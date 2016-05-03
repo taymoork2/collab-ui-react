@@ -292,7 +292,8 @@
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-service',
-        'services-overview'
+        'services-overview',
+        'my-company'
       ],
       'spark-room-system': [
         'devices',

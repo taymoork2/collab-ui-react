@@ -577,6 +577,44 @@ angular
           controllerAs: 'overview',
           parent: 'main'
         })
+        .state('my-company', {
+          // url: '/my-company',
+          templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+          controller: 'MyCompanyPageCtrl',
+          controllerAs: 'mcp',
+          parent: 'main',
+          abstract: true
+        })
+        .state('my-company.subscriptions', {
+          url: '/my-company/subscriptions',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpSubscription',
+              controller: 'MyCompanyPageSubscriptionCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+            }
+          }
+        })
+        .state('my-company.info', {
+          url: '/my-company',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpInfo',
+              controller: 'MyCompanyPageInfoCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html'
+            }
+          }
+        })
+        .state('my-company.orders', {
+          url: '/my-company/orders',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpOrder',
+              controller: 'MyCompanyPageOrderCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+            }
+          }
+        })
         .state('users', {
           abstract: true,
           template: '<div ui-view></div>',
