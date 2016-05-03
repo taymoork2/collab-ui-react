@@ -1,30 +1,34 @@
 <div class="aa-wrapper">
-  <div class="aa-general-wrapper" ng-class="aaBuilder.generalStyle">
-    <div class="aa-vertical-line"></div>
-    <div ng-include="'modules/huron/features/autoAttendant/numbers/aaNumbers.tpl.html'"></div>
-    <div class="aa-vertical-line"></div>
-    <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']"
-         ng-include="'modules/huron/features/autoAttendant/schedule/aaSchedule.tpl.html'"></div>
-    <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-vertical-line"></div>
+  <div class="aa-lanes-wrapper" ng-class="aaBuilder.generalStyle">
+    <div ng-if="aaBuilder.threeLanes" class="aa-lane"></div>
+    <div class="aa-flex-container aa-lane">
+      <div class="aa-vertical-line"></div>
+      <div ng-include="'modules/huron/features/autoAttendant/numbers/aaNumbers.tpl.html'"></div>
+      <div class="aa-vertical-line"></div>
+      <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']"
+           ng-include="'modules/huron/features/autoAttendant/schedule/aaSchedule.tpl.html'"></div>
+      <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-vertical-line"></div>
+    </div>
+    <div ng-if="aaBuilder.threeLanes" class="aa-lane"></div>
   </div>
-  <div class="aa-lanes-wrapper" ng-class="aaBuilder.lanesWrapperStyle">
-    <div class="aa-lane" ng-class="aaBuilder.laneStyle">
+  <div class="aa-lanes-wrapper">
+    <div class="aa-lane">
       <!--open lane-->
       <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-horizontal-line-right"></div>
-      <aa-schedule-info ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" schedule="openHours"></aa-schedule-info>
+      <aa-schedule-info ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" schedule="openHours" class="aa-max-width"></aa-schedule-info>
       <aa-builder-lane aa-schedule="openHours" class="aa-max-width"></aa-builder-lane>
     </div>
-    <div ng-if="aaBuilder.closedLane" class="aa-lane" ng-class="aaBuilder.laneStyle">
+    <div ng-if="aaBuilder.closedLane" class="aa-lane">
       <!--close lane-->
       <div ng-if="!aaBuilder.holidaysLane" class="aa-horizontal-line-left"></div>
       <div ng-if="aaBuilder.holidaysLane" class="aa-horizontal-line"></div>
-      <aa-schedule-info schedule="closedHours"></aa-schedule-info>
+      <aa-schedule-info schedule="closedHours" class="aa-max-width"></aa-schedule-info>
       <aa-builder-lane aa-schedule="closedHours" class="aa-max-width"></aa-builder-lane>
     </div>
-    <div ng-if="aaBuilder.holidaysLane" class="aa-lane" ng-class="aaBuilder.laneStyle">
+    <div ng-if="aaBuilder.holidaysLane" class="aa-lane">
       <!--holiday lane   -->
       <div class="aa-horizontal-line-left"></div>
-      <aa-schedule-info schedule="holidays"></aa-schedule-info>
+      <aa-schedule-info schedule="holidays" class="aa-max-width"></aa-schedule-info>
       <aa-builder-lane aa-schedule="holidays" class="aa-max-width"></aa-builder-lane>
     </div>
   </div>

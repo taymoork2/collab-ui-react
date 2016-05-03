@@ -49,29 +49,25 @@
 
     function setUpStyle() {
       if(vm.ui.isClosedHours && vm.ui.isHolidays && vm.ui.holidaysValue !== 'closedHours') {
-        vm.laneStyle = 'aa-3-lanes';
-        vm.lanesWrapperStyle = 'aa-3-lanes-wrapper';
-        vm.generalStyle = 'aa-general-3-lanes';
+        vm.generalStyle = '';
         vm.holidaysLane = true;
         vm.closedLane = true;
+        vm.threeLanes = true;
       } else if (vm.ui.isClosedHours) {
-        vm.laneStyle = 'aa-2-lanes';
-        vm.lanesWrapperStyle = 'aa-2-lanes-wrapper';
         vm.generalStyle = 'aa-general-2-lanes';
         vm.holidaysLane = false;
         vm.closedLane = true;
+        vm.threeLanes = false;
       } else if (vm.ui.isHolidays) {
-        vm.laneStyle = 'aa-2-lanes';
-        vm.lanesWrapperStyle = 'aa-2-lanes-wrapper';
         vm.generalStyle = 'aa-general-2-lanes';
         vm.holidaysLane = true;
         vm.closedLane = false;
+        vm.threeLanes = false;
       } else {
-        vm.laneStyle = 'aa-1-lane';
-        vm.lanesWrapperStyle = 'aa-1-lane-wrapper';
-        vm.generalStyle = 'aa-general-1-lane';
+        vm.generalStyle = '';
         vm.holidaysLane = false;
         vm.closedLane = false;
+        vm.threeLanes = false;
       }
     }
 
