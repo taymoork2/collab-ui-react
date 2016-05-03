@@ -14,17 +14,22 @@
       right: 0rem;
       background-color: white;
       border-radius: 2px;
-      border: 1px solid $gray-dark-1;
+
       list-style-type: none;
 
       opacity: 1;
       z-index: 9;
 
-      width: 10rem;
+      width: 12rem;
 
       text-transform: initial;
-      font-size: 0.7rem !important;
       color: black !important;
+
+      border: none;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
+      margin-top: 0;
+      overflow: visible;
+      font-size: 0.875rem !important;
       li {
         padding: 0.5rem;
         color: $gray-dark-1 !important;

@@ -1,4 +1,4 @@
-<div class="setting" ng-controller="PartnerProfileCtrl">
+<div class="setting" id="supportSettings" ng-controller="PartnerProfileCtrl">
   <div class="columns">
     <!-- support title / description -->
     <div class="form-section" id="supportTitleAndDescPanel">
@@ -22,7 +22,7 @@
           </a>
         </label>
       </div>
-      <div class="cs-input-group cs-input-radio">
+      <div class="cs-input-group cs-input-radio" id="problemReportsInput">
         <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1" ng-model="problemSiteRadioValue">
         <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanelRadio">
           <div class="radio-input-flex">
