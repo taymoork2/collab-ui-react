@@ -124,31 +124,57 @@
       var logMsg = "";
 
       var intBytes = [];
-      var littleEndianHeader = "%ff%fe";
 
-      littleEndianHeader.replace(/([0-9a-f]{2})/gi, function (hexByte) {
-        var intByte = parseInt(hexByte, 16);
+      var utf16leHeader = '%ff%fe';
 
-        intBytes.push(intByte);
+      utf16leHeader.replace(/([0-9a-f]{2})/gi, function (byte) {
+        intBytes.push(parseInt(byte, 16));
       });
 
       for (var i = 0; i < data.length; ++i) {
-        var hexByte = data[i].charCodeAt(0).toString(16);
-        var intByte = parseInt(hexByte, 16);
+        var hexByte = null;
+        var intByte = null;
 
-        if (2 <= i) {
-          intBytes.push(intByte);
+        if ("\t" == data[i]) {
+          hexByte = "%09";
+          hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
+            intByte = parseInt(hexByte, 16);
+          });
+        } else if ("\n" == data[i]) {
+          hexByte = "%0A";
+          hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
+            intByte = parseInt(hexByte, 16);
+          });
         } else {
+          hexByte = data[i].charCodeAt(0).toString(16);
+          intByte = parseInt(hexByte, 16);
+        }
+
+        if (25 > i) {
           logMsg = funcName + "\n" +
             "data[" + i + "]=" + data[i] + "\n" +
             "hexByte=" + hexByte + "\n" +
             "intByte=" + intByte;
-          $log.log(logMsg);
+          // $log.log(logMsg);
         }
+
+        intBytes.push(intByte);
+
+        hexByte = "%00";
+        hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
+          intByte = parseInt(hexByte, 16);
+        });
+
+        intBytes.push(intByte);
       }
 
-      var blob = new $window.Blob([new Uint8Array(intBytes)], {
-        type: 'text/csv;charset=UTF-16LE;'
+      var newData = new Uint8Array(intBytes);
+      // var newData = data;
+
+      var blob = new $window.Blob([newData], {
+        // type: 'text/csv;charset=UTF-16LE;'
+        // type: 'text/plain'
+        type: 'text/csv'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
