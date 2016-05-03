@@ -63,6 +63,7 @@
       case 'not_configured':
       case 'uninstalling':
       case 'registered':
+      case 'initializing':
         label = 'warning';
         value = 2;
         break;
