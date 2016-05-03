@@ -136,19 +136,18 @@
         var intByte = null;
 
         if ("\t" == data[i]) {
-          hexByte = "%09";
-          hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
-            intByte = parseInt(hexByte, 16);
+          "%09".replace(/([0-9a-f]{1})/gi, function (newHexByte) {
+            hexByte = newHexByte;
           });
         } else if ("\n" == data[i]) {
-          hexByte = "%0A";
-          hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
-            intByte = parseInt(hexByte, 16);
+          "%0A".replace(/([0-9a-f]{1})/gi, function (newHexByte) {
+            hexByte = newHexByte;
           });
         } else {
           hexByte = data[i].charCodeAt(0).toString(16);
-          intByte = parseInt(hexByte, 16);
         }
+
+        intByte = parseInt(hexByte, 16);
 
         if (25 > i) {
           logMsg = funcName + "\n" +
@@ -173,8 +172,8 @@
 
       var blob = new $window.Blob([newData], {
         // type: 'text/csv;charset=UTF-16LE;'
-        // type: 'text/plain'
-        type: 'text/csv'
+        type: 'text/plain'
+          // type: 'text/csv'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
