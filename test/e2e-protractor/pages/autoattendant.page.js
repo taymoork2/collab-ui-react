@@ -128,8 +128,8 @@ var AutoAttendantPage = function () {
   this.selectDayMonday = element(by.css('div.content.active')).element(by.css('select[name="day"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.selectdate = element(by.css('.calendar span:nth-child(15) .day'));
   this.date = element(by.css('cs-datepicker input'));
-  this.starttime = element(by.id('starttime'));
-  this.endtime = element(by.id('endtime'));
+  this.starttime = element(by.id('starttime0'));
+  this.endtime = element(by.id('endtime0'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
   this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
   this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));

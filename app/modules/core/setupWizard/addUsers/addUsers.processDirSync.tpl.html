@@ -1,14 +1,14 @@
-<div class="users-process-csv" ng-init="wizard.nextStep();">
+<div class="users-process-csv" ng-init="wizard.nextStep(); initBulkMetric();">
   <i class="icon icon-circle-group"></i>
 
   <div class="users-process-content">
     <div class="progressbar">
       <div class="progressbar-info">
-        <span class="progressbar-label" ng-show="csv.model.processProgress < 100" translate="firstTimeWizard.processing"></span>
-        <span class="progressbar-label" ng-show="csv.model.processProgress == 100" translate="common.done"></span>
-        <span class="progressbar-progress">{{csv.model.numTotalUsers}}/{{csv.model.numMaxUsers}}</span>
+        <span class="progressbar-label" ng-show="model.processProgress < 100" translate="firstTimeWizard.processing"></span>
+        <span class="progressbar-label" ng-show="model.processProgress == 100" translate="common.done"></span>
+        <span class="progressbar-progress">{{model.numTotalUsers}}/{{model.numMaxUsers}}</span>
       </div>
-      <progressbar animate="false" class="progress-striped active" value="csv.model.processProgress" type="primary"></progressbar>
+      <progressbar animate="false" class="progress-striped active" value="model.processProgress" type="primary"></progressbar>
       <div class="time-duration">
         <span translate="firstTimeWizard.timeElapsed"></span>
         <timer interval="1000">
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <button type="button" class="close" ng-click="csv.cancelProcessCsv();">
+    <button type="button" class="close" ng-click="cancelProcessCsv();">
       <span class="sr-only" translate="common.close"></span>
     </button>
   </div>

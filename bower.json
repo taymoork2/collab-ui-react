@@ -21,7 +21,7 @@
     "ui-router-extras": "=0.1.0",
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
-    "cisco-ui": "~2.19.0",
+    "cisco-ui": "~2.20.3",
     "cisco-amcharts": "~3.19.4",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",

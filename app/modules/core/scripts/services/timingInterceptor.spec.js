@@ -22,7 +22,9 @@ describe('TimingInterceptor', function () {
 
   it('should update config with response timestamp', function () {
     var response = {
-      config: {}
+      config: {
+        requestTimestamp: new Date().getTime()
+      }
     };
     Interceptor.response(response);
     expect(response.config.responseTimestamp).toBeGreaterThan(now);
@@ -78,6 +80,14 @@ describe('TimingInterceptor', function () {
       }
     };
     Interceptor.responseError(response).catch(done);
+    $rootScope.$digest();
+  });
+
+  it('should return the unmodified rejection from responseError if its not a response', function (done) {
+    Interceptor.responseError('foo').catch(function (rejection) {
+      expect(rejection).toBe('foo');
+      done();
+    });
     $rootScope.$digest();
   });
 
