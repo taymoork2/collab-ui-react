@@ -330,6 +330,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
       expect(AANotificationService.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
+
+      expect(controller.aaModel.aaRecord.scheduleId).toBeUndefined();
+      expect(controller.ui.ceInfo.scheduleId).toBeUndefined();
+
     });
 
     it('should not notify when the CE updatae fails during calendar creation', function () {
