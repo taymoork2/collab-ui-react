@@ -6,9 +6,8 @@ describe('Service: AAUiScheduleService', function () {
 
   function getRange8To5() {
     var calendar = AAICalService.createCalendar();
-    var date = new Date();
-    var _starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '8', 0, 0);
-    var _endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
+    var _starttime = "08:00 AM";
+    var _endtime = "05:00 PM";
     var defaultRange = [{
       days: [{
         abbr: 'SU',
