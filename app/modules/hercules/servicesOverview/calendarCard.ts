@@ -20,9 +20,9 @@ namespace servicesOverview {
         'servicesOverview.cards.calendar.title', 'servicesOverview.cards.calendar.description', 'icon-circle-calendar', true, 'calendar', CardType.hybrid);
     }
 
-    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>){
+    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
       this._status = this.filterAndGetCssStatus(services, ['squared-fusion-cal']);
-      this._active = this.filterAndGetEnabledService(services,['squared-fusion-cal']);
+      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal']);
       this._loading = false;
     }
   }
