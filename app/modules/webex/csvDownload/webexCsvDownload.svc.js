@@ -132,28 +132,31 @@
       });
 
       for (var i = 0; i < data.length; ++i) {
-        var hexByte = null;
-        var intByte = null;
+        var hexByte1 = null;
+        var intByte1 = null;
 
-        hexByte = data[i].charCodeAt(0).toString(16);
-        intByte = parseInt(hexByte, 16);
+        hexByte1 = data[i].charCodeAt(0);
+        intByte1 = parseInt(hexByte1.toString(16), 16);
 
         if (25 > i) {
           logMsg = funcName + "\n" +
             "data[" + i + "]=" + data[i] + "\n" +
-            "hexByte=" + hexByte + "\n" +
-            "intByte=" + intByte;
+            "hexByte1=" + hexByte1 + "\n" +
+            "intByte1=" + intByte1;
           // $log.log(logMsg);
         }
 
-        intBytes.push(intByte);
+        intBytes.push(intByte1);
 
-        hexByte = "%00";
-        hexByte.replace(/([0-9a-f]{1})/gi, function (hexByte) {
-          intByte = parseInt(hexByte, 16);
+        var hexByte2 = null;
+        var intByte2 = null;
+
+        hexByte2 = "%00";
+        hexByte2.replace(/([0-9a-f]{1})/gi, function (hexByte2) {
+          intByte2 = parseInt(hexByte2, 16);
         });
 
-        intBytes.push(intByte);
+        intBytes.push(intByte2);
       }
 
       var newData = new Uint8Array(intBytes);
