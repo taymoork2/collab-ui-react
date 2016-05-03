@@ -58,7 +58,6 @@ namespace servicesOverview {
 
     it('selecting filter to show all cards should show non active', ()=> {
       ctrl.filterHybridCard('all');
-      console.log(ctrl.hybridCards);
       expect(_.some(ctrl.hybridCards, {active: false})).toBeTruthy();
     });
   });

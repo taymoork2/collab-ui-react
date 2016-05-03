@@ -1,7 +1,7 @@
-/// <reference path="ServicesOverviewCard.ts"/>
+/// <reference path="ServicesOverviewHybridCard.ts"/>
 namespace servicesOverview {
 
-  export class ServicesOverviewHybridCallCard extends ServicesOverviewCard {
+  export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
     getShowMoreButton():servicesOverview.CardButton {
       return undefined;
     }

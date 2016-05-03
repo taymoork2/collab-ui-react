@@ -72,6 +72,7 @@ namespace servicesOverview {
       ok: 1,
       warn: 2,
       error: 3,
+      disabled: 4,
       undefined: 0
     };
 
@@ -79,26 +80,39 @@ namespace servicesOverview {
                        protected _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
     }
 
-    protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
-      return _.chain(services)
-        .filter((service)=> {
-          return _.indexOf(serviceIds, service.id) >= 0;
-        })
-        .reduce((result, serv:{enabled:boolean})=> {
-          return this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-        }, undefined)
-        .value();
+    protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):Boolean {
+      let startVal:Boolean = undefined;
+      let res:Boolean = services.filter((service)=> {
+        return _.indexOf(serviceIds, service.id) >= 0;
+      }).reduce((result, serv)=> {
+        return this.serviceEnabledWeight['' + serv.enabled] > this.serviceEnabledWeight['' + result] ? serv.enabled : result;
+      }, startVal);
+      return res;
+      // return _.chain(services)
+      //   .filter((service)=> {
+      //     return _.indexOf(serviceIds, service.id) >= 0;
+      //   })
+      //   .reduce((result, serv:{enabled:boolean})=> {
+      //     return this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
+      //   }, undefined)
+      //   .value();
     }
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
-      let callServiceStatus:string = _.chain(services)
-        .filter((service)=> {
-          return _.indexOf(serviceIds, service.id) >= 0;
-        })
-        .reduce((result, serv:{status:string})=> {
-          return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
-        }, undefined)
-        .value();
+      let startVal:string = undefined;
+      let callServiceStatus:string = services.filter((service)=> {
+        return _.indexOf(serviceIds, service.id) >= 0;
+      }).reduce((result, serv)=> {
+        return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
+      }, startVal);
+      // let callServiceStatus:string = _.chain(services)
+      //   .filter((service)=> {
+      //     return _.indexOf(serviceIds, service.id) >= 0;
+      //   })
+      //   .reduce((result, serv:{status:string})=> {
+      //     return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
+      //   }, undefined)
+      //   .value();
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
       }
