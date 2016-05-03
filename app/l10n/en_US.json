@@ -3582,7 +3582,8 @@
     "submitOrder": {
       "submitting": "Submitting Order...",
       "activate": "Click the Activate button below to start your subscription and begin using your new service.",
-      "newUser": "Thank you for your purchase. An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
+      "newUserHeader": "Your trial has been created",
+      "newUserText": "An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
       "missingEmail": "It has been over 30 minutes and I still have not received the email.",
       "userError": "An error occurred while retrieving the user.",
       "submitError": "An error occurred while submitting the order."
