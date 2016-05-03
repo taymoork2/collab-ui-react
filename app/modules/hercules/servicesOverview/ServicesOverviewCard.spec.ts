@@ -64,7 +64,7 @@ namespace servicesOverview {
           expect(cardService.card.status).toEqual(undefined);
         });
 
-        let statuses = {
+        let statuses:any = {
           ok: 'success',
           warn: 'warning',
           error: 'danger',
@@ -73,7 +73,7 @@ namespace servicesOverview {
           notKnown: undefined
         };
 
-        _.forEach(statuses, (cssExpectedStatus, status)=> {
+        _.forEach(statuses, (cssExpectedStatus:string, status:string)=> {
           it(cardService.card.name + ' should set status to ' + cssExpectedStatus + ' when ' + status + ' is received', ()=> {
             let statuses = _.map(cardService.services, (service)=> {
               return {id: service, status: status, enabled: true}

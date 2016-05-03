@@ -80,9 +80,9 @@ namespace servicesOverview {
                        protected _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
     }
 
-    protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):Boolean {
-      let startVal:Boolean = undefined;
-      let res:Boolean = services.filter((service)=> {
+    protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
+      let startVal = false;
+      let res = services.filter((service)=> {
         return _.indexOf(serviceIds, service.id) >= 0;
       }).reduce((result, serv)=> {
         return this.serviceEnabledWeight['' + serv.enabled] > this.serviceEnabledWeight['' + result] ? serv.enabled : result;
