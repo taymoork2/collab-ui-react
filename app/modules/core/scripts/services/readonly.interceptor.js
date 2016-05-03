@@ -11,7 +11,6 @@
 
     function rejectOnNotRead(config) {
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
-        console.log('Rejecting URL', config.url);
         Notification.notifyReadOnly(config);
         return $q.reject(config);
       } else {
