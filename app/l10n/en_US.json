@@ -1590,6 +1590,7 @@
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
     "errorCreateSchedule": "Failed to create schedule for {{name}}: {{statusText}} ({{status}}).",
+    "errorUpdateScheduleName": "Failed to update schedule name: {{name}} {{statusText}} ({{status}}).",
     "errorDeletePredefinedSchedule": "Failed to remove the predefined schedule for {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
