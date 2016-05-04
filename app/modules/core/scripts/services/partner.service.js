@@ -46,6 +46,14 @@
       });
     }
 
+    function addToManagedOrgsList(userId) {
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId) + '/' + userId;
+      return $http({
+        method: 'PATCH',
+        url: scimUrl
+      });
+    }
+
     // Series of fns dont make any sense, unless isTrial = null means something...
     function isLicenseATrial(license) {
       return license && license.isTrial === true;
