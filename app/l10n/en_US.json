@@ -2199,7 +2199,8 @@
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Request Purchase",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "usOnly": "(Currently U.S. only)"
   },
 
   "status": {
