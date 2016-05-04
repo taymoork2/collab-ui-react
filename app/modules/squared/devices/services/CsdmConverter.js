@@ -53,9 +53,19 @@
           case "Cisco TelePresence MX300 G2":
             return "images/devices-hi/mx300g2.png";
           case "Cisco TelePresence MX700":
-            return "images/devices-hi/mx700d.png";
+            return "images/devices-hi/mx700.png"; // missing
+          case "Cisco TelePresence MX700 SpeakerTrack":
+            return "images/devices-hi/mx700speakertrack.png"; // missing
+          case "Cisco TelePresence MX700 Dual":
+            return "images/devices-hi/mx700d.png"; // have pic, but endpoint never reports
+            case "Cisco TelePresence MX700 Dual Speakertrack":
+              return "images/devices-hi/mx700dspeakertrack.png"; // have pic, but endpoint never reports
           case "Cisco TelePresence MX800":
-            return "images/devices-hi/mx800d.png";
+            return "images/devices-hi/mx800.png";
+          case "Cisco TelePresence MX800 Dual":
+            return "images/devices-hi/mx800dspeakertrack.png";
+          case "Cisco TelePresence MX800 SpeakerTrack":
+            return "images/devices-hi/mx800speakertrack.png";
           case "Project Swedish Island":
             return "images/devices-hi/swedish_island.png";
           default:
