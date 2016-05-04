@@ -76,6 +76,10 @@
           responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
             email: email
           });
+        } else if (messageCode === '400096') {
+          responseMessage = $translate.instant('firstTimeWizard.bulk403AndNotSetupManUserAddError', {
+            email: email
+          });
         } else {
           responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
         }
