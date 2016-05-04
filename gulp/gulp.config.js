@@ -18,6 +18,7 @@ module.exports = function () {
   var tsSpecSuffix = '.spec.ts.js';
   var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
+  var prevCompiledTestFiles = app + '/**/*' + '.ts.spec.js';
   var examples = 'examples';
   var cache = '.cache';
   var tsManifest = '/../ts/ts-manifest.txt';
@@ -73,6 +74,7 @@ module.exports = function () {
       compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
       compiledTestFiles: compiledTestFiles,
+      previousCompiledTestFiles:prevCompiledTestFiles
     },
 
     unsupported: {
@@ -263,10 +265,10 @@ module.exports = function () {
     },
 
     banner: '/**\n' +
-      ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-      ' * Copyright ' + year + ' <%= pkg.author %>\n' +
-      ' */\n' +
-      '',
+    ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+    ' * Copyright ' + year + ' <%= pkg.author %>\n' +
+    ' */\n' +
+    '',
 
     beautifyFiles: [
       app + '/**/*.js',
