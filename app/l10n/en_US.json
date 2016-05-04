@@ -3311,6 +3311,10 @@
         "type": "Touch Panel Required",
         "message": "There is no touch panel connected to the Spark Room System. Check the cable connecting the touch panel to the Spark Room System."
       },
+      "NetworkQuality": {
+        "type": "Packet Loss Detected",
+        "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
+      },
       "inactive": {
         "type": "Inactive Account",
         "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
