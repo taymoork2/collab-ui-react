@@ -481,6 +481,12 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
       expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
       expect($scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
+
+      expect($scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['type']).toEqual('MENU_OPTION');
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['key']).toEqual('0');
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['actions'].length).toEqual(1);
+
       expect($scope.vm.ui.isOpenHours).toEqual(true);
 
     });
