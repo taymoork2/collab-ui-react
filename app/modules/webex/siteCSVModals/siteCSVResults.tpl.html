@@ -57,17 +57,20 @@
           <!-- 
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
                               type='webexexport'
+                              siteurl={{siteCSVResult.siteUrl}}
                               filedownloadurl="kttps://dummy.dummy.com"
                               filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           -->
           
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
                               type='webexexport'
+                              siteurl={{siteCSVResult.siteUrl}}
                               filedownloadurl={{siteCSVResult.downloadFileUrl}}
                               filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
           <webex-csv-download ng-if="(gridRow.id == 'import-download-err-file')"
                               type='webeximport'
+                              siteurl={{siteCSVResult.siteUrl}}
                               filedownloadurl={{siteCSVResult.downloadFileUrl}}
                               filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
