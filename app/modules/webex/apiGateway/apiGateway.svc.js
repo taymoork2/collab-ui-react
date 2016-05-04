@@ -315,6 +315,44 @@
       return blob;
     }; //transformImportFile()
 
+    this.webexCreateImportBlob = function (data) {
+      var funcName = "webexCreateImportBlob()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "data.length=" + data.length;
+      $log.log(logMsg);
+
+      var intBytes = [];
+
+      var utf16leHeader = '%ff%fe';
+
+      utf16leHeader.replace(/([0-9a-f]{2})/gi, function (byte) {
+        intBytes.push(parseInt(byte, 16));
+      });
+
+      for (var i = 0; i < data.length; ++i) {
+        var hexChar = data[i].charCodeAt(0);
+
+        var hexByte1 = hexChar & 0xff;
+        var hexByte2 = (hexChar >> 8) & 0xff;
+
+        var intByte1 = parseInt(hexByte1.toString(16), 16);
+        var intByte2 = parseInt(hexByte2.toString(16), 16);
+
+        intBytes.push(intByte1);
+        intBytes.push(intByte2);
+      }
+
+      var newData = new Uint8Array(intBytes);
+
+      var blob = new $window.Blob([newData], {
+        type: 'text/csv;charset=UTF-16LE;'
+      });
+
+      return blob;
+    }; // webexCreateImportBlob()
+
     this.csvImport = function (
       vm
     ) {
@@ -348,7 +386,7 @@
       );
 
       var fd = new $window.FormData();
-      fd.append("importCsvFile", _this.transformImportFile(csvFile));
+      fd.append("importCsvFile", _this.webexCreateImportBlob(csvFile));
 
       csvHttpsObj.data = fd;
 
