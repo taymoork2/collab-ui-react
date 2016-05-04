@@ -90,6 +90,7 @@
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
     "convertUserError": "Failed to convert",
+    "convertUserSearch": "Enter customer name or email address",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
@@ -1281,8 +1282,8 @@
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "certificatesHeading": "Certificates",
-        "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
+        "certificatesHeading": "Certificates for Encrypted SIP Calls",
+        "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -1610,7 +1611,7 @@
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Open/Closed",
+    "scheduleOpenClosed": "Business Hours",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1760,7 +1761,7 @@
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
     "AACustomDesc": "Create a custom Auto Attendant.",
-    "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
+    "AAOpenClosedDesc": "Simple open/closed schedule with custom actions."
   },
   "callPark": {
     "code": "CP",
@@ -3005,14 +3006,12 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "WebEx-SiteUsers.csv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "WebEx-ImportErr.csv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
