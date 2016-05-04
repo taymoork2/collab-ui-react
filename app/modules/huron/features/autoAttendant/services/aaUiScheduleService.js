@@ -18,8 +18,8 @@
 
     function getRange8To5() {
       var calendar = AAICalService.createCalendar();
-      var _starttime = new Date('', '', '', '08', '00', '00');
-      var _endtime = new Date('', '', '', '17', '00', '00');
+      var _starttime = "08:00 AM";
+      var _endtime = "05:00 PM";
       var openhours = AAICalService.getDefaultRange();
       openhours.starttime = _starttime;
       openhours.endtime = _endtime;

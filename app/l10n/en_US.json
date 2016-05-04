@@ -3301,11 +3301,19 @@
       },
       "MissingEncryptionKey": {
         "type": "Missing encryption option key",
-        "message": "Please add an encryption option key"
+        "message": "Please add an encryption option key."
       },
       "ConfiguredForTestAutomation": {
         "type": "Configured for test automation",
-        "message": "Metrics and log reporting are affected"
+        "message": "Metrics and log reporting are affected."
+      },
+      "TouchPanelConnection": {
+        "type": "Touch Panel Required",
+        "message": "There is no touch panel connected to the Spark Room System. Check the cable connecting the touch panel to the Spark Room System."
+      },
+      "NetworkQuality": {
+        "type": "Packet Loss Detected",
+        "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
       },
       "inactive": {
         "type": "Inactive Account",

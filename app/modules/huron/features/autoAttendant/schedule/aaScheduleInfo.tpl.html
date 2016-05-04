@@ -21,7 +21,7 @@
            <div ng-if="scheduleInfo.isStartTimeSet && holiday.starttime">
              <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
              <span class="small-4 columns">{{holiday.name}}</span>
-             <span class="small-4 columns aa-schedule-info-hours">{{scheduleInfo.formatTime(holiday.starttime)}} - {{scheduleInfo.formatTime(holiday.endtime)}}</span>
+             <span class="small-4 columns aa-schedule-info-hours">{{holiday.starttime}} - {{holiday.endtime}}</span>
            </div>
            <div ng-if="scheduleInfo.isStartTimeSet && !holiday.starttime">
              <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
