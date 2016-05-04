@@ -93,6 +93,7 @@
           // create event
           var vevent = new ical.Component('vevent');
 
+          var starttime, endtime, date, dateData;
           // create vtimezone
           // recurrence
           if (type === 'open') {
@@ -103,49 +104,64 @@
             vevent.addProperty(p);
             vevent.addPropertyWithValue('summary', 'open');
             vevent.addPropertyWithValue('priority', '10');
-            var date = getNextOpenDate(hoursRange.days);
-            var starttime = moment(hoursRange.starttime);
-            date.hours(starttime.hours());
-            date.minutes(starttime.minutes());
-            hoursRange.starttime = moment(date);
-            var endtime = moment(hoursRange.endtime);
-            date.hours(endtime.hours());
-            date.minutes(endtime.minutes());
-            hoursRange.endtime = moment(date);
+            date = getNextOpenDate(hoursRange.days);
+            dateData = {
+              'year': date.year(),
+              'month': date.month(),
+              'date': date.date()
+            };
+            starttime = moment(hoursRange.starttime, 'hh:mm A').set(dateData);
+            endtime = moment(hoursRange.endtime, 'hh:mm A').set(dateData);
           } else if (type === 'holiday') {
             vevent.addPropertyWithValue('summary', 'holiday');
-            var startDate, endDate;
             var description = hoursRange.name;
+            var startData, endData;
             if (hoursRange.exactDate) {
-              startDate = moment(hoursRange.date, 'YYYY-MM-DD');
-              endDate = moment(hoursRange.date, 'YYYY-MM-DD');
+              date = moment(hoursRange.date, 'YYYY-MM-DD');
+              dateData = {
+                'year': date.year(),
+                'month': date.month(),
+                'date': date.date()
+              };
             } else {
               //Find the first occurrence of the rule
-              startDate = getNextOccurrenceHolidays(hoursRange);
-              endDate = moment(startDate);
+              date = getNextOccurrenceHolidays(hoursRange);
+              dateData = {
+                'year': date.year(),
+                'month': date.month(),
+                'date': date.date()
+              };
               //Save the rule in the description
-              description += ";" + hoursRange.month.number + ";" + hoursRange.rank.number + ";" + hoursRange.day.abbr;
+              description += ';' + hoursRange.month.number + ';' + hoursRange.rank.number + ';' + hoursRange.day.abbr;
             }
             if (hoursRange.allDay) {
-              startDate.hours(0);
-              startDate.minutes(0);
-              endDate.hours(23);
-              endDate.minutes(59);
+              startData = {
+                'hours': 0,
+                'minutes': 0
+              };
+              endData = {
+                'hours': 23,
+                'minutes': 59
+              };
             } else {
-              var startTime = moment(hoursRange.starttime);
-              startDate.hours(startTime.hours());
-              startDate.minutes(startTime.minutes());
-              var endTime = moment(hoursRange.endtime);
-              endDate.hours(endTime.hours());
-              endDate.minutes(endTime.minutes());
+              var time = moment(hoursRange.starttime, 'hh:mm A');
+              startData = {
+                'hours': time.hours(),
+                'minutes': time.minutes()
+              };
+              time = moment(hoursRange.endtime, 'hh:mm A');
+              endData = {
+                'hours': time.hours(),
+                'minutes': time.minutes()
+              };
             }
-            hoursRange.starttime = startDate;
-            hoursRange.endtime = endDate;
+            starttime = moment().set(dateData).set(startData);
+            endtime = moment().set(dateData).set(endData);
             if (hoursRange.recurAnnually) {
               //Set the rule in the calendar
               strRRule = '';
               if (hoursRange.exactDate) {
-                strRRule = 'FREQ=YEARLY;BYMONTH=' + (startDate.month() + 1) + ';BYMONTHDAY=' + (startDate.date());
+                strRRule = 'FREQ=YEARLY;BYMONTH=' + (starttime.month() + 1) + ';BYMONTHDAY=' + (starttime.date());
               } else {
                 strRRule = 'FREQ=YEARLY;BYMONTH=' + hoursRange.month.number + ';BYDAY=' + hoursRange.day.abbr + ';BYSETPOS=' + hoursRange.rank.number;
               }
@@ -163,10 +179,10 @@
           // But we are doing recurrence based on day of week, so what particular date?
           // The date of the first day selected?  Today?
 
-          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime);
+          var p = getiCalDateTime(calendar, 'dtstart', starttime);
           vevent.addProperty(p);
 
-          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime);
+          p = getiCalDateTime(calendar, 'dtend', endtime);
           vevent.addProperty(p);
 
           // add event to calendar
@@ -308,7 +324,7 @@
       var hoursRanges = [];
       var holidayRanges = [];
 
-      _.forEach(calendar.getAllSubcomponents("vevent"), function (vevent) {
+      _.forEach(calendar.getAllSubcomponents('vevent'), function (vevent) {
 
         var summary = vevent.getFirstPropertyValue('summary');
 
@@ -317,21 +333,13 @@
         var hoursRange = getDefaultRange(summary);
 
         hoursRange.starttime = moment({
-          year: dtstart.year,
-          month: dtstart.month - 1,
-          date: dtstart.day,
           hour: dtstart.hour,
-          minute: dtstart.minute,
-          second: dtstart.second
-        });
+          minute: dtstart.minute
+        }).format('hh:mm A');
         hoursRange.endtime = moment({
-          year: dtend.year,
-          month: dtend.month - 1,
-          date: dtend.day,
           hour: dtend.hour,
-          minute: dtend.minute,
-          second: dtend.second
-        });
+          minute: dtend.minute
+        }).format('hh:mm A');
         if (summary === 'open') {
           hoursRanges.push(hoursRange);
           var rrule = vevent.getFirstPropertyValue('rrule');
@@ -345,7 +353,7 @@
           });
         } else if (summary === 'holiday') {
           hoursRange.exactDate = true;
-          var description = vevent.getFirstPropertyValue('description').split(";");
+          var description = vevent.getFirstPropertyValue('description').split(';');
           hoursRange.name = description[0];
           if (description.length > 3) {
             hoursRange.month = {};
@@ -357,7 +365,11 @@
             hoursRange.day.index = getTwoLetterDays().indexOf(description[3]);
             hoursRange.exactDate = false;
           }
-          hoursRange.date = moment(hoursRange.starttime).format("YYYY-MM-DD");
+          hoursRange.date = moment({
+            year: dtstart.year,
+            month: dtstart.month - 1,
+            date: dtstart.day
+          }).format('YYYY-MM-DD');
           if (dtstart.hour === 0 && dtstart.minute === 0 && dtend.hour === 23 && dtend.minute === 59) {
             hoursRange.allDay = true;
             hoursRange.starttime = undefined;

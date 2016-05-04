@@ -6,7 +6,8 @@
 
     var allowedList = [
       '/conversation/api/v1/users/deskFeedbackUrl',
-      '/idb/oauth2/v1/revoke'
+      '/idb/oauth2/v1/revoke',
+      '/WBXService/XMLService'
     ];
 
     function rejectOnNotRead(config) {
