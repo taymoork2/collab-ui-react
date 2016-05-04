@@ -59,6 +59,9 @@
       @include vr-spacing(mr, 2);
     }
   }
+  .cs-checkbox-group {
+    display: inline-block;
+  }
   .accordion {
     border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
