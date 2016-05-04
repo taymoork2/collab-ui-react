@@ -2181,7 +2181,8 @@
               displayName: 'Settings'
             },
             params: {
-              clusterList: null
+              clusterList: null,
+              dispName: null
             }
           });
       }
