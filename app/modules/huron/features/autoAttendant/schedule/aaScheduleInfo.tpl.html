@@ -9,7 +9,6 @@
         </div>
       </div>
       <div ng-if="scheduleInfo.isHolidays()" ng-class="{'closed-holiday': scheduleInfo.isOpenClosed()}">
-        <!-- <h3 class="text-info-left" translate="autoAttendant.scheduleHolidays"></h3> -->
          <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'">
          <div class="row aa-schedule-info-item">
            <div ng-if="!scheduleInfo.isStartTimeSet">
@@ -21,7 +20,7 @@
            <div ng-if="scheduleInfo.isStartTimeSet && holiday.starttime">
              <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
              <span class="small-4 columns">{{holiday.name}}</span>
-             <span class="small-4 columns aa-schedule-info-hours">{{scheduleInfo.formatTime(holiday.starttime)}} - {{scheduleInfo.formatTime(holiday.endtime)}}</span>
+             <span class="small-4 columns aa-schedule-info-hours">{{holiday.starttime}} - {{holiday.endtime}}</span>
            </div>
            <div ng-if="scheduleInfo.isStartTimeSet && !holiday.starttime">
              <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
