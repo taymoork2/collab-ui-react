@@ -37,6 +37,7 @@
         setUpStyle();
       });
     }
+
     /////////////////////
 
     function getScheduleTitle() {
@@ -48,7 +49,7 @@
     }
 
     function setUpStyle() {
-      if(vm.ui.isClosedHours && vm.ui.isHolidays && vm.ui.holidaysValue !== 'closedHours') {
+      if (vm.ui.isClosedHours && vm.ui.isHolidays && vm.ui.holidaysValue !== 'closedHours') {
         vm.generalStyle = '';
         vm.holidaysLane = true;
         vm.closedLane = true;

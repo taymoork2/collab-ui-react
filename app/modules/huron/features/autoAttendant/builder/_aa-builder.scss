@@ -426,7 +426,7 @@ $aa-builder-text-color: $gray-dark-1;
   justify-content: flex-end;
 
   .aa-general-2-lanes {
-    min-width: 780px;
+    min-width: vr-adjust(780);
   }
 
   .aa-lanes-wrapper {
@@ -436,7 +436,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-lane {
     @extend .aa-flex-container;
-    min-width: 390px;
+    min-width: vr-adjust(390);
 
     .aa-panel-lane {
       @extend .aa-panel;
