@@ -58,10 +58,7 @@
             <div id="brandingLogoPanel" class="small-12 columns optional-row">
               <h4 translate="partnerProfile.brandingTitle.custom"></h4>
               <div class="form-spacing form-group">
-                <span ng-if="!isPartner" >
-                  <span translate="customerProfile.brandingInfo.prefix"></span>
-                  <a ng-click="showBrandingExample()" translate="customerProfile.brandingInfo.middle"></a><span translate="customerProfile.brandingInfo.sufix"></span>
-                </span>
+                <span ng-if="!isPartner"  translate="customerProfile.brandingInfo"></span>
                 <span ng-if="isPartner">
                   <span translate="partnerProfile.brandingInfo"></span>
                 </span>
@@ -75,7 +72,7 @@
                     <label for="partnerLogoRadio">
                       <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
                       <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
-                      <a ng-if="!isPartner" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
+                      <a id="useCiscoLogoExampleLink" ng-if="!isPartner" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
                     </label>
                   </div>
 
@@ -83,7 +80,7 @@
                     <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
                     <label for="customLogoRadio">
                       <span translate="partnerProfile.userOwnLogo"></span>
-                      <a translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
+                      <a id="useCustomLogoExampleLink" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
                     </label>
                     <label for="customLogoRadio" class="radio-input-spacing">
                       <div class="radio-input-flex">
@@ -97,7 +94,6 @@
                           <span translate="partnerProfile.chooseFile"></span>
                         </button>
                       </div>
-                      <p class="body-small drop-box-note" translate="partnerProfile.logoUploadNote"></p>
                     </label>
                     <p translate="partnerProfile.uploadNote" class="drop-box-note body-small"></p>
                   </div>
@@ -115,7 +111,7 @@
                   ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
                   <label for="allowCustomerLogo">
                     <span translate="partnerProfile.allowCustomerLogo"></span>
-                    <a translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
+                    <a id="allowCustomLogExampleLink" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
                   </label>
               </div>
             </div>
