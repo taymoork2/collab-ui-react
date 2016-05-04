@@ -82,7 +82,9 @@
       var openHoursValid = true;
       var closedHoursValid = true;
       var holidaysValid = true;
-      var closedHoliday =  _.get(ui, 'holidaysValue', 'Closed') === 'closedHours'
+
+      /* check holiday value to determine if holiday uses open closed or holiday lane */
+      var closedHoliday =  _.get(ui, 'holidaysValue', 'Closed') === 'closedHours';
       if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
         openHoursValid = checkForValid(ui.openHours, 'Open Hours');
       }
@@ -91,6 +93,7 @@
           closedHoliday ? 'Closed/Holiday' : 'Closed');
       }
 
+      /* if holiday follows closed behavior, then don't validate */
       if (ui.isHolidays && (!closedHoliday) && _.has(ui, 'holidays.entries')) {
         holidaysValid = checkForValid(ui.holidays, 'Holiday');
       }
@@ -99,7 +102,7 @@
 
     }
 
-    function checkForValid(uiCombinedMenu, from) {
+    function checkForValid(uiCombinedMenu, fromLane) {
       var isValid = true;
       var errors = [];
 
@@ -115,10 +118,9 @@
 
         _.forEach(errors, function (err) {
           isValid = false;
-              
           AANotificationService.error(err.msg, {
             key: err.key,
-            schedule: from,
+            schedule: fromLane,
             at : _.indexOf(menuOptions, optionMenu) + 1
           });
         });
