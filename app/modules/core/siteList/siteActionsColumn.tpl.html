@@ -64,7 +64,7 @@
        tooltip-placement="top">
     </i>
 
-    <span ng-if="row.entity.isIframeSupported">
+    <span>
       <a ng-if="row.entity.isAdminReportEnabled"
          id="{{row.entity.license.siteUrl}}_webex-site-reports"
          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})">
@@ -87,7 +87,7 @@
             tooltip="{{::'siteList.siteSettings' | translate}}"
             tooltip-placement="top"></i>
       </a>
-    </span>  <!--  end row.entity.isIframeSupported -->
+    </span>
 
   </span>
   <!-- end of service enabling -->
