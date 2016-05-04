@@ -5,8 +5,7 @@
     .module('Huron')
     .controller('TelephonyInfoCtrl', TelephonyInfoCtrl);
 
-  TelephonyInfoCtrl.$inject = ['$scope', '$state', 'TelephonyInfoService', 'DeviceService', 'Config'];
-
+  /* @ngInject */
   function TelephonyInfoCtrl($scope, $state, TelephonyInfoService, DeviceService, Config) {
     var vm = this;
     vm.showDirectoryNumberPanel = showDirectoryNumberPanel;

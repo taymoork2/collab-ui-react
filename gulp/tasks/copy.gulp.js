@@ -19,7 +19,6 @@ gulp.task('copy:build', function (done) {
   messageLogger('Copying Build Files');
   runSeq([
       'copy:build-app-files',
-      'copy:build-unsupported-js',
       'copy:build-vendor-css',
       'copy:build-vendor-fonts',
       'copy:build-vendor-images',
@@ -43,19 +42,6 @@ gulp.task('copy:build-app-files', function () {
   messageLogger('Copying application files', files);
   return gulp
     .src(files, {
-      base: config.app
-    })
-    .pipe($.if(args.verbose, $.print()))
-    .pipe(gulp.dest(config.build))
-    .pipe(reload({
-      stream: true
-    }));
-});
-
-gulp.task('copy:build-unsupported-js', function () {
-  messageLogger('Copying unsupported JS files', config.unsupported.js);
-  return gulp
-    .src(config.unsupported.js, {
       base: config.app
     })
     .pipe($.if(args.verbose, $.print()))

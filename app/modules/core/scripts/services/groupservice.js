@@ -1,29 +1,32 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .service('GroupService', ['$http', '$rootScope', '$location', 'Storage', 'UrlConfig', 'Log', 'Authinfo', 'Auth',
-    function ($http, $rootScope, $location, Storage, UrlConfig, Log, Authinfo, Auth) {
+  angular.module('Core')
+    .service('GroupService', GroupService);
 
-      var groupssUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/groups';
+  /* @ngInject */
+  function GroupService($http, $rootScope, $location, Storage, UrlConfig, Log, Authinfo, Auth) {
 
-      return {
+    var groupssUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/groups';
 
-        getGroupList: function (callback) {
+    return {
 
-          $http.get(groupssUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              Log.debug('Retrieved group list');
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              callback(data, status);
-            });
-        }
+      getGroupList: function (callback) {
 
-      };
-    }
-  ]);
+        $http.get(groupssUrl)
+          .success(function (data, status) {
+            data = data || {};
+            data.success = true;
+            Log.debug('Retrieved group list');
+            callback(data, status);
+          })
+          .error(function (data, status) {
+            data = data || {};
+            data.success = false;
+            callback(data, status);
+          });
+      }
+
+    };
+  }
+})();

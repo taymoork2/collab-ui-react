@@ -13,6 +13,7 @@
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
+      atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasStormBranding: 'atlas-2015-storm-launch',
@@ -119,7 +120,8 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials'
+      huronCallTrials: 'huron-call-trials',
+      enableCrashLogs: 'csdm-enable-crash-logs'
     };
 
     var toggles = {};

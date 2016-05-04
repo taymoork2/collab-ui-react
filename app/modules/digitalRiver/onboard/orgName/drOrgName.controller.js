@@ -6,13 +6,16 @@
     .controller('drOrgNameController', drOrgNameController);
 
   /* @ngInject */
-  function drOrgNameController($location, $state) {
+  function drOrgNameController($location, $state, $translate) {
 
     var vm = this;
     vm.email = $state.params.email;
 
     vm.handleContinue = function () {
-      //TODO create org, move user to this org
+      if (!vm.orgName || 0 === vm.orgName.trim().length) {
+        vm.error = $translate.instant('digitalRiver.orgName.missingOrgName');
+        return;
+      }
       vm.error = "TODO create org, move user to org and then redirect to First Time Exp";
     };
 

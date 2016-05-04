@@ -1,18 +1,25 @@
-<div class="users-process-csv" ng-init="wizard.nextStep(); initBulkMetric();">
+<div class="users-process-csv" ng-init="wizard.nextStep();">
   <i class="icon icon-circle-group"></i>
 
   <div class="users-process-content">
     <div class="progressbar">
       <div class="progressbar-info">
-        <span class="progressbar-label" ng-show="model.processProgress < 100" translate="firstTimeWizard.processing"></span>
-        <span class="progressbar-label" ng-show="model.processProgress == 100" translate="common.done"></span>
-        <span class="progressbar-progress">{{model.numTotalUsers}}/{{model.numMaxUsers}}</span>
+        <span class="progressbar-label" ng-show="csv.model.processProgress < 100" translate="firstTimeWizard.processing"></span>
+        <span class="progressbar-label" ng-show="csv.model.processProgress == 100" translate="common.done"></span>
+        <span class="progressbar-progress">{{csv.model.numTotalUsers}}/{{csv.model.numMaxUsers}}</span>
       </div>
-      <progressbar animate="false" class="progress-striped active" value="model.processProgress" type="primary"></progressbar>
-      <div class="time-duration"><span translate="firstTimeWizard.timeElapsed"></span> <timer interval="1000"><span ng-show="hours" translate="time.hours" translate-value-time="{{hours}}" translate-interpolation="messageformat"></span> <span ng-show="minutes" translate="time.minutes" translate-value-time="{{minutes}}" translate-interpolation="messageformat"></span> <span translate="time.seconds" translate-value-time="{{seconds}}" translate-interpolation="messageformat"></span></timer></div>
+      <progressbar animate="false" class="progress-striped active" value="csv.model.processProgress" type="primary"></progressbar>
+      <div class="time-duration">
+        <span translate="firstTimeWizard.timeElapsed"></span>
+        <timer interval="1000">
+          <span ng-show="hours" translate="time.hours" translate-value-time="{{hours}}" translate-interpolation="messageformat"></span>
+          <span ng-show="minutes" translate="time.minutes" translate-value-time="{{minutes}}" translate-interpolation="messageformat"></span>
+          <span translate="time.seconds" translate-value-time="{{seconds}}" translate-interpolation="messageformat"></span>
+        </timer>
+      </div>
     </div>
 
-    <button type="button" class="close" ng-click="cancelProcessCsv();">
+    <button type="button" class="close" ng-click="csv.cancelProcessCsv();">
       <span class="sr-only" translate="common.close"></span>
     </button>
   </div>

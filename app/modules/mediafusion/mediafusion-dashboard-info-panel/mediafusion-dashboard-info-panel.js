@@ -1,22 +1,21 @@
-'use strict';
+(function () {
+  'use strict';
 
-(
-  function () {
+  (function () {
 
     angular.module('Mediafusion')
-      .controller('MediaFusionDashboardInfoPanelController', function ($scope) {
+      .controller('MediaFusionDashboardInfoPanelController', MediaFusionDashboardInfoPanelController)
+      .directive('mediafusionDashboardInfoPanel', mediafusionDashboardInfoPanel);
 
-      })
-      .directive('mediafusionDashboardInfoPanel', [
-        function () {
-          return {
-            restrict: 'E',
-            scope: false,
-            controller: 'MediaFusionDashboardInfoPanelController',
-            templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-dashboard-info-panel.html'
+    function MediaFusionDashboardInfoPanelController() {}
 
-          };
-        }
-      ]);
-  }
-)();
+    function mediafusionDashboardInfoPanel() {
+      return {
+        restrict: 'E',
+        scope: false,
+        controller: 'MediaFusionDashboardInfoPanelController',
+        templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-dashboard-info-panel.html'
+      };
+    }
+  })();
+})();

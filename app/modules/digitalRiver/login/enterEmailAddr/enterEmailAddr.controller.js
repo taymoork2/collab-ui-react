@@ -6,17 +6,18 @@
     .controller('enterEmailAddrController', enterEmailAddrController);
 
   /* @ngInject */
-  function enterEmailAddrController($location, $window, $translate, $state, Auth, DigitalRiverService) {
+  function enterEmailAddrController($translate, $state, DigitalRiverService) {
 
     var vm = this;
+    vm.loading = false;
 
-    vm.drReferrer = ($location.search().referrer === DigitalRiverService.getDrReferrer());
+    vm.drReferrer = ($state.params.referrer === DigitalRiverService.getDrReferrer());
     if (!vm.drReferrer) {
-      vm.error = $translate.instant('digitalRiver.createAccount.confirmEmailPlaceholder');
+      vm.error = $translate.instant('digitalRiver.restrictedPage');
     }
-    var sku = $location.search().sku;
-    var orderId = $location.search().orderId;
-    var campaignId = $location.search().campaignId;
+    vm.sku = $state.params.sku;
+    vm.orderId = $state.params.orderId;
+    vm.campaignId = $state.params.campaignId;
 
     vm.emailPlaceholder = emailPlaceholder;
     vm.handleEnterEmailAddr = handleEnterEmailAddr;
@@ -31,30 +32,38 @@
         return;
       }
 
-      return DigitalRiverService.getUserFromEmail(vm.email)
+      vm.loading = true;
+      return DigitalRiverService.userExists(vm.email)
         .then(function (result) {
-          if (_.get(result, 'data.success') === true) {
+          vm.loading = false;
+          if (!angular.isDefined(result)) {
+            vm.error = $translate.instant('digitalRiver.validation.unexpectedError');
+          } else if (result.error) {
+            vm.error = result.error;
+          } else if (result.domainClaimed) {
+            //TODO existing admin can have domainClaimed
+            vm.error = $translate.instant('digitalRiver.enterEmailAddr.domainClaimed');
+          } else {
             var params = {};
             params.referrer = DigitalRiverService.getDrReferrer();
             params.email = vm.email;
-            var params2 = {};
-            params2.sku = sku;
-            params2.orderId = orderId;
-            params2.campaignId = campaignId;
-            params.params = params2;
-            if (_.get(result, 'data.data.exists', false) === true) {
-              // user exists
+            var innerParams = {};
+            innerParams.sku = vm.sku;
+            innerParams.orderId = vm.orderId;
+            innerParams.campaignId = vm.campaignId;
+            params.params = innerParams;
+
+            if (result.userExists) {
               params.redirect = "submitOrder";
               $state.go('drLoginForward', params);
             } else {
-              // user doesn't exist so go to Create Account page
               $state.go('createAccount', params);
             }
-          } else {
-            vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
-        }, function (result) {
+        }).catch(function (result) {
           vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+        }).finally(function () {
+          vm.loading = false;
         });
     }
 

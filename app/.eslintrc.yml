@@ -18,24 +18,27 @@
     no-cond-assign: 0
     no-loop-func: 0
     no-param-reassign: 0
+    no-restricted-syntax: 0
     no-self-assign: 0
     no-spaced-func: 0
     no-throw-literal: 0
     no-trailing-spaces: 0
+    no-useless-concat: 0
+    no-useless-escape: 0
     one-var-declaration-per-line: 0
     one-var: 0
     radix: 0
     strict: 0
     wrap-iife: 0
     yoda: 0
-    # angular-config rules
+    # override eslint-angular-config rules
     angular/angularelement: 0
     angular/controller-as-route: 0
     angular/controller-as-vm: 0
     angular/controller-as: 0
     angular/controller-name: 0
     angular/definedundefined: 0
-    angular/di: 0
+    angular/empty-controller: 2
     angular/document-service: 0
     angular/json-functions: 0
     angular/module-getter: 0

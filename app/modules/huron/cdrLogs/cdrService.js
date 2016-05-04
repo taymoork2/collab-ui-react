@@ -16,8 +16,6 @@
     var calledDevice = 'called_deviceName';
     var callingNumber = 'calling_partyNumber';
     var calledNumber = 'called_partyNumber';
-    var callingTenant = 'calling_customerUUID';
-    var calledTenant = 'called_customerUUID';
     var emptyId = "00000000000000000000000000000000";
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
 
@@ -30,6 +28,7 @@
       query: query,
       formDate: formDate,
       createDownload: createDownload,
+      downloadInIE: downloadInIE,
       extractUniqueIds: extractUniqueIds,
       proxy: proxy
     };
@@ -65,7 +64,22 @@
       var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData)], {
         type: 'application/json'
       });
-      return ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
+
+      var jsonUrl;
+      if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+        jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
+      }
+
+      return {
+        jsonBlob: jsonBlob,
+        jsonUrl: jsonUrl
+      };
+    }
+
+    function downloadInIE(blob, filename) {
+      if ($window.navigator.msSaveOrOpenBlob) {
+        $window.navigator.msSaveOrOpenBlob(blob, filename);
+      }
     }
 
     function formDate(date, time) {

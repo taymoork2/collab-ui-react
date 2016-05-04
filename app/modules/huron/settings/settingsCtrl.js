@@ -974,6 +974,7 @@
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.unassignedExternalNumbers = ExternalNumberService.getUnassignedNumbers();
         vm.allExternalNumbers = ExternalNumberService.getAllNumbers();
+        vm.assignedExternalNumbers = ExternalNumberService.getAssignedNumbers();
       }).catch(function (response) {
         vm.unassignedExternalNumbers = [];
         vm.allExternalNumbers = [];
@@ -1377,21 +1378,14 @@
 
     function _buildServiceNumberOptions(localScope) {
       localScope.$watchCollection(function () {
-        return vm.allExternalNumbers;
+        return vm.assignedExternalNumbers;
       }, function (externalNumberPool) {
         localScope.to.options = _.chain(externalNumberPool)
-          // build a collection of assigned numbers
-          .reject(function (externalNumber) {
-            return _.some(vm.unassignedExternalNumbers, {
-              pattern: externalNumber.pattern
-            });
-          })
           // remove the voicemail number if it exists
           .reject(function (externalNumber) {
             return externalNumber.pattern === _.get(vm, 'model.site.voicemailPilotNumber');
           })
           .value();
-
         // add the existing emergencyCallBackNumber back into the list of options
         if (_.get(vm, 'model.site.emergencyCallBackNumber.pattern') && !_.find(localScope.to.options, function (externalNumber) {
             return externalNumber.pattern === vm.model.site.emergencyCallBackNumber.pattern;
