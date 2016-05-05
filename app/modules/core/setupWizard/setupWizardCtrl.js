@@ -58,7 +58,8 @@
       controller: 'AddUserCtrl',
       subTabs: [{
         name: 'csv',
-        controller: 'OnboardCtrl',
+        controller: 'UserCsvCtrl as csv',
+        controllerAs: 'csv',
         steps: [{
           name: 'init',
           template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
@@ -195,11 +196,11 @@
         template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
       }, {
         name: 'dirsyncProcessing',
-        template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
+        template: 'modules/core/setupWizard/addUsers/addUsers.processDirSync.tpl.html',
         buttons: false
       }, {
         name: 'dirsyncResult',
-        template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+        template: 'modules/core/setupWizard/addUsers/addUsers.uploadResultDirSync.tpl.html',
         buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
       }];
 

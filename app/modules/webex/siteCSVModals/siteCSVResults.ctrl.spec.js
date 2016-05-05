@@ -21,7 +21,23 @@ describe('SiteCSVResultsCtrl Test', function () {
         siteUrl: "fake.webex.com"
       },
 
-      csvStatusObj: {}
+      csvStatusObj: {
+        "siteUrl": "fake.webex.com",
+        "isMockResult": false,
+        "status": "exportCompletedNoErr",
+        "details": {
+          "jobType": 2,
+          "request": 2,
+          "errorLogLink": null,
+          "created": "05/05/16 04:33 AM",
+          "started": "05/05/16 04:34 AM",
+          "finished": "05/05/16 04:39 AM",
+          "totalRecords": 25,
+          "successRecords": 25,
+          "failedRecords": 0,
+          "exportFileLink": "http://fake.webex.com/meetingsapi/v1/files/fakeFileID"
+        }
+      },
     };
 
     SiteCSVResultsCtrl = $controller('SiteCSVResultsCtrl', {

@@ -9,6 +9,7 @@
     $stateParams,
     $translate,
     $log,
+    WebExUtilsFact,
     WebExApiGatewayService
   ) {
     var funcName = "SiteCSVResultsCtrl()";
@@ -18,12 +19,15 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    // $log.log(logMsg);
+    $log.log(logMsg);
 
     vm.viewReady = false;
     vm.siteRow = $stateParams.siteRow;
     vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
+    vm.siteUrl = $stateParams.siteRow.license.siteUrl;
+    vm.siteName = WebExUtilsFact.getSiteName(vm.siteUrl);
     vm.gridRows = [];
+
     vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
@@ -71,8 +75,14 @@
         value: null,
       });
 
-      vm.downloadFileUrl = vm.csvStatusObj.details.exportFileLink;
-      vm.downloadFileName = $translate.instant("webexCSVResultsModal.csvExportResultsFilename");
+      // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
+      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
+      vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
+
+      logMsg = funcName + "\n" +
+        "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+        "vm.downloadFileName=" + vm.downloadFileName;
+      $log.log(logMsg);
 
     } else if (
       ("importCompletedNoErr" === vm.csvStatusObj.status) ||
@@ -125,47 +135,21 @@
           value: null,
         });
 
-        vm.downloadFileUrl = vm.csvStatusObj.details.errorLogLink;
-        vm.downloadFileName = $translate.instant("webexCSVResultsModal.csvImportErrFilename");
+        // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
+        vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink.slice(vm.csvStatusObj.details.errorLogLink.lastIndexOf("/") + 1);
+        vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
+
+        logMsg = funcName + "\n" +
+          "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+          "vm.downloadFileName=" + vm.downloadFileName;
+        $log.log(logMsg);
       }
-    }
+    } // export/import results
 
     logMsg = funcName + "\n" +
       "vm.gridRows=" + JSON.stringify(vm.gridRows);
     // $log.log(logMsg);
 
     vm.viewReady = true;
-
-    vm.csvFileDownload = function (downloadUrl) {
-      var funcName = "csvFileDownload()";
-      var logMsg = "";
-
-      downloadUrl = downloadUrl.replace("http:", "https:");
-
-      logMsg = funcName + "\n" +
-        "downloadUrl=" + downloadUrl;
-      $log.log(logMsg);
-
-      WebExApiGatewayService.csvFileDownload(
-        vm.siteRow.license.siteUrl,
-        downloadUrl,
-        vm.siteRow.csvMock.mockFileDownload
-      ).then(
-
-        function success(response) {
-          var funcName = "WebExApiGatewayService.csvFileDownload.success()";
-          var logMsg = "";
-
-          $log.log(funcName);
-        },
-
-        function error(response) {
-          var funcName = "WebExApiGatewayService.csvFileDownload.error()";
-          var logMsg = "";
-
-          $log.log(funcName);
-        }
-      ); // WebExApiGatewayService.csvFileDownload().then()
-    }; // csvFileDownload()
   } // SiteCSVResultsCtrl()
 })(); // top level function

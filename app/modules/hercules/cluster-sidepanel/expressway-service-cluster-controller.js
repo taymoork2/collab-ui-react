@@ -106,13 +106,8 @@
       var upgrading = _.chain(vm.cluster.aggregates.hosts)
         .find('upgradeState', 'upgrading')
         .value();
-      // if we are unlucky we may have none upgrading, just pending
-      if (!upgrading) {
-        upgrading = _.chain(vm.cluster.aggregates.hosts)
-          .find('upgradeState', 'pending')
-          .value();
-      }
-      return upgrading.hostname;
+      // could be undefined if we only have upgraded and pending connectors
+      return _.get(upgrading, 'hostname', 'some host');
     }
   }
 }());

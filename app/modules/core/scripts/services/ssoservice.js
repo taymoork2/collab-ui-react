@@ -52,10 +52,11 @@
           });
       },
 
-      patchRemoteIdp: function (metaUrl, metadataXmlContent, ssoEnabled, callback) {
+      patchRemoteIdp: function (metaUrl, metadataXmlContent, selfSigned, ssoEnabled, callback) {
         var payload = {
           schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
           metadataXml: metadataXmlContent,
+          ignoreSignatureVerification: selfSigned,
           ssoEnabled: ssoEnabled
         };
 

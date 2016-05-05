@@ -91,9 +91,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         scheduleId: '1'
       }
     };
-    var date = new Date();
-    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8, 0, 0);
-    endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 17, 0, 0);
+    starttime = "08:00 AM";
+    endtime = "05:00 PM";
 
     openhours = [];
 
@@ -330,6 +329,10 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
       expect(AANotificationService.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
+
+      expect(controller.aaModel.aaRecord.scheduleId).toBeUndefined();
+      expect(controller.ui.ceInfo.scheduleId).toBeUndefined();
+
     });
 
     it('should not notify when the CE updatae fails during calendar creation', function () {
@@ -670,6 +673,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         holidayForm0: {
           holidayEnd: {
             $setDirty: function () {},
+            $validate: function () {},
             $error: {
               compareTo: undefined
             }
@@ -678,12 +682,14 @@ describe('Controller: AAScheduleModalCtrl', function () {
       };
       $scope.$apply();
       spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$setDirty');
+      spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$validate');
     });
 
     it('no holidays open should undefined', function () {
       controller.forceStartBeforeEndCheck();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeUndefined();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty.calls.any()).toEqual(false);
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$validate.calls.any()).toEqual(false);
     });
 
     it('holiday hours valid should have no error', function () {
@@ -694,6 +700,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.forceStartBeforeEndCheck();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeFalsy();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$validate).toHaveBeenCalled();
     });
 
     it('holiday hours invalid should have error', function () {
@@ -704,6 +711,53 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.forceStartBeforeEndCheck();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeTruthy();
       expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('forceOpenBeforeCloseCheck', function () {
+    beforeEach(function () {
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        $modalInstance: $modalInstance,
+        AACalendarService: AACalendarService,
+        AAICalService: AAICalService,
+        AAModelService: AAModelService,
+        AAUiModelService: AAUiModelService
+      });
+      controller.hoursForm = {
+        endtime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: starttime,
+        endtime: endtime
+      }];
+      $scope.$apply();
+      spyOn(controller.hoursForm.endtime0, '$setDirty');
+      spyOn(controller.hoursForm.endtime0, '$validate');
+    });
+
+    it('hours valid should have no error', function () {
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(false);
+      controller.forceOpenBeforeCloseCheck(0);
+      expect(controller.hoursForm.endtime0.$error.compareTo).toBeFalsy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
+    });
+
+    it('hours invalid should have error', function () {
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      controller.forceOpenBeforeCloseCheck(0);
+      expect(controller.hoursForm.endtime0.$error.compareTo).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
     });
   });
 
