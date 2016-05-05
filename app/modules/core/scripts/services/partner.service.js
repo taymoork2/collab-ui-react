@@ -46,8 +46,8 @@
       });
     }
 
-    function addToManagedOrgsList(userId) {
-      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId) + '/' + userId;
+    function addToManagedOrgsList() {
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId) + '/';
       return $http({
         method: 'PATCH',
         url: scimUrl
