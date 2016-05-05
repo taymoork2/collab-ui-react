@@ -1,4 +1,4 @@
-/* Schedule Panel */
+// Schedule Panel
 .aa-flex-item.schedule {
   @include vr-spacing(pv, .25);
   @include vr-spacing(ph, 2);
@@ -8,7 +8,7 @@
   }
 }
 
-/* Schedule Modal */
+// Schedule Modal
 .aa-schedule {
   .modal-body &-subtitle {
     font-size: 1.25rem;
@@ -135,7 +135,7 @@
   }
 }
 
-/* Schedule Info Box */
+// Schedule Info Box
 .aa-schedule-info {
   @include vr-spacing(pt, 0.5);
   display: flex;
