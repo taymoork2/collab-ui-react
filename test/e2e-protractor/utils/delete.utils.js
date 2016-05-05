@@ -105,8 +105,8 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 
 // Save the test AA name here, this is also accessed from
 // auto-attendant_spec.js
-exports.testAAName = 'AA for Atlas e2e Tests';
-exports.testAAImportName = 'AA for Atlas e2e Import Tests';
+exports.testAAName = 'Chandan';//'AA for Atlas e2e Tests';
+exports.testAAImportName = 'Chandan';//'AA for Atlas e2e Import Tests';
 
 // deleteTestAA - Delete a single AA via the CES API
 //
@@ -118,7 +118,7 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 
   aaDeleteTasks.push(exports.deleteAutoAttendant(aaUrl, bearer));
   aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
-  aaDeleteTasks.push(exports.deleteTestScheduleTrial(aaUrl, bearer));
+  aaDeleteTasks.push(exports.deleteTestSchedule(aaUrl, bearer));
   return Promise.all(aaDeleteTasks);
 }
 
@@ -194,14 +194,14 @@ exports.deleteSchedules = function (scheduleUrl, token) {
     }
   };
   return utils.sendRequest(options).then(function (results) {
-    return 204;
+    return 200;
   });
 };
 
 /**
  *This will delete the  required schedule
  */
-exports.deleteTestScheduleTrial = function (scheduleUrl, token) {
+exports.deleteTestSchedule = function (scheduleUrl, token) {
 
   var options = {
     method: 'get',
@@ -210,24 +210,14 @@ exports.deleteTestScheduleTrial = function (scheduleUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  var defer = protractor.promise.defer();
   request(options,
     function (error, response, body) {
       if (!error && response.statusCode === 200) {
         var scheduleId = JSON.parse(body).scheduleId;
         if (scheduleId !== undefined) {
           var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['huron-int1'].org, scheduleId);
-          exports.deleteSchedules(scheduleUrl, token);
+          return exports.deleteSchedules(scheduleUrl, token);
         }
-        defer.fulfill(JSON.parse(body));
-      } else {
-        defer.reject({
-          error: error,
-          message: body
-        });
-      }
+      } 
     });
-  return defer.promise.then(function (data) {
-    return 200;
-  });
 };
