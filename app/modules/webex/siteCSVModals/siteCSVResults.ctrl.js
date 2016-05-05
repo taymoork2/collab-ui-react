@@ -19,7 +19,7 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    $log.log(logMsg);
+    // $log.log(logMsg);
 
     vm.viewReady = false;
     vm.siteRow = $stateParams.siteRow;
@@ -82,7 +82,7 @@
       logMsg = funcName + "\n" +
         "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
         "vm.downloadFileName=" + vm.downloadFileName;
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
     } else if (
       ("importCompletedNoErr" === vm.csvStatusObj.status) ||
@@ -142,7 +142,7 @@
         logMsg = funcName + "\n" +
           "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
           "vm.downloadFileName=" + vm.downloadFileName;
-        $log.log(logMsg);
+        // $log.log(logMsg);
       }
     } // export/import results
 
