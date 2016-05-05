@@ -41,7 +41,7 @@ angular.module('Core')
       this.wbxclientversionplaceholder = 'Select webex client version';
       //For now restrict to one user (who is a partner)
       //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
-      $scope.showClientVersions = false;
+      $scope.showClientVersions = true;
 
       $scope.sendFeedback = function () {
         var appType = 'Atlas_' + $window.navigator.userAgent;
@@ -147,11 +147,8 @@ angular.module('Core')
           $scope.tempLogoUrl = logoUrl;
         });
 
-        FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
-          //toggle=false;
-          $scope.showClientVersions = toggle;
-          $scope.initWbxClientVersions();
-        });
+        
+        $scope.initWbxClientVersions();
 
       };
 
