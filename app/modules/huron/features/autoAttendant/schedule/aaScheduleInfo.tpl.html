@@ -13,7 +13,7 @@
         </div>
       </div>
       <div ng-if="scheduleInfo.isHolidays()">
-        <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'" class="aa-schedule-info" ng-class="{'aa-schedule-info-closed-holiday': scheduleInfo.isOpenClosed()}">
+        <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'" class="aa-schedule-info" ng-class="{'aa-schedule-info-closed-holiday': scheduleInfo.dayGroup.length !== 0 && scheduleInfo.schedule ==='closedHours' }">
           <div class="aa-schedule-info-holidays-date">
             <div class="aa-schedule-info-day">{{scheduleInfo.formatDate(holiday.date)}}</div>
           </div>

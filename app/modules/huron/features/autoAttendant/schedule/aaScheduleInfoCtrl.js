@@ -244,18 +244,14 @@
 
           getScheduleTitle();
 
-          if (angular.isDefined(vm.holidays) && vm.holidays.length) {
-            vm.isStartTimeSet = isStartTimePresent();
-            console.log(vm.openhours.length);
-            if (vm.openhours.length === 0) {
-              var open24hours = AAICalService.getDefaultRange();
-              _.forEach(open24hours.days, function (day) {
-                day.active = true;
-              });
-              open24hours.starttime = "12:00 AM";
-              open24hours.endtime = "23:59 PM";
-              vm.openhours = [open24hours];
-            }
+          if (angular.isDefined(vm.holidays) && vm.holidays.length && vm.openhours.length === 0) {
+            var open24hours = AAICalService.getDefaultRange();
+            _.forEach(open24hours.days, function (day) {
+              day.active = true;
+            });
+            open24hours.starttime = "12:00 AM";
+            open24hours.endtime = "23:59 PM";
+            vm.openhours = [open24hours];
           }
 
           if (vm.isOpenClosed() && angular.isDefined(vm.openhours) && vm.openhours.length) {
@@ -279,7 +275,7 @@
     }
 
     function isOpenClosed() {
-      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours'));
+      return (vm.schedule === 'openHours' || vm.schedule === 'closedHours');
     }
 
     function isClosed() {
@@ -296,16 +292,6 @@
 
     function formatDate(dt) {
       return (moment(dt).format('MMM') === 'May') ? moment(dt).format('MMM DD, YYYY') : moment(dt).format('MMM. DD, YYYY');
-    }
-
-    function isStartTimePresent() {
-      var flag = false;
-      _.each(vm.holidays, function (day) {
-        if (day.starttime) {
-          flag = true;
-        }
-      });
-      return flag;
     }
 
     function activate() {
