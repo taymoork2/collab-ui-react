@@ -13,6 +13,7 @@
     var userArray = [];
     var isCsvValid = false;
     var cancelDeferred;
+    var isCancelledByUser = false;
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
@@ -110,6 +111,7 @@
     };
 
     vm.cancelProcessCsv = function () {
+      isCancelledByUser = true;
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
@@ -322,7 +324,7 @@
         for (var k = 0; k < length; k++) {
           addUserErrorWithTrackingID(startIndex + k + 1, UserCsvService.getBulkErrorResponse(
             response.status,
-            '',
+            isCancelledByUser ? -1 : '',
             response.config.data.users[k].email
           ), response);
         }
