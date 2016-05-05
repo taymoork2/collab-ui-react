@@ -118,7 +118,7 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 
   aaDeleteTasks.push(exports.deleteAutoAttendant(aaUrl, bearer));
   aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
-
+  aaDeleteTasks.push(exports.deleteTestScheduleTrial(aaUrl, bearer));
   return Promise.all(aaDeleteTasks);
 }
 
@@ -180,4 +180,54 @@ exports.findAndDeleteTestAA = function () {
       });
 
     });
+};
+
+//deleteSchedules - Delete schedules ccreated in last test run
+// Called by deleteTestAA below.
+exports.deleteSchedules = function (scheduleUrl, token) {
+  var options = {
+    method: 'delete',
+    url: scheduleUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  return utils.sendRequest(options).then(function (results) {
+    return 204;
+  });
+};
+
+/**
+ *This will delete the  required schedule
+ */
+exports.deleteTestScheduleTrial = function (scheduleUrl, token) {
+
+  var options = {
+    method: 'get',
+    url: scheduleUrl,
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  var defer = protractor.promise.defer();
+  request(options,
+    function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var scheduleId = JSON.parse(body).scheduleId;
+        if (scheduleId !== undefined) {
+          var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['huron-int1'].org, scheduleId);
+          exports.deleteSchedules(scheduleUrl, token);
+        }
+        defer.fulfill(JSON.parse(body));
+      } else {
+        defer.reject({
+          error: error,
+          message: body
+        });
+      }
+    });
+  return defer.promise.then(function (data) {
+    return 200;
+  });
 };
