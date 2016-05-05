@@ -1396,7 +1396,7 @@
     "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
     "bulk500Error": "Request failed due to a server error. Please try again.",
     "bulk502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
-    "bulkCancelledError": "Skipped processing {{email}} due to canceled request by user.",
+    "bulkCancelledError": "{{email}} not processed due to cancelled request by user.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "uploadDirSyncEmpty": "Please upload users from the directory server.",
