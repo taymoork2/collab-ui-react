@@ -35,7 +35,7 @@ describe('SiteCSVResultsCtrl Test', function () {
           "totalRecords": 25,
           "successRecords": 25,
           "failedRecords": 0,
-          "exportFileLink": "http://fake.webex.com/meetingsapi/v1/files/fakeFileID"
+          "exportFileLink": "fakeFileID"
         }
       },
     };
@@ -57,5 +57,6 @@ describe('SiteCSVResultsCtrl Test', function () {
     expect(SiteCSVResultsCtrl.siteRow).not.toBe(null);
     expect(SiteCSVResultsCtrl.csvStatusObj).not.toBe(null);
     expect(SiteCSVResultsCtrl.gridRows).not.toBe(null);
+    expect(SiteCSVResultsCtrl.downloadFileUrl).toEqual("https://fake.webex.com/meetingsapi/v1/files/fakeFileID");
   }); // it()
 }); // describe()
