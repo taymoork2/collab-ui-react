@@ -90,7 +90,7 @@
           }
         }
         &:before {
-          content: initial;
+          content: none;
         }
         &.active {
           display: none;
