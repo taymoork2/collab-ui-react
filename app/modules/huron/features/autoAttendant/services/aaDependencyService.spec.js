@@ -101,54 +101,25 @@ describe('Service: AADependencyService', function () {
       expect(notifyResponse).toBe(error);
     });
 
-    it('should return a failure response if input event is incomplete', function () {
+    it('should ingore the notification if the any required input in the event is missing', function () {
       var event = {
         type: 'AANameChange',
-        scheduleId: '',
-        newName: 'AA'
+        scheduleId: undefined,
+        newName: 'ABC'
       };
-      var error = 'SCHEDULE_NAME_CHANGE_FAILED';
-
       var notifyResponse;
 
-      updateCalendarNameDeferred.reject(error);
-
       var notifyRes = AADependencyService.notifyScheduleDependent(event);
-      notifyRes.catch(function (error) {
-        notifyResponse = error;
+      notifyRes.then(function (response) {
+        notifyResponse = response;
       });
 
       $rootScope.$apply();
 
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect(AACalendarService.updateCalendarName).not.toHaveBeenCalled();
       expect(AANotificationService.errorResponse).not.toHaveBeenCalled();
-      expect(notifyResponse).toBe(error);
-    });
-
-    it('should return a failure response if input event is incomplete', function () {
-      var event = {
-        type: 'AANameChange',
-        scheduleId: '123',
-        newName: ''
-      };
-      var error = 'SCHEDULE_NAME_CHANGE_FAILED';
-
-      var notifyResponse;
-
-      updateCalendarNameDeferred.reject(error);
-
-      var notifyRes = AADependencyService.notifyScheduleDependent(event);
-      notifyRes.catch(function (error) {
-        notifyResponse = error;
-      });
-
-      $rootScope.$apply();
-
-      expect(AANotificationService.error).toHaveBeenCalled();
-      expect(AACalendarService.updateCalendarName).not.toHaveBeenCalled();
-      expect(AANotificationService.errorResponse).not.toHaveBeenCalled();
-      expect(notifyResponse).toBe(error);
+      expect(notifyResponse).toBe(event);
     });
   });
 
