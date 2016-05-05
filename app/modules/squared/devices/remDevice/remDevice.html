@@ -1,43 +1,41 @@
-<div>
-  <!-- header -->
-  <div class="modal-header">
-    <button
-      type="button"
-      class="close"
-      ng-click="$dismiss()">
-    </button>
-    <h3
-      class="modal-title"
+<!-- header -->
+<div class="modal-header">
+  <button
+    type="button"
+    class="close"
+    ng-click="$dismiss()">
+  </button>
+  <h3
+    class="modal-title"
+    translate="spacesPage.deleteDevice">
+  </h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body">
+  <p>
+    <span
+      translate="spacesPage.deleteDeviceConfText">
+    </span>
+  </p>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span
+      translate="common.cancel">
+    </span>
+  </button>
+  <button
+    class="btn btn--negative"
+    sq-click-promise="rdc.deleteDeviceOrCode(sc.currentDevice)" >
+    <span
       translate="spacesPage.deleteDevice">
-    </h3>
-  </div>
-
-  <!-- body -->
-  <div
-    class="modal-body">
-    <p>
-      <span
-        translate="spacesPage.deleteDeviceConfText">
-      </span>
-    </p>
-  </div>
-
-  <!-- footer -->
-  <div
-    class="modal-footer">
-    <button
-      class="btn"
-      ng-click="$dismiss()">
-      <span
-        translate="common.cancel">
-      </span>
-    </button>
-    <button
-      class="btn btn--negative"
-      sq-click-promise="rdc.deleteDeviceOrCode(sc.currentDevice)" >
-      <span
-        translate="spacesPage.deleteDevice">
-      </span>
-    </button>
-  </div>
+    </span>
+  </button>
 </div>
