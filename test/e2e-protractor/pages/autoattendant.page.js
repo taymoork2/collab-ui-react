@@ -142,14 +142,14 @@ var AutoAttendantPage = function () {
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
 
-  this.openHoursLane = element(by.name('bottomLane1')).element(by.name('openHours'));
-  this.openHoursSayMessage = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Say Message"]'));
-  this.openHoursPhoneMenu = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
-  this.openHoursEndCall = element(by.name('bottomLane1')).element(by.name('endCall'));
-  this.closedHoursLane = element(by.name('bottomLane3')).element(by.name('closedHours'));
-  this.closedHoursSayMessage = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Say Message"]'));
-  this.closedHoursPhoneMenu = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
-  this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
+  this.openHoursLane = element(by.name('openLane')).element(by.name('openHours'));
+  this.openHoursSayMessage = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.openHoursPhoneMenu = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.openHoursEndCall = element(by.name('openLane')).element(by.name('endCall'));
+  this.closedHoursLane = element(by.name('closedLane')).element(by.name('closedHours'));
+  this.closedHoursSayMessage = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.closedHoursPhoneMenu = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.closedHoursEndCall = element(by.name('closedLane')).element(by.name('endCall'));
   this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
   this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));

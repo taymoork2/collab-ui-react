@@ -107,6 +107,7 @@
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
+    "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
     "telstraAppRedirect": "Connecting to Telstra App Marketplace"
   },
   "groupsPage": {
@@ -1389,6 +1390,7 @@
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
     "bulk401And403Error": "Customer is not authorized to add or update this user.",
+    "bulk403AndNotSetupManUserAddError": "User {{email}} not found. This organization is not set up for adding users manually.",
     "bulk404Error": "Server is unable to respond at this time. Please try again at a later time.",
     "bulk408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
@@ -1611,7 +1613,7 @@
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Business Hours",
+    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1761,7 +1763,8 @@
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
     "AACustomDesc": "Create a custom Auto Attendant.",
-    "AAOpenClosedDesc": "Simple open/closed schedule with custom actions."
+    "AABusinessHours": "Business Hours",
+    "AABusinessHoursDesc": "Simple open/closed schedule with custom actions."
   },
   "callPark": {
     "code": "CP",
@@ -3317,11 +3320,19 @@
       },
       "MissingEncryptionKey": {
         "type": "Missing encryption option key",
-        "message": "Please add an encryption option key"
+        "message": "Please add an encryption option key."
       },
       "ConfiguredForTestAutomation": {
         "type": "Configured for test automation",
-        "message": "Metrics and log reporting are affected"
+        "message": "Metrics and log reporting are affected."
+      },
+      "TouchPanelConnection": {
+        "type": "Touch Panel Required",
+        "message": "There is no touch panel connected to the Spark Room System. Check the cable connecting the touch panel to the Spark Room System."
+      },
+      "NetworkQuality": {
+        "type": "Packet Loss Detected",
+        "message": "During the last call we detected a level of packet loss that may have impacted the call quality. Packet loss is typically caused by network congestion."
       },
       "inactive": {
         "type": "Inactive Account",

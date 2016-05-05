@@ -1153,7 +1153,7 @@
               email: userResult.email
             });
           } else if (userStatus === 403 && user.message === '400096') {
-            userResult.message = $translate.instant('usersPage.unauthorizedError', {
+            userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
               email: userResult.email
             });
           } else if (userStatus === 400 && user.message === '400087') {

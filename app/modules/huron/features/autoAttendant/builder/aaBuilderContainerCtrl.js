@@ -34,8 +34,10 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.ui = AAUiModelService.getUiModel();
         $scope.$broadcast('ScheduleChanged');
+        setUpStyle();
       });
     }
+
     /////////////////////
 
     function getScheduleTitle() {
@@ -46,9 +48,34 @@
       return "autoAttendant.schedule";
     }
 
+    function setUpStyle() {
+      if (vm.ui.isClosedHours && vm.ui.isHolidays && vm.ui.holidaysValue !== 'closedHours') {
+        vm.generalStyle = '';
+        vm.holidaysLane = true;
+        vm.closedLane = true;
+        vm.threeLanes = true;
+      } else if (vm.ui.isClosedHours) {
+        vm.generalStyle = 'aa-general-2-lanes';
+        vm.holidaysLane = false;
+        vm.closedLane = true;
+        vm.threeLanes = false;
+      } else if (vm.ui.isHolidays) {
+        vm.generalStyle = 'aa-general-2-lanes';
+        vm.holidaysLane = true;
+        vm.closedLane = false;
+        vm.threeLanes = false;
+      } else {
+        vm.generalStyle = '';
+        vm.holidaysLane = false;
+        vm.closedLane = false;
+        vm.threeLanes = false;
+      }
+    }
+
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      setUpStyle();
     }
 
     activate();
