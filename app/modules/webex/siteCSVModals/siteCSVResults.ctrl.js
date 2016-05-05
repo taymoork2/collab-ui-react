@@ -19,7 +19,7 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    // $log.log(logMsg);
+    $log.log(logMsg);
 
     vm.viewReady = false;
     vm.siteRow = $stateParams.siteRow;
@@ -75,11 +75,8 @@
         value: null,
       });
 
-      var fileIdIndex = vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1;
-      var fileId = vm.csvStatusObj.details.exportFileLink.slice(fileIdIndex);
-
-      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + fileId;
       // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
+      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
       vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
 
       logMsg = funcName + "\n" +
