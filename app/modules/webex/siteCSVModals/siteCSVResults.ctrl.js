@@ -75,8 +75,8 @@
         value: null,
       });
 
-      // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
-      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
+      // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
+      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
       vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
 
       logMsg = funcName + "\n" +
@@ -135,8 +135,8 @@
           value: null,
         });
 
-        // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
-        vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink.slice(vm.csvStatusObj.details.errorLogLink.lastIndexOf("/") + 1);
+        // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink.slice(vm.csvStatusObj.details.errorLogLink.lastIndexOf("/") + 1);
+        vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
         vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
 
         logMsg = funcName + "\n" +
