@@ -1610,7 +1610,7 @@
     "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
-    "actionEndCall": "End Call",
+    "actionEndCall": "Disconnect",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpenClosed": "Open/Closed",

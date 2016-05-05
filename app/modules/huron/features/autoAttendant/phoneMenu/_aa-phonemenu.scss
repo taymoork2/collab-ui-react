@@ -159,22 +159,21 @@
   }
 
   .aa-pm-add {
-    @include vr-spacing(ml, 1);
-
-    line-height: 1em;
-
+    @include vr-spacing(ml, .75);
     @include vr-spacing(mt, -0.25);
 
     .icon {
-      @include vr-spacing(mr, 0.5);
+      @include vr-spacing(pr, 0.5);
+      @include vr-spacing(pl, 0.25);
 
       top: 2px;
+      left: -1px;
 
       &:before {
         background-color: $gray-light-3;
       }
 
-      font-size: 1.25em;
+      font-size: 1.25rem;
     }
   }
 

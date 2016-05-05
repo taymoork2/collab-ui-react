@@ -339,32 +339,34 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-panel-round {
     @extend .panel-body;
-
     @include vr-spacing(m, 0);
     @include vr-spacing(p, 0);
+    position: relative;
     text-align: center;
     vertical-align: middle;
 
     & .popover {
       background-color: transparent;
       border: 0;
-      @include vr-spacing(mt, 0);
-      color: $gray-dark-1;
+      min-width: vr-adjust(120);
+      @include vr-spacing(m, 0);
+      @include vr-spacing(p,0);
+      color: $anchor-font-color-hover;
 
-      &.bottom > .arrow {
+      &.right > .arrow {
         background-color: transparent;
-        border-bottom-color: transparent;
+        border-right-color: transparent;
 
         &:after {
           border-color: transparent;
-          border-bottom-color: transparent;
+          border-right-color: transparent;
           border-width: 0;
         }
       }
 
       & .popover-content {
         font-size: $h6-font-size;
-        @include vr-spacing(pt, .25);
+        @include vr-spacing(p, .5);
       }
     }
 
@@ -390,13 +392,13 @@ $aa-builder-text-color: $gray-dark-1;
 
   @extend .icon-plus-circle;
 
-  font-size: 2.25rem;
+  font-size: 2rem;
   padding-right: $aa-builder-border-size;
-  color: $aa-builder-border-color;
+  color: $anchor-font-color;
 
   &:hover {
     cursor: pointer;
-    color: $aa-builder-icon-click-color;
+    color: $anchor-font-color-hover;
   }
 }
 
