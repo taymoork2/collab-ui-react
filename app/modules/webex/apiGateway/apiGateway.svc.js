@@ -9,15 +9,16 @@
   function WebExApiGatewayService(
     $rootScope,
     $q,
+    $window,
     $log,
     Authinfo,
     Storage,
     WebExUtilsFact,
+    WebExUtilsService,
     WebExXmlApiFact,
     WebExXmlApiInfoSvc,
     WebExRestApiFact,
-    WebExApiGatewayConstsService,
-    $window
+    WebExApiGatewayConstsService
   ) {
 
     var _this = this;
@@ -264,6 +265,7 @@
       return deferredResponse.promise;
     }; // csvExport()
 
+    /*
     this.transformImportFile = function (csvFile) {
 
       var funcName = 'transformImportFile()';
@@ -314,6 +316,7 @@
 
       return blob;
     }; //transformImportFile()
+    */
 
     this.webexCreateImportBlob = function (data) {
       var funcName = "webexCreateImportBlob()";
@@ -323,6 +326,7 @@
         "data.length=" + data.length;
       $log.log(logMsg);
 
+      /*
       var intBytes = [];
 
       var utf16leHeader = '%ff%fe';
@@ -343,6 +347,8 @@
         intBytes.push(intByte1);
         intBytes.push(intByte2);
       }
+      */
+      var intBytes = WebExUtilsService.utf8ToUtf16le(data);
 
       var newData = new Uint8Array(intBytes);
 
