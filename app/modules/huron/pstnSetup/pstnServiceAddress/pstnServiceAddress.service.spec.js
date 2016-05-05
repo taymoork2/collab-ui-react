@@ -103,6 +103,35 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.flush();
   });
 
+  it('should enter an irregular address and correctly parse', function () {
+    var irregularAddress = {
+      streetAddress: 'N95W18000 Appleton Ave',
+      unit: '',
+      city: 'Menomonee Falls',
+      state: 'WI',
+      zip: '53051'
+    };
+
+    var irregularServiceAddress = {
+      serviceName: 'Irregular Test Customer Site',
+      serviceStreetNumber: 'N95W18000',
+      serviceStreetDirection: '',
+      serviceStreetName: 'Appleton Ave',
+      serviceStreetSuffix: '',
+      serviceAddressSub: '',
+      serviceCity: 'Menomonee Falls',
+      serviceState: 'WI',
+      serviceZip: '53051'
+    };
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
+      name: 'Irregular Test Customer Site',
+      serviceAddress: irregularServiceAddress
+    }).respond(201);
+    PstnServiceAddressService.createCustomerSite(customerId, 'Irregular Test Customer Site', irregularAddress);
+    $httpBackend.flush();
+  });
+
   describe('update street address', function () {
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);

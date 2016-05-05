@@ -1,21 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-/* global Uint8Array:false */
+  /* global Uint8Array:false */
 
-angular.module('WebExApp').service('WebExApiGatewayService', [
-  '$rootScope',
-  '$q',
-  '$log',
-  'Authinfo',
-  'Storage',
-  'WebExUtilsFact',
-  'WebExXmlApiFact',
-  'WebExXmlApiInfoSvc',
-  'WebExRestApiFact',
-  'WebExApiGatewayConstsService',
-  '$window',
+  angular.module('WebExApp').service('WebExApiGatewayService', WebExApiGatewayService);
 
-  function (
+  /* @ngInject */
+  function WebExApiGatewayService(
     $rootScope,
     $q,
     $log,
@@ -23,7 +14,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     Storage,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj,
+    WebExXmlApiInfoSvc,
     WebExRestApiFact,
     WebExApiGatewayConstsService,
     $window
@@ -392,70 +383,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       return deferredResponse.promise;
     }; // csvImport()
 
-    this.csvFileDownload = function (
-      siteUrl,
-      downloadUrl,
-      mockFlag
-    ) {
-      var funcName = 'csvFileDownload()';
-      var logMsg = '';
-
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'downloadUrl=' + downloadUrl + "\n" +
-        'mockFlag=' + mockFlag;
-      // $log.log(logMsg);
-
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
-
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
-
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvFileDownload
-      );
-
-      csvHttpsObj.url = downloadUrl;
-
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
-
-      var deferredResponse = $q.defer();
-
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        null,
-        csvHttpsObj
-      ).then(
-
-        function success(response) {
-          deferredResponse.resolve(successResult);
-        },
-
-        function error(response) {
-          deferredResponse.reject(errorResult);
-        }
-
-      ).catch(
-
-        function catchError(response) {
-          deferredResponse.reject(errorResult);
-        }
-
-      ); // WebExRestApiFact.csvExportReq()
-
-      return deferredResponse.promise;
-    }; // csvFileDownload()
-
     this.isSiteSupportsIframe = function (siteUrl) {
       var funcName = "isSiteSupportsIframe()";
       var logMsg = "";
@@ -468,10 +395,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(response) {
-          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = response;
+          WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+          WebExXmlApiInfoSvc.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
+          WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
+          WebExXmlApiInfoSvc.webexAdminSessionTicket = response;
 
           var siteVersionJsonObj = null;
           var enableT30UnifiedAdminJsonObj = null;
@@ -586,8 +513,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
 
       function getSiteData() {
-        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
-        var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+        var siteVersionXml = WebExXmlApiFact.getSiteVersion(WebExXmlApiInfoSvc);
+        var siteInfoXml = WebExXmlApiFact.getSiteInfo(WebExXmlApiInfoSvc);
 
         return $q.all({
           siteVersionXml: siteVersionXml,
@@ -596,7 +523,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       } // getSiteData()
 
       function getEnableT30UnifiedAdminData() {
-        var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(webExXmlApiInfoObj);
+        var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(WebExXmlApiInfoSvc);
 
         return $q.all({
           enableT30UnifiedAdminInfoXml: enableT30UnifiedAdminInfoXml
@@ -662,4 +589,4 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       return deferredIsSiteSupportsIframe.promise;
     }; // isSiteSupportsIframe()
   } // end top level function
-]);
+})();

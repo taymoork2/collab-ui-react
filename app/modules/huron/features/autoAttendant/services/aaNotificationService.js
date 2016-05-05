@@ -56,6 +56,9 @@
         Notification.notify(cesErrorMsg, 'error');
       } else if (_.get(response, 'data.errorMessage')) {
         Notification.errorResponse(response, message, parameters);
+      } else {
+        // In this case just print out passed in message.
+        Notification.error(message, parameters);
       }
     }
   }

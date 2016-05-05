@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('OrganizationOverviewCtrl', OrganizationOverviewCtrl);
 
-  /*ngInject*/
+  /* @ngInject */
   function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, Log, $filter, Orgservice, Notification) {
     var currentOrgId = $stateParams.currentOrganization.id;
 

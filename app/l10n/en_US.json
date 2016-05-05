@@ -90,6 +90,7 @@
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
     "convertUserError": "Failed to convert",
+    "convertUserSearch": "Enter customer name or email address",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
@@ -1281,8 +1282,8 @@
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "certificatesHeading": "Certificates",
-        "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
+        "certificatesHeading": "Certificates for Encrypted SIP Calls",
+        "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -1506,6 +1507,8 @@
     "dataRetentionDesc": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
+    "appSecurity": "App Security",
+    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1608,7 +1611,7 @@
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Open/Closed",
+    "scheduleOpenClosed": "Business Hours",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1758,7 +1761,7 @@
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
     "AACustomDesc": "Create a custom Auto Attendant.",
-    "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
+    "AAOpenClosedDesc": "Simple open/closed schedule with custom actions."
   },
   "callPark": {
     "code": "CP",
@@ -1982,7 +1985,8 @@
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
       "addNumbers": "Add Numbers",
-      "tooltip": "Block allows you to add a large quantity of consecutive and non-consecutive numbers.",
+      "blockTooltip": "Check this box to display a block of phone numbers. After, you can select the numbers you want to order.",
+      "consecutiveTooltip": "Check this box to filter the results and only show a consecutive sequence of phone numbers.",
       "extra": "*Consecutive Numbers will be an additional charge"
     },
     "errors": {
@@ -2071,10 +2075,9 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Trial Setup - Meeting and WebEx",
-      "webexHeader": "Meeting and WebEx License Type",
-      "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition",
+      "title": "Trial Setup - WebEx",
+      "webexHeader": "WebEx License Type",
+      "webexDetails": "WebEx Enterprise Edition 200",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -3003,14 +3006,12 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "WebEx-SiteUsers.csv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "WebEx-ImportErr.csv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
@@ -3257,7 +3258,8 @@
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters.",
     "numeric": "Field can contain digits 0 to 9.",
-    "positiveNumber": "Must enter a positive number."
+    "positiveNumber": "Must enter a positive number.",
+    "maxNumber100": "Quantity must be 100 or less."
   },
   "CsdmStatus": {
     "Online": "Online",
@@ -3452,6 +3454,8 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "namePlaceholder": "Name the Chat Template",
+    "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
@@ -3593,7 +3597,8 @@
     "submitOrder": {
       "submitting": "Submitting Order...",
       "activate": "Click the Activate button below to start your subscription and begin using your new service.",
-      "newUser": "Thank you for your purchase. An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
+      "newUserHeader": "Your trial has been created",
+      "newUserText": "An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
       "missingEmail": "It has been over 30 minutes and I still have not received the email.",
       "userError": "An error occurred while retrieving the user.",
       "submitError": "An error occurred while submitting the order."
@@ -3932,19 +3937,35 @@
       "beforeVerify": "Before you verify"
     }
   },
+  "csvUpload": {
+    "fileModalTitle": "Import User List",
+    "resultModalTitle": "Import User List Results",
+    "desc": "Best method for adding up to {{maxUsers}} users at a time. Entitlement changes of the existing users can also be made through CSV file upload. Users cannot be deleted during this process.",
+    "uploadPrompt": "Drag and Drop your CSV file here",
+    "fileBrowser": "or click to browse",
+    "enableRemoveLabel": "Match user entitlements exactly from CSV",
+    "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
+    "removeFile": "Remove File",
+    "newUsers": "Added",
+    "existingUsers": "Updated",
+    "errorUsers": "Errors"
+  },
   "csvDownload": {
-    "csvDownloadConfirmTitle": "Are you sure?",
+    "confirmTitle": "Are you sure?",
     "confirmCsvDownloadMsg": "Gathering your data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will not complete.",
     "confirmCsvDownload": "Do you want to continue?",
     "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
-    "csvDownloadIsRunning": "An export task is already running. Please try again later.",
-    "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
-    "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+    "isRunning": "An export task is already running. Please try again later.",
+    "inProgress": "Background task 'Export {{type}} list' is running...",
+    "success": "Your {{type}} list has been compiled and your download has started."
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode",
     "title": "Read Only",
     "okButton": "OK",
     "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
+  },
+  "readOnlyMessages": {
+    "notAllowed": "Not allowed in read-only mode. Operation not executed."
   }
 }
