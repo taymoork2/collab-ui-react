@@ -319,9 +319,12 @@
       }
 
       function errorCallback(response, startIndex, length) {
-        var responseMessage = UserCsvService.getBulkErrorResponse(response.status);
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          addUserErrorWithTrackingID(startIndex + k + 1, UserCsvService.getBulkErrorResponse(
+            response.status,
+            '',
+            response.config.data.users[k].email
+          ), response);
         }
       }
 
