@@ -145,7 +145,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
@@ -180,9 +180,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-12",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: 'trialRoomSystem',
         class: 'columns medium-12',
       },

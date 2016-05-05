@@ -2192,15 +2192,16 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200",
     "call": "Call",
+    "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
+    "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to request purchase information?",
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Request Purchase",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
-    "usOnly": "(Currently U.S. only)"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
 
   "status": {
