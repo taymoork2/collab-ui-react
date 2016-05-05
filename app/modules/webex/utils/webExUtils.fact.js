@@ -403,6 +403,13 @@
     };
 
     obj.utf8ToUtf16le = function (data) {
+      var funcName = "utf8ToUtf16le()";
+      var logMsg = "";
+    	  
+      logMsg = funcName + "\n" +
+        "data=" + data;
+      // $log.log(logMsg);
+      
       var intBytes = [];
 
       var utf16leHeader = '%ff%fe';
