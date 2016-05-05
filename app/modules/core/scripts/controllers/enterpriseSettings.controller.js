@@ -378,7 +378,7 @@
             entityId: newEntityId
           }), 'url');
           if (metaUrl) {
-            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, selfSigned, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
                 $scope.ssoEnabled = true;
