@@ -89,10 +89,7 @@
               headers
             ) {
 
-              // var noTabData = data.replace(/\t/g, ',');
-
               var resultData = {
-                // content: noTabData
                 content: data
               };
 
