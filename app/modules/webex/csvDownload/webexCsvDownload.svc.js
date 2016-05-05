@@ -12,7 +12,7 @@
     $window,
     Authinfo,
     UrlConfig,
-    WebExUtilsService
+    WebExUtilsFact
   ) {
 
     var objectUrl;
@@ -121,7 +121,7 @@
         "data.length=" + data.length;
       $log.log(logMsg);
 
-      var intBytes = WebExUtilsService.utf8ToUtf16le(data);
+      var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
       var newData = new Uint8Array(intBytes);
       // var newData = data;

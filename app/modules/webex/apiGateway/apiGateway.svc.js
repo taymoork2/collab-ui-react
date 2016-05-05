@@ -14,7 +14,6 @@
     Authinfo,
     Storage,
     WebExUtilsFact,
-    WebExUtilsService,
     WebExXmlApiFact,
     WebExXmlApiInfoSvc,
     WebExRestApiFact,
@@ -265,59 +264,6 @@
       return deferredResponse.promise;
     }; // csvExport()
 
-    /*
-    this.transformImportFile = function (csvFile) {
-
-      var funcName = 'transformImportFile()';
-      var logMsg = '';
-
-      logMsg = funcName + ': ' + 'csvFile=' + csvFile;
-      //$log.log(logMsg);
-
-      var byteArray = [];
-      var header = '%ff%fe';
-
-      header.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
-
-      var newDataArray = [];
-      var newDataCount = 0;
-
-      for (var i = 0; i < csvFile.length; i++) {
-        var hexByte = null;
-
-        if ("\t" == csvFile[i]) {
-          hexByte = "%09";
-        } else if ("\n" == csvFile[i]) {
-          hexByte = "%0A";
-          // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
-        } else {
-          hexByte = csvFile[i].charCodeAt(0).toString(16);
-        }
-
-        newDataArray = newDataArray.concat(hexByte);
-        newDataArray = newDataArray.concat('%00');
-
-        newDataCount = newDataCount + 2;
-      }
-
-      var newDataStr = newDataArray.toString();
-
-      newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
-
-      var newData = new Uint8Array(byteArray);
-
-      var blob = new $window.Blob([newData], {
-        type: 'text/csv;charset=UTF-16LE;'
-      });
-
-      return blob;
-    }; //transformImportFile()
-    */
-
     this.webexCreateImportBlob = function (data) {
       var funcName = "webexCreateImportBlob()";
       var logMsg = "";
@@ -326,29 +272,7 @@
         "data.length=" + data.length;
       $log.log(logMsg);
 
-      /*
-      var intBytes = [];
-
-      var utf16leHeader = '%ff%fe';
-
-      utf16leHeader.replace(/([0-9a-f]{2})/gi, function (byte) {
-        intBytes.push(parseInt(byte, 16));
-      });
-
-      for (var i = 0; i < data.length; ++i) {
-        var hexChar = data[i].charCodeAt(0);
-
-        var hexByte1 = hexChar & 0xff;
-        var hexByte2 = (hexChar >> 8) & 0xff;
-
-        var intByte1 = parseInt(hexByte1.toString(16), 16);
-        var intByte2 = parseInt(hexByte2.toString(16), 16);
-
-        intBytes.push(intByte1);
-        intBytes.push(intByte2);
-      }
-      */
-      var intBytes = WebExUtilsService.utf8ToUtf16le(data);
+      var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
       var newData = new Uint8Array(intBytes);
 
