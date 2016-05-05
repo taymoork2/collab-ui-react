@@ -94,7 +94,9 @@
       } else if (status === 502 || status === 503) {
         responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
       } else if (status === -1) {
-        responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
+        responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError', {
+          email: email
+        });
       } else {
         responseMessage = $translate.instant('firstTimeWizard.processBulkError');
       }
