@@ -87,7 +87,7 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 
   var ceId = exports.extractUUID(aaUrl);
 
-  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['huron-int1'].org + '/features/autoattendants/' + ceId + '/numbers';
+  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['aa-admin'].org + '/features/autoattendants/' + ceId + '/numbers';
 
   var options = {
     method: 'delete',
@@ -154,10 +154,10 @@ exports.deleteTestAAs = function (bearer, data) {
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
 
-  helper.getBearerToken('huron-int1')
+  helper.getBearerToken('aa-admin')
     .then(function (bearer) {
       var options = {
-        url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
+        url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
           Authorization: 'Bearer ' + bearer
         }
