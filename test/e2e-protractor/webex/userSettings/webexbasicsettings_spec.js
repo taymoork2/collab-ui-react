@@ -3,22 +3,24 @@
 /*global webEx*/
 
 describe('WebEx user settings', function () {
+
+  /*
   var setup = false;
 
-  beforeAll(function () {
-    var promise = webEx.setup(usersettings.testAdmin.username, usersettings.testAdmin.password, usersettings.testSiteUrl);
-    promise.then(function (ticket) {
-      if (ticket) {
-        setup = true;
-      }
+    beforeAll(function () {
+      var promise = webEx.setup(usersettings.testAdmin.username, usersettings.testAdmin.password, usersettings.testSiteUrl);
+      promise.then(function (ticket) {
+        if (ticket) {
+          setup = true;
+        }
+      });
     });
+  */
+
+  it('should login as admin user', function () {
+    login.login('wbxUserSettingsTestAdmin');
   });
 
-  /**
-    xit('should allow login as admin user', function () {
-      login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
-    });
-  **/
   it('click on users tab', function () {
     navigation.clickUsers();
   });
@@ -34,62 +36,46 @@ describe('WebEx user settings', function () {
   });
 
   it('should allow click on site name', function () {
-    if (setup) {
-      utils.wait(usersettings.testSiteElement);
-      expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
-      utils.click(usersettings.testSiteElement);
-    }
+    utils.wait(usersettings.testSiteElement);
+    expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
+    utils.click(usersettings.testSiteElement);
   });
 
   it('should display basic WebEx settigns page', function () {
-    if (setup) {
-      utils.wait(usersettings.userSettingsPanel);
-      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
-    }
+    utils.wait(usersettings.userSettingsPanel);
+    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
   it('should not display WebEx error page', function () {
-    if (setup) {
-      expect(usersettings.errorPanel.isPresent()).toBeFalsy();
-    }
+    expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
   it('should allow navigation to the 4th panel', function () {
-    if (setup) {
-      utils.click(usersettings.userPrivilegesLink);
-      utils.wait(usersettings.userPrivilegesPanel);
-      expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
-    }
+    utils.click(usersettings.userPrivilegesLink);
+    utils.wait(usersettings.userPrivilegesPanel);
+    expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
   });
 
   it('should allow navigation back to the 3rd panel', function () {
-    if (setup) {
-      utils.clickLastBreadcrumb();
-      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
-    }
+    utils.clickLastBreadcrumb();
+    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
   it('should not show save button without any changes', function () {
-    if (setup) {
-      expect(usersettings.saveButton.isPresent()).toBeFalsy();
-    }
+    expect(usersettings.saveButton.isPresent()).toBeFalsy();
   });
 
   it('should allow edit in 3rd panel', function () {
-    if (setup) {
-      expect(usersettings.mcAuoCheckbox.isPresent());
-      usersettings.mcAuo.click();
-      expect(usersettings.saveButton.isPresent()).toBeTruthy();
-    }
+    expect(usersettings.mcAuoCheckbox.isPresent());
+    usersettings.mcAuo.click();
+    expect(usersettings.saveButton.isPresent()).toBeTruthy();
   });
 
   it('should allow save in 3rd panel', function () {
-    if (setup) {
-      usersettings.save();
-    }
+    usersettings.save();
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
 

@@ -19,11 +19,11 @@ while (1 >= sitesettings.testInfo.describeCount) {
 
     if (sitesettings.testInfo.testType == "T31") {
       it('should signin as ' + sitesettings.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t31Info.testAdminUsername, sitesettings.t31Info.testAdminPassword);
+        login.login('t31RegressionTestAdmin');
       });
     } else {
       it('should signin as ' + sitesettings.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t30Info.testAdminUsername, sitesettings.t30Info.testAdminPassword);
+        login.login('t30RegressionTestAdmin');
       });
     }
 
@@ -33,13 +33,13 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
         utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t31CardsSectionId);
       });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
         utils.click(sitesettings.t30ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t30CardsSectionId);
