@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderContainerCtrl', function () {
-  var $scope, controller, $modal, AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService, $modalInstance;
+  var $scope, controller, $modal, AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService;
 
   var uiModel = {
     isClosedHours: false,
@@ -56,7 +56,6 @@ describe('Controller: AABuilderContainerCtrl', function () {
       spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(false);
 
       controller.openScheduleModal();
-      $scope.$apply();
 
       expect($modal.open).not.toHaveBeenCalled();
 

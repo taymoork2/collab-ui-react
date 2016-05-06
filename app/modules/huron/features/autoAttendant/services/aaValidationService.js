@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, $translate) {
 
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
@@ -83,19 +83,25 @@
       var closedHoursValid = true;
       var holidaysValid = true;
 
+      var closedHoursLabel = $translate.instant('autoAttendant.scheduleClosed');
+      var holidayHoursLabel = $translate.instant('autoAttendant.scheduleHolidays');
+      var openHoursLabel = $translate.instant('autoAttendant.scheduleOpen');
+      var closedHolidayHoursLabel = $translate.instant('autoAttendant.scheduleClosedHolidays');
+
       /* check holiday value to determine if holiday uses open closed or holiday lane */
-      var closedHoliday =  _.get(ui, 'holidaysValue', 'Closed') === 'closedHours';
+
+      var closedHoliday =  _.get(ui, 'holidaysValue') === 'closedHours';
       if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
-        openHoursValid = checkForValid(ui.openHours, 'Open Hours');
+        openHoursValid = checkForValid(ui.openHours, openHoursLabel);
       }
       if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
         closedHoursValid = checkForValid(ui.closedHours, 
-          closedHoliday ? 'Closed/Holiday' : 'Closed');
+          closedHoliday ? closedHolidayHoursLabel : closedHoursLabel);
       }
 
       /* if holiday follows closed behavior, then don't validate */
       if (ui.isHolidays && (!closedHoliday) && _.has(ui, 'holidays.entries')) {
-        holidaysValid = checkForValid(ui.holidays, 'Holiday');
+        holidaysValid = checkForValid(ui.holidays, holidayHoursLabel);
       }
 
       return openHoursValid && closedHoursValid && holidaysValid;
