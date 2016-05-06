@@ -324,7 +324,7 @@
         for (var k = 0; k < length; k++) {
           addUserErrorWithTrackingID(startIndex + k + 1, UserCsvService.getBulkErrorResponse(
             response.status,
-            isCancelledByUser ? -1 : '',
+            isCancelledByUser ? '0' : '1',
             response.config.data.users[k].email
           ), response);
         }
