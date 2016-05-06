@@ -17,14 +17,12 @@
     vm.schedule = "";
     vm.openHours = [];
     vm.holidays = [];
-    vm.activate = activate;
     vm.laneTitle = '';
+    vm.activate = activate;
     vm.isOpenClosed = isOpenClosed;
     vm.isClosed = isClosed;
     vm.isHolidays = isHolidays;
     vm.formatDate = formatDate;
-    vm.formatTime = formatTime;
-    vm.isStartTimeSet = false;
 
     $scope.$on('ScheduleChanged', function () {
       if (vm.aaModel.aaRecord.scheduleId) {
@@ -127,10 +125,9 @@
           }
         }
       }
-      return;
     }
 
-    function getFormattedOpenhours(hour, dayhour) {
+    function getFormattedOpenhours() {
       if (vm.schedule === 'openHours') {
         _.each(vm.days, function (day) {
           _.each(day.hours, function (hour) {
@@ -190,7 +187,6 @@
       vm.dayGroup = [];
       var indices = [];
       var indexListed = [];
-      var numberofdays = 1;
       _.forEach(vm.days, function (wday, index) {
         var hour1 = wday.hours;
         var isIndexPresent = _.contains(indexListed, index);
@@ -221,7 +217,6 @@
               _.each(indices, function (index) {
                 if (dayLabel !== '') {
                   dayLabel = dayLabel + ', ';
-                  numberofdays = numberofdays++;
                 }
                 dayLabel = dayLabel + (vm.days[index].label);
               });
@@ -284,10 +279,6 @@
 
     function isHolidays() {
       return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
-    }
-
-    function formatTime(tt) {
-      return (tt) ? moment(tt).format('h:mm a') : 0;
     }
 
     function formatDate(dt) {
