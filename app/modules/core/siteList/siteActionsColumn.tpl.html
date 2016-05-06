@@ -21,15 +21,13 @@
 
   <!-- start of error handling -->
   <span ng-if="row.entity.showSiteLinks && row.entity.isError">
-    <i class="icon icon-report">
-    </i>
+    <i class="icon icon-report"></i>
 
     <span>
       &nbsp; 
     </span>
 
-    <i class="icon icon-settings">
-    </i>
+    <i class="icon icon-settings"></i>
 
     <span>
       &nbsp;&nbsp;&nbsp;
@@ -55,40 +53,35 @@
 
   <!-- start of service enabling -->
   <span ng-if="row.entity.showSiteLinks && !row.entity.isError">
+    <span ng-if="!row.entity.isAdminReportEnabled">
+      <i class="icon icon-report"
+         tooltip-append-to-body="true" 
+         tooltip-animation="false"
+         tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
+         tooltip-placement="top"></i>
+    </span>
 
-    <i ng-if="!row.entity.isAdminReportEnabled"
-       class="icon icon-report"
-       tooltip-append-to-body="true" 
-       tooltip-animation="false"
-       tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
-       tooltip-placement="top">
-    </i>
-
-    <span>
-      <a ng-if="row.entity.isAdminReportEnabled"
-         id="{{row.entity.license.siteUrl}}_webex-site-reports"
-         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})">
-         <i class="icon icon-report"
-            tooltip-append-to-body="true" 
-            tooltip-animation="false"
-            tooltip="{{::'siteList.siteReports' | translate}}"
-            tooltip-placement="top"></i>
-      </a>
-
-      <span>
-        &nbsp;
-      </span>
-
-      <a id="{{row.entity.license.siteUrl}}_webex-site-settings"
-         ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
-         <i class="icon icon-settings"
-            tooltip-append-to-body="true" 
-            tooltip-animation="false"
-            tooltip="{{::'siteList.siteSettings' | translate}}"
-            tooltip-placement="top"></i>
+    <span ng-if="row.entity.isAdminReportEnabled">
+      <a ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})">
+        <i class="icon icon-report"
+           tooltip-append-to-body="true" 
+           tooltip-animation="false"
+           tooltip="{{::'siteList.siteReports' | translate}}"
+           tooltip-placement="top"></i>
       </a>
     </span>
 
+    <span>
+        &nbsp;
+    </span>
+
+    <a ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
+      <i class="icon icon-settings"
+         tooltip-append-to-body="true" 
+         tooltip-animation="false"
+         tooltip="{{::'siteList.siteSettings' | translate}}"
+         tooltip-placement="top"></i>
+    </a>
   </span>
   <!-- end of service enabling -->
 </p>
