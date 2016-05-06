@@ -142,7 +142,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: callTemplateOptionId,
         class: 'columns medium-12',
       },
@@ -158,7 +158,7 @@
       type: 'checkbox',
       className: "columns medium-12 pad-top",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: roomSystemsTemplateOptionId,
         class: 'columns medium-12',
       },

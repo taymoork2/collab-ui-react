@@ -59,6 +59,12 @@
       @include vr-spacing(mr, 2);
     }
   }
+  .cs-checkbox-group {
+    display: inline-block;
+    &.aa-schedule-holidays-behavior {
+      @include vr-spacing(mb, 0);
+    }
+  }
   .accordion {
     border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
@@ -84,7 +90,7 @@
           }
         }
         &:before {
-          content: initial;
+          content: none;
         }
         &.active {
           display: none;
@@ -178,4 +184,12 @@
 
 .closed-holiday {
   padding-top: rem(12);
+}
+
+.modal-body-gray {
+  margin-right: 30px;
+  margin-left: 30px;
+  background-color: #F5F5F6;
+  margin-bottom: 5px;
+  padding: 20px;
 }

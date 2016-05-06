@@ -5,18 +5,20 @@
   <h3 class="modal-title" translate="autoAttendant.newAAText"></h3>
 </div>
 <!-- Remember to wrap class modal-body around this when new modals are pushed -->
-<div class="huron-new-feature-modal">
-  <button ng-repeat="type in aatypes" ng-click="ok(type)">
-    <div class="feature-icon-container">
-      <div class="icons icon-{{type.name}}" ng-class="{'show-line': type.showLine, 'no-line': !type.showLine && !type.showTreeLine, 'show-tree-line': type.showTreeLine}">
-        <i ng-repeat="icon in type.icons track by $index" class="icon" ng-class="icon"></i>
+<div class="modal-body">
+  <div class="huron-new-feature-modal">
+    <button ng-repeat="type in aatypes" ng-click="ok(type)">
+      <div class="feature-icon-container">
+        <div class="icons icon-{{type.name}}" ng-class="{'show-line': type.showLine, 'no-line': !type.showLine && !type.showTreeLine, 'show-tree-line': type.showTreeLine}">
+          <i ng-repeat="icon in type.icons track by $index" class="icon" ng-class="icon"></i>
+        </div>
       </div>
-    </div>
-    <h4 class="feature-label-container">
-      <strong>{{type.title}}</strong>
-    </h4>
-    <p class="feature-description-container text-center">
-      {{type.desc}}
-    </p>
-  </button>
+      <h4 class="feature-label-container">
+        <strong>{{type.title}}</strong>
+      </h4>
+      <p class="feature-description-container text-center">
+        {{type.desc}}
+      </p>
+    </button>
+  </div>
 </div>

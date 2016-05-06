@@ -1,17 +1,15 @@
-<div class="domainModal">
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="dmpopup.cancel()"><span class="sr-only">Close</span></button>
-    <h4 class="modal-title" translate="domainManagement.verify.header"></h4>
-  </div>
-  <div class="modal-body">
-    <section>
-      <p translate="domainManagement.verify.verifyThis"></p>
-      <p class="domainInput">{{dmpopup.domainName}}</p>
-      <p translate="domainManagement.verify.beforeVerify"/>
-      <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
-      <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-compile></p>
-    </section>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="dmpopup.cancel()"><span class="sr-only">Close</span></button>
+  <h4 class="modal-title" translate="domainManagement.verify.header"></h4>
+</div>
+<div class="modal-body">
+  <section>
+    <p translate="domainManagement.verify.verifyThis"></p>
+    <p class="domainInput">{{dmpopup.domainName}}</p>
+    <p translate="domainManagement.verify.beforeVerify"/>
+    <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
+    <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-compile></p>
+  </section>  
 
   <div ng-if="!dmpopup.error && dmpopup.showWarning" class="modal-body domWarning">
     <section>
@@ -26,10 +24,10 @@
       <p>{{dmpopup.error}}</p>
     </section>
   </div>
+</div>
 
-  <div class="modal-footer">
-    <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
-    <button ng-click="dmpopup.verify()" ng-disabled="!dmpopup.operationAllowed" class="btn--primary"
-            translate="domainManagement.verify.verify"></button>
-  </div>
+<div class="modal-footer">
+  <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
+  <button ng-click="dmpopup.verify()" ng-disabled="!dmpopup.operationAllowed" class="btn--primary"
+          translate="domainManagement.verify.verify"></button>
 </div>

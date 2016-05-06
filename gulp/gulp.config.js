@@ -165,7 +165,6 @@ module.exports = function () {
         vendor + '/angular-cookie/angular-cookie.js',
         vendor + '/angular-cookies/angular-cookies.js',
         vendor + '/angular-sanitize/angular-sanitize.js',
-        vendor + '/angular-dialog-service/dialogs.js',
         vendor + '/angular-resource/angular-resource.js',
         vendor + '/angular-route/angular-route.js',
         vendor + '/angular-messages/angular-messages.js',

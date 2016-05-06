@@ -1,31 +1,29 @@
-<div id="convertDialog" class="convert-users">
-  <div class="modal-header">
-    <button id="convertModalClose" type="button" class="close" ng-click="$dismiss()">
-      <span class="sr-only">Close</span>
-    </button>
-    <h3 class="modal-title">
-      <span translate="homePage.convertUsers"></span>
-    </h3>
-  </div>
-  <div class="modal-body">
-    <p><span translate="homePage.convertUsersText"></span></p>
-      <div class="search">
-        <span class="icon icon-search"></span>
-        <input type="text"
-        id="searchConvertUser"
-        placeholder= "{{searchPlaceholder}}"
-        ng-model="searchStr"
-        ng-change="filterList(searchStr)">
-      </div>
-    <div id="unlicensedUserList" ng-show="unlicensed > 0">
-      <div id="unlicensedList" class="row">
-        <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
-      </div>
+<div class="modal-header">
+  <button id="convertModalClose" type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">
+    <span translate="homePage.convertUsers"></span>
+  </h3>
+</div>
+<div class="modal-body">
+  <p><span translate="homePage.convertUsersText"></span></p>
+    <div class="search">
+      <span class="icon icon-search"></span>
+      <input type="text"
+      id="searchConvertUser"
+      placeholder= "{{searchPlaceholder}}"
+      ng-model="searchStr"
+      ng-change="filterList(searchStr)">
+    </div>
+  <div id="unlicensedUserList" ng-show="unlicensed > 0">
+    <div id="unlicensedList" class="row">
+      <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button id="convertNextButton" class="btn btn--lg btn--primary pull-right" ng-click="saveConvertList()" ng-disabled="convertDisabled()">
-      <span translate="homePage.nextBtn"></span>
-    </button>
-  </div>
+</div>
+<div class="modal-footer">
+  <button id="convertNextButton" class="btn btn--lg btn--primary pull-right" ng-click="saveConvertList()" ng-disabled="convertDisabled()">
+    <span translate="homePage.nextBtn"></span>
+  </button>
 </div>

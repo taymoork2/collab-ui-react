@@ -1,5 +1,4 @@
 <!-- Meeting Trial Modal -->
-<form id="webexTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
 
   <!-- header -->
   <div class="modal-header">
@@ -20,32 +19,23 @@
       <formly-form model="webexTrial.details" fields="webexTrial.siteUrlFields" hide-directive="ng-show"
         class="medium-12 columns">
       </formly-form>
-    <div class="medium-12 columns">
-      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.siteUrlDescription"></em>
-    </div>
+      <div class="medium-12 columns">
+        <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.tzDescription"></em>
+      </div>
     </section>
-  </section>
-  <section class="modal-body collapse-fields row">
-    <h5 translate="trialModal.meeting.webexTimezone"></h5>
-    <formly-form model="webexTrial.details" fields="webexTrial.timezoneFields"
-      class="medium-12 columns">
-    </formly-form>
-    <div class="medium-12 columns">
-      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.tzDescription"></em>
-    </div>
-  </section>
+  </form>
+</div>
 
-  <!-- footer -->
-  <div class="modal-footer">
-    <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
-      translate="common.back">
-    </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-      loading="trial.loading || webexTrial.validatingUrl"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
-        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
-        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
-      </span>
-    </button>
-  </div>
-</form>
+<!-- footer -->
+<div class="modal-footer">
+  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+    translate="common.back">
+  </button>
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
+    loading="trial.loading || webexTrial.validatingUrl"
+    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+    </span>
+  </button>
+</div>

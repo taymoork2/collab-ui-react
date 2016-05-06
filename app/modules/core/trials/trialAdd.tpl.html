@@ -1,52 +1,54 @@
 <!-- Add Trial Modal -->
-<form id="addTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-  <!-- header -->
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$dismiss()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h3 class="modal-title" translate="trialModal.addTrial.title"></h3>
-  </div>
 
-  <!-- body -->
-  <section class="modal-body collapse-fields row">
-    <h5 translate="partnerHomePage.customerInformation"></h5>
-    <formly-form model="trial.details" fields="trial.custInfoFields"
-      class="small-12 columns indent">
-    </formly-form>
-  </section>
-  <section class="modal-body collapse-fields">
-    <h5 translate="partnerHomePage.trialServices"></h5>
-    <section class="row indent">
-      <h6 class="small-12 columns" translate="partnerHomePage.individualUserServices"></h6>
-      <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show"
+<!-- header -->
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="trialModal.addTrial.title"></h3>
+</div>
+
+<!-- body -->
+<div class="modal-body">
+  <form id="addTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
+    <section class="collapse-fields row modal-body-gray">
+      <h5 translate="partnerHomePage.customerInformation"></h5>
+      <formly-form model="trial.details" fields="trial.custInfoFields"
         class="small-12 columns indent">
       </formly-form>
     </section>
-    <section class="row indent" ng-if="trial.showRoomSystems">
-      <h6 class="small-12 columns" translate="partnerHomePage.deviceBasedServices"></h6>
-      <span class="currently-us-only overlay-add-usonly" translate="trials.usOnly"></span>
-      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show"
+    <section class="collapse-fields row modal-body-gray">
+      <h5 translate="partnerHomePage.trialServices"></h5>
+      <section class="row indent">
+        <h6 class="small-12 columns" translate="partnerHomePage.individualUserServices"></h6>
+        <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show"
+          class="small-12 columns indent">
+        </formly-form>
+      </section>
+      <section class="row indent modal-body-gray" ng-if="trial.showRoomSystems">
+        <h6 class="small-12 columns" translate="partnerHomePage.deviceBasedServices"></h6>
+        <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show"
+          class="small-12 columns indent">
+        </formly-form>
+      </section>
+    </section>
+    <section class="row modal-body-gray">
+      <h5 translate="partnerHomePage.termsOfTrial"></h5>
+      <formly-form model="trial.details" fields="trial.trialTermsFields"
         class="small-12 columns indent">
       </formly-form>
     </section>
-  </section>
-  <section class="modal-body row">
-    <h5 translate="partnerHomePage.termsOfTrial"></h5>
-    <formly-form model="trial.details" fields="trial.trialTermsFields"
-      class="small-12 columns indent">
-    </formly-form>
-  </section>
+  </form>
+</div>
 
-  <!-- footer -->
-  <div class="modal-footer">
-    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
-      <span translate="partnerHomePage.cancel"></span>
-    </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
-        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
-        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
-    </button>
-  </div>
-</form>
+<!-- footer -->
+<div class="modal-footer">
+  <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
+    <span translate="partnerHomePage.cancel"></span>
+  </button>
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+  </button>
+</div>
