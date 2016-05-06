@@ -19,6 +19,23 @@ describe('Service: ModalService', function () {
     spyOn($modal, 'open').and.callThrough();
   }));
 
+  it('should open modal with default values', function () {
+    ModalService.open();
+    expect($modal.open).toHaveBeenCalledWith({
+      size: undefined,
+      templateUrl: 'modules/core/modal/modal.tpl.html',
+      controller: 'ModalCtrl',
+      controllerAs: 'modal',
+      resolve: {
+        title: jasmine.any(Function),
+        message: jasmine.any(Function),
+        close: jasmine.any(Function),
+        dismiss: jasmine.any(Function),
+        type: jasmine.any(Function)
+      }
+    });
+  });
+
   // TODO how to verify resolve arguments?
   it('should open modal with specified values', function () {
     ModalService.open({
@@ -26,7 +43,7 @@ describe('Service: ModalService', function () {
       message: myMessage,
       close: myClose,
       dismiss: myDismiss,
-      btnType: myType,
+      type: myType,
       size: mySize
     });
     expect($modal.open).toHaveBeenCalledWith({
@@ -34,13 +51,12 @@ describe('Service: ModalService', function () {
       templateUrl: 'modules/core/modal/modal.tpl.html',
       controller: 'ModalCtrl',
       controllerAs: 'modal',
-      type: 'dialog',
       resolve: {
         title: jasmine.any(Function),
         message: jasmine.any(Function),
         close: jasmine.any(Function),
         dismiss: jasmine.any(Function),
-        btnType: jasmine.any(Function)
+        type: jasmine.any(Function)
       }
     });
   });

@@ -36,6 +36,7 @@
     'ngRoute',
     'ngMessages',
     'ngFileUpload',
+    'dialogs',
     'ngCsv',
     'ipCookie',
     'ui.router',
