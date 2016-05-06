@@ -1,8 +1,8 @@
 <p class="ui-grid-cell-contents">
   <!-- Start of Reports icon -->
-  <span id=id="{{row.entity.license.siteUrl}}_reportsIcon">
+  <span id="{{row.entity.license.siteUrl}}_reportsIcon">
     <span ng-if="!row.entity.showSiteLinks || row.entity.isError"
-          id=id="{{row.entity.license.siteUrl}}_reports_unavailable">
+          id="{{row.entity.license.siteUrl}}_reports_unavailable">
         
       <i class="icon icon-report"></i>
     </span>
@@ -19,7 +19,7 @@
     </span>
   
     <span ng-if="row.entity.showSiteLinks && !row.entity.isError && row.entity.isAdminReportEnabled"
-          id=id="{{row.entity.license.siteUrl}}_reports">
+          id="{{row.entity.license.siteUrl}}_reports">
         
       <a ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})">
         <i class="icon icon-report"
@@ -33,19 +33,19 @@
   <!-- End of Reports icon -->
 
   <!-- Start of Config icon -->
-  <span id=id="{{row.entity.license.siteUrl}}_configIcon">
+  <span id="{{row.entity.license.siteUrl}}_configIcon">
     <span>
       &nbsp;
     </span>
 
     <span ng-if="!row.entity.showSiteLinks || row.entity.isError"
-          id=id="{{row.entity.license.siteUrl}}_config_unavailable">
+          id="{{row.entity.license.siteUrl}}_config_unavailable">
         
       <i class="icon icon-settings"></i>
     </span>
     
     <span ng-if="row.entity.showSiteLinks && !row.entity.isError"
-          id=id="{{row.entity.license.siteUrl}}_config">
+          id="{{row.entity.license.siteUrl}}_config">
         
       <a ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
         <i class="icon icon-settings"
