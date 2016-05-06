@@ -1,23 +1,21 @@
-<div>
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="exportUserStatusesCtrl.cancelExport();$dismiss()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h5 class="modal-title" translate="hercules.export.modalTitle"></h5>
-  </div>
-  <div class="modal-body">
-    <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
-    <form name="userStatusesExport">
-      <div class="cs-checkbox-group">
-        <div ng-hide="item.unselectable" ng-repeat="item in exportUserStatusesCtrl.statusTypes">
-          <input
-            cs-input
-            type="checkbox"
-            id="{{'ckid_' + item.stateType}}"
-            name="{{item.stateType}}"
-            ng-model="exportUserStatusesCtrl.statusTypes[$index].selected"
-            cs-input-label="{{item.text}} ({{item.count}})">
-        </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="exportUserStatusesCtrl.cancelExport();$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h5 class="modal-title" translate="hercules.export.modalTitle"></h5>
+</div>
+<div class="modal-body">
+  <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
+  <form name="userStatusesExport">
+    <div class="cs-checkbox-group">
+      <div ng-hide="item.unselectable" ng-repeat="item in exportUserStatusesCtrl.statusTypes">
+        <input
+          cs-input
+          type="checkbox"
+          id="{{'ckid_' + item.stateType}}"
+          name="{{item.stateType}}"
+          ng-model="exportUserStatusesCtrl.statusTypes[$index].selected"
+          cs-input-label="{{item.text}} ({{item.count}})">
       </div>
     </form>
     <p><strong translate="hercules.export.modalNote"></strong></p>

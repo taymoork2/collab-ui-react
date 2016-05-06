@@ -27,6 +27,7 @@
     vm.siteUrl = $stateParams.siteRow.license.siteUrl;
     vm.siteName = WebExUtilsFact.getSiteName(vm.siteUrl);
     vm.gridRows = [];
+
     vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
@@ -74,8 +75,14 @@
         value: null,
       });
 
-      vm.downloadFileUrl = vm.csvStatusObj.details.exportFileLink;
+      // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
+      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
       vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
+
+      logMsg = funcName + "\n" +
+        "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+        "vm.downloadFileName=" + vm.downloadFileName;
+      // $log.log(logMsg);
 
     } else if (
       ("importCompletedNoErr" === vm.csvStatusObj.status) ||
@@ -128,10 +135,16 @@
           value: null,
         });
 
-        vm.downloadFileUrl = vm.csvStatusObj.details.errorLogLink;
-        vm.downloadFileName = "WebEx-" + vm.siteName + "-WebEx-ImportErr.csv";
+        // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink.slice(vm.csvStatusObj.details.errorLogLink.lastIndexOf("/") + 1);
+        vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
+        vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
+
+        logMsg = funcName + "\n" +
+          "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+          "vm.downloadFileName=" + vm.downloadFileName;
+        // $log.log(logMsg);
       }
-    }
+    } // export/import results
 
     logMsg = funcName + "\n" +
       "vm.gridRows=" + JSON.stringify(vm.gridRows);

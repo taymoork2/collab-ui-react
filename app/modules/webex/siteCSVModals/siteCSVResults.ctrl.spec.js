@@ -21,7 +21,23 @@ describe('SiteCSVResultsCtrl Test', function () {
         siteUrl: "fake.webex.com"
       },
 
-      csvStatusObj: {}
+      csvStatusObj: {
+        "siteUrl": "fake.webex.com",
+        "isMockResult": false,
+        "status": "exportCompletedNoErr",
+        "details": {
+          "jobType": 2,
+          "request": 2,
+          "errorLogLink": null,
+          "created": "05/05/16 04:33 AM",
+          "started": "05/05/16 04:34 AM",
+          "finished": "05/05/16 04:39 AM",
+          "totalRecords": 25,
+          "successRecords": 25,
+          "failedRecords": 0,
+          "exportFileLink": "fakeFileID"
+        }
+      },
     };
 
     SiteCSVResultsCtrl = $controller('SiteCSVResultsCtrl', {
@@ -41,5 +57,6 @@ describe('SiteCSVResultsCtrl Test', function () {
     expect(SiteCSVResultsCtrl.siteRow).not.toBe(null);
     expect(SiteCSVResultsCtrl.csvStatusObj).not.toBe(null);
     expect(SiteCSVResultsCtrl.gridRows).not.toBe(null);
+    expect(SiteCSVResultsCtrl.downloadFileUrl).toEqual("https://fake.webex.com/meetingsapi/v1/files/fakeFileID");
   }); // it()
 }); // describe()
