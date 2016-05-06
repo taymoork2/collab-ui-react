@@ -33,24 +33,32 @@
   <!-- End of Reports icon -->
 
   <!-- Start of Config icon -->
-  <!-- End of Config icon -->
-  
-  <!-- Start of CSV icon and results link -->
-  <span ng-if="row.entity.showCSVIconAndResults"
-        id=id="{{row.entity.license.siteUrl}}_csvIconAndResults">
-        
+  <span id=id="{{row.entity.license.siteUrl}}_configIcon">
     <span>
       &nbsp;
     </span>
-    
-    <span id=id="{{row.entity.license.siteUrl}}_csvIcon">
-      ICON
+
+    <span ng-if="!row.entity.showSiteLinks || row.entity.isError"
+          id=id="{{row.entity.license.siteUrl}}_config_unavailable">
+        
+      <i class="icon icon-settings"></i>
     </span>
-  
-    <span id=id="{{row.entity.license.siteUrl}}_csvResults">
-      RESULTS
+    
+    <span ng-if="row.entity.showSiteLinks && !row.entity.isError"
+          id=id="{{row.entity.license.siteUrl}}_config">
+        
+      <a ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
+        <i class="icon icon-settings"
+           tooltip-append-to-body="true" 
+           tooltip-animation="false"
+           tooltip="{{::'siteList.siteSettings' | translate}}"
+           tooltip-placement="top"></i>
+      </a>
     </span>
   </span>
+  <!-- End of Config icon -->
+  
+  <!-- Start of CSV icon and results link -->
   <!-- End of CSV icon and results link -->
   
   <!-- Start of Loading icon -->
