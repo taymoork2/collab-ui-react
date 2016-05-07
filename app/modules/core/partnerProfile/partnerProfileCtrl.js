@@ -147,7 +147,6 @@ angular.module('Core')
           $scope.tempLogoUrl = logoUrl;
         });
 
-        
         $scope.initWbxClientVersions();
 
       };
