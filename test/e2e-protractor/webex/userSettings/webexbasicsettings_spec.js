@@ -4,19 +4,6 @@
 
 describe('WebEx user settings', function () {
 
-  /*
-  var setup = false;
-
-    beforeAll(function () {
-      var promise = webEx.setup(usersettings.testAdmin.username, usersettings.testAdmin.password, usersettings.testSiteUrl);
-      promise.then(function (ticket) {
-        if (ticket) {
-          setup = true;
-        }
-      });
-    });
-  */
-
   it('should login as admin user', function () {
     login.login('wbxUserSettingsTestAdmin');
   });
