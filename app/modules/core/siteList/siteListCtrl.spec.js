@@ -1,5 +1,86 @@
 'use strict';
 
+describe('SiteListCtrl(): grid update test', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+
+  var SiteListCtrl;
+  var SiteListService;
+  var WebExUtilsService;
+
+  var $scope;
+  var $q;
+  var $controller;
+  var Authinfo;
+  var fakeConferenceServices;
+  var deferredCheckWebExFeaturToggle;
+
+  beforeEach(inject(function (
+    $rootScope,
+    _$q_,
+    _$controller_,
+    _SiteListService_,
+    _WebExUtilsService_
+  ) {
+
+    $scope = $rootScope.$new();
+
+    $q = _$q_;
+    $controller = _$controller_;
+
+    SiteListService = _SiteListService_;
+    WebExUtilsService = _WebExUtilsService_;
+
+    deferredCheckWebExFeaturToggle = $q.defer();
+
+    fakeConferenceServices = [{
+      "label": "Enterprise Edition 200",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "EE_97e59181-0db2-4030-b6f5-d484f6adc297_200_cisjsite032.webex.com",
+        "offerName": "EE",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "SubCt31test0303032",
+        "features": ["cloudmeetings"],
+        "volume": 200,
+        "isTrial": false,
+        "status": "PENDING",
+        "capacity": 200,
+        "siteUrl": "cisjsite032.webex.com"
+      },
+      "isCustomerPartner": false
+    }];
+
+    Authinfo = {
+      'getConferenceServicesWithoutSiteUrl': function () {
+        return fakeConferenceServices;
+      },
+
+      'getPrimaryEmail': function () {
+        return "nobody@nowhere.com";
+      }
+    };
+
+    SiteListCtrl = $controller('SiteListCtrl', {
+      $scope: $scope,
+      Authinfo: Authinfo
+    });
+
+    spyOn(WebExUtilsService, 'checkWebExFeaturToggle').and.returnValue(deferredCheckWebExFeaturToggle.promise);
+  })); // beforeEach()
+
+  it('', function () {
+    expect(SiteListCtrl).toBeDefined();
+    expect(SiteListCtrl.gridData).toBeDefined();
+    expect(SiteListCtrl.gridData.length).toEqual(1);
+    expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toBeDefined();
+    expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toEqual(false);
+  });
+
+}); // describe()
+
 describe('Testing controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
