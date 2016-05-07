@@ -324,7 +324,7 @@
           metaUrl = _.get(data, 'data[0].url');
           if (metaUrl) {
             //call patch with sso false
-            SSOService.patchRemoteIdp(metaUrl, null, false, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, null, selfSigned, false, function (data, status) {
               if (data.success) {
                 //patch success so delete metadata
                 SSOService.deleteMeta(metaUrl, function (status) {
@@ -378,7 +378,7 @@
             entityId: newEntityId
           }), 'url');
           if (metaUrl) {
-            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
                 $scope.ssoEnabled = true;
@@ -427,7 +427,8 @@
     }
 
     function patchRemoteIdp(metaUrl) {
-      SSOService.patchRemoteIdp(metaUrl, $scope.idpFile.file, false, function (data, status) {
+      var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
+      SSOService.patchRemoteIdp(metaUrl, $scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
           $scope.idpFile.success = true;

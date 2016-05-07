@@ -5,6 +5,7 @@
 *.rdb
 *.sublime*
 *.swp
+*.swo
 *.ts.spec.js
 
 .DS_Store
@@ -24,6 +25,7 @@ dist
 screenshots
 plato
 typings
+/ts/ts-manifest.txt
 .cache
 
 bower_components

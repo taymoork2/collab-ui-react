@@ -15,6 +15,7 @@
     var QUEUED = "QUEUED";
     var BLOCK = 'block';
     var ORDER = 'order';
+    var PORT = 'port';
     var PORT_ORDERS = 'portOrders';
     var ADVANCED_ORDERS = 'advancedOrders';
     var NEW_ORDERS = 'newOrders';
@@ -226,7 +227,7 @@
       return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
         carrierId: carrierId,
-        type: PORT_ORDERS
+        type: PORT
       }, payload).$promise;
     }
 

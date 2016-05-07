@@ -6,20 +6,32 @@
     .controller('createAccountController', createAccountController);
 
   /* @ngInject */
-  function createAccountController($location, $window, $cookies, $translate, $state, $stateParams, Log, DigitalRiverService) {
+  function createAccountController($translate, $state, $stateParams, Log, DigitalRiverService) {
 
     var vm = this;
     vm.drReferrer = ($stateParams.referrer === DigitalRiverService.getDrReferrer());
     if (!vm.drReferrer) {
       vm.error = $translate.instant('digitalRiver.restrictedPage');
+    } else if (!angular.isDefined($stateParams.params.sku)) {
+      vm.error = $translate.instant('digitalRiver.validation.missingSKU');
     }
     vm.confirmEmailPlaceholder = confirmEmailPlaceholder;
     vm.passwordPlaceholder = passwordPlaceholder;
     vm.confirmPasswordPlaceholder = confirmPasswordPlaceholder;
     vm.handleCreateAccount = handleCreateAccount;
+    vm.handleCancel = handleCancel;
 
     vm.originalEmail = $stateParams.email;
     vm.email1 = $stateParams.email;
+
+    var params = {};
+    params.email = vm.email1;
+    params.referrer = DigitalRiverService.getDrReferrer();
+    var innerParams = {};
+    innerParams.sku = $stateParams.params.sku;
+    innerParams.orderId = $stateParams.params.orderId;
+    innerParams.campaignId = $stateParams.params.campaignId;
+    params.params = innerParams;
 
     function confirmEmailPlaceholder() {
       return $translate.instant('digitalRiver.createAccount.confirmEmailPlaceholder');
@@ -31,6 +43,11 @@
 
     function confirmPasswordPlaceholder() {
       return $translate.instant('digitalRiver.createAccount.confirmPasswordPlaceholder');
+    }
+
+    function showError(result) {
+      vm.loading = false;
+      vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
     }
 
     function handleCreateAccount() {
@@ -48,14 +65,46 @@
         return;
       }
 
+      if (vm.email1 !== vm.email) {
+        vm.loading = true;
+        return DigitalRiverService.userExists(vm.email1)
+          .then(function (result) {
+            vm.loading = false;
+            if (!angular.isDefined(result)) {
+              vm.error = $translate.instant('digitalRiver.validation.unexpectedError');
+              return;
+            } else if (result.error !== null) {
+              vm.error = result.error;
+              return;
+            } else if (result.domainClaimed) {
+              vm.error = $translate.instant('digitalRiver.enterEmailAddr.domainClaimed');
+              return;
+            } else if (result.userExists) {
+              vm.error = $translate.instant('digitalRiver.createAccount.validation.accountExists');
+              return;
+            }
+            createAccount();
+          }).catch(function (result) {
+            vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+            return;
+          }).finally(function (result) {
+            vm.loading = false;
+          });
+      } else {
+        return createAccount();
+      }
+    }
+
+    function createAccount() {
+      vm.loading = true;
       return DigitalRiverService.addDrUser({
           'email': vm.email1,
           'password': vm.password1
         })
         .then(function (result) {
+          vm.loading = false;
           if (_.get(result, 'data.success') === true) {
             var token = _.get(result, 'data.data.token', 'error');
-
             DigitalRiverService.decrytpUserAuthToken({
                 'sessionToken': token
               })
@@ -63,29 +112,28 @@
                 if (_.get(result, 'status') === 200) {
                   var uuid = _.get(result, 'data.userKey.userID');
                   if (angular.isDefined(uuid)) {
-                    var params = {};
-                    params.email = vm.email1;
-                    params.referrer = DigitalRiverService.getDrReferrer();
-                    var innerParams = {};
-                    innerParams.uuid = uuid;
-                    innerParams.sku = $stateParams.params.sku;
-                    innerParams.orderId = $stateParams.params.orderId;
-                    innerParams.campaignId = $stateParams.params.campaignId;
-                    params.params = innerParams;
+                    params.params.uuid = uuid;
                     $state.go('submitOrder', params);
                   }
+                } else {
+                  showError(result);
                 }
-                // we'll only reach here in an error case
-                vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
               }).catch(function (result) {
-                vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+                showError(result);
               });
           } else {
-            vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+            showError(result);
           }
         }).catch(function (result) {
-          vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+          showError(result);
+        }).finally(function (result) {
+          vm.loading = false;
         });
     }
+
+    function handleCancel() {
+      vm.error = "TODO Should take user back to initial login page";
+    }
   }
+
 })();

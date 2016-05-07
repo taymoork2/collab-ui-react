@@ -56,10 +56,12 @@
           <!-- branding logo upload -->
           <div ng-if="isPartner || allowCustomerLogos">
             <div id="brandingLogoPanel" class="small-12 columns optional-row">
-              <h4 translate="partnerProfile.brandingTitle"></h4>
+              <h4 translate="partnerProfile.brandingTitle.custom"></h4>
               <div class="form-spacing form-group">
-                <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
-                <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
+                <span ng-if="!isPartner"  translate="customerProfile.brandingInfo"></span>
+                <span ng-if="isPartner">
+                  <span translate="partnerProfile.brandingInfo"></span>
+                </span>
               </div>
             </div>
             <div class="row form-spacing collapse-both">
@@ -70,11 +72,16 @@
                     <label for="partnerLogoRadio">
                       <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
                       <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+                      <a id="useCiscoLogoExampleLink" ng-if="!isPartner" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
                     </label>
                   </div>
 
                   <div class="cs-input-group cs-input-radio">
                     <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+                    <label for="customLogoRadio">
+                      <span translate="partnerProfile.userOwnLogo"></span>
+                      <a id="useCustomLogoExampleLink" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
+                    </label>
                     <label for="customLogoRadio" class="radio-input-spacing">
                       <div class="radio-input-flex">
                         <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
@@ -83,25 +90,29 @@
                           <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
                         </div>
 
-                        <button class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                        <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
                           <span translate="partnerProfile.chooseFile"></span>
                         </button>
                       </div>
                     </label>
+                    <p translate="partnerProfile.uploadNote" class="drop-box-note body-small"></p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row form-spacing" ng-if="isPartner">
+              <h4 translate="partnerProfile.brandingTitle.tenant"></h4>
               <div class="small-12 columns cs-checkbox-group">
-                <input
-                  cs-input
+                <input 
                   type="checkbox"
                   id="allowCustomerLogo"
                   name="allowCustomerLogo"
                   ng-model="allowCustomerLogos"
-                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)"
-                  cs-input-label="{{::'partnerProfile.allowCustomerLogo' | translate}}">
+                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+                  <label for="allowCustomerLogo">
+                    <span translate="partnerProfile.allowCustomerLogo"></span>
+                    <a id="allowCustomLogExampleLink" translate="partnerProfile.exampleLink" ng-click="showExampleModal()"></a>
+                  </label>
               </div>
             </div>
           </div>
@@ -142,6 +153,22 @@
             </div>
           </div>
         </ng-form>
+
+        <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
+          <h4 translate="customerProfile.crashReportTitle"></h4>
+          <div class="form-spacing">
+            <span translate="customerProfile.crashReportText"></span>
+          </div>
+          <div class="form-spacing">
+            <input type="checkbox" id="crashReportCheckbox" ng-change='setCrashReportCheckbox(allowCrashLogUpload)' ng-model="allowCrashLogUpload">
+            <label for="crashReportCheckbox">
+              <span translate="customerProfile.crashReportCheckboxLabel"></span>
+            </label>
+          </div>
+          <p>
+            <span translate="customerProfile.crashReportTooltipDescription"></span><i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="above" tooltip-animation="true" tooltip="{{::'customerProfile.crashReportTooltip' | translate}}"></i>
+          </p>
+        </div>
       </div>
 
       <div class="partner-profile columns small-12 large-6 xlarge-5 end">

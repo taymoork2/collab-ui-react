@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -16,6 +16,7 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceOpenBeforeCloseCheck = forceOpenBeforeCloseCheck;
     vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
@@ -37,6 +38,9 @@
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
+    };
+    vm.messageHours = {
+      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
     vm.monthOptions = [];
     vm.dayOptions = [];
@@ -140,18 +144,20 @@
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
       if (startTime && endTime) {
-        var startTime = moment(startTime);
-        var endTime = moment(endTime);
-        var start = moment({
-          hour: startTime.hour(),
-          minute: startTime.minute()
-        });
-        var end = moment({
-          hour: endTime.hour(),
-          minute: endTime.minute()
-        });
+        var start = moment(startTime, "hh:mm A");
+        var end = moment(endTime, "hh:mm A");
         return start.isSame(end) || start.isAfter(end);
       }
+    }
+
+    function forceOpenBeforeCloseCheck(index) {
+      if (vm.isOpenHoursAfterCloseHours(vm.openhours[index].starttime, vm.openhours[index].endtime)) {
+        vm.hoursForm['endtime' + index].$error.compareTo = true;
+      } else {
+        delete vm.hoursForm['endtime' + index].$error.compareTo;
+      }
+      vm.hoursForm['endtime' + index].$setDirty();
+      vm.hoursForm['endtime' + index].$validate();
     }
 
     function forceStartBeforeEndCheck() {
@@ -160,8 +166,13 @@
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
-        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        if (vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime)) {
+          vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = true;
+        } else {
+          delete vm.holidaysForm[indexForm].holidayEnd.$error.compareTo;
+        }
         vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+        vm.holidaysForm[indexForm].holidayEnd.$validate();
       }
     }
 
@@ -297,7 +308,7 @@
               //and the newly created orphaned calendar is deleted.
               return;
             }
-            Notification.success('autoAttendant.successUpdateCe', {
+            AANotificationService.success('autoAttendant.successUpdateCe', {
               name: notifyName
             });
             vm.isDeleted = false;
@@ -311,20 +322,20 @@
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
               vm.isDeleted = false;
-              Notification.error('autoAttendant.errorDeleteCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorDeleteCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
               //Calendar create failed
-              Notification.error('autoAttendant.errorCreateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else {
-              Notification.error('autoAttendant.errorUpdateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
                 name: notifyName,
                 statusText: response.statusText,
                 status: response.status
@@ -363,7 +374,7 @@
           vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
         }, function (response) {
           // failure in updating CE with schedue id, so clean up the possible orphaned schedule and the objects
-          Notification.error('autoAttendant.errorUpdateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: ceName,
             statusText: response.statusText,
             status: response.status
@@ -381,7 +392,9 @@
     function deleteSchedule() {
       var id = vm.aaModel.aaRecord.scheduleId;
       var ceName = vm.aaModel.aaRecord.callExperienceName;
-      vm.aaModel.aaRecord.scheduleId = undefined;
+
+      delete vm.aaModel.aaRecord.scheduleId;
+
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
       var ceUrl;
       if (vm.aaModel.aaRecordUUID.length > 0) {
@@ -395,7 +408,9 @@
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
           // success removing ScheduleId from CE, delete the calendar 
-          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
+            delete vm.ui.ceInfo.scheduleId;
+          });
         });
     }
 
@@ -461,7 +476,7 @@
       });
       importModal.result.then(function (allHours) {
         if (allHours) {
-          Notification.success('autoAttendant.successImport', {
+          AANotificationService.success('autoAttendant.successImport', {
             holidays: allHours.holidays.length,
             hours: allHours.hours.length
           });
@@ -490,6 +505,7 @@
       populateUiModel();
       vm.isDeleted = false;
     }
+
     activate();
   }
 })();

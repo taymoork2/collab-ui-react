@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskHuronService(HelpdeskService, $http, $q, HelpdeskMockData, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
 
     function getDevices(userId, orgId) {

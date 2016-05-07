@@ -35,7 +35,7 @@ describe('Service: PstnServiceAddressService', function () {
     };
 
     serviceAddress = {
-      serviceName: '',
+      serviceName: 'Test Customer Site',
       serviceStreetNumber: '123',
       serviceStreetDirection: '',
       serviceStreetName: 'My Street',
@@ -87,10 +87,10 @@ describe('Service: PstnServiceAddressService', function () {
 
   it('should create a customer site', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
-      name: '',
+      name: 'Test Customer Site',
       serviceAddress: serviceAddress
     }).respond(201);
-    PstnServiceAddressService.createCustomerSite(customerId, '', address);
+    PstnServiceAddressService.createCustomerSite(customerId, 'Test Customer Site', address);
     $httpBackend.flush();
   });
 
@@ -100,6 +100,35 @@ describe('Service: PstnServiceAddressService', function () {
     PstnServiceAddressService.getAddress(customerId).then(function (response) {
       expect(response).toEqual(address);
     });
+    $httpBackend.flush();
+  });
+
+  it('should enter an irregular address and correctly parse', function () {
+    var irregularAddress = {
+      streetAddress: 'N95W18000 Appleton Ave',
+      unit: '',
+      city: 'Menomonee Falls',
+      state: 'WI',
+      zip: '53051'
+    };
+
+    var irregularServiceAddress = {
+      serviceName: 'Irregular Test Customer Site',
+      serviceStreetNumber: 'N95W18000',
+      serviceStreetDirection: '',
+      serviceStreetName: 'Appleton Ave',
+      serviceStreetSuffix: '',
+      serviceAddressSub: '',
+      serviceCity: 'Menomonee Falls',
+      serviceState: 'WI',
+      serviceZip: '53051'
+    };
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
+      name: 'Irregular Test Customer Site',
+      serviceAddress: irregularServiceAddress
+    }).respond(201);
+    PstnServiceAddressService.createCustomerSite(customerId, 'Irregular Test Customer Site', irregularAddress);
     $httpBackend.flush();
   });
 

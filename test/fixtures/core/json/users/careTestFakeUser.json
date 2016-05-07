@@ -1,0 +1,72 @@
+{
+  "fakeUser1": {
+    "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+    "userName": "sunlight-fake-user1@outlook.com",
+    "emails": [{
+      "primary": true,
+      "type": "work",
+      "value": "sunlight-fake-user2@outlook.com"
+    }],
+    "entitlements": ["contact-center-context", "squared-room-moderation", "webex-messenger", "squared-call-initiation", "spark", "webex-squared", "cloud-contact-center", "squared-syncup"],
+    "id": "69210b48-5a8b-468e-a9ee-eaf3382494b9",
+    "meta": {
+      "created": "2015-11-16T06:14:56.430Z",
+      "lastModified": "2016-03-28T20:42:45.961Z",
+      "version": "53384130906",
+      "lastServiceAccessTime": [{
+        "type": "cloud-contact-center",
+        "value": "2016-04-20T05:52:32.777Z"
+      }, {
+        "type": "contact-center-context",
+        "value": "2016-04-20T05:52:32.484Z"
+      }, {
+        "type": "webexsquare",
+        "value": "2016-04-20T05:52:33.557Z"
+      }, {
+        "type": "KMS",
+        "value": "2016-04-20T05:52:40.258Z"
+      }],
+      "organizationID": "b1de2d84-c9b1-485b-9698-b35e95c6107f"
+    },
+    "displayName": "sunlight-fake-user@outlook.com",
+    "roles": ["spark.synckms"],
+    "active": true,
+    "licenseID": ["CF_60c17363-5fe5-4aee-b498-c0e3e7918459", "MS_f41bc544-e633-4c37-86b7-b8b120d8a278"],
+    "avatarSyncEnabled": false
+  },
+  "fakeUser2": {
+    "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+    "userName": "sunlight-fake-user1@outlook.com",
+    "emails": [{
+      "primary": true,
+      "type": "work",
+      "value": "sunlight-fake-user2@outlook.com"
+    }],
+    "entitlements": ["contact-center-context", "squared-room-moderation", "webex-messenger", "squared-call-initiation", "spark", "webex-squared", "cloud-contact-center", "squared-syncup"],
+    "id": "69210b48-5a8b-468e-a9ee-eaf3382494b9",
+    "meta": {
+      "created": "2015-11-16T06:14:56.430Z",
+      "lastModified": "2016-03-28T20:42:45.961Z",
+      "version": "53384130906",
+      "lastServiceAccessTime": [{
+        "type": "cloud-contact-center",
+        "value": "2016-04-20T05:52:32.777Z"
+      }, {
+        "type": "contact-center-context",
+        "value": "2016-04-20T05:52:32.484Z"
+      }, {
+        "type": "webexsquare",
+        "value": "2016-04-20T05:52:33.557Z"
+      }, {
+        "type": "KMS",
+        "value": "2016-04-20T05:52:40.258Z"
+      }],
+      "organizationID": "b1de2d84-c9b1-485b-9698-b35e95c6107f"
+    },
+    "displayName": "sunlight-fake-user@outlook.com",
+    "roles": ["id_full_admin"],
+    "active": true,
+    "licenseID": ["CF_60c17363-5fe5-4aee-b498-c0e3e7918459", "MS_f41bc544-e633-4c37-86b7-b8b120d8a278"],
+    "avatarSyncEnabled": false
+  }
+}

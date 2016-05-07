@@ -103,6 +103,11 @@
       vm.refresh = false;
     }
 
+    function getIsTrial(org) {
+      if (!!org.isPartner) return false;
+      return _.get(org, 'communications.isTrial', true);
+    }
+
     function addNumbers(org) {
       numberPromise.then(function () {
         if (vm.showPstnSetup) {
@@ -110,7 +115,7 @@
             customerId: org.customerOrgId,
             customerName: org.customerName,
             customerEmail: org.customerEmail,
-            customerCommunicationLicenseIsTrial: _.get(org, 'communications.isTrial', org.isTrial)
+            customerCommunicationLicenseIsTrial: getIsTrial(org)
           });
         } else {
           return $state.go('didadd', {
