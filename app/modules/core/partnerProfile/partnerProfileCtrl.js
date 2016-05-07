@@ -94,34 +94,6 @@
             $scope.isManaged = true;
           }
         }
-<<<<<<< HEAD
-      };
-
-      $scope.useLatestWbxVersion = false;
-      $scope.wbxclientversionselected = '';
-      $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
-      $scope.wbxNoClientSelected = true;
-      $scope.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
-      this.wbxclientversionplaceholder = 'Select webex client version';
-      //For now restrict to one user (who is a partner)
-      //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
-      $scope.showClientVersions = true;
-
-      $scope.sendFeedback = function () {
-        var appType = 'Atlas_' + $window.navigator.userAgent;
-        var feedbackId = Utils.getUUID();
-
-        FeedbackService.getFeedbackUrl(appType, feedbackId).then(function (res) {
-          $window.open(res.data.url, '_blank');
-        });
-      };
-
-      // strings to be translated as placeholders, need to be used as values
-      $scope.grant = $translate.instant('partnerProfile.grant');
-      $scope.troubleUrl = $translate.instant('partnerProfile.troubleUrl');
-      $scope.troubleText = $translate.instant('partnerProfile.troubleText');
-      $scope.helpUrlText = $translate.instant('partnerProfile.helpUrlText');
-      $scope.partnerProvidedText = $translate.instant('partnerProfile.partnerProvidedText');
       });
 
       Orgservice.getOrg(function (data, status) {
@@ -150,13 +122,9 @@
             $scope.isCiscoSupport = settings.isCiscoSupport;
           }
 
-<<<<<<< HEAD
-        $scope.initWbxClientVersions();
-=======
           if (!_.isUndefined(settings.isCiscoHelp)) {
             $scope.isCiscoHelp = settings.isCiscoHelp;
           }
->>>>>>> dfd6b0bedfb63948be9590eceb6c28482be82838
 
           if (!_.isUndefined(settings.usePartnerLogo)) {
             $scope.usePartnerLogo = settings.usePartnerLogo;
