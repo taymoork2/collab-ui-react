@@ -75,7 +75,7 @@ describe('Partner flow', function () {
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
-      utils.sendKeys(partner.searchFilter, partner.newTrial.customerName + protractor.Key.ENTER );
+      utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
