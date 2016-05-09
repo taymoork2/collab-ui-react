@@ -7,7 +7,6 @@ describe('SiteListCtrl(): grid update test', function () {
 
   var SiteListCtrl;
   var SiteListService;
-  var WebExUtilsService;
 
   var $scope;
   var $q;
@@ -20,8 +19,7 @@ describe('SiteListCtrl(): grid update test', function () {
     $rootScope,
     _$q_,
     _$controller_,
-    _SiteListService_,
-    _WebExUtilsService_
+    _SiteListService_
   ) {
 
     $scope = $rootScope.$new();
@@ -30,7 +28,6 @@ describe('SiteListCtrl(): grid update test', function () {
     $controller = _$controller_;
 
     SiteListService = _SiteListService_;
-    WebExUtilsService = _WebExUtilsService_;
 
     deferredCheckWebExFeaturToggle = $q.defer();
 
@@ -67,13 +64,11 @@ describe('SiteListCtrl(): grid update test', function () {
       $scope: $scope,
       Authinfo: Authinfo
     });
-
-    spyOn(WebExUtilsService, 'checkWebExFeaturToggle').and.returnValue(deferredCheckWebExFeaturToggle.promise);
   })); // beforeEach()
 
   it('', function () {
     expect(SiteListCtrl).toBeDefined();
-    expect(SiteListCtrl.gridData).toBeDefined();
+    // expect(SiteListCtrl.gridData).toBeDefined();
     expect(SiteListCtrl.gridData.length).toEqual(1);
     expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toBeDefined();
     expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toEqual(false);
