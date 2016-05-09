@@ -1,10 +1,8 @@
 /*************************************
  *      Hercules Style imports
  ************************************/
-@import '../popover/popover';
-@import '../activation-status/activation-status';
 @import '../hybridServices/hybrid-services';
-@import '../expressway-service/expressway-service';
+@import 'expressway-service';
 @import '../notifications/hercules-notifications';
 @import '../servicesOverview/servicesOverview';
 @import '../schedule-upgrade-configuration/schedule-upgrade-configuration';

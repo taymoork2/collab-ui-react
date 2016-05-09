@@ -35,14 +35,12 @@ module.exports = function () {
     e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
     e2eReports: e2e + '/reports',
     app: 'app',
-    unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
     images: 'images',
     css: 'styles',
     docs: 'docs',
     cssName: 'main',
     jsIndexName: 'index.scripts',
-    jsUnsupportedName: 'unsupported.scripts',
     cache: cache,
     examples: examples,
     tsManifest: tsManifest,
@@ -75,15 +73,6 @@ module.exports = function () {
       compiledTestSuffix: tsSpecSuffix,
       compiledTestFiles: compiledTestFiles,
       previousCompiledTestFiles:prevCompiledTestFiles
-    },
-
-    unsupported: {
-      dir: 'unsupported',
-      file: 'unsupportedApp.js',
-      js: [
-        app + '/unsupported/**/*.js',
-      ],
-      name: 'unsupported.scripts',
     },
 
     templateCache: {
@@ -152,12 +141,6 @@ module.exports = function () {
     },
 
     vendorFiles: {
-      unsupported: [
-        vendor + '/json3/lib/json3.min.js',
-        vendor + '/angular/angular.js',
-        vendor + '/angular-translate/angular-translate.js',
-        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-      ],
       js: [
         vendor + '/x2js/xml2json.js',
         vendor + '/jquery/dist/jquery.js',

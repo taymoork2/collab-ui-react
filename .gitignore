@@ -5,6 +5,7 @@
 *.rdb
 *.sublime*
 *.swp
+*.swo
 *.ts.spec.js
 *.spec.ts.js
 

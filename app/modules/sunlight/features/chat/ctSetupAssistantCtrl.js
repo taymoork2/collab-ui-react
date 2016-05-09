@@ -40,6 +40,11 @@
     vm.leftArrow = 37;
     vm.rightArrow = 39;
 
+    vm.template = {
+      name: '',
+      mediaType: 'chat'
+    };
+
     function cancelModal() {
       $modal.open({
         templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
@@ -70,11 +75,27 @@
       return vm.states.indexOf(vm.currentState);
     }
 
-    function nextButton() {
-      if (vm.currentState === vm.states[vm.states.length - 1]) {
-        return 'hidden';
+    function validatePageName() {
+      if (vm.template.name === '') {
+        return false;
       }
       return true;
+    }
+
+    function nextButton() {
+      var retVal = true;
+
+      switch (vm.currentState) {
+      case 'name':
+        retVal = validatePageName();
+        break;
+      case 'embedCode':
+        retVal = 'hidden';
+        break;
+      default:
+        break;
+      }
+      return retVal;
     }
 
     function previousButton() {

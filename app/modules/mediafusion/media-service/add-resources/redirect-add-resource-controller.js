@@ -96,6 +96,10 @@
       });
       if (vm.groupDetail == null) {
         MediaClusterService.createGroup(enteredCluster).then(function (resp) {
+          vm.propertySetValue = MediaClusterService.getPropertySet(resp.data.id).then(function (propertySet) {
+            propertySet.properties["fms.releaseChannel"] = 'GA';
+            MediaClusterService.setPropertySet(resp.data.id, propertySet);
+          });
           vm.redirectPopUpAndClose(hostName, enteredCluster, resp.data.id);
         });
       } else {

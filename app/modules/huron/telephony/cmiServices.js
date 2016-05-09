@@ -3,38 +3,90 @@
 
   angular
     .module('Huron')
+    // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
+    .factory('HuronEmailService', HuronEmailService)
+    .factory('ActivationCodeEmailService', ActivationCodeEmailService)
+    .factory('DidAddEmailService', DidAddEmailService)
+    .factory('IdentityOTPService', IdentityOTPService)
+    .factory('UserOTPService', UserOTPService)
+    .factory('LineService', LineService)
+    .factory('RemoteDestinationService', RemoteDestinationService)
+    .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
+    .factory('UserDirectoryNumberService', UserDirectoryNumberService)
+    .factory('DirectoryNumberService', DirectoryNumberService)
+    .factory('CustomerCommonService', CustomerCommonService)
+    .factory('UserServiceCommon', UserServiceCommon)
+    .factory('UserServiceCommonV2', UserServiceCommonV2)
+    .factory('UserSearchServiceV2', UserSearchServiceV2)
+    .factory('NumberSearchServiceV2', NumberSearchServiceV2)
+    .factory('HuntGroupServiceV2', HuntGroupServiceV2)
+    .factory('AssignAutoAttendantService', AssignAutoAttendantService)
+    .factory('UserServiceVoice', UserServiceVoice)
+    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
+    .factory('VoicemailService', VoicemailService)
+    .factory('CompanyNumberService', CompanyNumberService)
+    // Will remove this service later
+    .factory('CallRouterService', CallRouterService)
+    .factory('CallParkService', CallParkService)
+    .factory('InternalNumberPoolService', InternalNumberPoolService)
+    .factory('ExternalNumberPoolService', ExternalNumberPoolService)
+    .factory('AlternateNumberService', AlternateNumberService)
+    .factory('DirectoryNumberCopyService', DirectoryNumberCopyService)
+    .factory('SiteService', SiteService)
+    .factory('InternalNumberRangeService', InternalNumberRangeService)
+    .factory('UserEndpointService', UserEndpointService)
+    .factory('SipEndpointService', SipEndpointService)
+    .factory('DirectoryNumberUserService', DirectoryNumberUserService)
+    .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
+    .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
+    .factory('TimeZoneService', TimeZoneService)
+    .factory('HermesQRCodeService', HermesQRCodeService)
+    .factory('DeviceLogApiService', DeviceLogApiService)
+    .factory('UserLineAssociationService', UserLineAssociationService)
+    .factory('UserLineAssociationCountService', UserLineAssociationCountService)
+    .factory('CustomerVoiceCmiService', CustomerVoiceCmiService)
+    .factory('DialPlanCmiService', DialPlanCmiService)
+    .factory('DialPlanDetailsCmiService', DialPlanDetailsCmiService)
+    .factory('UserCosRestrictionServiceV2', UserCosRestrictionServiceV2)
+    .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2);
 
-  // Temporary email service for Huron add user email.  This will be removed when the squared/huron emails are integrated
-  .factory('HuronEmailService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function HuronEmailService($resource, HuronConfig) {
     return $resource(HuronConfig.getEmailUrl() + '/email/userwelcome', {}, {});
-  })
+  }
 
-  .factory('ActivationCodeEmailService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function ActivationCodeEmailService($resource, HuronConfig) {
     return $resource(HuronConfig.getEmailUrl() + '/email/activationcode', {}, {});
-  })
+  }
 
-  .factory('DidAddEmailService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DidAddEmailService($resource, HuronConfig) {
     return $resource(HuronConfig.getEmailUrl() + '/email/didadd', {}, {});
-  })
+  }
 
-  .factory('IdentityOTPService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function IdentityOTPService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
-  })
+  }
 
-  .factory('UserOTPService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserOTPService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId/otp', {
       customerId: '@customerId',
       userId: "@userId"
     }, {});
-  })
+  }
 
-  .factory('LineService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function LineService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers?order=pattern-asc', {
       customerId: '@customerId'
     }, {});
-  })
+  }
 
-  .factory('RemoteDestinationService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function RemoteDestinationService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/remotedestinations/:remoteDestId', {
       customerId: '@customerId',
       userId: '@userId',
@@ -44,23 +96,26 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('UnassignedDirectoryNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UnassignedDirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/unassigneddirectorynumbers', {
       customerId: '@customerId'
     });
-  })
+  }
 
-  .factory('UserDirectoryNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserDirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       userId: '@userId',
       directoryNumberId: '@directoryNumberId'
     });
-  })
+  }
 
-  .factory('DirectoryNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId'
@@ -69,9 +124,10 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('CustomerCommonService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CustomerCommonService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId', {
       customerId: '@customerId'
     }, {
@@ -79,41 +135,46 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('UserServiceCommon', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserServiceCommon($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/customers/:customerId/users/:userId', {}, {
       update: {
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('UserServiceCommonV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserServiceCommonV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {}, {
       update: {
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('UserSearchServiceV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserSearchServiceV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       name: '@name',
       userId: '@userId',
     });
-  })
+  }
 
-  .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function NumberSearchServiceV2($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned'
     });
-  })
+  }
 
-  .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function HuntGroupServiceV2($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
       customerId: '@customerId',
@@ -126,9 +187,10 @@
         method: 'DELETE'
       }
     });
-  })
+  }
 
-  .factory('AssignAutoAttendantService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function AssignAutoAttendantService($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
       customerId: '@customerId',
@@ -145,9 +207,10 @@
         method: 'DELETE'
       }
     });
-  })
+  }
 
-  .factory('UserServiceVoice', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserServiceVoice($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       userId: '@userId'
@@ -157,9 +220,10 @@
         isArray: false
       }
     });
-  })
+  }
 
-  .factory('VoicemailTimezoneService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function VoicemailTimezoneService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
       customerId: '@customerId',
       objectId: '@objectId'
@@ -168,15 +232,17 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('VoicemailService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function VoicemailService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
       customerId: '@customerId'
     });
-  })
+  }
 
-  .factory('CompanyNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CompanyNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
       customerId: '@customerId',
       companyNumberId: '@companyNumberId'
@@ -185,10 +251,10 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  // Will remove this service later
-  .factory('CallRouterService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CallRouterService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
       customerId: '@customerId',
       companyNumberId: '@companyNumberId'
@@ -197,30 +263,34 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('CallParkService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CallParkService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {
       customerId: '@customerId',
       callParkId: '@callParkId'
     });
-  })
+  }
 
-  .factory('InternalNumberPoolService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function InternalNumberPoolService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId', {
       customerId: '@customerId',
       internalNumberId: '@internalNumberId'
     });
-  })
+  }
 
-  .factory('ExternalNumberPoolService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function ExternalNumberPoolService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId', {
       customerId: '@customerId',
       externalNumberId: '@externalNumberId'
     });
-  })
+  }
 
-  .factory('AlternateNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function AlternateNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/alternatenumbers/:alternateNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
@@ -236,9 +306,10 @@
         }
       }
     });
-  })
+  }
 
-  .factory('DirectoryNumberCopyService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DirectoryNumberCopyService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/copy/:ultId', {
       customerId: '@customerId',
       ultId: '@ultId'
@@ -254,9 +325,10 @@
         }
       }
     });
-  })
+  }
 
-  .factory('SiteService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function SiteService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
       siteId: '@siteId'
@@ -265,9 +337,10 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('InternalNumberRangeService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function InternalNumberRangeService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
       customerId: '@customerId',
       internalNumberRangeId: '@internalNumberRangeId'
@@ -279,17 +352,19 @@
         }
       }
     });
-  })
+  }
 
-  .factory('UserEndpointService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserEndpointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/endpoints/:userEndpointAssnId', {
       customerId: '@customerId',
       userId: '@userId',
       userEndpointAssnId: '@userEndpointAssnId'
     });
-  })
+  }
 
-  .factory('SipEndpointService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function SipEndpointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId', {
       customerId: '@customerId',
       sipEndpointId: '@sipEndpointId'
@@ -298,25 +373,28 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('DirectoryNumberUserService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DirectoryNumberUserService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/users/:dnUserAssnId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
       dnUserAssnId: '@dnUserAssnId'
     });
-  })
+  }
 
-  .factory('DirectoryNumberSipEndPointService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DirectoryNumberSipEndPointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId/sipendpoints/:endpointDnAssnId', {
       customerId: '@customerId',
       sipendpointId: '@directoryNumberId',
       endpointDnAssnId: '@endpointDnAssnId'
     });
-  })
+  }
 
-  .factory('SipEndpointDirectoryNumberService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function SipEndpointDirectoryNumberService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipendpointId/directorynumbers/:endpointDnAssnId', {
       customerId: '@customerId',
       sipendpointId: '@sipendpointId',
@@ -326,36 +404,42 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('TimeZoneService', function ($resource) {
+  /* @ngInject */
+  function TimeZoneService($resource) {
     return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
-  })
+  }
 
-  .factory('HermesQRCodeService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function HermesQRCodeService($resource, HuronConfig) {
     return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
       getqrima: 'getqrimage',
       oneTimePassword: '@oneTimePassword'
     }, {});
-  })
+  }
 
-  .factory('DeviceLogApiService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DeviceLogApiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/phones/:sipEndpointId/commands/logs', {}, {});
-  })
+  }
 
-  .factory('UserLineAssociationService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserLineAssociationService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociations', {
       customerId: '@customerId'
     });
-  })
+  }
 
-  .factory('UserLineAssociationCountService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserLineAssociationCountService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociationcounts', {
       customerId: '@customerId'
     });
-  })
+  }
 
-  .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CustomerVoiceCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
     }, {
@@ -363,23 +447,26 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('DialPlanCmiService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DialPlanCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplans/:dialPlanId', {
       clusterId: '@clusterId',
       dialPlanId: '@dialPlanId'
     });
-  })
+  }
 
-  .factory('DialPlanDetailsCmiService', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function DialPlanDetailsCmiService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
       clusterId: '@clusterId',
       dialPlanId: '@dialPlanId'
     });
-  })
+  }
 
-  .factory('UserCosRestrictionServiceV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function UserCosRestrictionServiceV2($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
@@ -390,14 +477,15 @@
         method: 'PUT'
       }
     });
-  })
+  }
 
-  .factory('CustomerCosRestrictionServiceV2', function ($resource, HuronConfig) {
+  /* @ngInject */
+  function CustomerCosRestrictionServiceV2($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
       restrictionId: '@restrictionId'
     });
-  });
+  }
 
 })();

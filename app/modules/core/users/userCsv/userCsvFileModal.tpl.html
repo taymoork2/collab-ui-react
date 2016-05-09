@@ -1,0 +1,17 @@
+<div id="modalContent">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title" translate="csvUpload.fileModalTitle"></h3>
+  </div>
+  <div class="modal-body">
+    <cr-user-csv-file></cr-user-csv-file>
+  </div>
+  <div class="template-anchor">
+    <csv-download type="template" filename="template.csv" no-icon anchor-text="{{csv.model.anchorText}}"></csv-download>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn--primary" ng-disabled="!csv.model.file" ng-click="csv.startUpload();" translate="common.submit"></button>
+  </div>
+</div>

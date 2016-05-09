@@ -367,6 +367,46 @@ describe('Auth Service', function () {
 
     });
 
+    describe('given admin has read only role', function () {
+
+      beforeEach(function () {
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+        $httpBackend
+          .expectGET('path/userauthinfo')
+          .respond(200, {
+            orgId: 1337,
+            services: [{
+              ciService: 'foo',
+              sqService: 'bar'
+            }]
+          });
+        $httpBackend
+          .expectGET('msn/orgs/1337/cisync/')
+          .respond(200, {});
+        Authinfo.initialize = sinon.stub();
+        Authinfo.initializeTabs = sinon.stub();
+      });
+
+      it('will update account info and initialize tabs', function (done) {
+        Authinfo.isReadOnlyAdmin = sinon.stub().returns(true);
+        Authinfo.getOrgId = sinon.stub().returns(42);
+        Authinfo.updateAccountInfo = sinon.stub();
+
+        $httpBackend
+          .expectGET('path/customers?orgId=42')
+          .respond(200, {});
+
+        Auth.authorize().then(function () {
+          _.defer(done);
+        });
+
+        $httpBackend.flush();
+        expect(Authinfo.initializeTabs.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+      });
+
+    });
+
     it('will add some webex stuff given some condition', function (done) {
       Authinfo.initialize = sinon.stub();
       UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');

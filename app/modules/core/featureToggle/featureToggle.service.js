@@ -13,6 +13,7 @@
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
+      atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasStormBranding: 'atlas-2015-storm-launch',
