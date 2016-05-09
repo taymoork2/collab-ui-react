@@ -68,7 +68,7 @@ describe('SiteListCtrl(): grid update test', function () {
 
   it('', function () {
     expect(SiteListCtrl).toBeDefined();
-    // expect(SiteListCtrl.gridData).toBeDefined();
+    expect(SiteListCtrl.gridData).toBeDefined();
     expect(SiteListCtrl.gridData.length).toEqual(1);
     expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toBeDefined();
     expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toEqual(false);
