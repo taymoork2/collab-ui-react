@@ -16,6 +16,7 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceOpenBeforeCloseCheck = forceOpenBeforeCloseCheck;
     vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
@@ -37,6 +38,9 @@
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
+    };
+    vm.messageHours = {
+      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
     vm.monthOptions = [];
     vm.dayOptions = [];
@@ -140,18 +144,20 @@
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
       if (startTime && endTime) {
-        var startTime = moment(startTime);
-        var endTime = moment(endTime);
-        var start = moment({
-          hour: startTime.hour(),
-          minute: startTime.minute()
-        });
-        var end = moment({
-          hour: endTime.hour(),
-          minute: endTime.minute()
-        });
+        var start = moment(startTime, "hh:mm A");
+        var end = moment(endTime, "hh:mm A");
         return start.isSame(end) || start.isAfter(end);
       }
+    }
+
+    function forceOpenBeforeCloseCheck(index) {
+      if (vm.isOpenHoursAfterCloseHours(vm.openhours[index].starttime, vm.openhours[index].endtime)) {
+        vm.hoursForm['endtime' + index].$error.compareTo = true;
+      } else {
+        delete vm.hoursForm['endtime' + index].$error.compareTo;
+      }
+      vm.hoursForm['endtime' + index].$setDirty();
+      vm.hoursForm['endtime' + index].$validate();
     }
 
     function forceStartBeforeEndCheck() {
@@ -160,8 +166,13 @@
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
-        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        if (vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime)) {
+          vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = true;
+        } else {
+          delete vm.holidaysForm[indexForm].holidayEnd.$error.compareTo;
+        }
         vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+        vm.holidaysForm[indexForm].holidayEnd.$validate();
       }
     }
 
@@ -494,6 +505,7 @@
       populateUiModel();
       vm.isDeleted = false;
     }
+
     activate();
   }
 })();

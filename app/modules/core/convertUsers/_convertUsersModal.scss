@@ -7,4 +7,22 @@
     height: 271px;
     background-color: $brand-white;
   }
+  .search {
+    width: 800px;
+    position: relative;
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+    input {
+      width: 790px;
+      height: 32px;
+      text-indent: 20px;
+    }
+
+    .icon-search {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  }
 }

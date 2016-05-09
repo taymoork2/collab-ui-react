@@ -13,6 +13,11 @@
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
 
+    $scope.searchStr = '';
+    $scope.timeoutVal = 1000;
+    $scope.timer = 0;
+    $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
+
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -23,6 +28,7 @@
     $scope.mapDidToDn = mapDidToDn;
     $scope.resetDns = resetDns;
     $scope.syncGridDidDn = syncGridDidDn;
+    $scope.filterList = filterList;
     $scope.isMapped = false;
     $scope.isMapInProgress = false;
     $scope.isResetInProgress = false;
@@ -774,6 +780,20 @@
       return idList;
     };
 
+    function filterList(str) {
+      if ($scope.timer) {
+        $timeout.cancel($scope.timer);
+        $scope.timer = 0;
+      }
+
+      $scope.timer = $timeout(function () {
+        if (str.length >= 3 || str === '') {
+          $scope.searchStr = str;
+          getUnlicensedUsers();
+        }
+      }, $scope.timeoutVal);
+    }
+
     /**
      * get the list of selected account licenses on the dialog
      *
@@ -1133,7 +1153,7 @@
               email: userResult.email
             });
           } else if (userStatus === 403 && user.message === '400096') {
-            userResult.message = $translate.instant('usersPage.unauthorizedError', {
+            userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
               email: userResult.email
             });
           } else if (userStatus === 400 && user.message === '400087') {
@@ -1719,7 +1739,7 @@
             });
           }
         }
-      });
+      }, null, $scope.searchStr);
     };
 
     $scope.convertDisabled = function () {
