@@ -6,7 +6,7 @@
     .controller('AATypeSelectCtrl', AATypeSelectCtrl);
 
   /* @ngInject */
-  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state) {
+  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state, AAMetricNameService) {
     var vm = $scope;
     vm.cancel = cancel;
     vm.ok = okay;
@@ -41,6 +41,9 @@
         aatype.aaName = '';
         aatype.aaTemplate = 'OpenClosedHoursTemplate';
       }
+      Localytics.tagEvent(AAMetricNameService.CREATE_AA, {
+        type: type.title
+      });
       $state.go('huronfeatures.aabuilder', aatype);
       $modalInstance.close(type);
     }
