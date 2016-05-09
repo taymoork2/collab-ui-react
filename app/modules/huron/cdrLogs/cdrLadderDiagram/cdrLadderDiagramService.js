@@ -7,6 +7,7 @@
   /* @ngInject */
   function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
+    var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
     var NOT_FOUND = 'Not Found';
     var serviceName = "Diagnostics Server";
@@ -184,6 +185,29 @@
       svc.events = events;
       var message = generateMessagebody($filter('orderBy')(svc.events, ['"@timestamp"']));
       return proxyDiagnosticService(message);
+    };
+
+    svc.getActivities = function (locusid, start, end) {
+      var defer = $q.defer();
+      $http({
+          method: "GET",
+          url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .success(function (response) {
+          defer.resolve(response);
+        })
+        .error(function (response, status) {
+          Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
+          defer.reject({
+            'response': response,
+            'status': status
+          });
+        });
+      return defer.promise;
     };
 
     return svc;

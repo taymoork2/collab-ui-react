@@ -2192,7 +2192,9 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200",
     "call": "Call",
+    "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
+    "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to request purchase information?",
@@ -3058,10 +3060,14 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
-    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
+    "brandingInfo": "Customize your tenant’s experience of Cisco applications by uploading your company logo below.",
     "allowCustomerLogo": "Enable all customers to use their own logo",
-    "useCiscoLogo": "Use Cisco Spark logo",
+    "useCiscoLogo": "Use default logos from Cisco",
+    "userOwnLogo": "Use your own log ",
+    "exampleLink": "(see example)",
+    "uploadNote": "For best results logo should be transparent with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "logoPlaceholder": "Drag and drop your logo here",
+    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3074,7 +3080,10 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
-    "brandingTitle": "Customize Branding",
+    "brandingTitle": {
+      "custom": "Custom Branding",
+      "tenant": "Tenant Branding"
+    },
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -3104,7 +3113,8 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
+    "brandingInfo": "Customize your employee’s experience of Cisco applications by uploading your company logo below.",
+
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
@@ -3116,6 +3126,10 @@
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
   },
+  "brandingExample": {
+    "title": "Examples of Custom Branding",
+    "description": "Logo Placement Examples: <br/>After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
+  },
   "fileUpload": {
     "uploading": "Uploading File",
     "success": "File Uploaded Successfully",
@@ -3124,6 +3138,10 @@
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
     "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
+  },
+  "brandingEample": {
+    "title": "Examples of Custom Branding",
+    "note": "Logo Placement Examples: After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",

@@ -368,6 +368,36 @@
         'trailing': false
       });
 
+    $scope.upload = function (file, event) {
+      openModal('sm');
+      if (validateLogo(file)) {
+        $scope.progress = 0;
+        BrandService.upload(orgId, file)
+          .then(uploadSuccess, uploadError, uploadProgress);
+      }
+    };
+    // TODO: ShowExamplePage
+    $scope.showExampleModal = function () {
+      $scope.exampleModal = $modal.open({
+        scope: $scope,
+        templateUrl: 'modules/core/partnerProfile/brandingExample.tpl.html',
+        size: 'lg'
+      });
+    };
+    // TODO:  close Example Page;
+    $scope.closeExampleModal = function () {
+      $scope.exampleModal.close();
+    };
+
+    // TODO: Refactor to use appconfig states
+    function openModal(size) {
+      $scope.uploadModal = $modal.open({
+        scope: $scope,
+        templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
+        size: size
+      });
+    }
+
     $scope.toggleLogo = _.debounce(function (value) {
       if (value) {
         BrandService.usePartnerLogo(orgId);
