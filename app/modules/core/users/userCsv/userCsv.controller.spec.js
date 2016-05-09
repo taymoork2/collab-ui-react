@@ -183,6 +183,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('Process CSV and Save Users', function () {
       beforeEach(function () {
+        $scope.isCancelledByUser = false;
         controller.model.file = twoValidUsers;
         $scope.$apply();
         $timeout.flush();
