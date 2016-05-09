@@ -1,6 +1,3 @@
-/**
- * HTML BUILDING TASKS
- */
 'use strict';
 
 var gulp = require('gulp');
@@ -16,10 +13,9 @@ var fileListParser = require('../utils/fileListParser.gulp');
 var typeScriptUtil = require('../utils/typeScript.gulp.js');
 
 gulp.task('processHtml:build', function (done) {
-  runSeq(['index:build', 'unsupported:build'], done);
+  runSeq(['index:build'], done);
 });
 
-// Inject dependancies into index.html
 gulp.task('index:build', function () {
   var jsFiles = [].concat(
     config.vendorFiles.js,
@@ -56,37 +52,7 @@ gulp.task('index:build', function () {
       ignorePath: config.build,
       addRootSlash: false
     }))
-    .pipe($.inject(gulp.src(config.app + '/**/unsupported.js', {
-      read: false
-    }), {
-      starttag: '<!-- unsupported:{{ext}} -->',
-      ignorePath: config.app,
-      addRootSlash: false
-    }))
     .pipe($.rename('index.html'))
-    .pipe(gulp.dest(config.build))
-    .pipe(reload({
-      stream: true
-    }));
-});
-
-// Inject dependancies into unsupported.html
-gulp.task('unsupported:build', function () {
-  var jsFiles = [].concat(
-    config.vendorFiles.unsupported,
-    config.unsupportedDir + '/scripts/**/*.js'
-  );
-  messageLogger('Injecting dependancies into unsupported.html', jsFiles);
-  return gulp
-    .src(config.unsupportedDir + '/unsupported2.html')
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.inject(gulp.src(jsFiles, {
-      read: false
-    }), {
-      ignorePath: config.build,
-      addRootSlash: false
-    }))
-    .pipe($.rename('unsupported.html'))
     .pipe(gulp.dest(config.build))
     .pipe(reload({
       stream: true

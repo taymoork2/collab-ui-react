@@ -59,6 +59,12 @@
       @include vr-spacing(mr, 2);
     }
   }
+  .cs-checkbox-group {
+    display: inline-block;
+    &.aa-schedule-holidays-behavior {
+      @include vr-spacing(mb, 0);
+    }
+  }
   .accordion {
     border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
@@ -84,7 +90,7 @@
           }
         }
         &:before {
-          content: initial;
+          content: none;
         }
         &.active {
           display: none;

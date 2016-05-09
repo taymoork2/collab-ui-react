@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskSparkStatusService($q, ReportsService) {
 
     function getHealthStatuses() {

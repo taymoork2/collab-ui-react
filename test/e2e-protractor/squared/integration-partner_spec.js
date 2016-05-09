@@ -83,7 +83,7 @@ describe('Partner flow', function () {
       });
     }, LONG_TIMEOUT);
 
-    it('should edit an exisiting trial', function () {
+    xit('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
