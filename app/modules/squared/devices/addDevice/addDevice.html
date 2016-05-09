@@ -1,75 +1,79 @@
-<div class="modal-header">
-  <button
-    type="button"
-    class="close"
-    ng-click="$dismiss()">
-  </button>
-  <h3 class="modal-title" translate="spacesPage.modalTitle"></h3>
-</div>
+<div id="addDeviceModal">
 
-<div class="modal-body">
-  <div ng-show="notificationsFailed" class="alert alert-warning">
-    Activation Code created successfully, but notifications failed to transmit.
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      ng-click="$dismiss()">
+    </button>
+    <h3 class="modal-title" translate="spacesPage.modalTitle"></h3>
   </div>
 
-  <form onsubmit="$('#create-code-button').click()" ng-show="adc.showAdd">
-    <h4 translate="spacesPage.addDeviceStep1"></h4>
-    <span translate="spacesPage.addDeviceStep1Desc"></span>
-
-    <div>
-      <input
-        required
-        type="text"
-        id="newRoom"
-        name="roomName"
-        focus-on="adc.showAdd"
-        ng-model="adc.deviceName"
-        placeholder="Room or shared space name"
-        class="form-control"
-        maxlength="127">
-      </input>
-      <h4 translate="spacesPage.addPersonalDevice"></h4>
-      <span translate="spacesPage.addPersonalDeviceDesc" translate-value-onclick="adc.clickUsers()" translate-compile></span>
-
+  <div class="modal-body">
+    <div ng-show="notificationsFailed" class="alert alert-warning">
+      Activation Code created successfully, but notifications failed to transmit.
     </div>
-  </form>
 
-  <div class="device-added clearfix" ng-if="!adc.showAdd">
-    <h4 translate="spacesPage.useThisCode" translate-values="{deviceName: adc.deviceName}"></h4>
-    <div class="clearfix">
-      <h3>
-        {{adc.activationCode}}
-        <a class="clipboard-button" sq-clipboard="adc.activationCode"><i class="fa fa-clipboard"></i></a>
-      </h3>
-      <p translate="deviceOverviewPage.codeExpires" translate-values="{inXDays: adc.expiryTime}"></p>
+    <form onsubmit="$('#create-code-button').click()" ng-show="adc.showAdd">
+      <h4 translate="spacesPage.addDeviceStep1"></h4>
+      <span translate="spacesPage.addDeviceStep1Desc"></span>
+
+      <div>
+        <input
+          required
+          type="text"
+          id="newRoom"
+          name="roomName"
+          focus-on="adc.showAdd"
+          ng-model="adc.deviceName"
+          placeholder="Room or shared space name"
+          class="form-control"
+          maxlength="127">
+        </input>
+        <h4 translate="spacesPage.addPersonalDevice"></h4>
+        <span translate="spacesPage.addPersonalDeviceDesc" translate-value-onclick="adc.clickUsers()" translate-compile></span>
+
+      </div>
+    </form>
+
+    <div class="device-added clearfix" ng-if="!adc.showAdd">
+      <h4 translate="spacesPage.useThisCode" translate-values="{deviceName: adc.deviceName}"></h4>
+      <div class="clearfix">
+        <h3>
+          {{adc.activationCode}}
+          <a class="clipboard-button" sq-clipboard="adc.activationCode"><i class="fa fa-clipboard"></i></a>
+        </h3>
+        <p translate="deviceOverviewPage.codeExpires" translate-values="{inXDays: adc.expiryTime}"></p>
+      </div>
+
     </div>
 
   </div>
 
-</div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn"
+      ng-if="!adc.showAdd"
+      focus-on="!adc.showAdd"
+      ng-click="adc.resetAddDevice()"
+      translate="spacesPage.addAnother">
+    </button>
+    <button
+      type="button"
+      class="btn btn--primary"
+      ng-click="$dismiss()"
+      ng-if="!adc.showAdd"
+      translate="common.done">
+    </button>
+    <button
+      ng-if="adc.showAdd"
+      id="create-code-button"
+      class="btn btn--primary"
+      sq-click-promise="adc.addDevice()"
+      ng-disabled="!adc.isNameValid()"
+      translate="spacesPage.addBtn">
+    </button>
+  </div>
 
-<div class="modal-footer">
-  <button
-    type="button"
-    class="btn"
-    ng-if="!adc.showAdd"
-    focus-on="!adc.showAdd"
-    ng-click="adc.resetAddDevice()"
-    translate="spacesPage.addAnother">
-  </button>
-  <button
-    type="button"
-    class="btn btn--primary"
-    ng-click="$dismiss()"
-    ng-if="!adc.showAdd"
-    translate="common.done">
-  </button>
-  <button
-    ng-if="adc.showAdd"
-    id="create-code-button"
-    class="btn btn--primary"
-    sq-click-promise="adc.addDevice()"
-    ng-disabled="!adc.isNameValid()"
-    translate="spacesPage.addBtn">
-  </button>
 </div>

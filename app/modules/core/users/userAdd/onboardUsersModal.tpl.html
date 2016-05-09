@@ -1,15 +1,18 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-  <h3 class="modal-title" translate="onboardModal.onboardUsers"></h3>
-</div>
+<div id="modalContent" class="add-users">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title" translate="onboardModal.onboardUsers"></h3>
+  </div>
 
-<div class="modal-body">
-  <cr-onboard-users></cr-onboard-users>
-</div>
+  <div class="modal-body">
+    <cr-onboard-users></cr-onboard-users>
+  </div>
 
-<div class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="clearPanel()"><span translate="onboardModal.clear"></span></button>
-  <button type="button" class="btn btn--primary" ng-click="validateTokensBtn()" ng-disabled="!model.userList"><span translate="common.next"></span></button>
+  <div class="modal-footer">
+    <button type="button" id="btnClear" class="btn" ng-click="clearPanel()"><span translate="onboardModal.clear"></span></button>
+    <button type="button" class="btn btn--primary" ng-click="validateTokensBtn()" ng-disabled="!model.userList"><span translate="common.next"></span></button>
+  </div>
+
 </div>

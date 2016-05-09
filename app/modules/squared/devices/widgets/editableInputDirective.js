@@ -75,7 +75,7 @@
             if (_focusVal) {
               $element.focus();
             }
-          }, 500);
+          });
         });
       }
     };

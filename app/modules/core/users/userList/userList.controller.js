@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
+  function UserListCtrl($dialogs, $location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
