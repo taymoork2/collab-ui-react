@@ -1,0 +1,561 @@
+[{
+  "id": "lid.52c671d2-1306-11e6-aafa-9ea28e152383",
+  "time": "2016-05-05T21:14:16.085Z",
+  "src": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"23.253.68.194\",\"port\":39761}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":61530,\"thread\":\"nioconnector4\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2_L2SIP\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/loci\/call\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.52c671d2-1306-11e6-aafa-9ea28e152383",
+  "time": "2016-05-05T21:14:16.136Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.254.6\",\"port\":45988}"
+  },
+  "dst": {
+    "type": "Conversation",
+    "payload": "{\"ip\":\"10.254.2.150\",\"port\":61129,\"thread\":\"nioconnector11\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/conversations\/user\/d415168b-ac5f-412e-b176-c71f98542d13\",\"method\":\"PUT\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.52c671d2-1306-11e6-aafa-9ea28e152383",
+  "time": "2016-05-05T21:14:16.154Z",
+  "src": {
+    "type": "Conversation",
+    "payload": "{\"ip\":\"10.254.2.150\",\"port\":61129,\"thread\":\"nioconnector11\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.254.6\",\"port\":45988}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/conversations\/user\/d415168b-ac5f-412e-b176-c71f98542d13\",\"status\":200}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.156Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "locus.state",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"state\":\"INACTIVE\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.192Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.254.6\",\"port\":36964}"
+  },
+  "dst": {
+    "type": "Conversation",
+    "payload": "{\"ip\":\"10.254.0.138\",\"port\":61027,\"thread\":\"nioconnector58\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/conversations\/92366f83-a326-3e63-b208-1c7bb302c550\/participants2\",\"method\":\"GET\",\"query\":\"participant=85094c45-7b96-47b1-854f-aef388a630fd\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.198Z",
+  "src": {
+    "type": "Conversation",
+    "payload": "{\"ip\":\"10.254.0.138\",\"port\":61027,\"thread\":\"nioconnector58\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.254.6\",\"port\":36964}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/conversations\/92366f83-a326-3e63-b208-1c7bb302c550\/participants2\",\"status\":200}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.216Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.183.248.251\",\"port\":59342}"
+  },
+  "dst": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.2\",\"port\":61109,\"thread\":\"nioconnector63\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/features\/users\/85094c45-7b96-47b1-854f-aef388a630fd\/developer\",\"method\":\"GET\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.264Z",
+  "src": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.2\",\"port\":61109,\"thread\":\"nioconnector63\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.183.248.251\",\"port\":59342}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/features\/users\/85094c45-7b96-47b1-854f-aef388a630fd\/developer\",\"status\":200}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.276Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.183.248.251\",\"port\":59525}"
+  },
+  "dst": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.106\",\"port\":61839,\"thread\":\"nioconnector2\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/features\/users\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "scid.51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com",
+  "time": "2016-05-05T21:14:16.285Z",
+  "src": {
+    "type": "L2SIP-PROXY",
+    "payload": "{\"ip\":\"23.253.68.194\",\"port\":5062}"
+  },
+  "dst": {
+    "type": "SIP",
+    "payload": "{\"port\":0}"
+  },
+  "msg": {
+    "type": "sip.res",
+    "payload": "{\"callId\":\"51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"cseq\":\"101\",\"status\":100}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.356Z",
+  "src": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.106\",\"port\":61839,\"thread\":\"nioconnector2\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.183.248.251\",\"port\":59525}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/features\/users\",\"status\":200}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.369Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":56611}"
+  },
+  "dst": {
+    "type": "Orpheus",
+    "payload": "{\"ip\":\"10.254.2.26\",\"port\":61114,\"thread\":\"nioconnector25\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/v1\/venues\/fca3d630-87ee-11e5-a656-d9ad81974429\/confluences\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.439Z",
+  "src": {
+    "type": "Orpheus",
+    "payload": "{\"ip\":\"10.254.2.26\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Linus",
+    "payload": "{\"ip\":\"104.130.11.101\",\"port\":444}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/calliope\/api\/v1\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.442Z",
+  "src": {
+    "type": "Linus",
+    "payload": "{\"host\":\"104.130.11.101\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Linus",
+    "payload": "{\"host\":\"104.130.11.101\",\"port\":0}"
+  },
+  "msg": {
+    "type": "service.note",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"note\":\"squared.US-EAST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.637Z",
+  "src": {
+    "type": "Linus",
+    "payload": "{\"ip\":\"104.130.11.101\",\"port\":444}"
+  },
+  "dst": {
+    "type": "Orpheus",
+    "payload": "{\"ip\":\"10.254.2.26\",\"port\":0}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/calliope\/api\/v1\",\"status\":201}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.642Z",
+  "src": {
+    "type": "Orpheus",
+    "payload": "{\"ip\":\"10.254.2.26\",\"port\":61114,\"thread\":\"nioconnector25\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":56611}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/v1\/venues\/fca3d630-87ee-11e5-a656-d9ad81974429\/confluences\",\"status\":201}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.649Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "locus.state",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"state\":\"ACTIVE\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.650Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "locus.state",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"state\":\"ACTIVE\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.651Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "locus.state",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"state\":\"ACTIVE\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.653Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Cassandra",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "db.write",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"commands\":[\"Update Locus\",\"ADD_CALL_LEVEL_TOGGLES,ROSTER_ADD,JOIN,LOCUS_ACTIVE,MEDIA_SHARE_CREATED,ADD_PARTICIPANT_ROLES\"]}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.659Z",
+  "src": {
+    "type": "Cassandra",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "db.write",
+    "payload": "{\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"commands\":[\"Update Locus\",\"ADD_CALL_LEVEL_TOGGLES,ROSTER_ADD,JOIN,LOCUS_ACTIVE,MEDIA_SHARE_CREATED,ADD_PARTICIPANT_ROLES\"],\"status\":\"SUCCESS\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.678Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "dst": {
+    "type": "Scheduler",
+    "payload": "{\"ip\":\"scheduler.cfa.wbx2.com\",\"port\":-1}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/scheduler\/api\/v1\/tasks\",\"method\":\"POST\",\"taskID\":\"60c2c066-9ee0-3243-a1c8-bc2b754449b8\",\"tag\":\"PERIODIC_SWEEPER-f2aa2076-77eb-329f-b5c1-a2f21fdfdc89\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.709Z",
+  "src": {
+    "type": "Scheduler",
+    "payload": "{\"ip\":\"scheduler.cfa.wbx2.com\",\"port\":-1}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.1.10\",\"port\":0}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/scheduler\/api\/v1\/tasks\",\"status\":200,\"taskID\":\"60c2c066-9ee0-3243-a1c8-bc2b754449b8\",\"nextTime\":\"2016-05-05T21:14:17.000Z\",\"tag\":\"PERIODIC_SWEEPER-f2aa2076-77eb-329f-b5c1-a2f21fdfdc89\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.716Z",
+  "src": {
+    "type": "Scheduler",
+    "payload": "{\"ip\":\"166.78.177.24\",\"port\":49082}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.2.166\",\"port\":61136,\"thread\":\"nioconnector96\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"Squared Scheduler\/1.0\",\"uid\":\"ab5f29fd-cc54-4bbc-a040-411f3c7d57cf\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/loci\/f2aa2076-77eb-329f-b5c1-a2f21fdfdc89\/schedulerCallback\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.726Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.254.2.166\",\"port\":61136,\"thread\":\"nioconnector96\"}"
+  },
+  "dst": {
+    "type": "Scheduler",
+    "payload": "{\"ip\":\"166.78.177.24\",\"port\":49082}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"Squared Scheduler\/1.0\",\"uid\":\"ab5f29fd-cc54-4bbc-a040-411f3c7d57cf\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/loci\/f2aa2076-77eb-329f-b5c1-a2f21fdfdc89\/schedulerCallback\",\"status\":200}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.729Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":56020}"
+  },
+  "dst": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.150\",\"port\":8080,\"thread\":\"http-apr-192.168.4.150-8080-exec-20\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_b8bbfe51-fea6-46a6-be0b-68910be03726\",\"path\":\"\/v1\/calls\/locusevents\/\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.732Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":43092}"
+  },
+  "dst": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.22\",\"port\":61116,\"thread\":\"nioconnector10\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"d415168b-ac5f-412e-b176-c71f98542d13\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/devices\/events\/locus\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.736Z",
+  "src": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.150\",\"port\":8080,\"thread\":\"http-apr-192.168.4.150-8080-exec-20\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":56020}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_b8bbfe51-fea6-46a6-be0b-68910be03726\",\"path\":\"\/v1\/calls\/locusevents\/\",\"status\":204}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.736Z",
+  "src": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.2.22\",\"port\":61116,\"thread\":\"nioconnector10\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":43092}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"d415168b-ac5f-412e-b176-c71f98542d13\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/devices\/events\/locus\",\"status\":204}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.746Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":44895}"
+  },
+  "dst": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.1.222\",\"port\":61099,\"thread\":\"nioconnector30\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/devices\/events\/locus\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.746Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":41101}"
+  },
+  "dst": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.146\",\"port\":8080,\"thread\":\"http-apr-192.168.4.146-8080-exec-28\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_fc4296b1-2c29-4470-9ce8-3976c8aff164\",\"path\":\"\/v1\/calls\/locusevents\/\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.750Z",
+  "src": {
+    "type": "WDM",
+    "payload": "{\"ip\":\"10.254.1.222\",\"port\":61099,\"thread\":\"nioconnector30\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"10.189.252.6\",\"port\":44895}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"85094c45-7b96-47b1-854f-aef388a630fd\",\"tid\":\"L2Sip-ITCLIENT_51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\",\"path\":\"\/devices\/events\/locus\",\"status\":204}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.751Z",
+  "src": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.146\",\"port\":8080,\"thread\":\"http-apr-192.168.4.146-8080-exec-28\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":41101}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_fc4296b1-2c29-4470-9ce8-3976c8aff164\",\"path\":\"\/v1\/calls\/locusevents\/\",\"status\":204}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.765Z",
+  "src": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":56022}"
+  },
+  "dst": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.150\",\"port\":8080,\"thread\":\"http-apr-192.168.4.150-8080-exec-21\"}"
+  },
+  "msg": {
+    "type": "http.req",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_b320b108-2357-4d67-b6ed-bc436114ea39\",\"path\":\"\/v1\/calls\/locusevents\/51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\/a33e2c88-4847-4b75-9dd1-2e38b859ab6f?type=service\",\"method\":\"POST\"}"
+  },
+  "isTest": false
+}, {
+  "id": "lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89",
+  "time": "2016-05-05T21:14:16.809Z",
+  "src": {
+    "type": "L2SIP",
+    "payload": "{\"ip\":\"192.168.4.150\",\"port\":8080,\"thread\":\"http-apr-192.168.4.150-8080-exec-21\"}"
+  },
+  "dst": {
+    "type": "Locus",
+    "payload": "{\"ip\":\"192.168.4.132\",\"port\":56022}"
+  },
+  "msg": {
+    "type": "http.res",
+    "payload": "{\"ua\":\"WX2 Locus Server\",\"uid\":\"a087c188-0022-4972-8270-a535260f6d0d\",\"tid\":\"NA_b320b108-2357-4d67-b6ed-bc436114ea39\",\"path\":\"\/v1\/calls\/locusevents\/51818980-1e713109-1f1b6-f45ba8c0@sme-vip-a-01-internal.sc-tx2.huron-dev.com\/a33e2c88-4847-4b75-9dd1-2e38b859ab6f?type=service\",\"status\":204}"
+  },
+  "isTest": false
+}]

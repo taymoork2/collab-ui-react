@@ -73,6 +73,10 @@
         label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
         name: 'phoneMenuRouteMailbox',
         action: 'routeToVoiceMail'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+        name: 'phoneMenuRouteToExtNum',
+        action: 'route'
       }
     ];
 
@@ -238,11 +242,8 @@
     function addAvailableFeatures() {
       if (Config.isDev() || Config.isIntegration()) {
 
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
-          name: 'phoneMenuRouteToExtNum',
-          action: 'route'
-        });
+        // push features here
+        // vm.keyActions.push();
 
       }
     }

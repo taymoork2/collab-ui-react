@@ -6,7 +6,12 @@
 
     var allowedList = [
       '/conversation/api/v1/users/deskFeedbackUrl',
-      '/idb/oauth2/v1/revoke'
+      '/idb/oauth2/v1/revoke',
+      '/WBXService/XMLService',
+      '/meetingsapi/v1/users/',
+      '/meetingsapi/v1/users/importexportstatus',
+      '/meetingsapi/v1/users/export',
+      '/meetingsapi/v1/users/import'
     ];
 
     function rejectOnNotRead(config) {
