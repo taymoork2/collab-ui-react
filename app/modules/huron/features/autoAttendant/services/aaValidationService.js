@@ -90,12 +90,12 @@
 
       /* check holiday value to determine if holiday uses open closed or holiday lane */
 
-      var closedHoliday =  _.get(ui, 'holidaysValue') === 'closedHours';
+      var closedHoliday = _.get(ui, 'holidaysValue') === 'closedHours';
       if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
         openHoursValid = checkForValid(ui.openHours, openHoursLabel);
       }
       if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
-        closedHoursValid = checkForValid(ui.closedHours, 
+        closedHoursValid = checkForValid(ui.closedHours,
           closedHoliday ? closedHolidayHoursLabel : closedHoursLabel);
       }
 
@@ -127,7 +127,7 @@
           AANotificationService.error(err.msg, {
             key: err.key,
             schedule: fromLane,
-            at : _.indexOf(menuOptions, optionMenu) + 1
+            at: _.indexOf(menuOptions, optionMenu) + 1
           });
         });
       });

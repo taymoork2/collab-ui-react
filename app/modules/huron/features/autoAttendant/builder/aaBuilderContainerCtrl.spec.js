@@ -20,12 +20,12 @@ describe('Controller: AABuilderContainerCtrl', function () {
         this.cancelCallback = cancelCallback;
       }
     },
-      close: function (item) {
-        this.result.okCallback(item);
-      },
-      dismiss: function (type) {
-        this.result.cancelCallback(type);
-      }
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
+    }
   };
 
   beforeEach(module('uc.autoattendant'));
@@ -51,7 +51,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   }));
 
   describe('openScheduleModal', function () {
-    
+
     it('should not open the Modal on Validation error', function () {
       spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(false);
 
@@ -76,7 +76,6 @@ describe('Controller: AABuilderContainerCtrl', function () {
     });
 
   });
-
 
   describe('getScheduleTitle', function () {
 

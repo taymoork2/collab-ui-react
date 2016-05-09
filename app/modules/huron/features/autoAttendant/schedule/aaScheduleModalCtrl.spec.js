@@ -520,7 +520,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
     });
- 
+
     it('should open a modal for importing', function () {
       controller.openImportModal();
       $scope.$apply();
