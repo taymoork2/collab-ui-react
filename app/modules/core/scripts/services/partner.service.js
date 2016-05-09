@@ -24,6 +24,7 @@
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
+      addToManagedOrgsList: addToManagedOrgsList,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -46,11 +47,24 @@
       });
     }
 
-    function addToManagedOrgsList() {
-      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId) + '/';
+    function addToManagedOrgsList(uuid, orgId) {
+      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
+
+      var payload = {
+        'schemas': [
+          'urn:scim:schemas:core:1.0',
+          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
+        ],
+        'managedOrgs': [{
+          'orgId': orgId,
+          'role': 'ID_Full_Admin'
+        }]
+      };
+
       return $http({
         method: 'PATCH',
-        url: scimUrl
+        url: authUrl,
+        data: payload
       });
     }
 

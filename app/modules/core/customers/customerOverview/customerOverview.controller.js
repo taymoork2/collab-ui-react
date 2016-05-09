@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -21,8 +21,10 @@
     vm.isSquaredUC = isSquaredUC();
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
+    vm.getUserUuid = getUserUuid;
     vm.deleteTestOrg = deleteTestOrg;
 
+    vm.uuid = '';
     vm.logoOverride = false;
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
@@ -195,6 +197,17 @@
 
     function isOwnOrg() {
       return vm.customerName === Authinfo.getOrgName();
+    }
+
+    function getUserUuid() {
+      Auth.getAuthorizationUrlList().then(function (response) {
+        if (response.status === 200) {
+          vm.uuid = response.data.uuid;
+          PartnerService.addToManagedOrgsList(vm.uuid, vm.customerOrgId);
+        } else {
+          Log.error('Query for userauthinfo failed. Status: ' + response.status);
+        }
+      });
     }
 
     function getIsTestOrg() {

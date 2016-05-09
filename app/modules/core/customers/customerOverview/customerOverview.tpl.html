@@ -18,7 +18,7 @@
   </cs-sp-buttons>
 
     <cs-sp-section>
-      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people" ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" ng-click="customerOverview.launchCustomerPortal(); PartnerService.addToManagedOrgsList()">
+      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people" ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" ng-click="customerOverview.launchCustomerPortal(); customerOverview.getUserUuid()">
         <span ng-if="customerOverview.isOrgSetup()" translate="customerPage.launchButton"></span>
         <span ng-if="!customerOverview.isOrgSetup()" translate="customerPage.setupButton"></span>
       </button>
