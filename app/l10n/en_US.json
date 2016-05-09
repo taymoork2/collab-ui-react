@@ -3689,6 +3689,12 @@
       "title": "Support"
     }
   },
+  "my-company": {
+    "pageTitle": "My Company",
+    "subscription": "Subscriptions",
+    "info": "Info",
+    "order": "Order"
+  },
   "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",

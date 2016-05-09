@@ -17,10 +17,8 @@
 <!-- if the use of settings  as in global settings, then replace with above-->
 
 
-<form class="cs-form">
+<form class="cs-form" id="my-company-info">
   <div class="cs-form__section">
-
-
     <!-- company name / account number -->
     <div class="section__info">
       <h4 class="section__title" translate="partnerProfile.companyInfo"></h4>
@@ -63,8 +61,15 @@
       <div ng-show="rep !== null" class="form-spacing">
         <h4 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h4>
         <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-        <span class="rep-info" translate="rep.displayName"></span>
-        <span class="rep-info" translate="rep.userName"></span>
+
+        <!-- Mock content -->
+        <span class="rep-info"><strong>Jan Janssen</strong></span> <br>
+        <span class="rep-info">jjanssen</span>
+
+        <!-- Real content below -->
+        <!--<span class="rep-info" translate="rep.displayName"></span> <br>
+        <span class="rep-info" translate="rep.userName"></span>-->
+
         <!-- grant cisco access checkbox -->
         <div class="row grant-row" ng-show="false">
           <div class="columns small-12">
@@ -74,10 +79,14 @@
       </div>
       <div ng-if="!isPartner && partner !== null">
         <h4 translate="customerProfile.partnerAdmin"></h4>
-        <span class="rep-info">{{partner.displayName}}</span>
-        <span class="rep-info">{{partner.userName}}</span>
+        <!-- Mock content -->
+        <span class="rep-info"><strong>John Doe</strong></span> <br>
+        <span class="rep-info">jdoe</span>
+
+        <!-- Real content below -->
+        <!--<span class="rep-info">{{partner.displayName}}</span> <br>
+        <span class="rep-info">{{partner.userName}}</span>-->
       </div>
     </div>
   </div>
 </form>
-
