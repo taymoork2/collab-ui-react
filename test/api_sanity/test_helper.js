@@ -118,6 +118,11 @@ var auth = {
     pass: 'C1sco123=',
     org: '676a82cd-64e9-4ebd-933c-4dce087a02bd'
   },
+  'aa-admin': {
+    user: 'indigoAA02+1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '7e0f0f48-0582-444e-ac75-908a36b29539'
+  },
   't31CSVToggleUser': {
     user: 't31r1-csvtoggle-adm@mailinator.com',
     pass: 'Cisco!23',
