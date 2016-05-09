@@ -104,6 +104,7 @@ var PartnerHomePage = function () {
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
   this.closeBtnOnModal = element(by.id('btnCloseModal'));
   this.videoModal = element(by.id('videoId'));
+  this.searchFilter = element(by.id('searchFilter'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
