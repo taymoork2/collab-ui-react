@@ -336,10 +336,8 @@
         vm.activeButton = [1, 2, 3];
         vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
         previousSearch = vm.searchField;
-      }
-      $timeout(function () {
         resizeCards();
-      }, 10);
+      }
       return returnArray;
     }
 

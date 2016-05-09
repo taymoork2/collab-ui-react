@@ -39,10 +39,9 @@ $aa-builder-text-color: $gray-dark-1;
   .aa-builder-container {
     background-color: $gray-light-4;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 
     $margin-top: 0.125rem;
-
     margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
@@ -162,7 +161,7 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-help-wrapper {
-    & .popover {
+  & .popover {
     width: 60%;
   }
 }
@@ -182,7 +181,7 @@ $aa-builder-text-color: $gray-dark-1;
   transition: all 0.2s ease-in-out;
 
   .phone-number {
-    position: absolute;
+    display: inline-block;
     @include vr-spacing(pt, .25);
   }
 
@@ -259,13 +258,14 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-panel-numbers {
   @extend .panel;
+  text-align: left;
 
   width: 16rem;
   @include vr-spacing(mv, 1);
 }
 
 .aa-container {
-  overflow: visible;
+  width: 100%;
   padding: 0;
   min-height: 1px;
   align-items: center;
@@ -288,11 +288,11 @@ $aa-builder-text-color: $gray-dark-1;
 
   @extend .aa-transition;
 
-  display: inline-block;
   @include vr-spacing(m, 0);
 
   @include vr-spacing(pl, .5);
   @include vr-spacing(pr, .5);
+  white-space: normal;
   box-shadow: none;
   line-height: .5rem;
 
@@ -324,7 +324,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-schedule-body {
     @extend .aa-panel-body;
-    width: rem-calc(410);
+    min-width: vr-adjust(300);
   }
 
   .aa-panel-body-endcall {
@@ -352,7 +352,7 @@ $aa-builder-text-color: $gray-dark-1;
       @include vr-spacing(mt, 0);
       color: $gray-dark-1;
 
-      &.bottom >.arrow {
+      &.bottom > .arrow {
         background-color: transparent;
         border-bottom-color: transparent;
 
@@ -378,12 +378,12 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-transition.ng-enter,
 .aa-transition.ng-leave.ng-leave-active {
-  opacity:0;
+  opacity: 0;
 }
 
 .aa-transition.ng-leave,
 .aa-transition.ng-enter.ng-enter-active {
-  opacity:1;
+  opacity: 1;
 }
 
 .aa-add-step-icon {
@@ -419,20 +419,49 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
-.aa-flex-vertical-line {
+.aa-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  .aa-general-2-lanes {
+    min-width: vr-adjust(780);
+  }
+
+  .aa-lanes-wrapper {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .aa-lane {
+    @extend .aa-flex-container;
+    min-width: vr-adjust(390);
+
+    .aa-panel-lane {
+      @extend .aa-panel;
+      @extend .aa-max-width;
+    }
+  }
+}
+
+.aa-max-width {
+  max-width: 100%;
+}
+
+.aa-vertical-line {
   border-left: $aa-builder-border-size solid $aa-builder-border-color;
   min-height: 30px;
   display: flex;
   flex: 0 1 auto;
 }
 
-.aa-flex-vertical-spacer {
+.aa-vertical-spacer {
   min-height: 30px;
   display: flex;
   flex: 0 1 auto;
 }
 
-.aa-flex-horizontal-line {
+.aa-horizontal-line {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   width: 100%;
@@ -440,7 +469,7 @@ $aa-builder-text-color: $gray-dark-1;
   flex: 0 1 auto;
 }
 
-.aa-flex-horizontal-line-right {
+.aa-horizontal-line-right {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
@@ -449,7 +478,7 @@ $aa-builder-text-color: $gray-dark-1;
   align-self: flex-end;
 }
 
-.aa-flex-horizontal-line-left {
+.aa-horizontal-line-left {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
