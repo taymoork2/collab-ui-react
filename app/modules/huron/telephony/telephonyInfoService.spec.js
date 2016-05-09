@@ -199,7 +199,7 @@ describe('Service: TelephonyInfoService', function () {
       InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
       TelephonyInfoService.getUserInternationalDialingDetails();
       $rootScope.$apply();
-      expect(TelephonyInfoService.telephonyInfo.internationalDialingStatus).toEqual('internationalDialingPanel.alwaysAllow');
+      expect(TelephonyInfoService.getTelephonyInfo().internationalDialingStatus).toEqual('internationalDialingPanel.alwaysAllow');
     });
   });
 });

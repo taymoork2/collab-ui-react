@@ -198,9 +198,7 @@
     }, {
       get: {
         method: 'GET',
-        transformResponse: function (data) {
-          return transformEnvelope(data);
-        }
+        transformResponse: transformEnvelope
       },
       update: {
         method: 'PUT'
@@ -480,9 +478,7 @@
       },
       get: {
         method: 'GET',
-        transformResponse: function (data, headers) {
-          return transformEnvelope(data);
-        }
+        transformResponse: transformEnvelope
       }
     });
   }
@@ -496,9 +492,7 @@
     }, {
       get: {
         method: 'GET',
-        transformResponse: function (data) {
-          return transformEnvelope(data);
-        }
+        transformResponse: transformEnvelope
       }
     });
   }

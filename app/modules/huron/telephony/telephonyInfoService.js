@@ -70,8 +70,7 @@
       checkCustomerVoicemail: checkCustomerVoicemail,
       getTelephonyInfoObject: getTelephonyInfoObject,
       getInternationalDialing: getInternationalDialing,
-      getUserInternationalDialingDetails: getUserInternationalDialingDetails,
-      telephonyInfo: telephonyInfo
+      getUserInternationalDialingDetails: getUserInternationalDialingDetails
     };
 
     return telephonyInfoService;
