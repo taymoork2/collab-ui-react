@@ -10,7 +10,7 @@
   </div>
 
   <div ng-if="aaBuilderMain.isAANameDefined" class="aa-builder-frame">
-    <div class="aa-builder-container" id="builderScrollContainer">
+    <div class="aa-builder-container" id="builderScrollContainer" cs-scroll>
       <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder" onload="aaBuilderMain.setLoadingDone()"></span>
     </div>
   </div>

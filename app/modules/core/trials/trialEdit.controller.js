@@ -145,7 +145,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
@@ -180,9 +180,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-12",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: 'trialRoomSystem',
         class: 'columns medium-12',
       },
@@ -202,10 +202,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: "columns medium-12 small-offset-1",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -260,8 +260,11 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
-        vm.showRoomSystems = results[0];
-        vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
+        //vm.showRoomSystems = results[0];
+        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        vm.showRoomSystems = true;
+        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
         vm.webexTrial.enabled = results[1] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
         vm.showWebex = results[1];

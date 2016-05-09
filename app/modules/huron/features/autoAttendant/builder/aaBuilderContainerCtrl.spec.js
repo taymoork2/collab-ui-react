@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderContainerCtrl', function () {
-  var $scope, controller, AAModelService, AutoAttendantCeInfoModelService, AAUiModelService;
+  var $scope, controller, $modal, AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService;
 
   var uiModel = {
     isClosedHours: false,
@@ -13,23 +13,69 @@ describe('Controller: AABuilderContainerCtrl', function () {
     }
   };
 
+  var fakeModal = {
+    result: {
+      then: function (okCallback, cancelCallback) {
+        this.okCallback = okCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
+    }
+  };
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _AAModelService_, _AAUiModelService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
     $scope = _$rootScope_;
+    $modal = _$modal_;
 
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
+    AAValidationService = _AAValidationService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(uiModel);
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+
+    spyOn($modal, 'open').and.returnValue(fakeModal);
 
     controller = $controller('AABuilderContainerCtrl', {
       $scope: $scope
     });
 
   }));
+
+  describe('openScheduleModal', function () {
+
+    it('should not open the Modal on Validation error', function () {
+      spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(false);
+
+      controller.openScheduleModal();
+
+      expect($modal.open).not.toHaveBeenCalled();
+
+    });
+    it('should open the Modal on Validation success', function () {
+      spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
+
+      controller.openScheduleModal();
+      fakeModal.close({
+        holidays: [],
+        hours: []
+      });
+
+      $scope.$apply();
+
+      expect($modal.open).toHaveBeenCalled();
+
+    });
+
+  });
 
   describe('getScheduleTitle', function () {
 

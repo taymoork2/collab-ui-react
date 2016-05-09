@@ -22,13 +22,10 @@
     function notifyScheduleDependent(event) {
       var deferred = $q.defer();
       if (event.type === 'AANameChange') {
+        // If any required input in the event is missing, simply ignore the notification and pass it on
+        // to the next dependent.
         if (!event.newName || !event.scheduleId) {
-          AANotificationService.error('autoAttendant.errorUpdateScheduleName', {
-            name: event.newName,
-            statusText: '',
-            status: ''
-          });
-          deferred.reject('SCHEDULE_NAME_CHANGE_FAILED');
+          deferred.resolve(event);
           return deferred.promise;
         }
         AACalendarService.updateCalendarName(event.scheduleId, event.newName).then(function (data) {

@@ -26,8 +26,8 @@
     }, {
       id: 3,
       name: 'OpenClosed',
-      title: $translate.instant('autoAttendant.scheduleOpenClosed'),
-      desc: $translate.instant('autoAttendant.AAOpenClosedDesc'),
+      title: $translate.instant('autoAttendant.AABusinessHours'),
+      desc: $translate.instant('autoAttendant.AABusinessHoursDesc'),
       icons: ['icon-clock', 'icon-audio-plus', 'icon-audio-plus'],
       showTreeLine: true
     }];
