@@ -14,6 +14,7 @@
     vm.uniqueIds = $stateParams.uniqueIds;
     vm.call = $stateParams.call;
     vm.events = $stateParams.events;
+    vm.huronEvents = [];
     vm.imported = $stateParams.imported;
     var logstashPath = $stateParams.logstashPath;
 
@@ -28,21 +29,187 @@
     vm.filterCallIdOptions = [];
     vm.SessionIDPairsFilterOptions = [];
     vm.isSessionIDPairsCollapsed = true;
-    vm.filterHostNamefilterOptions = [];
-
+    vm.sparkHostNamefilterOptions = [];
+    vm.huronHostNamefilterOptions = [];
+    vm.sparkHostNames = [];
     vm.diagramGenerated = false;
     vm.FilterSelectisOpen = false;
+    vm.enabledSparkNodes = true;
     vm.spin = false;
     vm.error = '';
+    var LOCUS = 'Locus:';
+    var SIP_MESSAGE = 'sipmsg';
 
     vm.close = function () {
       clearDownloads();
       $state.modal.close();
     };
 
+    vm.selectedNodes = function () {
+      for (var i = 0; i < vm.sparkHostNamefilterOptions.length; i++) {
+        vm.sparkHostNamefilterOptions[i].value = vm.enabledSparkNodes;
+      }
+    };
+
     $scope.$on('event-query-resolved', function (event, args) {
-      generateLadderDiagram();
+      getSparkData();
     });
+
+    function getSparkData() {
+      if (vm.events === undefined) {
+        return [];
+      }
+      var locusId = null;
+      var start = null;
+      var end = null;
+      var startIndex = -1;
+      var endIndex = -1;
+
+      vm.sparkHostNamefilterOptions = [];
+      vm.hostNamefilterOptions = [];
+      vm.sparkHostNames = [];
+      for (var i = 0; i < vm.events.length; i++) {
+        if (vm.events[i].eventSource !== undefined) {
+          var message = JSON.parse(vm.events[i].message);
+          if ((message.id === SIP_MESSAGE) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
+            if (locusId === null) {
+              startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
+              endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
+              if (endIndex === -1) {
+                endIndex = message.dataParam.rawMsg.indexOf("Content-Type");
+              }
+              locusId = message.dataParam.rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
+              start = vm.events[i]['@timestamp'];
+            }
+            end = vm.events[i]['@timestamp'];
+          }
+        }
+      }
+      if (locusId != null) {
+        CdrLadderDiagramService.getActivities(locusId, start, end).then(
+          function (response) {
+            if (angular.isArray(response)) {
+              _.each(response, function (value, key) {
+                processActivitiesData(value, key, message);
+              });
+            }
+            vm.events = $filter('orderBy')(vm.events, ['"@timestamp"']);
+            generateLadderDiagram();
+          });
+      }
+    }
+
+    function processActivitiesData(value, key, message) {
+      var srcPayload = null;
+      var dstPayload = null;
+      var sourceIp = null;
+      var destinationIp = null;
+      var msgPayload = null;
+      var msgType = null;
+      var localAlias = null;
+      var remoteAlias = null;
+      var event = null;
+      var sparkEvent = null;
+
+      srcPayload = JSON.parse(value.src.payload);
+      if (srcPayload.ip !== undefined) {
+        localAlias = value.src.type;
+        sourceIp = srcPayload.ip;
+      } else if (srcPayload.host !== undefined) {
+        localAlias = value.src.type;
+        sourceIp = srcPayload.host;
+      }
+
+      dstPayload = JSON.parse(value.dst.payload);
+      if (dstPayload.ip !== undefined) {
+        remoteAlias = value.dst.type;
+        destinationIp = dstPayload.ip;
+      } else if (dstPayload.host !== undefined) {
+        remoteAlias = value.dst.type;
+        destinationIp = dstPayload.host;
+      }
+
+      msgPayload = JSON.parse(value.msg.payload);
+      if (msgPayload.path != undefined) {
+        msgType = "path:" + msgPayload.path;
+      } else {
+        msgType = value.msg.type;
+      }
+
+      event = _.find(vm.huronEvents, function (event) {
+        return (event.dataParam.remoteIPAddress === sourceIp);
+      });
+      if (event !== undefined) {
+        addEventData({
+          "type": "ProtocolEvents",
+          "sourceIp": event.eventSource.hostname,
+          "destinationIp": remoteAlias,
+          "timeStamp": value.time,
+          "msgType": msgType,
+          "remoteAlias": remoteAlias,
+          "localAlias": event.eventSource.hostname,
+          "callflowTransition": true
+        });
+      }
+
+      event = _.find(vm.huronEvents, function (event) {
+        return ((event.dataParam.localIPAddress === destinationIp) || (event.dataParam.remoteIPAddress === destinationIp));
+      });
+      if (event !== undefined) {
+        addEventData({
+          "type": "ProtocolEvents",
+          "sourceIp": remoteAlias,
+          "destinationIp": event.eventSource.hostname,
+          "timeStamp": value.time,
+          "msgType": msgType,
+          "remoteAlias": event.eventSource.hostname,
+          "localAlias": remoteAlias,
+          "callflowTransition": true
+        });
+      }
+
+      sparkEvent = {
+        "type": "SparkEvent",
+        "sourceIp": sourceIp,
+        "destinationIp": destinationIp,
+        "timeStamp": value.time,
+        "msgType": msgType,
+        "remoteAlias": remoteAlias,
+        "localAlias": localAlias,
+        "callflowTransition": false
+      };
+      addEventData(sparkEvent);
+    }
+
+    function addEventData(event) {
+      if (((event.sourceIp !== null) && (event.sourceIp.indexOf("127.0.0.1") === -1)) &&
+        ((event.destinationIp !== null) && (event.destinationIp.indexOf("127.0.0.1") === -1))) {
+        vm.events.push({
+          "type": event.type,
+          "@timestamp": event.localAlias,
+          "eventSource": {
+            "serviceID": "",
+            "serviceInstanceID": "0",
+            "customerID": "none",
+            "hostname": event.localAlias
+          },
+          "dataParam": {
+            "remoteName": event.remoteAlias,
+            "direction": "out",
+            "msgType": event.msgType,
+            "remoteAlias": event.remoteAlias,
+            "localAlias": event.localAlias,
+            "localIPAddress": event.sourceIp,
+            "remotePAddress": event.destinationIp,
+            "callflowTransition": event.callflowTransition
+          }
+        });
+
+        if ((event.type === "SparkEvent") && (!_.contains(vm.sparkHostNames, event.localAlias))) {
+          vm.sparkHostNames.push(event.localAlias);
+        }
+      }
+    }
 
     function generateDownloadFilterOptions() {
       generateDownloads();
@@ -102,6 +269,7 @@
         function (response) {
           if (response.hits.hits.length > 0) {
             vm.events = formatEventsResponse(response);
+            vm.huronEvents = formatEventsResponse(response);
             $rootScope.$broadcast('event-query-resolved');
           } else {
             vm.error = 'Response was undefined';
@@ -454,27 +622,47 @@
 
     function populateHostNamefilterOptions() {
       var uniqueHostNames = extractUniqueHostNames(vm.events);
-      vm.filterHostNamefilterOptions = [];
+      var huronHostNames = _.difference(uniqueHostNames, vm.sparkHostNames);
+      vm.sparkHostNamefilterOptions = [];
+      vm.huronHostNamefilterOptions = [];
       var tempObj = {};
-      for (var i = 0; i < uniqueHostNames.length; i++) {
-        tempObj.label = uniqueHostNames[i];
+      for (var i = 0; i < huronHostNames.length; i++) {
+        tempObj.name = huronHostNames[i];
         tempObj.value = true;
-        vm.filterHostNamefilterOptions.push(tempObj);
+        vm.huronHostNamefilterOptions.push(tempObj);
+        tempObj = {};
+      }
+
+      for (i = 0; i < vm.sparkHostNames.length; i++) {
+        tempObj.name = vm.sparkHostNames[i];
+        tempObj.value = true;
+        vm.sparkHostNamefilterOptions.push(tempObj);
         tempObj = {};
       }
     }
 
     function hostNameFilter() {
       var filtered = [];
-      for (var i = 0; i < vm.filterHostNamefilterOptions.length; i++) {
-        if (vm.filterHostNamefilterOptions[i].value === true) {
+      for (var i = 0; i < vm.huronHostNamefilterOptions.length; i++) {
+        if (vm.huronHostNamefilterOptions[i].value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: vm.filterHostNamefilterOptions[i].label
+              hostname: vm.huronHostNamefilterOptions[i].name
             }
           }));
         }
       }
+
+      for (i = 0; i < vm.sparkHostNamefilterOptions.length; i++) {
+        if (vm.sparkHostNamefilterOptions[i].value === true) {
+          filtered = _.union(filtered, $filter('filter')(vm.events, {
+            eventSource: {
+              hostname: vm.sparkHostNamefilterOptions[i].name
+            }
+          }));
+        }
+      }
+
       return filtered;
     }
 
