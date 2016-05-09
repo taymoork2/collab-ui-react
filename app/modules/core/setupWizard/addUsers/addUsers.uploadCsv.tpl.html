@@ -1,23 +1,44 @@
 <div class="users-upload-csv">
-  <div ng-if="!model.file" class="file-drop" cr-file-drop file="model.file" file-name="model.fileName" file-max-size="10" file-max-size-error="onFileSizeError()" file-type="text/csv, application/csv, application/vnd.ms-excel" file-suffix="csv" file-type-error="onFileTypeError()" >
+  <div
+    ng-if="!csv.model.file"
+    class="file-drop"
+    cr-file-drop
+    file="csv.model.file"
+    file-name="csv.model.fileName"
+    file-max-size="10"
+    file-max-size-error="csv.onFileSizeError()"
+    file-type="text/csv, application/csv, application/vnd.ms-excel"
+    file-suffix="csv"
+    file-type-error="csv.onFileTypeError()">
     <div class="file-drop-content">
       <div class="icon icon-circle-upload center"></div>
-      <input id="upload" name="upload" type="file" cr-file-read file="model.file" file-name="model.fileName" file-max-size="10" file-max-size-error="onFileSizeError()" file-type="text/csv, application/csv, application/vnd.ms-excel" file-suffix="csv" file-type-error="onFileTypeError()" />
+      <input
+        id="upload"
+        name="upload"
+        type="file"
+        cr-file-read
+        file="csv.model.file"
+        file-name="csv.model.fileName"
+        file-max-size="10"
+        file-max-size-error="csv.onFileSizeError()"
+        file-type="text/csv, application/csv, application/vnd.ms-excel"
+        file-suffix="csv"
+        file-type-error="csv.onFileTypeError()"/>
       <span translate="firstTimeWizard.uploadPrompt"></span>
       <label for='upload' translate="firstTimeWizard.fileBrowser"></label>
     </div>
   </div>
-  <div ng-if="model.file" class="file-drop-inactive">
+  <div ng-if="csv.model.file" class="file-drop-inactive">
     <div class="file-drop-content">
       <div class="progressbar-info">
-        <span class="progressbar-label" ng-show="model.uploadProgress < 100" translate="firstTimeWizard.uploading"></span>
-        <span class="progressbar-label" ng-show="model.uploadProgress == 100" translate="common.done"></span>
-        <span class="progressbar-progress">{{model.uploadProgress}}%</span>
+        <span class="progressbar-label" ng-show="csv.model.uploadProgress < 100" translate="firstTimeWizard.uploading"></span>
+        <span class="progressbar-label" ng-show="csv.model.uploadProgress == 100" translate="common.done"></span>
+        <span class="progressbar-progress">{{csv.model.uploadProgress}}%</span>
       </div>
-      <progressbar animate="false" class="progress-striped active" value="model.uploadProgress" type="primary"></progressbar>
-      <div class="file-name">{{model.fileName}}</div>
+      <progressbar animate="false" class="progress-striped active" value="csv.model.uploadProgress" type="primary"></progressbar>
+      <div class="file-name">{{csv.model.fileName}}</div>
     </div>
-    <button type="button" class="close" ng-click="resetFile();">
+    <button type="button" class="close" ng-click="csv.resetFile();">
       <span class="sr-only" translate="common.close"></span>
     </button>
   </div>

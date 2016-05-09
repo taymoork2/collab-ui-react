@@ -21,13 +21,17 @@ describe('Template: partnerProfile', function () {
   var SAVE_BUTTON = '#orgProfileSaveBtn';
   var INVISIBLE = 'invisible';
 
+  var USE_CISCO_EXAMPLE_LINK = 'useCiscoLogoExampleLink';
+  var USE_CUSTOM_EXAMPLE_LINK = 'useCustomLogoExampleLink';
+  var ALLOW_CUSTOM_EXAMPLE_LINK = "allowCustomLogExampleLink";
+
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$log_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -120,6 +124,11 @@ describe('Template: partnerProfile', function () {
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
 
+    describe('Example Link', function () {
+      it('show be exist near use custom logo radio', expectExampleLinkExist(USE_CUSTOM_EXAMPLE_LINK));
+      it('show be exist near allow Custom Logo checkbox', expectExampleLinkExist(ALLOW_CUSTOM_EXAMPLE_LINK));
+    });
+
     describe('Save buttons should not be visible with autosave changes', function () {
       afterEach(expectButtonContainerNotVisible);
 
@@ -165,6 +174,13 @@ describe('Template: partnerProfile', function () {
       var radio = view.find('#' + id);
 
       expect(radio).not.toExist();
+    };
+  }
+
+  function expectExampleLinkExist(id) {
+    return function () {
+      var link = view.find('#' + id);
+      expect(link).toExist();
     };
   }
 

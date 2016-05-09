@@ -1,10 +1,11 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular.module('Core')
+    .controller('PackagesCtrl', PackagesCtrl);
 
-.controller('PackagesCtrl', ['$scope',
-  function ($scope) {
-
+  /* @ngInject */
+  function PackagesCtrl($scope) {
     $scope.packageInfo = {
       name: 'Premium UC Packages',
       termMax: 50,
@@ -12,6 +13,5 @@ angular.module('Core')
       termRemaining: 37,
       termUnits: 'days'
     };
-
   }
-]);
+})();

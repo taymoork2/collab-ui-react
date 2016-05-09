@@ -5,14 +5,15 @@
     .directive('crFileDrop', fileDrop);
 
   /* @ngInject */
-  function fileDrop($window) {
+  function fileDrop($window, $timeout) {
     var directive = {
       restrict: 'A',
       scope: {
         file: '=',
         fileName: '=',
         fileMaxSizeError: '&',
-        fileTypeError: '&'
+        fileTypeError: '&',
+        fileValidator: '&'
       },
       link: link
     };
@@ -32,10 +33,10 @@
       element.on('drop', onDrop);
 
       function checkSize(size) {
-        if (angular.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
+        if (_.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
           return true;
         } else {
-          if (angular.isFunction(scope.fileMaxSizeError)) {
+          if (_.isFunction(scope.fileMaxSizeError)) {
             scope.fileMaxSizeError();
           }
           return false;
@@ -43,12 +44,12 @@
       }
 
       function isTypeValid(type, name) {
-        if (angular.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1)) {
+        if (_.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1)) {
           return true;
         } else {
           if (isSuffixValid(name)) {
             return true;
-          } else if (angular.isFunction(scope.fileTypeError)) {
+          } else if (_.isFunction(scope.fileTypeError)) {
             scope.fileTypeError();
           }
           return false;
@@ -56,7 +57,7 @@
       }
 
       function isSuffixValid(name) {
-        if (angular.isString(name)) {
+        if (_.isString(name)) {
           var nameParts = name.split('.');
           var suffix = nameParts[nameParts.length - 1];
           if (attrs.fileSuffix && attrs.fileSuffix.indexOf(suffix) > -1) {
@@ -96,6 +97,11 @@
             scope.$apply(function () {
               scope.file = loadEvent.target.result;
               scope.fileName = name;
+              if (_.isFunction(scope.fileValidator)) {
+                $timeout(function () {
+                  scope.fileValidator();
+                });
+              }
             });
           }
         }
