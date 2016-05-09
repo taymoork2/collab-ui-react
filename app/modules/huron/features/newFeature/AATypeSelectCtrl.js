@@ -41,9 +41,6 @@
         aatype.aaName = '';
         aatype.aaTemplate = 'OpenClosedHoursTemplate';
       }
-      //TODO: Localytics.tagEvent('Create AA', {
-      //  type: type.title
-      //});
       $state.go('huronfeatures.aabuilder', aatype);
       $modalInstance.close(type);
     }
