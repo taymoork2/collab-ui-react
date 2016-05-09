@@ -31,17 +31,6 @@ describe('Controller: WizardCtrl', function () {
       template: 'modules/core/setupWizard/messagingSetup.tpl.html'
     }]
   }, {
-    name: 'communications',
-    label: 'firstTimeWizard.call',
-    description: 'firstTimeWizard.communicationsSub',
-    icon: 'icon-phone',
-    title: 'firstTimeWizard.claimSipUrl',
-    controller: 'CommunicationsCtrl as communicationsCtrl',
-    steps: [{
-      name: 'claimSipUrl',
-      template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
-    }]
-  }, {
     name: 'enterpriseSettings',
     label: 'firstTimeWizard.enterpriseSettings',
     description: 'firstTimeWizard.enterpriseSettingsSub',
@@ -98,18 +87,6 @@ describe('Controller: WizardCtrl', function () {
         template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html'
       }]
     }]
-  }, {
-    name: 'serviceSetup',
-    label: 'firstTimeWizard.callSettings',
-    description: 'firstTimeWizard.serviceSetupSub',
-    icon: 'icon-tools',
-    title: 'firstTimeWizard.unifiedCommunication',
-    controller: 'ServiceSetupCtrl as squaredUcSetup',
-    controllerAs: 'squaredUcSetup',
-    steps: [{
-      name: 'claimSipUrl',
-      template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
-    }]
   }];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Authinfo_, _SessionStorage_, $stateParams, _Userservice_, _FeatureToggleService_) {
@@ -158,28 +135,4 @@ describe('Controller: WizardCtrl', function () {
     });
 
   });
-
-  describe('claimSipUriEvent', function () {
-    it('should broadcast claimSipUriEvent from Communications Tab', function () {
-      controller.setTab(_.find($scope.tabs, {
-        name: 'communications',
-      }));
-      controller.nextStep();
-      $scope.$apply();
-
-      expect(rootScope.$broadcast).toHaveBeenCalledWith("wizard-claim-sip-uri-event");
-    });
-
-    it('should broadcast claimSipUriEvent from ServiceSetup Tab', function () {
-      controller.setTab(_.find($scope.tabs, {
-        name: 'serviceSetup',
-      }));
-      controller.nextStep();
-      $scope.$apply();
-
-      expect(rootScope.$broadcast).toHaveBeenCalledWith("wizard-claim-sip-uri-event");
-    });
-
-  });
-
 });
