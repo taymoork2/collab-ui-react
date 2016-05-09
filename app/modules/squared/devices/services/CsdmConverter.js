@@ -22,6 +22,8 @@
         this.tags = getTags(obj.description);
         this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
+        this.accountType = obj.accountType || 'MACHINE';
+        this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
@@ -60,8 +62,8 @@
             return "images/devices-hi/mx700dspeakertrack.png"; // using this instead for now
           case "Cisco TelePresence MX700 Dual":
             return "images/devices-hi/mx700d.png"; // have pic, but endpoint never reports
-            case "Cisco TelePresence MX700 Dual Speakertrack":
-              return "images/devices-hi/mx700dspeakertrack.png"; // have pic, but endpoint never reports
+          case "Cisco TelePresence MX700 Dual Speakertrack":
+            return "images/devices-hi/mx700dspeakertrack.png"; // have pic, but endpoint never reports
           case "Cisco TelePresence MX800":
             return "images/devices-hi/mx800.png";
           case "Cisco TelePresence MX800 Dual":

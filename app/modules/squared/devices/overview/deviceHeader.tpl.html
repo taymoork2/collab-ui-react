@@ -2,7 +2,13 @@
 
   <div class="header-image">
     <div class="device-img" ng-if="!deviceOverview.currentDevice.isHuronDevice">
-      <img src="images/devices-hi/space_avatar.png" />
+      <img ng-if="!(deviceOverview.currentDevice.accountType === 'PERSON')"
+           src="images/devices-hi/space_avatar.png"/>
+      <span ng-if="(deviceOverview.currentDevice.accountType === 'PERSON') && !deviceOverview.currentDevice.photos">
+        <i class="icon icon-user"></i>
+      </span>
+      <img ng-if="(deviceOverview.currentDevice.accountType === 'PERSON') && deviceOverview.currentDevice.photos"
+           ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
     </div>
     <div class="user-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
       <span ng-if="!deviceOverview.currentDevice.photos">

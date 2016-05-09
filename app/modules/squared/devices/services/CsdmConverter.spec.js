@@ -109,6 +109,23 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
     });
 
+    it('accountType', function () {
+      var arr = [{
+        accountType: 'PERSON'
+      }];
+      expect(converter.convertDevices(arr)[0].accountType).toBe('PERSON');
+    });
+
+    it('photos', function () {
+      var arr = [{
+        photos: [{
+          url: 'foo'
+        }]
+      }];
+      expect(converter.convertDevices(arr)[0].photos[0].url).toBe('foo');
+      expect(converter.convertHuronDevices(arr)[0].photos[0].url).toBe('foo');
+    });
+
     it('huronId', function () {
       var arr = [{
         url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6'
