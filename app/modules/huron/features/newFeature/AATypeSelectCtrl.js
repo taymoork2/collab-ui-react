@@ -6,7 +6,7 @@
     .controller('AATypeSelectCtrl', AATypeSelectCtrl);
 
   /* @ngInject */
-  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state, AAMetricNameService) {
+  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state, AAMetricNameService, Localytics) {
     var vm = $scope;
     vm.cancel = cancel;
     vm.ok = okay;
