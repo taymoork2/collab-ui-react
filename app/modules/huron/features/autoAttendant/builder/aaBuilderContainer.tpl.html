@@ -15,20 +15,20 @@
     <div class="aa-lane" name="openLane">
       <!--open lane-->
       <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-horizontal-line-right"></div>
-      <aa-schedule-info ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" schedule="openHours" class="aa-max-width"></aa-schedule-info>
+      <aa-schedule-info ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" schedule="openHours" class="aa-max-width" ng-if="aaBuilder.isScheduleAvailable()" ng-click="aaBuilder.openScheduleModal()"></aa-schedule-info>
       <aa-builder-lane aa-schedule="openHours" class="aa-max-width"></aa-builder-lane>
     </div>
     <div ng-if="aaBuilder.closedLane" class="aa-lane"  name="closedLane">
       <!--close lane-->
       <div ng-if="!aaBuilder.holidaysLane" class="aa-horizontal-line-left"></div>
       <div ng-if="aaBuilder.holidaysLane" class="aa-horizontal-line"></div>
-      <aa-schedule-info schedule="closedHours" class="aa-max-width"></aa-schedule-info>
+      <aa-schedule-info schedule="closedHours" class="aa-max-width" ng-if="aaBuilder.isScheduleAvailable()" ng-click="aaBuilder.openScheduleModal()"></aa-schedule-info>
       <aa-builder-lane aa-schedule="closedHours" class="aa-max-width"></aa-builder-lane>
     </div>
     <div ng-if="aaBuilder.holidaysLane" class="aa-lane" name="holidaysLane">
       <!--holiday lane   -->
       <div class="aa-horizontal-line-left"></div>
-      <aa-schedule-info schedule="holidays" class="aa-max-width"></aa-schedule-info>
+      <aa-schedule-info schedule="holidays" class="aa-max-width" ng-if="aaBuilder.isScheduleAvailable()" ng-click="aaBuilder.openScheduleModal()"></aa-schedule-info>
       <aa-builder-lane aa-schedule="holidays" class="aa-max-width"></aa-builder-lane>
     </div>
   </div>
