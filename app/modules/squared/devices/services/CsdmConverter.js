@@ -53,9 +53,11 @@
           case "Cisco TelePresence MX300 G2":
             return "images/devices-hi/mx300g2.png";
           case "Cisco TelePresence MX700":
-            return "images/devices-hi/mx700.png"; // missing
+            // return "images/devices-hi/mx700.png"; // missing
+            return "images/devices-hi/mx700d.png"; // using this instead for now
           case "Cisco TelePresence MX700 SpeakerTrack":
-            return "images/devices-hi/mx700speakertrack.png"; // missing
+            // return "images/devices-hi/mx700speakertrack.png"; // missing
+            return "images/devices-hi/mx700dspeakertrack.png"; // using this instead for now
           case "Cisco TelePresence MX700 Dual":
             return "images/devices-hi/mx700d.png"; // have pic, but endpoint never reports
             case "Cisco TelePresence MX700 Dual Speakertrack":
