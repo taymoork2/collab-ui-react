@@ -398,8 +398,45 @@
         });
         promise = $q.when(jqpromise); //convert into angularjs promise
       }
+
       return promise;
-    };
+    }; // logoutSite()
+
+    obj.utf8ToUtf16le = function (data) {
+      var funcName = "utf8ToUtf16le()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "data=" + data;
+      // $log.log(logMsg);
+
+      var intBytes = [];
+
+      var utf16leHeader = '%ff%fe';
+
+      utf16leHeader.replace(/([0-9a-f]{2})/gi, function (byte) {
+        intBytes.push(parseInt(byte, 16));
+      });
+
+      for (var i = 0; i < data.length; ++i) {
+        var hexChar = data[i].charCodeAt(0);
+
+        var hexByte1 = hexChar & 0xff;
+        var hexByte2 = (hexChar >> 8) & 0xff;
+
+        var intByte1 = parseInt(hexByte1.toString(16), 16);
+        var intByte2 = parseInt(hexByte2.toString(16), 16);
+
+        intBytes.push(intByte1);
+        intBytes.push(intByte2);
+      }
+
+      logMsg = funcName + "\n" +
+        "intBytes=" + intBytes;
+      // $log.log(logMsg);
+
+      return intBytes;
+    }; // utf8ToUtf16le()
 
     return obj;
   } // webexUtilsFact()
