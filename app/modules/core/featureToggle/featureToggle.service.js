@@ -43,6 +43,7 @@
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
       servicesOverview: 'atlas-services-overview',
+      myCompanyPage: 'atlas-my-company-page',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
