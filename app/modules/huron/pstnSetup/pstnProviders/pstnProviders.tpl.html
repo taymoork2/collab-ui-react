@@ -1,32 +1,34 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
-  <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
-</div>
-<div class="modal-body">
-  <div class="loading" ng-if="pstnProviders.loading">
-    <i class="icon icon-spinner"></i>
+<div class="pstn-providers">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
+    <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
   </div>
-  <cs-card-layout block-view="true" ng-if="!pstnProviders.loading">
-    <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnProviders.providers">
-      <article>
-      <header class="align-center">
-        <img ng-src="{{::provider.logoSrc}}" alt="{{::provider.logoAlt}}">
-      </header>
-      <section>
-        <h4>{{::provider.title}}</h4>
-        <div class="card-checkbox">
-          <div ng-repeat="feature in provider.features" class="feature">
-            <i class="icon icon-check"></i>
-            <span class="feature-text" ng-bind-html="feature"></span>
+  <div class="modal-body">
+    <div class="loading" ng-if="pstnProviders.loading">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <cs-card-layout block-view="true" ng-if="!pstnProviders.loading">
+      <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnProviders.providers">
+        <article>
+        <header class="align-center">
+          <img ng-src="{{::provider.logoSrc}}" alt="{{::provider.logoAlt}}">
+        </header>
+        <section>
+          <h4>{{::provider.title}}</h4>
+          <div class="card-checkbox">
+            <div ng-repeat="feature in provider.features" class="feature">
+              <i class="icon icon-check"></i>
+              <span class="feature-text" ng-bind-html="feature"></span>
+            </div>
           </div>
-        </div>
-      </section>
-      <footer>
-        <button type="button" class="btn btn--people" ng-click="pstnProviders.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
-        <a ng-if="provider.docSrc" class="icon icon-content-share" ng-href="{{::provider.docSrc}}" download="{{::provider.title}}" title="{{::'common.download' | translate}}"></a>
-      </footer>
-      </article>
-    </cs-card>
-  </cs-card-layout>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--people" ng-click="pstnProviders.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
+          <a ng-if="provider.docSrc" class="icon icon-content-share" ng-href="{{::provider.docSrc}}" download="{{::provider.title}}" title="{{::'common.download' | translate}}"></a>
+        </footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
 
+  </div>
 </div>

@@ -374,10 +374,7 @@
               template: '<div ui-view="modal"></div>',
               size: options.size,
               windowClass: options.windowClass,
-              backdrop: options.backdrop || 'static',
-              modalClass: $state.params.modalClass,
-              modalId: $state.params.modalId,
-              type: $state.params.modalType
+              backdrop: options.backdrop || 'static'
             });
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
@@ -586,14 +583,7 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalId = 'deleteUserModal';
-                    $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
               }
             },
             params: {
@@ -608,14 +598,7 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalId = 'deleteUserModal';
-                    $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
               }
             },
             params: {
@@ -632,26 +615,14 @@
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
               }
             }
           })
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
               }
             }
           })
@@ -1612,12 +1583,7 @@
               'modal@': {
                 templateUrl: 'modules/huron/moh/moh.tpl.html',
                 controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
+                controllerAs: 'moh'
               }
             }
           })
@@ -1692,12 +1658,6 @@
             templateUrl: 'modules/core/trials/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
-            resolve: {
-              modalInfo: function ($state) {
-                $state.params.modalClass = 'add-did-numbers-modal';
-                $state.params.modalId = 'didAddModal add-numbers';
-              }
-            },
             params: {
               currentOrg: {}
             }
@@ -1871,12 +1831,7 @@
               'modal@': {
                 controller: 'HuronFeatureDeleteCtrl',
                 controllerAs: 'huronFeatureDelete',
-                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
               }
             },
             params: {
@@ -1891,12 +1846,7 @@
               'modal@': {
                 controller: 'HuronFeatureAADependsCtrl',
                 controllerAs: 'huronFeatureAADepends',
-                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
               }
             },
             params: {
