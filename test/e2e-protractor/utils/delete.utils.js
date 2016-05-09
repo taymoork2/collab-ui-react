@@ -135,7 +135,6 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 exports.deleteTestAAs = function (bearer, data) {
   var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
-
     var AAsToDelete = [];
 
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
@@ -202,7 +201,6 @@ exports.deleteSchedules = function (scheduleUrl, token) {
  *This will delete the  required schedule
  */
 exports.deleteTestSchedule = function (aaUrl, token) {
-
   var options = {
     method: 'get',
     url: aaUrl,
@@ -218,7 +216,6 @@ exports.deleteTestSchedule = function (aaUrl, token) {
           var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['huron-int1'].org, scheduleId);
           return exports.deleteSchedules(scheduleUrl, token);
         }
-      } 
-      
+      }
     });
 };
