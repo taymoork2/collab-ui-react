@@ -3491,21 +3491,21 @@
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "ctOverviews": {
-      "customerInfo":{
-        "name":"Customer Info",
-        "desc":"This is the screen a customer fills out before chatting with an agent"
+      "customerInformation": {
+        "title": "Customer Info",
+        "desc": "This is the screen a customer fills out before chatting with an agent"
       },
-      "agentUnavailable":{
-        "name":"Agent Unavailable",
-        "desc":"This screen is shown to a customer when no agent is available to assist"
+      "agentUnavailable": {
+        "title": "Agent Unavailable",
+        "desc": "This screen is shown to a customer when no agent is available to assist"
       },
-      "offHours":{
-        "name":"Off-Hours",
-        "desc":"This screen is shown during business off-hours"
+      "offHours": {
+        "title": "Off-Hours",
+        "desc": "This screen is shown during business off-hours"
       },
-      "feedback":{
-        "name":"Feedback",
-        "desc":"This screen is used to collect feedback from the customer after chat ends"
+      "feedback": {
+        "title": "Feedback",
+        "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
     }
 

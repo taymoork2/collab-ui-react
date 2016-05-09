@@ -1,0 +1,28 @@
+.ct-card-border {
+  border: rem-calc(1) solid $color-primary-base;
+}
+
+.ct-card-img {
+  margin-top: rem-calc(17);
+  text-align: center;
+  color: $gray-base;
+}
+.ct-card-title {
+  text-align: center;
+  color: $gray-dark-1;
+  font-family: $brand-font-light;
+  font-size : $font-size-h4;
+}
+
+.ct-toggle {
+  margin-left: rem-calc(120);
+}
+.ct-card-desc {
+  color: $gray-dark-1;
+  font-family: $brand-font-light;
+  font-size: $font-size-base;
+  text-align: center;
+}
+
+
+
