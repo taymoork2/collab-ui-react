@@ -201,11 +201,11 @@ exports.deleteSchedules = function (scheduleUrl, token) {
 /**
  *This will delete the  required schedule
  */
-exports.deleteTestSchedule = function (scheduleUrl, token) {
+exports.deleteTestSchedule = function (aaUrl, token) {
 
   var options = {
     method: 'get',
-    url: scheduleUrl,
+    url: aaUrl,
     headers: {
       'Authorization': 'Bearer ' + token
     }
