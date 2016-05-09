@@ -61,13 +61,13 @@
 
             //incommig call
             if (events[i].dataParam.direction === 'in') {
-              if ((events[i].dataParam.callflowTransition !== undefined) && (events[i].dataParam.callflowTransition)) {
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
                 messageBody += '\"' + remote + '\"' + TRANSITION_ARROW + '\"' + source + '\"' + ': ';
               } else {
                 messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
               }
             } else {
-              if ((events[i].dataParam.callflowTransition !== undefined) && (events[i].dataParam.callflowTransition)) {
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
                 messageBody += '\"' + source + '\"' + TRANSITION_ARROW + '\"' + remote + '\"' + ': ';
               } else {
                 messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';

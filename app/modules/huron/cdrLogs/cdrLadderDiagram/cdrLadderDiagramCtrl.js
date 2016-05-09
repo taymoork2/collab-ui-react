@@ -6,7 +6,7 @@
     .controller('CdrLadderDiagramCtrl', CdrLadderDiagramCtrl);
 
   /* @ngInject */
-  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $state, $translate, $stateParams, CdrService, CdrLadderDiagramService, $sce, Log, $window) {
+  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $state, $translate, $stateParams, CdrLadderDiagramService, $sce, Log, $window) {
     var vm = this;
 
     vm.downLoadLabel = $translate.instant('cdrLadderDiagram.downLoadEvents');
@@ -45,10 +45,10 @@
       $state.modal.close();
     };
 
-    vm.selectedNodes = function () {
-      for (var i = 0; i < vm.sparkHostNamefilterOptions.length; i++) {
-        vm.sparkHostNamefilterOptions[i].value = vm.enabledSparkNodes;
-      }
+    vm.selectSparkNodes = function () {
+      _.forEach(vm.sparkHostNamefilterOptions, function (option, key) {
+        option.value = vm.enabledSparkNodes;
+      });
     };
 
     $scope.$on('event-query-resolved', function (event, args) {
@@ -56,7 +56,7 @@
     });
 
     function getSparkData() {
-      if (vm.events === undefined) {
+      if (_.isUndefined(vm.events)) {
         return [];
       }
       var locusId = null;
@@ -68,29 +68,32 @@
       vm.sparkHostNamefilterOptions = [];
       vm.hostNamefilterOptions = [];
       vm.sparkHostNames = [];
-      for (var i = 0; i < vm.events.length; i++) {
-        if (vm.events[i].eventSource !== undefined) {
-          var message = JSON.parse(vm.events[i].message);
+
+      _.forEach(vm.events, function (event, key) {
+        if (!_.isUndefined(event.eventSource)) {
+          var message = JSON.parse(event.message);
           if ((message.id === SIP_MESSAGE) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
-            if (locusId === null) {
+            if (_.isNull(locusId)) {
               startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
               endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
               if (endIndex === -1) {
                 endIndex = message.dataParam.rawMsg.indexOf("Content-Type");
               }
               locusId = message.dataParam.rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
-              start = vm.events[i]['@timestamp'];
+              start = event['@timestamp'];
             }
-            end = vm.events[i]['@timestamp'];
+            end = event['@timestamp'];
           }
+
         }
-      }
-      if (locusId != null) {
+      });
+
+      if (!_.isNull(locusId)) {
         CdrLadderDiagramService.getActivities(locusId, start, end).then(
           function (response) {
-            if (angular.isArray(response)) {
-              _.each(response, function (value, key) {
-                processActivitiesData(value, key, message);
+            if (_.isArray(response)) {
+              _.forEach(response, function (value, key) {
+                processActivitiesData(value, key);
               });
             }
             vm.events = $filter('orderBy')(vm.events, ['"@timestamp"']);
@@ -99,7 +102,7 @@
       }
     }
 
-    function processActivitiesData(value, key, message) {
+    function processActivitiesData(value, key) {
       var srcPayload = null;
       var dstPayload = null;
       var sourceIp = null;
@@ -112,25 +115,25 @@
       var sparkEvent = null;
 
       srcPayload = JSON.parse(value.src.payload);
-      if (srcPayload.ip !== undefined) {
+      if (!_.isUndefined(srcPayload.ip)) {
         localAlias = value.src.type;
         sourceIp = srcPayload.ip;
-      } else if (srcPayload.host !== undefined) {
+      } else if (!_.isUndefined(srcPayload.host)) {
         localAlias = value.src.type;
         sourceIp = srcPayload.host;
       }
 
       dstPayload = JSON.parse(value.dst.payload);
-      if (dstPayload.ip !== undefined) {
+      if (!_.isUndefined(dstPayload.ip)) {
         remoteAlias = value.dst.type;
         destinationIp = dstPayload.ip;
-      } else if (dstPayload.host !== undefined) {
+      } else if (!_.isUndefined(dstPayload.host)) {
         remoteAlias = value.dst.type;
         destinationIp = dstPayload.host;
       }
 
       msgPayload = JSON.parse(value.msg.payload);
-      if (msgPayload.path != undefined) {
+      if (!_.isUndefined(msgPayload.path)) {
         msgType = "path:" + msgPayload.path;
       } else {
         msgType = value.msg.type;
@@ -139,7 +142,7 @@
       event = _.find(vm.huronEvents, function (event) {
         return (event.dataParam.remoteIPAddress === sourceIp);
       });
-      if (event !== undefined) {
+      if (!_.isUndefined(event)) {
         addEventData({
           "type": "ProtocolEvents",
           "sourceIp": event.eventSource.hostname,
@@ -155,7 +158,7 @@
       event = _.find(vm.huronEvents, function (event) {
         return ((event.dataParam.localIPAddress === destinationIp) || (event.dataParam.remoteIPAddress === destinationIp));
       });
-      if (event !== undefined) {
+      if (!_.isUndefined(event)) {
         addEventData({
           "type": "ProtocolEvents",
           "sourceIp": remoteAlias,
@@ -247,15 +250,15 @@
     }
 
     function clearDownloads() {
-      if (vm.jsonUrl !== null) {
+      if (!_.isNull(vm.jsonUrl)) {
         ($window.URL || $window.webkitURL).revokeObjectURL(vm.jsonUrl);
       }
 
-      if (vm.csvUrl !== null) {
+      if (!_.isNull(vm.csvUrl)) {
         ($window.URL || $window.webkitURL).revokeObjectURL(vm.csvUrl);
       }
 
-      if (vm.htmlUrl !== null) {
+      if (!_.isNull(vm.htmlUrl)) {
         ($window.URL || $window.webkitURL).revokeObjectURL(vm.htmlUrl);
       }
     }
@@ -575,19 +578,20 @@
       var uniqueSessionIDPairs = extractUniqueSessionIDPairs(vm.events);
       vm.SessionIDPairsFilterOptions = [];
       var tempObj = {};
-      for (var i = 0; i < uniqueSessionIDPairs.length; i++) {
-        tempObj.label = uniqueSessionIDPairs[i];
+      _.forEach(uniqueSessionIDPairs, function (idPair, key) {
+        tempObj.label = idPair;
         tempObj.value = true;
         vm.SessionIDPairsFilterOptions.push(tempObj);
         tempObj = {};
-      }
+      });
+
     }
 
     function SessionIDPairsFilter() {
       var filtered = [];
-      for (var i = 0; i < vm.SessionIDPairsFilterOptions.length; i++) {
-        if (vm.SessionIDPairsFilterOptions[i].value === true) {
-          var sessionIds = vm.SessionIDPairsFilterOptions[i].label.split(' / ');
+      _.forEach(vm.SessionIDPairsFilterOptions, function (option, key) {
+        if (option.value === true) {
+          var sessionIds = option.label.split(' / ');
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             dataParam: {
               localSessionID: sessionIds[0],
@@ -601,22 +605,22 @@
             }
           }));
         }
-      }
+      });
       return filtered;
     }
 
     function extractUniqueHostNames(events) {
-      if (events === undefined) {
+      if (_.isUndefined(events)) {
         return [];
       }
       var uniqueHostNames = [];
-      for (var i = 0; i < events.length; i++) {
-        if (events[i].eventSource !== undefined) {
-          if (uniqueHostNames.indexOf(events[i].eventSource.hostname) < 0 && events[i].eventSource.hostname !== undefined) {
-            uniqueHostNames.push(events[i].eventSource.hostname);
+      _.forEach(events, function (event, key) {
+        if (!_.isUndefined(event.eventSource)) {
+          if (uniqueHostNames.indexOf(event.eventSource.hostname) < 0 && !_.isUndefined(event.eventSource.hostname)) {
+            uniqueHostNames.push(event.eventSource.hostname);
           }
         }
-      }
+      });
       return uniqueHostNames;
     }
 
@@ -626,43 +630,43 @@
       vm.sparkHostNamefilterOptions = [];
       vm.huronHostNamefilterOptions = [];
       var tempObj = {};
-      for (var i = 0; i < huronHostNames.length; i++) {
-        tempObj.name = huronHostNames[i];
+
+      _.forEach(huronHostNames, function (name, key) {
+        tempObj.name = name;
         tempObj.value = true;
         vm.huronHostNamefilterOptions.push(tempObj);
         tempObj = {};
-      }
+      });
 
-      for (i = 0; i < vm.sparkHostNames.length; i++) {
-        tempObj.name = vm.sparkHostNames[i];
+      _.forEach(vm.sparkHostNames, function (name, key) {
+        tempObj.name = name;
         tempObj.value = true;
         vm.sparkHostNamefilterOptions.push(tempObj);
         tempObj = {};
-      }
+      });
     }
 
     function hostNameFilter() {
       var filtered = [];
-      for (var i = 0; i < vm.huronHostNamefilterOptions.length; i++) {
-        if (vm.huronHostNamefilterOptions[i].value === true) {
+      _.forEach(vm.huronHostNamefilterOptions, function (option, key) {
+        if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: vm.huronHostNamefilterOptions[i].name
+              hostname: option.name
             }
           }));
         }
-      }
+      });
 
-      for (i = 0; i < vm.sparkHostNamefilterOptions.length; i++) {
-        if (vm.sparkHostNamefilterOptions[i].value === true) {
+      _.forEach(vm.sparkHostNamefilterOptions, function (option, key) {
+        if (option.value === true) {
           filtered = _.union(filtered, $filter('filter')(vm.events, {
             eventSource: {
-              hostname: vm.sparkHostNamefilterOptions[i].name
+              hostname: option.name
             }
           }));
         }
-      }
-
+      });
       return filtered;
     }
 
