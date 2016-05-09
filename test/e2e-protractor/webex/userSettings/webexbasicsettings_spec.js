@@ -4,11 +4,11 @@
 
 describe('WebEx user settings', function () {
 
-  it('should login as admin user', function () {
+  beforeAll(function () {
     login.login('wbxUserSettingsTestAdmin');
   });
 
-  it('click on users tab', function () {
+  it('should login as ' + usersettings.testAdmin.username + ' and navigate to Users page', function () {
     navigation.clickUsers();
   });
 

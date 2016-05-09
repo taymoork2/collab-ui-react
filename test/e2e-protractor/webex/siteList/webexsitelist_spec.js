@@ -6,11 +6,11 @@ describe('Services > Webex page aka Site List page', function () {
 
   describe(': CSV Export/Import : ', function () {
 
-    it('should login as' + sitelist.t31CSVToggleUser.testAdminUsername, function () {
+    beforeAll(function () {
       login.login('t31CSVToggleUser');
     });
 
-    it('should navigate to site list page', function () {
+    it('should login as ' + sitelist.t31CSVToggleUser.testAdminUsername + ' and navigate to site list page', function () {
       navigation.clickServicesTab();
       utils.click(sitelist.conferencingLink);
       utils.wait(sitelist.siteListPageId);
@@ -33,8 +33,11 @@ describe('Services > Webex page aka Site List page', function () {
   //Start tests to detect 'Not Available' and warning icon conditions
   describe("test CSV 'Not Anavailable' condition : ", function () {
 
-    it('should login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ', and navigate to site list page', function () {
+    beforeAll(function () {
       login.login('t30csvNotAvailableUser');
+    });
+
+    it('should login as ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ' and navigate to site list page', function () {
       navigation.clickServicesTab();
       utils.click(sitelist.conferencingLink);
     });
@@ -50,8 +53,11 @@ describe('Services > Webex page aka Site List page', function () {
 
   describe("test CSV warning icon condition: ", function () {
 
-    it('should login as admin user ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ', and navigate to site list page', function () {
+    beforeAll(function () {
       login.login('t30csvWbxNotEntitledUser');
+    });
+
+    it('should login as ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ' and navigate to site list page', function () {
       navigation.clickServicesTab();
       utils.click(sitelist.conferencingLink);
     });

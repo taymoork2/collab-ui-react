@@ -18,11 +18,11 @@ while (1 >= sitereports.testInfo.describeCount) {
   describe(sitereports.testInfo.describeText, function () {
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site reports test', function () {
+      beforeAll(function () {
         login.login('t31RegressionTestAdmin');
       });
     } else {
-      it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site reports test', function () {
+      beforeAll(function () {
         login.login('t30RegressionTestAdmin');
       });
     }
@@ -112,7 +112,7 @@ while (1 >= sitereports.testInfo.describeCount) {
     //   browser.pause()
     // });
 
-    it('should log out', function () {
+    afterAll(function () {
       navigation.logout();
     });
   });
