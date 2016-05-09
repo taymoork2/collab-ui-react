@@ -231,7 +231,7 @@ describe('Service: ServiceSetup', function () {
       ServiceSetup.listCosRestrictions();
       $httpBackend.flush();
 
-      expect(_.isObject(ServiceSetup.cosRestrictions)).toBe(true);
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
     });
 
     it('should receive an object and return an object', function () {
@@ -239,7 +239,7 @@ describe('Service: ServiceSetup', function () {
       ServiceSetup.listCosRestrictions();
       $httpBackend.flush();
 
-      expect(_.isObject(ServiceSetup.cosRestrictions)).toBe(true);
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
     });
   });
 
