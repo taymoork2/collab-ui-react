@@ -13,8 +13,7 @@
     FeatureToggleService,
     WebExApiGatewayService,
     WebExApiGatewayConstsService,
-    WebExUtilsFact,
-    WebExUtilsService
+    WebExUtilsFact
   ) {
 
     var _this = this;
@@ -491,17 +490,19 @@
       var funcName = "updateGrid()";
       var logMsg = "";
 
-      // $log.log(funcName);
+      logMsg = funcName + "\n" +
+        "vm=" + JSON.stringify(vm);
+      // $log.log(logMsg);
 
       // remove grid column(s) based on feature toggles
-      WebExUtilsService.checkWebExFeaturToggle(FeatureToggleService.features.webexCSV).then(
+      FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
         function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
           var funcName = "checkWebExFeaturToggleSuccess()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
             "adminUserSupportCSV=" + adminUserSupportCSV;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           // Start of hide CSV info if admin user does not have feature toggle
           vm.gridData.forEach(
@@ -537,7 +538,7 @@
 
           updateGridColumns();
         } // checkWebExFeaturToggleError()
-      ); // WebExUtilsService.checkWebExFeaturToggle().then()
+      ); // FeatureToggleService.supports().then()
 
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
