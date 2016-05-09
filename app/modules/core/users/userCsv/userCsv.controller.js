@@ -325,7 +325,8 @@
           addUserErrorWithTrackingID(startIndex + k + 1, UserCsvService.getBulkErrorResponse(
             response.status,
             isCancelledByUser ? '0' : '1',
-            response.config.data.users[k].email
+            (typeof response.config !== "undefined"
+              && typeof response.config.data !== "undefined") ? response.config.data.users[k].email : ''
           ), response);
         }
       }
@@ -350,6 +351,7 @@
       }
 
       function processCsvRows() {
+        isCancelledByUser = false;
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
         csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
 
