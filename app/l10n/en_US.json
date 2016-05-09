@@ -3960,7 +3960,8 @@
     "removeFile": "Remove File",
     "newUsers": "Added",
     "existingUsers": "Updated",
-    "errorUsers": "Errors"
+    "errorUsers": "Errors",
+    "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {
     "confirmTitle": "Are you sure?",
