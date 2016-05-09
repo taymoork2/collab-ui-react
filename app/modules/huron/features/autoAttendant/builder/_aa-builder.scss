@@ -324,6 +324,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-schedule-body {
     @extend .aa-panel-body;
+    min-width: vr-adjust(300);
   }
 
   .aa-panel-body-endcall {
