@@ -51,7 +51,7 @@ describe('Directive: csvDownload', function () {
 
       var isolated = element.isolateScope();
       expect(isolated.downloading).toBeTruthy();
-      expect(isolated.downloadingMessage).toContain('csvDownload.csvDownloadInProgress');
+      expect(isolated.downloadingMessage).toContain('csvDownload.inProgress');
 
       // start download
       $timeout.flush(300);
@@ -92,7 +92,7 @@ describe('Directive: csvDownload', function () {
       downloadAnchor[0].click();
       var isolated = element.isolateScope();
       expect(isolated.downloading).toBeTruthy();
-      expect(isolated.downloadingMessage).toContain('csvDownload.csvDownloadInProgress');
+      expect(isolated.downloadingMessage).toContain('csvDownload.inProgress');
 
       // start download
       $timeout.flush(300);

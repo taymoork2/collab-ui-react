@@ -1,0 +1,10 @@
+<div class="hercules-fix-paragraphs">
+  <p translate="hercules.activateService.ingress"></p>
+  <h2 translate="{{'hercules.activateService.serviceNames.' + exp.servicesId[0]}}"></h2>
+  <p ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
+    <button id="activateService" ng-disabled="exp.waitForEnabled" translate="hercules.activateService.label" style="margin-top: 20px;" class="btn btn--people btn--large" ng-click="exp.enableService(exp.servicesId[0])"></button>
+  </p>
+  <i ng-show="exp.waitForEnabled" class="icon icon-spinner"></i>
+  <p translate="{{'hercules.serviceDescriptions.' + exp.servicesId[0]}}"></p>
+  <p translate="hercules.serviceHelpInfo.servicePrivacyStatement" class="hercules-footer"></p>
+</div>

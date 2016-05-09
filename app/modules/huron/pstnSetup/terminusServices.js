@@ -2,67 +2,114 @@
   'use strict';
 
   angular.module('Huron')
-    .factory('TerminusCustomerService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {
-        update: {
-          method: 'PUT'
-        }
-      });
-    })
-    .factory('TerminusResellerCarrierService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
-    })
-    .factory('TerminusCustomerCarrierService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
-    })
-    .factory('TerminusCustomerSiteService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
-        update: {
-          method: 'PUT'
-        }
-      });
-    })
-    .factory('TerminusCustomerCarrierDidService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type', {}, {});
-    })
-    .factory('TerminusOrderService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
-    })
-    .factory('TerminusNumberService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/dids/:did', {}, {});
-    })
-    .factory('TerminusCarrierService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
-    })
-    .factory('TerminusCarrierInventoryCount', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/count');
-    })
-    .factory('TerminusCarrierInventorySearch', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/search');
-    })
-    .factory('TerminusCarrierInventoryReserve', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/reserve');
-    })
-    .factory('TerminusCarrierInventoryRelease', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
-    })
-    .factory('TerminusCustomerCarrierInventoryReserve', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/reserve');
-    })
-    .factory('TerminusCustomerCarrierInventoryRelease', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/release');
-    })
-    .factory('TerminusStateService', function ($resource) {
-      return $resource('modules/huron/pstnSetup/states.json', {}, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          cache: true
-        }
-      });
-    })
-    .factory('TerminusLookupE911Service', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
-    });
+    .factory('TerminusCustomerService', TerminusCustomerService)
+    .factory('TerminusResellerCarrierService', TerminusResellerCarrierService)
+    .factory('TerminusCustomerCarrierService', TerminusCustomerCarrierService)
+    .factory('TerminusCustomerSiteService', TerminusCustomerSiteService)
+    .factory('TerminusCustomerCarrierDidService', TerminusCustomerCarrierDidService)
+    .factory('TerminusOrderService', TerminusOrderService)
+    .factory('TerminusNumberService', TerminusNumberService)
+    .factory('TerminusCarrierService', TerminusCarrierService)
+    .factory('TerminusCarrierInventoryCount', TerminusCarrierInventoryCount)
+    .factory('TerminusCarrierInventorySearch', TerminusCarrierInventorySearch)
+    .factory('TerminusCarrierInventoryReserve', TerminusCarrierInventoryReserve)
+    .factory('TerminusCarrierInventoryRelease', TerminusCarrierInventoryRelease)
+    .factory('TerminusCustomerCarrierInventoryReserve', TerminusCustomerCarrierInventoryReserve)
+    .factory('TerminusCustomerCarrierInventoryRelease', TerminusCustomerCarrierInventoryRelease)
+    .factory('TerminusStateService', TerminusStateService)
+    .factory('TerminusLookupE911Service', TerminusLookupE911Service);
 
+  /* @ngInject */
+  function TerminusCustomerService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function TerminusResellerCarrierService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusCustomerCarrierService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusCustomerSiteService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+
+  /* @ngInject */
+  function TerminusCustomerCarrierDidService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusOrderService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusNumberService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/dids/:did', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusCarrierService($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
+  }
+
+  /* @ngInject */
+  function TerminusCarrierInventoryCount($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/count');
+  }
+
+  /* @ngInject */
+  function TerminusCarrierInventorySearch($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/search');
+  }
+
+  /* @ngInject */
+  function TerminusCarrierInventoryReserve($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/reserve');
+  }
+
+  /* @ngInject */
+  function TerminusCarrierInventoryRelease($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
+  }
+
+  /* @ngInject */
+  function TerminusCustomerCarrierInventoryReserve($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/reserve');
+  }
+
+  /* @ngInject */
+  function TerminusCustomerCarrierInventoryRelease($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/release');
+  }
+
+  /* @ngInject */
+  function TerminusStateService($resource) {
+    return $resource('modules/huron/pstnSetup/states.json', {}, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        cache: true
+      }
+    });
+  }
+
+  /* @ngInject */
+  function TerminusLookupE911Service($resource, HuronConfig) {
+    return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
+  }
 })();

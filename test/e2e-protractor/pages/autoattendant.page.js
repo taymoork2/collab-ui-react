@@ -128,8 +128,8 @@ var AutoAttendantPage = function () {
   this.selectDayMonday = element(by.css('div.content.active')).element(by.css('select[name="day"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.selectdate = element(by.css('.calendar span:nth-child(15) .day'));
   this.date = element(by.css('cs-datepicker input'));
-  this.starttime = element(by.id('starttime'));
-  this.endtime = element(by.id('endtime'));
+  this.starttime = element(by.id('starttime0'));
+  this.endtime = element(by.id('endtime0'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
   this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
   this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));
@@ -142,14 +142,14 @@ var AutoAttendantPage = function () {
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
 
-  this.openHoursLane = element(by.name('bottomLane1')).element(by.name('openHours'));
-  this.openHoursSayMessage = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Say Message"]'));
-  this.openHoursPhoneMenu = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
-  this.openHoursEndCall = element(by.name('bottomLane1')).element(by.name('endCall'));
-  this.closedHoursLane = element(by.name('bottomLane3')).element(by.name('closedHours'));
-  this.closedHoursSayMessage = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Say Message"]'));
-  this.closedHoursPhoneMenu = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
-  this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
+  this.openHoursLane = element(by.name('openLane')).element(by.name('openHours'));
+  this.openHoursSayMessage = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.openHoursPhoneMenu = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.openHoursEndCall = element(by.name('openLane')).element(by.name('endCall'));
+  this.closedHoursLane = element(by.name('closedLane')).element(by.name('closedHours'));
+  this.closedHoursSayMessage = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.closedHoursPhoneMenu = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.closedHoursEndCall = element(by.name('closedLane')).element(by.name('endCall'));
   this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
   this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));

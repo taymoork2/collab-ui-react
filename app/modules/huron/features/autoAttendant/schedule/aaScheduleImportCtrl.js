@@ -55,6 +55,12 @@
           };
         });
 
+        // Sort the schedule names using case-insensitive 
+        vm.options = _.sortBy(vm.options,
+          function (covertToLowerCase) {
+            return covertToLowerCase.label.toLowerCase();
+          });
+
       }, function (response) {
         if (response.status !== 404) {
           AANotificationService.error('autoAttendant.failureImport', {

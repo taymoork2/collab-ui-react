@@ -15,6 +15,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMessageServices;
   var getLicensesUsage;
   var getLicensesUsageSpy;
+  var unlicensedUsers;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -45,6 +46,11 @@ describe('OnboardCtrl: Ctrl', function () {
     $scope.wizard = {};
     $scope.wizard.current = current;
 
+    function isLastStep() {
+      return false;
+    }
+    $scope.wizard.isLastStep = isLastStep;
+
     spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
       callback({});
     });
@@ -61,6 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
+    unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -72,7 +79,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(Notification, 'notify');
-    spyOn(Orgservice, 'getUnlicensedUsers');
+    spyOn(Orgservice, 'getUnlicensedUsers').and.returnValue(unlicensedUsers);
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
@@ -121,119 +128,35 @@ describe('OnboardCtrl: Ctrl', function () {
     };
   }
 
-  describe('Bulk Users CSV', function () {
+  describe('Bulk Users DirSync', function () {
     beforeEach(function () {
       initController();
     });
-    var oneColumnValidUser = "User ID/Email (Required),\njohndoe@example.com,";
-    var oneColumnInvalidUser = "First Name,\nJohn,";
-    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,f,f,f,f";
-    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
-    var twoValidUsersWithSpaces = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f";
+    var validUserList = [{
+      firstName: 'John',
+      lastName: 'Doe',
+      Email: 'johnDoe@example.com'
+    }, {
+      firstName: 'Jane',
+      lastName: 'Doe',
+      Email: 'janeDoe@domain.com'
+    }];
 
     beforeEach(installPromiseMatchers);
 
-    describe('Upload CSV', function () {
-      describe('without file content', function () {
-        it('should have 0 upload progress', function () {
-          expect($scope.model.uploadProgress).toEqual(0);
-        });
-        it('should not go to the next step', function () {
-          var promise = $scope.csvUploadNext();
-          $scope.$apply();
-          expect(promise).toBeRejected();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        });
-      });
-      describe('with file content', function () {
-        beforeEach(function () {
-          $scope.model.file = twoValidUsers;
-          $scope.$apply();
-          $timeout.flush();
-        });
-        it('should have 100 upload progress when the file model changes', function () {
-          expect($scope.model.uploadProgress).toEqual(100);
-        });
-        it('should go to next step', function () {
-          var promise = $scope.csvUploadNext();
-          $scope.$apply();
-          expect(promise).toBeResolved();
-        });
-        it('should not allow to go next after resetting file', function () {
-          $scope.resetFile();
-          $scope.$apply();
-          $timeout.flush();
-          var promise = $scope.csvUploadNext();
-          $scope.$apply();
-          expect(promise).toBeRejected();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        });
-      });
-      it('should notify error on file size error', function () {
-        $scope.onFileSizeError();
-        $scope.$apply();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-      });
-      it('should notify error on file type error', function () {
-        $scope.onFileTypeError();
-        $scope.$apply();
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-      });
-      describe('valid one column file content', function () {
-        beforeEach(function () {
-          $scope.model.file = oneColumnValidUser;
-          $scope.$apply();
-          $timeout.flush();
-        });
-        it('should have 100 upload progress', function () {
-          expect($scope.model.uploadProgress).toEqual(100);
-        });
-        it('should go to next step', function () {
-          var promise = $scope.csvUploadNext();
-          $scope.$apply();
-          expect(promise).toBeResolved();
-        });
-      });
-      describe('invalid file content that does not have the required column', function () {
-        beforeEach(function () {
-          $scope.model.file = oneColumnInvalidUser;
-          $scope.$apply();
-          $timeout.flush();
-        });
-        it('should have 100 upload progress', function () {
-          expect($scope.model.uploadProgress).toEqual(100);
-        });
-        it('should not go to the next step', function () {
-          var promise = $scope.csvUploadNext();
-          $scope.$apply();
-          expect(promise).toBeRejected();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-        });
-      });
-    });
-
-    describe('Process CSV and Save Users', function () {
+    describe('process and save users', function () {
       beforeEach(function () {
-        $scope.model.file = twoValidUsers;
+        $scope.userList = validUserList;
+        var promise = $scope.syncStatusNext();
         $scope.$apply();
         $timeout.flush();
       });
-      it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
-
-        var promise = $scope.csvProcessingNext();
-        $scope.$apply();
-        expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(2);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(0);
+      it('should load user list into userArray', function () {
+        expect($scope.model.numMaxUsers).toEqual(2);
       });
       it('should report existing users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200)));
-
-        var promise = $scope.csvProcessingNext();
+        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200)));
+        var promise = $scope.dirsyncProcessingNext();
         $scope.$apply();
         expect(promise).toBeResolved();
         expect($scope.model.processProgress).toEqual(100);
@@ -242,11 +165,9 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.numExistingUsers).toEqual(2);
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
-
       it('should report error users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403)));
-
-        var promise = $scope.csvProcessingNext();
+        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403)));
+        var promise = $scope.dirsyncProcessingNext();
         $scope.$apply();
         expect(promise).toBeResolved();
         expect($scope.model.processProgress).toEqual(100);
@@ -255,11 +176,9 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.numExistingUsers).toEqual(0);
         expect($scope.model.userErrorArray.length).toEqual(2);
       });
-
       it('should report error users when API fails', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.reject(onboardUsersResponse(500)));
-
-        var promise = $scope.csvProcessingNext();
+        Userservice.onboardUsers.and.returnValue($q.reject(onboardUsersResponse(500)));
+        var promise = $scope.dirsyncProcessingNext();
         $scope.$apply();
         expect(promise).toBeResolved();
         expect($scope.model.processProgress).toEqual(100);
@@ -268,28 +187,9 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.numExistingUsers).toEqual(0);
         expect($scope.model.userErrorArray.length).toEqual(2);
       });
-
-      it('should report error users when invalid CSV', function () {
-        $scope.model.file = twoInvalidUsers;
-        $scope.$apply();
-        $timeout.flush();
-
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
-
-        var promise = $scope.csvProcessingNext();
-        $scope.$apply();
-        expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(0);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(2);
-      });
-
       it('should stop processing when cancelled', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(-1)));
-
-        var promise = $scope.csvProcessingNext();
+        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(-1)));
+        var promise = $scope.dirsyncProcessingNext();
         $scope.$apply();
         expect(promise).toBeResolved();
         expect($scope.model.processProgress).toEqual(100);
@@ -297,30 +197,9 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.numNewUsers).toEqual(0);
         expect($scope.model.numExistingUsers).toEqual(0);
         expect($scope.model.userErrorArray.length).toEqual(2);
-
         $scope.cancelProcessCsv();
         $scope.$apply();
         expect(promise).toBeResolved();
-      });
-    });
-
-    describe('Process CSV with spaces and Save Users', function () {
-      beforeEach(function () {
-        $scope.model.file = twoValidUsersWithSpaces;
-        $scope.$apply();
-        $timeout.flush();
-      });
-      it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
-
-        var promise = $scope.csvProcessingNext();
-        $scope.$apply();
-        expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(2);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(0);
       });
     });
   });
@@ -346,7 +225,7 @@ describe('OnboardCtrl: Ctrl', function () {
         volume: 100
       }];
     });
-    it('should initialize allLicenses correctly', function () {
+    it('should initialize all licenses correctly', function () {
       $scope.populateConf();
       expect($scope.allLicenses[0].confModel).toEqual(false);
       expect($scope.allLicenses[0].label).toEqual('test org');
@@ -541,6 +420,15 @@ describe('OnboardCtrl: Ctrl', function () {
     it('check hybrid services without paid licenses', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+  });
+
+  describe('filterList', function () {
+    beforeEach(initController);
+    it('a proper query should call out to organizationService', function () {
+      $scope.filterList('sqtest');
+      $timeout.flush();
+      expect(Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
     });
   });
 

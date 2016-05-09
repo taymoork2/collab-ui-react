@@ -54,8 +54,8 @@
           starttime: 0,
           endtime: 0
         };
-        dayhour.starttime = moment(hour.starttime).set(consolidateDate);
-        dayhour.endtime = moment(hour.endtime).set(consolidateDate);
+        dayhour.starttime = moment(hour.starttime, "hh:mm A").set(consolidateDate);
+        dayhour.endtime = moment(hour.endtime, "hh:mm A").set(consolidateDate);
         _.forEach(hour.days, function (wday, index) {
           if (wday.active) {
             addUniqueHours(vm.days[index], dayhour);

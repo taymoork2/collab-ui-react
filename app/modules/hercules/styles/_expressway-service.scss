@@ -1,0 +1,292 @@
+.management-service-list-state,
+.call-service-list-state,
+.calendar-service-list-state {
+  @extend %page-background-white;
+}
+
+.expressway-service {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+}
+
+.hercules.call-service {
+  .call-aware, .call-connect {
+    padding-bottom: 2rem;
+  }
+  .call-connect {
+    padding-top: 2rem;
+  }
+  .feature-settings {
+    padding-bottom: 1rem;
+  }
+}
+
+.hercules-trash-icon {
+  color: $color-alerts
+}
+
+/**
+Special stuff currently used for out own mail input field...
+*/
+.cal-mail-form {
+  display: block;
+  //border: 2px solid rgba(0,0,0,0.75);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  padding: .3rem;
+
+  input, input:focus, input[type="text"]:focus {
+    border: none !important;
+    box-shadow: none !important;
+    border-color: none !important;
+    transition: none !important;
+  }
+  #existing-mails {
+    .token-label {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: .3rem;
+      margin-bottom: .3rem;
+      cursor: pointer;
+      padding: {
+        left: .75rem;
+        right: 1.75rem;
+        top: .3rem;
+        bottom: .3rem;
+      }
+      color: white !important;
+      vertical-align: top;
+      line-height: 1;
+      background-color: $brand-primary;
+      border-radius: 2px;
+
+      position: relative;
+
+      .del {
+        display: block;
+        width: .75rem;
+        height: .75rem;
+        color: white;
+        position: absolute;
+        right: .25rem;
+        top: .3rem;
+      }
+    }
+    .token-label.alert {
+      margin-left: 0 !important;
+      margin-right: .3rem !important;
+      margin-bottom: .3rem !important;
+      background-color: $brand-danger;
+    }
+    .token-label:hover {
+      background-color: $brand-primary-dark;
+    }
+    .token-label.alert:hover {
+      background-color: $brand-danger;
+    }
+  }
+}
+
+.hercules-clusters-list {
+  i {
+    margin-right: 10px;
+  }
+
+  .clusters-list-loading {
+    position: absolute;
+    top: 200px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .centered-info-pane {
+    padding: 10% !important;
+  }
+}
+
+.hercules-cluster-settings {
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.hercules-connectSettings h5 {
+  padding-top: 1rem;
+}
+
+.hercules-connect-setting {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.hercules-state-ok {
+  color: $color-cta-base;
+}
+
+.hercules-state-neutral {
+  color: $gray-base;
+}
+
+.hercules-state-warning {
+  color: $color-attention-base;
+}
+
+.hercules-state-error {
+  color: $color-negative-base;
+}
+
+.hercules-settings-table {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}
+
+.hercules-certificates-table {
+  table {
+    margin-bottom: 0px;
+    td {
+      padding: 5px 5px 10px 0;
+      vertical-align: top;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}
+
+.feature-list {
+  .status-icon {
+    margin-right: 10px;
+    line-height: $feature-line-height;
+  }
+
+  .feature-status span {
+    font-size: 0.75rem;
+  }
+}
+
+.hercules-export-list {
+  display: flex;
+  align-items: center;
+  color: $gray-light-1;
+
+  .icon-download-container {
+    color: inherit;
+
+    > i, span {
+      vertical-align: middle;
+    }
+  }
+
+  .icon-circle-user {
+    margin-right: 10px;
+  }
+
+  .icon-circle-user,
+  .icon-download {
+    font-size: 1.5em;
+  }
+
+  .export-number {
+    position: relative;
+    margin-right: 20px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      right: -10px;
+      width: 1px;
+      height: 60%;
+      background-color: $gray-light-1;
+    }
+
+    // &:last-of-type{
+    //   margin-right: 10px;
+    //
+    //   &:after {
+    //     display: none;
+    //   }
+    // }
+  }
+}
+
+.add-resource-button {
+  margin-left: 25px;
+}
+
+.hercules-sip-settings {
+  .tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+  }
+  .sip-domain-icon {
+    margin-left: 30px;
+  }
+}
+
+.hercules-sip-destination-table {
+  display: flex;
+  .form-control {
+    flex: 1 0 auto;
+    /* the following override default value for .form-control */
+    margin-right: 10px;
+    margin-bottom: 0;
+    width: auto;
+  }
+  .btn {
+    margin: 0 !important; /* override .hercules .btn--primary */
+    flex: 0 0 auto;
+  }
+}
+
+.hercules-update-warning-text {
+  margin-top: 0;
+  margin-right: 5px;
+  font-size: 0.75rem;
+  color: orange;
+}
+
+.hercules-btn-deregister {
+  margin-top: 0.875rem;
+}
+
+.hercules-footer {
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 10px;
+  color: #CCC;
+}
+
+.hercules-user-error-name {
+  font-weight: bold;
+}
+
+.hercules-user-error-status {
+  padding-top: 10px;
+}
+
+.preserve-newlines {
+  white-space: pre-wrap;
+}

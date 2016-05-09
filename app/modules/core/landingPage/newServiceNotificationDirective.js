@@ -3,20 +3,8 @@
 
   angular
     .module('Core')
-    .controller('NewServiceNotificationCtrl', ['$scope', function ($scope) {
-      $scope.CalendarService = {
-        text: 'homePage.setUpCalendarService'
-      };
-      $scope.CallAwareService = {
-        text: 'homePage.setUpCallAwareService'
-      };
-      $scope.CallConnectService = {
-        text: 'homePage.setUpCallConnectService'
-      };
-
-    }])
-
-  .directive('newServiceNotification', newServiceNotification);
+    .controller('NewServiceNotificationCtrl', NewServiceNotificationCtrl)
+    .directive('newServiceNotification', newServiceNotification);
 
   function newServiceNotification() {
     var directive = {
@@ -31,6 +19,19 @@
     };
 
     return directive;
+  }
+
+  /* @ngInject */
+  function NewServiceNotificationCtrl($scope) {
+    $scope.CalendarService = {
+      text: 'homePage.setUpCalendarService'
+    };
+    $scope.CallAwareService = {
+      text: 'homePage.setUpCallAwareService'
+    };
+    $scope.CallConnectService = {
+      text: 'homePage.setUpCallConnectService'
+    };
   }
 
 })();
