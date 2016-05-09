@@ -81,8 +81,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       $scope.$apply();
 
       expectedDayGroup.label = moment().weekday(4).format('dddd') + ' - ' + moment().weekday(7).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hours.starttime).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(hours.endtime).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hours.starttime).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(hours.endtime).format('hh:mm A');
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
@@ -95,18 +95,18 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       $scope.$apply();
 
       expectedDayGroup.label = moment().weekday(1).format('dddd') + ' - ' + moment().weekday(3).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm A');
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
       expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
 
       expectedDayGroup.label = moment().weekday(4).format('dddd') + ' - ' + moment().weekday(7).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm a');
-      var starttime = moment(hours.endtime).add(1, 'm').format('hh:mm a');
-      var endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm A');
+      var starttime = moment(hours.endtime).add(1, 'm').format('hh:mm A');
+      var endtime = moment(endhh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
         endtime: endtime
@@ -145,8 +145,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
         label: ''
       };
       expectedDayGroup.label = moment().weekday(1).format('dddd') + ' - ' + moment().weekday(3).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm A');
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
@@ -187,8 +187,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       };
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hours.endtime).add('1', 'm').format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hours.endtime).add('1', 'm').format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm A');
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
@@ -212,8 +212,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       };
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hours.endtime).add('1', 'm').format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hours.endtime).add('1', 'm').format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(endhh).format('hh:mm A');
 
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
@@ -267,16 +267,16 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       //           '05:01pm - 11:59pm'
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm a');
-      var starttime = moment(hours.endtime).add(1, 'm').format('hh:mm a');
-      var endtime = moment(hours1.starttime).subtract(1, 'm').format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm A');
+      var starttime = moment(hours.endtime).add(1, 'm').format('hh:mm A');
+      var endtime = moment(hours1.starttime).subtract(1, 'm').format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
         endtime: endtime
       });
-      starttime = moment(hours1.endtime).add(1, 'm').format('hh:mm a');
-      endtime = moment(endhh).format('hh:mm a');
+      starttime = moment(hours1.endtime).add(1, 'm').format('hh:mm A');
+      endtime = moment(endhh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
         endtime: endtime
@@ -335,10 +335,10 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       //           '06:01pm - 11:59pm'
 
       expectedDayGroup.label = moment().weekday(1).format('dddd');
-      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm a');
-      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm a');
-      var starttime = moment(hours1.endtime).add(1, 'm').format('hh:mm a');
-      var endtime = moment(endhh).format('hh:mm a');
+      expectedDayGroup.hours[0].starttime = moment(hh).format('hh:mm A');
+      expectedDayGroup.hours[0].endtime = moment(hours.starttime).subtract(1, 'm').format('hh:mm A');
+      var starttime = moment(hours1.endtime).add(1, 'm').format('hh:mm A');
+      var endtime = moment(endhh).format('hh:mm A');
       expectedDayGroup.hours.push({
         starttime: starttime,
         endtime: endtime
