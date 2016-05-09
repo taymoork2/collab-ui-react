@@ -26,8 +26,7 @@
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
-        size: 'lg',
-        modalClass: 'aa-schedule'
+        size: 'lg'
       });
 
       modalInstance.result.then(function (result) {

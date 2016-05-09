@@ -1,33 +1,35 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-  <h4 class="modal-title" translate="hercules.clusters.deregisterHeader"></h4>
-</div>
-<div class="modal-body">
-  <div ng-show="clusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
-    {{clusterDeregister.error}}
+<div class="hercules-notification-config">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h4 class="modal-title" translate="hercules.clusters.deregisterHeader"></h4>
   </div>
-  <div ng-hide="clusterDeregister.error">
-    <p>{{clusterDeregister.deregisterAreYouSure}}</p>
-    <ul>
-      <li translate="hercules.clusters.deregisterCausesListItem1"></li>
-      <li>{{clusterDeregister.deregisterCausesListItem2}}</li>
-      <li translate="hercules.clusters.deregisterCausesListItem3"></li>
-    </ul>
+  <div class="modal-body">
+    <div ng-show="clusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
+      {{clusterDeregister.error}}
+    </div>
+    <div ng-hide="clusterDeregister.error">
+      <p>{{clusterDeregister.deregisterAreYouSure}}</p>
+      <ul>
+        <li translate="hercules.clusters.deregisterCausesListItem1"></li>
+        <li>{{clusterDeregister.deregisterCausesListItem2}}</li>
+        <li translate="hercules.clusters.deregisterCausesListItem3"></li>
+      </ul>
+    </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-default"
-          ng-click="$dismiss()"
-          type="button"
-          translate="hercules.clusters.deregisterCancel"></button>
-  <button class="btn btn--negative"
-          cs-btn
-          loading="clusterDeregister.deregistering"
-          type="button"
-          ng-disabled="vm.deregistering"
-          ng-click="clusterDeregister.deregister()">
-    <span translate="hercules.clusters.deregisterConfirm"></span>
-  </button>
+  <div class="modal-footer">
+    <button class="btn btn-default"
+            ng-click="$dismiss()"
+            type="button"
+            translate="hercules.clusters.deregisterCancel"></button>
+    <button class="btn btn--negative"
+            cs-btn
+            loading="clusterDeregister.deregistering"
+            type="button"
+            ng-disabled="vm.deregistering"
+            ng-click="clusterDeregister.deregister()">
+      <span translate="hercules.clusters.deregisterConfirm"></span>
+    </button>
+  </div>
 </div>
