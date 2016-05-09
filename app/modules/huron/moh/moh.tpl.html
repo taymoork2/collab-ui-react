@@ -1,73 +1,76 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="moh.close()"><span class="sr-only" translate="common.close"></span></button>
-  <h3 class="modal-title" translate="mohManagement.title"></h3>
-</div>
-<div class="loading" ng-if="!moh.playlists[0]">
-  <i class="icon icon-spinner"></i>
-</div>
-<div class="modal-body" ng-if="moh.playlists[0]">
-  <div class="row">
-    <div class="col-xs-4 playlist-list">
-      <a class="btn btn--people new-playlist" translate="mohManagement.newPlaylistButton"></a>
-      <ul>
-        <li ng-repeat="playlist in moh.playlists" ng-class="{selected: playlist.uuid === moh.selectedUuid}" class="playlist-item" ng-click="moh.selectPlaylist(playlist.uuid, playlist.name)">
-          <span class="playlist-name">{{playlist.name}}</span>
-          <span cs-dropdown class="actions-menu dropdown">
-          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-          <i class="icon icon-three-dots"></i>
-          </button>
-          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-playlist">
-            <li><a href="" translate="mohManagement.setActive"></a></li>
-            <li ng-if="!playlist.systemOwned"><a href="" translate="common.rename"></a></li>
-            <li ng-if="!playlist.systemOwned"><a href="" translate="common.delete"></a></li>
-          </ul>
-          </span>
-        </li>
-      </ul>
-    </div>
-    <div class="col-xs-8">
-      <div class="loading" ng-if="!moh.tracks[0]">
-        <i class="icon icon-spinner"></i>
-      </div>
-      <div class="playlist-detail" ng-if="moh.tracks[0]">
-      <div class="row">
-        <div class="col-sm-8 playlist-title">
-          <span>{{moh.selectedList.name}}</span>
-        </div>
-        <div class="col-sm-4 playlist-info">
-          <span class="status">Saved</span>
-          <span class="track-count">{{moh.tracksCount}}&nbsp;{{'mohManagement.tracks' | translate}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 tracklist-header">
-          <span class="title" translate="mohManagement.tracks"></span>
-          <span class="description" translate="mohManagement.draganddrop"></span>
-          <span class="add-track pull-right"><i class="icon icon-plus"></i></span>
-        </div>
-      </div>
-      <div class="row tracklist">
+<div class="moh-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="moh.close()"><span class="sr-only" translate="common.close"></span></button>
+    <h3 class="modal-title" translate="mohManagement.title"></h3>
+    <p class="modal-subtitle" translate="mohManagement.subtitle"></p>
+  </div>
+  <div class="loading" ng-if="!moh.playlists[0]">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <div class="modal-body no-bkgd" ng-if="moh.playlists[0]">
+    <div class="row">
+      <div class="col-xs-4 playlist-list">
+        <a class="btn btn--people new-playlist" translate="mohManagement.newPlaylistButton"></a>
         <ul>
-          <li ng-repeat="track in moh.tracks" class="tracklist-item">
-            <span class="track-number">{{$index + 1}}.</span>
-            <span class="track-name">{{track.name}}</span>
-            <span class="actions-menu dropdown">
-            <button class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+          <li ng-repeat="playlist in moh.playlists" ng-class="{selected: playlist.uuid === moh.selectedUuid}" class="playlist-item" ng-click="moh.selectPlaylist(playlist.uuid, playlist.name)">
+            <span class="playlist-name">{{playlist.name}}</span>
+            <span cs-dropdown class="actions-menu dropdown">
+            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
             <i class="icon icon-three-dots"></i>
             </button>
-            <ul class="dropdown-menu dropdown-primary actions-tracklist">
-              <li><a href="" translate="common.play"></a></li>
-              <li><a href="" translate="common.rename"></a></li>
-              <li><a href="" translate="common.delete"></a></li>
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-playlist">
+              <li><a href="" translate="mohManagement.setActive"></a></li>
+              <li ng-if="!playlist.systemOwned"><a href="" translate="common.rename"></a></li>
+              <li ng-if="!playlist.systemOwned"><a href="" translate="common.delete"></a></li>
             </ul>
             </span>
           </li>
         </ul>
       </div>
+      <div class="col-xs-8">
+        <div class="loading" ng-if="!moh.tracks[0]">
+          <i class="icon icon-spinner"></i>
+        </div>
+        <div class="playlist-detail" ng-if="moh.tracks[0]">
+        <div class="row">
+          <div class="col-sm-8 playlist-title">
+            <span>{{moh.selectedList.name}}</span>
+          </div>
+          <div class="col-sm-4 playlist-info">
+            <span class="status">Saved</span>
+            <span class="track-count">{{moh.tracksCount}}&nbsp;{{'mohManagement.tracks' | translate}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 tracklist-header">
+            <span class="title" translate="mohManagement.tracks"></span>
+            <span class="description" translate="mohManagement.draganddrop"></span>
+            <span class="add-track pull-right"><i class="icon icon-plus"></i></span>
+          </div>
+        </div>
+        <div class="row tracklist">
+          <ul>
+            <li ng-repeat="track in moh.tracks" class="tracklist-item">
+              <span class="track-number">{{$index + 1}}.</span>
+              <span class="track-name">{{track.name}}</span>
+              <span class="actions-menu dropdown">
+              <button class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              <i class="icon icon-three-dots"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-primary actions-tracklist">
+                <li><a href="" translate="common.play"></a></li>
+                <li><a href="" translate="common.rename"></a></li>
+                <li><a href="" translate="common.delete"></a></li>
+              </ul>
+              </span>
+            </li>
+          </ul>
+        </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn--primary btn--large" ng-click="moh.close()">{{'common.done' | translate}}</button>
+  <div class="modal-footer">
+    <button class="btn btn--primary btn--large" ng-click="moh.close()">{{'common.done' | translate}}</button>
+  </div>
 </div>

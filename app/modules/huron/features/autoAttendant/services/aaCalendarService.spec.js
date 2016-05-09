@@ -249,4 +249,41 @@ describe('Service: AACalendarService', function () {
     });
   });
 
+  describe('updateCalendarName', function () {
+    it('should notify on success', function () {
+      $httpBackend.whenGET(scheduleURL).respond(200, calendar);
+      $httpBackend.whenPUT(scheduleURL).respond(200);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).toHaveBeenCalled();
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should notify on updateCalendar failure', function () {
+      $httpBackend.whenGET(scheduleURL).respond(200, calendar);
+      $httpBackend.whenPUT(scheduleURL).respond(500);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+
+    it('should notify on readCalendar failure', function () {
+      $httpBackend.whenGET(scheduleURL).respond(500);
+      AACalendarService.updateCalendarName(calendarId, 'AA').then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(successSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+  });
+
 });

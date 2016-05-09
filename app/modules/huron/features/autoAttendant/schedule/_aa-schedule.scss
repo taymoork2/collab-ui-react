@@ -1,3 +1,14 @@
+// Schedule Panel
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
+
+  h3 {
+    display: inline-block;
+  }
+}
+
+// Schedule Modal
 .aa-schedule {
   .modal-body &-subtitle {
     font-size: 1.25rem;
@@ -39,7 +50,15 @@
   &-add {
     i {
       @include vr-spacing(pr, 0.5);
-      color: $color-primary-base;
+    }
+    > .icon {
+      font-size: 1.25rem;
+      vertical-align: middle;
+      color: $anchor-font-color;
+    }
+    &:hover {
+      cursor: pointer;
+      color: $anchor-font-color-hover;
     }
   }
   &-holidays-behavior {
@@ -57,6 +76,12 @@
     width: vr-adjust(170);
     &:last-of-type {
       @include vr-spacing(mr, 2);
+    }
+  }
+  .cs-checkbox-group {
+    display: inline-block;
+    &.aa-schedule-holidays-behavior {
+      @include vr-spacing(mb, 0);
     }
   }
   .accordion {
@@ -84,7 +109,7 @@
           }
         }
         &:before {
-          content: initial;
+          content: none;
         }
         &.active {
           display: none;
@@ -124,40 +149,46 @@
   }
 }
 
-.aa-schedule-container {
-  h3 {
-    display: inline-block;
+// Schedule Info Box
+.aa-schedule-info {
+  @include vr-spacing(pt, 0.5);
+  display: flex;
+  align-items: flex-start;
+
+  &:first-of-type {
+    @include vr-spacing(pt, 0);
   }
-}
 
-.aa-schedule-info-item {
-  @include vr-spacing(pb, .5);
-  line-height: 1rem;
-  text-align: left;
-}
+  &-closed-holiday:first-of-type {
+    @include vr-spacing(mt, 1);
+  }
 
-.aa-schedule-info-day {
-  @include vr-spacing(pt, 1.0);
-  @include vr-spacing(pr, 0.3);
-}
+  &-item {
+    @include vr-spacing(pb, .5);
+    line-height: 1rem;
+    text-align: left;
+  }
 
-.aa-schedule-info-hours {
-  color: $gray-light-1;
-  text-align: left;
-}
+  &-day {
+    @extend .aa-schedule-info-item;
+    @include vr-spacing(pr, 0.3);
+  }
 
-.aa-column {
-  @include vr-spacing(pl, 1.0);
-  white-space: normal;
-}
+  &-hours {
+    @extend .aa-schedule-info-item;
+    color: $gray-light-1;
+    text-align: left;
+  }
 
-.aa-trim-padding {
-  @include vr-spacing(pl, 0);
-}
+  &-holidays-date {
+    display: inline-block;
+    @include vr-spacing(pr, 1);
+  }
 
-.aa-flex-item.schedule {
-  @include vr-spacing(pv, .25);
-  @include vr-spacing(ph, 2);
+  &-holidays-name {
+    display: inline-block;
+    @include vr-spacing(pr, 1);
+  }
 }
 
 /* Should go in toolkit for timepicker error state */
@@ -175,15 +206,6 @@
   border-color: $color-alerts-base;
   background-color: $color-alerts-lighter;
 }
-
 .closed-holiday {
   padding-top: rem(12);
-}
-
-.modal-body-gray {
-  margin-right: 30px;
-  margin-left: 30px;
-  background-color: #F5F5F6;
-  margin-bottom: 5px;
-  padding: 20px;
 }

@@ -1,39 +1,41 @@
-<div class="modal-header">
-  <button id="convertModalClose" type="button" class="close" ng-click="$close()">
-    <span class="sr-only">Close</span>
-  </button>
-  <h5 class="modal-title">Activation Errors</h5>
-</div>
-<div class="modal-body">
-  <div ng-show="loading" style="text-align: center; padding: 60px;">
-    <i class="icon icon-spinner icon-2x"></i>
+<div>
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="$close()">
+      <span class="sr-only">Close</span>
+    </button>
+    <h5 class="modal-title">Activation Errors</h5>
   </div>
-  <div ng-hide="loading">
-    <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
-      out of {{userErrorsCtrl.totalCount}} errors.
-      <span
-        ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The
-        <a href ng-click="userErrorsCtrl.openUserStatusReportModal(userErrorsCtrl.serviceId);">user status
-          report</a> has more information.</span>
-    </p>
+  <div class="modal-body">
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+    <div ng-hide="loading">
+      <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
+        out of {{userErrorsCtrl.totalCount}} errors.
+        <span
+          ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The
+          <a href ng-click="userErrorsCtrl.openUserStatusReportModal(userErrorsCtrl.serviceId);">user status
+            report</a> has more information.</span>
+      </p>
 
-    <p ng-repeat="status in userErrorsCtrl.userStatuses" class="hercules-user-error-status">
-      <span class="hercules-user-error-name">{{status.displayName}}</span>
-      <span>({{status.emailAddress}})</span>
-      <span ng-if="status.connector">
-        on <a href="https://{{status.connector.host_name}}"
-              target="_blank">{{status.connector.host_name}}</a>
-      </span>
-      <span ng-if="status.description.defaultMessage">: <em>{{status.description.defaultMessage}}</em>.</span>
-    </p>
+      <p ng-repeat="status in userErrorsCtrl.userStatuses" class="hercules-user-error-status">
+        <span class="hercules-user-error-name">{{status.displayName}}</span>
+        <span>({{status.emailAddress}})</span>
+        <span ng-if="status.connector">
+          on <a href="https://{{status.connector.host_name}}"
+                target="_blank">{{status.connector.host_name}}</a>
+        </span>
+        <span ng-if="status.description.defaultMessage">: <em>{{status.description.defaultMessage}}</em>.</span>
+      </p>
+    </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button class="btn" ng-click="$close()">
-    Close
-  </button>
-  <button class="btn btn--primary"
-          ng-click="userErrorsCtrl.openUserStatusReportModal(userErrorsCtrl.serviceId);">
-    Open Report
-  </button>
+  <div class="modal-footer">
+    <button class="btn" ng-click="$close()">
+      Close
+    </button>
+    <button class="btn btn--primary"
+            ng-click="userErrorsCtrl.openUserStatusReportModal(userErrorsCtrl.serviceId);">
+      Open Report
+    </button>
+  </div>
 </div>
