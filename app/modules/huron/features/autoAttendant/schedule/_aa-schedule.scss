@@ -50,7 +50,15 @@
   &-add {
     i {
       @include vr-spacing(pr, 0.5);
-      color: $color-primary-base;
+    }
+    > .icon {
+      font-size: 1.25rem;
+      vertical-align: middle;
+      color: $anchor-font-color;
+    }
+    &:hover {
+      cursor: pointer;
+      color: $anchor-font-color-hover;
     }
   }
   &-holidays-behavior {
