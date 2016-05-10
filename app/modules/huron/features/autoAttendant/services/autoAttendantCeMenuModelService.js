@@ -453,6 +453,10 @@
         }
 
         menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToQueue)) {
+        action = new Action('routeToQueue', inAction.routeToQueue.id);
+        setDescription(action, inAction.routeToQueue);
+        menuEntry.addAction(action);
       } else {
         // insert an empty action
         action = new Action('', '');
