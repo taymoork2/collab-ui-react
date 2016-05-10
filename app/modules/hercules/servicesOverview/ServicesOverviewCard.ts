@@ -14,6 +14,7 @@ namespace servicesOverview {
 
     protected _status;
     protected _loading = true;
+    protected _statusTxt:string;
 
     get active() {
       return this._active;
@@ -68,11 +69,11 @@ namespace servicesOverview {
     };
 
     serviceStatusToTxt = {
-      ok: 'Running',
-      warn: 'Alarms',
-      error: 'Error',
-      disabled: 'Disabled',
-      undefined: 'Alarms'
+      ok: 'servicesOverview.cardStatus.running',
+      warn: 'servicesOverview.cardStatus.alarms',
+      error: 'servicesOverview.cardStatus.error',
+      disabled: 'servicesOverview.cardStatus.disabled',
+      undefined: 'servicesOverview.cardStatus.alarms'
     };
 
     serviceEnabledWeight = {

@@ -4071,6 +4071,12 @@
     "showMore": "View all",
     "genericButtons": {
       "setup": "Setup"
+    },
+    "cardStatus":{
+      "running":"Running",
+      "alarms":"Alarms",
+      "error":"Error",
+      "disabled": "Disabled"
     }
   },
   "readOnlyModal": {

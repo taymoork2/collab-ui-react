@@ -20,6 +20,6 @@
 <footer ng-if="!card.loading && card.status">
   <p class="status">
       <i class="icon icon-circle" ng-class="card.status || 'disabled'"></i>
-      <span ng-class="card.status || 'disabled'">{{card.statusTxt}}</span>
+      <span ng-class="card.status || 'disabled'">{{card.statusTxt| translate}}</span>
   </p>
 </footer>
