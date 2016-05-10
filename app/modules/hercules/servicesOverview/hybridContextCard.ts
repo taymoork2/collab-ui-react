@@ -16,7 +16,7 @@ namespace servicesOverview {
 
     public constructor() {
       super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridContext.title', 'servicesOverview.cards.hybridContext.description', 'icon-circle-data', true, 'context', CardType.hybrid);
+        'servicesOverview.cards.hybridContext.title', 'servicesOverview.cards.hybridContext.description', '', true, 'context', CardType.hybrid);
 
       this._loading = false;
     }

@@ -47,6 +47,10 @@ namespace servicesOverview {
       return this._status;
     }
 
+    get statusTxt() {
+      return this._statusTxt;
+    }
+
     get template() {
       return this._template;
     }
@@ -61,6 +65,14 @@ namespace servicesOverview {
       error: 'danger',
       disabled: 'disabled',
       undefined: 'warning'
+    };
+
+    serviceStatusToTxt = {
+      ok: 'Running',
+      warn: 'Alarms',
+      error: 'Error',
+      disabled: 'Disabled',
+      undefined: 'Alarms'
     };
 
     serviceEnabledWeight = {
@@ -99,6 +111,19 @@ namespace servicesOverview {
       }, startVal);
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
+      }
+      return undefined;
+    }
+
+    protected filterAndGetTxtStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
+      let startVal:string = undefined;
+      let callServiceStatus:string = services.filter((service)=> {
+        return _.indexOf(serviceIds, service.id) >= 0;
+      }).reduce((result, serv)=> {
+        return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
+      }, startVal);
+      if (callServiceStatus) {
+        return this.serviceStatusToTxt[callServiceStatus] || this.serviceStatusToTxt['undefined'];
       }
       return undefined;
     }

@@ -12,10 +12,10 @@
     </cs-card-layout>
 
     <h5><span translate="servicesOverview.hybridServices"></span>
-      
+
     </h5>
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
-      <cs-card class="large-3 medium-6 small-12 header-bar gray" ng-class="card.cardClass"
+      <cs-card class="large-3 medium-6 small-12 header-bar gray-light" ng-class="card.cardClass"
                ng-repeat="card in servicesOverviewCtrl.hybridCards">
         <!--ng-if="showLayout=='active'">-->
         <article ng-include="card.template"></article>

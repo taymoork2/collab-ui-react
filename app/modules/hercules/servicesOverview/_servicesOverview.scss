@@ -3,6 +3,10 @@
     display: none;
   }
 
+  .gray-light header:after{
+    border-top-color: $gray-light-1 !important;
+  }
+
   h5 {
     position: relative;
     i {
@@ -115,6 +119,19 @@
         button.btn-link{
           color: $color-primary-base;
           background-color: transparent;
+        }
+        footer{
+          border-top: 1px solid $gray-light-4;
+          .status{
+            position: relative;
+            top: 0.75rem;
+            text-align: center;
+            span{
+              position: relative;
+              top: -0.1rem;
+              left: 0.1rem;
+            }
+          }
         }
       }
       .cs-card.header-bar.cta-bar header:after {

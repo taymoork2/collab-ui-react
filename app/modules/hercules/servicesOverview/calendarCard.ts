@@ -17,11 +17,12 @@ namespace servicesOverview {
 
     public constructor() {
       super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.calendar.title', 'servicesOverview.cards.calendar.description', 'icon-circle-calendar', true, 'calendar', CardType.hybrid);
+        'servicesOverview.cards.calendar.title', 'servicesOverview.cards.calendar.description', '', true, 'calendar', CardType.hybrid);
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
       this._status = this.filterAndGetCssStatus(services, ['squared-fusion-cal']);
+      this._statusTxt = this.filterAndGetTxtStatus(services, ['squared-fusion-cal']);
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal']);
       this._loading = false;
     }

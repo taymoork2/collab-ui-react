@@ -18,6 +18,8 @@
   <i class='icon icon-spinner icon-2x'></i>
 </section>
 <footer ng-if="!card.loading && card.status">
-  <i class="icon icon-circle" ng-class="card.status || 'disabled'"></i>
-  <span>{{card.levelText}}</span><!-- not implemented yet-->
+  <p class="status">
+      <i class="icon icon-circle" ng-class="card.status || 'disabled'"></i>
+      <span ng-class="card.status || 'disabled'">{{card.statusTxt}}</span>
+  </p>
 </footer>

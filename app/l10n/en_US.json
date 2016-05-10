@@ -4062,7 +4062,7 @@
       },
       "hybridContext": {
         "title": "Context",
-        "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
+        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
         "buttons": {
           "settings": "Settings"
         }

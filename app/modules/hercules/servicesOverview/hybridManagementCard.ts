@@ -22,11 +22,12 @@ namespace servicesOverview {
 
     public constructor() {
       super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridManagement.title', 'servicesOverview.cards.hybridManagement.description', 'icon-circle-data', true, '', CardType.hybrid);
+        'servicesOverview.cards.hybridManagement.title', 'servicesOverview.cards.hybridManagement.description', '', true, '', CardType.hybrid);
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
       this._status = this.filterAndGetCssStatus(services, ['squared-fusion-mgmt']);
+      this._statusTxt = this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']);
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-mgmt']);
       this._loading = false;
     }
