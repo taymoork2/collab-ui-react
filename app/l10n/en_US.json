@@ -4072,10 +4072,10 @@
     "genericButtons": {
       "setup": "Setup"
     },
-    "cardStatus":{
-      "running":"Running",
-      "alarms":"Alarms",
-      "error":"Error",
+    "cardStatus": {
+      "running": "Running",
+      "alarms": "Alarms",
+      "error": "Error",
       "disabled": "Disabled"
     }
   },
