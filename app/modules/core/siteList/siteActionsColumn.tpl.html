@@ -4,7 +4,11 @@
     <!-- display disabled reports icon -->
     <i ng-if="!row.entity.showSiteLinks || row.entity.isError"
        id="{{row.entity.license.siteUrl}}_reportsUnavailable"
-       class="icon icon-report"></i>
+       class="icon icon-report"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip=""
+       tooltip-placement="top"></i>
       
     <span ng-if="row.entity.showSiteLinks && !row.entity.isError"
           id="{{row.entity.license.siteUrl}}_reportsAvailable">
@@ -42,7 +46,11 @@
     <!-- display disabled config icon -->
     <i ng-if="!row.entity.showSiteLinks || row.entity.isError"
        id="{{row.entity.license.siteUrl}}_configUnavailable"
-       class="icon icon-settings"></i>
+       class="icon icon-settings"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip=""
+       tooltip-placement="top"></i>
     
     <!-- display enabled config icon and tooltip -->
     <a ng-if="row.entity.showSiteLinks && !row.entity.isError"
@@ -69,7 +77,11 @@
     <!-- display disabled CSV icon -->
     <i ng-if="!row.entity.showSiteLinks || !row.entity.showCSVInfo || row.entity.isError"
        id="{{row.entity.license.siteUrl}}_csvUnavailable"
-       class="icon icon-admin"></i>
+       class="icon icon-admin"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip=""
+       tooltip-placement="top"></i>
     
     <!-- display disabled CSV icon and unsupported tooltip -->
     <i ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && !row.entity.isError && !row.entity.isCSVSupported"
@@ -82,7 +94,7 @@
        
     <!-- display enabled CSV icon and results link (when applicable) -->
     <a ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && row.entity.isCSVSupported"
-       ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})">
+       ui-sref="site-csv({csvImportObj:row.entity})">
        
       <i class="icon icon-admin"
          tooltip-append-to-body="true" 
