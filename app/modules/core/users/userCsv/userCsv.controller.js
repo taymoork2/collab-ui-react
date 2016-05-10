@@ -9,11 +9,13 @@
   function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService) {
     // variables
     var vm = this;
+
+    vm.isCancelledByUser = false;
+
     var maxUsers = 1100;
     var userArray = [];
     var isCsvValid = false;
     var cancelDeferred;
-    var isCancelledByUser = false;
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
@@ -111,7 +113,7 @@
     };
 
     vm.cancelProcessCsv = function () {
-      isCancelledByUser = true;
+      vm.isCancelledByUser = true;
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
@@ -322,12 +324,15 @@
 
       function errorCallback(response, startIndex, length) {
         for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, UserCsvService.getBulkErrorResponse(
-            response.status,
-            isCancelledByUser ? '0' : '1',
-            (typeof response.config !== "undefined"
-              && typeof response.config.data !== "undefined") ? response.config.data.users[k].email : ''
-          ), response);
+          addUserErrorWithTrackingID(
+            startIndex + k + 1,
+            UserCsvService.getBulkErrorResponse(
+              response.status,
+              vm.isCancelledByUser ? '0' : '1',
+              (!_.isUndefined(response.config) && !_.isUndefined(response.config.data)) ? response.config.data.users[k].email : ''
+            ),
+            response
+          );
         }
       }
 
@@ -351,7 +356,7 @@
       }
 
       function processCsvRows() {
-        isCancelledByUser = false;
+        vm.isCancelledByUser = false;
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
         csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
 
