@@ -2,7 +2,7 @@
 
 /*global webEx, sitelist*/
 
-describe('Services > Webex page aka Site List page', function () {
+xdescribe('Services > Webex page aka Site List page', function () {
 
   beforeEach(function () {
     browser.ignoreSynchronization = false;
@@ -12,7 +12,7 @@ describe('Services > Webex page aka Site List page', function () {
     browser.ignoreSynchronization = true;
   });
 
-  describe(': CSV Export/Import : ', function () {
+  xdescribe(': CSV Export/Import : ', function () {
     var setup = false;
 
     beforeAll(function () {
@@ -51,7 +51,7 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start tests to detect 'Not Available' and warning icon conditions
-  describe("test CSV 'Not Anavailable' condition : ", function () {
+  xdescribe("test CSV 'Not Anavailable' condition : ", function () {
     var setup = false;
 
     beforeAll(function () {
@@ -81,7 +81,7 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  describe("test CSV warning icon condition: ", function () {
+  xdescribe("test CSV warning icon condition: ", function () {
     var setup = false;
 
     beforeAll(function () {
