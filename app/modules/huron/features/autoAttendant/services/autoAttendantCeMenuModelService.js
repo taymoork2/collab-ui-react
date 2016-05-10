@@ -862,6 +862,8 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToQueue') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
               if (menuEntry.actions[0].inputType === 2) {
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
@@ -918,6 +920,8 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
+        } else if (actionName === 'routeToQueue') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;

@@ -77,6 +77,10 @@
         label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
         name: 'phoneMenuRouteToExtNum',
         action: 'route'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+        name: 'phoneMenuRouteQueue',
+        action: 'routeToQueue'
       }
     ];
 
