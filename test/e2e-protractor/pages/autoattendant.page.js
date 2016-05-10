@@ -141,11 +141,16 @@ var AutoAttendantPage = function () {
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
+  this.scheduleCloseButton = element(by.css('.modal-header button.close'));
 
   this.openHoursLane = element(by.name('openLane')).element(by.name('openHours'));
   this.openHoursSayMessage = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.openHoursPhoneMenu = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
   this.openHoursEndCall = element(by.name('openLane')).element(by.name('endCall'));
+  this.selectOpenHoursBox = element(by.name('openHours'));
+  this.selectHolidayHoursBox = element(by.name('holidays'));
+  this.selectOpenCloseBar = element(by.xpath("//div[@class='modal-content']//p[.='Open/Closed']"));
+  this.selectHolidaysBar = element(by.xpath("//div[@class='modal-content']//p[normalize-space(.)='Holidays']"));
   this.closedHoursLane = element(by.name('closedLane')).element(by.name('closedHours'));
   this.closedHoursSayMessage = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.closedHoursPhoneMenu = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
