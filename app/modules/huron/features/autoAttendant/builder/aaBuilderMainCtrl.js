@@ -438,6 +438,14 @@
           if (actionset === 'runActionsOnInput') {
             menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
             menuEntry.type = 'MENU_OPTION';
+
+            var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            keyEntry.type = "MENU_OPTION";
+            keyEntry.key = '0';
+            var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
+            keyEntry.addAction(emptyAction);
+            menuEntry.entries.push(keyEntry);
+
           } else {
             menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
