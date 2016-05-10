@@ -148,13 +148,17 @@
 
     function getMinLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMinLength', {
-        min: scope.options.templateOptions.minlength
+        min: function () {
+          return scope.options.templateOptions.minlength;
+        }
       });
     }
 
     function getMaxLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMaxLength', {
-        max: scope.options.templateOptions.maxlength
+        max: function () {
+          return scope.options.templateOptions.maxlength;
+        }
       });
     }
 
