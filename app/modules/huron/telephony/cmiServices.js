@@ -196,9 +196,9 @@
       customerId: '@customerId',
       cesId: '@cesId'
     }, {
-      query: {
+      get: {
         method: 'GET',
-        isArray: true
+        transformResponse: transformEnvelope
       },
       update: {
         method: 'PUT'
@@ -475,6 +475,10 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      get: {
+        method: 'GET',
+        transformResponse: transformEnvelope
       }
     });
   }
@@ -485,7 +489,17 @@
     return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
       restrictionId: '@restrictionId'
+    }, {
+      get: {
+        method: 'GET',
+        transformResponse: transformEnvelope
+      }
     });
+  }
+
+  function transformEnvelope(response) {
+    var responseObj = angular.fromJson(response);
+    return _.get(responseObj, '[0]', responseObj);
   }
 
 })();

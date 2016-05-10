@@ -126,7 +126,7 @@
       },
 
       listCosRestrictions: function () {
-        return CustomerCosRestrictionServiceV2.query({
+        return CustomerCosRestrictionServiceV2.get({
           customerId: Authinfo.getOrgId()
         }, angular.bind(this, function (cosRestrictions) {
           this.cosRestrictions = cosRestrictions;
