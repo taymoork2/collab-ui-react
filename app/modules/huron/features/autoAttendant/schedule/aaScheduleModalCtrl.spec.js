@@ -535,6 +535,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
     });
+
   });
 
   describe('forceCheckHoliday', function () {

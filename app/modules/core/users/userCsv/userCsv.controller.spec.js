@@ -183,6 +183,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('Process CSV and Save Users', function () {
       beforeEach(function () {
+        controller.isCancelledByUser = false;
         controller.model.file = twoValidUsers;
         $scope.$apply();
         $timeout.flush();
@@ -258,6 +259,7 @@ describe('OnboardCtrl: Ctrl', function () {
         controller.cancelProcessCsv();
         $scope.$apply();
         expect($scope.$broadcast).toHaveBeenCalledWith('timer-stop');
+        expect(controller.isCancelledByUser).toEqual(true);
       });
     });
 
