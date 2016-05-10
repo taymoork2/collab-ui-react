@@ -848,6 +848,7 @@
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              vm.model.site.extensionLength = site.extensionLength || "4";
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
@@ -1002,16 +1003,9 @@
     }
 
     function loadInternationalDialing() {
-      return ServiceSetup.listCosRestrictions().then(function (cosRestrictions) {
-        var cosRestriction;
-        if (cosRestrictions.length > 0) {
-          cosRestriction = _.find(cosRestrictions, function (cosRestriction) {
-            if (cosRestriction.restrictions.length > 0) {
-              return cosRestriction.restrictions[0].restriction === INTERNATIONAL_DIALING;
-            }
-          });
-        }
-        if (cosRestriction) {
+      return ServiceSetup.listCosRestrictions().then(function (cosRestriction) {
+
+        if (_.get(cosRestriction, 'restrictions[0].restriction') === INTERNATIONAL_DIALING) {
           vm.model.internationalDialingEnabled = false;
           vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
         } else {

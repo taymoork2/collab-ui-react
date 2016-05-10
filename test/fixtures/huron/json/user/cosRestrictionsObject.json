@@ -1,0 +1,14 @@
+{
+  "url": "https://cmi.huron-int.com/api/v2/customers/222/users/111/features/restrictions",
+  "user": [{
+    "url": "https://cmi.huron-int.com/api/v2/customers/222/users/111/features/restrictions/03b56c84-2c75-4331-aa59-c47885a9a0e9",
+    "uuid": "03b56c84-2c75-4331-aa59-c47885a9a0e9",
+    "restriction": "DIALINGCOSTAG_INTERNATIONAL",
+    "blocked": false
+  }],
+  "customer": [{
+    "url": "https://cmi.huron-int.com/api/v2/customers/222/features/restrictions/e8814fdf-ca9d-4c6a-ba90-35ce1b4e33b9",
+    "uuid": "e8814fdf-ca9d-4c6a-ba90-35ce1b4e33b9",
+    "restriction": "DIALINGCOSTAG_INTERNATIONAL"
+  }]
+}
