@@ -8,41 +8,7 @@
   }
 
   h5 {
-    position: relative;
-    i {
-      cursor: pointer;
-    }
-    .dropdown {
-      position: absolute;
-      top: 1.5rem;
-      right: 0rem;
-      background-color: white;
-      border-radius: 2px;
-
-      list-style-type: none;
-
-      opacity: 1;
-      z-index: 9;
-
-      width: 12rem;
-
-      text-transform: initial;
-      color: black !important;
-
-      border: none;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
-      margin-top: 0;
-      overflow: visible;
-      font-size: 0.875rem !important;
-      li {
-        padding: 0.5rem;
-        color: $gray-dark-1 !important;
-        cursor: pointer;
-      }
-      li:hover {
-        background-color: $gray-light-3;
-      }
-    }
+    color: $gray-dark-2;
   }
 
   .servicesBlock {
@@ -75,7 +41,7 @@
       z-index: 1;
       overflow: hidden;
       .cs-card {
-        padding-bottom: 2rem;
+        padding-bottom: 1rem;
         display: block;
         height: 350px;
         min-height: 320px;
