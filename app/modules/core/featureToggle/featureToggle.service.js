@@ -9,14 +9,12 @@
   /* @ngInject */
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
-      pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
-      atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
@@ -29,6 +27,7 @@
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
+      androidImportantFilter: 'android-important-filter',
       androidMentions: 'android-mentions',
       androidMessageSearch: 'android-message-search',
       androidModernTokenRefresh: 'android-modern-token-refresh',
@@ -49,7 +48,6 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
-      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -57,6 +55,7 @@
       iosFilterBadges: 'ios-filter-badges',
       iosFiltering: 'ios-filtering',
       iosImportantFilter: 'ios-important-filter',
+      iosImportantFilter2: 'ios-important-filter2',
       iosKmsMessagingApi3: 'ios-kms-messaging-api3',
       iosKmsMessagingApi4: 'ios-kms-messaging-api4',
       iosLocalNotification2: 'ios-local-notification2',
@@ -90,6 +89,7 @@
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
+      osxImportantFilter: 'osx-important-filter',
       persistenceForFeatures: 'persistenceForFeatures',
       relevantRooms: 'relevant-rooms',
       sanitizeactivityOptimization: 'sanitizeactivity-optimization',
@@ -103,6 +103,7 @@
       titleEncryption: 'title-encryption',
       uploadCallLogs: 'upload-call-logs',
       userPresence: 'user-presence',
+      uwpImportantFilter: 'uwp-important-filter',
       webGuestCall: 'web-guest-call',
       webHuronCalls: 'web-huron-calls',
       webManualPairing: 'web-manual-pairing',
@@ -111,6 +112,7 @@
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
       winHuronCalls: 'win-huron-calls',
+      winImporantFilter: 'win-important-filter',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
       winProximityDeviceSelection: 'win-proximity-device-selection',
@@ -120,7 +122,6 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials',
       enableCrashLogs: 'csdm-enable-crash-logs'
     };
 

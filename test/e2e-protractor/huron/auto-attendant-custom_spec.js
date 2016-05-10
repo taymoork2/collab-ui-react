@@ -10,7 +10,7 @@ describe('Huron Auto Attendant', function () {
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
-    login.login('huron-int1');
+    login.login('aa-admin');
   }, 120000);
 
   // See AUTOATTN-556
