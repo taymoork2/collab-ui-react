@@ -16,7 +16,9 @@
 
     $scope.navStyle = 'admin';
 
-    FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {vm.newTabDisplay = !!support;});
+    FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
+      vm.newTabDisplay = !!support;
+    });
 
     function originalTabDisplay() {
       return !_.isUndefined(vm.newTabDisplay) && !vm.newTabDisplay;
