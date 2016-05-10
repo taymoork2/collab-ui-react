@@ -23,7 +23,7 @@ namespace servicesOverview {
           new ServicesOverviewCalendarCard(),
           new ServicesOverviewHybridCallCard(),
           new ServicesOverviewHybridMediaCard(),
-          new ServicesOverviewHybridContextCard()
+          // new ServicesOverviewHybridContextCard() //removed until feature is ready.
         ];
       }
     };

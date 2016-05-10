@@ -47,7 +47,7 @@ namespace servicesOverview {
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.calendar.title'}).length).toBe(1);
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridCall.title'}).length).toBe(1);
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridMedia.title'}).length).toBe(1);
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridContext.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridContext.title'}).length).toBe(0); //this card isn't present in factory now.
       });
     });
 
