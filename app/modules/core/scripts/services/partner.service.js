@@ -25,6 +25,7 @@
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
       addToManagedOrgsList: addToManagedOrgsList,
+      getUserAuthInfo: getUserAuthInfo,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -65,6 +66,17 @@
         method: 'PATCH',
         url: authUrl,
         data: payload
+      });
+    }
+
+    function getUserAuthInfo(customerOrgId) {
+      Auth.getAuthorizationUrlList().then(function (response) {
+        if (response.status === 200) {
+          var uuid = response.data.uuid;
+          addToManagedOrgsList(uuid, customerOrgId);
+        } else {
+          Log.error('Query for userauthinfo failed. Status: ' + response.status);
+        }
       });
     }
 

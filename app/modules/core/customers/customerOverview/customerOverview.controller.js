@@ -21,7 +21,7 @@
     vm.isSquaredUC = isSquaredUC();
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
-    vm.getUserUuid = getUserUuid;
+    vm.getUserAuthInfo = getUserAuthInfo;
     vm.deleteTestOrg = deleteTestOrg;
 
     vm.uuid = '';
@@ -34,6 +34,7 @@
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
+    vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
     var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
@@ -199,15 +200,8 @@
       return vm.customerName === Authinfo.getOrgName();
     }
 
-    function getUserUuid() {
-      Auth.getAuthorizationUrlList().then(function (response) {
-        if (response.status === 200) {
-          vm.uuid = response.data.uuid;
-          PartnerService.addToManagedOrgsList(vm.uuid, vm.customerOrgId);
-        } else {
-          Log.error('Query for userauthinfo failed. Status: ' + response.status);
-        }
-      });
+    function getUserAuthInfo() {
+      PartnerService.getUserAuthInfo(vm.customerOrgId);
     }
 
     function getIsTestOrg() {

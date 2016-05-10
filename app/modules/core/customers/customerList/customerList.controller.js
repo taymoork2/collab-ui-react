@@ -7,6 +7,7 @@
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
     $scope.searchStr = '';
@@ -16,6 +17,7 @@
     $scope.filterAction = filterAction;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
+    $scope.getUserAuthInfo = getUserAuthInfo;
     $scope.getTrialsList = getTrialsList;
     $scope.partnerClicked = partnerClicked;
     $scope.isPartnerOrg = isPartnerOrg;
@@ -307,6 +309,10 @@
           // (if you .finally(..), the next `then` doesnt get called)
           $scope.showManagedOrgsRefresh = false;
         });
+    }
+
+    function getUserAuthInfo(customerOrgId) {
+      PartnerService.getUserAuthInfo(customerOrgId);
     }
 
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
