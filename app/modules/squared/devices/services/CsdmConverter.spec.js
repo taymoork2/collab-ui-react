@@ -135,6 +135,39 @@ describe('CsdmConverterSpec', function () {
 
   }); // pass thru fields
 
+  describe('photos', function () {
+    it('should handle empty', function () {
+      var arr = [{
+        photos: []
+      }];
+      expect(converter.convertDevices(arr)[0].photos).toBe(null);
+      expect(converter.convertHuronDevices(arr)[0].photos).toBe(null);
+    });
+    it('should handle null', function () {
+      var arr = [{
+        photos: null
+      }];
+      expect(converter.convertDevices(arr)[0].photos).toBe(null);
+      expect(converter.convertHuronDevices(arr)[0].photos).toBe(null);
+    });
+  });
+
+  describe('image', function () {
+    it('should convert sx10 to correct image', function () {
+      var arr = [{
+        product: "Cisco TelePresence SX10"
+      }];
+      expect(converter.convertDevices(arr)[0].image).toBe('images/devices-hi/sx10.png');
+    });
+
+    it('should convert MODEL_CISCO_7811 to correct image', function () {
+      var arr = [{
+        product: "MODEL_CISCO_7811"
+      }];
+      expect(converter.convertHuronDevices(arr)[0].image).toBe('images/devices-hi/cisco_7811.png');
+    });
+  });
+
   describe('state and cssColorClass', function () {
     it('should convert device with issues yellow color and show status', function () {
       var arr = [{
