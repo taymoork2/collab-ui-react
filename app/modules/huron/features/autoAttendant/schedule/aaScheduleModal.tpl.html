@@ -48,8 +48,8 @@
       <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
         <p translate="autoAttendant.hoursMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();"><i
-        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddHours' | translate}}</a>
+      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();">
+        <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddHours' | translate }}</a>
     </div>
   </div>
 
@@ -62,7 +62,7 @@
          ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
     </p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
-      <div class="aa-schedule-holidays-behavior">
+      <div class="cs-checkbox-group aa-schedule-holidays-behavior">
         <input
           cs-input
           type="checkbox"
@@ -243,9 +243,8 @@
       <div ng-show="aaScheduleModalCtrl.holidays.length === 0">
         <p translate="autoAttendant.holidaysMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i
-        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
-        | translate}}</a>
+      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday()">
+        <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddAdditionalHolidays' | translate }}</a>
     </div>
   </div>
   <div class="modal-footer">

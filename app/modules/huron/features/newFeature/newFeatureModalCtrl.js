@@ -10,13 +10,13 @@
     var vm = $scope;
 
     vm.features = [{
-      cssClass: 'HG',
+      id: 'HG',
       code: 'huronHuntGroup.code',
       label: 'huronHuntGroup.modalTitle',
       description: 'huronHuntGroup.modalDescription',
       toggle: 'huronHuntGroup'
     }, {
-      cssClass: 'AA',
+      id: 'AA',
       code: 'autoAttendant.code',
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
@@ -33,10 +33,10 @@
       vm.loading = false;
     }
 
-    function ok(featureCode) {
-      if (featureCode === 'HG') {
+    function ok(featureId) {
+      if (featureId === 'HG') {
         $state.go('huronHuntGroup');
-      } else if (featureCode === 'AA') {
+      } else if (featureId === 'AA') {
 
         if (Config.isDev() || Config.isIntegration()) {
           $modal.open({
@@ -52,7 +52,7 @@
         }
 
       }
-      $modalInstance.close(featureCode);
+      $modalInstance.close(featureId);
     }
 
     function cancel() {

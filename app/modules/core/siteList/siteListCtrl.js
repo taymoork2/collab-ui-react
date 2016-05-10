@@ -68,6 +68,7 @@
           conferenceService.isIframeSupported = false;
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isCSVSupported = false;
+          conferenceService.showCSVIconAndResults = false;
 
           // define the range of csv states to mock
           // list of states are in the file apiGatewayConsts.svc.js
@@ -120,7 +121,6 @@
       displayName: $translate.instant('siteList.siteActions'),
       cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
       sortable: false,
-      width: '27%'
     });
 
     vm.gridOptions.columnDefs.push({

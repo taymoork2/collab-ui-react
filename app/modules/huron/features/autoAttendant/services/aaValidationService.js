@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, $translate) {
 
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
@@ -78,24 +78,62 @@
 
     }
 
-    function isPhoneMenuValidationSuccess(uiCombinedMenu) {
-      var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
-        return this === entry.type;
-      }, 'MENU_OPTION');
+    function isPhoneMenuValidationSuccess(ui) {
+      var openHoursValid = true;
+      var closedHoursValid = true;
+      var holidaysValid = true;
 
-      var errors = [];
+      var closedHoursLabel = $translate.instant('autoAttendant.scheduleClosed');
+      var holidayHoursLabel = $translate.instant('autoAttendant.scheduleHolidays');
+      var openHoursLabel = $translate.instant('autoAttendant.scheduleOpen');
+      var closedHolidayHoursLabel = $translate.instant('autoAttendant.scheduleClosedHolidays');
 
-      if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
-        errors = checkAllKeys(optionMenu);
+      /* check holiday value to determine if holiday uses open closed or holiday lane */
 
-        _.forEach(errors, function (err) {
-          AANotificationService.error(err.msg, {
-            key: err.key
-          });
-        });
+      var closedHoliday = _.get(ui, 'holidaysValue') === 'closedHours';
+      if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
+        openHoursValid = checkForValid(ui.openHours, openHoursLabel);
+      }
+      if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
+        closedHoursValid = checkForValid(ui.closedHours,
+          closedHoliday ? closedHolidayHoursLabel : closedHoursLabel);
       }
 
-      return errors.length === 0;
+      /* if holiday follows closed behavior, then don't validate */
+      if (ui.isHolidays && (!closedHoliday) && _.has(ui, 'holidays.entries')) {
+        holidaysValid = checkForValid(ui.holidays, holidayHoursLabel);
+      }
+
+      return openHoursValid && closedHoursValid && holidaysValid;
+
+    }
+
+    function checkForValid(uiCombinedMenu, fromLane) {
+      var isValid = true;
+      var errors = [];
+
+      var menuOptions = _.filter(uiCombinedMenu.entries, {
+        'type': 'MENU_OPTION'
+      });
+
+      _.forEach(menuOptions, function (optionMenu) {
+
+        if (_.has(optionMenu, 'entries')) {
+          errors = checkAllKeys(optionMenu);
+        }
+
+        _.forEach(errors, function (err) {
+          isValid = false;
+          AANotificationService.error(err.msg, {
+            key: err.key,
+            schedule: fromLane,
+            at: _.indexOf(menuOptions, optionMenu) + 1
+          });
+        });
+      });
+
+      return isValid;
+
     }
   }
 })();

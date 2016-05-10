@@ -329,6 +329,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
+        required: true,
         disabled: true
       },
     }, {
@@ -341,6 +342,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.phone'),
         type: 'text',
+        required: true,
         disabled: true
       }
     }, {
