@@ -129,41 +129,6 @@
       desc: 'tabs.mediaOnHoldTabDesc',
       state: 'mediaonhold',
       link: '#mediaonhold'
-    }, {
-      title: 'tabs.metricsDetailsTab',
-      desc: 'tabs.metricsDetailsTabDesc',
-      state: 'metrics',
-      link: '#metrics'
-    }, {
-      title: 'tabs.thresholdDetailsTab',
-      desc: 'tabs.thresholdDetailsTabDesc',
-      state: 'threshold',
-      link: '#threshold'
-    }, {
-      title: 'tabs.meetingDetailsTab',
-      desc: 'tabs.meetingDetailsTabDesc',
-      state: 'meetings',
-      link: '#meetings'
-    }, {
-      title: 'tabs.vtsDetailsTab',
-      desc: 'tabs.vtsDetailsTabDesc',
-      state: 'vts',
-      link: '#vts'
-    }, {
-      title: 'tabs.entResUtilizationTab',
-      desc: 'tabs.entResUtilizationTabDesc',
-      state: 'utilization',
-      link: '#utilization'
-    }, {
-      title: 'tabs.alarmsTab',
-      desc: 'tabs.alarmsTabDesc',
-      state: 'alarms',
-      link: '#alarms'
-    }, {
-      title: 'tabs.eventsTab',
-      desc: 'tabs.eventsTabDesc',
-      state: 'events',
-      link: '#events'
     }]
   }];
 
