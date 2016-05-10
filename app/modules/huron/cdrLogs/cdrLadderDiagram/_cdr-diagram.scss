@@ -22,6 +22,9 @@
   .diagram {
     overflow: auto;
   }
+  .item-pad {
+    padding-left: rem-calc(25);
+  }
   .filter-label {
     padding-left: rem-calc(8);
   }

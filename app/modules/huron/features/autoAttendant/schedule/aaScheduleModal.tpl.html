@@ -1,12 +1,12 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-    <span class="sr-only">Close</span>
-  </button>
-  <p class="modal-title"
-      translate="autoAttendant.schedule"></p>
-</div>
-<div class="modal-body">
-  <div class="modal-body-gray">
+<div class="aa-schedule">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only">Close</span>
+    </button>
+    <p class="modal-title"
+       translate="autoAttendant.schedule"></p>
+  </div>
+  <div class="modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleOpenClosed' | translate}}<a
       ng-click="aaScheduleModalCtrl.toggleSection('hours')" class="icon icon-right-arrow pull-right"
       ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
@@ -40,7 +40,7 @@
           <div class="aa-schedule-days">
             <div ng-repeat="day in hours.days">
               <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
-                            label="{{day.label}}"></cs-checkbox>
+                           label="{{day.label}}"></cs-checkbox>
             </div>
           </div>
         </div>
@@ -48,13 +48,13 @@
       <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
         <p translate="autoAttendant.hoursMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();"><i
-        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddHours' | translate}}</a>
+      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();">
+        <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddHours' | translate }}</a>
     </div>
   </div>
 
 
-  <div class="modal-body-gray">
+  <div class="modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleHolidays' | translate}}
       <a id="toggleHolidays"
          ng-click="aaScheduleModalCtrl.toggleSection('holidays')"
@@ -62,7 +62,7 @@
          ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
     </p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
-      <div class="aa-schedule-holidays-behavior">
+      <div class="cs-checkbox-group aa-schedule-holidays-behavior">
         <input
           cs-input
           type="checkbox"
@@ -153,12 +153,12 @@
                     <div
                       ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$error.required && aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$dirty}">
                       <cs-datepicker name="holidayDate" ng-model="holiday.date"
-                                      placeholder="{{'cdrLogs.dateExample' | translate}}" required></cs-datepicker>
+                                     placeholder="{{'cdrLogs.dateExample' | translate}}" required></cs-datepicker>
                       <div class="cs-input__messages"
-                            ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$error"
-                            role="alert">
+                           ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$error"
+                           role="alert">
                         <div class="message" ng-message="{{::key}}"
-                              ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
+                             ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
                         </div>
                       </div>
                     </div>
@@ -166,45 +166,45 @@
                 </div>
                 <div ng-hide="holiday.exactDate" class="aa-schedule-holidays-recur-select-container">
                   <div class="columns medium-4"
-                        ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}">
+                       ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}">
                     <label class="cs-input__label" for="month" translate="autoAttendant.every"></label>
                     <cs-select name="month" options="aaScheduleModalCtrl.monthOptions" ng-model="holiday.month"
-                                placeholder="aaScheduleModalCtrl.monthPlaceholder" labelfield="label"
-                                icon="icon-chevron-down"
-                                ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}"></cs-select>
+                               placeholder="aaScheduleModalCtrl.monthPlaceholder" labelfield="label"
+                               icon="icon-chevron-down"
+                               ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}"></cs-select>
                     <div class="cs-input__messages"
-                          ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error"
-                          role="alert">
+                         ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error"
+                         role="alert">
                       <div class="message" ng-message="{{::key}}"
-                            ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
+                           ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
                       </div>
                     </div>
                   </div>
                   <div class="columns medium-4"
-                        ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].rank.$error.required}">
+                       ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].rank.$error.required}">
                     <label class="cs-input__label" for="rank" translate="autoAttendant.on"></label>
                     <cs-select name="rank" options="aaScheduleModalCtrl.rankOptions" ng-model="holiday.rank"
-                                placeholder="aaScheduleModalCtrl.rankPlaceholder" labelfield="labelTranslate"
-                                icon="icon-chevron-down"></cs-select>
+                               placeholder="aaScheduleModalCtrl.rankPlaceholder" labelfield="labelTranslate"
+                               icon="icon-chevron-down"></cs-select>
                     <div class="cs-input__messages"
-                          ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].rank.$error"
-                          role="alert">
+                         ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].rank.$error"
+                         role="alert">
                       <div class="message" ng-message="{{::key}}"
-                            ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
+                           ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
                       </div>
                     </div>
                   </div>
                   <div class="columns medium-4"
-                        ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error.required}">
+                       ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error.required}">
                     <label class="cs-input__label" for="day" translate="autoAttendant.day"></label>
                     <cs-select name="day" options="aaScheduleModalCtrl.dayOptions" ng-model="holiday.day"
-                                placeholder="aaScheduleModalCtrl.dayPlaceholder" labelfield="label"
-                                icon="icon-chevron-down"></cs-select>
+                               placeholder="aaScheduleModalCtrl.dayPlaceholder" labelfield="label"
+                               icon="icon-chevron-down"></cs-select>
                     <div class="cs-input__messages"
-                          ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error"
-                          role="alert">
+                         ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error"
+                         role="alert">
                       <div class="message" ng-message="{{::key}}"
-                            ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
+                           ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}
                       </div>
                     </div>
                   </div>
@@ -243,20 +243,19 @@
       <div ng-show="aaScheduleModalCtrl.holidays.length === 0">
         <p translate="autoAttendant.holidaysMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i
-        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
-        | translate}}</a>
+      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday()">
+        <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.scheduleAddAdditionalHolidays' | translate }}</a>
     </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button id="importSchedule" class="pull-left" ng-click="aaScheduleModalCtrl.openImportModal()"
-          translate="autoAttendant.importSchedule"></button>
-  <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
-  <button id="saveOpenClosedBtn" cs-btn class="btn btn-primary"
-          ng-disabled="!aaScheduleModalCtrl.isSavable() || (aaScheduleModalCtrl.hoursForm.$pristine && aaScheduleModalCtrl.holidaysForm.$pristine)"
-          ng-click="aaScheduleModalCtrl.save()">
-    <span translate="common.save"></span></button>
-</div>
+  <div class="modal-footer">
+    <button id="importSchedule" class="pull-left" ng-click="aaScheduleModalCtrl.openImportModal()"
+            translate="autoAttendant.importSchedule"></button>
+    <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
+    <button id="saveOpenClosedBtn" cs-btn class="btn btn-primary"
+            ng-disabled="!aaScheduleModalCtrl.isSavable() || (aaScheduleModalCtrl.hoursForm.$pristine && aaScheduleModalCtrl.holidaysForm.$pristine)"
+            ng-click="aaScheduleModalCtrl.save()">
+      <span translate="common.save"></span></button>
+  </div>
 
+</div>
 

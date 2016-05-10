@@ -1,12 +1,14 @@
-<div class="modal-header">
-  <button type="button" class="close" ui-sref="domainmanagement"><span class="sr-only">Close</span></button>
-  <h4 class="modal-title" translate="domainManagement.claim.header"></h4>
-</div>
-<div class="modal-body">
-  <section class="domainVerificationInfo">
-    <p translate="domainManagement.claim.claimThis"></p>
-    <p class="domainInput">{{dmpopup.domainName}}</p>
-  </section>
+<div class="domainModal">
+  <div class="modal-header">
+    <button type="button" class="close" ui-sref="domainmanagement"><span class="sr-only">Close</span></button>
+    <h4 class="modal-title" translate="domainManagement.claim.header"></h4>
+  </div>
+  <div class="modal-body">
+    <section class="domainVerificationInfo">
+      <p translate="domainManagement.claim.claimThis"></p>
+      <p class="domainInput">{{dmpopup.domainName}}</p>
+    </section>
+  </div>
 
   <div ng-if="!dmpopup.error" class="modal-body domWarning">
     <section>
@@ -21,10 +23,10 @@
       <p>{{dmpopup.error}}</p>
     </section>
   </div>
-</div>
 
-<div class="modal-footer">
-  <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
-  <button ng-click="dmpopup.claim()" ng-disabled="!dmpopup.operationAllowed" class="btn--attention"
-          translate="domainManagement.claim.claim"></button>
+  <div class="modal-footer">
+    <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
+    <button ng-click="dmpopup.claim()" ng-disabled="!dmpopup.operationAllowed" class="btn--attention"
+            translate="domainManagement.claim.claim"></button>
+  </div>
 </div>

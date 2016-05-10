@@ -1,140 +1,164 @@
-<div class="cdr-diagram modal-content">
-    <div class="modal-header">
-        <button type="button" class="close" ng-click="cdrLadderDiagram.close()"><span class="sr-only" translate="common.close"></span></button>
-        <h3 class="modal-title" translate="cdrLadderDiagram.title"></h3>
-    </div>
-
-    <div class="modal-body" ng-show="cdrLadderDiagram.diagramGenerated">
-        <!-- download section-->
-        <div class="row options showgrid">
-            <button class="btn btn-default" ng-click="cdrLadderDiagram.isDownloadCollapsed = !cdrLadderDiagram.isDownloadCollapsed">
-                <span class="icon icon-download"></span> {{::"cdrLadderDiagram.downLoadEvents" | translate}}
-            </button>
-            <div collapse="cdrLadderDiagram.isDownloadCollapsed" class="download">
-                <div class="row showgrid">
-                    <div class="columns medium-12">
-                        <h3>{{::"cdrLadderDiagram.downLoadOptions" | translate}}</h3>
-                    </div>
-                </div>
-
-                <div class="row showgrid download">
-                    <div class="columns medium-3 medium-offset-1">
-                        <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadJson" | translate}}</h4>
-                        <hr class="color-blk">{{::"cdrLadderDiagram.downLoadJsonDesc" | translate}}
-                        <br>
-                        {{::"cdrLadderDiagram.downLoadJsonNote" | translate}}
-                    </div>
-                    <div class="columns medium-3">
-                        <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadCsv" | translate}}</h4>
-                        <hr class="color-blk">{{::"cdrLadderDiagram.downLoadCsvDesc" | translate}}
-                    </div>
-                    <div class="columns medium-3 medium-pull-2">
-                        <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadHtml" | translate}}</h4>
-                        <hr class="color-blk">{{::"cdrLadderDiagram.downLoadHtmlDesc" | translate}}
-                    </div>
-                </div>
-
-                <div class="row showgrid">
-                    <div class="columns medium-3 medium-offset-1"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.json" ng-href="{{ cdrLadderDiagram.jsonUrl }}"><span class="icon icon-download"></span></a></div>
-                    <div class="columns medium-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.csv" ng-href="{{ cdrLadderDiagram.csvUrl }}"><span class="icon icon-download"></span></a></div>
-                    <div class="columns medium-3 medium-pull-2"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.html" ng-href="{{ cdrLadderDiagram.htmlUrl }}"><span class="icon icon-download"></span></a></div>
-                </div>
-            </div>
+<div class="modal-content">
+    <div class="cdr-diagram">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cdrLadderDiagram.close()"><span class="sr-only" translate="common.close"></span></button>
+            <h3 class="modal-title" translate="cdrLadderDiagram.title"></h3>
         </div>
 
-        <!-- filter section-->
-        <div class="row options showgrid">
-            <button class="btn btn-default" ng-click="cdrLadderDiagram.isFilterCollapsed = !cdrLadderDiagram.isFilterCollapsed">{{::"cdrLadderDiagram.filterOptions" | translate}}</button>
-            <div collapse="cdrLadderDiagram.isFilterCollapsed"  class="filter">
-                <div class="row showgrid">
-                    <div class="columns medium-10">
-                        <div class="row showgrid">
-                            <h4 class="filter-label" ng-click="cdrLadderDiagram.isCallIdsCollapsed = !cdrLadderDiagram.isCallIdsCollapsed">
-                                {{::"cdrLadderDiagram.callIds" | translate}}
-                                <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isCallIdsCollapsed, 'icon icon-arrow-up' : !cdrLadderDiagram.isCallIdsCollapsed}"></span>
-                            </h4>
-                        </div>
-                        <div class="row showgrid">
-                            <div collapse="cdrLadderDiagram.isCallIdsCollapsed">
-                                <div class="row showgrid"  ng-repeat="callId in cdrLadderDiagram.filterCallIdOptions">
-                                    <div class="columns medium-11 medium-offset-1">
-                                        <cs-checkbox ckid="{{callId.label}}" ng-model="callId.value" label="{{callId.label}}"></cs-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row showgrid">
-                            <h4 class="filter-label" ng-click="cdrLadderDiagram.isSessionIDPairsCollapsed = !cdrLadderDiagram.isSessionIDPairsCollapsed">
-                                {{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}
-                                <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isSessionIDPairsCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isSessionIDPairsCollapsed == false }"></span>
-                            </h4>
-                        </div>
-                        <div class="row showgrid">
-                            <div collapse="cdrLadderDiagram.isSessionIDPairsCollapsed">
-                                <div class="row showgrid" ng-repeat="pair in cdrLadderDiagram.SessionIDPairsFilterOptions">
-                                    <div class="columns medium-11 medium-offset-1">
-                                        <cs-checkbox ckid="{{pair.label}}" ng-model="pair.value" label="{{pair.label}}"></cs-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row showgrid">
-                            <h4 class="filter-label" ng-click="cdrLadderDiagram.isHostNameCollapsed = !cdrLadderDiagram.isHostNameCollapsed">
-                                {{::"cdrLadderDiagram.hostname" | translate}}
-                                <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isHostNameCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isHostNameCollapsed == false }"></span>
-                            </h4>
-                        </div>
-                        <div class="row showgrid">
-                            <div collapse="cdrLadderDiagram.isHostNameCollapsed">
-                                <div class="row showgrid" ng-repeat="hostName in cdrLadderDiagram.filterHostNamefilterOptions">
-                                    <div class="columns medium-11 medium-offset-1">
-                                        <cs-checkbox ckid="{{hostName.label}}" ng-model="hostName.value" label="{{hostName.label}}"></cs-checkbox>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="modal-body" ng-show="cdrLadderDiagram.diagramGenerated">
+            <!-- download section-->
+            <div class="row options showgrid">
+                <button class="btn btn-default" ng-click="cdrLadderDiagram.isDownloadCollapsed = !cdrLadderDiagram.isDownloadCollapsed">
+                    <span class="icon icon-download"></span> {{::"cdrLadderDiagram.downLoadEvents" | translate}}
+                </button>
+                <div collapse="cdrLadderDiagram.isDownloadCollapsed" class="download">
+                    <div class="row showgrid">
+                        <div class="columns medium-12">
+                            <h3>{{::"cdrLadderDiagram.downLoadOptions" | translate}}</h3>
                         </div>
                     </div>
 
-                    <div class="columns medium-2">
-                        <div class="columns small-12" cs-dropdown is-open="cdrLadderDiagram.FilterSelectisOpen">
-                            <button cs-dropdown-toggle id="filterDropdown" type="button" class="btn btn--white dropdown-toggle right">
-                                <span>{{::"cdrLadderDiagram.filterBy" | translate}}</span><span class="icon icon-arrow-down"></span>
-                            </button>
-                            <ul cs-dropdown-menu class="dropdown-menu" role="menu">
-                                <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('all')">{{::"cdrLadderDiagram.all" | translate}}</a></li>
-                                <li class="divider"></li>
-                                <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('callId')">{{::"cdrLadderDiagram.callIds" | translate}}</a></li>
-                                <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('sessionPair')">{{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}</a></li>
-                                <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('hostName')">{{::"cdrLadderDiagram.hostname" | translate}}</a></li>
-                            </ul>
+                    <div class="row showgrid download">
+                        <div class="columns medium-3 medium-offset-1">
+                            <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadJson" | translate}}</h4>
+                            <hr class="color-blk">{{::"cdrLadderDiagram.downLoadJsonDesc" | translate}}
+                            <br>
+                            {{::"cdrLadderDiagram.downLoadJsonNote" | translate}}
                         </div>
+                        <div class="columns medium-3">
+                            <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadCsv" | translate}}</h4>
+                            <hr class="color-blk">{{::"cdrLadderDiagram.downLoadCsvDesc" | translate}}
+                        </div>
+                        <div class="columns medium-3 medium-pull-2">
+                            <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadHtml" | translate}}</h4>
+                            <hr class="color-blk">{{::"cdrLadderDiagram.downLoadHtmlDesc" | translate}}
+                        </div>
+                    </div>
+
+                    <div class="row showgrid">
+                        <div class="columns medium-3 medium-offset-1"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.json" ng-href="{{ cdrLadderDiagram.jsonUrl }}"><span class="icon icon-download"></span></a></div>
+                        <div class="columns medium-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.csv" ng-href="{{ cdrLadderDiagram.csvUrl }}"><span class="icon icon-download"></span></a></div>
+                        <div class="columns medium-3 medium-pull-2"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.html" ng-href="{{ cdrLadderDiagram.htmlUrl }}"><span class="icon icon-download"></span></a></div>
                     </div>
                 </div>
             </div>
+
+            <!-- filter section-->
+            <div class="row options showgrid">
+                <button class="btn btn-default" ng-click="cdrLadderDiagram.isFilterCollapsed = !cdrLadderDiagram.isFilterCollapsed">{{::"cdrLadderDiagram.filterOptions" | translate}}</button>
+                <div collapse="cdrLadderDiagram.isFilterCollapsed"  class="filter">
+                    <div class="row showgrid">
+                        <div class="columns medium-10">
+                            <div class="row showgrid">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isCallIdsCollapsed = !cdrLadderDiagram.isCallIdsCollapsed">
+                                    {{::"cdrLadderDiagram.callIds" | translate}}
+                                    <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isCallIdsCollapsed, 'icon icon-arrow-up' : !cdrLadderDiagram.isCallIdsCollapsed}"></span>
+                                </h4>
+                            </div>
+                            <div class="row showgrid">
+                                <div collapse="cdrLadderDiagram.isCallIdsCollapsed">
+                                    <div class="row showgrid"  ng-repeat="callId in cdrLadderDiagram.filterCallIdOptions">
+                                        <div class="columns medium-11 medium-offset-2">
+                                            <cs-checkbox ckid="{{callId.label}}" ng-model="callId.value" label="{{callId.label}}"></cs-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row showgrid">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isSessionIDPairsCollapsed = !cdrLadderDiagram.isSessionIDPairsCollapsed">
+                                    {{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}
+                                    <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isSessionIDPairsCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isSessionIDPairsCollapsed == false }"></span>
+                                </h4>
+                            </div>
+                            <div class="row showgrid">
+                                <div collapse="cdrLadderDiagram.isSessionIDPairsCollapsed">
+                                    <div class="row showgrid" ng-repeat="pair in cdrLadderDiagram.SessionIDPairsFilterOptions">
+                                        <div class="columns medium-11 medium-offset-1">
+                                            <cs-checkbox ckid="{{pair.label}}" ng-model="pair.value" label="{{pair.label}}"></cs-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row showgrid">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isHostNameCollapsed = !cdrLadderDiagram.isHostNameCollapsed">
+                                    {{::"cdrLadderDiagram.hostname" | translate}}
+                                    <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isHostNameCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isHostNameCollapsed == false }"></span>
+                                </h4>
+                            </div>
+                            <div class="row showgrid">
+                                <div collapse="cdrLadderDiagram.isHostNameCollapsed">
+                                    <div class="row showgrid" ng-show="cdrLadderDiagram.sparkHostNamefilterOptions.length > 0">                                        
+                                        <div class="columns medium-6">
+                                             <h5 class="item-pad">{{::"cdrLadderDiagram.huronNodes" | translate}}</h5>
+                                        </div>
+                                        <div class="columns medium-6">
+                                            <div class="row showgrid">
+                                                <div class="columns medium-4">
+                                                    <h5 class="item-pad">{{::"cdrLadderDiagram.sparkNodes" | translate}}</h5>
+                                                </div>
+                                                <div class="columns medium-8">
+                                                    <cs-checkbox ckid="enabledSparkNodes" ng-model="cdrLadderDiagram.enabledSparkNodes"  ng-click="cdrLadderDiagram.selectSparkNodes()" label="{{::'cdrLadderDiagram.enabledSparkNodes' | translate}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row showgrid">
+                                        <div class="columns medium-5 medium-offset-1">
+                                            <div class="row showgrid" ng-repeat="option in cdrLadderDiagram.huronHostNamefilterOptions">
+                                                <cs-checkbox ckid="{{option.name}}" ng-model="option.value" label="{{option.name}}"></cs-checkbox>
+                                            </div>
+                                        </div>
+                                        <div class="columns medium-5 medium-offset-1">
+                                            <div class="row showgrid" ng-repeat="option in cdrLadderDiagram.sparkHostNamefilterOptions">
+                                                <cs-checkbox ckid="{{option.name}}" ng-model="option.value" label="{{option.name}}"></cs-checkbox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="columns medium-2">
+                            <div class="columns small-12" cs-dropdown is-open="cdrLadderDiagram.FilterSelectisOpen">
+                                <button cs-dropdown-toggle id="filterDropdown" type="button" class="btn btn--white dropdown-toggle right">
+                                    <span>{{::"cdrLadderDiagram.filterBy" | translate}}</span><span class="icon icon-arrow-down"></span>
+                                </button>
+                                <ul cs-dropdown-menu class="dropdown-menu" role="menu">
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('all')">{{::"cdrLadderDiagram.all" | translate}}</a></li>
+                                    <li class="divider"></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('callId')">{{::"cdrLadderDiagram.callIds" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('sessionPair')">{{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('hostName')">{{::"cdrLadderDiagram.hostname" | translate}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- diagram -->
+            <div ng-if="cdrLadderDiagram.diagramGenerated" class="diagram">
+                <div ng-bind-html="cdrLadderDiagram.diagramXML"></div>
+            </div>
         </div>
 
-        <!-- diagram -->
-        <div ng-if="cdrLadderDiagram.diagramGenerated" class="diagram">
-            <div ng-bind-html="cdrLadderDiagram.diagramXML"></div>
+        <div class="spinner-position" ng-if="cdrLadderDiagram.spin">
+            <i class='icon icon-spinner icon-2x'></i>
         </div>
-    </div>
 
-    <div class="spinner-position" ng-if="cdrLadderDiagram.spin">
-        <i class='icon icon-spinner icon-2x'></i>
-    </div>
-
-    <div ng-if="!cdrLadderDiagram.diagramGenerated && !cdrLadderDiagram.spin">
-        <div class="features-reload">
-            <br>
-            <p class="h4">{{cdrLadderDiagram.error}}</p>
-            <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
-            <button type="button" class="button btn-link" ng-click="cdrLadderDiagram.query()">{{::"cdrLadderDiagram.reload" | translate}}</button>
+        <div ng-if="!cdrLadderDiagram.diagramGenerated && !cdrLadderDiagram.spin">
+            <div class="features-reload">
+                <br>
+                <p class="h4">{{cdrLadderDiagram.error}}</p>
+                <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+                <button type="button" class="button btn-link" ng-click="cdrLadderDiagram.query()">{{::"cdrLadderDiagram.reload" | translate}}</button>
+            </div>
         </div>
-    </div>
 
-    <div class="modal-footer" ng-show="cdrLadderDiagram.diagramGenerated">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cdrLadderDiagram.close()">{{::"cdrLadderDiagram.close" | translate}}</button>
+        <div class="modal-footer" ng-show="cdrLadderDiagram.diagramGenerated">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cdrLadderDiagram.close()">{{::"cdrLadderDiagram.close" | translate}}</button>
+        </div>
     </div>
 </div>

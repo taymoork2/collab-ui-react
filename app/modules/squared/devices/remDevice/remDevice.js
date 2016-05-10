@@ -33,8 +33,7 @@
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',
-            templateUrl: 'modules/squared/devices/remDevice/remDevice.html',
-            type: 'dialog'
+            templateUrl: 'modules/squared/devices/remDevice/remDevice.html'
           }).result;
         }
 

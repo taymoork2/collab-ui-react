@@ -1,32 +1,33 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only">close</span></button>
-  <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
-</div>
-<div class="loading" ng-if="!genAuthCode.otp.code">
-  <i class="icon icon-spinner"></i>
-</div>
-<div class="modal-body" ng-if="genAuthCode.otp.code">
-  <div translate="generateActivationCodeModal.activateBody"></div>
-  <div class="row">
-    <div class="col-sm-5">
-      <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
-    </div>
-    <div class="col-sm-7">
-      <div class="activation-code">
-        {{genAuthCode.otp.friendlyCode}}
+<div  id="printActivationCode" class="generate-activation-code">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only">close</span></button>
+    <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
+  </div>
+  <div class="loading" ng-if="!genAuthCode.otp.code">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <div class="modal-body" ng-if="genAuthCode.otp.code">
+    <div translate="generateActivationCodeModal.activateBody"></div>
+    <div class="row">
+      <div class="col-sm-5">
+        <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
       </div>
-      <div class="expiration">
-        <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
+      <div class="col-sm-7">
+        <div class="activation-code">
+          {{genAuthCode.otp.friendlyCode}}
+        </div>
+        <div class="expiration">
+          <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
+        </div>
       </div>
     </div>
   </div>
-  
-  <div ng-if="genAuthCode.otp.code">
-    <div class="pull-left">
+  <div class="modal-footer" ng-if="genAuthCode.otp.code">
+    <div class="modal-footer-left">
       <button class="btn btn--link btn--large" clip-copy="genAuthCode.otp.friendlyCode" clip-click-fallback="genAuthCode.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
       <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
     </div>
-    <button class="btn btn--large pull-right" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
+    <button class="btn btn--large" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
   </div>
   <div ng-show="genAuthCode.showEmail">
 
@@ -39,8 +40,8 @@
       </div>
     </div>
 
-    <div>
-      <button class="btn btn--primary btn--large pull-right" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
+    <div class="modal-footer">
+      <button class="btn btn--primary btn--large" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
     </div>
   </div>
 </div>

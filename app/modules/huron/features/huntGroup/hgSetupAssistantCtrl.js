@@ -192,8 +192,7 @@
 
     function cancelModal() {
       $modal.open({
-        templateUrl: 'modules/huron/features/huntGroup/hgCancelModal.tpl.html',
-        type: 'dialog'
+        templateUrl: 'modules/huron/features/huntGroup/hgCancelModal.tpl.html'
       });
     }
 

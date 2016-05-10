@@ -1,9 +1,9 @@
 <div class="add-did-numbers-modal" id="didAddModal">
-    <div class="add-numbers modal-content" ng-show="didAdd.addNumbers">
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
-            <h3 class="modal-title" translate="didManageModal.title"></h3>
-        </div>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
+        <h3 class="modal-title" translate="didManageModal.title"></h3>
+    </div>
+    <div class="add-numbers" ng-show="didAdd.addNumbers">
         <div class="modal-body">
             <div class="did-input">
               <cs-token-field tokens="didAdd.unsavedTokens" tokenfieldid="didAdd.tokenfieldid" tokenplaceholder="didAdd.tokenplaceholder" tokenoptions="didAdd.tokenoptions" tokenmethods="didAdd.tokenmethods"></cs-token-field>
@@ -16,11 +16,7 @@
             <button id="addDidButton" class="btn btn--primary" ng-disabled="!didAdd.submitBtnStatus" ng-click="!didAdd.submitBtnStatus || didAdd.submit()" translate="common.save"></button>
         </div>
     </div>
-    <div class="adding-numbers modal-content" ng-show="didAdd.processing">
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
-            <h3 class="modal-title" translate="didManageModal.title"></h3>
-        </div>
+    <div class="adding-numbers" ng-show="didAdd.processing">
         <div class="modal-body">
             <i class='icon icon-spinner'></i>
             <p translate="didManageModal.processingText"></p>
@@ -28,11 +24,7 @@
         <div class="modal-footer">
         </div>
     </div>
-    <div class="add-success modal-content" ng-show="didAdd.addSuccess">
-        <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
-            <h3 class="modal-title" translate="didManageModal.title"></h3>
-        </div>
+    <div class="add-success" ng-show="didAdd.addSuccess">
         <div class="modal-body">
             <i class="icon icon-check"></i>
             <p ng-if="didAdd.unchangedCount" translate="didManageModal.existingDidText" translate-values="{count: didAdd.unchangedCount}"></p>
