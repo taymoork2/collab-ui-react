@@ -24,22 +24,23 @@
       <h4 class="section__title" translate="partnerProfile.companyInfo"></h4>
     </div>
     <div class="section__content">
-      <div ng-if="setting.subsectionLabel" class="sub-section">
-        <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
-        <p ng-if="setting.subsectionDescription" class="sub-section__description"
-           translate="{{setting.subsectionDescription}}"></p>
-      </div>
+      <!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
+      <!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
+      <!--<p ng-if="setting.subsectionDescription" class="sub-section__description"-->
+      <!--translate="{{setting.subsectionDescription}}"></p>-->
+      <!--</div>-->
       <article>
         <div class="form-group">
           <!-- <div class="columns small-4"> -->
           <label for="company-name" translate="partnerProfile.name"></label>
-          <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
+          <input class="form-control" name="test2" type="text" ng-model="mcpInfo.companyName" disabled="true"
+                 id="company-name">
           <!-- </div> -->
         </div>
         <div class="form-group">
           <!-- <div class="columns small-4"> -->
           <label for="company-id" translate="partnerProfile.id"></label>
-          <input id="company-id" class="form-control" type="text" disabled="true">
+          <input id="company-id" class="form-control" type="text" ng-model="mcpInfo.accountNumber" disabled="true">
           <!-- </div> -->
         </div>
       </article>
@@ -47,45 +48,32 @@
   </div>
 
   <!-- cisco rep -->
-  <div class="cs-form__section">
+  <div class="cs-form__section" ng-if="mcpInfo.showSupportContacts">
     <div class="section__info">
-      <h4 class="section__title" ng-if="isPartner" translate="partnerProfile.ciscoRep"></h4>
-      <h4 class="section__title" ng-if="!isPartner" translate="customerProfile.supportContacts"></h4>
+      <h4 class="section__title" ng-if="mcpInfo.isPartner" translate="partnerProfile.ciscoRep"></h4>
+      <h4 class="section__title" ng-if="!mcpInfo.isPartner" translate="customerProfile.supportContacts"></h4>
     </div>
     <div class="section__content">
-      <div ng-if="setting.subsectionLabel" class="sub-section">
-        <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
-        <p ng-if="setting.subsectionDescription" class="sub-section__description"
-           translate="{{setting.subsectionDescription}}"></p>
-      </div>
-      <div ng-show="rep !== null" class="form-spacing">
-        <h4 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h4>
-        <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-
-        <!-- Mock content -->
-        <span class="rep-info"><strong>Jan Janssen</strong></span> <br>
-        <span class="rep-info">jjanssen</span>
-
-        <!-- Real content below -->
-        <!--<span class="rep-info" translate="rep.displayName"></span> <br>
-        <span class="rep-info" translate="rep.userName"></span>-->
-
-        <!-- grant cisco access checkbox -->
-        <div class="row grant-row" ng-show="false">
-          <div class="columns small-12">
-            <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
+      <!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
+      <!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
+      <!--<p ng-if="setting.subsectionDescription" class="sub-section__description"-->
+      <!--translate="{{setting.subsectionDescription}}"></p>-->
+      <!--</div>-->
+      <div ng-show="mcpInfo.showSupportContacts" class="form-spacing">
+        <h4 ng-if="mcpInfo.isPartner" translate="partnerProfile.ciscoRep"></h4>
+        <h4 ng-if="!mcpInfo.isPartner" translate="customerProfile.supportContacts"></h4>
+        <div ng-repeat="representative in mcpInfo.representatives">
+          <span class="rep-info">{{representative.name.givenName | translate}} {{representative.name.familyName | translate}}</span>
+          <span class="rep-info"><strong>{{representative.displayName}}</strong></span> <br>
+          <span class="rep-info">{{representative.userName}}</span>
+        </div>
+        <div ng-if="!mcpInfo.isPartner && mcpInfo.partner !== null">
+          <h4 translate="customerProfile.partnerAdmin"></h4>
+          <div ng-repeat="partner in mcpInfo.partners">
+            <span class="rep-info"><strong>{{partner.displayName}}</strong></span> <br>
+            <span class="rep-info">{{partner.userName}}</span>
           </div>
         </div>
-      </div>
-      <div ng-if="!isPartner && partner !== null">
-        <h4 translate="customerProfile.partnerAdmin"></h4>
-        <!-- Mock content -->
-        <span class="rep-info"><strong>John Doe</strong></span> <br>
-        <span class="rep-info">jdoe</span>
-
-        <!-- Real content below -->
-        <!--<span class="rep-info">{{partner.displayName}}</span> <br>
-        <span class="rep-info">{{partner.userName}}</span>-->
       </div>
     </div>
   </div>
