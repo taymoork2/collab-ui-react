@@ -681,7 +681,10 @@
     "404Error": "Diagnostic Service unable to respond at this time. Please try again at a later time.",
     "408Error": "Request timed out while waiting for a response from Diagnostic Service. Please try again at a later time.",
     "500Error": "Diagnostic Service encountered an internal error.",
-    "502And503Error": "Diagnostic Service is temporarily unavailable. Please try again at a later time."
+    "502And503Error": "Diagnostic Service is temporarily unavailable. Please try again at a later time.",
+    "huronNodes": "Huron Nodes",
+    "sparkNodes": "Spark Nodes",
+    "enabledSparkNodes": "Enabled Spark Nodes"
   },
   "billingPage": {
     "title": "Order Provisioning",
