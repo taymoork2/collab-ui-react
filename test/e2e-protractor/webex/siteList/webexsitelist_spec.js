@@ -4,6 +4,14 @@
 
 describe('Services > Webex page aka Site List page', function () {
 
+  beforeEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = true;
+  });
+
   describe(': CSV Export/Import : ', function () {
 
     beforeAll(function () {
