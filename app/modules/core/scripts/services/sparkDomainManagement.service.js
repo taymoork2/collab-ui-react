@@ -9,14 +9,14 @@
     var sparksUrl = UrlConfig.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
     var service = {
       checkDomainAvailability: checkDomainAvailability,
-      addSipUriDomain: addSipUriDomain
+      addSipDomain: addSipDomain
     };
 
     return service;
 
     function checkDomainAvailability(domain) {
       if (!domain || domain === '') {
-        return $q.reject('A SIP URI Domain input value must be entered');
+        return $q.reject('A SIP Domain input value must be entered');
       }
 
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
@@ -30,9 +30,9 @@
       });
     }
 
-    function addSipUriDomain(domain) {
+    function addSipDomain(domain) {
       if (!domain || domain === '') {
-        return $q.reject('A SIP URI Domain input value must be entered');
+        return $q.reject('A SIP Domain input value must be entered');
       }
 
       var domainName = domain + UrlConfig.getSparkDomainCheckUrl();

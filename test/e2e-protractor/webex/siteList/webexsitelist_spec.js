@@ -2,165 +2,127 @@
 
 /*global webEx, sitelist*/
 
-describe('Services > Webex page aka Site List page', function () {
+describe('WebEx Site List: CSV Export/Import : ', function () {
 
-  beforeEach(function () {
-    browser.ignoreSynchronization = false;
+  beforeAll(function () {
+    login.loginUsingIntegrationBackend('t31CSVToggleUser');
   });
 
-  afterEach(function () {
-    browser.ignoreSynchronization = true;
+  it('should login as ' + sitelist.t31CSVToggleUser.testAdminUsername + ' and navigate to site list page', function () {
+    navigation.clickServicesTab();
+    utils.click(sitelist.conferencingLink);
+    utils.wait(sitelist.siteListPageId);
   });
 
-  describe(': CSV Export/Import : ', function () {
-    var setup = false;
+  it('should detect the CSV column', function () {
+    utils.wait(sitelist.csvColumnId);
+  });
 
-    beforeAll(function () {
-      var promise = webEx.setup(sitelist.t31CSVToggleUser.testAdminUsername, sitelist.t31CSVToggleUser.testAdminPassword, sitelist.t31CSVToggleUser.siteUrl);
-      promise.then(function (ticket) {
-        if (ticket) {
-          setup = true;
-        }
+  /*
+      xit('should detect CSV Export & Import status is given', function () {
+        utils.wait(sitelist.csvImportId);
+        utils.wait(sitelist.csvExportId);
       });
-    });
+  */
+  afterAll(function () {
+    navigation.logout();
+  });
+});
 
-    it('should navigate to webex site list', function () {
-      if (setup) {
+//Start tests to detect 'Not Available' and warning icon conditions
+describe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () {
+
+  beforeAll(function () {
+    login.loginUsingIntegrationBackend('t30csvNotAvailableUser');
+  });
+
+  it('should login as ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ' and navigate to site list page', function () {
+    navigation.clickServicesTab();
+    utils.click(sitelist.conferencingLink);
+  });
+
+  it("should detect 'Not Available' for T30 site", function () {
+    utils.wait(sitelist.t30csvNotAvail);
+  });
+
+  afterAll(function () {
+    navigation.logout();
+  });
+});
+
+describe('WebEx Site List: test CSV warning icon condition: ', function () {
+
+  beforeAll(function () {
+    login.loginUsingIntegrationBackend('t30csvWbxNotEntitledUser');
+  });
+
+  it('should login as ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ' and navigate to site list page', function () {
+    navigation.clickServicesTab();
+    utils.click(sitelist.conferencingLink);
+  });
+
+  it('should detect warning icon due to entitlement authentication failure', function () {
+    utils.wait(sitelist.siteEntitlementAuthFailure);
+  });
+
+  afterAll(function () {
+    navigation.logout();
+  });
+});
+
+/*
+    //Start multi center license tests
+    xdescribe(': License Types - Single : ', function () {
+
+      it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
+        //TODO:  If and when we want to enable this test, need to create this user login credential in the test_helper.js
+        login.login('multiCenterLicenseUser_single');
+      });
+
+      it('should navigate to webex site list page', function () {
         navigation.clickServicesTab();
         utils.click(sitelist.conferencingLink);
         utils.wait(sitelist.siteListPageId);
-      }
-    });
+      });
 
-    it('should detect the CSV column', function () {
-      if (setup) {
-        utils.wait(sitelist.csvColumnId);
-      }
-    });
+      it('should detect the license types column', function () {
+        utils.wait(sitelist.licenseTypesColumnId);
+      });
 
-    xit('should detect CSV Export & Import status is given', function () {
-      if (setup) {
-        utils.wait(sitelist.csvImportId);
-        utils.wait(sitelist.csvExportId);
-      }
-    });
+      it('should detect text MC 100', function () {
+        var mc100 = "Meeting Center 100";
+        utils.expectText(sitelist.singleLicenseSiteId, mc100);
+      });
 
-    afterAll(function () {
-      navigation.logout();
-    });
-  });
-
-  //Start tests to detect 'Not Available' and warning icon conditions
-  describe("test CSV 'Not Anavailable' condition : ", function () {
-    var setup = false;
-
-    beforeAll(function () {
-      var promise = webEx.setup(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword, sitelist.t30csvNotAvailableUser.siteUrl);
-      promise.then(function (ticket) {
-        if (ticket) {
-          setup = true;
-        }
+      it('should log out', function () {
+        navigation.logout();
       });
     });
 
-    it('should login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ', and navigate to site list page', function () {
-      if (setup) {
+    xdescribe(': License Types - Multiple : ', function () {
+
+      it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
+        //TODO:  If and when we want to enable this test, need to create this user login credential in the test_helper.js
+        login.login('multiCenterLicenseUser_multiple');
+      });
+
+      it('should navigate to webex site list page', function () {
         navigation.clickServicesTab();
         utils.click(sitelist.conferencingLink);
-      }
-    });
+        utils.wait(sitelist.siteListPageId);
+      });
 
-    it("should detect 'Not Available' for T30 site", function () {
-      if (setup) {
-        utils.wait(sitelist.t30csvNotAvail);
-      }
-    });
+      it('should detect the license types column', function () {
+        utils.wait(sitelist.licenseTypesColumnId);
+      });
 
-    afterAll(function () {
-      navigation.logout();
-    });
-  });
+      it('should detect text multiple', function () {
+        var multiple = "Multiple...";
+        utils.expectText(sitelist.multiLicenseSiteId, multiple);
+      });
 
-  describe("test CSV warning icon condition: ", function () {
-    var setup = false;
-
-    beforeAll(function () {
-      var promise = webEx.setup(sitelist.t30csvWbxNotEntitledUser.testAdminUsername, sitelist.t30csvWbxNotEntitledUser.testAdminPassword, sitelist.t30csvNotAvailableUser.siteUrl);
-      promise.then(function (ticket) {
-        if (ticket) {
-          setup = true;
-        }
+      it('should log out', function () {
+        navigation.logout();
       });
     });
-
-    it('should login as admin user ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ', and navigate to site list page', function () {
-      if (setup) {
-        navigation.clickServicesTab();
-        utils.click(sitelist.conferencingLink);
-      }
-    });
-
-    it('should detect warning icon due to entitlement authentication failure', function () {
-      if (setup) {
-        utils.wait(sitelist.siteEntitlementAuthFailure);
-      }
-    });
-
-    afterAll(function () {
-      navigation.logout();
-    });
-  });
-
-  //Start multi center license tests
-  xdescribe(': License Types - Single : ', function () {
-
-    it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
-      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
-    });
-
-    it('should navigate to webex site list page', function () {
-      navigation.clickServicesTab();
-      utils.click(sitelist.conferencingLink);
-      utils.wait(sitelist.siteListPageId);
-    });
-
-    it('should detect the license types column', function () {
-      utils.wait(sitelist.licenseTypesColumnId);
-    });
-
-    it('should detect text MC 100', function () {
-      var mc100 = "Meeting Center 100";
-      utils.expectText(sitelist.singleLicenseSiteId, mc100);
-    });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
-
-  xdescribe(': License Types - Multiple : ', function () {
-
-    it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
-      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
-    });
-
-    it('should navigate to webex site list page', function () {
-      navigation.clickServicesTab();
-      utils.click(sitelist.conferencingLink);
-      utils.wait(sitelist.siteListPageId);
-    });
-
-    it('should detect the license types column', function () {
-      utils.wait(sitelist.licenseTypesColumnId);
-    });
-
-    it('should detect text multiple', function () {
-      var multiple = "Multiple...";
-      utils.expectText(sitelist.multiLicenseSiteId, multiple);
-    });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
-});
+*/
