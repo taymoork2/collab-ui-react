@@ -338,7 +338,7 @@
           suffix: '.json'
         });
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-        $translateProvider.determinePreferredLanguage();
+        $translateProvider.preferredLanguage('en_US');
         $translateProvider.fallbackLanguage('en_US');
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
