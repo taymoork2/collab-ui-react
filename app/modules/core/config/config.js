@@ -309,14 +309,6 @@
         'organization'
       ],
       'squared-fusion-media': [
-        'meetings',
-        'vts',
-        'utilization',
-        'metrics',
-        'threshold',
-        'fault',
-        'alarms',
-        'events',
         //'mediafusionconnector',
         'media-service',
         'connector-details'

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function GroupSettingsController($stateParams, MediaClusterService) {
+  function GroupSettingsController($stateParams, MediaClusterService, $log) {
     var vm = this;
     vm.config = "";
     vm.cluster = $stateParams.cluster;
@@ -16,8 +16,23 @@
       vm.clusterList = $stateParams.clusterList;
     }
 
-    if (!angular.equals(vm.clusterList[0].properties["fms.releaseChannel"], undefined)) {
-      vm.selected = vm.clusterList[0].properties["fms.releaseChannel"];
+    if (!angular.equals($stateParams.dispName, {})) {
+      vm.dispName = $stateParams.dispName;
+    }
+
+    if (vm.clusterList.length > 0) {
+      if (!angular.equals(vm.clusterList[0].properties["fms.releaseChannel"], undefined)) {
+        vm.selected = vm.clusterList[0].properties["fms.releaseChannel"];
+      }
+    } else {
+      MediaClusterService.getGroups().then(function (group) {
+        _.each(group, function (group) {
+          // $log.log("grp ", group.properties["fms.releaseChannel"]);
+          if (angular.equals(group.name, vm.dispName)) {
+            vm.selected = group.properties["fms.releaseChannel"];
+          }
+        });
+      });
     }
 
     vm.options = [

@@ -76,6 +76,10 @@
           responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
             email: email
           });
+        } else if (messageCode === '400096') {
+          responseMessage = $translate.instant('firstTimeWizard.bulk403AndNotSetupManUserAddError', {
+            email: email
+          });
         } else {
           responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
         }
@@ -90,7 +94,15 @@
       } else if (status === 502 || status === 503) {
         responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
       } else if (status === -1) {
-        responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
+        if (messageCode === '0') {
+          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByUser', {
+            email: email
+          });
+        } else {
+          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledErrorByServer', {
+            email: email
+          });
+        }
       } else {
         responseMessage = $translate.instant('firstTimeWizard.processBulkError');
       }

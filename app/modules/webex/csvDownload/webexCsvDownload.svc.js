@@ -9,9 +9,10 @@
   function WebExCsvDownloadService(
     $log,
     $resource,
+    $window,
     Authinfo,
     UrlConfig,
-    $window
+    WebExUtilsFact
   ) {
 
     var objectUrl;
@@ -74,14 +75,11 @@
       var funcName = "getWebExCsv)";
       var logMsg = "";
 
-      var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
-
       logMsg = funcName + "\n" +
-        "fileDownloadUrl=" + fileDownloadUrl + "\n" +
-        "fileDownloadUrlFixed=" + fileDownloadUrlFixed;
+        "fileDownloadUrl=" + fileDownloadUrl;
       // $log.log(logMsg);
 
-      var webexCsvResource = $resource(fileDownloadUrlFixed, {}, {
+      var webexCsvResource = $resource(fileDownloadUrl, {}, {
         get: {
           method: 'POST',
           // override transformResponse function because $resource
@@ -91,10 +89,7 @@
               headers
             ) {
 
-              // var noTabData = data.replace(/\t/g, ',');
-
               var resultData = {
-                // content: noTabData
                 content: data
               };
 
@@ -108,8 +103,7 @@
 
     function createObjectUrl(data) {
       var blob = new $window.Blob([data], {
-        // type: 'text/csv'
-        type: 'application/octet-stream'
+        type: 'text/csv'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
@@ -123,32 +117,18 @@
       var funcName = "webexCreateObjectUrl()";
       var logMsg = "";
 
-      var intBytes = [];
-      var littleEndianHeader = "%ff%fe";
+      logMsg = funcName + "\n" +
+        "data.length=" + data.length;
+      $log.log(logMsg);
 
-      littleEndianHeader.replace(/([0-9a-f]{2})/gi, function (hexByte) {
-        var intByte = parseInt(hexByte, 16);
+      var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
-        intBytes.push(intByte);
-      });
+      var newData = new Uint8Array(intBytes);
+      // var newData = data;
 
-      for (var i = 0; i < data.length; ++i) {
-        var hexByte = data[i].charCodeAt(0).toString(16);
-        var intByte = parseInt(hexByte, 16);
-
-        if (2 <= i) {
-          intBytes.push(intByte);
-        } else {
-          logMsg = funcName + "\n" +
-            "data[" + i + "]=" + data[i] + "\n" +
-            "hexByte=" + hexByte + "\n" +
-            "intByte=" + intByte;
-          $log.log(logMsg);
-        }
-      }
-
-      var blob = new $window.Blob([new Uint8Array(intBytes)], {
-        type: 'text/csv;charset=UTF-16LE;'
+      var blob = new $window.Blob([newData], {
+        // type: 'text/csv;charset=UTF-16LE;'
+        type: 'text/plain'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);

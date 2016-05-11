@@ -9,12 +9,12 @@
 
 <div class="aa-flex-row">
   <div class="aa-route-call-select">
-    <div ng-switch="aaRouteCallMenu.selected.label" class="aa-route-action">
-      <aa-route-to-aa ng-switch-when="Route to Auto Attendant" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-aa>
-      <aa-route-to-hg ng-switch-when="Route to Hunt Group"  aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-hg>
-      <aa-route-to-user ng-switch-when="Route to Voicemail"  voicemail=true aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
-      <aa-route-to-user ng-switch-when="Route to User"  aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
-      <aa-route-to-ext-num ng-switch-when="Route to Phone Number" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-ext-num>
+    <div ng-switch="aaRouteCallMenu.selected.value" class="aa-route-action">
+      <aa-route-to-aa ng-switch-when="goto" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-aa>
+      <aa-route-to-hg ng-switch-when="routeToHuntGroup"  aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-hg>
+      <aa-route-to-user ng-switch-when="routeToVoiceMail"  voicemail=true aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
+      <aa-route-to-user ng-switch-when="routeToUser"  aa-schedule="{{schedule}}" aa-index="index" aa-from-route-call="true"></aa-route-to-user>
+      <aa-route-to-ext-num ng-switch-when="route" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-ext-num>
     </div>
   </div>
 </div>

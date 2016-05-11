@@ -1,34 +1,27 @@
 <div class="aa-flex-container">
-  <div class="aa-panel">
-    <div  class= "row" name="{{scheduleInfo.schedule}}" ng-class="scheduleInfo.scheduleClass">
-      <h3 class="small-12 columns text-info-left"> {{scheduleInfo.laneTitle}}</h3>
-      <div ng-if="scheduleInfo.isOpenClosed()" ng-repeat="day in scheduleInfo.dayGroup">
-        <div class="aa-schedule-info-item aa-schedule-info-day" label="day">{{day.label}}</div>
-        <div ng-repeat="hour in day.hours">
-          <div class="aa-schedule-info-hours aa-schedule-info-item"> {{hour.starttime}}  -  {{hour.endtime}}</div>
+  <div class="aa-vertical-line"></div>
+  <div class="aa-panel-lane">
+    <div name="{{scheduleInfo.schedule}}" class="aa-schedule-body">
+      <h3 class="text-info-left"> {{scheduleInfo.laneTitle}}</h3>
+      <div ng-if="scheduleInfo.isOpenClosed()" ng-repeat="day in scheduleInfo.dayGroup"
+           class="aa-schedule-info">
+        <div>
+          <div class="aa-schedule-info-day" label="day">{{day.label}}</div>
+          <div ng-repeat="hour in day.hours">
+            <div class="aa-schedule-info-hours"> {{hour.starttime}} - {{hour.endtime}}</div>
+          </div>
         </div>
       </div>
-      <div ng-if="scheduleInfo.isHolidays()" ng-class="{'closed-holiday': scheduleInfo.isOpenClosed()}">
-        <!-- <h3 class="text-info-left" translate="autoAttendant.scheduleHolidays"></h3> -->
-         <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'">
-         <div class="row aa-schedule-info-item">
-           <div ng-if="!scheduleInfo.isStartTimeSet">
-             <div class="small-12 columns aa-trim-padding">
-               <span>{{scheduleInfo.formatDate(holiday.date)}}</span>
-               <span class="aa-column">{{holiday.name}}</span>
-             </div>
-           </div>
-           <div ng-if="scheduleInfo.isStartTimeSet && holiday.starttime">
-             <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
-             <span class="small-4 columns">{{holiday.name}}</span>
-             <span class="small-4 columns aa-schedule-info-hours">{{scheduleInfo.formatTime(holiday.starttime)}} - {{scheduleInfo.formatTime(holiday.endtime)}}</span>
-           </div>
-           <div ng-if="scheduleInfo.isStartTimeSet && !holiday.starttime">
-             <span class="small-4 columns aa-trim-padding">{{scheduleInfo.formatDate(holiday.date)}}</span>
-             <span class="small-8 columns">{{holiday.name}}</span>
-           </div>
-         </div>
-
+      <div ng-if="scheduleInfo.isHolidays()">
+        <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'" class="aa-schedule-info" ng-class="{'aa-schedule-info-closed-holiday': scheduleInfo.dayGroup.length !== 0 && scheduleInfo.schedule ==='closedHours' }">
+          <div class="aa-schedule-info-holidays-date">
+            <div class="aa-schedule-info-day">{{scheduleInfo.formatDate(holiday.date)}}</div>
+          </div>
+          <div class="aa-schedule-info-holidays-name">
+            <div class="aa-schedule-info-day">{{holiday.name}}</div>
+            <div class="aa-schedule-info-hours" ng-if="holiday.starttime"> {{holiday.starttime}} - {{holiday.endtime}}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@
   function WebExApiGatewayService(
     $rootScope,
     $q,
+    $window,
     $log,
     Authinfo,
     Storage,
@@ -16,8 +17,7 @@
     WebExXmlApiFact,
     WebExXmlApiInfoSvc,
     WebExRestApiFact,
-    WebExApiGatewayConstsService,
-    $window
+    WebExApiGatewayConstsService
   ) {
 
     var _this = this;
@@ -264,56 +264,24 @@
       return deferredResponse.promise;
     }; // csvExport()
 
-    this.transformImportFile = function (csvFile) {
+    this.webexCreateImportBlob = function (data) {
+      var funcName = "webexCreateImportBlob()";
+      var logMsg = "";
 
-      var funcName = 'transformImportFile()';
-      var logMsg = '';
+      logMsg = funcName + "\n" +
+        "data.length=" + data.length;
+      $log.log(logMsg);
 
-      logMsg = funcName + ': ' + 'csvFile=' + csvFile;
-      //$log.log(logMsg);
+      var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
-      var byteArray = [];
-      var header = '%ff%fe';
-
-      header.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
-
-      var newDataArray = [];
-      var newDataCount = 0;
-
-      for (var i = 0; i < csvFile.length; i++) {
-        var hexByte = null;
-
-        if ("\t" == csvFile[i]) {
-          hexByte = "%09";
-        } else if ("\n" == csvFile[i]) {
-          hexByte = "%0A";
-          // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
-        } else {
-          hexByte = csvFile[i].charCodeAt(0).toString(16);
-        }
-
-        newDataArray = newDataArray.concat(hexByte);
-        newDataArray = newDataArray.concat('%00');
-
-        newDataCount = newDataCount + 2;
-      }
-
-      var newDataStr = newDataArray.toString();
-
-      newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
-
-      var newData = new Uint8Array(byteArray);
+      var newData = new Uint8Array(intBytes);
 
       var blob = new $window.Blob([newData], {
         type: 'text/csv;charset=UTF-16LE;'
       });
 
       return blob;
-    }; //transformImportFile()
+    }; // webexCreateImportBlob()
 
     this.csvImport = function (
       vm
@@ -348,7 +316,7 @@
       );
 
       var fd = new $window.FormData();
-      fd.append("importCsvFile", _this.transformImportFile(csvFile));
+      fd.append("importCsvFile", _this.webexCreateImportBlob(csvFile));
 
       csvHttpsObj.data = fd;
 
@@ -382,70 +350,6 @@
 
       return deferredResponse.promise;
     }; // csvImport()
-
-    this.csvFileDownload = function (
-      siteUrl,
-      downloadUrl,
-      mockFlag
-    ) {
-      var funcName = 'csvFileDownload()';
-      var logMsg = '';
-
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'downloadUrl=' + downloadUrl + "\n" +
-        'mockFlag=' + mockFlag;
-      // $log.log(logMsg);
-
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
-
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
-
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvFileDownload
-      );
-
-      csvHttpsObj.url = downloadUrl;
-
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
-
-      var deferredResponse = $q.defer();
-
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        null,
-        csvHttpsObj
-      ).then(
-
-        function success(response) {
-          deferredResponse.resolve(successResult);
-        },
-
-        function error(response) {
-          deferredResponse.reject(errorResult);
-        }
-
-      ).catch(
-
-        function catchError(response) {
-          deferredResponse.reject(errorResult);
-        }
-
-      ); // WebExRestApiFact.csvExportReq()
-
-      return deferredResponse.promise;
-    }; // csvFileDownload()
 
     this.isSiteSupportsIframe = function (siteUrl) {
       var funcName = "isSiteSupportsIframe()";

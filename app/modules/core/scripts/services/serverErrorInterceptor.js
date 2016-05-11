@@ -6,9 +6,17 @@
     .factory('ServerErrorInterceptor', ServerErrorInterceptor);
 
   /* @ngInject */
-  function ServerErrorInterceptor($q, $log, Authinfo, Config) {
+  function ServerErrorInterceptor($q, $log, $injector, Config) {
+
+    return {
+      responseError: function (response) {
+        return $q.reject(responseHandler(response));
+      }
+    };
 
     function responseHandler(response) {
+      // injected manually to get around circular dependency problem with $translateProvider
+      var Authinfo = $injector.get('Authinfo');
       if (!Config.isProd() && response.status >= 400 && response.status != 404) {
         $log.error(
           'Request failed with status ' + response.status + '\n' +
@@ -21,12 +29,6 @@
       }
       return response;
     }
-
-    return {
-      responseError: function (response) {
-        return $q.reject(responseHandler(response));
-      }
-    };
   }
 
 })();

@@ -1,0 +1,28 @@
+{
+  "totalResults": 2,
+  "itemsPerPage": 2,
+  "startIndex": 1,
+  "schemas": [
+    "urn:scim:schemas:extension:cisco:commonidentity:1.0",
+    "urn:scim:schemas:core:1.0"
+  ],
+  "resources": [{
+    "id": "e120a976-b51f-4b98-9d68-827263f7ce34",
+    "userName": "sqtest-benand+1@squared.example.com",
+    "displayName": "sqtest-benand+1@squared.example.com",
+    "meta": {
+      "created": "2016-04-21T19:07:24.156Z",
+      "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/e120a976-b51f-4b98-9d68-827263f7ce34"
+    },
+    "orgId": "consumer"
+  }, {
+    "id": "e3f60a80-ff71-4cf2-ba73-1027a2ef18c1",
+    "userName": "sqtest1-mmulcair1@squared.example.com",
+    "displayName": "sqtest1-mmulcair1@squared.example.com",
+    "meta": {
+      "created": "2016-04-20T11:43:39.316Z",
+      "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/e3f60a80-ff71-4cf2-ba73-1027a2ef18c1"
+    },
+    "orgId": "consumer"
+  }]
+}
