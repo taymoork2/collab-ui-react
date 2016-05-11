@@ -790,7 +790,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Localytics.tagEvent('Convert User Search Filter', {
+          Localytics.tagEvent(Localytics.events.convertUserSearch, {
             from: $state.current.name
           });
         }

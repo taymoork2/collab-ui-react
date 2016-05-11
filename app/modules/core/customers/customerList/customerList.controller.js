@@ -328,7 +328,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Localytics.tagEvent('Start Trial Button Click', {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
           from: $state.current.name
         });
       }
