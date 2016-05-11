@@ -263,9 +263,6 @@
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
           updateStep();
-        } else if ((getTab().name === 'communications' || getTab().name === 'serviceSetup') && getStep().name === 'claimSipUrl') {
-          $rootScope.$broadcast('wizard-claim-sip-uri-event');
-          updateStep();
         } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
           updateStep();
           vm.isNextDisabled = true;
