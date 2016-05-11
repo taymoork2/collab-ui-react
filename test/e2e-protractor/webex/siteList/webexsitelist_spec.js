@@ -5,7 +5,7 @@
 describe('WebEx Site List: CSV Export/Import : ', function () {
 
   beforeAll(function () {
-    login.login('t31CSVToggleUser');
+    login.loginUsingIntegrationBackend('t31CSVToggleUser');
   });
 
   it('should login as ' + sitelist.t31CSVToggleUser.testAdminUsername + ' and navigate to site list page', function () {
@@ -33,7 +33,7 @@ describe('WebEx Site List: CSV Export/Import : ', function () {
 describe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () {
 
   beforeAll(function () {
-    login.login('t30csvNotAvailableUser');
+    login.loginUsingIntegrationBackend('t30csvNotAvailableUser');
   });
 
   it('should login as ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ' and navigate to site list page', function () {
@@ -53,7 +53,7 @@ describe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () 
 describe('WebEx Site List: test CSV warning icon condition: ', function () {
 
   beforeAll(function () {
-    login.login('t30csvWbxNotEntitledUser');
+    login.loginUsingIntegrationBackend('t30csvWbxNotEntitledUser');
   });
 
   it('should login as ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ' and navigate to site list page', function () {
