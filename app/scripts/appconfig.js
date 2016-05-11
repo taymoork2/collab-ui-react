@@ -1881,7 +1881,12 @@
             templateUrl: 'modules/hercules/landing-page/resource-list.html',
             controller: 'FusionResourceListController',
             controllerAs: 'resourceList',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
           })
           .state('resource-settings-page', {
             url: '/services/resource/settings/:clusterid',

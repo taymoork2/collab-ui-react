@@ -6,7 +6,12 @@
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
-  function FusionResourceListController($window, $filter, FusionClusterService, XhrNotificationService, $log) {
+  function FusionResourceListController($window, $filter, hasFeatureToggle, FusionClusterService, XhrNotificationService, $log) {
+    if (!hasFeatureToggle) {
+      // show a white page…
+      return;
+    }
+
     var vm = this;
     var clustersCache = [];
 
