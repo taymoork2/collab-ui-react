@@ -2,7 +2,7 @@
 
 /*global webEx, sitelist*/
 
-describe('WebEx Site List: CSV Export/Import : ', function () {
+xdescribe('WebEx Site List: CSV Export/Import : ', function () {
 
   beforeAll(function () {
     login.loginUsingIntegrationBackend('t31CSVToggleUser');
@@ -30,7 +30,7 @@ describe('WebEx Site List: CSV Export/Import : ', function () {
 });
 
 //Start tests to detect 'Not Available' and warning icon conditions
-describe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () {
+xdescribe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () {
 
   beforeAll(function () {
     login.loginUsingIntegrationBackend('t30csvNotAvailableUser');
@@ -50,7 +50,7 @@ describe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () 
   });
 });
 
-describe('WebEx Site List: test CSV warning icon condition: ', function () {
+xdescribe('WebEx Site List: test CSV warning icon condition: ', function () {
 
   beforeAll(function () {
     login.loginUsingIntegrationBackend('t30csvWbxNotEntitledUser');
