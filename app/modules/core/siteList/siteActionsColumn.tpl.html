@@ -2,13 +2,15 @@
   <!-- Start of Reports icon -->
   <span id="{{row.entity.license.siteUrl}}_reportsIcon">
     <!-- display disabled reports icon -->
-    <i ng-if="!row.entity.showSiteLinks || row.entity.isError"
+    <i ng-if="!row.entity.showSiteLinks || 
+              row.entity.isError"
        id="{{row.entity.license.siteUrl}}_reportsUnavailable"
        class="icon icon-report"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteReports' | translate}}"></i>
       
-    <span ng-if="row.entity.showSiteLinks && !row.entity.isError"
+    <span ng-if="row.entity.showSiteLinks && 
+                 !row.entity.isError"
           id="{{row.entity.license.siteUrl}}_reportsAvailable">
       
       <!-- display disabled reports icon and reports turned off tooltip -->
@@ -38,14 +40,16 @@
     </span>
 
     <!-- display disabled config icon -->
-    <i ng-if="!row.entity.showSiteLinks || row.entity.isError"
+    <i ng-if="!row.entity.showSiteLinks || 
+              row.entity.isError"
        id="{{row.entity.license.siteUrl}}_configUnavailable"
        class="icon icon-settings"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteSettings' | translate}}"></i>
     
     <!-- display enabled config icon and tooltip -->
-    <a ng-if="row.entity.showSiteLinks && !row.entity.isError"
+    <a ng-if="row.entity.showSiteLinks && 
+              !row.entity.isError"
        id="{{row.entity.license.siteUrl}}_webex-site-settings"
        ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
          
@@ -65,22 +69,32 @@
     </span>
     
     <!-- display disabled CSV icon -->
-    <i ng-if="!row.entity.showSiteLinks || !row.entity.showCSVInfo || row.entity.isError"
+    <i ng-if="!row.entity.showSiteLinks || 
+              !row.entity.showCSVInfo || 
+              row.entity.isError"
        id="{{row.entity.license.siteUrl}}_csvUnavailable"
        class="icon icon-admin"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
     
     <!-- display disabled CSV icon and unsupported tooltip -->
-    <i ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && !row.entity.isError && !row.entity.isCSVSupported"
+    <i ng-if="row.entity.showSiteLinks && 
+              row.entity.showCSVInfo && 
+              !row.entity.isError && 
+              !row.entity.isCSVSupported"
        id="{{row.entity.license.siteUrl}}_csvNotSupported"
        class="icon icon-admin"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"></i>
        
-    <span ng-if="row.entity.showSiteLinks && row.entity.showCSVInfo && row.entity.isCSVSupported">
+    <span ng-if="row.entity.showSiteLinks && 
+                 row.entity.showCSVInfo && 
+                 row.entity.isCSVSupported">
+                 
       <!-- display disabled CSV icon and in progress spinner -->
-      <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || (row.entity.csvStatusObj.status == 'importInProgress')">
+      <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || 
+                   (row.entity.csvStatusObj.status == 'importInProgress')">
+                   
         <i class="icon icon-admin"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
@@ -97,7 +111,8 @@
       </span>
             
       <!-- display enabled CSV icon -->
-      <a ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && (row.entity.csvStatusObj.status != 'exportInProgress')"
+      <a ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && 
+                (row.entity.csvStatusObj.status != 'exportInProgress')"
          ui-sref="site-csv({csvImportObj:row.entity})">
        
         <i class="icon icon-admin"
@@ -129,7 +144,8 @@
   <!-- End of CSV icon and results link -->
   
   <!-- Start of Loading icon -->
-  <span ng-if="(!row.entity.showCSVIconAndResults && !row.entity.showSiteLinks) || (row.entity.showCSVIconAndResults && (!row.entity.showSiteLinks || !row.entity.showCSVInfo))"
+  <span ng-if="(!row.entity.showCSVIconAndResults && !row.entity.showSiteLinks) || 
+               (row.entity.showCSVIconAndResults && (!row.entity.showSiteLinks || !row.entity.showCSVInfo))"
         id="{{row.entity.license.siteUrl}}_loading">
         
     <span>
