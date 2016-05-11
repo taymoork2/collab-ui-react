@@ -4038,15 +4038,15 @@
       },
       "calendar": {
         "title": "Calendar",
-        "description": "Integrate Microsoft Exchange enabling @webex and @spark to be used in the meeting invite location field to automatically include meeting info.",
+        "description": "Integrate Microsoft Exchange to automatically include meeting info when @webex and @spark are added to the meeting invite location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
       "hybridCall": {
-        "title": "Call",
-        "description": "Enables Aware and Connect, two features which bring cloud capabilities to your desk phone like using Cisco Spark to answer and place calls.",
+        "title": "Hybrid Call",
+        "description": "Enable Aware and Connect, two features which bring cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
