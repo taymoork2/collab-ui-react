@@ -6,7 +6,7 @@
     .controller('PostponeModalController', PostponeModalController);
 
   /* @ngInject */
-  function PostponeModalController($modalInstance, ScheduleUpgradeService, Authinfo, data, nextUpdate, serviceType) {
+  function PostponeModalController($modalInstance, ScheduleUpgradeService, Authinfo, data, nextUpdate, connectorType) {
     var vm = this;
     vm.data = data;
     vm.nextUpdate = nextUpdate;
@@ -16,7 +16,7 @@
 
     function postpone() {
       vm.state = 'sending';
-      ScheduleUpgradeService.patch(Authinfo.getOrgId(), serviceType, {
+      ScheduleUpgradeService.patch(Authinfo.getOrgId(), connectorType, {
           postponed: true
         })
         .then(function (data) {

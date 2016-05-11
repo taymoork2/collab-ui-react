@@ -9,7 +9,7 @@ describe('Huron Auto Attendant', function () {
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
-    login.login('huron-int1');
+    login.login('aa-admin');
 
   }, 120000);
 
@@ -60,8 +60,8 @@ describe('Huron Auto Attendant', function () {
 
       // expect to see an open hours lane
       utils.expectIsDisplayed(autoattendant.openHoursLane);
-      utils.expectIsDisplayed(autoattendant.openHoursSayMessage);
-      utils.expectIsDisplayed(autoattendant.openHoursPhoneMenu);
+      utils.expectIsNotPresent(autoattendant.openHoursSayMessage);
+      utils.expectIsNotPresent(autoattendant.openHoursPhoneMenu);
       utils.expectIsDisplayed(autoattendant.openHoursEndCall);
 
       // expect to see closed hours lane

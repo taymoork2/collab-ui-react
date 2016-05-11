@@ -64,18 +64,18 @@
     function getSeverityLabel(value) {
       var label = '';
       switch (value) {
-        case 0:
-          label = 'ok';
-          break;
-        case 1:
-          label = 'unknown';
-          break;
-        case 2:
-          label = 'warning';
-          break;
-        case 3:
-          label = 'error';
-          break;
+      case 0:
+        label = 'ok';
+        break;
+      case 1:
+        label = 'unknown';
+        break;
+      case 2:
+        label = 'warning';
+        break;
+      case 3:
+        label = 'error';
+        break;
       }
       return label;
     }

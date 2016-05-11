@@ -5,6 +5,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
+  var AATrackChangeService, AADependencyService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -51,7 +52,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
-    _AACalendarService_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -74,6 +75,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     $httpBackend = _$httpBackend_;
     AAUiScheduleService = _AAUiScheduleService_;
     AACalendarService = _AACalendarService_;
+    AATrackChangeService = _AATrackChangeService_;
+    AADependencyService = _AADependencyService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -220,6 +223,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var updateCeSpy;
     var nameValidationSpy;
     var phoneMenuValidationSpy;
+    var aaNameChangedSpy;
 
     beforeEach(function () {
       createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
@@ -229,6 +233,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANotificationService, 'errorResponse');
       spyOn($scope.vm, 'saveUiModel');
       spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
+
+      spyOn(AADependencyService, 'notifyAANameChange');
+      aaNameChangedSpy = spyOn(AATrackChangeService, 'isChanged').and.returnValue(false);
+      spyOn(AATrackChangeService, 'track');
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
       phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
@@ -251,6 +259,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
+      expect(AATrackChangeService.track).toHaveBeenCalled();
+      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+
       expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
     });
 
@@ -262,6 +273,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       }));
       controller.saveAARecords();
       $scope.$apply();
+
+      expect(AATrackChangeService.track).not.toHaveBeenCalled();
+      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
 
       expect(AANotificationService.errorResponse).toHaveBeenCalled();
     });
@@ -281,6 +295,38 @@ describe('Controller: AABuilderMainCtrl', function () {
       // check that ceInfos is updated successfully too because it is required on the landing page
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+
+      // if AA Name is not changed, don't call AADependencyService.notifyAANameChange()
+      expect(AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(AATrackChangeService.track).not.toHaveBeenCalled();
+
+      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+    });
+
+    it('should update an existing aaRecord with AA Name changed successfully', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+
+      // Assume aaName is changed.
+      aaNameChangedSpy.and.returnValue(true);
+
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+
+      // check that aaRecord is saved successfully into model
+      expect(angular.equals(aaModel.aaRecords[0], rawCeInfo)).toEqual(true);
+
+      // check that ceInfos is updated successfully too because it is required on the landing page
+      var ceInfo = ce2CeInfo(rawCeInfo);
+      expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+
+      // if AA Name is changed, call AADependencyService.notifyAANameChange()
+      expect(AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).toHaveBeenCalled();
+      expect(AATrackChangeService.track).toHaveBeenCalled();
 
       expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
@@ -317,6 +363,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
       spyOn(AAModelService, 'getNewAARecord').and.callThrough();
+      spyOn(AADependencyService, 'notifyAANameChange');
+      spyOn(AATrackChangeService, 'isChanged');
+      spyOn(AATrackChangeService, 'track');
 
     });
 
@@ -330,7 +379,13 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
+
+      // AAName is not tracked yet when opening new AA
+      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(AATrackChangeService.track).not.toHaveBeenCalled();
     });
+
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is empty', function () {
       $scope.vm.aaModel = {};
       $scope.vm.templateName = "";
@@ -385,6 +440,11 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
+
+      // start tracking AAName when reading an existing aaRecord
+      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(AATrackChangeService.track).toHaveBeenCalled();
     });
 
     it('should return error when the backend return 500 error', function () {
@@ -420,7 +480,13 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
       expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
-      expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('runActionsOnInput');
+      expect($scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
+
+      expect($scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['type']).toEqual('MENU_OPTION');
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['key']).toEqual('0');
+      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['actions'].length).toEqual(1);
+
       expect($scope.vm.ui.isOpenHours).toEqual(true);
 
     });

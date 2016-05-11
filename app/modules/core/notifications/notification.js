@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config, Authinfo) {
     var NO_TIMEOUT = 0;
     var FAILURE_TIMEOUT = NO_TIMEOUT;
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
@@ -27,7 +27,8 @@
       notify: notify,
       errorResponse: errorResponse,
       processErrorResponse: processErrorResponse,
-      confirmation: confirmation
+      confirmation: confirmation,
+      notifyReadOnly: notifyReadOnly
     };
 
     function success(messageKey, messageParams) {
@@ -42,9 +43,17 @@
       notify($translate.instant(messageKey, messageParams), 'error');
     }
 
-    function notify(notifications, type) {
+    function notifyReadOnly(rejection) {
+      notify($translate.instant('readOnlyMessages.notAllowed'), 'warning', true);
+    }
+
+    function notify(notifications, type, readOnly) {
+      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && !readOnly) {
+        return;
+      }
       var types = ['success', 'warning', 'error'];
-      var closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + $translate.instant('common.close') + '</span></button>';
+      var closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + $translate.instant('common.close') +
+        '</span></button>';
 
       if (!notifications) {
         return;
@@ -110,7 +119,10 @@
       });
       */
 
-      toaster.pop('warning', null, message + '<br/> <div class="clearfix"><button type="button" class="btn btn--negative ui-ml notification-yes right">' + $translate.instant('common.yes') + '</button>' + '<button type="button" class="btn right notification-no">' + $translate.instant('common.no') + '</button></div>');
+      toaster.pop('warning', null, message +
+        '<br/> <div class="clearfix"><button type="button" class="btn btn--negative ui-ml notification-yes right">' + $translate.instant(
+          'common.yes') + '</button>' + '<button type="button" class="btn right notification-no">' + $translate.instant('common.no') +
+        '</button></div>');
       $timeout(function () {
         angular.element('.notification-yes').on('click', function () {
           toaster.clear('*');

@@ -17,22 +17,18 @@
     vm.schedule = "";
     vm.openHours = [];
     vm.holidays = [];
-    vm.activate = activate;
     vm.laneTitle = '';
+    vm.activate = activate;
     vm.isOpenClosed = isOpenClosed;
     vm.isClosed = isClosed;
     vm.isHolidays = isHolidays;
     vm.formatDate = formatDate;
-    vm.formatTime = formatTime;
-    vm.isStartTimeSet = false;
 
     $scope.$on('ScheduleChanged', function () {
       if (vm.aaModel.aaRecord.scheduleId) {
         populateScheduleHours();
       }
     });
-
-    vm.scheduleClass = 'aa-panel-body';
 
     function populateScheduleHours() {
       vm.dayGroup = [];
@@ -54,8 +50,8 @@
           starttime: 0,
           endtime: 0
         };
-        dayhour.starttime = moment(hour.starttime).set(consolidateDate);
-        dayhour.endtime = moment(hour.endtime).set(consolidateDate);
+        dayhour.starttime = moment(hour.starttime, "hh:mm A").set(consolidateDate);
+        dayhour.endtime = moment(hour.endtime, "hh:mm A").set(consolidateDate);
         _.forEach(hour.days, function (wday, index) {
           if (wday.active) {
             addUniqueHours(vm.days[index], dayhour);
@@ -89,10 +85,10 @@
     }
 
     function is24HoursOpen(hour) {
-      var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm a');
-      var endhh = moment().set('hour', '23').set('minute', '59').format('hh:mm a');
-      return (moment(hour.starttime).format('hh:mm a') === hh &&
-        moment(hour.endtime).format('hh:mm a') === endhh);
+      var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm A');
+      var endhh = moment().set('hour', '23').set('minute', '59').format('hh:mm A');
+      return (moment(hour.starttime).format('hh:mm A') === hh &&
+        moment(hour.endtime).format('hh:mm A') === endhh);
     }
 
     function consolidateHours(hours) {
@@ -129,23 +125,22 @@
           }
         }
       }
-      return;
     }
 
-    function getFormattedOpenhours(hour, dayhour) {
+    function getFormattedOpenhours() {
       if (vm.schedule === 'openHours') {
         _.each(vm.days, function (day) {
           _.each(day.hours, function (hour) {
-            hour.starttime = moment(hour.starttime).format('hh:mm a');
-            hour.endtime = moment(hour.endtime).format('hh:mm a');
+            hour.starttime = moment(hour.starttime).format('hh:mm A');
+            hour.endtime = moment(hour.endtime).format('hh:mm A');
           });
         });
       }
     }
 
     function getClosedHours() {
-      var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm a');
-      var endhh = moment().set('hour', '23').set('minute', '59').format('hh:mm a');
+      var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm A');
+      var endhh = moment().set('hour', '23').set('minute', '59').format('hh:mm A');
       var dayhour = {
         starttime: 0,
         endtime: 0
@@ -161,9 +156,9 @@
         _.each(day.hours, function (hour, i) {
           var numberOfHours = day.hours.length;
           if (!is24HoursOpen(hour)) {
-            var starttime = moment(hour.starttime).subtract(1, 'm').format('hh:mm a');
-            var endtime = moment(hour.endtime).add(1, 'm').format('hh:mm a');
-            if (!i && moment(hour.starttime).format('hh:mm a') !== hh) {
+            var starttime = moment(hour.starttime).subtract(1, 'm').format('hh:mm A');
+            var endtime = moment(hour.endtime).add(1, 'm').format('hh:mm A');
+            if (!i && moment(hour.starttime).format('hh:mm A') !== hh) {
               //First interval starts at 12:00AM if it is not part of open hours
               dayhour.starttime = hh;
               dayhour.endtime = starttime;
@@ -171,10 +166,10 @@
             }
             if (i + 1 < numberOfHours) {
               dayhour.starttime = endtime;
-              dayhour.endtime = moment(day.hours[i + 1].starttime).subtract(1, 'm').format('hh:mm a');
+              dayhour.endtime = moment(day.hours[i + 1].starttime).subtract(1, 'm').format('hh:mm A');
               addUniqueHours(closedHours[index], dayhour);
             }
-            if (i + 1 === numberOfHours && moment(hour.endtime).format('hh:mm a') !== endhh) {
+            if (i + 1 === numberOfHours && moment(hour.endtime).format('hh:mm A') !== endhh) {
               //last interval ends with 11:59pm if it is not part of open hours
               dayhour.starttime = endtime;
               dayhour.endtime = endhh;
@@ -192,7 +187,6 @@
       vm.dayGroup = [];
       var indices = [];
       var indexListed = [];
-      var numberofdays = 1;
       _.forEach(vm.days, function (wday, index) {
         var hour1 = wday.hours;
         var isIndexPresent = _.contains(indexListed, index);
@@ -223,7 +217,6 @@
               _.each(indices, function (index) {
                 if (dayLabel !== '') {
                   dayLabel = dayLabel + ', ';
-                  numberofdays = numberofdays++;
                 }
                 dayLabel = dayLabel + (vm.days[index].label);
               });
@@ -234,9 +227,6 @@
         }
 
       });
-      if (numberofdays >= 2) {
-        vm.scheduleClass = 'aa-schedule-body';
-      }
 
     }
 
@@ -246,12 +236,17 @@
           var calhours = AAICalService.getHoursRanges(data);
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
-          vm.scheduleClass = (angular.isDefined(vm.holidays) && vm.holidays.length) ? 'aa-schedule-body' : 'aa-panel-body';
 
           getScheduleTitle();
 
-          if (angular.isDefined(vm.holidays) && vm.holidays.length) {
-            vm.isStartTimeSet = isStartTimePresent();
+          if (angular.isDefined(vm.holidays) && vm.holidays.length && vm.openhours.length === 0) {
+            var open24hours = AAICalService.getDefaultRange();
+            _.forEach(open24hours.days, function (day) {
+              day.active = true;
+            });
+            open24hours.starttime = "12:00 AM";
+            open24hours.endtime = "23:59 PM";
+            vm.openhours = [open24hours];
           }
 
           if (vm.isOpenClosed() && angular.isDefined(vm.openhours) && vm.openhours.length) {
@@ -275,7 +270,7 @@
     }
 
     function isOpenClosed() {
-      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours'));
+      return (vm.schedule === 'openHours' || vm.schedule === 'closedHours');
     }
 
     function isClosed() {
@@ -286,22 +281,8 @@
       return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
     }
 
-    function formatTime(tt) {
-      return (tt) ? moment(tt).format('h:mm a') : 0;
-    }
-
     function formatDate(dt) {
       return (moment(dt).format('MMM') === 'May') ? moment(dt).format('MMM DD, YYYY') : moment(dt).format('MMM. DD, YYYY');
-    }
-
-    function isStartTimePresent() {
-      var flag = false;
-      _.each(vm.holidays, function (day) {
-        if (day.starttime) {
-          flag = true;
-        }
-      });
-      return flag;
     }
 
     function activate() {

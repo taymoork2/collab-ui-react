@@ -36,6 +36,7 @@ describe('Service: AANotificationService', function () {
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');
+    spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
   }));
 
@@ -82,6 +83,15 @@ describe('Service: AANotificationService', function () {
       AANotificationService.errorResponse(response, message, parameters);
       expect(Notification.notify).toHaveBeenCalledWith(
         "autoAttendant.errorCreateCe Key: CES0005 Description: message field is not an object TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2", 'error');
+    });
+  });
+
+  describe('errorResponse', function () {
+    var response = {};
+
+    it('should just print messsage if no data.error or data.message', function () {
+      AANotificationService.errorResponse(response, message, parameters);
+      expect(Notification.error).toHaveBeenCalledWith(message, parameters);
     });
   });
 

@@ -7,7 +7,9 @@
   /* @ngInject */
   function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
+    var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
+    var TRANSITION_ARROW = "-[#009933]>";
     var NOT_FOUND = 'Not Found';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
@@ -40,6 +42,7 @@
       var eventNote = '';
 
       messageBody += skinParam;
+
       for (var i = 0; i < events.length; i++) {
         if (events[i].type !== 'ApplicationEvents' && events[i].type !== undefined) {
           if (events[i].eventSource.hostname !== undefined && events[i].dataParam.direction !== undefined) {
@@ -58,13 +61,20 @@
 
             //incommig call
             if (events[i].dataParam.direction === 'in') {
-              messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '\"' + remote + '\"' + TRANSITION_ARROW + '\"' + source + '\"' + ': ';
+              } else {
+                messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+              }
             } else {
-              messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '\"' + source + '\"' + TRANSITION_ARROW + '\"' + remote + '\"' + ': ';
+              } else {
+                messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+              }
             }
 
-            eventNote = '[' + (($filter('orderBy')(svc.events, ['"@timestamp"'])).indexOf(events[i]) + 1) + '] ';
-            eventNote += note;
+            eventNote = note;
             eventNote += events[i].dataParam.msgType;
             messageBody += '\"' + eventNote.replace('"', ' ') + '\"\n';
           }
@@ -87,7 +97,6 @@
     }
 
     function getRemoteAlias(event) {
-      var remoteAlias = {};
       if (event.dataParam.remoteName !== undefined && event.eventSource.hostname !== undefined) {
         if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('cms') > -1) {
           return 'Line Hedge';
@@ -184,6 +193,29 @@
       svc.events = events;
       var message = generateMessagebody($filter('orderBy')(svc.events, ['"@timestamp"']));
       return proxyDiagnosticService(message);
+    };
+
+    svc.getActivities = function (locusid, start, end) {
+      var defer = $q.defer();
+      $http({
+          method: "GET",
+          url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .success(function (response) {
+          defer.resolve(response);
+        })
+        .error(function (response, status) {
+          Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
+          defer.reject({
+            'response': response,
+            'status': status
+          });
+        });
+      return defer.promise;
     };
 
     return svc;

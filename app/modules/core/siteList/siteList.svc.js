@@ -1,18 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').service('SiteListService', [
-  '$log',
-  '$translate',
-  '$interval',
-  'Authinfo',
-  'UrlConfig',
-  'FeatureToggleService',
-  'WebExApiGatewayService',
-  'WebExApiGatewayConstsService',
-  'WebExUtilsFact',
-  'WebExUtilsService',
+  angular.module('Core').service('SiteListService', SiteListService);
 
-  function (
+  /* @ngInject */
+  function SiteListService(
     $log,
     $translate,
     $interval,
@@ -21,8 +13,7 @@ angular.module('Core').service('SiteListService', [
     FeatureToggleService,
     WebExApiGatewayService,
     WebExApiGatewayConstsService,
-    WebExUtilsFact,
-    WebExUtilsService
+    WebExUtilsFact
   ) {
 
     var _this = this;
@@ -499,22 +490,34 @@ angular.module('Core').service('SiteListService', [
       var funcName = "updateGrid()";
       var logMsg = "";
 
-      // $log.log(funcName);
+      logMsg = funcName + "\n" +
+        "vm=" + JSON.stringify(vm);
+      // $log.log(logMsg);
 
       // remove grid column(s) based on feature toggles
-      WebExUtilsService.checkWebExFeaturToggle(FeatureToggleService.features.webexCSV).then(
+      FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
         function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
           var funcName = "checkWebExFeaturToggleSuccess()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
             "adminUserSupportCSV=" + adminUserSupportCSV;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
-          // don't show the CSV column if admin user does not have feature toggle
+          // Start of hide CSV info if admin user does not have feature toggle
+          vm.gridData.forEach(
+            function processSiteRow(siteRow) {
+              var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
+              var logMsg = "";
+
+              siteRow.showCSVIconAndResults = adminUserSupportCSV;
+            } // processSiteRow()
+          ); // gridData.forEach()
+
           if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(3, 1);
           }
+          // End of hiding CSV info if admin user does not have feature toggle
 
           // don't show the Actions column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
@@ -535,7 +538,7 @@ angular.module('Core').service('SiteListService', [
 
           updateGridColumns();
         } // checkWebExFeaturToggleError()
-      ); // WebExUtilsService.checkWebExFeaturToggle().then()
+      ); // FeatureToggleService.supports().then()
 
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
@@ -549,4 +552,4 @@ angular.module('Core').service('SiteListService', [
       } // updateGridColumns()
     }; // updateGrid()
   } // end top level function
-]);
+})();

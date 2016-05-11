@@ -42,8 +42,7 @@ describe('Service: ExampleService', function () {
         .respond([{
           state: 'fused',
           connectors: []
-        },
-        {
+        }, {
           state: 'defused',
           connectors: []
         }]);

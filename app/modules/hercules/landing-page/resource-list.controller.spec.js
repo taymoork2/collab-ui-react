@@ -1,5 +1,3 @@
 'use strict';
 
-describe('Controller: FusionResourceListController', function () {
-  
-});
+describe('Controller: FusionResourceListController', function () {});

@@ -5,7 +5,6 @@
     .module('Hercules')
     .controller('FusionResourceSettingsController', FusionResourceSettingsController);
 
-
   /* @ngInject */
   function FusionResourceSettingsController($stateParams, $log, FusionClusterService, XhrNotificationService) {
 
@@ -15,23 +14,13 @@
     loadCluster($stateParams.clusterid);
 
     function loadCluster(clusterid) {
-      var cluster;
       FusionClusterService.getAll()
         .then(function (clusters) {
-
-          cluster = _.find(clusters, function(c) {
+          var cluster = _.find(clusters, function (c) {
             return c.id === clusterid;
           });
-
           vm.cluster = cluster;
-
-
         }, XhrNotificationService.notify);
-
-
     }
-
   }
-
-
 })();

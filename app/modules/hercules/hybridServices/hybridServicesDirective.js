@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $timeout, Authinfo, Config, USSService, ServiceDescriptor, Orgservice) {
+  function HybridServicesCtrl($scope, $timeout, Authinfo, Config, USSService, FusionUtils, ServiceDescriptor, Orgservice) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -62,7 +62,7 @@
     }
 
     vm.extensionIcon = function (id) {
-      return ServiceDescriptor.serviceIcon(id);
+      return FusionUtils.serviceId2Icon(id);
     };
 
     if (extensionEntitlements.every(function (extensionEntitlement) {

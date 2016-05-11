@@ -95,7 +95,9 @@
         application: 'atlas-portal.application',
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
-        helpdesk: 'atlas-portal.partner.helpdesk'
+        helpdesk: 'atlas-portal.partner.helpdesk',
+        spark_synckms: 'spark.synckms',
+        readonly_admin: 'id_readonly_admin'
       },
 
       roles: {
@@ -106,7 +108,9 @@
         application: 'Application',
         reports: 'Reports',
         sales: 'Sales_Admin',
-        helpdesk: 'Help_Desk'
+        helpdesk: 'Help_Desk',
+        spark_synckms: 'Spark_SyncKms',
+        readonly_admin: 'Readonly_Admin'
       },
 
       roleState: {
@@ -309,14 +313,6 @@
         'organization'
       ],
       'squared-fusion-media': [
-        'meetings',
-        'vts',
-        'utilization',
-        'metrics',
-        'threshold',
-        'fault',
-        'alarms',
-        'events',
         //'mediafusionconnector',
         'media-service',
         'connector-details'

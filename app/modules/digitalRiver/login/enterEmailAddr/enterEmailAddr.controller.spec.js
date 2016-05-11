@@ -2,42 +2,35 @@
   'use strict';
 
   describe('Controller: enterEmailAddrController', function () {
-    var controller, DigitalRiverService, $window, $controller, $rootScope, $q;
+    var controller, DigitalRiverService, $window, $controller, $rootScope, $q, $state;
 
     beforeEach(module('DigitalRiver'));
 
-    beforeEach(inject(function (_$rootScope_, _$controller_, _DigitalRiverService_, _$q_) {
+    beforeEach(inject(function (_$rootScope_, _$controller_, _DigitalRiverService_, _$q_, _$state_) {
       $rootScope = _$rootScope_;
       DigitalRiverService = _DigitalRiverService_;
       $controller = _$controller_;
-      $window = {
-        location: {
-          href: ''
-        }
-      };
-      $q = _$q_;
-      spyOn(DigitalRiverService, 'getUserFromEmail').and.returnValue($q.when());
-    }));
-
-    function initController() {
+      $state = _$state_;
+      $state.params.referrer = DigitalRiverService.getDrReferrer();
+      $state.params.sku = 'A-SPK-M1CSB';
       controller = $controller('enterEmailAddrController', {
-        $window: $window
+        $state: $state
       });
-      controller.drReferrer = DigitalRiverService.getDrReferrer();
       controller.error = undefined;
       $rootScope.$apply();
-    }
+      $q = _$q_;
+      spyOn(DigitalRiverService, 'userExists').and.returnValue($q.when());
+      spyOn($state, 'go');
+    }));
 
-    xdescribe('emailPlaceholder', function () {
-      beforeEach(initController);
-
+    describe('emailPlaceholder', function () {
       it('should return the correct value', function () {
+        $state.params.orderId = '123';
         expect(controller.emailPlaceholder()).toEqual('digitalRiver.enterEmailAddr.emailPlaceholder');
       });
     });
 
-    xdescribe('handleEnterEmailAddr', function () {
-      beforeEach(initController);
+    describe('handleEnterEmailAddr', function () {
       it('should validate an empty email', function () {
         controller.handleEnterEmailAddr();
         expect(controller.error).toEqual('digitalRiver.enterEmailAddr.validation.emptyEmail');
@@ -47,18 +40,17 @@
         controller.email = 'foo@bar.com';
         controller.handleEnterEmailAddr();
         expect(controller.error).not.toBeDefined();
-        expect(DigitalRiverService.getUserFromEmail).toHaveBeenCalled();
+        expect(DigitalRiverService.userExists).toHaveBeenCalled();
       });
     });
 
-    xdescribe('getUserFromEmail', function () {
+    describe('userExists', function () {
       beforeEach(function () {
-        initController();
         controller.email = 'foo@bar.com';
       });
 
       it('should error out on rejection', function (done) {
-        DigitalRiverService.getUserFromEmail.and.returnValue($q.reject());
+        DigitalRiverService.userExists.and.returnValue($q.reject());
         controller.handleEnterEmailAddr().then(function () {
           expect(controller.error).toBe('digitalRiver.validation.unexpectedError');
           done();
@@ -66,8 +58,8 @@
         $rootScope.$apply();
       });
 
-      it('should error out on success with no data', function (done) {
-        DigitalRiverService.getUserFromEmail.and.returnValue($q.when());
+      it('should error out with no data', function (done) {
+        DigitalRiverService.userExists.and.returnValue($q.when());
         controller.handleEnterEmailAddr().then(function () {
           expect(controller.error).toBe('digitalRiver.validation.unexpectedError');
           done();
@@ -75,31 +67,34 @@
         $rootScope.$apply();
       });
 
-      //TODO Note: a tech debt US has been created to refactor these tests
-      it('should redirect to create-account on success with improper data', function (done) {
-        DigitalRiverService.getUserFromEmail.and.returnValue($q.when({
-          data: {
-            success: true
-          }
+      it('should error out with claimed domain', function (done) {
+        DigitalRiverService.userExists.and.returnValue($q.when({
+          domainClaimed: true
         }));
         controller.handleEnterEmailAddr().then(function () {
-          expect($window.location.href).toContain('create-account');
+          expect(controller.error).toBe('digitalRiver.enterEmailAddr.domainClaimed');
+          done();
+        });
+        $rootScope.$apply();
+      });
+
+      it('should redirect to createAccount when user does not exist', function (done) {
+        DigitalRiverService.userExists.and.returnValue($q.when({
+          userExists: false
+        }));
+        controller.handleEnterEmailAddr().then(function () {
+          expect($state.go).toHaveBeenCalledWith('createAccount', jasmine.any(Object));
           done();
         });
         $rootScope.$apply();
       });
 
       it('should redirect to dr-login-forward on success with proper data', function (done) {
-        DigitalRiverService.getUserFromEmail.and.returnValue($q.when({
-          data: {
-            data: {
-              exists: true
-            },
-            success: true
-          }
+        DigitalRiverService.userExists.and.returnValue($q.when({
+          userExists: true
         }));
         controller.handleEnterEmailAddr().then(function () {
-          expect($window.location.href).toContain('/#/dr-login-forward');
+          expect($state.go).toHaveBeenCalledWith('drLoginForward', jasmine.any(Object));
           done();
         });
         $rootScope.$apply();

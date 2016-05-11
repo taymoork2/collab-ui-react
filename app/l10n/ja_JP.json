@@ -9,25 +9,28 @@
     "assignServices": "サービスの割り当て",
     "assignDnAndDirectLines": "数字の割り当て",
     "inviteModalBtn": "ユーザーの追加",
-    "manageUsers": "ユーザー",
+    "pageTitle": "ユーザー",
     "subTitleAdd": "ユーザーの管理",
     "subTitleEnable": "ユーザーのエンタイトル",
     "email": "メール",
     "clear": "クリア",
     "add": "ユーザーの追加",
     "entitle": "エンタイトル",
+    "invitePending": "招待保留中",
+    "inviteMsg": "ユーザーサービスは保留中で、ユーザーがアカウントをアクティベートした時にここに表示されます",
+    "resendInvitation": "招待状の再送信",
     "firstnameHeader": "名",
     "lastnameHeader": "姓",
     "displayNameHeader": "表示名",
     "emailHeader": "メール",
-    "sipUri": "Cloud SIP URI",
+    "sipUri": "Spark SIP アドレス",
     "actionHeader": "アクション",
     "invite": "招待状を送信する",
     "addedHeader": "追加済み",
     "statusHeader": "状況 / ツール",
     "modify": "変更",
     "existingUsers": "既存のユーザー",
-    "userInput": "メールアドレスまたはグループメーラーをコンマで区切って入力してください。",
+    "userInput": "複数のメールアドレスをカンマで区切って入力することもできます。",
     "userInputDescription": "例： John Doe john.doe@example.com、Kate Williams kate.williams@example.com",
     "firstNamePlaceHolder": "名",
     "lastNamePlaceHolder": "姓",
@@ -39,6 +42,7 @@
     "duplicateDnFound": "重複した内線番号が入力されました。",
     "duplicateDidFound": "重複した直通番号が入力されました。",
     "noUsersInput": "ユーザーが入力されていません。",
+    "userGettingCount": "進行中のユーザーを数えています",
     "csvBtnTitle": "CSV にエクスポート",
     "csvBtnExportingTitle": "エクスポートが進行中です",
     "csvFilename": "exported_users.csv",
@@ -59,6 +63,10 @@
     "all": "すべて",
     "administrators": "管理者",
     "inviteUsers": "ユーザーの追加",
+    "manageUsers": "ユーザーの管理",
+    "exportUserList": "ユーザリストのエクスポート",
+    "importUserList": "ユーザリストのインポート",
+    "viewLastImport": "最後のインポートを表示",
     "partners": "パートナー管理者",
     "deleteUser": "ユーザーの削除",
     "deleteUserConfText": "このデバイス{{email}}を削除してもよいですか ?",
@@ -68,13 +76,15 @@
     "resend": "招待の再送信",
     "resendActivation": "アクティブ化の再送信",
     "deleteUserSuccess": "ユーザー {{email}} は正常に削除されました",
-    "deleteUserError": "ユーザーの削除中にエラーが発生しました。ステータス: {{status}}",
+    "deleteUserError": "ユーザーの削除中にエラーが発生しました。",
     "onboardSuccess": "{{email}} が正常にオンボードしました",
     "onboardError": "{{email}} はオンボードされませんでした。ステータス: {{status}}",
     "ciscoucError": "{{email}} は通話サービスに正常に参加できませんでした。",
     "messageError": "メッセージ: {{message}}",
     "userListError": "ユーザーリストの取得時にエラーが発生しました。ページを再ロードしてください。",
-    "searchUser": "ユーザーの検索...",
+    "hybridServicesError": "一部のユーザーについてこの操作を実行できません。ライセンスされたユーザーにはハイブリッドサービスが使用できます。ユーザーのライセンスをチェックし、もう一度試してください。",
+    "hybridServicesComboError": "当社がサポートしていないサービス（通話サービスとSpark Call）の組み合わせを選択しました。1 つ削除して、もう一度試してください。",
+    "searchUser": "ユーザーの検索",
     "tooManyUsers": "1000 名以上のユーザーが存在するためユーザー リストは表示されません。",
     "emailSuccess": "メールは正常に送信されました",
     "emailError": "電子メールの送信中にエラーが発生しました",
@@ -93,7 +103,8 @@
     "steeringDigitOverlapWarning": "内線の最初の桁が外線番号({{steeringDigitInTranslation}})と重複しています。",
     "tooManyResultsError": "検索の結果が多すぎます。 検索基準を絞り込んでください。",
     "userExistsError": "ユーザー {{email}} は既に存在します。 概要ページで変換オプションを利用して、ユーザーを組織に入れるようにしてください。 ユーザーが変換できない場合、問題レポートを送信してください。",
-    "claimedDomainError": "{{email}} を追加できません。ユーザードメインは、組織が要求したドメインと同じものであるか、または、あなたの組織がドメインを主張していない場合は、他の組織が要求していないものである必要があります。"
+    "claimedDomainError": "{{email}} を追加できません。ユーザードメインは、組織が要求したドメインと同じものであるか、または、あなたの組織がドメインを主張していない場合は、他の組織が要求していないものである必要があります。",
+    "userExistsInDiffOrgError": "{{email}} を追加できません。ユーザーはすでに別の組織に存在しています。"
   },
   "groupsPage": {
     "manageGroups": "グループ",
@@ -109,7 +120,7 @@
     "cancel": "キャンセル",
     "clear": "クリア",
     "addUserText": "誰を追加しますか ?",
-    "userInput": "メールアドレスまたはグループメーラーをコンマで区切って入力してください ...",
+    "userInput": "複数のメールアドレスをカンマで区切って入力することもできます。",
     "enableServiceText": "サービスを有効化",
     "enableCollab": "コラボレーションービスを個別に有効にする",
     "enableCollabGroup": "グループメンバーに基づいてコラボレーションサービスを有効化",
@@ -121,7 +132,7 @@
     "sendImmediate": "すぐにユーザーへのサービスのプロビジョニングを行って、メールの通知を送信します。",
     "message": "メッセージ",
     "meeting": "ミーティング",
-    "call": "をコール",
+    "call": "コール",
     "subscriptionIdError": "サブスクリプション ID の読み込み中にエラーが発生しました。",
     "hybridServices": "ハイブリッド サービス",
     "freeCollab": "無料パブリックコラボレーションサービス",
@@ -140,7 +151,7 @@
     "paidMsg": "メッセージ",
     "paidConf": "25人のミーティング",
     "paidConfWebEx": "WebEx ミーティング",
-    "paidComm": "をコール",
+    "paidComm": "コール",
     "paidContactCenter": "チャット、電子メール、音声",
     "enterpriseEdition": "エンタープライズ版 {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
@@ -149,7 +160,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "コミュニケーション",
     "cloudExtensions": "ハイブリッド サービス",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "コラボレーションミーティング会議室",
     "result": {
       "200": "資格が付与されました",
       "404": "存在しません",
@@ -173,6 +184,7 @@
     "fullAdmin": "フル管理権限",
     "generateActivationCode": "アクティベーションコードの生成",
     "generateActivationCodeText": "新しいデバイスをこのユーザーで有効にするためのアクティベーションコードを生成します。",
+    "generateActivationCodeDesc": "コードをなくした場合は、新しいアクティベーションコードを生成するか、カスタマーサポートに連絡してください。 ",
     "activationCodeTitle": "アクティベーションコード",
     "expires": "終了期限",
     "editServices": "サービス編集",
@@ -209,9 +221,9 @@
     "addOrganizationTabDesc": "新しい組織をこのアカウントに追加する",
     "fusionDetailsTab": "コネクタ管理",
     "fusionDetailsTabDesc": "コネクタ管理",
-    "huronLineDetailsTab": "をコール",
+    "huronLineDetailsTab": "コール",
     "huronLineDetailsTabDesc": "番号と設定",
-    "MediafusionDetailsTab": "メディアサービス管理",
+    "MediafusionDetailsTab": "ハイブリッドサービス: メディア",
     "MediafusionDetailsTabDesc": "メディアサービス管理",
     "callRoutingTab": "呼び出しルーティング",
     "callRoutingTabDesc": "コールパークのような呼び出しルーティング機能を管理します。",
@@ -312,6 +324,8 @@
     "onehundredeightyDays": "180",
     "numberOfLicenses": "ライセンス数",
     "invalidOrganizationLicenseCount": "ライセンスの数は 0 より大きく、1000 より小さいです。",
+    "isEFT": "isEFT が有効",
+    "eftError": "EFT サービスに到達できません",
     "organizationInformation": "組織の情報",
     "createOrganization": "組織を作成する",
     "cancel": "キャンセル",
@@ -362,13 +376,17 @@
     "saveAs": "名前をつけて保存",
     "allCalls": "すべてのコール",
     "videoCalls": "ビデオコール",
-    "audioCalls": "音声のみのコール"
+    "audioCalls": "音声のみのコール",
+    "customer": "カスタマー",
+    "customers": "カスタマー",
+    "customerSelect": "カスタマーを選択してください",
+    "trackingId": "トラッキング ID: "
   },
   "activeUsers": {
     "active": "アクティブ",
     "activeUsers": "アクティブなユーザー",
     "overallActiveUserGraphError": "詳細なアクティブユーザーデータのロード中にエラーが発生しました。",
-    "activeUserTableError": "{{customer}} のもっともアクティブなユーザーデータをロードしている間にエラーが発生しました。",
+    "activeUserTableError": "選択したカスタマーのもっともアクティブなユーザーデータをロードしている間にエラーが発生しました。",
     "mostActiveError": "ほとんどのアクティブなユーザーのデータをロードしている間にエラーが発生しました。",
     "calls": "通話",
     "customer": "カスタマー",
@@ -381,9 +399,9 @@
     "user": "ユーザー",
     "users": "ユーザー",
     "search": "検索",
-    "description": "アクティブなユーザーはデバイスを使用するか、Spark アプリケーションを使用して通話を行うか、受け取る人として定義されます。このレポートでは、登録ユーザーの合計数を {{time}} にわたって選択されたカスタマーのアクティブなユーザー数と比較することができます。",
-    "mostActiveDescription": "{{time}} の間、これらは {{customer}} に対するもっともアクティブなユーザーです。",
-    "customerPortalDescription": "アクティブなユーザーはデバイスを使用するか、Spark アプリケーションを使用して通話を行うか、受け取る人として定義されます。このレポートでは、登録ユーザーの合計数を {{time}} にわたってアクティブなユーザー数と比較することができます。",
+    "description": "アクティブなユーザーはデバイスを使用するか、Cisco Spark アプリを使用して通話を行うか、受け取る人として定義されます。このレポートでは、登録ユーザーの合計数を {{time}} にわたって選択されたカスタマーのアクティブなユーザー数と比較することができます。",
+    "mostActiveDescription": "{{time}} の間、これらは特定の顧客に対するもっともアクティブなユーザーです。",
+    "customerPortalDescription": "アクティブなユーザーはデバイスを使用するか、Cisco Spark アプリを使用して通話を行うか、受け取る人として定義されます。このレポートでは、登録ユーザーの合計数を {{time}} にわたってアクティブなユーザー数と比較することができます。",
     "customerMostActiveDescription": "下表はトップ500のユーザーのユーザーアクティビティを示します。ユーザー名、合計通話数、Sparkメッセージによってソートでき、ユーザー名に基づいて検索できます。"
   },
   "avgRooms": {
@@ -410,9 +428,10 @@
     "good": "良くできました",
     "fair": "公平",
     "poor": "不良",
-    "description": "メディアクオリティは、15 秒を超えるすべてのコール中に登録されたデバイスにより報告されるパケットの量を測定することによって決まります。",
-    "descriptionCustomer": "メディアクオリティは、15 秒を超えるすべてのコール中に登録されたデバイスにより報告されるパケットの量を測定することによって決まります。データはすべてのコール、音声のみのコール、ビデオコールによってフィルタリングできます。",
-    "mediaQualityGraphError": "{{customer}} の通話品質データをロードしている間にエラーが発生しました。",
+    "description": "メディアの品質は、通話中の登録デバイスで報告されたパケット損失の量で判断されます。15 秒以上の通話のみが測定されます。",
+    "descriptionCustomer": "メディアの品質は、通話中の登録デバイスで報告されたパケット損失の量で判断されます。15 秒を超える通話のみが測定されます。データは、すべての通話、音声のみの通話、ビデオ通話によってフィルタリングできます。",
+    "mediaQualityGraphError": "選択したカスタマーの通話の品質データを読み込んでいる間にエラーが発生しました。",
+    "packetLossDefinition": "通話の品質を判断しているときに、パケット損失は通話中に失われるパケットの割合（%）として計算されます。損失率が1.5%未満の場合、通話は「良好」として分類され、損失率が1.5%から3%までの場合、通話は「普通」として分類されます。残りのすべての通話で、損失率が3%を超える場合は、「不良」として分類されます。",
     "customerError": "通話品質データのロード中にエラーが発生しました。",
     "minutes": "分"
   },
@@ -422,7 +441,7 @@
     "callConditionPoorMedia": "低品質メディア",
     "callConditionSuccessful": "成功",
     "callMetrics": "コールメトリック",
-    "callMetricsChartError": "{{customer}} の通話メトリックデータをロードしている間にエラーが発生しました。",
+    "callMetricsChartError": "選択したカスタマーの通話の測定データを読み込んでいる間にエラーが発生しました。",
     "customerError": "通話メトリックデータのロード中にエラーが発生しました。",
     "callMetricsDesc": "この図は、行った通話の合計数と {{time}} にわたってこれらの通話に費やされた時間（分）を表示します。また、選択したカスタマーで成功した通話と失敗した通話の割合を判断することもできます。",
     "customerDescription": "この図は{{time}}の間に成功したコールの合計数を示し、ビデオコールと音声のみのコールに分類しています。図の下には、合計コール数、合計時間、全体の失敗率に関する追加情報が表示されています。",
@@ -439,7 +458,7 @@
     "maxRegisteredDevices": "デバイス {{time}} (Min/Max)",
     "totalRegistered": "昨日の合計",
     "trend": "{{time}} にわたる傾向",
-    "registeredEndpointsError": "{{customer}} の登録済エンドポイントをロードしている間にエラーが発生しました。",
+    "registeredEndpointsError": "選択したカスタマーの登録されたエンドポイントを読み込んでいる間にエラーが発生しました。",
     "description": "登録済エンドポイントは、{{time}} にクラウドに接続される任意のデバイスです。ここで示したデータは、デバイス採用傾向と使用料を高いレベルで判断することを支援します。",
     "customerDescription": "登録済エンドポイントは、{{time}} にクラウドに接続される任意のデバイスです。ここで示したデータはデバイスごとに示すことができ、デバイス採用傾向と使用料を高いレベルで判断することを支援します。",
     "customerError": "登録済エンドポイントをロードしている間にエラーが発生しました。",
@@ -447,10 +466,10 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "会社ごとのアクティブユーザーの数",
-    "description": "アクティブなユーザーとは、デバイスを使用したか、Spark アプリケーションを使用した通話を行ったか、受けた人として定義されます。このレポートでは、選択されたカスタマーがカスタマー全体にわたる平均的なエンゲージメントと比較してどの程度のエンゲージメントを行ったかを測定できます。",
+    "description": "アクティブなユーザーとは、デバイスを使用したか、Spark アプリを使用した通話を行ったか、受けた人として定義されます。このレポートでは、選択されたカスタマーがカスタマー全体にわたる平均的なエンゲージメントと比較してどの程度のエンゲージメントを行ったかを測定できます。",
     "averageLabel": "平均のエンゲージメント",
     "acrossCustomers": "すべてのカスタマーにわたる",
-    "loadingCustomer": "サンプルカスタマーデータ"
+    "loadingCustomer": "サンプルカスタマー"
   },
   "profilePage": {
     "userProfile": "ユーザーのプロファイル",
@@ -476,7 +495,7 @@
   },
   "supportPage": {
     "title": "サポート",
-    "subtitleLogs": "ログの検索",
+    "subtitleLogs": "サポートログを検索",
     "listlogsbtn": "検索",
     "noResults": "結果はありません。",
     "searching": "検索中 ...",
@@ -521,7 +540,7 @@
     "tx": "Tx",
     "errCallInfoQuery": "通話情報の取得に失敗しました。ステータス： {{status}}",
     "subTitleCallFlow": "通話フロー",
-    "downloading": "このダウンロードには最大 5 分かかります。お待ちください ...",
+    "downloading": "このダウンロードには最大 5 分かかります。",
     "operational": "すべてのシステムが稼働中です",
     "error": "システムにエラーが発生しました",
     "supportResources": "サポートリソース",
@@ -535,10 +554,11 @@
     "sendFeedback": "Ciscoのフィードバック",
     "sso": "SSO",
     "roles": "役割",
+    "readOnlyHeader": "読み取り専用",
+    "readOnlyAccessNotEnabled": "ヘルプデスクの読み取り専用アクセスが有効になっていません。これをアカウント設定で変更できます",
     "downloadLogFailed": "ログのダウンロードに失敗しました。",
     "callflowResultsFailed": "ログファイルと一致するコールフローの結果のダウンロードに失敗しました。",
     "status": "Sparkの状況",
-    "cdrLogs": "CDR 通話フロー",
     "tabs": {
       "status": "状況",
       "logs": "ロゴ",
@@ -548,7 +568,15 @@
       "sparkStatus": "Sparkの状況",
       "helpDesk": "ヘルプデスクサポート",
       "supportResources": "サポートリソース",
-      "tools": "ツール"
+      "tools": {
+        "tools": "ツール",
+        "helpdeskSupport": "ヘルプデスクサポート",
+        "viewHelpdeskSupport": "ヘルプデスクサポートを表示",
+        "launchHelpdeskDesc": "新しいタブで Help Desk ポータルを開きます",
+        "cdrLogs": "CDR 通話フロー",
+        "viewCdrCallFlow": "CDR 通話フローを表示",
+        "viewCdrCallFlowDesc": "新しいタブでツールを開く"
+      }
     }
   },
   "cdrLogs": {
@@ -576,6 +604,7 @@
     "jsonSizeError": "ファイルサイズが最大値の10MBを超えています。",
     "jsonTypeError": "有効な JSON ファイルをアップロードしてください。",
     "jsonSyntaxError": "ファイルには構文エラーがあります。再提出する前にエラーを修正してください。",
+    "jsonAllowedFormatError": "cdrsを含まないか、誤った形式になっています。再送する前に、ファイルの内容をご確認ください。",
     "cdrAccordionHeader": "{{firstTimestamp}} - CDR の数: {{numberOfCdrs}} - 総出席時間: {{totalDuration}} 秒",
     "timeStamp": "タイムスタンプ",
     "callingDeviceName": "発信デバイス名",
@@ -588,14 +617,20 @@
     "callsSubtitle": "コールリスト",
     "sessionIds": "セッション ID",
     "cdrTableTitle": "CDR 生成の通話中",
-    "cdrRetrievalError": "CDR 録画を取得中にエラーが発生しました。",
-    "cdr401Unauthorized": "ユーザーは CDR 録画を取得する権限がありません。",
-    "cdrRecursiveError": "リクエストされた録画サイズが大きすぎて、すべての関連する CDR データを取得できません。データを取得するには、「ヒットサイズ」の数値を下げ、再度送信してください。",
+    "cdr401And403Error": "ユーザーは CDR 録画を取得する権限がありません。",
+    "cdr404Error": "現在、柔軟な検索は応答できません。後でもう一度試してください。",
+    "cdr408Error": "柔軟な検索からの応答を待機している間に、リクエストがタイムアウトしました。後でもう一度試してください。",
+    "cdr409Error": "処理の競合があったため、リクエストが失敗しました。検索データを確認し、もう一度試してください。",
+    "cdr500Error": "柔軟な検索で内部エラーが発生しました。CDR レコードが欠落しているか結果として不完全です。再試行する前にヒットサイズを下げることにより、エラーの発生を防止することができる場合があります。",
+    "cdr500ShortError": "柔軟な検索で内部エラーが発生しました。CDR レコードが欠落しているか結果として不完全です。",
+    "cdr502And503Error": "柔軟な検索は一時的にご利用になれません。後でもう一度試してください。",
     "required": "このフィールドは必須です。",
     "userDataError": "ユーザー ID のデータを取得できませんでした。ユーザー ID を検証してやり直すか、UUID がある場合はそれを使用してください。",
     "userUuidError": "ユーザー ID または 36 文字の UUID を入力してください。",
     "userUuidMatchError": "呼び出し側と呼び出される側のユーザー ID または UUID が一致してはなりません。",
-    "invalidDate": "終了日は、開始日と同じか、開始日より後の任意の日付にしてください。",
+    "invalidStartDate": "開始日は終了日と同じか、終了日より前の任意の日付にしてください。",
+    "invalidEndDate": "終了日は、開始日と同じか、開始日より後の任意の日付にしてください。",
+    "invalidFutureDate": "将来の日付を指定できません。",
     "tomorrowError": "今日の日付を選択するか、または今日より前の日付を選択してください。",
     "invalidTime": "「hh:mm:ss AM/PM」のフォーマットに従ってください。「AM/PM」が省略される場合、24時制が使用されます。",
     "invalidTimeTwo": "終了時刻は、開始時刻と同じまたは開始時刻より早い時間にはできません。",
@@ -603,6 +638,7 @@
     "phoneNumberErrorTwo": "発信側番号と被呼者番号は同じにできません。",
     "deviceNameError": "発信側デバイスと被呼者デバイスは同じにできません。",
     "hitSizeError": "リクエストヒットサイズは 1 から 50 の間でなくてはなりません。",
+    "invalidNumber": "数字 [0-9] を使用して、有効なヒットサイズを入力してください。",
     "advancedCDR": "詳細 CDR レポート",
     "local": "ローカル:",
     "remote": "リモート:",
@@ -633,7 +669,12 @@
     "diagramRetrievalError": "{{server}} からラダーダイアグラムを取得中にエラーが発生しました。",
     "reload": "再読み込み",
     "reloadMessage": "ページを再読み込みしてください",
-    "close": "閉じる"
+    "close": "閉じる",
+    "401And403Error": "ユーザーはラダーダイアグラムを作成する権限がありません。",
+    "404Error": "現在、診断サービスは応答できません。後でもう一度試してください。",
+    "408Error": "診断サービスからの応答を待機している間に、リクエストがタイムアウトしました。後でもう一度試してください。",
+    "500Error": "診断サービスで内部エラーが発生しました。",
+    "502And503Error": "診断サービスは一時的にご利用になれません。後でもう一度試してください。"
   },
   "billingPage": {
     "title": "オーダープロビジョニング",
@@ -657,6 +698,13 @@
     "friday": "金曜日",
     "saturday": "土曜日",
     "sunday": "日曜日"
+  },
+  "ranks": {
+    "first": "第一",
+    "second": "第二",
+    "third": "第三",
+    "fourth": "第四",
+    "last": "最終"
   },
   "common": {
     "delete": "削除",
@@ -715,13 +763,16 @@
     "download": "ダウンロード",
     "quantity": "数量",
     "modify": "変更",
-    "submit": "提出",
+    "submit": "送信",
     "online": "オンライン",
     "offline": "オフライン",
     "unknown": "未知",
     "description": "説明",
     "user": "ユーザー",
-    "ipAddress": "IPアドレス"
+    "ipAddress": "IPアドレス",
+    "tryAgain": "再試行してください",
+    "postpone": "延期",
+    "continue": "続行"
   },
   "notifications": {
     "success": "成功の通知",
@@ -780,9 +831,9 @@
     "spark": "Spark",
     "sso": "シングルサインオン（SSO）",
     "goSetupCloudSipUri": "この設定を修了するためには、ここに進みます",
-    "setupCloudSipUriMessage": "組織のクラウド SIP URI ドメインが定義されていません。一部のコール機能が正しく機能するために、この値が必要です。",
+    "setupCloudSipUriMessage": "組織の SIP ドメインが定義されていません。一部のコール機能が正しく機能するために、この値が必要です。",
     "dirsync": "ディレクトリ同期",
-    "setUpCalendarService": "カレンダーサービスがご利用になれます。ユーザーは Cisco Spark 会議室を作成するために @spark を追加し、招待に WebEx をアタッチするために @webex を追加できます。",
+    "setUpCalendarService": "カレンダーサービスが利用できます。ミーティングの招待メールで@sparkと@webexを使用して、会議室の詳細を自動的に追加してください。",
     "setUpCallAwareService": "通話サービス認識がご利用になれます。ユーザーは通話中に、Cisco Spark クライアントからデスクトップを瞬時に共有できます。",
     "setUpCallConnectService": "通話サービスコネクトがご利用になれます。ユーザーは Cisco Spark クライアントで業務電話に応答でき、Cisco Spark から他の業務電話へかけることができます。",
     "getStarted": "開始"
@@ -809,7 +860,8 @@
     "importMetadataNote": "注: メタデータファイルをインポートすることにより、SSO は<b>オン</b>になります。SSO をテストするだけの場合は、次の画面でオフにすることを忘れないでください。",
     "exportMetadataDesc1": "シスココラボレーションサービスから次の信頼メタデータをダウンロードして、自分の ID プロバイダ（IdP）の管理インタフェースにアップロードします。",
     "exportMetadataDesc2": "ファイルを IdP にアップロードしたら、この画面に戻って [次へ] をクリックします。",
-    "testSSOSetupDesc": "これで SSO の構成をテストする準備ができました。下のボタンをクリックして新しいウィンドウを開きます。正常にサインインすることができたら、この画面に戻って [次へ] をクリックし、SSO のセットアップを終了してください。",
+    "testSSOSetupDesc": "SSO構成をテストするために、下のボタンを押してください。テストは新しいブラウザーウィンドウで開きます。有効なSSO資格情報を入力し、ログインが成功したことを確認してください。",
+    "testSSOSetupDesc2": "テストが成功した場合、下のシングルサインオンを有効にします。テストが成功しなかった場合は、シングルサインオンを無効にして、前の手順に戻ります。",
     "enableSSODesc": "すべてのユーザーに対してシングルサインオン（SSO）を有効にする準備ができたら、[完了] ボタンをクリックします。すべてのユーザー認証はこれ以後新しい SSO プロバイダを通して処理されます。",
     "IdPFileLabel": "IdP メタデータファイル",
     "chooseFilePlaceHolder": "ファイルの選択 ...",
@@ -843,6 +895,7 @@
     "siteSteeringDigit": "サイト間ダイアル番号",
     "siteSteeringDigitDescription": "ユーザーが他のサイトへ発信を行う際にダイアルする必要がある数字を指定します。",
     "siteCode": "サイトコード",
+    "steeringDigitChangeWarning": "外線番号を変更すると、同じ番号で始まる内線番号でダイアルするときに遅延が生じます。内線番号が外線番号と同じ番号で始まらないことを確認してください。",
     "siteCodeDescription": "特定のサイトを指定するための一意な番号を指定します。",
     "internalExtensionRange": "内線番号の範囲",
     "internalNumberRangeDescription": "内部番号の範囲を指定してください。長さは4桁にする必要があります。",
@@ -864,6 +917,7 @@
     "customerPutError": "カスタマーサービスの更新に失敗しました",
     "customerDialPlanDetailsGetError": "カスタマーダイヤルプランの詳細の取得に失敗しました。",
     "carrierCountryGetError": "電話通信事業者の情報を取得できませんでした",
+    "siteUpdateError": "サイトの更新に失敗しました。",
     "voicemailGetError": "会社のボイスメール番号を取得するのに失敗しました",
     "voicemailUpdateError": "会社のボイスメール番号を更新するのに失敗しました",
     "voicemailNoExternalNumbersError": "ボイスメールをオンにするためには、未割り当ての直通回線が必要です。パートナーまたは管理者に連絡してください。",
@@ -954,8 +1008,9 @@
     "videoError": "再生しようとしているビデオに問題があります。"
   },
   "spacesPage": {
+    "addTag": "タグの追加",
     "title": "デバイス",
-    "modalTitle": "新規デバイスのアクティベート",
+    "modalTitle": "新規デバイスの追加",
     "activateDevice": "新規デバイスのアクティベート",
     "addBtn": "デバイスを追加する",
     "deleteActivationCode": "アクティベーションコードの削除",
@@ -965,11 +1020,13 @@
     "actionsHeader": "アクション",
     "account": "アカウント",
     "unactivatedDevice": "アクティブ化していないデバイス",
-    "informationHeader": "情報",
+    "informationHeader": "設定",
     "customTagsHeader": "カスタムタグ",
     "newCustomTagPlaceholder": "タグを入力",
     "addDeviceStep1": "デバイスはどこにインストールしますか ?",
     "addDeviceStep1Desc": "名前は会社の電話帳に掲載されるものなので、会議室または共用スペースの名前を使用することを推奨します。このデバイスのビデオアドレスはこの名前を使用します。また、こうしておけば、後ほどシステム内のデバイスを検索して見つけるのが容易になります。",
+    "addPersonalDevice": "個人用デバイスを追加しようとしていますか?",
+    "addPersonalDeviceDesc": "個人用デバイスを追加するためには、<a ng-click=\"{{onclick}}\">ユーザー</a>ページで特定のユーザーのためのアクティベーションコードを生成してください。",
     "addDeviceStep2": "アクティベーションコードが作成されました。",
     "addDeviceStep2Desc": "このアクティベーションコードを使用すると、それは不思議にデバイスになり、ユニコーンが鳴りだします。",
     "emptyDevices1": "新しいデバイスを追加すると、",
@@ -977,6 +1034,7 @@
     "deleteDevice": "デバイスの削除",
     "rebootDevice": "デバイスの再起動",
     "reboot": "再起動",
+    "cancel": "キャンセル",
     "reportProblem": "問題の報告",
     "deleteDeviceConfText": "このデバイスを削除してもよいですか ?",
     "rebootDeviceConfText": "このデバイスをリセットしてもよいですか ?",
@@ -993,7 +1051,10 @@
     "reset": "リセット",
     "rsuKeyWasReset": "リモートサポートキーがリセットされました。Cisco Support と共有してきたキーは、今後使えなくなります。",
     "rsuKeyResetFailed": "リモートサポートキーのリセットに失敗し、デバイスは新しいキーを返しませんでした。",
-    "noDevices": "デバイスが見つかりません...",
+    "nothingHere": "デバイスはありません。",
+    "noDevices": "コラボレーションデバイスを有効にしましょう",
+    "noneFound": "デバイスが見つかりません",
+    "tryAgain": "別の検索を試してください",
     "licenseWarningTitle": "ライセンス",
     "licenseWarningHeader": "このサービスのライセンスに問題があります。",
     "licenseSuspendedWarning": "会議質システムのライセンスが中断されました。",
@@ -1002,6 +1063,10 @@
   },
   "hercules": {
     "page_title": "コネクタ管理",
+    "domain-verification": {
+      "domain-not-verified": "このディレクトリ URI のドメインはこのサービスに対して正しく機能することを確認しなければなりません。 ",
+      "navigateToCallSettings": "<a ng-click=\"{{onclick}}\">通話サービス設定</a>のドメインを検証します。"
+    },
     "connectors": {
       "group_by": "グループサービス：",
       "cluster_id": "クラスタ",
@@ -1012,10 +1077,11 @@
       "version": "バージョン",
       "status": "状況",
       "alarms": "アラーム",
-      "serial": "シリアル",
       "hosts": "主催者",
       "goToHost": "ホストに進む",
-      "remove": "削除"
+      "removeButton": "削除",
+      "removeSectionHeader": "削除",
+      "removeSectionBody": "Cisco Collaboration Cloudからこのホストを削除してください。"
     },
     "export": {
       "modalTitle": "ユーザーステータスレポート",
@@ -1033,7 +1099,8 @@
       "clusters-title": "Expressway クラスタ",
       "status-title": "［サービス ステータス］",
       "add-resource-button": "リソースを追加",
-      "add-resource-button-information": " Expressways の登録と設定を開始します。"
+      "add-resource-button-information": " Expressways の登録と設定を開始します。",
+      "setupCloudSipUriHeader": "SIP ドメインの定義"
     },
     "redirect-target-dialog": {
       "title": "新しい Expressway を登録します。",
@@ -1041,7 +1108,7 @@
       "hostname-placeholder": "Expressway ホスト名を入力します。",
       "activate-resource-button": "次へ",
       "register-resource-button": "Expressway に進む",
-      "grant-registration-success-header": "Cisco Collaboration Cloud で Expressway <strong>{{hostname}}</strong> を登録することができます。",
+      "grant-registration-success-header": "Cisco Collaboration Cloud で Expressway {{hostname}} を登録することができます。",
       "grant-success-information": "1 時間以内に Expressway に進んで、登録を終了してください。"
     },
     "activateService": {
@@ -1071,7 +1138,9 @@
       "deregisterCausesListItem3": "システムがクラスターに存在する場合、他のピアを登録解除する必要はありません。 自動的に行われます。",
       "deregisterErrorGeneric": "{{clusterName}} を登録解除できません。 {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "{{clusterName}}を登録解除できません。管理コネクタ ソフトウェア バージョンは、クラウドからの登録解除に対応していません。コネクタをアップグレードするか、または Cisco Expressway ウェブ インターフェースから登録解除してください。",
-      "notInstalled": "{{serviceName}} がこのクラスタにインストールされていません。"
+      "notInstalled": "{{serviceName}} がこのクラスタにインストールされていません。",
+      "deregisterSectionHeader": "登録解除",
+      "deregisterSectionBody": "このクラスタをCisco Collaboration Cloudから切断し、すべてのコネクタと関連する構成を削除します。"
     },
     "status": {
       "unknown": "未知のステータス",
@@ -1103,20 +1172,32 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "通話サービス",
-      "squared-fusion-uc.full": "通話サービス: 認識",
+      "squared-fusion-uc.full": "通話サービス認識",
       "squared-fusion-cal": "カレンダーサービス",
       "squared-fusion-media": "メディアサービス",
       "contact-center-context": "コンテキストセンターサービス",
-      "squared-fusion-ec": "通話サービス: コネクト",
+      "squared-fusion-ec": "通話サービスコネクト",
       "squared-fusion-mgmt": "Expressway 管理サービス "
     },
+    "connectorNames": {
+      "squared-fusion-uc": "Call Connector",
+      "squared-fusion-uc.full": "Call Connector",
+      "squared-fusion-cal": "Calendar Connector",
+      "squared-fusion-media": "メディアサービス",
+      "contact-center-context": "コンテキストセンターサービス",
+      "squared-fusion-ec": "Call Connector",
+      "squared-fusion-mgmt": "Management Connector"
+    },
     "serviceDescriptions": {
-      "squared-fusion-uc": "通話サービス認識により、ユーザーは通話中に Cisco Spark からデスクトップを簡単に共有できます。通話サービスコネクトにより、ユーザーは Cisco Spark クライアントで業務電話に応答でき、Cisco Spark から他の業務電話へかけることができます。",
-      "squared-fusion-cal": "カレンダーサービスでは、ユーザーが容易にコラボレーションできるよう支援します。@spark を追加し Spark 会議室を作成します。@webex を追加して招待に WebEx をアタッチします。",
+      "squared-fusion-uc": "通話サービス認識により、ユーザーは通話中に Cisco Spark からデスクトップを簡単に共有できます。通話サービスコネクトにより、ユーザーは Cisco Spark クライアントで業務電話に応答でき、他の業務電話へかけることができます。",
+      "squared-fusion-cal": "カレンダーサービスでは、ユーザーが容易にコラボレーションできるよう支援します。@spark を追加し Spark 会議室を作成します。@webex を追加して招待に WebEx リンクをアタッチします。",
       "squared-fusion-media": "",
       "contact-center-context": "",
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "管理サービスは、カレンダーと通話サービスに対するグローバルな構成サービスです。あなたがこれらのサービスのうち 1 つをアクティベートした後、このページはアクティブになります。"
+    },
+    "serviceHelpInfo": {
+      "servicePrivacyStatement": "Cisco Hybrid Serviceコネクタは、使用中のHybrid Serviceの展開について特定の情報をCisco Collaboration Cloudに送信します。詳細については、<a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>ここをクリック</a>してください。"
     },
     "errors": {
       "enableServiceEntitlementFailure": "失敗しました。あなたの組織には、{{serviceName}} の追加に必要な資格がありません。この問題を解決するには、サポート担当者に連絡してください。",
@@ -1131,9 +1212,9 @@
         "squared-fusion-ec": "接続"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "ユーザーは、電話中に Cisco Spark クライアントでデスクトップを共有できます。",
+        "squared-fusion-uc": "ユーザーは仕事用の電話からの通話中に Cisco Spark アプリのコンテンツを共有し、アプリの通話履歴に従います。",
         "squared-fusion-cal": "@sparkを招待状に追加するだけで、ミーティングのためのSpark会議室を作成できます。@webexを追加して WebEx Personal Room をアタッチします。",
-        "squared-fusion-ec": "ユーザーは、Cisco Spark から電話に応答する、または同僚に電話をかけることができます。"
+        "squared-fusion-ec": "ユーザーの着信通話は職場の電話とアプリのいずれかに電話をかけます。ユーザーは電話またはアプリのいずれかからの通話もありません。"
       }
     },
     "alarms": {
@@ -1152,12 +1233,14 @@
       "softwareUpgrade": "ソフトウェアアップグレード",
       "currentVersion": "最新バージョン",
       "newVersion": "新しいバージョン",
-      "explanation": "選択された Cisco Expressway クラスタのすべてのホストで {{serviceName}} のソフトウェアをアップグレードしようとしています。",
+      "explanation": "選択された Cisco Expressway クラスタのすべてのホストで {{connectorType}} をアップグレードしようとしています。",
       "pending": "保留",
       "upgrade": "アップグレード",
       "upgradeNow": "今すぐアップグレード",
       "upgradingHost": "{{host}} から {{version}} へのアップグレード",
-      "upgradeDone": "アップグレードが完了しました!"
+      "upgradeDone": "アップグレードが完了しました!",
+      "upToDate": "{{connectorType}} はこのクラスタに最新のものです。",
+      "upgradeImpossible": "このクラスタでは {{connectorType}} が設定されていません。アップグレードを開始する前に設定して起動してください。"
     },
     "settings": {
       "deactivateServiceHeading": "サービスのアクティベート解除",
@@ -1167,22 +1250,18 @@
       "emailNotifications": "電子メールアドレスを追加して、アラームとソフトウェアのアップグレードに影響を与えるサービスに関する通知のメールを受け取ってください。",
       "emailNotificationsSaving": "保存中。",
       "documentationHeading": "ドキュメントとソフトウェア",
-      "documentationHelpLink": "ハイブリッドサービスについて、詳細な情報が必要な場合は、いつでも <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> にアクセスしてください。",
+      "documentationHelpLink": "ハイブリッドサービスについて、詳細な情報が必要な場合は、<a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> にアクセスしてください。",
       "documentationDownloadLink": "Cisco Expressway ソフトウェアを <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a> からダウンロードしてください。",
       "documentationSaving": "保存中。",
       "call": {
         "featureHeading": "機能設定",
         "feature": "通話サービス機能を有効または無効にします。",
         "awareHeading": "認識",
-        "aware": "電話で通話しながら Spark でデスクトップを簡単に共有しましょう。",
-        "on": "デフォルトでは",
-        "connectHeading": "接続",
-        "connect": "ユーザーは、Cisco Spark から電話に応答する、または同僚に電話をかけることができます。",
-        "connectSettingsHeading": "設定の接続",
-        "connectSettings": "Connect 機能の特長のある設定。",
         "aware": "ユーザーは仕事用の電話からの通話中に Cisco Spark アプリのコンテンツを共有し、アプリの通話履歴に従います。",
         "on": "デフォルトでは",
         "connectHeading": "接続",
+        "connectSettingsHeading": "設定の接続",
+        "connectSettings": "Connect 機能の特長のある設定。",
         "connect": "ユーザーの着信通話は職場の電話とアプリのいずれかに電話をかけます。ユーザーは電話またはアプリのいずれかからの通話もありません。",
         "certificatesHeading": "証明書",
         "certificates": "暗号化された SIP 通話のために Cisco Collaboration のデフォルト信頼リストから提供される証明書を使うか、自分自身の証明書をアップロードしてください。",
@@ -1194,23 +1273,50 @@
         "disableConfirmDialogText3": "すべてのユーザーのサービスがアクティブ解除されます。",
         "disableConfirmDialogText4": "Cisco Expressway がサービスコネクタをアンインストールします。",
         "disableConfirmDialogText5": "サービスコネクタのデータが削除されます。",
-        "disableConfirmDialogText6": "Cisco Expressway で他のサービスがまったくインストールされていない場合、それを登録解除する必要があります。ログインして、[アプリケーション] &gt; [ハイブリッドサービス] &gt; [コネクタ管理] から登録を解除してください。",
+        "disableConfirmDialogText6": "Cisco Expresswayではほかのサービスがインストールされていないので、登録を解除する必要があります。",
         "sipDomainHeading": "SIP宛先",
-        "sipDomainButtonTooltip": "SRV ドメイン、ホスト名ポート、ExpresswayーEの TLS に対して IP アドレスを入力します。",
+        "sipDomainButtonTooltip": "SRV ドメイン、互いのTLSのExpresswayーEの TLS に対してホスト名:ポート、IP アドレス:ポートを入力します。SRVレコードが\"_sips._tcp.sipmtls.example.com\"の場合、ここに\"sipmtls.example.com\"と入力します。",
         "sipDomainPlaceholder": "フォールバック先を入力します",
-        "sipDomainExample": "例　www.webex.com"
+        "sipDomainExample": "例： sipmtls.example.com"
       },
       "scheduleUpgrade": {
         "title": "ソフトウェアの自動アップグレード",
         "description": "開始時間を目標に、コネクタのアップグレードに対するスタートを設定します。",
-        "defaultWarning": "デフォルトのスケジュールを確認してください"
+        "defaultWarning": "デフォルトのスケジュールを確認してください",
+        "postponeLabel": "次に利用可能なアップグレードの開始が予定されています。",
+        "postponeAction": "スケジュールの延期",
+        "postponeModalTitle": "アップグレードの延期",
+        "postponeModalText": "スケジュールされたアップグレードの開始を延期しますか。"
+
       }
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "詳細については、<a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a>を参照してください。",
+      "callAware": {
+        "title": "ユーザーに対して通話サービス認識を有効にします",
+        "navigateToUsers": "<a ng-click=\"{{onclick}}\">[ユーザーとグループ管理]</a> で、ユーザーに対して通話サービス認識を有効にします。"
+      },
+      "calendar": {
+        "title": "ユーザーに対してカレンダーサービスを有効にします",
+        "navigateToUsers": "<a ng-click=\"{{onclick}}\">[ユーザーとグループ管理]</a> で、ユーザーに対してカレンダーサービスを有効にします。"
+      },
+      "connect": {
+        "title": "ユーザーに対して通話サービスコネクトを有効にします",
+        "navigateToUsers": "通話サービスコネクトを正常に設定しました。<a ng-click=\"{{onclick}}\">[ユーザーとグループ管理]</a> で、ユーザーに対して通話サービスコネクトを有効にします。ユーザーに対して CTI リモートデバイスを作成する方法について、Expressway の適切なオプションを選択してください。 "
+      },
       "scheduleUpgrade": {
         "title": "スケジュール / アップグレードの承諾",
         "description": "このサービスのこのクラスタでは、スケジュールされているアップグレードに対してデフォルト時間をもちます",
-        "action": "それを変更するか、確認する<a ng-click=\"{{onclick}}\">必要があります。</a>"
+        "action": "<a ng-click=\"{{onclick}}\">時間を変更するか、確認する必要があります。</a>"
+      },
+      "configure-connector": {
+        "title": "コネクタを構成して開始する",
+        "description": "Cisco Expressway は Hybrid Services に対して登録されています。",
+        "action": "ここで、Expressway で Connector を設定します。"
+      },
+      "no-domain-verified": {
+        "title": "ドメインの検証",
+        "description": "サービスを要求するために、少なくとも1つの検証済みのドメインが必要です。設定の下にドメインを追加してください。"
       }
     }
   },
@@ -1226,12 +1332,12 @@
     "downloadError": "ファイルのダウンロードに問題があります。",
     "downloadHeadersError": "テンプレートヘッダーのダウンロードに問題があります。",
     "uploading": "アップロード中...",
-    "uploadPrompt": "CSVファイルをドラッグアンドドロップするか、",
+    "uploadPrompt": "ファイルをドラッグアンドドロップするか、",
     "fileBrowser": "ファイルブラウザを使用してください",
     "uploadCsvEmpty": "有効なCSVファイルをアップロードしてください。",
     "csvFileTypeError": "有効なファイルタイプをアップロードしてください。",
     "csvMaxSizeError": "ファイルサイズが最大値の10MBを超えています。",
-    "csvMaxLinesError": "CSVには、許可される最大数を超えるユーザーが含まれています。ユーザー数を250以下に減らし、CSVを再びアップロードしてください。",
+    "csvMaxLinesError": "CSVには、許可される最大数を超えるユーザーが含まれています。ユーザー数を{{max}}以下に減らし、CSVを再びアップロードしてください。",
     "processCsvStep": "CSVの処理中",
     "processing": "処理中...",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
@@ -1264,14 +1370,13 @@
     "resultRowHeader": "行番号",
     "resultErrorHeader": "エラーメッセージ",
     "uploadDirSyncEmpty": "ディレクトリサーバーからユーザーをアップロードしてください。",
-    "dirsyncMaxLinesError": "ディレクトリには、許可される最大数を超えるユーザーが含まれています。ユーザー数を250以下に減らしてください。",
     "dirSyncStatus": "同期の状況",
     "processDirSyncStep": "ディレクトリの同期の処理",
     "dirSyncResultStep": "ディレクトリの同期の結果",
     "runDirSyncAgain": "再同期",
     "advanced": "高度",
     "simpleSub": "必要なのはユーザーのメールアドレスだけです",
-    "uploadSub": "同時に複数のユーザーを追加する最高の方法",
+    "uploadSub": "一度に最大 {{maxUsers}} 人のユーザーを追加するための最良の方法。",
     "downloadSub": "CSVテンプレートをダウンロードする",
     "advancedSub": "アクティブディレクトリからユーザーを同期します。",
     "needHelp": "サポートが必要 ",
@@ -1287,7 +1392,7 @@
     "callingMsg": "クラウド通話",
     "message": "メッセージ",
     "meeting": "ミーティング",
-    "call": "をコール",
+    "call": "コール",
     "roomSystems": "会議室システム",
     "sparkRoomSystem": "Spark 会議室システム",
     "freeMsg": "無料メッセージ",
@@ -1301,17 +1406,18 @@
     "claimSipUriDomainTitle": "SIP URIドメイン",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "この機能は現在、試験機関のみが使用できます。次のステップに進んでください。",
-    "setSipUriDescPartOne": "この値は選択している名前でブランドされたドメインを作成します。これはまた、ユーザーに割り当てられた Spark SIP アドレスも生成します。これらのアドレスは、ユーザーをコールするために外部の SIP 対応デバイスで使用することができます。",
-    "setSipUriDescPartTwo": "たとえば、John Smith は Acme で仕事をしています。同僚は、標準的な SIP デバイスから、jsmith@acme.call.ciscospark.com にダイヤルすることで連絡がつきます。",
-    "setSipUriDescPartThree": "このフィールドにデフォルト値を設定しています。",
+    "setSipUriDescPartOne": "組織に対してカスタム SIP ドメインを作成します。作成すると、Spark SIP アドレスが組織の各ユーザーに対して生成され、SIP 対応デバイスとユーザーの間の通話が可能になります。",
+    "setSipUriDescPartTwo": "たとえば、John Smith は Example  社で仕事をしています。同僚は、標準的な SIP デバイスから、jsmith@example.call.ciscospark.com にダイヤルすることで連絡がつきます。",
+    "setSipUriDescPartThree": "組織名に基づいて提案された名前を提供します。希望の場合は、別の名前を入力すると、貴社の使用できるかどうかを確認します。",
     "setSipUriDescPartFour": "希望に応じて固有の値を入力すると、会社に利用できるかどうかを確認できます。",
-    "setSipUriDomainMsg": "SIP URIドメイン名を入力してください",
-    "setSipUriDomainTitle": "SIP URI ドメインをカスタマイズする",
-    "setSipUriDomainCompNames": "会社のドメイン名",
+    "setSipUriDomainMsg": "SIP ドメインのプレフィックスを入力します",
+    "setSipUriDomainTitle": "SIP ドメイン",
+    "setSipUriDomainCompNames": "所属組織の SIP ドメイン：",
     "setSipUriDomainCheckAvailability": "利用できるかどうか確認する",
     "setSipUriPlaceholder": "固有ドメインを入力してください",
     "setSipUriErrorMessage": "利用できません。別の名前を試してください。",
-    "setSipUriDomainSuccessMessage": "SIP URI ドメインは正常に保存されました",
+    "setSipUriErrorMessageInvalidDomain": "無効なドメインです。別の名前を試してください。",
+    "setSipUriDomainSuccessMessage": "SIP ドメインは正常に保存されました",
     "sparkDomainManagementServiceErrorMessage": "Spark Domain Management Service に到達できませんでした",
     "messageSettings": "メッセージ設定",
     "callSettings": "コール設定",
@@ -1395,22 +1501,15 @@
     "assignDnAndDirectLines": "数字の割り当て",
     "assignDnAndDirectlineDesc": "ユーザーが割り当てられる内線と直通回線を確認してください。直通回線の4桁を使用して以下の［直通回線を内線番号にマッピング］リンクを押してユーザーの内線番号と照合できます。",
     "mapDirectLineWithExt": "直通回線を内線番号にマッピング",
-    "reset": "リセット"
+    "reset": "リセット",
+    "tosReadAndAgree": "私はこれらの条件を読み、",
+    "tosTermsAndConditions": "合意しました。"
   },
   "reports": {
     "title": "レポート",
     "engagementTab": "エンゲージメント",
     "qualityTab": "クオリティ",
     "opportunitiesTab": "機会",
-    "time": "常時",
-    "week": "先週",
-    "month": "先月",
-    "threeMonths": "最近3か月",
-    "mostEngaged": "5つの最大のエンゲージ",
-    "leastEngaged": "5つの最低のエンゲージ",
-    "highQuality": "5つの最高のクオリティ",
-    "leastQuality": "5つの最低のクオリティ",
-    "services": "すべてのサービス",
     "UsersOnboarded": "今月オンボードしたユーザー",
     "AvgCallsPerUser": "今月のユーザーごとの平均通話数",
     "AvgRoomsPerUser": "今月のユーザーごとの平均会議室数",
@@ -1422,7 +1521,6 @@
     "ContentShared": "今月共有されたファイル",
     "AmountofContentShared": "今月の共有コンテンツのGB数",
     "UserEngagement": "ユーザーエンゲージメント",
-    "weekOf": "週末日",
     "numberOfCallsAxis": "通話数 (合計)",
     "numberOfRoomsAxis": "会議室数 (平均)",
     "numberActiveAxis": "アクティブユーザー数 (合計)",
@@ -1434,9 +1532,8 @@
     "numberCallsAxis": "通話数 (合計)",
     "filesSharedAxis": "共有ファイル数 (合計)",
     "gbSharedAxis": "共有ギガバイト数 (合計)",
-    "orgDsc": "組織内のユーザーの合計数",
-    "onboardDsc": "Sparkにログインした、または許可されたユーザーの合計数。",
-    "activeDsc": "先週にメッセージを送信および閲覧した、または会議室を作成、もしくは入室したユーザーの合計数。",
+    "error": "{{graph}}に対するデータのロードに問題がありました。",
+    "weekOf": "週末日",
     "allCustomers": "全カスタマー"
   },
   "callRouting": {
@@ -1453,34 +1550,51 @@
     "title": "自動アテンダント",
     "modalDescription": "自動アテンダントは、カスタマイズされた案内を再生し、システム内でコールをルーティングするよう、メニューオプション付きで通話者に提供します。",
     "namePlaceholder": "名前を入力",
-    "repeatMenu": "リピートメニュー",
+    "repeatMenu": "繰り返す",
     "errorReadCe": "{{name}} の読み込みに失敗: {{statusText}} ({{status}})",
     "successCreateCe": "{{name}} の作成に成功しました。",
     "successDeleteCe": "{{name}} の削除に成功しました。",
     "successUpdateCe": "{{name}} の更新に成功しました。",
+    "successImport": "{Hours}} 始業/終業時間と {{holidays}} 休日のインポートに成功しました",
     "errorCreateCe": "{{name}} の作成に失敗: {{statusText}} ({{status}})",
     "errorDeleteCe": "{{name}} の削除に失敗: {{statusText}} ({{status}})",
     "errorUpdateCe": "{{name}} の更新に失敗: {{statusText}} ({{status}})",
+    "errorCreateSchedule": "{{name}} のスケジュールの作成に失敗: {{statusText}} ({{status}})",
+    "errorDeletePredefinedSchedule": "{{name}} の事前に定義されたスケジュールの削除に失敗: {{statusText}} ({{status}})",
     "newCardCustom": "カスタムメッセージを作成し、電話メニューを構築し、通話をルートします。",
     "resourceCountPlusMore": "+ さらに {{count}} 追加",
     "builderTitle": "自動アテンダントビルダー",
     "builderAddNewStep": "新規ステップの追加",
     "builderNewStep": "新規ステップ",
-    "builderNewStepInfo": "ここのアクションを追加して、自動アテンダントに追加できます。 お好きなだけ作成し、すべてをリンクします。",
-    "builderNewStepChoiceHelp": "メッセージをお話しください - 発信元に、中断のない録画を再生します",
+    "builderNewStepHelp": "通話フローに希望の数だけステップを追加できます。",
+    "builderNewStepInfo": "ここに自動アテンダントのアクションを追加してください。 お好きなだけ作成し、すべてをリンクします。",
     "builderNumbers": "番号",
     "actionPlaceholder": "アクションの選択…",
     "actionSayMessage": "メッセージを言う",
+    "actionSayMessageHint": "継続的なメッセージを再生します。",
     "actionPhoneMenu": "電話メニュー",
-    "actionRouteCall": "通話を転送",
+    "actionPhoneMenuHint": "メッセージを再生し、発信者の入力に基づいたアクションをとります。",
+    "actionRouteCall": "通話のルート",
+    "actionRouteCallHint": "通話をハントグループ、自動アテンダント、内線などの宛先に導きます。",
+    "actionDialByExtensionHint": "内線について発信者にプロンプトを表示し、通話を導きます。",
+    "actionDialByExtensionHelp": "ダイヤルする内線番号を発信者にプロンプトするために使用するメッセージを入力します。このフレーズの原語と声を選択してください。",
     "actionEndCall": "通話を終了",
     "schedule": "スケジュール",
     "scheduleAllDay": "24時間対応",
+    "scheduleOpenClosed": "営業中/営業外",
     "scheduleOpen": "営業時間",
     "scheduleClosed": "営業外時間",
     "scheduleHolidays": "休日",
+    "hoursMissing": "時間が定義されていません。",
+    "holidaysMissing": "休日が定義されていません。",
+    "scheduleOpenTime": "営業時間",
+    "scheduleClosedTime": "営業外時間",
+    "scheduleClosedTimeCheck": "営業外時間は営業時間の後でなければなりません",
+    "holidayScheduleEndTimeCheck": "終業時間は始業時間の後でなければなりません",
+    "scheduleAddHours": "時間を追加",
     "invalidBuilderNameMissing": "自動アテンダント名を入力してください。",
     "invalidBuilderNameNotUnique": "この自動アテンダント名はすでに使用されています。一意の自動アテンダント名を入力してください。",
+    "routeCallMenuHelp": "適切な転送エンドポイントを選択してください",
     "phoneMenuAddDigit": "入力桁を追加します",
     "phoneMenuTimeout": "タイムアウト/無効",
     "phoneMenuContinue": "次のステップに続く",
@@ -1494,7 +1608,6 @@
     "phoneMenuRouteHunt": "ハントグループに琉オートする",
     "phoneMenuRouteVM": "ボイスメールにルートする",
     "phoneMenuRouteAA": "自動アテンダントにルートする",
-    "phoneMenuAddDigit": "入力桁を追加します",
     "phoneMenuListening": "以下のユーザー入力をリスンする間",
     "phoneMenuRepeatOnce": "1 回",
     "phoneMenuRepeatTwice": "2 回",
@@ -1509,13 +1622,27 @@
     "phoneMenuErrorRouteToUserTargetMissing": "キー {{key}} で、[ユーザーにルートする] のターゲットが欠落しています。",
     "addNumberMsg": "この自動アテンダントは、以下の番号のすべての通話に応答します。番号はいつでも追加または削除できます。",
     "numberInfoPopover": "ここに番号を入力しなくても問題はありません。通話は他の自動アテンダント経由でかかってきます。",
+    "routeCallPopover": "通話をルートする方法を選択してください",
     "selectPlaceHolder": "検索または選択",
     "selectNumberPlaceHolder": "番号を検索または選択",
     "inputPlaceHolder": "ここにタイプしてください",
     "sayMessage": "メッセージ",
     "sayMessagePlaceholder": "ここにメッセージを入力します。",
-    "sayMessageUninterrupt": "メッセージのｓ愛誠は中断できません。",
+    "sayMessageUninterrupt": "メッセージの再生は中断できません。",
     "sayMessageVoice": "音声",
+    "scheduleAddAdditionalHolidays": "休日を追加する",
+    "selectDate": "日付を選択する",
+    "allDay": "全日",
+    "recurAnnually": "毎年繰り返す",
+    "exactDate": "同日",
+    "every": "毎",
+    "on": "オン",
+    "day": "日",
+    "selectAA": "自動アテンダントの選択",
+    "importSchedule": "スケジュールのインポート",
+    "importDesc": "既存の自動アテンダントを選択して、始業時間/終業時間と休日をインポートしてください",
+    "closedBehavious": "振り替え休日",
+    "failureImport": "スケジュールの取得に失敗しました。状況： {{status}} ",
     "voices": {
       "male": "男性",
       "female": "女性",
@@ -1586,7 +1713,7 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "通話の相手に話すために使用するための希望の言語と音声を選択してください。メッセージを話すかどうかはオプションです。メッセージを入力しない場合でも、会話は次のステップに続きます。",
-    "errorReadCMI": "割り当てられた電話番号をロードできません",
+    "errorReadCMI": "割り当てられた電話番号を読み込むことができませんでした。保存は無効化されています。この自動アテンダントを再度開いてください。",
     "errorAddCMI": "電話番号 {{phoneNumber}} を割り当てられません: {{statusText}} ({{status}})。",
     "errorRemoveCMI": "割り当てられた電話番号を削除できません。",
     "errorResetCMI": "前に割り当てられた電話番号をリセットできません。",
@@ -1594,8 +1721,14 @@
     "errorNumbersCMIOnly": "番号が割り当てられましたが自動アテンダントになっていません: {{phoneNumbers}}",
     "errorNumbersCESOnly": "番号は自動アテンダントになっていますが、割り当てられていません: {{phoneNumbers}}",
     "errorInvalidTemplate": "テンプレートをロードできませんでした: {{template}}.",
-    "errorInvalidTemplateDef": "テンプレートに対するテンプレートの定義が無効です: {{template}}.",
-    "routeExtNumPlaceHolder": "番号を入力"
+    "errorInvalidTemplateDef": "テンプレートに対するテンプレートの定義が無効です: {{template}}",
+    "routeExtNumPlaceHolder": "番号を入力",
+    "newAAText": "新しい自動アテンダントを作成",
+    "AABasic": "基本",
+    "AABasicDesc": "カスタム電話メニューによる簡単な再生メッセージ。",
+    "AACustom": "カスタム",
+    "AACustomDesc": "カスタム自動アテンダントを作成します。",
+    "AAOpenClosedDesc": "カスタムメッセージと電話メニューにより、簡単なスケジュールのオープ/クローズ。"
   },
   "callPark": {
     "code": "CP",
@@ -1731,7 +1864,8 @@
     "alwaysAllow": "常に許可",
     "neverAllow": "決して許可しない",
     "on": "オン",
-    "off": "オフです"
+    "off": "オフ",
+    "getLicenseIsTrialError": "COMMUNICATIONライセンスのトライヤル状態を得ることが出来ませんでした。"
   },
   "voicemailPanel": {
     "success": "ボイスメールの設定は正常に保存されました",
@@ -1745,6 +1879,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "電話番号",
     "editNumbers": "電話番号を編集する",
+    "pendingNumbersTooltip": "番号は、様々な理由で保留状態にすることができます。通常の処理時間中にご辛抱いただき、ありがとうございます。予想よりも時間がかかるようでしたら、プロバイダーにご連絡ください。",
     "listError": "電話番号リストを読み込めませんでした。",
     "deleteNumber": "番号を削除する",
     "deleteConfirmation": "{{pattern}}を削除してもよいですか ?",
@@ -1767,6 +1902,10 @@
     "setupNumbers": "PSTN 番号のセットアップ",
     "placeOrder": "発注する",
     "orderBlock": "ブロック番号を発注する",
+    "newNumbersTab": "新しい番号",
+    "portNumbersTab": "ポート番号",
+    "portNumbersPrompt": "ポートする必要がある顧客の番号をコピーし、貼り付けてください。",
+    "portNumbersLabel": "ポート番号",
     "manualAdd": "新しい番号を手動で追加",
     "state": "都道府県",
     "selectState": "都道府県の選択",
@@ -1776,17 +1915,19 @@
     "searchAreaCodes": "市外局番の選択",
     "quantity": "数量",
     "consecutive": "連続的",
+    "block": "ブロック",
     "reviewAndOrder": "見直し、発注する",
     "package": "パッケージ",
     "adding": "追加中",
     "numbersTitle": "番号",
     "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{{count}} 新規",
+    "portNumbers": "{{Count}} ポート",
     "thankYou": "ありがとうございます",
     "setupSuccess": "PSTN サーバーのセットアップが正常に完了しました。",
     "nextStep": "次のステップ",
     "checkOrderStatus": "オーダー ステータスのチェック",
-    "launchPortal": "企業ポータルの起動",
+    "launchPortal": "Spark Serviceをセットアップする",
     "carrierListError": "このカスタマーの通信業者のリストを取得できませんでした。",
     "listSiteError": "このカスタマーのサイトリストを取得できませんでした。",
     "orderNumbersPrompt": "先に進むためには、番号を追加する必要があります。",
@@ -1805,7 +1946,18 @@
     "serviceAddress": "サービスアドレス",
     "serviceAddressPrompt": "緊急電話をかけたとき、現地の緊急対応班はこの住所を利用して発信者を見つけます。",
     "serviceAddressConfirmation": "この住所でよろしいですか？",
-    "serviceAddressNotFound": "住所を発見できません。更新して再試行してください。"
+    "serviceAddressNotFound": "住所を発見できません。更新して再試行してください。",
+    "advancedOrder": {
+      "noResults": "検索結果はありませんが、ソリューションがあります。",
+      "detail": "検索結果に番号がありませんが、{{areaCode}}エリアコードの番号を取得するための特別なオーダーを設定することができます。プロバイダーでは、注文を満たすまで約5日かかる場合があります。",
+      "addNumbers": "番号を追加する",
+      "tooltip": "ブロックは多数の連続、非連続の番号を追加できるようにするものです。",
+      "extra": "*連続する番号の場合は、追加料金が発生します"
+    },
+    "errors": {
+      "states": "状態の取得に失敗しました",
+      "inventory": "PSTNインベントリの取得に失敗しました"
+    }
   },
   "pstnContractInformation": {
     "title": "PSTN連絡先",
@@ -1881,7 +2033,7 @@
     "roomSystems": "会議室システム",
     "roomSystem": "会議室システム",
     "deviceBasedServices": "デバイスベースのサービス",
-    "call": "をコール"
+    "call": "コール"
   },
   "trialModal": {
     "addTrial": {
@@ -1908,8 +2060,14 @@
     },
     "call": {
       "title": "トライヤルのセットアップ - デバイスの出荷",
+      "deviceTrialCapacityHeader": "デバイスを追加できません",
+      "remainingDeviceTrials": "20個の同時にアクティブなデバイスのトライヤルのうち{{number}}個が残っています。",
+      "deviceTrialLimitReached": "あなたの組織は、同時にアクティブなデバイスのトライヤル制限の{{number}}に達しました。これまでのトライヤル数を変換すると、もっと多くのデバイストライヤルを追加できます。",
+      "deviceTrialLimitHelp": "この制限に関する質問は、次のパートナーヘルプデスクにお問い合わせください。 webexpartnerhelp@cisco.com または 1-800-553-6387",
+      "deviceTrialTip": "出荷したデバイスの進行中のトライヤル",
+      "deviceTrialUnavailable": "システムは一時的にデバイスを追加できません。後で試してください.",
       "selectDevicesHeader": "デバイスを選択",
-      "deviceLimitDescription": "少なくとも 2 個、最大で 7 個のデバイスを選択してください（種類ごとに最大 5）",
+      "deviceLimitDescription": "最大7個（タイプごとに2～5個のデバイス）のデバイスを選択してください。",
       "meetingRoomCamera": "Spark 会議室システム",
       "deskPhones": "個人および共有デスクフォン",
       "skipAddDevices": "デバイスの追加をスキップ",
@@ -1932,12 +2090,50 @@
       "phone": "電話番号",
       "country": "Country",
       "address": "アドレス",
+      "unit": "建物名",
       "city": "市区町村",
       "state": "都道府県",
       "zip": "郵便番号"
     },
     "numbers": {
       "title": "新しいトライヤルの開始 - 数の追加"
+    },
+    "pstn": {
+      "title": "トライヤルのセットアップ - 通話",
+      "pstnProvider": "PSTN プロバイダー",
+      "provider": "プロバイダー",
+      "serviceProvider": "サービスプロバイダーを選択します",
+      "phoneNumbers": "電話番号",
+      "pleaseAdd": "カスタマーの電話番号を追加してください",
+      "pleaseAdd10": "カスタマーの電話番号を最大10個、追加してください",
+      "pleaseAdd5": "カスタマーの電話番号を最大5個、追加してください",
+      "state": "都道府県",
+      "areaCode": "市外局番",
+      "numbers": "番号",
+      "contract": "PSTN連絡先",
+      "company": "会社名",
+      "firstName": "署名者の名",
+      "lastName": "署名者の姓",
+      "email": "署名者のメールアドレス",
+      "esa": "緊急サービスアドレス",
+      "esaDesc": "緊急電話をかけたとき、現地の緊急対応班はこの住所を利用して発信者を見つけます。",
+      "address": "アドレス",
+      "unit": "建物名",
+      "city": "市区町村",
+      "zip": "郵便番号",
+      "skip": "スキップして、後で番号を追加してください",
+      "popover": "契約に署名できる正当な担当者に関する情報を提供してください",
+      "addrRetry": "別の住所を使用する",
+      "addrFound": "これは、システムで見つかった住所です。",
+      "error": {
+        "areaCodes": "選択した州のエリアコードを取得できませんでした",
+        "numbers": "選択したエリアコードの番号を取得できませんでした",
+        "noAddress": "住所が見つかりません",
+        "reserveFail": "番号が予約されませんでした",
+        "customerFail": "カスタマーが作成されませんでした",
+        "orderFail": "番号が注文されませんでした",
+        "siteFail": "サイトが作成されませんでした"
+      }
     },
     "trialSuccess": "トライヤルの準備ができました。",
     "nextStepPrompt": "カスタマーに対するサービスをセットアップしますか？",
@@ -1956,10 +2152,17 @@
     "licenseQuantity": "ライセンスの数",
     "users": "ユーザー",
     "message": "メッセージ",
-    "messageAndMeeting": "メッセージとミーティング",
-    "meeting": "ミーティングと WebEx",
-    "call": "をコール",
-    "roomSystem": "Spark 会議室システム"
+    "meeting": "25人のミーティング",
+    "webex": "WebEx Enterprise Edition 200",
+    "call": "コール",
+    "roomSystem": "Spark 会議室システム",
+    "expireWarningMsg": "お使いのトライヤルは {{numDaysLeft}} 日以内に終了します。",
+    "expiredMsg": "トライアルの有効期限が終了しました。",
+    "requestPurchaseMsg": "購入情報をリクエストしますか?",
+    "requestConfirmMsg": "購入リクエストメッセージが {{partnerAdminDisplayName}} に送られました",
+    "requestPurchaseBtn": "購入のリクエスト",
+    "requestAgainBtn": "もう一度リクエスト",
+    "requestConfirmNotifyMsg": "購入に関する通知が {{partnerAdminDisplayName}} に送られました"
   },
 
   "status": {
@@ -1973,11 +2176,11 @@
     "customerNameHeader": "カスタマー名",
     "service": "サービス",
     "message": "メッセージ",
-    "call": "をコール",
+    "call": "コール",
     "meeting": "ミーティング",
+    "roomSystems": "会議室システム",
     "notes": "注意",
     "active": "アクティブ",
-    "trial": "トライヤル",
     "free": "無料",
     "daysRemaining": "残り {{count}} 日",
     "expiringToday": "本日終了します",
@@ -2028,20 +2231,22 @@
     "allowCustomerLogo": "{{customer}} 用にカスタマーロゴを有効化",
     "myOrganization": "組織",
     "meetingParty": "25人のミーティング",
-    "call": "をコール",
     "roomSystem": "Spark 会議室システム",
     "branding": "顧客のブランド指定",
     "MS": "メッセージ",
     "CF": "ミーティング",
     "MC": "25人のミーティング",
     "WebExMC": "WebEx Meeting Center",
-    "SC": "Cisco WebEx Support Center",
-    "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
-    "EC": "WebEx Event Centerのみ",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
     "EE": "WebEx 企業 Edition",
-    "CO": "をコール",
+    "CO": "コール",
     "ST": "ストレージ",
-    "SD": "Spark 会議室システム"
+    "SD": "Spark 会議室システム",
+    "deleteOrg": "組織 {{orgName}} の削除",
+    "deleteOrgSuccess": "{{orgName}} の削除に成功しました",
+    "deleteOrgError": "{{orgName}} が削除されませんでした"
   },
   "didAddModal": {
     "title": "電話番号の追加 (オプション)"
@@ -2069,6 +2274,14 @@
     "savePrompt": "この住所を保存しますか？",
     "saveSuccess": "緊急サービス住所を更新しました。",
     "saveError": "緊急サービス住所の更新時にエラーが発生しました。"
+  },
+  "settingsServiceNumber": {
+    "label": "緊急サービス番号",
+    "description": "呼び出し側のデバイスに個々の電話番号が割り当てられていない場合に使用される代替の緊急連絡先番号。",
+    "savePrompt": "この番号を保存しますか?",
+    "saveSuccess": "緊急サービス番号が正常に更新されました。",
+    "saveError": "緊急サービス番号の更新時にエラーが発生しました。",
+    "warning": "ユーザーまたは Spark Call 機能に割り当てられた番号を選択してください"
   },
   "didManageModal": {
     "buttonText": "番号を追加する",
@@ -2116,18 +2329,22 @@
     "serial": "シリアル",
     "ipAddr": "IPアドレス",
     "macAddr": "MAC アドレス",
+    "sipUrl": "SIP アドレス",
     "issues": "発行",
-    "lastSeen": "オフライン開始日時:",
-    "codeExpires": "アクティベーションコードの有効期限が切れました",
-    "deviceCodeExpires": "このデバイスのアクティベーションコードの有効期限が切れます。",
+    "lastSeen": "最初の発行日:",
+    "notYetActivated": "この場所でデバイスがアクティベートされていません。",
+    "deleteLocation": "場所を削除",
+    "codeExpires": "このアクティベーションコードは、{{inXDays}}で有効期限が切れます",
+    "deviceCodeExpires": "現在のアクティベーションコードは、{{inXDays}}で有効期限が切れます",
+    "getNewCode": "新規コードの取得",
     "channelUpdated": "ソフトウェア更新チャネルが更新されました",
     "channelUpdateFailed": "デバイスは、時間内にソフトウェア更新チャネルを更新しませんでした"
   },
   "generateActivationCodeModal": {
     "title": "アクティベーションコード",
     "activateBody": "シスコの新しい卓上電話または telepresence デバイスを接続し、プロンプトに応じてアクティベーションコードを入力します。または、デバイスのカメラで QR コードをスキャンします。",
-    "emailCode": "コードをメール送信する",
-    "copyToClipboard": "クリップボードにコピー",
+    "emailCode": "メール",
+    "copyToClipboard": "コピー",
     "print": "印刷",
     "send": "送信",
     "to": "宛先",
@@ -2239,7 +2456,6 @@
     "takeOffline": "オフラインにする",
     "bringOnline": "オンラインにする",
     "actionsHeader": "アクション",
-    "deleteResource": "コミッション解除リソース",
     "deleteResourceConfText1": "このリソースをコミッション解除してもよろしいですか？",
     "deleteResourceConfText2": "クラウドから切断され、オフラインになります",
     "cancel": "キャンセル",
@@ -2305,8 +2521,17 @@
       "uninstalling": "アンインストール中",
       "running": "実行中",
       "needs_attention": "注意が必要",
-      "alarm": "時間を",
-      "Unknown": "登録"
+      "alarm": "アラーム",
+      "Unknown": "登録",
+      "nohosts": "主催者が登録されていません"
+    },
+    "deleteGroup": {
+      "title": "クラスターを削除",
+      "message": "Cisco Collaboration Cloudから{{groupName}}を削除しますか?",
+      "errorHeader": "予期せぬエラーです",
+      "errorMessage": "{{groupName}}を削除できません。",
+      "keep": "維持",
+      "delete": "削除"
     },
     "clusters": {
       "listing": {
@@ -2319,9 +2544,9 @@
       "deregisterHeader": "登録解除の確認",
       "deregisterErrorHeader": "予期せぬエラーです",
       "deregisterAreYouSure": "組織 {{organizationName}} からメディアサーバー {{clusterName}} の登録を解除しようとしています",
-      "deregisterCausesListItem1": "このシステムは、通話を受付できなくなります。",
+      "deregisterCausesListItem1": "このシステムでは、通話を受付できなくなります。",
       "deregisterCausesListItem2": "以前から存在する通話は続行します。",
-      "defuseAreYouSure": "組織 {{organizationName}} からメディアサーバー {{clusterName}} の登録を解除しますか。",
+      "defuseAreYouSure": "組織 {{organizationName}} からメディアサーバー {{clusterName}} の登録を解除しますか?",
       "defuseCausesListItem1": "クラスタ {{groupName}} がシステムから削除されます。",
       "deregisterErrorGeneric": "{{clusterName}} を登録解除できません。 {{errorMessage}}"
     },
@@ -2347,11 +2572,16 @@
     },
     "add-resource-dialog": {
       "title": "新しいメディアサーバーを登録する",
-      "text1": "新しいメディアクラスタまたは既存のメディアクラスタを選択して、新しいメディアサーバーを割り当てます。",
+      "text1": "新しいメディアクラスタまたは既存のメディアクラスタを選択して、新しいメディアサーバーを次に割り当てます。",
       "text2": "クラウドに登録するメディアサーバーのホスト名または IP アドレスを入力してください。［リソースの登録］をクリックして、メディアサーバーにログインして登録します。",
-      "register": "リソースの登録",
+      "register": "メディアサーバーにアクセス",
       "cancel": "キャンセル",
-      "hostname-placeholder": "ホスト名/IP アドレス:を入力してください"
+      "hostname-placeholder": "ホスト名/IP アドレス:を入力してください",
+      "grant-registration-success-header-old-cluster": "メディアサーバー <strong>{{hostname}}</strong>を登録します。これは Cisco Collaboration Cloud の <strong>{{clustername}}</strong> に属します。",
+      "grant-registration-success-header-new-cluster": "メディアサーバー <strong>{{hostname}}</strong>を登録します。これは Cisco Collaboration Cloud の新しいクラスタ <strong>{{clustername}}</strong> に属します。",
+      "grant-success-information": "1 時間以内にメディアサーバーにアクセスして、登録を終了してください。",
+      "next": "次へ",
+      "back": "戻る"
     },
     "mediaServiceActivationFailure": "問題がサービスを有効にしています",
     "mediaAgentOrgMappingFailure": "問題が Orpheus for MediaFusion を有効にしています",
@@ -2385,7 +2615,8 @@
     "noCluster": "Spark に接続されたメディアサービスクラスタがありません",
     "close": "閉じる",
     "reassignCluster": "クラスタに再割り当て",
-    "moveHost": "ホストを移動"
+    "moveHost": "ホストを移動",
+    "deleteCluster": "クラスターを削除"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "セッションの種類の権能割賦が更新されました。",
@@ -2394,6 +2625,7 @@
     "pmrErrorTelephonyPrivilegesHybridVOIP": "個人用会議室を作成するために、このユーザーに対するテレフォニー権限をセットアップしてください。",
     "pmrErrorHybridAudio": "個人用会議室を作成する前に、WebEx Audioを有効化する必要があります。詳細については、WebExサポートにお問い合わせください。",
     "mustHavePROorSTDifPMRenabled": "このユーザーに対する個人用会議室を作成するには、個人用会議室に適切なMeeting Centerミーティングを選択してください。",
+    "mustHaveAtLeastOneSessionTypeEnabled": "各 WebEx センターの下で少なくとも 1 つのセッションタイプを選択してください。",
     "reload": "再試行してください",
     "cancel": "戻る"
   },
@@ -2437,7 +2669,6 @@
     "030035": "030035",
     "030036": "ユーザーアカウントが無料コールイン電話会議に対応していません。",
     "030037": "ユーザーまたはサイトはワンクリックに対応していません。",
-    "030039": "030039",
     "030039": "030039",
     "030040": "030040",
     "030041": "030041",
@@ -2494,6 +2725,7 @@
     "defaultProcessError": "申請を処理できません。",
     "defaultNotWebExAdminError": "あなたはこのサイトではまだ管理者としてプロビジョニングされていません。この処理には時間がかかります。",
     "defaultAccessError": "現在、サーバーにアクセスできません。",
+    "defaultDbMismatchError": "ユーザーアカウントの変更は、サーバー間で動機されています。このプロセスにはしばらく時間がかかります。",
     "defaultReloadMsg": "ページを再読み込みしてください。"
   },
   "webexUserSettingLabels": {
@@ -2514,7 +2746,7 @@
     "priviligesLable": "権限",
     "userPriviligesLabel": "ユーザー権限",
     "teleCLIAuthEnabledLabel": "コール回線識別子 (CLI)",
-    "pmrLabel": "個人用会議室",
+    "pmrLabel": "パーソナル会議室",
     "OtherPrivilegesLabel": "他の権限",
     "advancedLinkLabel": "詳細設定"
   },
@@ -2523,7 +2755,7 @@
     "breadcrumbsAltText": "あなたはここにいます"
   },
   "webexSiteSettingsLabels": {
-    "siteSettingsIndexPageTitle": "設定",
+    "siteSettingsIndexPageTitle": "WebEx サイトを構成する",
     "siteSettingsIndexPageTitleFull": "構成 {{siteUrl}}",
     "hostAccountsTitle": "主催者アカウント",
     "activeTitle": "アクティブ",
@@ -2539,7 +2771,7 @@
     "indexPageLabel_SiteInfo_site_info": "サイト情報",
     "indexPageLabel_SiteInfo_site_features": "サイトの機能",
 
-    "indexPageLabel_CommonSettings_cmr": "コラボレーションミーティング会議室",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "モバイル",
     "indexPageLabel_CommonSettings_navigation": "ナビゲーションカスタマイズ",
     "indexPageLabel_CommonSettings_scheduler": "スケジューラ",
@@ -2728,6 +2960,24 @@
     "pageId_xxxx": "未定義",
     "pageId_underDevelopment": "開発中"
   },
+  "webexCSVResultsModal": {
+    "csvExportTitle": "結果のエクスポート",
+    "csvExportRecordsAvailable": "利用可能なレコードの総数:",
+    "csvExportRecordsSuccessful": "正常にエクスポートされた記録:",
+    "csvExportDownloadFile": "CSVファイルのダウンロード:",
+    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
+
+    "csvImportTitle": "結果のインポート",
+    "csvImportFileName": "ファイル名:",
+    "csvImportRecordsRequested": "要求されたレコードの総数:",
+    "csvImportRecordsUpdated": "正常に更新された記録:",
+    "csvImportDownloadErr": "ダウンロードエラーログ:",
+    "csvImportErrFilename": "WebEx-ImportErr.tsv",
+
+    "csvStarted": "開始:",
+    "csvFinished": "終了:",
+    "csvRecordsFailed": "失敗した記録:"
+  },
   "leaderBoard": {
     "actions": "アクション",
     "licenseUsage": "ライセンスの使用状況",
@@ -2735,7 +2985,7 @@
     "messagingTitle": "メッセージ",
     "messagingSubtitle": "標準チーム会議室",
     "messagingDesc": "コンテンツのストレージを含むチーム会議室を利用すれば、どの機器からでも、組織内外のユーザーと容易に協力できます。",
-    "communicationTitle": "をコール",
+    "communicationTitle": "コール",
     "communicationSubtitle": "高度な Spark 通話",
     "communicationDesc": "組織に対する基本外部通話および通話ルーティング機能が有効になっています。",
     "conferencingTitle": "ミーティング",
@@ -2747,12 +2997,12 @@
     "CF": "25人のミーティング",
     "MC": "25人のミーティング",
     "WebExMC": "WebEx Meeting Center",
-    "SC": "Cisco WebEx Support Center",
-    "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
-    "EC": "WebEx Event Centerのみ",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
     "EE": "WebEx エンタープライズエディション",
-    "CMR": "WebEx Collaboration Meeting Room",
-    "CO": "をコール",
+    "CMR": "WebEx Collaboration Meeting Rooms",
+    "CO": "コール",
     "ST": "ストレージ",
     "SD": "Spark 会議室システム"
   },
@@ -2798,14 +3048,26 @@
     "orgSettingsSuccess": "組織に対するorgSettingsの更新が成功しました",
     "orgSettingsError": "組織に対するorgSettingsの更新が失敗しました",
     "orgSettingsForPartnerSuccess": "パートナーとmanagedOrgsに対するorgSettingsの更新が成功しました",
-    "orgSettingsForPartnerError": "パートナーとmanagedOrgsに対するorgSettingsの更新が失敗しました"
+    "orgSettingsForPartnerError": "パートナーとmanagedOrgsに対するorgSettingsの更新が失敗しました",
+    "alwaysProvisionWithLatest": "最新のクライアントバージョンで、新しい WebEx サイトをプロビジョンします",
+    "webexClientVersionUpdated": "WebEx クライアントバージョンが更新されました",
+    "webexClientVersionUpdatedFailed": "WebEx クライアントバージョンの更新が失敗しました",
+    "webexVersionUseLatestTrue": "最新バージョンの WebEx クライアントが使用されます",
+    "webexVersionUseLatestFalse": "選択されたバージョンの WebEx クライアントが使用されます",
+    "webexVersionUseLatestUpdateFailed": "更新できませんでした",
+    "selectAWbxClientVersion": "WebEx クライアントバージョンを選択してください",
+    "WbxClientVersionOnlyOnNewSites": "この設定は、今後、設定されるサイトにのみ適用されます。既存のサイトは影響を受けません。",
+    "webexClientVersion": "Cisco WebEx アプリケーションバージョン:"
   },
   "customerProfile": {
     "supportContacts": "サポート連絡先",
     "partnerAdmin": "パートナー管理者",
     "brandingInfo": "Cisco Spark に追加してご自身のブランドを表示したい場合、以下にご自分のロゴをアップロードします。",
     "usePartnerLogo": "{{partner}} の使用ロゴと同じロゴを使用する",
-    "supportInfo": "ユーザーにサポートを提供している場合、以下にサポートパラメータを入力してください。このパラメータはSparkアプリケーション中のサポートオプションの下に表示されます。"
+    "supportInfo": "ユーザーにサポートを提供している場合、以下にサポートパラメータを入力してください。このパラメータはSparkアプリケーション中のサポートオプションの下に表示されます。",
+    "supportAccessTitle": "サポートアクセス",
+    "supportAccessInfo": "この設定は、Ciscoまたはパートナーにあなたの組織に対する読み取り専用アクセスを与えます。あなたの組織の詳細を変更することは許可しません。",
+    "supportAccessCheckbox": "Ciscoまたはパートナーサポートにあなたの組織への読み取り専用アクセスを許可します。"
   },
   "fileUpload": {
     "uploading": "ファイルのアップロード",
@@ -2844,7 +3106,7 @@
     "events": "イベント"
   },
   "processOrderPage": {
-    "errOrgCreation": "注文 # {{orderId}} が処理中です。24 時間後に再度ご確認ください。",
+    "errOrgCreation": "ご注文は処理中です。24 時間後にもう一度チェックしてください。",
     "info": "状況",
     "wait": "リダイレクト中です"
   },
@@ -2856,7 +3118,7 @@
     "spanishSpain": "Español (España)",
     "spanishColumbian": "Español (América Latina)",
     "french": "Français (France)",
-    "indonesian": "Bahasa Indonesia",
+    "indionesian": "Bahasa Indonesia",
     "italian": "Italiano",
     "japanese": "日本語",
     "korean": "한국어",
@@ -2869,44 +3131,55 @@
     "turkish": "Tϋrkçe",
     "chineseMandarin": "简体中文",
     "chineseTraditional": "繁體中文",
-    "englishAustralian": "英語 (オーストラリア)",
-    "catalan": "カタロニア語",
-    "dutch": "Nederlands",
     "frenchCanadian": "Français (Canada)",
-    "finnish": "フィンランド語",
-    "galician": "ガラテヤ語",
-    "greek": "ギリシャ語",
-    "spanishArgentine": "スペイン語 (アルゼンチン)",
-    "spanishChilean": "スペイン語 (チリ)",
-    "spanishMexican": "スペイン語 (メキシコ)",
-    "portuguese": "ポルトガル語",
-    "valencian": "バレンシア語"
+    "finnish": "Suomi",
+    "galician": "Galego",
+    "greek": "Ελληνικά",
+    "spanishArgentine": "Español (Argentina)",
+    "spanishChilean": "Español (Chile)",
+    "spanishMexican": "Español (mexicano)",
+    "portuguese": "Português",
+    "englishAustralian": "English (Australian)",
+    "valencian": "Valenciano",
+    "catalan": "Català"
   },
   "siteList": {
     "conferencing": "WebEx サイト",
     "siteName": "サイト名",
     "licenseCount": "ライセンス数",
-    "type": "種類",
+    "licenseTypes": "ライセンスの種類",
     "siteSettings": "設定",
     "siteReports": "レポート",
     "siteCsvColumnHeader": "ユーザー属性",
     "siteCsvExportLinkLabel": "エクスポート",
-    "siteCsvExportInProgressLinkLabel": "エクスポートが進行中です...",
+    "siteCsvExportInProgressLinkLabel": "エクスポート中...",
+    "siteCsvExportResultsLinkLabel": "結果のエクスポート",
     "siteCsvImportLinkLabel": "インポート",
-    "siteCsvImportInProgressLinkLabel": "インポートが進行中です...",
+    "siteCsvImportInProgressLinkLabel": "インポート中...",
     "siteCsvDownloadLinkLabel": "ファイルのダウンロード",
+    "siteCsvImportResultsLinkLabel": "結果のインポート",
     "userAttributesTooltip": "スプレッドシートプログラムを使用して、複数の WebEx ユーザーのユーザー属性を変更します。ユーザーを .csv ファイルをエクスポートし、ユーザー情報を編集し、更新された .csv ファイルを WebEx サイトにインポートします。",
     "exportBlockedTooltip": "エクスポートするためには、インポートの完了を待つ必要があります。",
     "exportInProgressTooltip": "このエクスポートには少し時間がかかる場合があります。ログアウトするか、別のサイトのユーザー属性をインポートまたはエクスポートする場合でも、エクスポートは完了するまで続行する場合があります。",
     "exportFinishedWithErrorsTooltip": "エクスポートでエラーが発生して終了しました",
     "exportFailedTooltip": "エクスポートに失敗しました。",
+    "exportStartedToast": "このエクスポートには少し時間がかかる場合があります。ログアウトするか、別のサイトのユーザー属性をインポートまたはエクスポートする場合でも、エクスポートは完了するまで続行する場合があります。",
+    "exportRejectedToast": "エクスポートに失敗しました。やり直してください。",
+    "importButton": "インポート",
+    "importStartModalTitle": "WebEx ユーザーの属性",
+    "importStartModalInstruction_1": "カンマ区切りファイルをアップロードするには、ファイルを選択し、[インポート] を選択します。インポートファイルに ASCII 以外の文字が含まれる場合、Unicode のカンマ区切り記号が使用されていることを確認してください。",
     "importBlockedTooltip": "インポートするためには、エクスポートの完了を待つ必要があります。",
     "importInProgressTooltip": "このインポートには少し時間がかかる場合があります。ログアウトした場合でも、インポートが完了するまで続行する場合があります。希望に応じて、別のサイトのユーザー属性をインポートまたはエクスポートすることができます。",
     "importFinishedWithErrorsTooltip": "インポートでエラーが発生して終了しました",
     "importFailedTooltip": "インポートに失敗しました",
+    "importStartedToast": "このインポートには少し時間がかかる場合があります。ログアウトした場合でも、インポートが完了するまで続行する場合があります。希望に応じて、別のサイトのユーザー属性をインポートまたはエクスポートすることができます。",
+    "importRejectedToast": "インポートに失敗しました。やり直してください。",
+    "importInvalidFileToast": "インポートするファイルを選択します。",
     "siteCSVNotAvailable": "利用不可",
+    "siteCSVNotAvailableTooltip": "このサイトをアップグレードして、この機能にアクセスしてください",
     "authError": "認証できません。このサイトで権限をチェックしてください。",
-    "systemError": "WebEx サイトとコミュニケーションできません。サポートにご連絡ください。"
+    "systemError": "WebEx サイトとコミュニケーションできません。サポートにご連絡ください。",
+    "multipleLicenses": "複数の..."
   },
   "cloudExtensions": {
     "cloudExtensions": "ハイブリッド サービス",
@@ -2978,7 +3251,7 @@
         "message": "SX10のこのハードウェアバージョンにはエンベデッド超音波スピーカーがありません。"
       },
       "MissingEncryptionKey": {
-        "type": " 暗号化オプションキーが欠落しています",
+        "type": "暗号化オプションキーが欠落しています",
         "message": "暗号化オプション キーを追加してください"
       },
       "ConfiguredForTestAutomation": {
@@ -3028,7 +3301,7 @@
   },
 
   "huronDetails": {
-    "title": "をコール",
+    "title": "コール",
     "linesTitle": "番号",
     "settingsTitle": "設定",
     "featuresTitle": "特徴"
@@ -3042,7 +3315,8 @@
     "cp": "CP",
     "editAction": "編集",
     "deleteAction": "削除",
-    "aaDependsTitle": "{{featureName}} 自動アテンダント依存",
+    "aaDependsTitle": "自動アテンダント依存",
+    "aaDependsContext": "{{featureName}} を参照するすべての自動アテンダントのリストは、ここにあります。",
     "aaDeleteBlocked": "この自動アテンダントが {{aaNames}} によって参照されているため、操作を完了できません。",
     "deleteFeature": "{{ featureType }} を削除",
     "deleteConfirmText": "{{ featureName }} {{ featureType }} を削除してもよろしいですか？",
@@ -3141,7 +3415,7 @@
     "noFeatures": "現在のログインでは機能を利用できません",
     "noFeature": "現在のログインではこの機能を有効化できません",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "まだ何もありません。",
+      "nothingToSee": "機能がありません。",
       "letsCustomize": "通話エクスペリエンスをカスタマイズしましょう"
     },
     "hgMethods": {
@@ -3155,7 +3429,7 @@
       },
       "circular": {
         "name": "円形",
-        "desc": "システムは、前の通話がどのメンバーに送信されたかを追跡しています。 Circular は、次に連続したアイドルの（または利用可能な）メンバーへ通話を送信します。"
+        "desc": " 円形は最初に通話を次の順序の待機中 (または空き状態の) メンバーに送信します。システムは、どのメンバーが前の通話を送信したのかを追跡し続けます。"
       },
       "topDown": {
         "name": "上から下へ",
@@ -3248,7 +3522,7 @@
         "notEnabledText": "Team Room Sync-upsでは最大25名まで参加でき、WebEx Meeting Centerではより多くの人が参加できます。"
       },
       "call": {
-        "title": "をコール",
+        "title": "コール",
         "notEnabledText": "組織に対する基本外部通話および通話ルーティング機能が有効になっています。"
       },
       "roomSystem": {
@@ -3260,11 +3534,11 @@
       "hybrid": {
         "title": "ハイブリッド サービス",
         "notEnabledText": "ハイブリッドサービスを使用すると、オンプレミスのシステムを Cisco Collaboration Platform に組み込むことができるようになります。",
-        "notEnabledActionText": "詳細はこちら。",
+        "notEnabledActionText": "詳しく知る",
         "serviceHeader": "オンプレミスのステータス",
         "services": {
           "squared-fusion-cal": "カレンダー",
-          "squared-fusion-uc": "をコール",
+          "squared-fusion-uc": "コール",
           "squared-fusion-mgmt": "管理"
 
         }
@@ -3303,12 +3577,13 @@
     "PARTNER_READ_ONLY_ADMIN": "リードオンリーパートナーアドミニストレータ"
   },
   "helpdesk": {
+    "browserTabHeaderTitle": "ヘルプデスクサポート",
     "navHeaderTitle": "クラウドコラボレーションヘルプデスク",
     "helpdesk": "ヘルプデスク",
     "searchHeading": "ヘルプデスクサポート",
     "users": "ユーザー",
     "customers": "カスタマー",
-    "badUserSearchInput": "少なくとも3文字を入力してください。名前または電子メールで検索するには、2語を入力してください。例: John Doeまたはjohn doe",
+    "badUserSearchInput": "1単語ごとに少なくとも3文字を入力してください。名前または電子メールで検索するには、2語を入力してください。例: John Doeまたはjohn doe",
     "unexpectedError": "予期しないエラーが発生しました",
     "cancelled": "検索がキャンセルされました",
     "searchingPleaseWait": "検索中。お待ちください...",
@@ -3331,10 +3606,13 @@
     "customerPortalLaunch": "カスタマーポータルの表示",
     "contact": "連絡先",
     "managedBy": "管理者",
+    "supportedBy": "サポート者",
+    "ts": "TS(TAC)",
+    "trials": "トライヤル",
     "administratorUsers": "管理者ユーザー",
     "message": "メッセージ",
     "meeting": "ミーティング",
-    "call": "をコール",
+    "call": "コール",
     "rooms": "会議室",
     "claimedDomain": "要求されたドメイン",
     "hybridServices": "ハイブリッド サービス",
@@ -3405,12 +3683,13 @@
       "navigation-title": "キーボードによるナビゲーション",
       "navigation-info": "<strong>Tab</strong> または ↑ ↓ ← → キーを使用して結果の中で移動し、↵ で選択し、<strong>Esc</strong> で結果に戻るか、検索用語をクリアしてください。顧客を選択した後で（または顧客表示ページから）<strong>s</strong> を押して、その顧客にのみを検索するように、フィルタリングしてください。 ",
       "search-criterias-title": "検索基準",
-      "search-criterias-users": "<strong>ユーザー</strong>: 電子メール、名前（名、姓）、電話番号、表示名（2語が必要）",
-      "search-criterias-customers": "<strong>顧客</strong>: 表示名",
+      "search-criterias-users": "<strong>ユーザー</strong>: 電子メール、名前（名、姓）、電話番号、表示名（それぞれ少なくとも2語が必要）",
+      "search-criterias-customers": "<strong>カスタマー</strong>: 表示名 (少なくとも3文字必要)",
       "search-criterias-devices": "<strong>デバイス</strong>: Spark 通話デバイス: SEP 番号または電話番号。Spark 会議室システム、表示名、シリアルまたは MAC アドレス。",
       "search-criterias-note": "注: Spark システムまたはデバイスを検索するには、最初に顧客を選択してください。",
       "narrow-title": "顧客を選択します。",
-      "narrow-info": "1つの顧客のみを検索するようにフィルタリングするには、メイン検索ツールのページから初めて、表示名で顧客を検索します。次に、顧客の検索結果カードで <i class='icon icon-search'></i> をクリックします。"
+      "narrow-info": "1つの顧客のみを検索するようにフィルタリングするには、メイン検索ツールのページから初めて、表示名で顧客を検索します。次に、顧客の検索結果カードで <i class='icon icon-search'></i> をクリックします。",
+      "referTo": "参照先"
     },
     "history": {
       "clear": "履歴の消去",
@@ -3424,8 +3703,6 @@
     "more": "その他",
     "less": "以下",
     "usage": "使用中の {{volume}} のうちの {{usage}}",
-    "launchHelpdesk": "ヘルプデスク",
-    "launchHelpdeskDesc": "新しいタブで Help Desk ポータルを開きます",
     "numbers": "番号",
     "noDeviceEntitlements": "デバイス検索が実行できません。カスタマーにはCloudberryまたはSpark Callの資格がありません。",
     "applyOrgFilterPleaseWait": "フィルタを適用しています。お待ちください。",
@@ -3437,7 +3714,9 @@
     "sparkStatus": "Sparkの状況",
     "searchHelp": "ヘルプを検索",
     "deviceNotFound": "このデバイスはもはや存在しません。削除されていますか?",
-    "viewPortal": "カスタマーを閲覧する"
+    "customerPortalViewHeading": "カスタマーポータル表示",
+    "customerPortalViewDetails": "顧客のポータル全体を表示しますが、変更はできません。",
+    "view": "表示"
   },
   "activation": {
     "verificationComplete": "確認を完了",
@@ -3452,7 +3731,7 @@
   },
   "domainManagement": {
     "title": "ドメイン",
-    "description": "組織のドメインに追加して確認すると、ユーザーが通話サービス接続を利用できるようになります。同時にすべてのドメインを確認して、ユーザーアクセスのブロックを避けてください。最初に自分のドメインを確認して、管理ロックアウトを避けてください。",
+    "description": "組織のドメインを追加、検証して、ユーザーが通話サービスを利用できるようにしてください。",
     "addDomain": "ドメインの追加",
     "verifyDomain": "検証",
     "claimDomain": "クレーム",
@@ -3463,28 +3742,24 @@
     },
     "add": {
       "header": "ドメインの追加",
-      "description": "検証される組織にドメインを追加します。複数ドメインにユーザーをもっている場合は、すべてが追加されるまで、このステップを繰り返してください。他の人よりも自分のドメインを確認する必要があります。",
+      "description": "組織のドメインを追加します。複数のドメインがある場合は、このステップを繰り返してください。",
       "exampleDomain": "example.com",
       "invalidDomain": "これは有効なドメイン名ではありません。",
       "encodedIDN": "これは、IDNであり、この {{domain}} としてエンコードされます",
-      "invalidDomainAdded": "このドメインはすでに追加されています。"
-
+      "invalidDomainAdded": "このドメインはすでに追加されました。"
     },
     "delete": {
       "header": "ドメインの削除",
+      "remove": "削除",
       "description": "次のドメインを削除しようとしています。",
       "preventLockoutError": "固有のドメインを削除すると、ログインしないですみます。",
-      "warning": "ドメインに属するユーザーはロックアウトされ、Spark Service のログインまたは使用ができません。また、このドメインに属する新しいユーザーを追加することもできません。"
+      "warning": "ドメインに属するユーザーはロックアウトされ、Spark Service のログインまたは使用ができません。このドメインに属する新しいユーザーを追加することもできません。"
     },
-    "email": {
-      "header": "電子メールの送信",
-      "description": "{{Name}} のDNS 検証トークンと指示の電子メールを受け取るために、電子メールアドレスを入力してください。",
-      "exampleEmail": "複数のメールアドレスをカンマで区切って入力することもできます。",
-      "invalidEmail": "これは有効な電子メールアドレスではありません。",
-      "instructions": "この DNS 検証トークンをコピーし、これを TXT レコードセクションに貼り付けて、このドメインを所有していることを証明します。",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>DNS 検証トークンの入力方法については、</a>詳細をご覧ください。",
-      "beforeVerify": "検証する前に",
-      "sendEmail": "指示を送信"
+    "unclaim": {
+      "header": "ドメインクレームのリリース",
+      "unclaim": "リリース",
+      "description": "次のドメインをリリースしようとしています。",
+      "warning": "このドメインは他の組織が検証したり、要求したりすることができるようになりました。"
     },
     "verify": {
       "header": "ドメインの検証",
@@ -3492,29 +3767,35 @@
       "beforeVerify": "この DNS 検証トークンをコピーし、これを TXT レコードセクションに貼り付けて、このドメインを所有していることを証明します。",
       "warning": "すべてのドメインを検証することが重要です。検証されたドメインに所属していないユーザーは、正しhにロックアウトされます。これらのユーザーはログインしたり、Spark サービスを使用したりできなくなります。また、検証されていないドメインに所属する新しいユーザーを追加できません。",
       "verify": "検証",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>DNS 検証トークンの入力方法については、</a>詳細をご覧ください。",
-      "preventLockoutError": "アカウントのロックアウトを避けるために、ドメイン '{{domain}}' を検証する必要があります。"
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法については、</a>詳細をご覧ください。"
     },
     "claim": {
-      "header": "要求されたドメイン",
+      "header": "ドメインの要求",
       "claimThis": "次のドメインを要求しようとしています。",
       "warning": "他の組織に属するこのドメインのメールアドレスをもつユーザーは、新しい電子メールを指定する必要があります。",
       "claim": "クレーム"
     },
     "actions": {
-      "instructions": "トークンと指示の表示",
-      "mail": "トークンと指示のメール送信",
+      "instructions": "検証トークンの取得",
       "unverify": "ドメインの削除",
       "unclaim": "ドメインの解放",
-      "delete": "削除"
+      "delete": "ドメインの削除"
     },
     "instructions": {
       "title": "トークンと指示",
-      "done": "完了",
+      "close": "閉じる",
       "instructions": "この DNS 検証トークンをコピーし、これを TXT レコードセクションに貼り付けて、このドメインを所有していることを証明します。",
-      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>DNS 検証トークンの入力方法については、</a>詳細をご覧ください。",
-      "beforeVerify": "検証する前に",
-      "sendEmail": "指示を送信"
+      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 検証トークンの入力方法については、</a>詳細をご覧ください。",
+      "beforeVerify": "検証する前に"
     }
+  },
+  "csvDownload": {
+    "csvDownloadConfirmTitle": "間違いありませんか?",
+    "confirmCsvDownloadMsg": "エクスポートするデータの収集には時間がかかる場合があります。この間、サインアウトできず、ブラウザの最新表示やエクスポートは完了しません。",
+    "confirmCsvDownload": "続行しますか?",
+    "confirmCsvCancelMsg": "このことにより、現在のデータエクスポートがキャンセルされます。アクションを取り消すことはできません。",
+    "csvDownloadIsRunning": "エクスポートタスクがすでに実行中です。後でもう一度試してください。",
+    "csvDownloadInProgress": "バックグラウンドタスク「Export {{type}} list」ば実行中です。",
+    "csvDownloadSuccess": "あなたの {{Type}} リストがコンパイルされ、ダウンロードが開始されます。"
   }
 }

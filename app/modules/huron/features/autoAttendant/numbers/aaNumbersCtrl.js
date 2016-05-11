@@ -368,13 +368,13 @@
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCMIOnly', {
+            AANotificationService.error('autoAttendant.errorNumbersCMIOnly', {
               phoneNumbers: onlyCMI
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCESOnly', {
+            AANotificationService.error('autoAttendant.errorNumbersCESOnly', {
               phoneNumbers: onlyResources
             });
           }

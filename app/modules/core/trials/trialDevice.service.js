@@ -85,6 +85,9 @@
         state: 'Delaware',
         abbr: 'DE'
       }, {
+        state: 'District of Columbia',
+        abbr: 'DC'
+      }, {
         state: 'Florida',
         abbr: 'FL'
       }, {
