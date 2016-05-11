@@ -69,8 +69,8 @@ var WebExPage = function () {
     return flow.execute(this.initPost);
   };
 
-  this.setup = function (username, testSiteUrl) {
-    //login.login(username, password);
+  this.setup = function (username, password, testSiteUrl) {
+    login.loginThroughGuiUsingIntegrationBackend(username, password);
     var defer = protractor.promise.defer();
     browser.executeScript("return window.localStorage.getItem('accessToken');").then(function (accessToken) {
       var promise = webEx.getTicket(username, accessToken, testSiteUrl);
