@@ -4074,7 +4074,7 @@
     },
     "cardStatus": {
       "running": "Running",
-      "alarms": "Alarms",
+      "alarms": "Notifications",
       "error": "Error",
       "disabled": "Disabled"
     }
