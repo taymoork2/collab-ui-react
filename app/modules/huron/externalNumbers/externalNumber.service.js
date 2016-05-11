@@ -35,13 +35,13 @@
     return service;
 
     function refreshNumbers(customerId) {
+      clearNumbers();
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
-                clearNumbers();
                 _.forEach(numbers, function (number) {
                   if (_.has(number, 'orderNumber') || _.has(number, 'quantity')) {
                     pendingOrders.push(number);
