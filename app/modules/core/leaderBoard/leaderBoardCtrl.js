@@ -99,6 +99,10 @@
       getLicenses();
     });
 
+    $scope.$on('USER_LIST_UPDATED', function () {
+      getLicenses();
+    });
+
     function trialExistsInSubscription(subscription) {
       var licenses = _.get(subscription, 'licenses', []);
       return _.some(licenses, function (license) {
