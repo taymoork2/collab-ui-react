@@ -17,7 +17,9 @@
     font-weight: normal;
     &:hover {
       cursor: pointer;
-      color: $aa-builder-icon-click-color;
+      .icon {
+        color: $aa-builder-icon-click-color;
+      }
     }
     margin: -20px;
     padding: 20px;
