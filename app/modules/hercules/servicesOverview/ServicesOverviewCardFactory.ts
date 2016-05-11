@@ -11,12 +11,12 @@ namespace servicesOverview {
 
   /* @ngInject */
   import ServicesOverviewCard = servicesOverview.ServicesOverviewCard;
-  function ServicesOverviewCardFactory($translate) {
+  function ServicesOverviewCardFactory($translate, Authinfo) {
 
     return {
       createCards: function ():Array<ServicesOverviewCard> {
         return [
-          new ServicesOverviewMessageCard(),
+          new ServicesOverviewMessageCard(Authinfo),
           new ServicesOverviewMeetingCard(),
           new ServicesOverviewCallCard(),
           new ServicesOverviewHybridManagementCard(),
