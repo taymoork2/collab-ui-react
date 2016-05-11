@@ -63,9 +63,9 @@
         <h4 ng-if="mcpInfo.isPartner" translate="partnerProfile.ciscoRep"></h4>
         <h4 ng-if="!mcpInfo.isPartner" translate="customerProfile.supportContacts"></h4>
         <div ng-repeat="representative in mcpInfo.representatives">
-          <span class="rep-info">{{representative.name.givenName | translate}} {{representative.name.familyName | translate}}</span>
-          <span class="rep-info"><strong>{{representative.displayName}}</strong></span> <br>
-          <span class="rep-info">{{representative.userName}}</span>
+          <span class="rep-info"><strong>{{representative.name.givenName | translate}} {{representative.name.familyName | translate}}</strong></span>, 
+          <span class="rep-info">{{representative.displayName}}</span> <br>
+          <span class="rep-info">{{representative.userName}}</span><br>
         </div>
         <div ng-if="!mcpInfo.isPartner && mcpInfo.partner !== null">
           <h4 translate="customerProfile.partnerAdmin"></h4>
