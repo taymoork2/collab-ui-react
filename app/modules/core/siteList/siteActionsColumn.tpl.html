@@ -103,6 +103,26 @@
         <i class="icon icon-admin"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
+           
+        <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') || 
+                     (row.entity.csvStatusObj.status == 'exportCompletedWithErr') || 
+                     (row.entity.csvStatusObj.status == 'importCompletedNoErr') || 
+                     (row.entity.csvStatusObj.status == 'importCompletedWithErr')">
+                     
+          &nbsp;&nbsp;&nbsp;
+          
+          <a id="{{row.entity.license.siteUrl}}_exportResult"
+             ui-sref="site-csv-results({siteRow:row.entity})">
+            
+            <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') || 
+                         (row.entity.csvStatusObj.status == 'exportCompletedWithErr')"
+                  translate="siteList.siteCsvExportResultsLinkLabel"></span>
+            
+            <span ng-if="(row.entity.csvStatusObj.status == 'importCompletedNoErr') || 
+                         (row.entity.csvStatusObj.status == 'importCompletedWithErr')"
+                  translate="siteList.siteCsvImportResultsLinkLabel"></span>
+          </a>
+        </span>
       </a>
     </span>
   </span>
