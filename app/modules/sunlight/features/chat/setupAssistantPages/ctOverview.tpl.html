@@ -6,16 +6,16 @@
   <cs-card-layout>
     <div ng-repeat="(page, status) in careChatSA.template.configuration.pages">
       <cs-card class="medium">
-        <article ng-class="{'ct-card-border': status.enabled }">
+        <article ng-class="{'ct-card-border-enabled': status.enabled ,'ct-card-border-disabled': !status.enabled}" class="ct-card-overview">
           <i ng-class="['icon', 'icon-' + careChatSA.overview.{{page}},'icon-4x','ct-card-img']"></i>
-          <header><div class="h5 ct-card-title" translate="careChatTpl.ctOverviews.{{page}}.title"></div></header>
+          <div class="h4 ct-card-title" translate="careChatTpl.ctOverviews.{{page}}.title"></div>
           <section>
-            <div class="ct-card-desc" translate="careChatTpl.ctOverviews.{{page}}.desc"></div>
-            <cs-toggle-switch class="ct-toggle"
-                              ng-model="status.enabled"
+            <div class="h6 ct-card-desc" translate="careChatTpl.ctOverviews.{{page}}.desc"></div>
+            <cs-toggle-switch ng-model="status.enabled"
                               toggle-id={{page}}
                               name={{page}}
-                              size="small"></cs-toggle-switch>
+                              size="small">
+            </cs-toggle-switch>
           </section>
         </article>
       </cs-card>
