@@ -68,6 +68,7 @@
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.showUserDetails = showUserDetails;
+    $scope.getUserLicenses = getUserLicenses;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = isValidThumbnail;
@@ -280,6 +281,10 @@
       });
     }
 
+    function getUserLicenses(user) {
+      return $scope.isCSB && _.isUndefined(user.licenseID);
+    }
+
     function setFilter(filter) {
       $scope.activeFilter = filter || 'all';
       if (filter === 'administrators') {
@@ -375,8 +380,8 @@
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="(row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)) && !grid.appScope.isCSB" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity) && !userOverview.hasNoLicenseId" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity) && !userOverview.hasNoLicenseId" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="(!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)) && grid.appScope.getUserLicenses(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="(!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)) && grid.appScope.getUserLicenses(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
 

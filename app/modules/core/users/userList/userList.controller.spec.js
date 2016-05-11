@@ -34,6 +34,7 @@ describe('UserListCtrl: Ctrl', function () {
       CUSTOMER: 2
     };
 
+    spyOn($scope, '$emit').and.callThrough();
     spyOn(Notification, 'success');
     spyOn(Userservice, 'resendInvitation').and.returnValue($q.when({}));
     spyOn(UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
@@ -46,10 +47,10 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
       callback(getOrgJson, 200);
     });
-    spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-    spyOn($scope, '$emit').and.callThrough();
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
+    spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    
   }));
 
   function initController() {
@@ -147,7 +148,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
-  describe('When atlasTelstraCsb is enabled and customerType is a CSB', function () {
+  describe('When atlasTelstraCsb is enabled and customerType is APP_DIRECT', function () {
     beforeEach(function () {
       spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(true));
       initController();
