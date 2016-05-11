@@ -62,17 +62,9 @@
   &-holidays-recur-select-container {
     @include vr-spacing(mb, 6);
   }
-  &-holidays-time-wrapper {
-    margin-left: auto;
-  }
   &-holidays-time {
     display: inline-block;
     vertical-align: top;
-  }
-  &-holidays-date-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
   }
   &-holidays-date {
     @include vr-spacing(mb, 1);
