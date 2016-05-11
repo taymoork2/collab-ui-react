@@ -96,7 +96,8 @@
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
-        spark_synckms: 'spark.synckms'
+        spark_synckms: 'spark.synckms',
+        readonly_admin: 'id_readonly_admin'
       },
 
       roles: {
@@ -108,7 +109,8 @@
         reports: 'Reports',
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
-        spark_synckms: 'Spark_SyncKms'
+        spark_synckms: 'Spark_SyncKms',
+        readonly_admin: 'Readonly_Admin'
       },
 
       roleState: {
