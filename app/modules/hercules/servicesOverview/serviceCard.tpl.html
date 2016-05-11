@@ -5,7 +5,7 @@
   <p>
     {{card.description | translate}}
   </p>
-  <div class="card-button">
+  <div class="card-button" ng-class="{alignedButtons: !card.loading && card.status}">
     <a ng-href="#/{{button.link}}" ng-repeat="button in card.getButtons()">
       <button ng-class="button.buttonClass">{{button.name | translate}}</button>
       <!--      <button class="btn-link">{{button.name | translate}}</button> -->
