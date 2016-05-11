@@ -3,7 +3,7 @@
 describe('UserListCtrl: Ctrl', function () {
   var controller, $controller, $scope, $rootScope, $state, $timeout, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsersJson, listPartnersJson, getOrgJson;
-  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements;
+  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
   currentUser = getJSONFixture('core/json/currentUser.json');
   listUsersJson = getJSONFixture('core/json/users/userlist.service.json').listUsers;
@@ -11,9 +11,6 @@ describe('UserListCtrl: Ctrl', function () {
   getOrgJson = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
-  var photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
-  var currentUser = getJSONFixture('core/json/currentUser.json');
-  var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
 
   beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
@@ -50,7 +47,7 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    
+
   }));
 
   function initController() {
@@ -150,12 +147,21 @@ describe('UserListCtrl: Ctrl', function () {
 
   describe('When atlasTelstraCsb is enabled and customerType is APP_DIRECT', function () {
     beforeEach(function () {
+      telstraUser = {
+        "id": "111",
+        "userName": "telstraUser",
+        "licenseID": undefined,
+      };
       spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(true));
       initController();
     });
 
-    it('should set the isCSB flag to true', function () {
+    it('should set the isCSB flag to true and currentUser should be false', function () {
       expect($scope.isCSB).toBe(true);
+      expect($scope.getUserLicenses(currentUser)).toBe(false);
+    });
+    it('should expect telstraUser to be true', function () {
+      expect($scope.getUserLicenses(telstraUser)).toBe(true);
     });
   });
 
