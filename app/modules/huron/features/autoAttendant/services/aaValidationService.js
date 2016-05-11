@@ -72,6 +72,12 @@
             key: entry.key
           });
         }
+        if (entry.key && 'routeToQueue' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing',
+            key: entry.key
+          });
+        }
       });
 
       return outErrors;

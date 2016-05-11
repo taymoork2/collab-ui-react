@@ -238,6 +238,25 @@ describe('Service: AAValidationService', function () {
       expect(valid).toEqual(true);
       expect(AANotificationService.error).not.toHaveBeenCalled();
     });
+    it('report validation error for an empty Route to Queue target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[6];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+    });
+    it('should not report validation error for an empty Route to Queue target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[6];
+      uiKey2.actions[0].value = "Test Queue";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
   });
 
 });
