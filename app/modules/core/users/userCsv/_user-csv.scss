@@ -218,5 +218,8 @@
         border-top: none;
       }
     }
+    .csv-download {
+      @extend .right;
+    }
   }
 }

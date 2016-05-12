@@ -123,7 +123,9 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      enableCrashLogs: 'csdm-enable-crash-logs'
+      huronCallTrials: 'huron-call-trials',
+      enableCrashLogs: 'csdm-enable-crash-logs',
+      readonlyAdmin: 'atlas-read-only-admin'
     };
 
     var toggles = {};

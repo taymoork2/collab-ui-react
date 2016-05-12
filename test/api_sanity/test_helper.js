@@ -122,6 +122,41 @@ var auth = {
     user: 'indigoAA02+1@gmail.com',
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539'
+  },
+  't31CSVToggleUser': {
+    user: 't31r1-csvtoggle-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  't30csvWbxNotEntitledUser': {
+    user: 't30citestprov9_csvadm2@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  't30csvNotAvailableUser': {
+    user: 't30citestprov9_csvadm3@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  't31RegressionTestAdmin': {
+    user: 't31r1-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  't30RegressionTestAdmin': {
+    user: 't30sp6-regression-adm@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbxUserSettingsTestAdmin': {
+    user: 't30citestprov9@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbxUserSettingsTestUser': {
+    user: 'prov9usr@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
   }
 };
 
@@ -174,7 +209,7 @@ var getAuthCode = function (req, creds) {
         response_type: 'code',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         client_id: clientId,
-        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin',
+        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config cloudMeetings:login Identity:Organization ccc_config:admin',
         realm: '/' + creds.org,
         state: rand_str
       }

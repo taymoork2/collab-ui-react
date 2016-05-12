@@ -290,15 +290,9 @@ describe('ServiceStateChecker', function () {
     ScheduleUpgradeService.get.returns($q.when({
       isAdminAcknowledged: true
     }));
-    // this should spawn a dom verification notification
+    // this should spawn a domain verification notification
     DomainManagementService.domainList = [];
 
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
-    $rootScope.$digest();
-    //notifications not shown because first call to dv service hasn't returned
-    expect(NotificationService.getNotificationLength()).toEqual(0);
-
-    //notifications shown because since first call is now resolved.  (digest on line 307)
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
     $rootScope.$digest();
 
