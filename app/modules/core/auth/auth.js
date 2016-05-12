@@ -240,11 +240,15 @@
     }
 
     function updateAccessToken(response) {
-      var token = _.get(response, 'data.access_token', '');
+      var accessToken = _.get(response, 'data.access_token', '');
+      var refreshToken = _.get(response, 'data.refresh_token', '');
+      Storage.put('refreshToken', refreshToken);
+
       Log.info('Update Access Token');
-      Storage.put('accessToken', token);
-      setAuthorizationHeader(token);
-      return token;
+      Storage.put('accessToken', accessToken);
+
+      setAuthorizationHeader(accessToken);
+      return accessToken;
     }
 
     function getOauthState() {

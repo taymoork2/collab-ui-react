@@ -142,6 +142,25 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
+  it('should set refresh token', function (done) {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+
+    $httpBackend
+      .expectPOST('url', 'data', assertCredentials)
+      .respond(200, {
+        refresh_token: 'refreshTokenFromAPI'
+      });
+
+    Auth.setAccessToken().then(function (refreshToken) {
+      expect(refreshToken).toBe('refreshTokenFromAPI');
+      _.defer(done);
+    });
+
+    $httpBackend.flush();
+  });
+
   it('should return rejected promise if setAccessToken fails', function (done) {
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
