@@ -58,7 +58,7 @@
                             <div class="row showgrid">
                                 <div collapse="cdrLadderDiagram.isCallIdsCollapsed">
                                     <div class="row showgrid"  ng-repeat="callId in cdrLadderDiagram.filterCallIdOptions">
-                                        <div class="columns medium-11 medium-offset-1">
+                                        <div class="columns medium-11 medium-offset-2">
                                             <cs-checkbox ckid="{{callId.label}}" ng-model="callId.value" label="{{callId.label}}"></cs-checkbox>
                                         </div>
                                     </div>
@@ -89,9 +89,31 @@
                             </div>
                             <div class="row showgrid">
                                 <div collapse="cdrLadderDiagram.isHostNameCollapsed">
-                                    <div class="row showgrid" ng-repeat="hostName in cdrLadderDiagram.filterHostNamefilterOptions">
-                                        <div class="columns medium-11 medium-offset-1">
-                                            <cs-checkbox ckid="{{hostName.label}}" ng-model="hostName.value" label="{{hostName.label}}"></cs-checkbox>
+                                    <div class="row showgrid" ng-show="cdrLadderDiagram.sparkHostNamefilterOptions.length > 0">                                        
+                                        <div class="columns medium-6">
+                                             <h5 class="item-pad">{{::"cdrLadderDiagram.huronNodes" | translate}}</h5>
+                                        </div>
+                                        <div class="columns medium-6">
+                                            <div class="row showgrid">
+                                                <div class="columns medium-4">
+                                                    <h5 class="item-pad">{{::"cdrLadderDiagram.sparkNodes" | translate}}</h5>
+                                                </div>
+                                                <div class="columns medium-8">
+                                                    <cs-checkbox ckid="enabledSparkNodes" ng-model="cdrLadderDiagram.enabledSparkNodes"  ng-click="cdrLadderDiagram.selectSparkNodes()" label="{{::'cdrLadderDiagram.enabledSparkNodes' | translate}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row showgrid">
+                                        <div class="columns medium-5 medium-offset-1">
+                                            <div class="row showgrid" ng-repeat="option in cdrLadderDiagram.huronHostNamefilterOptions">
+                                                <cs-checkbox ckid="{{option.name}}" ng-model="option.value" label="{{option.name}}"></cs-checkbox>
+                                            </div>
+                                        </div>
+                                        <div class="columns medium-5 medium-offset-1">
+                                            <div class="row showgrid" ng-repeat="option in cdrLadderDiagram.sparkHostNamefilterOptions">
+                                                <cs-checkbox ckid="{{option.name}}" ng-model="option.value" label="{{option.name}}"></cs-checkbox>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

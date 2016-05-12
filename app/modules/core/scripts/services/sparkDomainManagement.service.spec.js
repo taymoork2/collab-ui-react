@@ -26,13 +26,13 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should verify that a domain is passed for checkAvailability and addSipUriDomain calls', function () {
+  it('should verify that a domain is passed for checkAvailability and addSipDomain calls', function () {
     SparkDomainManagementService.checkDomainAvailability().catch(function (response) {
-      expect(response).toBe('A SIP URI Domain input value must be entered');
+      expect(response).toBe('A SIP Domain input value must be entered');
     });
 
-    SparkDomainManagementService.addSipUriDomain().catch(function (response) {
-      expect(response).toBe('A SIP URI Domain input value must be entered');
+    SparkDomainManagementService.addSipDomain().catch(function (response) {
+      expect(response).toBe('A SIP Domain input value must be entered');
     });
   });
 
@@ -70,7 +70,7 @@ describe('SparkDomainManagementService: Service', function () {
     $httpBackend.flush();
   });
 
-  it('should add a Sip Uri Domain', function () {
+  it('should add a Sip Domain', function () {
     $httpBackend.whenPOST(sparkDomainRegex).respond(function () {
       var data = {
         'isDomainAvailable': false,
@@ -79,7 +79,7 @@ describe('SparkDomainManagementService: Service', function () {
       return [200, data];
     });
 
-    SparkDomainManagementService.addSipUriDomain('shafiTest3').then(function (response) {
+    SparkDomainManagementService.addSipDomain('shafiTest3').then(function (response) {
       expect(response.data.isDomainReserved).toBe(true);
       expect(response.data.isDomainAvailable).toBe(false);
     });

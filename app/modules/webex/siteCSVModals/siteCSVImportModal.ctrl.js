@@ -20,7 +20,7 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    $log.log(logMsg);
+    // $log.log(logMsg);
 
     vm.modal = {};
 

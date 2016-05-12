@@ -112,9 +112,10 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
     expect(csvConstructHttpsObj.headers).toEqual(expectedCsvHttpsObj.headers);
   }));
+
 });
 
-describe('WebExApiGatewayService.csvStatus() test', function () {
+describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function () {
   var $q;
   var $rootScope;
 
@@ -130,6 +131,18 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       'Authorization': 'Bearer someFakeBearer'
+    }
+  };
+
+  var fakeViewModel = {
+    'siteUrl': 'test.site.com',
+    'csvImportObj': {
+      'csvMock': {
+        'mockImport': true
+      }
+    },
+    'modal': {
+      'file': 'Some file content'
     }
   };
 
@@ -216,8 +229,18 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     deferredCsvApiRequest = $q.defer();
 
     spyOn(WebExApiGatewayService, 'csvConstructHttpsObj').and.returnValue(fakeCsvStatusHttpsObj);
+    spyOn(WebExApiGatewayService, 'webexCreateImportBlob');
     spyOn(WebExRestApiFact, 'csvApiRequest').and.returnValue(deferredCsvApiRequest.promise);
   }));
+
+  it('can call webex import blob', function () {
+    expect(WebExApiGatewayService).toBeDefined();
+    expect(fakeViewModel).toBeDefined();
+
+    WebExApiGatewayService.csvImport(fakeViewModel);
+
+    expect(WebExApiGatewayService.webexCreateImportBlob).toHaveBeenCalled();
+  });
 
   it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(

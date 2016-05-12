@@ -5,7 +5,7 @@
   "description": "",
   "author": "Cisco Systems, Inc.",
   "homepage": "",
-  "license": "Copyright 2013-2014 Cisco Systems, Inc.",
+  "license": "Copyright 2013-2016 Cisco Systems, Inc.",
   "devDependencies": {
     "browser-sync": "^2.7.1",
     "compression": "~1.6.0",
