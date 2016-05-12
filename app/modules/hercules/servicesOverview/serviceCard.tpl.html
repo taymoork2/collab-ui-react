@@ -17,9 +17,9 @@
 <section ng-if="card.loading">
   <i class='icon icon-spinner icon-2x'></i>
 </section>
-<footer ng-if="!card.loading && card.status">
-  <p class="status">
-      <i class="icon icon-circle" ng-class="card.status || 'disabled'"></i>
-      <span ng-class="card.status || 'disabled'">{{card.statusTxt| translate}}</span>
-  </p>
+<footer ng-if="card.showStatus">
+  <a class="status" ng-href="#/{{card.status.link}}">
+      <i class="icon icon-circle" ng-class="card.status.status || 'disabled'"></i>
+      <span ng-class="card.status.status || 'disabled'">{{card.status.text| translate}}</span>
+  </a>
 </footer>

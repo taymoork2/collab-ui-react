@@ -13,8 +13,12 @@ namespace servicesOverview {
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass:'btn-link'},
-      {name: 'servicesOverview.cards.hybridCall.buttons.settings', link: 'services/call/settings', buttonClass:'btn-link'}];
+      {name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass: 'btn-link'},
+      {
+        name: 'servicesOverview.cards.hybridCall.buttons.settings',
+        link: 'services/call/settings',
+        buttonClass: 'btn-link'
+      }];
 
 
     getButtons():Array<servicesOverview.CardButton> {
@@ -29,8 +33,11 @@ namespace servicesOverview {
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = this.filterAndGetCssStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']);
-      this._statusTxt = this.filterAndGetTxtStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']);
+      this._status = {
+        status: this.filterAndGetCssStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
+        text: this.filterAndGetTxtStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
+        link: ''
+      };
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc']);
       this._loading = false;
     }

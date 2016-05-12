@@ -13,8 +13,12 @@ namespace servicesOverview {
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaservice', buttonClass:'btn-link'},
-      {name: 'servicesOverview.cards.hybridMedia.buttons.settings', link: 'mediaservice/settings', buttonClass:'btn-link'}];
+      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaservice', buttonClass: 'btn-link'},
+      {
+        name: 'servicesOverview.cards.hybridMedia.buttons.settings',
+        link: 'mediaservice/settings',
+        buttonClass: 'btn-link'
+      }];
 
 
     getButtons():Array<servicesOverview.CardButton> {
@@ -29,8 +33,11 @@ namespace servicesOverview {
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = this.filterAndGetCssStatus(services, ['squared-fusion-media']);
-      this._statusTxt = this.filterAndGetTxtStatus(services, ['squared-fusion-media']);
+      this._status = {
+        status: this.filterAndGetCssStatus(services, ['squared-fusion-media']),
+        text: this.filterAndGetTxtStatus(services, ['squared-fusion-media']),
+        link: 'mediaservice'
+      };
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-media']);
       this._loading = false;
     }

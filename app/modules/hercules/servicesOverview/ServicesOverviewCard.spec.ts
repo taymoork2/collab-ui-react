@@ -46,6 +46,16 @@ namespace servicesOverview {
           expect(cardService.card.active).toBeFalsy();
         });
 
+        it(cardService.card.name + ' should set disable if one of expected service(s) are disabled', ()=> {
+          let enabledFlag = true;
+          let statuses = _.map(cardService.services, (service)=> {
+            enabledFlag = !enabledFlag;
+            return {id: service, status: '', enabled: enabledFlag}
+          });
+          cardService.card.hybridStatusEventHandler(statuses);
+          expect(cardService.card.active).toBeFalsy();
+        });
+
         it(cardService.card.name + ' should set disable no status is received', ()=> {
           let statuses = _.map(cardService.services, (service)=> {
             return {id: service + 'wrong-id', status: '', enabled: true}
@@ -59,7 +69,7 @@ namespace servicesOverview {
             return {id: service + 'wrong-id', status: 'ok', enabled: true}
           });
           cardService.card.hybridStatusEventHandler(statuses);
-          expect(cardService.card.status).toEqual(undefined);
+          expect(cardService.card.status.status).toEqual(undefined);
         });
 
         let statuses:any = {
@@ -77,7 +87,7 @@ namespace servicesOverview {
               return {id: service, status: status, enabled: true}
             });
             cardService.card.hybridStatusEventHandler(statuses);
-            expect(cardService.card.status).toEqual(cssExpectedStatus);
+            expect(cardService.card.status.status).toEqual(cssExpectedStatus);
           });
         });
 
@@ -91,12 +101,12 @@ namespace servicesOverview {
         };
 
         _.forEach(statusesTxt, (expectedStatusTxt:string, statusTxt:string)=> {
-          it(cardService.card.name + ' should set status to ' + expectedStatusTxt + ' when ' + statusTxt + ' is received', ()=> {
+          it(cardService.card.name + ' should set status text to ' + expectedStatusTxt + ' when ' + statusTxt + ' is received', ()=> {
             let statusesTxt = _.map(cardService.services, (service)=> {
               return {id: service, status: statusTxt, enabled: true}
             });
             cardService.card.hybridStatusEventHandler(statusesTxt);
-            expect(cardService.card.statusTxt).toEqual(expectedStatusTxt);
+            expect(cardService.card.status.text).toEqual(expectedStatusTxt);
           });
         });
 

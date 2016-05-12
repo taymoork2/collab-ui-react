@@ -7,14 +7,17 @@ namespace servicesOverview {
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridManagement.buttons.resources', link: 'services/expressway-management', buttonClass:'btn-link'},
+      {
+        name: 'servicesOverview.cards.hybridManagement.buttons.resources',
+        link: 'services/expressway-management',
+        buttonClass: 'btn-link'
+      },
       {
         name: 'servicesOverview.cards.hybridManagement.buttons.settings',
         link: 'services/expressway-management/settings',
-        buttonClass:'btn-link'
+        buttonClass: 'btn-link'
       }
     ];
-
 
     getButtons():Array<servicesOverview.CardButton> {
       return _.take(this._buttons, 3);
@@ -26,8 +29,11 @@ namespace servicesOverview {
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = this.filterAndGetCssStatus(services, ['squared-fusion-mgmt']);
-      this._statusTxt = this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']);
+      this._status = {
+        status: this.filterAndGetCssStatus(services, ['squared-fusion-mgmt']),
+        text: this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']),
+        link: 'services/expressway-management'
+      };
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-mgmt']);
       this._loading = false;
     }

@@ -5,6 +5,13 @@ namespace servicesOverview {
     buttonClass?:String;
     link:String;
   }
+
+  export interface CardStatus {
+    status:String,
+    text:String,
+    link:String,
+  }
+
   export enum CardType{
     cloud,
     hybrid
@@ -12,9 +19,8 @@ namespace servicesOverview {
 
   export abstract class ServicesOverviewCard {
 
-    protected _status;
+    protected _status:CardStatus;
     protected _loading = true;
-    protected _statusTxt:string;
 
     get active() {
       return this._active;
@@ -48,8 +54,8 @@ namespace servicesOverview {
       return this._status;
     }
 
-    get statusTxt() {
-      return this._statusTxt;
+    get showStatus() {
+      return !this.loading && this.active && this.status && this.status.status;
     }
 
     get template() {
@@ -77,8 +83,8 @@ namespace servicesOverview {
     };
 
     serviceEnabledWeight = {
-      'true': 2,
-      'false': 1,
+      'true': 1,
+      'false': 2,
       undefined: 0
     };
     serviceStatusWeight = {
@@ -94,13 +100,13 @@ namespace servicesOverview {
     }
 
     protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
-      let startVal = false;
+      let startVal = undefined;
       let res = services.filter((service)=> {
         return _.indexOf(serviceIds, service.id) >= 0;
       }).reduce((result, serv)=> {
         return this.serviceEnabledWeight['' + serv.enabled] > this.serviceEnabledWeight['' + result] ? serv.enabled : result;
       }, startVal);
-      return res;
+      return _.isUndefined(res) ? false : res;
     }
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
