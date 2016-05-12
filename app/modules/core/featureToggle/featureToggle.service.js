@@ -43,6 +43,7 @@
       disableCacheForFeatures: 'disableCacheForFeatures',
       domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
+      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
@@ -122,7 +123,6 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials',
       enableCrashLogs: 'csdm-enable-crash-logs',
       readonlyAdmin: 'atlas-read-only-admin'
     };

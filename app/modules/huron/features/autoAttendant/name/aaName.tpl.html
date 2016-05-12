@@ -1,7 +1,7 @@
 <div class="aa-flex-row centered" ng-controller="aaBuilderNameCtrl as nameCtrl">
   <!--form novalidate name="addAutoDetailForm" id="addAutoDetailForm" class="form-horizontal"  -->
   <form  class="aa-flex-name-item" id="nameForm" ng-submit="nameCtrl.saveAARecord()">
-    <input type="text" aa-builder-autofocus maxlength="64" ng-model="nameCtrl.name" id="aa-name-detail" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
+    <input type="text" aa-builder-autofocus aa-keypress maxlength="64" ng-model="nameCtrl.name" id="aa-name-detail" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
            />
   </form>
 </div>
