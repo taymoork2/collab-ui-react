@@ -152,7 +152,7 @@
 
       var enterpriseSipUrlStep = {
         name: 'enterpriseSipUrl',
-        template: 'modules/core/setupWizard/sipUriSettings/enterprise.setSipUri.tpl.html',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
       };
 
       var enterpriseSettingsTab = _.find($scope.tabs, {

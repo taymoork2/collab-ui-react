@@ -1,23 +1,16 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, $q, $state, $stateParams, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService;
-  var getUserMe;
-  var getMigrateUsers;
-  var getMyFeatureToggles;
-  var sites;
-  var fusionServices;
-  var headers;
-  var getMessageServices;
-  var getLicensesUsage;
-  var getLicensesUsageSpy;
-  var $controller;
+  var controller, $controller, $scope, $timeout, $q, $state, $stateParams, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer;
+  var getUserMe, getMigrateUsers, getMyFeatureToggles, sites;
+  var fusionServices, headers, getMessageServices, getLicensesUsage;
+  var getLicensesUsageSpy, customer;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _Orgservice_, _FeatureToggleService_, _Authinfo_, _CsvDownloadService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _Orgservice_, _FeatureToggleService_, _Authinfo_, _CsvDownloadService_, _HuronCustomer_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -30,6 +23,7 @@ describe('OnboardCtrl: Ctrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     Authinfo = _Authinfo_;
     CsvDownloadService = _CsvDownloadService_;
+    HuronCustomer = _HuronCustomer_;
 
     spyOn($state, 'go');
 
@@ -40,6 +34,7 @@ describe('OnboardCtrl: Ctrl', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
+    customer = getJSONFixture('huron/json/settings/customer.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -61,6 +56,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
     spyOn(Userservice, 'updateUsers');
     spyOn($scope, '$broadcast').and.callThrough();
+    spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
   }));
 
   function initController() {
@@ -183,6 +179,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('Process CSV and Save Users', function () {
       beforeEach(function () {
+        controller.isCancelledByUser = false;
         controller.model.file = twoValidUsers;
         $scope.$apply();
         $timeout.flush();
@@ -197,6 +194,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(controller.model.numNewUsers).toEqual(2);
         expect(controller.model.numExistingUsers).toEqual(0);
         expect(controller.model.userErrorArray.length).toEqual(0);
+        expect(controller.model.csvChunk).toEqual(2);
       });
       it('should report existing users', function () {
         Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200)));
@@ -258,6 +256,7 @@ describe('OnboardCtrl: Ctrl', function () {
         controller.cancelProcessCsv();
         $scope.$apply();
         expect($scope.$broadcast).toHaveBeenCalledWith('timer-stop');
+        expect(controller.isCancelledByUser).toEqual(true);
       });
     });
 

@@ -12,8 +12,8 @@
     var oldSSOValue = 0;
     $scope.updateSSO = updateSSO;
 
-    //SIP URI Domain Controller code
-    $scope.cloudSipUriField = {
+    //SipDomain Controller code
+    $scope.cloudSipDomainField = {
       inputValue: '',
       isDisabled: false,
       isUrlAvailable: false,
@@ -23,7 +23,7 @@
       urlValue: '',
       isRoomLicensed: false,
       domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
-      errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
+      errorMsg: $translate.instant('firstTimeWizard.setSipDomainErrorMessage')
     };
 
     $scope.options = {
@@ -34,12 +34,12 @@
       deleteSSOBySwitchingRadio: false
     };
 
-    var sipField = $scope.cloudSipUriField;
+    var sipField = $scope.cloudSipDomainField;
     init();
 
     function init() {
       checkRoomLicense();
-      setSipUri();
+      setSipDomain();
       updateSSO();
     }
 
@@ -61,7 +61,7 @@
       });
     }
 
-    function setSipUri() {
+    function setSipDomain() {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
         var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
@@ -85,12 +85,12 @@
       }, false, true);
     }
 
-    $scope.checkSipUriAvailability = function () {
+    $scope.checkSipDomainAvailability = function () {
       var domain = sipField.inputValue;
       sipField.isUrlAvailable = false;
       sipField.isLoading = true;
       sipField.isButtonDisabled = true;
-      sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
+      sipField.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
       return SparkDomainManagementService.checkDomainAvailability(domain)
         .then(function (response) {
           if (response.data.isDomainAvailable) {
@@ -105,7 +105,7 @@
         })
         .catch(function (response) {
           if (response.status === 400) {
-            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessageInvalidDomain');
+            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessageInvalidDomain');
             sipField.isError = true;
           } else {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
@@ -118,13 +118,13 @@
     $scope._saveDomain = function () {
       var domain = sipField.inputValue;
       if (sipField.isUrlAvailable && sipField.isConfirmed) {
-        SparkDomainManagementService.addSipUriDomain(domain)
+        SparkDomainManagementService.addSipDomain(domain)
           .then(function (response) {
             if (response.data.isDomainReserved) {
               sipField.isError = false;
               sipField.isDisabled = true;
               sipField.isButtonDisabled = true;
-              Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
+              Notification.success('firstTimeWizard.setSipDomainSuccessMessage');
               $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
             }
           })
@@ -136,7 +136,7 @@
 
     $scope.$on('wizard-enterprise-sip-url-event', $scope._saveDomain);
 
-    $scope.validateSipUri = function () {
+    $scope.validateSipDomain = function () {
       if (sipField.inputValue.length > 40) {
         sipField.isError = true;
       }
@@ -144,7 +144,7 @@
       return sipField.isError;
     };
 
-    $scope.$watch('cloudSipUriField.inputValue', function (newValue, oldValue) {
+    $scope.$watch('cloudSipDomainField.inputValue', function (newValue, oldValue) {
       if (newValue !== sipField.urlValue && !sipField.isDisabled) {
         sipField.isUrlAvailable = false;
         sipField.isError = false;
@@ -378,7 +378,7 @@
             entityId: newEntityId
           }), 'url');
           if (metaUrl) {
-            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
                 $scope.ssoEnabled = true;
