@@ -73,4 +73,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     controller.evalKeyPress(escapeKey);
     expect($modal.open).toHaveBeenCalled();
   });
+  
+  describe('Initial Chat Template - Overview Page', function () {
+
+    it("should have previous and next button enabled", function () {
+      checkStateOfButton(2, true, true);
+      validateKeyPressEvent(rightArrow, 2, 3);
+      validateKeyPressEvent(leftArrow, 2, 1);
+    });
+
+    it("should inititialize all cards as enabled ", function () {
+      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+    });
+  });
 });
