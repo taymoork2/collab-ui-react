@@ -38,6 +38,7 @@
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
+      getAllOrders: getAllOrders,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
@@ -255,6 +256,12 @@
       return TerminusOrderService.query({
         customerId: customerId,
         orderId: orderId
+      }).$promise;
+    }
+
+    function getAllOrders(customerId) {
+      return TerminusOrderService.query({
+        customerId: customerId
       }).$promise;
     }
 

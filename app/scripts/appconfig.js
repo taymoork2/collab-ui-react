@@ -1318,6 +1318,29 @@
               displayName: 'Phone Numbers'
             }
           })
+          .state('customer-overview.pstnOrderOverview', {
+            controller: 'PstnOrderOverviewCtrl',
+            controllerAs: 'pstnOrderOverview',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            data: {
+              displayName: 'PSTN Orders'
+            },
+            params: {
+              currentCustomer: {}
+            }
+          })
+          .state('customer-overview.pstnOrderDetail', {
+            parent: 'customer-overview.pstnOrderOverview',
+            controller: 'PstnOrderDetailCtrl',
+            controllerAs: 'pstnOrderDetail',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            data: {
+              displayName: 'Order'
+            },
+            params: {
+              currentOrder: {}
+            }
+          })
           .state('modal', {
             abstract: true,
             onEnter: modalOnEnter(),
