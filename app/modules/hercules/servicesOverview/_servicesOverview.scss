@@ -93,6 +93,7 @@
         .cta-btn {
           background-color: $color-cta-base !important;
           color: white;
+          bottom: 3.25rem;
         }
         button.btn-link{
           color: $color-primary-base;
@@ -105,10 +106,11 @@
           .status{
             position: relative;
             top: 0.9rem;
+            display: block;
             //text-align: center;
             span{
               position: relative;
-              top: -0.1rem;
+              top: -0.2rem;
               left: 0.1rem;
             }
           }
