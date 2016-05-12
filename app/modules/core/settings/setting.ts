@@ -1,7 +1,7 @@
 namespace globalsettings {
 
   export interface SettingsController {
-    authinfo:any, 
+    authinfo:any,
     translate:any
   }
 
@@ -17,9 +17,12 @@ namespace globalsettings {
     public isCiscoHelp:boolean;
     public translate:any;
 
-    constructor(settingKey:string, ctrl:SettingsController) {
-      this.title = 'globalSettings.' + settingKey + '.title';
+    settingKey:string;
 
+    constructor(settingKey:string, ctrl:SettingsController) {
+      this.settingKey = settingKey;
+
+      this.title = 'globalSettings.' + settingKey + '.title';
       this.subsectionLabel = 'globalSettings.' + settingKey + '.subsectionLabel';
       this.subsectionDescription = 'globalSettings.' + settingKey + '.subsectionDescription';
       this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
@@ -29,6 +32,10 @@ namespace globalsettings {
       //this.isCiscoSupport = ctrl.authinfo.isCiscoSupport();
      // this.isCiscoHelp = ctrl.authinfo.isCiscoHelp();
       this.translate = ctrl.translate;
+    }
+
+    getSettingString(settingName:string):string{
+      return this.translate.instant('globalSettings.' + this.settingKey + "." + settingName)
     }
   }
 }
