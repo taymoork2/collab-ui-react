@@ -56,11 +56,12 @@
 
     function getQueues() {
 
-      return QueueHelperService.listQueues().then(function (queuePool) {
-        _.each(queuePool, function (aaQueueList) {
+      return QueueHelperService.listQueues().then(function (aaQueueList) {
+        _.each(aaQueueList, function (aaQueue) {
+          var idPos = aaQueue.queueUrl.lastIndexOf("/");
           vm.queues.push({
-            description: aaQueueList.name,
-            id: aaQueueList.id
+            description: aaQueue.name,
+            id: aaQueue.queueUrl.substr(idPos + 1)
           });
         });
       });
