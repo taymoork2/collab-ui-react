@@ -70,18 +70,6 @@ namespace myCompanyPage {
         this._partners = _.filter(data.partners, (rep)=> {
           return !_.endsWith(rep.userName, '@cisco.com')
         });
-        // data.partners.forEach(partner=> {
-        //   let currentPartner:Partner = data.partners[partner];
-        //   if (this.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
-        //     console.log('cur', currentPartner);
-        //     this._partner = currentPartner;
-        //     this.isManaged = true;
-        //   } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
-        //     console.log('rep', currentPartner);
-        //     this._representative = currentPartner;
-        //     this.isManaged = true;
-        //   }
-        // });
       });
     }
   }
