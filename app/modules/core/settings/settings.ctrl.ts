@@ -28,14 +28,14 @@ namespace globalsettings {
         ];
       } else {
         this.settings = [
-       //   new SecuritySetting(this),
-        //  new PrivacySetting(this),
+          new SecuritySetting(this),
+          new PrivacySetting(this),
           new DomainsSetting(this),
           new SipDomainSetting(this),
           new AuthSetting(this, AuthModeService),
           new BrandingSetting(this),
           new SupportSetting(this),
-         // new DataPolicySetting(this)
+          new DataPolicySetting(this)
         ];
       }
     }

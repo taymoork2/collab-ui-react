@@ -3725,6 +3725,18 @@
       "title": "Authentication",
       "subsectionLabel": "Single Sign-On"
     },
+    "dataPolicy": {
+      "title": "Data Policy",
+      "subsectionLabel": "Data Retention (after deletion of org)"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "subsectionLabel": "Support Access"
+    },
+    "security": {
+      "title": "Security",
+      "subsectionLabel": "Spark Client Security"
+    },
     "support": {
       "title": "Support"
     }
