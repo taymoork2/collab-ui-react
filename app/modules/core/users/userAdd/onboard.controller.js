@@ -12,6 +12,7 @@
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
+    $scope.showSearch = false;
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -1735,6 +1736,7 @@
         $scope.unlicensedUsersList = null;
         if (data.success) {
           if (data.totalResults) {
+            $scope.showSearch = true;
             $scope.unlicensed = data.totalResults;
             $scope.unlicensedUsersList = data.resources;
             $('.ui-grid-viewport').mouseover(function () {
