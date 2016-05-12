@@ -13,7 +13,7 @@ describe('Directive: aaRouteToQueue', function () {
 
   var queue = [{
     name: 'Test Queue',
-    id: ''
+    queueUrl: ''
   }];
 
   var schedule = 'openHours';

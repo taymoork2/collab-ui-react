@@ -21,7 +21,8 @@ describe('Controller: AARouteToQueueCtrl', function () {
   var queueName = 'Chandan Test Queue';
   var queues = [{
     name: queueName,
-    id: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+    queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
+
   }];
 
   var schedule = 'openHours';
@@ -208,7 +209,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
           $scope: $scope
         });
         $scope.$apply();
-        expect(controller.queueSelected.id).toEqual(queues[0].id);
+        expect(controller.queueSelected.id).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
     });
 
