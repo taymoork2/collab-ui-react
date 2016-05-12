@@ -26,13 +26,11 @@
     };
     vm.menuKeyEntry = {};
 
-    vm.populateUiModel = populateUiModel;
-    vm.saveUiModel = saveUiModel;
-
     var rtQueue = 'routeToQueue';
-
     var fromRouteCall = false;
 
+    vm.populateUiModel = populateUiModel;
+    vm.saveUiModel = saveUiModel;
     /////////////////////
 
     function populateUiModel() {
@@ -53,9 +51,7 @@
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.queueSelected.id);
       }
-
       AACommonService.setPhoneMenuStatus(true);
-
     }
 
     function getQueues() {
@@ -72,12 +68,9 @@
     }
 
     function activate() {
-
       vm.aaModel = AAModelService.getAAModel();
       var ui = AAUiModelService.getUiModel();
-
       vm.uiMenu = ui[$scope.schedule];
-
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
       if ($scope.fromRouteCall) {
@@ -103,14 +96,11 @@
         }
 
       }
-
       getQueues().then(function () {
         populateUiModel();
       });
 
     }
-
     activate();
-
   }
 })();
