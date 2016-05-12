@@ -73,7 +73,9 @@
       Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200) {
           var uuid = response.data.uuid;
-          addToManagedOrgsList(uuid, customerOrgId);
+          if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
+            addToManagedOrgsList(uuid, customerOrgId);
+          }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);
         }
