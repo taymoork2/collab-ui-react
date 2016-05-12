@@ -7,7 +7,7 @@ namespace servicesOverview {
     getShowMoreButton():servicesOverview.CardButton {
       return this.moreButton;
     }
-
+    
     private _buttons:Array<servicesOverview.CardButton> = [];
 
     getButtons():Array<servicesOverview.CardButton> {

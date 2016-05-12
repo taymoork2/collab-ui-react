@@ -6,6 +6,12 @@ namespace servicesOverview {
       return undefined;
     }
 
+    private _setupButton:CardButton = {
+      name: 'servicesOverview.genericButtons.setup',
+      link: 'services/expressway-management',
+      buttonClass: 'cta-btn'
+    };
+
     private _buttons:Array<servicesOverview.CardButton> = [
       {
         name: 'servicesOverview.cards.hybridManagement.buttons.resources',
@@ -20,7 +26,9 @@ namespace servicesOverview {
     ];
 
     getButtons():Array<servicesOverview.CardButton> {
-      return _.take(this._buttons, 3);
+      if(this.active)
+        return _.take(this._buttons, 3);
+      return [this._setupButton];
     }
 
     public constructor() {
@@ -34,7 +42,11 @@ namespace servicesOverview {
         text: this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']),
         link: 'services/expressway-management'
       };
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-mgmt']);
+      // this._active = this.filterAndGetEnabledService(services, ['squared-fusion-mgmt']);
+      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal'])
+        || this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc'])
+        || this.filterAndGetEnabledService(services, ['squared-fusion-media']);
+      console.log('acdtive',this._active);
       this._loading = false;
     }
   }

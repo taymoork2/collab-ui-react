@@ -6,6 +6,12 @@ namespace servicesOverview {
       return undefined;
     }
 
+    private _setupButton:CardButton = {
+      name: 'servicesOverview.genericButtons.setup',
+      link: 'services/calendar',
+      buttonClass: 'cta-btn'
+    };
+
     private _buttons:Array<servicesOverview.CardButton> = [
       {name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar', buttonClass: 'btn-link'},
       {
@@ -16,7 +22,9 @@ namespace servicesOverview {
 
 
     getButtons():Array<servicesOverview.CardButton> {
-      return _.take(this._buttons, 3);
+      if (this.active)
+        return _.take(this._buttons, 3);
+      return [this._setupButton];
     }
 
     public constructor() {
