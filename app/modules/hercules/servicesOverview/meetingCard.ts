@@ -5,10 +5,7 @@ namespace servicesOverview {
     private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list', buttonClass:'btn-link'};
 
     getShowMoreButton():servicesOverview.CardButton {
-      if (this._buttons.length > 3) {
-        return this.moreButton;
-      }
-      return undefined;
+      return this.moreButton;
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [];
