@@ -2,12 +2,8 @@
 namespace servicesOverview {
 
   export class ServicesOverviewCallCard extends ServicesOverviewCard {
-    // private moreButton:CardButton = {name: 'servicesOverview.showMore', link: ''};
-
+    
     getShowMoreButton():servicesOverview.CardButton {
-      // if (this._buttons.length > 3) {
-      //   return this.moreButton;
-      // }
       return undefined;
     }
 
@@ -17,12 +13,14 @@ namespace servicesOverview {
       {name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass:'btn-link'}];
 
     getButtons():Array<servicesOverview.CardButton> {
-      return _.take(this._buttons, 3);
+      if(this.active)
+        return _.take(this._buttons, 3);
+      return [];
     }
 
-    public constructor() {
+    public constructor(Authinfo) {
       super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.call.title', 'servicesOverview.cards.call.description', 'icon-circle-call', true, 'cta-bar');
+        'servicesOverview.cards.call.title', 'servicesOverview.cards.call.description', 'icon-circle-call', Authinfo.isAllowedState('huronsettings'), 'cta-bar');
       this._loading = false;
     }
   }

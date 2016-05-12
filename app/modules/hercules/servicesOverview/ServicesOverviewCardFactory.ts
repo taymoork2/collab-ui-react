@@ -17,8 +17,8 @@ namespace servicesOverview {
       createCards: function ():Array<ServicesOverviewCard> {
         return [
           new ServicesOverviewMessageCard(Authinfo),
-          new ServicesOverviewMeetingCard(),
-          new ServicesOverviewCallCard(),
+          new ServicesOverviewMeetingCard(Authinfo),
+          new ServicesOverviewCallCard(Authinfo),
           new ServicesOverviewHybridManagementCard(),
           new ServicesOverviewCalendarCard(),
           new ServicesOverviewHybridCallCard(),
