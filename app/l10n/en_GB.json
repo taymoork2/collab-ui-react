@@ -772,8 +772,7 @@
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
     "postpone": "Postpone",
-    "continue": "Continue",
-    "warning": "Warning"
+    "continue": "Continue"
   },
   "notifications": {
     "success": "Success notifications",
@@ -893,17 +892,13 @@
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
-    "extensionLength": "Internal Extension Length",
-    "extensionLengthDescription": "Specify the length of internal numbers.",
-    "extensionLengthChangeWarning": "Changing the extension length will change all extensions in the system.",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
     "siteCode": "Site Code",
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
-    "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
     "internalExtensionRange": "Internal Extension Range",
-    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
+    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",

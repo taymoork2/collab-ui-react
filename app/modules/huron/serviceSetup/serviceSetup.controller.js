@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, $timeout, ServiceSetup, Notification, Authinfo, $translate,
+  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
     ExternalNumberService, ModalService, FeatureToggleService) {
     var vm = this;
