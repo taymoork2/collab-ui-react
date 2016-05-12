@@ -7,7 +7,7 @@ namespace myCompanyPage {
     private _accountNumber:String;
     private _isPartner:boolean;
     private isManaged:boolean;
-    private mockIfEmpty = true;
+    private mockIfEmpty = false;
 
     get accountNumber():String {
       return this._accountNumber;
@@ -30,17 +30,17 @@ namespace myCompanyPage {
     }
 
     get showSupportContacts():boolean {
-      return !_.isEmpty(this.partners) || !_.isEmpty(this.representatives);
+      return false;//!_.isEmpty(this.partners) || !_.isEmpty(this.representatives);
     }
 
     /* @ngInject */
     constructor(Authinfo, UserListService) {
       this._companyName = Authinfo.getOrgName();
       let orgId = Authinfo.getOrgId();
+      this._accountNumber = orgId;
       this._isPartner = Authinfo.isPartner();
 
       UserListService.listPartners(orgId, (data:{partners:Array<Partner>})=> {
-        // _.chain(data.partners).filter((partner)=>{}).last().value();
         if (_.isEmpty(data.partners) && this.mockIfEmpty) {
           //mock data
           data.partners = [{
