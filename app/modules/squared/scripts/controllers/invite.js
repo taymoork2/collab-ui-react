@@ -21,12 +21,7 @@
       WindowLocation.set(redirectUrl);
     };
 
-    // extracts param from url
-    var encryptedUser = $location.search().user;
-
-    if (encryptedUser === undefined) {
-      redirect();
-    }
+    redirect();
 
     // check if cookie already exists.  Only call backend if not.
     var cookieName = 'invdata';
@@ -44,22 +39,6 @@
         domain: Config.isDev() ? null : '.wbx2.com',
         expires: 1 // 1 day
       };
-
-      // call backend to decrypt param
-      Inviteservice.resolveInvitedUser(encryptedUser)
-        .then(function (res) {
-          Log.debug('param decrypted');
-          var data = res.data;
-
-          inviteCookie.userEmail = data.email;
-          inviteCookie.displayName = data.displayName;
-          inviteCookie.entitlements = data.entitlements;
-          inviteCookie.orgId = data.orgId;
-
-          ipCookie(cookieName, inviteCookie, cookieOptions);
-
-          redirect();
-        });
 
     } else {
       redirect();
