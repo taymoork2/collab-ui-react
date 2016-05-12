@@ -1,10 +1,12 @@
-class AuthModeService {
+namespace globalsettings {
+  export class AuthModeService {
 
-  public enableSSO = 0;
+    public enableSSO = 0;
 
-  constructor(private $translate) {
+    constructor(private $translate) {
 
+    }
   }
+  angular.module('Core')
+    .service('AuthModeService', AuthModeService);
 }
-angular.module('Core')
-  .service('AuthModeService', AuthModeService);

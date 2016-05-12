@@ -1,86 +1,14 @@
+/// <reference path="AuthSetting.ts"/>
+/// <reference path="BrandingSetting.ts"/>
+/// <reference path="DataPolicySetting.ts"/>
+/// <reference path="DomainsSetting.ts"/>
+/// <reference path="PrivacySetting.ts"/>
+/// <reference path="SecuritySetting.ts"/>
+/// <reference path="SipDomainSetting.ts"/>
+/// <reference path="SupportSetting.ts"/>
 namespace globalsettings {
 
-  class Setting {
-
-    public title:string;
-    public template:string;
-    public subsectionLabel:string;
-    public subsectionDescription:string;
-    public isPartner:boolean;
-    public isManaged:boolean;
-    public isCiscoSupport:boolean;
-    public isCiscoHelp:boolean;
-    public translate:any;
-
-    constructor(settingKey:string, ctrl:SettingsCtrl) {
-      this.title = 'globalSettings.' + settingKey + '.title';
-
-      this.subsectionLabel = 'globalSettings.' + settingKey + '.subsectionLabel';
-      this.subsectionDescription = 'globalSettings.' + settingKey + '.subsectionDescription';
-      this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
-
-      this.isPartner = ctrl.authinfo.isPartner();
-      //this.isManaged = false;
-      //this.isCiscoSupport = ctrl.authinfo.isCiscoSupport();
-     // this.isCiscoHelp = ctrl.authinfo.isCiscoHelp();
-      this.translate = ctrl.translate;
-    }
-  }
-
-  class AuthSetting extends Setting {
-
-    public authModeService:AuthModeService;
-
-    constructor(ctrl:SettingsCtrl, authModeService:AuthModeService) {
-      super('authentication', ctrl);
-      this.subsectionDescription = '';
-      this.authModeService = authModeService;
-    }
-
-    public configureSSOOptions = [{
-      label: this.translate.instant('ssoModal.disableSSO'),
-      value: 0,
-      name: 'ssoOptions',
-      id: 'ssoNoProvider'
-    }, {
-      label: this.translate.instant('ssoModal.enableSSO'),
-      value: 1,
-      name: 'ssoOptions',
-      id: 'ssoProvider'
-    }];
-  }
-
-  class SupportSetting extends Setting {
-
-    constructor(ctrl:SettingsCtrl) {
-      super('support', ctrl);
-      this.subsectionLabel = '';
-      this.subsectionDescription = '';
-    }
-  }
-
-  class BrandingSetting extends Setting {
-    constructor(ctrl:SettingsCtrl) {
-      super('branding', ctrl);
-      this.subsectionDescription = '';
-    }
-  }
-
-  class SipDomainSetting extends Setting {
-    constructor(ctrl:SettingsCtrl) {
-      super('sipDomain', ctrl);
-    }
-  }
-
-  class DomainSetting extends Setting {
-    constructor(ctrl:SettingsCtrl) {
-      super('domains', ctrl);
-      this.subsectionLabel = 'domainManagement.title';
-      this.subsectionDescription = 'domainManagement.description';
-    }
-  }
-
-  class SettingsCtrl {
+  export class SettingsCtrl implements SettingsController {
 
     private settings:Array<Setting>;
 
@@ -100,11 +28,14 @@ namespace globalsettings {
         ];
       } else {
         this.settings = [
-          new BrandingSetting(this),
+       //   new SecuritySetting(this),
+        //  new PrivacySetting(this),
+          new DomainsSetting(this),
           new SipDomainSetting(this),
-          new DomainSetting(this),
           new AuthSetting(this, AuthModeService),
-          new SupportSetting(this)
+          new BrandingSetting(this),
+          new SupportSetting(this),
+         // new DataPolicySetting(this)
         ];
       }
     }
