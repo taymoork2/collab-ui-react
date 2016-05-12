@@ -6,7 +6,12 @@
     .controller('AppdownloadCtrl', AppdownloadCtrl);
 
   /* @ngInject */
-  function AppdownloadCtrl(UrlConfig, Utils, WindowLocation) {
+  function AppdownloadCtrl($document, UrlConfig, Utils, WindowLocation, Localytics) {
+    var platform = Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web');
+    Localytics.tagEvent('Display /appdownload', {
+      from: $document[0].referrer,
+      platform: platform
+    });
     if (Utils.isIPhone()) {
       WindowLocation.set(UrlConfig.getItunesStoreUrl());
     } else if (Utils.isAndroid()) {

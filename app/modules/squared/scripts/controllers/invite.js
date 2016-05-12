@@ -5,7 +5,13 @@
     .module('Squared')
     .controller('InviteCtrl', InviteCtrl);
 
-  function InviteCtrl($location, $cookies, Utils, Inviteservice, Config, Log, UrlConfig, WindowLocation) {
+  function InviteCtrl($location, $cookies, Utils, Inviteservice, Config, Log, UrlConfig, WindowLocation, Localytics) {
+    var platform = Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web');
+    Localytics.tagEvent('Display /invite', {
+      platform: platform,
+      encryptedUser: !!$location.search().user,
+      inviteCookie: !!$cookies.getObject(cookieName)
+    });
     var redirect = function () {
       var redirectUrl = null;
 

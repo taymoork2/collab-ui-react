@@ -6,7 +6,11 @@
     .controller('ApplauncherCtrl', ApplauncherCtrl);
 
   /* @ngInject */
-  function ApplauncherCtrl($location, $timeout, UrlConfig, Utils, WindowLocation) {
+  function ApplauncherCtrl($location, $timeout, UrlConfig, Utils, WindowLocation, Localytics) {
+    var platform = Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web');
+    Localytics.tagEvent('Display /applauncher', {
+      platform: platform
+    });
     if (Utils.isWeb()) {
       var urlParams = '';
       var params = $location.absUrl().split('?')[1];
