@@ -8,15 +8,18 @@
     </h3>
   </div>
   <div class="modal-body">
-    <p><span translate="homePage.convertUsersText"></span></p>
-      <div class="search">
-        <span class="icon icon-search"></span>
-        <input type="text"
+    <p class="explanation"><span translate="homePage.convertUsersText"></span></p>
+    <span class="spinner-example--large" ng-show="!showSearch">
+        <i class="icon icon-spinner"></i>
+    </span>
+    <div class="search" ng-show="unlicensed > 0 || showSearch">
+      <span class="icon icon-search"></span>
+      <input type="text"
         id="searchConvertUser"
         placeholder= "{{searchPlaceholder}}"
         ng-model="searchStr"
         ng-change="filterList(searchStr)">
-      </div>
+    </div>
     <div id="unlicensedUserList" ng-show="unlicensed > 0">
       <div id="unlicensedList" class="row">
         <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
