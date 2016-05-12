@@ -22,7 +22,7 @@ namespace servicesOverview {
 
     public constructor() {
       super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.call.title', 'servicesOverview.cards.call.description', 'icon-circle-call', true, 'people');
+        'servicesOverview.cards.call.title', 'servicesOverview.cards.call.description', 'icon-circle-call', true, 'cta-bar');
       this._loading = false;
     }
   }

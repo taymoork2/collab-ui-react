@@ -4046,7 +4046,7 @@
         }
       },
       "hybridManagement": {
-        "title": "Management",
+        "title": "Hybrid Management",
         "description": "Management Service is the global configuration service for Calendar and Call Services.",
         "buttons": {
           "resources": "Resources",
@@ -4054,8 +4054,8 @@
         }
       },
       "calendar": {
-        "title": "Calendar",
-        "description": "Integrate Microsoft Exchange to automatically include meeting info when @webex and @spark are added to the meeting invite location field.",
+        "title": "Hybrid Calendar",
+        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4063,15 +4063,15 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Enable Aware and Connect, two features which bring cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
       "hybridMedia": {
-        "title": "Media",
-        "description": "Set up the Media Service to host meetings in the Cloud and On-premise.",
+        "title": "Hybrid Media",
+        "description": "The Media Service enables you to host meetings in the cloud and on-premise.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
