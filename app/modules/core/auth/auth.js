@@ -241,8 +241,11 @@
 
     function updateAccessToken(response) {
       var accessToken = _.get(response, 'data.access_token', '');
-      var refreshToken = _.get(response, 'data.refresh_token', '');
-      Storage.put('refreshToken', refreshToken);
+
+      if (!Storage.get('refreshToken')) {
+        var refreshToken = _.get(response, 'data.refresh_token');
+        Storage.put('refreshToken', refreshToken);
+      }
 
       Log.info('Update Access Token');
       Storage.put('accessToken', accessToken);
