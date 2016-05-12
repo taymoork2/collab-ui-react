@@ -114,6 +114,9 @@
               left: 0.1rem;
             }
           }
+          .danger{
+            color: $color-negative-base;
+          }
         }
       }
       .cs-card.header-bar.cta-bar header:after {
