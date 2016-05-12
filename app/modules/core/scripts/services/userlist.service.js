@@ -107,10 +107,9 @@
     function generateUserReports(sortBy, callback) {
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
-        "sortedBy": [sortBy],
-        "attributes": ["name", "displayName", "userName", "active"]
+        sortedBy: [sortBy],
+        attributes: ["name", "displayName", "userName", "entitlements", "active"]
       };
-
       $http({
           method: 'POST',
           url: generateUserReportsUrl,
@@ -228,6 +227,7 @@
                 header.lastName = "Last Name";
                 header.displayName = "Display Name";
                 header.email = "User ID/Email (Required)";
+                header.entitlements = "Entitlements";
                 exportedUsers.push(header);
 
                 //formatting the data for export
@@ -237,6 +237,7 @@
                   exportedUser.lastName = (users[i].name && users[i].name.familyName) ? users[i].name.familyName : '';
                   exportedUser.displayName = users[i].displayName || '';
                   exportedUser.email = users[i].userName;
+                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }

@@ -7,12 +7,23 @@
 
   function TrialTimeZoneService() {
     var service = {
-      getTimeZones: getTimeZones
+      getTimeZones: getTimeZones,
+      getTimeZone: getTimeZone
     };
 
     return service;
 
     ////////////////
+
+    function getTimeZone(timeZoneId) {
+      // - previously 'timeZoneId' was stored in the backend as a stringified numeric
+      // - observed as of 2016-05-05, it is stored as a proper numeric
+      // - so now we always convert to string, as legacy records may still use stringified numeric values
+      var normalizedTimeZoneId = timeZoneId + '';
+      return _.find(_getTimeZones(), {
+        timeZoneId: normalizedTimeZoneId
+      });
+    }
 
     function getTimeZones() {
       return _getTimeZones();

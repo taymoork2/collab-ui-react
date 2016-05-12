@@ -10,8 +10,7 @@
     var vm = this;
 
     vm.isSipUriAcknowledged = false;
-    var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
-    var initialized = false;
+    var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
@@ -30,23 +29,25 @@
     }
 
     function checkDomainVerified(serviceId) {
-      if (!initialized) {
-        DomainManagementService.getVerifiedDomains().then(function () {
-          domainList = DomainManagementService.domainList;
-          initialized = true;
+      if (serviceId !== 'squared-fusion-uc' && serviceId !== 'squared-fusion-ec') {
+        return;
+      }
+      DomainManagementService.getVerifiedDomains()
+        .then(function () {
+          return DomainManagementService.domainList;
+        })
+        .then(function (domainList) {
+          if (domainList.length === 0) {
+            NotificationService.addNotification(
+              NotificationService.types.TODO,
+              'noDomains',
+              1,
+              'modules/hercules/notifications/no-domains.html', [serviceId]
+            );
+          } else {
+            NotificationService.removeNotification('noDomains');
+          }
         });
-      }
-      var domainList = DomainManagementService.domainList;
-      if (initialized && domainList.length < 1) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          'noDomains',
-          1,
-          'modules/hercules/notifications/no-domains.html', [serviceId]
-        );
-      } else {
-        NotificationService.removeNotification('noDomains');
-      }
     }
 
     function removeAllUserNotifications() {

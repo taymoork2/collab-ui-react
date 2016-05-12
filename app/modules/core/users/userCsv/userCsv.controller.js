@@ -6,7 +6,7 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService) {
+  function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService, HuronCustomer) {
     // variables
     var vm = this;
 
@@ -28,12 +28,12 @@
     FeatureToggleService.supportsDirSync().then(function (enabled) {
       isDirSync = enabled;
     });
-    var csvChunk = 0; // Rate limit for Huron
     var csvPromise = $q.when();
     var tempUserArray = [];
     var uniqueEmails = [];
     var processingError;
     var headers;
+    var idIndex;
     var isCalendarServiceEnabled = false;
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -45,10 +45,12 @@
       }
     });
     var bulkStartLog = null;
+    var hasVoicemailService = false;
     vm.model = {
       file: null,
       desc: null,
-      anchorText: null,
+      templateAnchorText: null,
+      exportErrorsAnchorText: null,
       enableRemove: false,
       uploadProgress: 0,
       isProcessing: false,
@@ -58,12 +60,14 @@
       numNewUsers: 0,
       numExistingUsers: 0,
       userArray: [],
-      userErrorArray: []
+      userErrorArray: [],
+      csvChunk: 0
     };
     vm.model.desc = $translate.instant("csvUpload.desc", {
       maxUsers: maxUsers
     });
-    vm.model.anchorText = $translate.instant("firstTimeWizard.downloadStep");
+    vm.model.templateAnchorText = $translate.instant("firstTimeWizard.downloadStep");
+    vm.model.exportErrorsAnchorText = $translate.instant("csvUpload.exportErrors");
 
     // watches
     $scope.$watchCollection(function () {
@@ -194,31 +198,40 @@
       return bFalse;
     }
 
-    function hasSparkCallLicense(inHeaders) {
-      var index = _.findIndex(inHeaders, function (h) {
-        return h.name == 'Spark Call';
-      });
-      return index !== -1;
+    function hasSparkCallVoicemailService() {
+      hasVoicemailService = false;
+      return HuronCustomer.get().then(function (customer) {
+          _.forEach(customer.links, function (service) {
+            if (service.rel === 'voicemail') {
+              hasVoicemailService = true;
+            }
+          });
+        })
+        .catch(function (response) {
+          hasVoicemailService = false;
+        });
     }
 
-    function addUserError(row, errorMsg) {
+    function addUserError(row, email, errorMsg) {
       $timeout(function () {
         vm.model.userErrorArray.push({
           row: row,
+          email: email,
           error: errorMsg
         });
         UserCsvService.setCsvStat({
           userErrorArray: [{
             row: row,
+            email: email,
             error: errorMsg
           }]
         });
       });
     }
 
-    function addUserErrorWithTrackingID(row, errorMsg, response) {
+    function addUserErrorWithTrackingID(row, email, errorMsg, response) {
       errorMsg = UserCsvService.addErrorWithTrackingID(errorMsg, response);
-      addUserError(row, _.trim(errorMsg));
+      addUserError(row, email, _.trim(errorMsg));
     }
 
     function calculateProcessProgress() {
@@ -312,12 +325,12 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, userArray[startIndex + index][idIndex], UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
           for (var i = 0; i < length; i++) {
-            addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+            addUserErrorWithTrackingID(startIndex + i + 1, userArray[startIndex + i][idIndex], $translate.instant('firstTimeWizard.processBulkResponseError'), response);
           }
         }
       }
@@ -326,10 +339,11 @@
         for (var k = 0; k < length; k++) {
           addUserErrorWithTrackingID(
             startIndex + k + 1,
+            userArray[startIndex + k][idIndex],
             UserCsvService.getBulkErrorResponse(
               response.status,
               vm.isCancelledByUser ? '0' : '1',
-              (!_.isUndefined(response.config) && !_.isUndefined(response.config.data)) ? response.config.data.users[k].email : ''
+              userArray[startIndex + k][idIndex]
             ),
             response
           );
@@ -358,7 +372,7 @@
       function processCsvRows() {
         vm.isCancelledByUser = false;
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
-        csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
+        idIndex = findHeaderIndex('User ID/Email (Required)');
 
         // TODO
         // deal with AUDP -- only one column - Phone Number
@@ -379,12 +393,12 @@
           var isWrongLicenseFormat = false;
 
           // If we haven't met the chunk size, process the next user
-          if (tempUserArray.length < csvChunk) {
+          if (tempUserArray.length < vm.model.csvChunk) {
             // Basic data
             firstName = _.trim(userRow[findHeaderIndex('First Name')]);
             lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
             displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
-            id = _.trim(userRow[findHeaderIndex('User ID/Email (Required)')]);
+            id = _.trim(userRow[idIndex]);
             idxDirectoryNumber = findHeaderIndex('Directory Number');
             if (idxDirectoryNumber !== -1) {
               directoryNumber = _.trim(userRow[idxDirectoryNumber]);
@@ -400,15 +414,15 @@
             if (!id) {
               // Report required field is missing
               processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+              addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
             } else if (_.contains(uniqueEmails, id)) {
               // Report a duplicate email
               processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+              addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
             } else if (directLine && !isValidDID(directLine)) {
               // Report an invalid DID format
               processingError = true;
-              addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+              addUserError(j + 1, id, $translate.instant('firstTimeWizard.bulkInvalidDID'));
             } else {
               // get license and entitlements
               _.forEach(headers, function (header, k) {
@@ -449,10 +463,10 @@
 
               if (isWrongLicenseFormat) {
                 processingError = true;
-                addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
+                addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
               } else if (numOfActiveMessageLicenses > 1) {
                 processingError = true;
-                addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+                addUserError(j + 1, id, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
               } else {
                 uniqueEmails.push(id);
                 // Do not send name and displayName if it's a DirSync org
@@ -478,7 +492,7 @@
           if (processingError) {
             csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
             tempUserArray = [];
-          } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+          } else if (tempUserArray.length === vm.model.csvChunk || j === (userArray.length - 1)) {
             // Onboard the current temp array if we've met the chunk size or is the last user in list
             csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
             tempUserArray = [];
@@ -488,7 +502,7 @@
         });
       }
 
-      csvChunk = 0;
+      vm.model.csvChunk = 0;
       csvPromise = $q.when();
       tempUserArray = [];
       uniqueEmails = [];
@@ -511,7 +525,10 @@
       }, true);
 
       initBulkMetric();
-      processCsvRows();
+      hasSparkCallVoicemailService().then(function () {
+        vm.model.csvChunk = hasVoicemailService ? 2 : 10; // Rate limit for Huron
+        processCsvRows();
+      });
 
       return saveDeferred.promise;
     }
