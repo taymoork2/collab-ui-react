@@ -208,7 +208,7 @@
           });
         })
         .catch(function (response) {
-          Notification.errorResponse(response, 'serviceSetupModal.customerGetError');
+          hasVoicemailService = false;
         });
     }
 
