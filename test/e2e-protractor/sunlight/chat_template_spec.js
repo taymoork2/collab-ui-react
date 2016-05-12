@@ -53,6 +53,9 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfOverviewPage() {
     validateTitleAndDesc('Chat Template Overview', 'These are the screens customers will see when they use chat to contact customer care');
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
+    utils.click(careChatTemplateSetupPage.customerInfoToggle);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
   }
 
   function validateContentsOfCustomerInfoPage() {

@@ -73,7 +73,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     controller.evalKeyPress(escapeKey);
     expect($modal.open).toHaveBeenCalled();
   });
-  
+
   describe('Initial Chat Template - Overview Page', function () {
 
     it("should have previous and next button enabled", function () {
