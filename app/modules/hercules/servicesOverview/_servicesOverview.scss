@@ -61,6 +61,14 @@
           font-size: 1.75rem;
           padding-top: 0.5rem;
           text-align: center;
+          i{
+            position: relative;
+            top: 0.2rem;
+          }
+        }
+        h4.size-1{
+          font-size: 1.3rem;
+          padding-top: 1rem;
         }
         section{
           position: relative;
@@ -91,8 +99,9 @@
           }
         }
         .cta-btn {
-          background-color: $color-cta-base !important;
+          background-color: $color-primary-base !important;
           color: white;
+          margin-top: 1rem;
           //bottom: 3.25rem;
         }
         button.btn-link{
@@ -101,7 +110,7 @@
         }
         footer{
           border-top: 1px solid $gray-light-4;
-          background-color: $gray-light-4;
+          //background-color: $gray-light-4;
           height:3rem;
           .status{
             position: relative;

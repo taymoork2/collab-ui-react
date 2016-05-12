@@ -1,5 +1,5 @@
 <header>
-  <h4><i class="icon" ng-class="card.icon"></i> {{card.name | translate}}</h4>
+  <h4 class="size-{{card.cardType}}"><i class="icon" ng-class="card.icon"></i> {{card.name | translate}}</h4>
 </header>
 <section ng-if="!card.loading">
   <p>
