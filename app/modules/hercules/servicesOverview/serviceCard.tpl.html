@@ -10,8 +10,9 @@
       <button ng-class="button.buttonClass">{{button.name | translate}}</button>
       <!--      <button class="btn-link">{{button.name | translate}}</button> -->
     </a>
-    <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">{{card.getShowMoreButton().name |
-      translate}}</a>
+    <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">
+      <button ng-class="button.buttonClass" class="btn-link">{{card.getShowMoreButton().name | translate}}</button>
+    </a>
   </div>
 </section>
 <section ng-if="card.loading">
