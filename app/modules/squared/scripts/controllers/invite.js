@@ -5,7 +5,7 @@
     .module('Squared')
     .controller('InviteCtrl', InviteCtrl);
 
-  function InviteCtrl($location, ipCookie, Utils, Inviteservice, Config, Log, UrlConfig, WindowLocation) {
+  function InviteCtrl($location, $cookies, Utils, Inviteservice, Config, Log, UrlConfig, WindowLocation) {
     var redirect = function () {
       var redirectUrl = null;
 
@@ -26,43 +26,45 @@
 
     if (encryptedUser === undefined) {
       redirect();
+      return;
     }
 
     // check if cookie already exists.  Only call backend if not.
     var cookieName = 'invdata';
-    var inviteCookie = ipCookie(cookieName);
+    var inviteCookie = $cookies.getObject(cookieName);
 
-    if (inviteCookie === undefined) {
-
-      inviteCookie = {
-        userEmail: null,
-        displayName: null,
-        orgId: null,
-        entitlements: null
-      };
-      var cookieOptions = {
-        domain: Config.isDev() ? null : '.wbx2.com',
-        expires: 1 // 1 day
-      };
-
-      // call backend to decrypt param
-      Inviteservice.resolveInvitedUser(encryptedUser)
-        .then(function (res) {
-          Log.debug('param decrypted');
-          var data = res.data;
-
-          inviteCookie.userEmail = data.email;
-          inviteCookie.displayName = data.displayName;
-          inviteCookie.entitlements = data.entitlements;
-          inviteCookie.orgId = data.orgId;
-
-          ipCookie(cookieName, inviteCookie, cookieOptions);
-
-          redirect();
-        });
-
-    } else {
+    if (inviteCookie !== undefined) {
       redirect();
+      return;
     }
+
+    inviteCookie = {
+      userEmail: null,
+      displayName: null,
+      orgId: null,
+      entitlements: null
+    };
+    var expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 1); // 1 day
+    var cookieOptions = {
+      domain: Config.isDev() ? null : '.wbx2.com',
+      expires: expireDate
+    };
+
+    // call backend to decrypt param
+    Inviteservice.resolveInvitedUser(encryptedUser)
+      .then(function (res) {
+        Log.debug('param decrypted');
+        var data = res.data;
+
+        inviteCookie.userEmail = data.email;
+        inviteCookie.displayName = data.displayName;
+        inviteCookie.entitlements = data.entitlements;
+        inviteCookie.orgId = data.orgId;
+
+        $cookies.putObject(cookieName, inviteCookie, cookieOptions);
+
+        redirect();
+      });
   }
 })();

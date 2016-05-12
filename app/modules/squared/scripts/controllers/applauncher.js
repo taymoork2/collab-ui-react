@@ -6,7 +6,7 @@
     .controller('ApplauncherCtrl', ApplauncherCtrl);
 
   /* @ngInject */
-  function ApplauncherCtrl(UrlConfig, Utils, $location, WindowLocation) {
+  function ApplauncherCtrl($location, $timeout, UrlConfig, Utils, WindowLocation) {
     if (Utils.isWeb()) {
       var urlParams = '';
       var params = $location.absUrl().split('?')[1];
@@ -16,7 +16,7 @@
       WindowLocation.set(UrlConfig.getWebClientUrl() + urlParams);
     } else if (Utils.isIPhone()) {
       WindowLocation.set(UrlConfig.getSquaredAppUrl());
-      setTimeout(function () {
+      $timeout(function () {
         WindowLocation.set(UrlConfig.getItunesStoreUrl());
       }, 25);
     } else if (Utils.isAndroid()) {
