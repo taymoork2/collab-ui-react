@@ -4095,9 +4095,9 @@
       "setup": "Setup"
     },
     "cardStatus": {
-      "running": "Running",
-      "alarms": "Reduced Service",
-      "error": "Error",
+      "running": "Operational",
+      "alarms": "Impaired Service",
+      "error": "Outage",
       "disabled": "Disabled"
     }
   },
