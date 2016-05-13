@@ -20,7 +20,7 @@
 
     initSearchStatus();
 
-    pollHuronReport();
+    pollAvalonReport();
     EdiscoveryService.getReport();
 
     function getStartDate() {
@@ -103,7 +103,7 @@
       });
     }
 
-    function pollHuronReport() {
+    function pollAvalonReport() {
       EdiscoveryService.roomQuery().then(function (res) {
         //console.log("Response from poll reports", res)
         vm.reports = res;
@@ -114,7 +114,7 @@
           }
         });
 
-        $timeout(pollHuronReport, 2000);
+        $timeout(pollAvalonReport, 2000);
       });
     }
 
