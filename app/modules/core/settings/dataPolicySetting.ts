@@ -9,7 +9,7 @@ namespace globalsettings {
       super('dataPolicy', ctrl);
 
       //get retentionTime
-      setTimeout( this.retentionModeLoaded.bind(this), 400, 2)
+      setTimeout( this.retentionModeLoaded.bind(this), 400, 2);
     }
 
     retentionModeLoaded(mode:number) {

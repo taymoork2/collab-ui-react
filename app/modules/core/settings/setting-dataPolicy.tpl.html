@@ -1,5 +1,9 @@
 <div class="setting">
    <div class="large-3">
-    <cs-select id="retentionTimeSelector" name="retentionTime" ng-model="setting.retentionTimeSelected" options="setting.retentionTimeOptions" on-change-fn="setting.retentionTimeUpdate()" is-disabled="!setting.dataLoaded"></cs-select>
+    <cs-select id="retentionTimeSelector" name="retentionTime"
+               ng-model="setting.retentionTimeSelected"
+               options="setting.retentionTimeOptions"
+               on-change-fn="setting.retentionTimeUpdate()"
+               is-disabled="!setting.dataLoaded"></cs-select>
    </div>
 </div>
