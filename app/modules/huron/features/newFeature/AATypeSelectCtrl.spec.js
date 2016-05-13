@@ -26,26 +26,29 @@ describe('Controller: AATypeSelectCtrl', function () {
 
   it("ok function call results in closing the Modal with the value chosen when item is 1", function () {
     var item = {
-      id: 1
+      name: 'Basic'
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: '',
-      aaTemplate: 'template1'
+      aaTemplate: 'Basic'
     });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
   it("ok function call results in closing the Modal with the value chosen when item is 2", function () {
     var item = {
-      id: 2
+      name: 'Custom'
     };
     $scope.ok(item);
     $scope.$apply();
     $timeout.flush();
-    expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {});
+    expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
+      aaName: '',
+      aaTemplate: 'Custom'
+    });
     expect(modalFake.close).toHaveBeenCalledWith(item);
   });
 
