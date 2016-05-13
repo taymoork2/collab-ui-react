@@ -3729,9 +3729,9 @@
       "title": "Data Policy",
       "subsectionLabel": "Data Retention (after deletion of org)",
       "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
-      "retentionOption1":"Delete immediately",
-      "retentionOption2":"Keep for 1 year",
-      "retentionOption3":"Keep forever"
+      "retentionOption1": "Delete immediately",
+      "retentionOption2": "Keep for 1 year",
+      "retentionOption3": "Keep forever"
     },
     "privacy": {
       "title": "Privacy",
