@@ -285,48 +285,48 @@
         }
       }]
     }, {
-        model: vm.model.site,
-        key: 'extensionLength',
-        type: 'select',
-        className: 'service-setup service-setup-extension-length',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.extensionLength'),
-          description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
-          warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
-          isWarn: false,
-          options: vm.availableExtensions,
-          onChange: function () {
-            if (vm.model.site.extensionLength !== vm.model.previousLength) {
-              return ModalService.open({
-                  title: $translate.instant('common.warning'),
-                  message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
-                  close: $translate.instant('common.continue'),
-                  dismiss: $translate.instant('common.cancel'),
-                  type: 'negative'
-                })
-                .result.then(function () {
-                  for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
-                    vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
-                    vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
-                    vm.model.previousLength = vm.model.site.extensionLength;
-                  }
-                })
-                .catch(function () {
-                  vm.model.site.extensionLength = vm.model.previousLength;
-                  return $q.reject();
-                });
-            }
-          }
-        },
-        hideExpression: function () {
-          return vm.model.hideExtensionLength;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+      model: vm.model.site,
+      key: 'extensionLength',
+      type: 'select',
+      className: 'service-setup service-setup-extension-length',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.extensionLength'),
+        description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+        isWarn: false,
+        options: vm.availableExtensions,
+        onChange: function () {
+          if (vm.model.site.extensionLength !== vm.model.previousLength) {
+            return ModalService.open({
+                title: $translate.instant('common.warning'),
+                message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+                close: $translate.instant('common.continue'),
+                dismiss: $translate.instant('common.cancel'),
+                type: 'negative'
+              })
+              .result.then(function () {
+                for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
+                  vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
+                  vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
+                  vm.model.previousLength = vm.model.site.extensionLength;
+                }
+              })
+              .catch(function () {
+                vm.model.site.extensionLength = vm.model.previousLength;
+                return $q.reject();
+              });
           }
         }
-      }, {
+      },
+      hideExpression: function () {
+        return vm.model.hideExtensionLength;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+        }
+      }
+    }, {
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
