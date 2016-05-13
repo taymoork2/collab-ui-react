@@ -8,7 +8,8 @@
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
-    AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
+    AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
+    AATrackChangeService, AADependencyService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -223,6 +224,17 @@
           AACommonService.resetFormStatus();
           vm.canSave = false;
 
+          if (AATrackChangeService.isChanged('AAName', aaRecord.callExperienceName)) {
+            var scheduleId = aaRecord.scheduleId;
+            var nameChangeEvent = {
+              'type': 'AANameChange',
+              'scheduleId': scheduleId,
+              'newName': aaRecord.callExperienceName
+            };
+            AADependencyService.notifyAANameChange(nameChangeEvent);
+            AATrackChangeService.track('AAName', aaRecord.callExperienceName);
+          }
+
           AANotificationService.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
@@ -258,6 +270,7 @@
 
           AACommonService.resetFormStatus();
           vm.canSave = false;
+          AATrackChangeService.track('AAName', aaRecord.callExperienceName);
 
           AANotificationService.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName
@@ -309,7 +322,7 @@
         return deferred.promise;
       }
 
-      if (vm.ui.isOpenHours && !AAValidationService.isPhoneMenuValidationSuccess(vm.ui.openHours)) {
+      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
         deferred.reject({
           statusText: '',
           status: 'VALIDATION_FAILURE'
@@ -431,6 +444,14 @@
           if (actionset === 'runActionsOnInput') {
             menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
             menuEntry.type = 'MENU_OPTION';
+
+            var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            keyEntry.type = "MENU_OPTION";
+            keyEntry.key = '0';
+            var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
+            keyEntry.addAction(emptyAction);
+            menuEntry.entries.push(keyEntry);
+
           } else {
             menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
@@ -462,6 +483,7 @@
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
                 vm.populateUiModel();
                 vm.isAANameDefined = true;
+                AATrackChangeService.track('AAName', aaRecord.callExperienceName);
               },
               function (response) {
                 AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {

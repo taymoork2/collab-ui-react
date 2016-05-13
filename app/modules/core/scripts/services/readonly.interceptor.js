@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Core')
+    .factory('ReadonlyInterceptor', ReadonlyInterceptor);
+
   /*ngInject*/
-  function ReadonlyInterceptor($q, Authinfo, Notification) {
+  function ReadonlyInterceptor($q, $injector) {
 
     var allowedList = [
       '/conversation/api/v1/users/deskFeedbackUrl',
@@ -14,7 +18,14 @@
       '/meetingsapi/v1/users/import'
     ];
 
+    return {
+      request: rejectOnNotRead
+    };
+
     function rejectOnNotRead(config) {
+      // injected manually to get around circular dependency problem with $translateProvider
+      var Authinfo = $injector.get('Authinfo');
+      var Notification = $injector.get('Notification');
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
         Notification.notifyReadOnly(config);
         return $q.reject(config);
@@ -37,12 +48,6 @@
         return false;
       }
     }
-
-    return {
-      request: rejectOnNotRead
-    };
   }
-
-  angular.module('Core').factory('ReadonlyInterceptor', ReadonlyInterceptor);
 
 }());

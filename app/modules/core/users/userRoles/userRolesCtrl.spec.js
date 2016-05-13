@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, rootScope, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice;
+  var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, $q;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
@@ -10,12 +10,14 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Squared'));
 
-  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_) {
+  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _$q_) {
     $scope = $rootScope.$new();
     Orgservice = _Orgservice_;
     Userservice = _Userservice_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
+    FeatureToggleService = _FeatureToggleService_;
+    $q = _$q_;
     $stateParams = _$stateParams_;
     $stateParams.currentUser = currentUser;
 
@@ -23,6 +25,11 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
     spyOn(Orgservice, 'getOrgCacheOption').and.callFake(function (callback) {
       callback({});
+    });
+    spyOn(FeatureToggleService, 'supports').and.returnValue({
+      then: function () {
+        return true;
+      }
     });
   }));
 
@@ -128,6 +135,10 @@ describe('Controller: UserRolesCtrl', function () {
           roleState: 'INACTIVE'
         }),
         Object({
+          roleName: 'Readonly_Admin',
+          roleState: 'INACTIVE'
+        }),
+        Object({
           roleName: 'Help_Desk',
           roleState: 'INACTIVE'
         }),
@@ -155,6 +166,10 @@ describe('Controller: UserRolesCtrl', function () {
         Object({
           roleName: 'Full_Admin',
           roleState: 'ACTIVE'
+        }),
+        Object({
+          roleName: 'Readonly_Admin',
+          roleState: 'INACTIVE'
         }),
         Object({
           roleName: 'Sales_Admin',
