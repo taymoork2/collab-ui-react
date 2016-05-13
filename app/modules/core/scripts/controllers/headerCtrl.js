@@ -7,7 +7,7 @@
   /* @ngInject */
   function HeaderCtrl($scope, $translate, Config, Utils, FeatureToggleService) {
     var vm = this;
-    vm.newTabDisplay = undefined;
+    vm.newTabDisplay = false;
 
     $scope.icon = 'icon-cisco-logo';
     $translate('loginPage.title').then(function (title) {
