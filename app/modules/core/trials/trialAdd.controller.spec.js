@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService;
+  var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -18,6 +18,8 @@ describe('Controller: TrialAddCtrl', function () {
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
     TrialPstnService = _TrialPstnService_;
+    Orgservice = _Orgservice_;
+    $httpBackend = _$httpBackend_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
@@ -26,6 +28,10 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
+
+    $httpBackend
+      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .respond({});
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -36,6 +42,7 @@ describe('Controller: TrialAddCtrl', function () {
       Notification: Notification,
       EmailService: EmailService,
       FeatureToggleService: FeatureToggleService,
+      Orgservice: Orgservice
     });
     $scope.$apply();
   }));
@@ -286,5 +293,29 @@ describe('Controller: TrialAddCtrl', function () {
       $scope.$apply();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
+  });
+
+  describe('Toggling ship devices modal with Orgservice call', function () {
+    var orgserviceSpy;
+    beforeEach(function () {
+      orgserviceSpy = spyOn(Orgservice, "getAdminOrg").and.callFake(function () {
+        controller.callTrial.enabled = true;
+      });
+    });
+
+    it('should enable ship devices modal for any other org', function () {
+      Orgservice.getAdminOrg();
+      $scope.$apply();
+      expect(controller.callTrial.enabled).toBeTruthy();
+    });
+
+    it('should disable ship devices modal since test org is used', function () {
+      orgserviceSpy.and.callFake(function () {
+        controller.callTrial.enabled = false;
+      });
+      $scope.$apply();
+      expect(controller.callTrial.enabled).toBeFalsy();
+    });
+
   });
 });

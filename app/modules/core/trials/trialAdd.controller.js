@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice, Log) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
@@ -267,9 +267,21 @@
 
         pstnModal.enabled = vm.pstnTrial.enabled;
         emergAddressModal.enabled = vm.pstnTrial.enabled;
-        devicesModal.enabled = results[2];
         meetingModal.enabled = results[1];
-
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and only test orgs that have feature toggle enabled (US12063)
+        //devicesModal.enabled = results[2];
+        Orgservice.getAdminOrg(function (data, status) {
+          if (data.success) {
+            devicesModal.enabled = !data.isTestOrg;
+            // Devices modal is disabled for testOrgs unless feature toggle is set
+            FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices).then(function (result) {
+              devicesModal.enabled = result;
+            });
+          } else {
+            Log.error('Query org info failed. Status: ' + status);
+          }
+        });
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;

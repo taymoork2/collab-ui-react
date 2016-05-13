@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice, Log) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -271,8 +271,20 @@
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-
-        vm.canSeeDevicePage = results[2];
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and do not show to test orgs (US12063)
+        //vm.canSeeDevicePage = results[2];
+        Orgservice.getAdminOrg(function (data, status) {
+          if (data.success) {
+            vm.canSeeDevicePage = !data.isTestOrg;
+            // Devices modal is disabled for testOrgs unless feature toggle is set
+            FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices).then(function (result) {
+              vm.canSeeDevicePage = result;
+            });
+          } else {
+            Log.error('Query org info failed. Status: ' + status);
+          }
+        });
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
