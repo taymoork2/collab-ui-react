@@ -51,8 +51,6 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
-
     /////////////////////
 
     function selectOption() {

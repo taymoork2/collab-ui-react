@@ -12,7 +12,6 @@
     vm.schedule = "";
     vm.entries = [];
     vm.templateName = $stateParams.aaTemplate;
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
     vm.addAction = addAction;
 
     /////////////////////
