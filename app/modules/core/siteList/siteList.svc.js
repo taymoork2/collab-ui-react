@@ -293,7 +293,8 @@
           // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              _this.updateCSVColumnInRow(siteRow);
+              // _this.updateCSVColumnInRow(siteRow);
+              _this.pollCSVColumnInRow(siteRow);
             },
 
             pollInterval
@@ -407,6 +408,16 @@
 
     }; //updateDisplayControlFlagsInRow()
 
+    this.pollCSVColumnInRow = function (siteRow) {
+      var funcName = "pollCSVColumnInRow()";
+      var logMsg = "";
+      
+      $log.log(funcName);
+
+      siteRow.csvStatusRequestFromPoll = true;
+      _this.updateCSVColumnInRow(siteRow);
+    }; // pollCSVColumnInRow()
+
     this.updateCSVColumnInRow = function (siteRow) {
       var funcName = "updateCSVColumnInRow()";
       var logMsg = "";
@@ -465,7 +476,6 @@
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
           _this.updateDisplayControlFlagsInRow(siteRow);
-
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -481,7 +491,10 @@
           siteRow.asyncErr = true;
           _this.updateDisplayControlFlagsInRow(siteRow);
 
-          // siteRow.showCSVInfo = true;
+          if (siteRow.csvStatusRequestFromPoll) {
+            siteRow.showCSVInfo = false;
+            siteRow.csvStatusRequestFromPoll = false;
+          }
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumnInRow()

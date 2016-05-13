@@ -54,6 +54,8 @@
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
 
+          conferenceService.csvStatusRequestFromPoll = false;
+
           conferenceService.isIframeSupported = false;
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isError = false;
