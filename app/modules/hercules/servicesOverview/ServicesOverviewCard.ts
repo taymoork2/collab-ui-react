@@ -109,13 +109,19 @@ namespace servicesOverview {
       return _.isUndefined(res) ? false : res;
     }
 
-    protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
+    private filterAndGetStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
       let startVal:string = undefined;
       let callServiceStatus:string = services.filter((service)=> {
         return _.indexOf(serviceIds, service.id) >= 0;
       }).reduce((result, serv)=> {
         return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
       }, startVal);
+      return callServiceStatus;
+    }
+
+    protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
+      let callServiceStatus = this.filterAndGetStatus(services,serviceIds);
+      // console.log('status',callServiceStatus,services,serviceIds);
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
       }
@@ -123,12 +129,7 @@ namespace servicesOverview {
     }
 
     protected filterAndGetTxtStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
-      let startVal:string = undefined;
-      let callServiceStatus:string = services.filter((service)=> {
-        return _.indexOf(serviceIds, service.id) >= 0;
-      }).reduce((result, serv)=> {
-        return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
-      }, startVal);
+      let callServiceStatus = this.filterAndGetStatus(services,serviceIds);
       if (callServiceStatus) {
         return this.serviceStatusToTxt[callServiceStatus] || this.serviceStatusToTxt['undefined'];
       }
