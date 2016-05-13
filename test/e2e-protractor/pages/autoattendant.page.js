@@ -164,7 +164,7 @@ var AutoAttendantPage = function () {
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
   this.importSchedule = element(by.id('importSchedule'));
   this.importContinue = element(by.id('importCtn'));
-  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
+  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
@@ -181,7 +181,7 @@ var AutoAttendantPage = function () {
   }
 
   function assertImportSuccess(hours, holidays) {
-    notifications.assertSuccess("Imported " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
+    notifications.assertSuccess("Copied " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
   }
 
   function assertCalendarUpdateSuccess(test) {
