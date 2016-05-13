@@ -46,7 +46,6 @@ namespace servicesOverview {
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal'])
         || this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc'])
         || this.filterAndGetEnabledService(services, ['squared-fusion-media']);
-      console.log('acdtive',this._active);
       this._loading = false;
     }
   }

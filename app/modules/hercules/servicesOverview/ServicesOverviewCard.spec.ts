@@ -17,7 +17,8 @@ namespace servicesOverview {
         {
           card: new ServicesOverviewHybridCallCard(), services: ['squared-fusion-ec', 'squared-fusion-uc']
         }, {
-          card: new ServicesOverviewHybridManagementCard(), services: ['squared-fusion-mgmt']
+          card: new ServicesOverviewHybridManagementCard(),
+          services: ['squared-fusion-cal', 'squared-fusion-ec', 'squared-fusion-uc', 'squared-fusion-media']
         }, {
           card: new ServicesOverviewCalendarCard(), services: ['squared-fusion-cal']
         }, {
