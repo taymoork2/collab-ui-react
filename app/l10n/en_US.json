@@ -219,6 +219,7 @@
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
+    "settingsTab": "Settings",
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
@@ -3710,6 +3711,51 @@
       }
     }
   },
+  "globalSettings": {
+    "pageTitle": "Settings",
+    "branding": {
+      "title": "Branding",
+      "subsectionLabel": "Branding"
+    },
+    "sipDomain": {
+      "title": "SIP Domain",
+      "subsectionLabel": "SIP Domain Prefix",
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
+    },
+    "domains": {
+      "title": "Domains"
+    },
+    "authentication": {
+      "title": "Authentication",
+      "subsectionLabel": "Single Sign-On"
+    },
+    "dataPolicy": {
+      "title": "Data Policy",
+      "subsectionLabel": "Data Retention (after deletion of org)",
+      "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
+      "retentionOption1":"Delete immediately",
+      "retentionOption2":"Keep for 1 year",
+      "retentionOption3":"Keep forever"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "subsectionLabel": "Support Access"
+    },
+    "security": {
+      "title": "Security",
+      "subsectionLabel": "Spark Client Security",
+      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+    },
+    "support": {
+      "title": "Support"
+    }
+  },
+  "my-company": {
+    "pageTitle": "My Company",
+    "subscription": "Subscriptions",
+    "info": "Info",
+    "order": "Order History"
+  },
   "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
@@ -3976,6 +4022,84 @@
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started."
+  },
+  "servicesOverview": {
+    "title": "Services",
+    "cloudServices": "Cloud services",
+    "hybridServices": "Hybrid services",
+    "showAllCards": "Show all cards",
+    "showActiveCards": "Show active cards only",
+    "cards": {
+      "message": {
+        "title": "Message",
+        "description": "Cisco Spark configurations for your organization and individuals.",
+        "buttons": {
+          "webexMessenger": "Webex Messenger"
+        }
+      },
+      "meeting": {
+        "title": "Meeting",
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+      },
+      "call": {
+        "title": "Call",
+        "description": "Unified Communications and basic calling configurations for your organization.",
+        "buttons": {
+          "numbers": "Numbers",
+          "features": "Features",
+          "settings": "Settings"
+        }
+      },
+      "hybridManagement": {
+        "title": "Hybrid Management",
+        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "calendar": {
+        "title": "Hybrid Calendar",
+        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridCall": {
+        "title": "Hybrid Call",
+        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridMedia": {
+        "title": "Hybrid Media",
+        "description": "The Media Service enables you to host meetings in the cloud and on-premise.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridContext": {
+        "title": "Context",
+        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
+        "buttons": {
+          "settings": "Settings"
+        }
+      }
+    },
+    "showMore": "View all",
+    "genericButtons": {
+      "setup": "Setup"
+    },
+    "cardStatus": {
+      "running": "Running",
+      "alarms": "Reduced Service",
+      "error": "Error",
+      "disabled": "Disabled"
+    }
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode",

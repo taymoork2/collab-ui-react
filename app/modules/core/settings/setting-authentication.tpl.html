@@ -1,0 +1,4 @@
+<div class="setting">
+  <cs-radiolist ng-model="setting.authModeService.enableSSO" options="setting.configureSSOOptions"></cs-radiolist>
+  <button ui-sref="settings.enable3rdPartyAuth({domain: domain, loggedOnUser: loggedOnUser})">Change</button>
+</div>
