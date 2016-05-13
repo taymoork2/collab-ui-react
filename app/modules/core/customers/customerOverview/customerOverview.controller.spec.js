@@ -144,6 +144,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('should call getUserAuthInfo correctly', function () {
     it('should expect PartnerService.getUserAuthInfo to be called', function () {
       expect(controller.customerOrgId).toBe('123-456');
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
       controller.getUserAuthInfo();
       expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
