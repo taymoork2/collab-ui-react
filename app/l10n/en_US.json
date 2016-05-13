@@ -3863,7 +3863,7 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
       "title": "Support"
