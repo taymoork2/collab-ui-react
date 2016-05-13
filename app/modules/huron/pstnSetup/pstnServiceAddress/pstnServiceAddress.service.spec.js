@@ -38,8 +38,8 @@ describe('Service: PstnServiceAddressService', function () {
       serviceName: 'Test Customer Site',
       serviceStreetNumber: '123',
       serviceStreetDirection: '',
-      serviceStreetName: 'My Street',
-      serviceStreetSuffix: 'Drive',
+      serviceStreetName: 'My Street Drive',
+      serviceStreetSuffix: '',
       serviceAddressSub: 'Apt 100',
       serviceCity: 'Richardson',
       serviceState: 'TX',
@@ -151,7 +151,6 @@ describe('Service: PstnServiceAddressService', function () {
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
       serviceAddress.serviceStreetName = 'Lexi Petal';
-      serviceAddress.serviceStreetSuffix = '';
     });
 
     it('should update address with a street address containing possible suffix', function () {
@@ -159,8 +158,7 @@ describe('Service: PstnServiceAddressService', function () {
 
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
-      serviceAddress.serviceStreetName = 'My';
-      serviceAddress.serviceStreetSuffix = 'Street';
+      serviceAddress.serviceStreetName = 'My Street';
     });
 
     it('should update address with a suffix', function () {
@@ -168,8 +166,7 @@ describe('Service: PstnServiceAddressService', function () {
 
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
-      serviceAddress.serviceStreetName = 'My Street';
-      serviceAddress.serviceStreetSuffix = 'Drive';
+      serviceAddress.serviceStreetName = 'My Street Drive';
     });
   });
 
