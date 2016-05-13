@@ -12,23 +12,20 @@
     vm.ok = okay;
     vm.aatypes = [{
       id: 1,
-      label: 'Basic',
-      name: $translate.instant('autoAttendant.AABasic'),
+      name: 'Basic',
       title: $translate.instant('autoAttendant.AABasic'),
       desc: $translate.instant('autoAttendant.AABasicDesc'),
       icons: ['icon-audio-plus', 'icon-playlist'],
       showLine: true
     }, {
       id: 2,
-      label: 'Custom',
-      name: $translate.instant('autoAttendant.AACustom'),
+      name: 'Custom',
       title: $translate.instant('autoAttendant.AACustom'),
       desc: $translate.instant('autoAttendant.AACustomDesc'),
       icons: ['icon-audio-plus', 'icon-headset', 'icon-playlist']
     }, {
       id: 3,
-      label: 'Business Hours',
-      name: 'OpenClosed',
+      name: 'BusinessHours',
       title: $translate.instant('autoAttendant.AABusinessHours'),
       desc: $translate.instant('autoAttendant.AABusinessHoursDesc'),
       icons: ['icon-clock', 'icon-audio-plus', 'icon-audio-plus'],
@@ -37,15 +34,10 @@
 
     function okay(type) {
       var aatype = {};
-      if (type.id === 1) {
-        aatype.aaName = '';
-        aatype.aaTemplate = 'template1';
-      } else if (type.id === 3) {
-        aatype.aaName = '';
-        aatype.aaTemplate = 'OpenClosedHoursTemplate';
-      }
+      aatype.aaName = '';
+      aatype.aaTemplate = type.name;
       Localytics.tagEvent(AAMetricNameService.CREATE_AA, {
-        type: type.label
+        type: type.name
       });
       $state.go('huronfeatures.aabuilder', aatype);
       $modalInstance.close(type);
