@@ -1942,6 +1942,7 @@
     "inProgress": "In Progress",
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
+    "portNumberOrder": "Porting Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
