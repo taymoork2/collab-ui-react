@@ -63,6 +63,9 @@
      * @param {{string|object}} attributes Data object to be stored with the event
      */
     function tagEvent(eventName, attributes) {
+      console.log('tagEvent');
+      console.log(eventName);
+      console.log(attributes);
       invokeLocalytics(TAG_EVENT, eventName, attributes);
     }
   }

@@ -12,6 +12,7 @@
     vm.ok = okay;
     vm.aatypes = [{
       id: 1,
+      label: 'Basic',
       name: $translate.instant('autoAttendant.AABasic'),
       title: $translate.instant('autoAttendant.AABasic'),
       desc: $translate.instant('autoAttendant.AABasicDesc'),
@@ -19,12 +20,14 @@
       showLine: true
     }, {
       id: 2,
+      label: 'Custom',
       name: $translate.instant('autoAttendant.AACustom'),
       title: $translate.instant('autoAttendant.AACustom'),
       desc: $translate.instant('autoAttendant.AACustomDesc'),
       icons: ['icon-audio-plus', 'icon-headset', 'icon-playlist']
     }, {
       id: 3,
+      label: 'Business Hours',
       name: 'OpenClosed',
       title: $translate.instant('autoAttendant.AABusinessHours'),
       desc: $translate.instant('autoAttendant.AABusinessHoursDesc'),
@@ -42,7 +45,7 @@
         aatype.aaTemplate = 'OpenClosedHoursTemplate';
       }
       Localytics.tagEvent(AAMetricNameService.CREATE_AA, {
-        type: type.title
+        type: type.label
       });
       $state.go('huronfeatures.aabuilder', aatype);
       $modalInstance.close(type);
