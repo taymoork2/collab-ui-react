@@ -6,7 +6,11 @@ namespace servicesOverview {
 
     let meetingCard:ServicesOverviewMeetingCard;
     beforeEach(()=> {
-      meetingCard = new ServicesOverviewMeetingCard();
+      meetingCard = new ServicesOverviewMeetingCard({
+        isAllowedState: ()=> {
+          return true;
+        }
+      });
     });
 
     it('should update button list from sites', ()=> {
