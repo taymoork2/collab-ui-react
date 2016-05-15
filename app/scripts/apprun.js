@@ -87,6 +87,8 @@
         Log.debug('No access code data.');
       }
     }
+    $log.log('Here is the accessToken: ', Storage.get('accessToken'));
+    $log.log('Here is the refreshToken: ', Storage.get('refreshToken'));
 
     var refreshToken = function () {
       $interval(function () {
