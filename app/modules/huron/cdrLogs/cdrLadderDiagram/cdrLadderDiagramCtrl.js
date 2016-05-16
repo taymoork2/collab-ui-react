@@ -77,7 +77,7 @@
       _.forEach(vm.events, function (event, key) {
         if (!_.isUndefined(event.eventSource)) {
           var message = JSON.parse(event.message);
-          if ((message.id === SIP_MESSAGE) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
+          if ((message.id === SIP_MESSAGE) && !_.isUndefined(message.dataParam.rawMsg) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
             if (_.isNull(locusId)) {
               startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
               endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
