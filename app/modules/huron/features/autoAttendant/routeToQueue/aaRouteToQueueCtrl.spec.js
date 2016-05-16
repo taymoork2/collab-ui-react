@@ -20,7 +20,7 @@ describe('Controller: AARouteToQueueCtrl', function () {
 
   var queueName = 'Chandan Test Queue';
   var queues = [{
-    name: queueName,
+    queueName: queueName,
     queueUrl: '/c16a6027-caef-4429-b3af-9d61ddc7964b',
 
   }];

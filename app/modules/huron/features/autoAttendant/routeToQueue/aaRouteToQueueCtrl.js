@@ -60,7 +60,7 @@
         _.each(aaQueueList, function (aaQueue) {
           var idPos = aaQueue.queueUrl.lastIndexOf("/");
           vm.queues.push({
-            description: aaQueue.name,
+            description: aaQueue.queueName,
             id: aaQueue.queueUrl.substr(idPos + 1)
           });
         });

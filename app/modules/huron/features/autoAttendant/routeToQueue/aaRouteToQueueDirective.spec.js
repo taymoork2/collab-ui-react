@@ -12,7 +12,7 @@ describe('Directive: aaRouteToQueue', function () {
   };
 
   var queue = [{
-    name: 'Test Queue',
+    queueName: 'Test Queue',
     queueUrl: ''
   }];
 
