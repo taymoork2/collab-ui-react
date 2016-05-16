@@ -9,6 +9,7 @@ var ChatTemplateCreation = function () {
   this.typeAheadInput = element(by.css('.typeahead-large .ct-input'));
   this.nameHint = element(by.css('.typeahead-large .ct-input-hint'));
   this.customerInfoToggle = element.all(by.css('.toggle-switch')).first();
+  this.overviewCard = element.all(by.css('.ct-card-overview'));
   this.customerInfoEnabledCard = element.all(by.css('.ct-card-border-enabled')).first();
   this.customerInfoDisabledCard = element.all(by.css('.ct-card-border-disabled')).first();
 

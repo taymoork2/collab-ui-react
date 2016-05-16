@@ -52,12 +52,14 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfOverviewPage() {
+    var OVERVIEW_CARD_COUNT = 4;
     validateTitleAndDesc('Chat Template Overview', 'These are the screens customers will see when they use chat to contact customer care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
+    utils.expectCount(careChatTemplateSetupPage.overviewCard, OVERVIEW_CARD_COUNT)
   }
 
   function validateContentsOfCustomerInfoPage() {

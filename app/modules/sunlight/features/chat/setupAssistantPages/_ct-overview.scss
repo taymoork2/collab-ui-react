@@ -1,37 +1,29 @@
 .ct-card-border-enabled {
-  border: rem-calc(1) solid $color-primary-base;
-
+  border: rem-calc(1) solid $color-primary-base
 }
-
 .ct-card-border-disabled {
-  border: rem-calc(1) solid $gray-light-1;
-}
-
-.ct-card-img {
-  @include vr-spacing(mt, 1);
-  text-align: center;
-  color: $gray-base
-}
-.ct-card-title {
-  text-align: center;
-  color: $gray-dark-1;
-  @include vr-spacing(mt, 0.5);
-}
-
-.ct-card-desc {
-  color: $gray-dark-1;
-  text-align: center
+  border: rem-calc(1) solid $gray-light-1
 }
 .ct-card-overview {
   height: rem-calc(220);
   box-shadow: rem-calc(0) rem-calc(0) rem-calc(0) rem-calc(0) !important;
-
+  .ct-card-img {
+    @include vr-spacing(mt, 1);
+    text-align: center;
+    color: $gray-base
+  }
+  .ct-card-title {
+    text-align: center;
+    color: $gray-dark-1;
+    @include vr-spacing(mt, 0.5);
+  }
+  .ct-card-desc {
+    color: $gray-dark-1;
+    text-align: center
+  }
   section {
     display: flex;
     flex-direction: column;
     align-items: center
   }
 }
-
-
-

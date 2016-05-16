@@ -3494,7 +3494,7 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
-    "ctOverviews": {
+    "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
         "desc": "This is the screen a customer fills out before chatting with an agent"
