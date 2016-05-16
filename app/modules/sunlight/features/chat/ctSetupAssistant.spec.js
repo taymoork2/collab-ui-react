@@ -88,7 +88,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     it("should have previous and next button enabled", function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
       validateKeyPressEvent(rightArrow, OVERVIEW_PAGE_INDEX, CUSTOMER_PAGE_INDEX);
-      validateKeyPressEvent(leftArrow, OVERVIEW_PAGE_INDEX, NAME_PAGE_INDEX);
+      validateKeyPressEvent(leftArrow, OVERVIEW_PAGE_INDEX, PROFILE_PAGE_INDEX);
     });
 
     it("should initialize all cards as enabled ", function () {
