@@ -8,9 +8,12 @@
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
           <li>
-            <a ng-click="externalNumbers.addNumbers(externalNumbers.currentCustomer)">
-              <span ng-show="externalNumbers.showPstnSetup" translate="pstnSetup.setupPstn"></span>
-              <span ng-hide="externalNumbers.showPstnSetup" translate="didManageModal.buttonText"></span>
+            <a ng-show="externalNumbers.showPstnSetup" ng-click="externalNumbers.addNumbers(externalNumbers.currentCustomer);
+            externalNumbers.getUserAuthInfo(externalNumbers.currentCustomer);">
+              <span translate="pstnSetup.setupPstn"></span> 
+            </a>
+            <a ng-hide="externalNumbers.showPstnSetup" ng-click="externalNumbers.addNumbers(externalNumbers.currentCustomer)">
+              <span translate="didManageModal.buttonText"></span>
             </a>
           </li>
         </ul>

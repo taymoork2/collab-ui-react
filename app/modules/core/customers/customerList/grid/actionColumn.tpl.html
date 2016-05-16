@@ -16,7 +16,8 @@
       </a>
     </li>
     <li ng-show="row.entity.isAllowedToManage && grid.appScope.isOrgSetup(row.entity) && row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup">
-      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.addNumbers(row.entity)">
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.addNumbers(row.entity);
+      grid.appScope.getUserAuthInfo(row.entity.customerOrgId);">
         <span translate="pstnSetup.setupPstn"></span>
     	</a>
     </li>
