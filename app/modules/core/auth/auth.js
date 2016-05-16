@@ -20,7 +20,8 @@
       setAuthorizationHeader: setAuthorizationHeader,
       refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
       verifyOauthState: verifyOauthState,
-      getAuthorizationUrl: getAuthorizationUrl
+      getAuthorizationUrl: getAuthorizationUrl,
+      getAuthorizationUrlList: getAuthorizationUrlList
     };
 
     return service;
@@ -133,6 +134,11 @@
       }
 
       return url + 'userauthinfo';
+    }
+
+    function getAuthorizationUrlList() {
+      var authUrl = getAuthorizationUrl();
+      return httpGET(authUrl);
     }
 
     function injectMessengerService(authData) {

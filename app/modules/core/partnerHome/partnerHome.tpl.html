@@ -22,7 +22,7 @@
               <div class="trial" ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
                 <div class="row collapse">
                   <div class="columns small-12">
-                    <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click=" launchCustomerPortal(trial);" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
+                    <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click="launchCustomerPortal(trial);" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
                       <a href="">
                         <span>{{trial.customerName}}</span>
                       </a>

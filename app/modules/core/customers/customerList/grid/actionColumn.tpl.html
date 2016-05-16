@@ -8,8 +8,9 @@
         <span translate="customerPage.myOrgButton"></span>
       </a>
     </li>
-    <li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton">
-      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank">
+    <li ng-show="row.entity.isAllowedToManage || row.entity.isPartnerAdmin" id="{{row.entity.customerName}}LaunchCustomerButton">
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.getUserAuthInfo(row.entity.customerOrgId);" 
+      ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank">
         <span ng-if="grid.appScope.isOrgSetup(row.entity)" translate="customerPage.launchButton"></span>
         <span ng-if="!grid.appScope.isOrgSetup(row.entity)" translate="customerPage.setupButton"></span>
       </a>
