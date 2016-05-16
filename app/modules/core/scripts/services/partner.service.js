@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -75,6 +75,9 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
             addToManagedOrgsList(uuid, customerOrgId);
+            Localytics.tagEvent('PATCHED User Count', {
+              from: response.data.orgName
+            });
           }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);
