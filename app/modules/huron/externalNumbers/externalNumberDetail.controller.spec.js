@@ -122,7 +122,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
   });
 
-  //remove with 'huron-order-management'
+  //TODO: remove when removing toggle 'huron-order-management'
   describe('customerCommunicationLicenseIsTrial flag', function () {
     it('should be true if communication license is a trial.', function () {
       var org = {

@@ -30,7 +30,7 @@
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
-    //remove with 'huron-order-management'
+    //TODO: remove when removing toggle 'huron-order-management'
     var numberPromise = ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
       .then(function (response) {
         vm.showPstnSetup = response;
@@ -104,13 +104,13 @@
       vm.refresh = false;
     }
 
-    //remove with 'huron-order-management'
+    //TODO: remove when removing toggle 'huron-order-management'
     function getIsTrial(org) {
       if (!!org.isPartner) return false;
       return _.get(org, 'communications.isTrial', true);
     }
 
-    //remove with 'huron-order-management'
+    //TODO: remove when removing toggle 'huron-order-management'
     function addNumbers(org) {
       numberPromise.then(function () {
         if (vm.showPstnSetup) {
