@@ -87,11 +87,11 @@
       vm.orders = PstnSetup.getOrders();
 
       vm.portOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'type') === PstnSetupService.PORT_ORDERS;
+        return _.get(order, 'type') === PstnSetupService.PORT_ORDER;
       });
 
       vm.advancedOrders = _.remove(vm.orders, function (order) {
-        return _.get(order, 'type') === PstnSetupService.ADVANCED_ORDERS;
+        return _.get(order, 'type') === PstnSetupService.BLOCK_ORDER;
       });
 
       vm.newOrders = vm.orders;

@@ -6,32 +6,36 @@
 
   /* @ngInject */
   function PstnSetupService($q, $translate, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
+    //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
-    var PSTN = "PSTN";
-    var TYPE_PORT = "PORT";
-    var PENDING = "PENDING";
-    var QUEUED = "QUEUED";
-    var BLOCK = 'block';
-    var ORDER = 'order';
-    var PORT = 'port';
-    var PORT_ORDERS = 'portOrders';
-    var ADVANCED_ORDERS = 'advancedOrders';
-    var NEW_ORDERS = 'newOrders';
-    var BLOCK_ORDER = 'BLOCK_ORDER';
+    //e911 order operations
     var UPDATE = 'UPDATE';
     var DELETE = 'DELETE';
     var ADD = 'ADD';
+    //did order status
     var PENDING = 'PENDING';
     var PROVISIONED = 'PROVISIONED';
+    var QUEUED = "QUEUED";
+    //did order types
     var NUMBER_ORDER = 'NUMBER_ORDER';
     var PORT_ORDER = 'PORT_ORDER';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
+    //translated order status
     var SUCCESSFUL = $translate.instant('pstnOrderOverview.successful');
     var IN_PROGRESS = $translate.instant('pstnOrderOverview.inProgress');
+    //translated order type
     var ADVANCE_ORDER = $translate.instant('pstnOrderOverview.advanceOrder');
     var NEW_NUMBER_ORDER = $translate.instant('pstnOrderOverview.newNumberOrder');
     var PORT_NUMBER_ORDER = $translate.instant('pstnOrderOverview.portNumberOrder');
+    //$resource constants
+    var BLOCK = 'block';
+    var ORDER = 'order';
+    var PORT = 'port';
+    //misc
+    var PSTN = "PSTN";
+    var TYPE_PORT = "PORT";
 
     var service = {
       createCustomer: createCustomer,
@@ -61,9 +65,9 @@
       QUEUED: QUEUED,
       BLOCK: BLOCK,
       ORDER: ORDER,
-      PORT_ORDERS: PORT_ORDERS,
-      ADVANCED_ORDERS: ADVANCED_ORDERS,
-      NEW_ORDERS: NEW_ORDERS
+      PORT_ORDER: PORT_ORDER,
+      BLOCK_ORDER: BLOCK_ORDER,
+      NUMBER_ORDER: NUMBER_ORDER
     };
 
     return service;

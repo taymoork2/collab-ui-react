@@ -247,14 +247,14 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.quantity = advancedOrder.data.length;
       controller.model.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.ADVANCED_ORDERS);
+      controller.addToCart(PstnSetupService.BLOCK_ORDER);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
           consecutive: advancedOrder.data.consecutive
         },
-        type: PstnSetupService.ADVANCED_ORDERS
+        type: PstnSetupService.BLOCK_ORDER
       });
     });
   });
