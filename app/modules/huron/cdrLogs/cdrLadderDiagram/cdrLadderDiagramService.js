@@ -10,7 +10,7 @@
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
     var TRANSITION_ARROW = "-[#009933]>";
-    var NOT_FOUND = 'SME';
+    var SME_NODE = 'SME';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var skinParam = "skinparam backgroundColor #EEEBDC \n" +
@@ -52,11 +52,11 @@
             note = getNote(events[i]);
 
             if (source === null || source === "") {
-              source = NOT_FOUND;
+              source = SME_NODE;
             }
 
             if (remote === null || remote === "") {
-              remote = NOT_FOUND;
+              remote = SME_NODE;
             }
 
             //incommig call
@@ -97,12 +97,12 @@
     }
 
     function getRemoteAlias(event) {
-      if (event.dataParam.remoteAlias !== undefined) {
+      if (!_.isUndefined(event.dataParam.remoteAlias)) {
         if (event.dataParam.remoteAlias.indexOf('Cisco') > -1 && event.dataParam.remoteAlias.indexOf('SME') > -1) {
-          return 'SME';
+          return SME_NODE;
         }
       }
-      if (event.dataParam.remoteName !== undefined && event.eventSource.hostname !== undefined) {
+      if (!_.isUndefined(event.dataParam.remoteName) && !_.isUndefined(event.eventSource.hostname)) {
         if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('cms') > -1) {
           return 'Line Hedge';
         } else if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('sme') > -1) {
@@ -116,7 +116,7 @@
         } else {
           return event.dataParam.remoteName.replace(/-/g, '\\-');
         }
-      } else if (event.eventSource.hostname !== undefined) {
+      } else if (!_.isUndefined(event.eventSource.hostname)) {
         if (event.eventSource.hostname.indexOf('line') > -1) {
           return 'Start Point';
         } else {
