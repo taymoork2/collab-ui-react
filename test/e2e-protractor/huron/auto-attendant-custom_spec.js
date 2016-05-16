@@ -116,10 +116,25 @@ describe('Huron Auto Attendant', function () {
 
       autoattendant.assertImportSuccess(0, 1);
 
+      // verify open/close and holiday bars are clickable
+      utils.click(autoattendant.selectHolidaysBar);
+      utils.expectIsDisplayed(autoattendant.holidayBehaviour);
+      utils.click(autoattendant.selectOpenCloseBar);
+      utils.expectIsDisplayed(autoattendant.addschedule);
+
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
 
     }, 120000);
+
+    it('should click schdule lane header boxes and see the schedule config page can be opened', function () {
+
+      utils.click(autoattendant.selectOpenHoursBox);
+      utils.click(autoattendant.scheduleCloseButton);
+      utils.click(autoattendant.selectHolidayHoursBox);
+      utils.click(autoattendant.scheduleCloseButton);
+
+    });
 
     it('should close AA edit and return to landing page', function () {
 

@@ -25,13 +25,12 @@ function compile(files, dest, writeManifest) {
     .pipe($.if(args.verbose, $.print()))
     .pipe($.sourcemaps.init())
     .pipe($.typescript({
-      "removeComments": false,
-      "preserveConstEnums": true,
-      "target": "ES5",
-      "sourceMap": true,
-      "showOutput": "silent",
-      "listFiles": false,
-      "sortOutput": true
+      removeComments: false,
+      preserveConstEnums: true,
+      target: 'ES5',
+      sourceMap: true,
+      listFiles: false,
+      sortOutput: true
     }, undefined, reporter))
     .pipe($.rename(
       function (path) {
@@ -54,7 +53,7 @@ function compile(files, dest, writeManifest) {
 
 function getTsFilesFromManifest() {
   var fileList = [];
-  fileList = fileList.concat(fileListParser.toList(config.build + '/' + config.tsManifest, "utf8"));
+  fileList = fileList.concat(fileListParser.toList(config.build + '/' + config.tsManifest, 'utf8'));
   return fileList;
 }
 

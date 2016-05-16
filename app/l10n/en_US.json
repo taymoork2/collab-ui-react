@@ -75,7 +75,7 @@
     "yes": "YES",
     "resend": "Resend Invitation",
     "resendActivation": "Resend Activation",
-    "deleteUserSuccess": "User {{email}} deleted successfully",
+    "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
@@ -739,7 +739,7 @@
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
-    "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
+    "invalidMinLength": "This entry is too short. Minimum length is {{min}}.",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "invalidMax": "Maximum value is {{max}}.",
     "on": "On",
@@ -782,7 +782,8 @@
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
     "postpone": "Postpone",
-    "continue": "Continue"
+    "continue": "Continue",
+    "warning": "Warning"
   },
   "notifications": {
     "success": "Success notifications",
@@ -909,13 +910,17 @@
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
+    "extensionLength": "Internal Extension Length",
+    "extensionLengthDescription": "Specify the length of internal numbers.",
+    "extensionLengthChangeWarning": "Changing the extension length will change all extensions in the system.",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
     "siteCode": "Site Code",
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
+    "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
     "internalExtensionRange": "Internal Extension Range",
-    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
+    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
@@ -1117,7 +1122,7 @@
       "report": "Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add a Resource",
+      "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define SIP Domain"
     },
@@ -1584,7 +1589,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Imported {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1672,8 +1677,8 @@
     "on": "On",
     "day": "Day",
     "selectAA": "Select Auto Attendant",
-    "importSchedule": "Import Schedule",
-    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
+    "importSchedule": "Copy Schedule",
+    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -2405,6 +2410,7 @@
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
+    "readonlyAdmin": "Read only administrator privileges",
     "partialAdmin": "Some administrator privileges",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
@@ -2610,15 +2616,15 @@
       "raised": "Raised"
     },
     "add-resource-dialog": {
-      "title": "Register a New Media Server",
-      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to:",
-      "text2": "Enter the hostname or IP address of the Media Server that you want to register to cloud. Click REGISTER RESOURCE, login to your Media Server and register.",
-      "register": "Go To Media Server",
+      "title": "Register a New media server",
+      "text1": "Create a new or choose an existing Media Cluster to assign the new media server to:",
+      "text2": "Enter the hostname or IP address of the media server that you want to register to the cloud. Click Next, and then log in to your media server to confirm registration.",
+      "register": "Go To media server",
       "cancel": "Cancel",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Media Server <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
       "grant-registration-success-header-new-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
-      "grant-success-information": "Go to your Media Server within one hour to finish registration.",
+      "grant-success-information": "Go to your media server within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "errorTitle": "Registration Error",
@@ -3181,7 +3187,7 @@
     "spanishSpain": "Español (España)",
     "spanishColumbian": "Español (América Latina)",
     "french": "Français (France)",
-    "indionesian": "Bahasa Indonesia",
+    "indonesian": "Bahasa Indonesia",
     "italian": "Italiano",
     "japanese": "日本語",
     "korean": "한국어",
@@ -3214,7 +3220,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
-    "siteCsvColumnHeader": "User Attributes",
+    "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3241,8 +3247,8 @@
     "importRejectedToast": "Import failed. Try again.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
-    "siteCSVNotAvailable": "Not Available",
-    "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature.",
+    "siteCSVNotAvailable": "Not available",
+    "siteCSVNotAvailableTooltip": "You must upgrade this site to access the Bulk Modify User Attributes feature",
     "authError": "You are not entitled to access this site.",
     "systemError": "Unable to connect to site.",
     "multipleLicenses": "Multiple...",
@@ -3487,7 +3493,26 @@
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "ctOverview": {
+      "customerInformation": {
+        "title": "Customer Info",
+        "desc": "This is the screen a customer fills out before chatting with an agent"
+      },
+      "agentUnavailable": {
+        "title": "Agent Unavailable",
+        "desc": "This screen is shown to a customer when no agent is available to assist"
+      },
+      "offHours": {
+        "title": "Off-Hours",
+        "desc": "This screen is shown during business off-hours"
+      },
+      "feedback": {
+        "title": "Feedback",
+        "desc": "This screen is used to collect feedback from the customer after chat ends"
+      }
+    }
+
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3658,7 +3683,7 @@
     "thisMonth": "This month",
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
-    "contactCsb": "Contact",
+    "visitCsb": "Visit",
     "telstraMarketplace": "Telstra Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
@@ -3959,7 +3984,8 @@
     "removeFile": "Remove File",
     "newUsers": "Added",
     "existingUsers": "Updated",
-    "errorUsers": "Errors"
+    "errorUsers": "Errors",
+    "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {
     "confirmTitle": "Are you sure?",

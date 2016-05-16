@@ -331,26 +331,21 @@
             }
           });
 
+        // See http://angular-translate.github.io/docs/#/guide/19_security
+        $translateProvider.useSanitizeValueStrategy('escapeParameters');
+        $translateProvider.useStaticFilesLoader({
+          prefix: 'l10n/',
+          suffix: '.json'
+        });
+        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
+        $translateProvider.preferredLanguage('en_US');
+        $translateProvider.fallbackLanguage('en_US');
+
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-
-        // See ... http://angular-translate.github.io/docs/#/guide/19_security
-        $translateProvider.useSanitizeValueStrategy('escapeParameters');
-
-        $translateProvider.useStaticFilesLoader({
-          prefix: 'l10n/',
-          suffix: '.json'
-        });
-
-        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-
-        var defaultLang = 'en_US';
-
-        //Tell the module what language to use by default
-        $translateProvider.preferredLanguage(defaultLang);
       }
     ]);
 
@@ -1013,6 +1008,19 @@
                 controller: 'SiteCSVImportModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
                 controllerAs: 'siteCSVImportModalCtrl'
+              }
+            },
+            params: {
+              csvImportObj: null
+            }
+          })
+          .state('site-csv', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'SiteCSVModalCtrl',
+                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                controllerAs: 'siteCSVModalCtrl'
               }
             },
             params: {
