@@ -10,7 +10,7 @@
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
     vm.allNumbersCount = 0;
-    vm.addNumbers = addNumbers;
+    vm.isTerminusCustomer = isTerminusCustomer;
     var ALL = 'all';
 
     updatePhoneNumberCount();
@@ -41,14 +41,14 @@
       vm.loading = false;
     }
 
-    function addNumbers() {
+    function isTerminusCustomer() {
       ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId).then(function (response) {
         if (response) {
           return $state.go('pstnSetup', {
             customerId: vm.currentCustomer.customerOrgId,
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
-            customerCommunicationLicenseIsTrial: getIsTrial(vm.currentCustomer)
+            customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer)
           });
         } else {
           return $state.go('didadd', {
@@ -58,8 +58,10 @@
       });
     }
 
-    function getIsTrial(org) {
-      if (!!org.isPartner) return false;
+    function getCommTrial(org) {
+      if (!!org.isPartner) {
+        return false;
+        }
       return _.get(org, 'communications.isTrial', true);
     }
   }

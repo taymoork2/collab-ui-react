@@ -16,31 +16,33 @@
     //parse order
     switch (vm.currentOrder.operation) {
     case BLOCK_ORDER:
-      if (_.get(vm.currentOrder, 'response')) {
+      if (_.has(vm.currentOrder, 'response')) {
         try {
           var order = JSON.parse(vm.currentOrder.response);
+          var response = order[vm.currentOrder.carrierOrderId];
         } catch (error) {
           return;
         }
-        if (order[vm.currentOrder.carrierOrderId][0].e164 === null) {
+        if (_.get(response, '[0].e164') === null) {
           vm.info.push({
             label: $translate.instant('pstnOrderDetail.pendingNumbers', {
-              count: order[vm.currentOrder.carrierOrderId].length
+              count: response.length
             }, 'messageformat')
           });
         } else {
-          pushNumbersToView(order[vm.currentOrder.carrierOrderId]);
+          pushNumbersToView(response);
         }
       }
       break;
     default:
-      if (_.get(vm.currentOrder, 'response')) {
+      if (_.has(vm.currentOrder, 'response')) {
         try {
           var order = JSON.parse(vm.currentOrder.response);
+          var response = order[vm.currentOrder.carrierOrderId];
         } catch (error) {
           return;
         }
-        pushNumbersToView(order[vm.currentOrder.carrierOrderId]);
+        pushNumbersToView(response);
       }
       break;
     }
