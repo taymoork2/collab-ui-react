@@ -6,7 +6,7 @@
     .service('ServiceDescriptor', ServiceDescriptor);
 
   /* @ngInject */
-  function ServiceDescriptor($http, UrlConfig, Authinfo) {
+  function ServiceDescriptor($http, $q, UrlConfig, Authinfo, Orgservice) {
     var services = function (callback, includeStatus) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
@@ -85,6 +85,39 @@
         });
     };
 
+    var getDisableEmailSendingToUser = function () {
+      return $q(function (resolve, reject) {
+        Orgservice.getOrg(function (data, status) {
+          if (data.success) {
+            var settings = data.orgSettings;
+            if (!_.isEmpty(settings)) {
+              resolve({
+                'calSvcDisableEmailSendingToEndUser': settings.calSvcDisableEmailSendingToEndUser
+              });
+            } else {
+              reject();
+            }
+          } else {
+            reject();
+          }
+        }, Authinfo.getOrgId(), true);
+      });
+    };
+
+    var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser, callback) {
+      var settings = {
+        'calSvcDisableEmailSendingToEndUser': (calSvcDisableEmailSendingToEndUser ? true : false)
+      };
+
+      Orgservice.setOrgSettings(Authinfo.getOrgId(), settings)
+        .then(function () {
+          callback(null);
+        })
+        .catch(function () {
+          callback("error in setting disable email sending for Org.");
+        });
+    };
+
     var setServiceEnabled = function (serviceId, enabled, callback) {
       $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
@@ -134,7 +167,9 @@
       getServices: getServices,
       servicesInOrg: servicesInOrg,
       getEmailSubscribers: getEmailSubscribers,
-      setEmailSubscribers: setEmailSubscribers
+      setEmailSubscribers: setEmailSubscribers,
+      getDisableEmailSendingToUser: getDisableEmailSendingToUser,
+      setDisableEmailSendingToUser: setDisableEmailSendingToUser
     };
   }
 }());

@@ -56,7 +56,8 @@
       "logoUrl": "https://94b6b900d66ab54604ad-5bd511b512ffac5b60f6dbd4f0ba3414.ssl.cf1.rackcdn.com/bcd7afcd-839d-4c61-a7a8-31c6c7f016d7/branding/logos/customerLogo.png",
       "usePartnerLogo": false,
       "allowCustomerLogos": false,
-      "sipCloudDomain": "amtest2.ciscospark.com"
+      "sipCloudDomain": "amtest2.ciscospark.com",
+      "calSvcDisableEmailSendingToEndUser": false
     },
     "meta": {
       "created": "2016-01-07T21:41:20.970Z",

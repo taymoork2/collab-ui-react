@@ -1,5 +1,8 @@
 <h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
-<p translate="{{'hercules.settings.emailNotifications'}}"></p>
+<h6><strong translate="hercules.settings.emailAdministratorHeading"></strong></h6>
+<p><span translate="{{'hercules.settings.emailAdministratorNotification'}}"></span><br>
+</p>
+
 <tags-input add-on-blur="true"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
@@ -10,3 +13,14 @@
             type="email"
             allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
 <span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+
+<h6><strong translate="hercules.settings.emailUserHeading"></strong></h6>
+<p><span translate="{{'hercules.settings.emailUserNotification'}}"></span><br>
+</p>
+
+<cs-toggle-switch ng-model="expresswayServiceSettings.disableEmailSendingToUser"
+                  ng-click="expresswayServiceSettings.setDisableEmailSendingToUser()"
+                  toggle-id="toggleDisableEmailSendingToUser"
+                  name="toggleDisableEmailSendingToUser"
+                  size="small">
+</cs-toggle-switch>

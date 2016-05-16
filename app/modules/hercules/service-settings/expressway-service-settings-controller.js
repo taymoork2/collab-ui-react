@@ -97,6 +97,28 @@
       }
     };
 
+    vm.disableEmailSendingToUser = false;
+    ServiceDescriptor.getDisableEmailSendingToUser()
+      .then(function (settings) {
+        vm.disableEmailSendingToUser = !(settings.calSvcDisableEmailSendingToEndUser);
+      });
+
+    vm.toggleDisableEmailSendingToUser = _.debounce(function (value) {
+      ServiceDescriptor.setDisableEmailSendingToUser(value, function (err) {
+        if (err) {
+          return XhrNotificationService.notify(err);
+        }
+      });
+
+    }, 2000, {
+      'leading': true,
+      'trailing': false
+    });
+
+    vm.setDisableEmailSendingToUser = function () {
+      vm.toggleDisableEmailSendingToUser(vm.disableEmailSendingToUser);
+    };
+
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
         // TODO: Strange callback result ???
