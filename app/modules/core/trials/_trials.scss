@@ -18,8 +18,8 @@
   }
   .formly-field-checkbox {
     padding-bottom: 0;
-    label,
-    .form-group {
+    .form-group,
+    label {
       margin: 0;
     }
   }
@@ -81,46 +81,53 @@
     min-height: rem(144px);
   }
   .token {
-      background-color: $color-primary-base;
+    background-color: $color-primary-base;
+    color: $white;
+    .close {
       color: $white;
-      .close {
-          color: $white;
-      }
-      padding: rem(6px) rem(6px);
+    }
+    padding: rem(6px);
   }
   .no-pad {
-      padding-bottom: 0;
+    padding-bottom: 0;
   }
   .no-flex {
-      flex: none;
-      -webkit-flex: none;
+    flex: none;
+    -webkit-flex: none;
+  }
+  .state-zip-wrapper {
+    /* nested form grid fix */
+    @include vr-spacing(ph, 0.75, 2px);
+    input {
+      margin-bottom: 0.25rem;
+    }
   }
   .max-width {
     .select-toggle {
-        width: 100%;
+      width: 100%;
     }
   }
   .flex-row {
-      display:flex;
-      flex-direction:row;
+    display: flex;
+    flex-direction: row;
   }
   .pad-right {
-      padding-right:1.6rem;
+    padding-right: 1.6rem;
   }
   .flex1 {
-      flex:1;
-      padding-left: 1px;
+    flex: 1;
+    padding-left: 1px;
   }
   .legal-tooltip {
-      color: $gray-light-1;
-      padding-left: rem(5px);
-      margin-top: rem(5px);
+    color: $gray-light-1;
+    padding-left: rem(5px);
+    margin-top: rem(5px);
   }
   .tooltip-arrow {
-      top: rem(26px);
+    top: rem(26px);
   }
   .city-width input {
-      min-width: rem(258px);
+    min-width: rem(258px);
   }
 }
 
@@ -184,5 +191,11 @@
     span.msg--default {
       display: none;
     }
+  }
+}
+// chrome only label width bugfix
+@media all and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+  .trial-modal.form-horizontal .state-zip-wrapper {
+    padding-left: 0.375rem;
   }
 }
