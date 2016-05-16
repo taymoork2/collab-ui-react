@@ -47,7 +47,7 @@
         } else {
           $state.go('huronfeatures.aabuilder', {
             aaName: '',
-            aaTemplate: 'template1'
+            aaTemplate: 'Basic'
           });
         }
 

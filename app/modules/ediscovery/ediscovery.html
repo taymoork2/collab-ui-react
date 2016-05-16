@@ -1,0 +1,64 @@
+<div class="XXediscovery-search">
+
+
+  <div class="row">
+    <div class="cs-input-group columns medium-2">
+      <cs-datepicker
+        ng-model="ediscoveryCtrl.searchCriteria.startDate"
+        placeholder="Choose a start Day"
+        view-format="YYYY-MM-DD">
+      </cs-datepicker>
+
+    </div>
+
+    <div class="cs-input-group columns medium-2">
+      <cs-datepicker
+        ng-model="ediscoveryCtrl.searchCriteria.endDate"
+        placeholder="Choose an end Day"
+        view-format="YYYY-MM-DD">
+      </cs-datepicker>
+    </div>
+
+    <div class="cs-input-group columns medium-6">
+      <input cs-input
+             size="50"
+             placeholder="Enter room id"
+             ng-model="ediscoveryCtrl.searchCriteria.searchString">
+
+    </div>
+
+
+    <div class="cs-input-group columns medium-2">
+      <button type="button" class="button btn--primary" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
+    </div>
+
+
+  </div>
+
+
+
+  <div class="row grid">
+
+    <div gridscrollbar class="gridStyle" ui-grid="ediscoveryCtrl.gridOptions" ui-grid-selection></div>
+
+  </div>
+
+
+
+
+
+
+
+
+  <table>
+    <tr ng-repeat="report in reports">
+      <td>{{report.id}}</td>
+      <td>{{report.name}}</td>
+      <td>{{report.progress}} %</td>
+      <td ng-show="report.progress === 100">[CLICK TO DOWNLOAD FULL REPORT]</td>
+    </tr>
+  </table>
+
+
+
+</div>
