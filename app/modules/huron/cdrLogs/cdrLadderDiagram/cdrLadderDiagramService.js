@@ -10,7 +10,7 @@
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
     var TRANSITION_ARROW = "-[#009933]>";
-    var NOT_FOUND = 'Not Found';
+    var NOT_FOUND = 'SME';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var skinParam = "skinparam backgroundColor #EEEBDC \n" +
@@ -97,6 +97,11 @@
     }
 
     function getRemoteAlias(event) {
+      if (event.dataParam.remoteAlias !== undefined) {
+        if (event.dataParam.remoteAlias.indexOf('Cisco') > -1 && event.dataParam.remoteAlias.indexOf('SME') > -1) {
+          return 'SME';
+        }
+      }
       if (event.dataParam.remoteName !== undefined && event.eventSource.hostname !== undefined) {
         if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('cms') > -1) {
           return 'Line Hedge';
