@@ -762,37 +762,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
     });
   });
 
-  describe('isDateValid', function () {
-    beforeEach(function () {
-      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-      controller = $controller('AAScheduleModalCtrl as vm', {
-        $scope: $scope,
-        $modalInstance: $modalInstance,
-        AACalendarService: AACalendarService,
-        AAICalService: AAICalService,
-        AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
-      });
-      controller.holidaysForm = {
-        holidayForm0: {
-          holidayDate: {
-            $valid: function () {}
-          }
-        }
-      };
-      $scope.$apply();
-    });
-
-    it('should check the holidays', function () {
-      controller.holidays = [{
-        isOpen: true,
-      }];
-
-      var test = controller.isDateValid();
-      expect(test).toBe(true);
-    });
-  });
-
   describe('isHolidaysSavable', function () {
     beforeEach(function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);

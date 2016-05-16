@@ -24,7 +24,6 @@
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
-    vm.isDateValid = isDateValid;
     vm.exactDateChanged = exactDateChanged;
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
@@ -186,21 +185,8 @@
       }
     }
 
-    function isDateValid() {
-      var index = _.findLastIndex(vm.holidays, {
-        isOpen: true
-      });
-      if (index >= 0) {
-        var indexForm = 'holidayForm' + index;
-        if (!vm.holidaysForm[indexForm].holidayDate.$valid) {
-          return false;
-        }
-      }
-      return true;
-    }
-
     function isSavable() {
-      return (vm.openhours.length == 0 || isHoursSavable()) && ((vm.holidays.length == 0 || isHolidaysSavable()) && isDateValid());
+      return (vm.openhours.length == 0 || isHoursSavable()) && ((vm.holidays.length == 0 || isHolidaysSavable()));
     }
 
     function isHolidaysSavable() {
@@ -211,7 +197,7 @@
           return flag;
         }
         if (holiday.exactDate) {
-          if (holiday.date === undefined || holiday.date == '') {
+          if (_.isEmpty(holiday.date)) {
             return flag;
           }
         } else {
