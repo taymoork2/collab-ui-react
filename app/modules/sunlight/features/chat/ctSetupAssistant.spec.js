@@ -74,7 +74,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     expect($modal.open).toHaveBeenCalled();
   });
 
-  describe('Initial Chat Template - Overview Page', function () {
+  describe('Chat Template - Overview Page', function () {
 
     it("should have previous and next button enabled", function () {
       checkStateOfButton(2, true, true);
@@ -84,9 +84,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it("should inititialize all cards as enabled ", function () {
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
-      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
-      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
-      expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
+      expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
+      expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
+      expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
     });
   });
 });

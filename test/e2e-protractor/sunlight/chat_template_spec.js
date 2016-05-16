@@ -56,6 +56,8 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
+    utils.click(careChatTemplateSetupPage.customerInfoToggle);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
   }
 
   function validateContentsOfCustomerInfoPage() {
