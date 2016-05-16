@@ -3,4 +3,21 @@
     <span class="h1" translate="careChatTpl.overview"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.overviewDesc"></div>
+  <cs-card-layout>
+    <div ng-repeat="(page, status) in careChatSA.template.configuration.pages">
+      <cs-card class="medium">
+        <article ng-class="{'ct-card-border-enabled': status.enabled ,'ct-card-border-disabled': !status.enabled}" class="ct-card-overview">
+          <i ng-class="['icon', 'icon-' + careChatSA.overview.{{page}},'icon-4x','ct-card-img']"></i>
+          <div class="h4 ct-card-title" translate="careChatTpl.ctOverview.{{page}}.title"></div>
+          <section>
+            <div class="h6 ct-card-desc" translate="careChatTpl.ctOverview.{{page}}.desc"></div>
+            <cs-toggle-switch ng-model="status.enabled"
+                              toggle-id={{page}}
+                              size="small">
+            </cs-toggle-switch>
+          </section>
+        </article>
+      </cs-card>
+    </div>
+  </cs-card-layout>
 </div>
