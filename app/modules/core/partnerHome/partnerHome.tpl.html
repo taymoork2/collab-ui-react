@@ -50,7 +50,9 @@
                   </div>
                 </div>
                 <div class="row trialRow collapse-both" ng-repeat="trial in expiredList | orderBy: 'daysLeft' | limitTo: expiredRows">
-                  <span class="columns small-8 primary-color">{{trial.customerName}}</span>
+                  <div class="columns small-8" id="{{trial.customerName}}" ng-click="launchCustomerPortal(trial);" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
+                    <a href=""><span class="primary-color">{{trial.customerName}}</span></a>
+                  </div>
                   <span class="columns small-2 expired" translate="partnerHomePage.daysAgo" translate-values="{ days: getDaysAgo(trial.daysLeft) }"></span>
                   <div class="columns small-2 expired">
                     <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
