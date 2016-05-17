@@ -20,7 +20,8 @@
       setAuthorizationHeader: setAuthorizationHeader,
       refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
       verifyOauthState: verifyOauthState,
-      getAuthorizationUrl: getAuthorizationUrl
+      getAuthorizationUrl: getAuthorizationUrl,
+      getAuthorizationUrlList: getAuthorizationUrlList
     };
 
     return service;
@@ -52,7 +53,7 @@
       // Security: verify authentication request came from our site
       if (service.verifyOauthState(params.state)) {
         return httpPOST(url, data, token)
-          .then(updateAccessToken)
+          .then(updateOauthTokens)
           .catch(handleError('Failed to obtain new oauth access_token.'));
       } else {
         clearStorage();
@@ -68,7 +69,7 @@
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       return httpPOST(url, data, token)
-        .then(updateAccessToken)
+        .then(updateOauthTokens)
         .catch(handleError('Failed to refresh access token'));
     }
 
@@ -86,7 +87,7 @@
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       return httpPOST(url, data, token)
-        .then(updateAccessToken)
+        .then(updateOauthTokens)
         .catch(handleError('Failed to obtain oauth access_token'));
     }
 
@@ -133,6 +134,11 @@
       }
 
       return url + 'userauthinfo';
+    }
+
+    function getAuthorizationUrlList() {
+      var authUrl = getAuthorizationUrl();
+      return httpGET(authUrl);
     }
 
     function injectMessengerService(authData) {
@@ -233,12 +239,19 @@
       });
     }
 
-    function updateAccessToken(response) {
-      var token = _.get(response, 'data.access_token', '');
+    function updateOauthTokens(response) {
+      var accessToken = _.get(response, 'data.access_token', '');
+
+      if (_.has(response, 'data.refresh_token')) {
+        var refreshToken = _.get(response, 'data.refresh_token');
+        Storage.put('refreshToken', refreshToken);
+      }
+
       Log.info('Update Access Token');
-      Storage.put('accessToken', token);
-      setAuthorizationHeader(token);
-      return token;
+      Storage.put('accessToken', accessToken);
+
+      setAuthorizationHeader(accessToken);
+      return accessToken;
     }
 
     function getOauthState() {

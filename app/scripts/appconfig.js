@@ -331,26 +331,21 @@
             }
           });
 
+        // See http://angular-translate.github.io/docs/#/guide/19_security
+        $translateProvider.useSanitizeValueStrategy('escapeParameters');
+        $translateProvider.useStaticFilesLoader({
+          prefix: 'l10n/',
+          suffix: '.json'
+        });
+        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
+        $translateProvider.preferredLanguage('en_US');
+        $translateProvider.fallbackLanguage('en_US');
+
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-
-        // See ... http://angular-translate.github.io/docs/#/guide/19_security
-        $translateProvider.useSanitizeValueStrategy('escapeParameters');
-
-        $translateProvider.useStaticFilesLoader({
-          prefix: 'l10n/',
-          suffix: '.json'
-        });
-
-        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-
-        var defaultLang = 'en_US';
-
-        //Tell the module what language to use by default
-        $translateProvider.preferredLanguage(defaultLang);
       }
     ]);
 
@@ -1323,6 +1318,29 @@
               displayName: 'Phone Numbers'
             }
           })
+          .state('customer-overview.pstnOrderOverview', {
+            controller: 'PstnOrderOverviewCtrl',
+            controllerAs: 'pstnOrderOverview',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            data: {
+              displayName: 'PSTN Orders'
+            },
+            params: {
+              currentCustomer: {}
+            }
+          })
+          .state('customer-overview.pstnOrderDetail', {
+            parent: 'customer-overview.pstnOrderOverview',
+            controller: 'PstnOrderDetailCtrl',
+            controllerAs: 'pstnOrderDetail',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            data: {
+              displayName: 'Order'
+            },
+            params: {
+              currentOrder: {}
+            }
+          })
           .state('modal', {
             abstract: true,
             onEnter: modalOnEnter(),
@@ -2030,92 +2048,7 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
-          .state('meetings', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            //url: '/meetings',
-            //templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-            //controller: 'ListMeetingsCtrl',
-            parent: 'main'
-          })
-          .state('meetings.list', {
-            url: '/meetings',
-            templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-            controller: 'ListMeetingsCtrl',
-            params: {
-              showAddUsers: {}
-            }
-          })
-          .state('meetings.list.preview', {
-            templateUrl: 'modules/mediafusion/meetings/meetingPreview/meetingPreview.tpl.html',
-            controller: 'MeetingPreviewCtrl'
-          })
-          .state('metrics', {
-            url: '/metrics',
-            templateUrl: 'modules/mediafusion/metrics/metricsList/metricsList.tpl.html',
-            controller: 'MetricsCtrl',
-            parent: 'main'
-          })
-          .state('metrics.preview', {
-            templateUrl: 'modules/mediafusion/metrics/metricsPreview/metricsPreview.tpl.html',
-            controller: 'MetricsPreviewCtrl'
-          })
-          .state('threshold', {
-            url: '/threshold',
-            templateUrl: 'modules/mediafusion/threshold/thresholdList/thresholdList.tpl.html',
-            controller: 'ThresholdCtrl',
-            parent: 'main'
-          })
-          .state('threshold.preview', {
-            templateUrl: 'modules/mediafusion/threshold/thresholdPreview/thresholdPreview.tpl.html',
-            controller: 'ThresholdPreviewCtrl'
-          })
-          .state('fault', {
-            url: '/fault',
-            templateUrl: 'modules/mediafusion/faultRules/faultRules.tpl.html',
-            controller: 'FaultRulesCtrl',
-            parent: 'main'
-          })
-          .state('vts', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('vts.list', {
-            url: '/vts',
-            templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourceList/enterpriseResourceList.tpl.html',
-            controller: 'ListVtsCtrl'
-          })
-          .state('vts.list.preview', {
-            templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourcePreview/enterpriseResourcePreview.tpl.html',
-            controller: 'VtsPreviewCtrl'
-          })
-          .state('alarms', {
-            url: '/alarms',
-            templateUrl: 'modules/mediafusion/alarms/alarmList/alarmList.tpl.html',
-            controller: 'AlarmListCtrl',
-            parent: 'main'
-          })
-          .state('alarms.preview', {
-            templateUrl: 'modules/mediafusion/alarms/alarmPreview/alarmPreview.tpl.html',
-            controller: 'AlarmPreviewCtrl'
-          })
-          .state('events', {
-            url: '/events',
-            templateUrl: 'modules/mediafusion/events/eventList/eventList.tpl.html',
-            controller: 'EventListCtrl',
-            parent: 'main'
-          })
-          .state('events.preview', {
-            templateUrl: 'modules/mediafusion/events/eventPreview/eventPreview.tpl.html',
-            controller: 'EventPreviewCtrl'
-          })
-          .state('utilization', {
-            url: '/utilization',
-            templateUrl: 'modules/mediafusion/utilization/overAllUtilization.tpl.html',
-            controller: 'UtilizationCtrl',
-            parent: 'main'
-          })
+
           .state('media-service', {
             templateUrl: 'modules/mediafusion/media-service/overview.html',
             controller: 'MediaServiceController',

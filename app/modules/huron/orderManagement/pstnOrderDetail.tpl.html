@@ -1,0 +1,22 @@
+<cs-sp-container class="pstn-order-detail">
+  <cs-sp-section>
+    <div class="section-title-row">
+      <h3 translate="pstnOrderDetail.orderNumber" translate-values="{orderId: pstnOrderDetail.currentOrder.carrierOrderId}"></h3>
+    </div>
+    <div>
+      <span class="feature-name">{{pstnOrderDetail.currentOrder.created}}&emsp;{{pstnOrderDetail.currentOrder.type}}</span>
+    </div>
+    <div>
+      <span class="feature-name">{{pstnOrderDetail.currentOrder.status}}</span>
+    </div>
+    <div class="filter">
+      <input type="text" class="form-control" ng-model="orderDetails.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderDetail.searchPlaceholder' | translate}}">
+      <i class="icon icon-search"></i>
+    </div>
+    <ul class="detail-group">
+      <li class="detail-group-item" ng-repeat="info in filteredOrderDetails = (pstnOrderDetail.info | filter:orderDetails.filter)">
+        <span class="text-center">{{info.label}}</span>
+      </li>
+    </ul>
+  </cs-sp-section>
+</cs-sp-container>

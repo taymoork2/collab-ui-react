@@ -5,21 +5,37 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, $translate, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
+    //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
-    var PSTN = "PSTN";
-    var TYPE_PORT = "PORT";
-    var PENDING = "PENDING";
+    //e911 order operations
+    var UPDATE = 'UPDATE';
+    var DELETE = 'DELETE';
+    var ADD = 'ADD';
+    //did order status
+    var PENDING = 'PENDING';
+    var PROVISIONED = 'PROVISIONED';
     var QUEUED = "QUEUED";
+    //did order types
+    var NUMBER_ORDER = 'NUMBER_ORDER';
+    var PORT_ORDER = 'PORT_ORDER';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
+    //translated order status
+    var SUCCESSFUL = $translate.instant('pstnOrderOverview.successful');
+    var IN_PROGRESS = $translate.instant('pstnOrderOverview.inProgress');
+    //translated order type
+    var ADVANCE_ORDER = $translate.instant('pstnOrderOverview.advanceOrder');
+    var NEW_NUMBER_ORDER = $translate.instant('pstnOrderOverview.newNumberOrder');
+    var PORT_NUMBER_ORDER = $translate.instant('pstnOrderOverview.portNumberOrder');
+    //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
-    var PORT_ORDERS = 'portOrders';
-    var ADVANCED_ORDERS = 'advancedOrders';
-    var NEW_ORDERS = 'newOrders';
-    var BLOCK_ORDER = 'BLOCK_ORDER';
+    //misc
+    var PSTN = "PSTN";
+    var TYPE_PORT = "PORT";
 
     var service = {
       createCustomer: createCustomer,
@@ -38,6 +54,7 @@
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
+      getFormattedNumberOrders: getFormattedNumberOrders,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
@@ -48,9 +65,9 @@
       QUEUED: QUEUED,
       BLOCK: BLOCK,
       ORDER: ORDER,
-      PORT_ORDERS: PORT_ORDERS,
-      ADVANCED_ORDERS: ADVANCED_ORDERS,
-      NEW_ORDERS: NEW_ORDERS
+      PORT_ORDER: PORT_ORDER,
+      BLOCK_ORDER: BLOCK_ORDER,
+      NUMBER_ORDER: NUMBER_ORDER
     };
 
     return service;
@@ -256,6 +273,45 @@
         customerId: customerId,
         orderId: orderId
       }).$promise;
+    }
+
+    function getFormattedNumberOrders(customerId) {
+      return TerminusOrderService.query({
+        customerId: customerId
+      }).$promise.then(function (response) {
+        return _.chain(response)
+          .map(function (order) {
+            if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+              var newOrder = {
+                carrierOrderId: _.get(order, 'carrierOrderId'),
+                response: _.get(order, 'response'),
+                operation: _.get(order, 'operation')
+              };
+              //translate order status
+              if (order.status === PROVISIONED) {
+                newOrder.status = SUCCESSFUL;
+              } else if (order.status === PENDING) {
+                newOrder.status = IN_PROGRESS;
+              }
+              //translate order type
+              if (order.operation === BLOCK_ORDER) {
+                newOrder.type = ADVANCE_ORDER;
+              } else if (order.operation === NUMBER_ORDER) {
+                newOrder.type = NEW_NUMBER_ORDER;
+              } else if (order.operation === PORT_ORDER) {
+                newOrder.type = PORT_NUMBER_ORDER;
+              }
+              //create sort date and translate creation date
+              var orderDate = new Date(order.created);
+              newOrder.sortDate = orderDate.getTime();
+              newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+
+              return newOrder;
+            }
+          })
+          .compact()
+          .value();
+      });
     }
 
     function listPendingNumbers(customerId) {

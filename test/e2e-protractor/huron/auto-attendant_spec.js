@@ -112,6 +112,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
 
       // language
+      autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
       utils.click(autoattendant.sayMessageLanguage);
       utils.click(autoattendant.languageDropDownOptions);
 
@@ -237,7 +238,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectCount(autoattendant.sayMessageAll, 2);
 
       // OK, now add another via Add New Step
-      utils.click(autoattendant.addStep);
+      autoattendant.scrollIntoView(autoattendant.addStep(1));
+      utils.click(autoattendant.addStep(1));
 
       utils.expectIsDisplayed(autoattendant.newStep);
 
@@ -247,6 +249,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepSelectFirst);
 
       // Since the AA already contained 2 Say Message, we should now have 3
+      autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
       utils.expectCount(autoattendant.sayMessageAll, 3);
 
       // sayMessage code has already been fully tested elsewhere
@@ -266,9 +269,11 @@ describe('Huron Auto Attendant', function () {
 
       // Verify we have 1 Say Message already:
       // On timing issues here, see AUTOATTN-556
+      autoattendant.scrollIntoView(autoattendant.phoneMenuAll.first());
       utils.expectCount(autoattendant.phoneMenuAll, 1);
 
-      utils.click(autoattendant.addStep);
+      autoattendant.scrollIntoView(autoattendant.addStep(1));
+      utils.click(autoattendant.addStep(1));
 
       utils.expectIsDisplayed(autoattendant.newStep);
 
@@ -299,7 +304,8 @@ describe('Huron Auto Attendant', function () {
       //
       // Verify we have 1 Route Call already:
 
-      utils.click(autoattendant.addStep);
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
 
@@ -318,7 +324,8 @@ describe('Huron Auto Attendant', function () {
       //
       //console.log('Expect 0 Dial by Extensions');
       //utils.expectCount(autoattendant.dialByExtensionAll, 0);
-      utils.click(autoattendant.addStep);
+      autoattendant.scrollIntoView(autoattendant.addStepLast);
+      utils.click(autoattendant.addStepLast);
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
       // 3rd menu option is Dial By Extension 
@@ -348,7 +355,9 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should add a Schedule to AA', function () {
+      autoattendant.scrollIntoView(autoattendant.schedule);
       utils.click(autoattendant.schedule);
+
       utils.wait(autoattendant.addschedule, 12000);
       utils.click(autoattendant.addschedule);
 

@@ -40,13 +40,19 @@
     vm.delete8To5Schedule = delete8To5Schedule;
 
     vm.templateDefinitions = [{
-      tname: "template1",
+      tname: 'Basic',
       actions: [{
         lane: 'openHours',
         actionset: ['say', 'runActionsOnInput']
       }]
     }, {
-      tname: "OpenClosedHoursTemplate",
+      tname: 'Custom',
+      actions: [{
+        lane: 'openHours',
+        actionset: []
+      }]
+    }, {
+      tname: 'BusinessHours',
       actions: [{
         lane: 'openHours',
         actionset: []
@@ -542,7 +548,7 @@
     }
 
     $scope.$on('AANameCreated', function () {
-      if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'OpenClosedHoursTemplate') {
+      if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'BusinessHours') {
         vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
         vm.saveAARecords().then(function () {

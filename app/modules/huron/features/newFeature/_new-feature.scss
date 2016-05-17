@@ -38,6 +38,7 @@
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     color: $gray-base;
     &.show-line:before {
       content: ' ';
@@ -45,31 +46,28 @@
       height: 1rem;
       position: relative;
       top: rem-calc(46);
-      left: 50%;
     }
     &.no-line {
       padding-top: 1rem;
     }
     &.show-tree-line:before {
-      content: ' ';
+      content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
       border-top: 1px solid $gray-base;
       border-left: 1px solid $gray-base;
       border-right: 1px solid $gray-base;
-      height: 0.75rem;
+      height: 0.875rem;
+      margin-bottom: 0.125rem;
       width: 4rem;
       position: relative;
       top: rem-calc(46);
-      left: 50%;
-      margin-left: -2rem;
-      margin-bottom: 0.25rem;
     }
   }
   .icon {
     font-size: 24px;
-    flex: 1;
+    flex-basis: 50%;
     &:first-child {
       flex-basis: 100%;
-      padding-bottom: 24px;
+      padding-bottom: 26px;
     }
   }
 }

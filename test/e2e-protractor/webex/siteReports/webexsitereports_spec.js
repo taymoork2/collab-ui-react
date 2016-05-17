@@ -1,6 +1,6 @@
 'use strict';
 
-/*global sitereports, sitesettings*/
+/*global sitereports*/
 
 sitereports.testInfo.describeCount = 0;
 while (1 >= sitereports.testInfo.describeCount) {
@@ -18,12 +18,12 @@ while (1 >= sitereports.testInfo.describeCount) {
   describe(sitereports.testInfo.describeText, function () {
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
+      beforeAll(function () {
+        login.loginUsingIntegrationBackend('t31RegressionTestAdmin');
       });
     } else {
-      it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
+      beforeAll(function () {
+        login.loginUsingIntegrationBackend('t30RegressionTestAdmin');
       });
     }
 
@@ -33,13 +33,13 @@ while (1 >= sitereports.testInfo.describeCount) {
     });
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + sitereports.t31Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T31ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t31CardsSectionId);
       });
     } else {
-      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + sitereports.t30Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T30ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t30CardsSectionId);
@@ -112,7 +112,7 @@ while (1 >= sitereports.testInfo.describeCount) {
     //   browser.pause()
     // });
 
-    it('should log out', function () {
+    afterAll(function () {
       navigation.logout();
     });
   });
