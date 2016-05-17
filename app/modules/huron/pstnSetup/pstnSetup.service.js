@@ -276,41 +276,42 @@
     }
 
     function getFormattedNumberOrders(customerId) {
-      var formattedOrders = [];
-      TerminusOrderService.query({
+      return TerminusOrderService.query({
         customerId: customerId
       }).$promise.then(function (response) {
-        _.forEach(response, function (order) {
-          if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
-            var newOrder = {
-              carrierOrderId: _.get(order, 'carrierOrderId'),
-              response: _.get(order, 'response'),
-              operation: _.get(order, 'operation')
-            };
-            //translate order status
-            if (order.status === PROVISIONED) {
-              newOrder.status = SUCCESSFUL;
-            } else if (order.status === PENDING) {
-              newOrder.status = IN_PROGRESS;
-            }
-            //translate order type
-            if (order.operation === BLOCK_ORDER) {
-              newOrder.type = ADVANCE_ORDER;
-            } else if (order.operation === NUMBER_ORDER) {
-              newOrder.type = NEW_NUMBER_ORDER;
-            } else if (order.operation === PORT_ORDER) {
-              newOrder.type = PORT_NUMBER_ORDER;
-            }
-            //create sort date and translate creation date
-            var orderDate = new Date(order.created);
-            newOrder.sortDate = orderDate.getTime();
-            newOrder.created = orderDate.getMonth() + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+        return _.chain(response)
+          .map(function (order) {
+            if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+              var newOrder = {
+                carrierOrderId: _.get(order, 'carrierOrderId'),
+                response: _.get(order, 'response'),
+                operation: _.get(order, 'operation')
+              };
+              //translate order status
+              if (order.status === PROVISIONED) {
+                newOrder.status = SUCCESSFUL;
+              } else if (order.status === PENDING) {
+                newOrder.status = IN_PROGRESS;
+              }
+              //translate order type
+              if (order.operation === BLOCK_ORDER) {
+                newOrder.type = ADVANCE_ORDER;
+              } else if (order.operation === NUMBER_ORDER) {
+                newOrder.type = NEW_NUMBER_ORDER;
+              } else if (order.operation === PORT_ORDER) {
+                newOrder.type = PORT_NUMBER_ORDER;
+              }
+              //create sort date and translate creation date
+              var orderDate = new Date(order.created);
+              newOrder.sortDate = orderDate.getTime();
+              newOrder.created = orderDate.getMonth() + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
 
-            formattedOrders.push(newOrder);
-          }
-        });
+              return newOrder;
+            }
+          })
+          .compact()
+          .value();
       });
-      return formattedOrders;
     }
 
     function listPendingNumbers(customerId) {

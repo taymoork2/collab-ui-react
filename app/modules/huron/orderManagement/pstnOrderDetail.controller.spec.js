@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnOrderDetailCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $translate;
+  var controller, $controller, $scope, $state, $stateParams, $translate, fulfilledBlockOrder, pendingBlockOrder, fulfilledNumberOrder;
 
   beforeEach(module('Huron'));
 
@@ -11,7 +11,7 @@ describe('Controller: PstnOrderDetailCtrl', function () {
     $stateParams = _$stateParams_;
     $translate = _$translate_;
 
-    $stateParams.currentOrder = {
+    fulfilledBlockOrder = {
       carrierOrderId: '631208',
       created: '3/13/2016',
       operation: 'BLOCK_ORDER',
@@ -20,22 +20,46 @@ describe('Controller: PstnOrderDetailCtrl', function () {
       type: 'Advance Numbers'
     };
 
+    pendingBlockOrder = {
+      carrierOrderId: '631209',
+      created: '3/13/2016',
+      operation: 'BLOCK_ORDER',
+      response: '{"631209":[{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209},{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209}]}',
+      status: 'Successful',
+      type: 'Advance Numbers'
+    };
+
+    fulfilledNumberOrder = {
+      carrierOrderId: '631210',
+      created: '3/13/2016',
+      operation: 'NUMBER_ORDER',
+      response: '{"631210":[{"countryCode":"1","e164":"+14697862340","number":"4697862340","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208},{"countryCode":"1","e164":"+14697862371","number":"4697862371","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208}]}',
+      status: 'Successful',
+      type: 'New Numbers'
+    };
+
     spyOn($translate, 'instant');
 
+    $scope.$apply();
+  }));
+
+  function initController(order) {
+    $stateParams.currentOrder = order;
     controller = $controller('PstnOrderDetailCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       $translate: $translate
     });
-
     $scope.$apply();
-  }));
+  }
 
   it('should initialize the controller', function () {
+    initController(fulfilledBlockOrder);
     expect(controller).toBeDefined();
   });
 
   it('should properly format the IP response', function () {
+    initController(fulfilledBlockOrder);
     expect(controller.info).toContain({
       number: '+14697862340',
       label: '(469) 786-2340'
@@ -47,39 +71,14 @@ describe('Controller: PstnOrderDetailCtrl', function () {
 
   it('reset controller with pending order and process', function () {
     $translate.instant.and.returnValue('There are 2 numbers pending for this order');
-    $stateParams.currentOrder = {
-      carrierOrderId: '631209',
-      created: '3/13/2016',
-      operation: 'BLOCK_ORDER',
-      response: '{"631209":[{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209},{"countryCode":"1","e164":null,"number":null,"tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PENDING","e911":null,"e911Address":null,"batchID":629790,"orderID":631209}]}',
-      status: 'Successful',
-      type: 'Advance Numbers'
-    };
-    controller = $controller('PstnOrderDetailCtrl', {
-      $scope: $scope,
-      $stateParams: $stateParams,
-      $translate: $translate
-    });
-    $scope.$apply();
+    initController(pendingBlockOrder);
     expect(controller.info).toContain({
       label: 'There are 2 numbers pending for this order'
     });
   });
 
   it('reset controller with new order and process', function () {
-    $stateParams.currentOrder = {
-      carrierOrderId: '631210',
-      created: '3/13/2016',
-      operation: 'NUMBER_ORDER',
-      response: '{"631210":[{"countryCode":"1","e164":"+14697862340","number":"4697862340","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208},{"countryCode":"1","e164":"+14697862371","number":"4697862371","tempCountryCode":null,"tempE164":null,"tempNumber":null,"network":"PROVISIONED","e911":null,"e911Address":null,"batchID":629790,"orderID":631208}]}',
-      status: 'Successful',
-      type: 'New Numbers'
-    };
-    controller = $controller('PstnOrderDetailCtrl', {
-      $scope: $scope,
-      $stateParams: $stateParams
-    });
-    $scope.$apply();
+    initController(fulfilledNumberOrder);
     expect(controller.info).toContain({
       number: '+14697862340',
       label: '(469) 786-2340'

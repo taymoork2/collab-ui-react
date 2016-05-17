@@ -3,9 +3,6 @@
 describe('Controller: PstnOrderOverviewCtrl', function () {
   var controller, $controller, $q, $scope, $stateParams, PstnSetupService;
 
-  var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
-  var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
-
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$stateParams_, _PstnSetupService_) {
@@ -19,7 +16,7 @@ describe('Controller: PstnOrderOverviewCtrl', function () {
       customerOrgId: '5555-6666'
     };
 
-    spyOn(PstnSetupService, 'getAllOrders').and.returnValue($q.when(orders));
+    spyOn(PstnSetupService, 'getFormattedNumberOrders').and.returnValue($q.when());
 
     controller = $controller('PstnOrderOverviewCtrl', {
       $scope: $scope,
@@ -35,6 +32,6 @@ describe('Controller: PstnOrderOverviewCtrl', function () {
   });
 
   it('should get the orders and filter them', function () {
-    expect(controller.orders).toEqual(acceptedOrder);
+    expect(PstnSetupService.getFormattedNumberOrders).toHaveBeenCalled();
   });
 });

@@ -78,7 +78,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         }
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
-      controller.addNumbers();
+      controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: controller.currentCustomer.customerOrgId,
@@ -98,7 +98,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         }
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
-      controller.addNumbers();
+      controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: controller.currentCustomer.customerOrgId,
@@ -115,7 +115,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: 'customer@cisco.com'
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
-      controller.addNumbers();
+      controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: controller.currentCustomer.customerOrgId,
@@ -136,7 +136,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         }
       };
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.when(true));
-      controller.addNumbers();
+      controller.isTerminusCustomer();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: controller.currentCustomer.customerOrgId,

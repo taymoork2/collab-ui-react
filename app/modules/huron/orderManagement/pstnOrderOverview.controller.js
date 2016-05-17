@@ -13,7 +13,9 @@
     init();
 
     function init() {
-      vm.orders = PstnSetupService.getFormattedNumberOrders(vm.currentCustomer.customerOrgId);
+      PstnSetupService.getFormattedNumberOrders(vm.currentCustomer.customerOrgId).then(function (response) {
+        vm.orders = response;
+      });
     }
   }
 })();

@@ -61,7 +61,7 @@
     function getCommTrial(org) {
       if (!!org.isPartner) {
         return false;
-        }
+      }
       return _.get(org, 'communications.isTrial', true);
     }
   }

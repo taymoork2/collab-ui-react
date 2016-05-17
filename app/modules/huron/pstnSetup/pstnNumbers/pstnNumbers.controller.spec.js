@@ -11,7 +11,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     "data": {
       "numbers": "+12145551000"
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var consecutiveOrder = {
     "data": {
@@ -20,7 +20,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551001"
       ]
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var nonconsecutiveOrder = {
     "data": {
@@ -29,7 +29,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551678"
       ]
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var portOrder = {
     "data": {
@@ -38,7 +38,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145557002"
       ]
     },
-    "type": "portOrders"
+    "type": "PORT_ORDER"
   };
   var advancedOrder = {
     data: {
@@ -46,7 +46,7 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 2,
       consecutive: false
     },
-    type: "advancedOrders"
+    type: "BLOCK_ORDER"
   };
 
   var states = [{
