@@ -2,11 +2,11 @@
   border: 1px solid $color-primary-base
 }
 .ct-card-border-disabled {
-  border: 1pxx solid $gray-light-1
+  border: 1px solid $gray-light-1
 }
 .ct-card-overview {
   height: rem-calc(220);
-  box-shadow: rem-calc(0) rem-calc(0) rem-calc(0) rem-calc(0) !important;
+  box-shadow: 0px 0px 0px 0px !important;
   .ct-card-img {
     @include vr-spacing(mt, 1);
     text-align: center;
