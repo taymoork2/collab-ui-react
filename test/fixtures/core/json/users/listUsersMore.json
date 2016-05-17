@@ -1,0 +1,29 @@
+{
+  "totalResults": "2",
+  "itemsPerPage": "2",
+  "startIndex": "100",
+  "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+  "Resources": [{
+    "userName": "collabctg+testuser3@gmail.com",
+    "name": {
+      "givenName": "Test",
+      "familyName": "User"
+    },
+    "id": "45469144-96bb-4c49-b4ed-ed3992f0be36",
+    "displayName": "collabctg+testuser3@gmail.com",
+    "roles": [],
+    "active": true,
+    "avatarSyncEnabled": false
+  }, {
+    "userName": "collabctg+testuser4@gmail.com",
+    "name": {
+      "givenName": "Test",
+      "familyName": "User"
+    },
+    "id": "45469144-96bb-4c49-b4ed-ed3992f0be37",
+    "displayName": "collabctg+testuser4@gmail.com",
+    "roles": [],
+    "active": true,
+    "avatarSyncEnabled": false
+  }]
+}

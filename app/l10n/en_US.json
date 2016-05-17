@@ -75,7 +75,7 @@
     "yes": "YES",
     "resend": "Resend Invitation",
     "resendActivation": "Resend Activation",
-    "deleteUserSuccess": "User {{email}} deleted successfully",
+    "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
@@ -1589,7 +1589,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Imported {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1677,8 +1677,8 @@
     "on": "On",
     "day": "Day",
     "selectAA": "Select Auto Attendant",
-    "importSchedule": "Import Schedule",
-    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
+    "importSchedule": "Copy Schedule",
+    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -3017,7 +3017,7 @@
     "csvExportDownloadFile": "Download CSV file:",
 
     "csvImportTitle": "Import Results",
-    "csvImportFileName": "File Name:",
+    "csvImportFileName": "File name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
@@ -3216,7 +3216,7 @@
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
-    "licenseTypes": "License Types",
+    "licenseTypes": "License Type",
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
@@ -3230,21 +3230,21 @@
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
-    "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
-    "exportInProgressTooltip": "Export is in progress and may take a while to complete. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
-    "exportFinishedWithErrorsTooltip": "Export finished with errors",
-    "exportFailedTooltip": "Export failed",
+    "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
+    "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportFinishedWithErrorsTooltip": "Export finished with errors.",
+    "exportFailedTooltip": "Export failed.",
     "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
-    "exportRejectedToast": "Export failed, try again.",
+    "exportRejectedToast": "Export failed. Try again.",
     "importButton": "Import",
     "importStartModalTitle": "Import WebEx User Attributes",
-    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
-    "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
-    "importInProgressTooltip": "Import is in progress and may take a while to complete. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
-    "importFinishedWithErrorsTooltip": "Import finished with errors",
-    "importFailedTooltip": "Import failed",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select Import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
+    "importBlockedTooltip": "In order to Import, you must wait for your Export to complete.",
+    "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importFinishedWithErrorsTooltip": "Import finished with errors.",
+    "importFailedTooltip": "Import failed.",
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
-    "importRejectedToast": "Import failed, try again.",
+    "importRejectedToast": "Import failed. Try again.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
@@ -3493,7 +3493,26 @@
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "ctOverview": {
+      "customerInformation": {
+        "title": "Customer Info",
+        "desc": "This is the screen a customer fills out before chatting with an agent"
+      },
+      "agentUnavailable": {
+        "title": "Agent Unavailable",
+        "desc": "This screen is shown to a customer when no agent is available to assist"
+      },
+      "offHours": {
+        "title": "Off-Hours",
+        "desc": "This screen is shown during business off-hours"
+      },
+      "feedback": {
+        "title": "Feedback",
+        "desc": "This screen is used to collect feedback from the customer after chat ends"
+      }
+    }
+
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
