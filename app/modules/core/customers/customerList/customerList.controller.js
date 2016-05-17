@@ -25,6 +25,7 @@
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
     $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
+    $scope.actionEvents = actionEvents;
     $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
@@ -365,6 +366,21 @@
         customerOrgId: customer.customerOrgId,
         customerOrgName: customer.customerName
       }));
+    }
+
+    function actionEvents($event, action, org) {
+      $event.stopPropagation();
+      if (action === 'myOrg') {
+        closeActionsDropdown();
+      } else if (action === 'customer') {
+        closeActionsDropdown();
+        getUserAuthInfo(org.customerOrgId);
+      } else if (action === 'pstn') {
+        closeActionsDropdown();
+        addNumbers(org);
+        getUserAuthInfo(org.customerOrgId);
+      }
+      return;
     }
 
     function isLicenseInfoAvailable(licenses) {
