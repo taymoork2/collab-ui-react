@@ -304,7 +304,7 @@
               //create sort date and translate creation date
               var orderDate = new Date(order.created);
               newOrder.sortDate = orderDate.getTime();
-              newOrder.created = orderDate.getMonth() + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+              newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
 
               return newOrder;
             }

@@ -196,7 +196,8 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders').respond(orders);
     var promise = PstnSetupService.getFormattedNumberOrders(customerId);
     promise.then(function (numbers) {
-      expect(numbers).toEqual(acceptedOrder);
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[1]));
     });
     $httpBackend.flush();
   });
