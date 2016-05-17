@@ -293,8 +293,7 @@
           // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              // _this.updateCSVColumnInRow(siteRow);
-              _this.pollCSVColumnInRow(siteRow);
+              _this.updateCSVColumnInRow(siteRow);
             },
 
             pollInterval
@@ -328,8 +327,8 @@
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteRow=" + "\n" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // $log.log(logMsg);
 
       //initialize display control flags
       siteRow.showCSVInfo = true;
@@ -381,9 +380,9 @@
 
         } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
-          siteRow.grayedExportLink = true;
-
           siteRow.showImportInProgressLink = true;
+
+          siteRow.grayedExportLink = true;
 
         } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
@@ -407,16 +406,6 @@
       }
 
     }; //updateDisplayControlFlagsInRow()
-
-    this.pollCSVColumnInRow = function (siteRow) {
-      var funcName = "pollCSVColumnInRow()";
-      var logMsg = "";
-      
-      $log.log(funcName);
-
-      siteRow.csvStatusRequestFromPoll = true;
-      _this.updateCSVColumnInRow(siteRow);
-    }; // pollCSVColumnInRow()
 
     this.updateCSVColumnInRow = function (siteRow) {
       var funcName = "updateCSVColumnInRow()";
@@ -475,6 +464,7 @@
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
+
           _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
@@ -489,12 +479,10 @@
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
+
           _this.updateDisplayControlFlagsInRow(siteRow);
 
-          if (siteRow.csvStatusRequestFromPoll) {
-            siteRow.showCSVInfo = false;
-            siteRow.csvStatusRequestFromPoll = false;
-          }
+          siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumnInRow()

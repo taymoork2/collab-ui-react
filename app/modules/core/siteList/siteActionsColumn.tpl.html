@@ -8,7 +8,7 @@
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_reportsUnavailable"
        name="{{row.entity.license.siteUrl}}_reportsUnavailable"
-       class="icon icon-report"
+       class="icon icon-report grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteReports' | translate}}"></i>
       
@@ -21,7 +21,7 @@
       <i ng-if="!row.entity.isAdminReportEnabled"
          id="{{row.entity.license.siteUrl}}_reportsDisabled"
          name="{{row.entity.license.siteUrl}}_reportsDisabled"
-         class="icon icon-report"
+         class="icon icon-report grid-vcenter"
          tooltip-append-to-body="true" 
          tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"></i>
       
@@ -30,7 +30,7 @@
          id="{{row.entity.license.siteUrl}}_webex-site-reports"
          name="{{row.entity.license.siteUrl}}_webex-site-reports"
          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"
-         class="icon icon-report iconEnabled"
+         class="icon icon-report iconEnabled grid-vcenter"
          tooltip-append-to-body="true" 
          tooltip="{{::'siteList.siteReports' | translate}}"></i>
     </span>
@@ -50,7 +50,7 @@
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_configUnavailable"
        name="{{row.entity.license.siteUrl}}_configUnavailable"
-       class="icon icon-settings"
+       class="icon icon-settings grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteSettings' | translate}}"></i>
     
@@ -59,7 +59,7 @@
               !row.entity.isError"
        id="{{row.entity.license.siteUrl}}_webex-site-settings"
        name="{{row.entity.license.siteUrl}}_webex-site-settings"
-       class="icon icon-settings iconEnabled"
+       class="icon icon-settings iconEnabled grid-vcenter"
        ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteSettings' | translate}}"></i>
@@ -81,7 +81,7 @@
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_csvUnavailable"
        name="{{row.entity.license.siteUrl}}_csvUnavailable"
-       class="icon icon-admin"
+       class="icon icon-admin grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
     
@@ -92,7 +92,7 @@
               !row.entity.isCSVSupported"
        id="{{row.entity.license.siteUrl}}_csvNotSupported"
        name="{{row.entity.license.siteUrl}}_csvNotSupported"
-       class="icon icon-admin"
+       class="icon icon-admin grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"></i>
        
@@ -104,16 +104,17 @@
       <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || 
                    (row.entity.csvStatusObj.status == 'importInProgress')">
                    
-        <i class="icon icon-admin"
+        <i class="icon icon-admin grid-vcenter"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
         
         &nbsp;&nbsp;&nbsp;
         
-        <i class="icon icon-spinner"></i>
+        <i class="icon icon-spinner grid-vcenter"></i>
         
         <span ng-if="row.entity.csvStatusObj.status == 'exportInProgress'"
-              translate="siteList.siteCsvExportInProgressLinkLabel"></span>
+              translate="siteList.siteCsvExportInProgressLinkLabel"
+              class="grid-vcenter"></span>
         
         <span ng-if="row.entity.csvStatusObj.status == 'importInProgress'"
               translate="siteList.siteCsvImportInProgressLinkLabel"></span>
@@ -123,7 +124,7 @@
       <span ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && 
                    (row.entity.csvStatusObj.status != 'exportInProgress')">
                 
-        <i class="icon icon-admin iconEnabled"
+        <i class="icon icon-admin iconEnabled grid-vcenter"
            ui-sref="site-csv({csvImportObj:row.entity})"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
@@ -134,7 +135,7 @@
                      (row.entity.csvStatusObj.status == 'importCompletedNoErr') || 
                      (row.entity.csvStatusObj.status == 'importCompletedWithErr')">
                      
-          &nbsp;
+          &nbsp;&nbsp;&nbsp;
           
           <a id="{{row.entity.license.siteUrl}}_exportResult"
              name="{{row.entity.license.siteUrl}}_exportResult"
@@ -166,9 +167,10 @@
       &nbsp;&nbsp;&nbsp;
     </span>
     
-    <i class="icon icon-spinner"></i>
+    <i class="icon icon-spinner grid-vcenter"></i>
     
-    <span translate="siteList.checkingServices"></span>
+    <span class="grid-vcenter"
+          translate="siteList.checkingServices"></span>
   </span>
   <!-- End of Loading icon -->
   
@@ -185,7 +187,7 @@
           id="{{row.entity.license.siteUrl}}_warningIcon"
           name="{{row.entity.license.siteUrl}}_warningIcon">
 
-      <i class="icon icon-warning webex-attention-text"></i>
+      <i class="icon icon-warning webex-attention-text grid-text-top"></i>
 
       <span translate="siteList.authError"></span>
     </span>

@@ -54,8 +54,6 @@
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
 
-          conferenceService.csvStatusRequestFromPoll = false;
-
           conferenceService.isIframeSupported = false;
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isError = false;
@@ -170,17 +168,17 @@
     }
 
     $scope.csvExport = function (siteRow) {
-      var funcName = "csvExport()";
+      var funcName = "SiteListCtrl.csvExport()";
       var logMsg = "";
       var siteUrl = siteRow.license.siteUrl;
 
       logMsg = funcName + "\n" +
         "siteRow=" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+      // $log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
-      //$log.log(logMsg);
+      // $log.log(logMsg);
 
       WebExApiGatewayService.csvExport(
         siteUrl,
@@ -188,36 +186,31 @@
       ).then(
 
         function success(response) {
-          var funcName = "WebExApiGatewayService.csvExport.success()";
-          var logMsg = "";
-
-          $log.log(logMsg);
-
           Notification.success($translate.instant('siteList.exportStartedToast'));
+
           SiteListService.updateCSVColumnInRow(siteRow);
         },
 
         function error(response) {
-          var funcName = "WebExApiGatewayService.csvExport.error()";
-          var logMsg = "";
+          // Notification.error($translate.instant('csvRejectedToast-' + response.errorCode));
+          Notification.error($translate.instant('siteList.csvRejectedToast-' + response.errorCode));
 
-          $log.log(logMsg);
-
-          //TBD: Actual error result handling
-          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
         }
       ).catch(
         function catchError(response) {
-          var funcName = "WebExApiGatewayService.csvExport.catchError()";
+          var funcName = "SiteListCtrl.csvExport().catchError()";
           var logMsg = "";
 
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           Notification.error($translate.instant('siteList.exportRejectedToast'));
+
           SiteListService.updateCSVColumnInRow(siteRow);
         }
       ); // WebExApiGatewayService.csvExport()
-
     }; // csvExport()
 
     // kill the csv poll when navigating away from the site list page
@@ -230,7 +223,7 @@
           if (null != siteRow.csvPollIntervalObj) {
             logMsg = funcName + "\n" +
               "siteUrl=" + siteRow.license.siteUrl;
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);
           }
