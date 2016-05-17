@@ -149,17 +149,20 @@
       "firstName": "First Name",
       "lastName": "Last Name",
       "displayName": "Display Name",
-      "email": "User ID/Email (Required)"
+      "email": "User ID/Email (Required)",
+      "entitlements": "Entitlements"
     }, {
       "firstName": "Jackson",
       "lastName": "Smith",
       "displayName": "Partner Administrator",
-      "email": "atlaspartneradmin@atlas.test.com"
+      "email": "atlaspartneradmin@atlas.test.com",
+      "entitlements": "squared-call-initiation webex-squared"
     }, {
       "firstName": "SQ",
       "lastName": "Doe",
       "displayName": "John Doe w1ksv6pxm",
-      "email": "sq-testpaiduser@atlas.test.com"
+      "email": "sq-testpaiduser@atlas.test.com",
+      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup"
     }]
   },
   "listPartners": {

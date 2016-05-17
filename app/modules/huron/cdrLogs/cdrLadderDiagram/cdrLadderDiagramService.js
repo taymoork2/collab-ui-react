@@ -9,7 +9,8 @@
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
-    var NOT_FOUND = 'Not Found';
+    var TRANSITION_ARROW = "-[#009933]>";
+    var SME_NODE = 'SME';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var skinParam = "skinparam backgroundColor #EEEBDC \n" +
@@ -41,6 +42,7 @@
       var eventNote = '';
 
       messageBody += skinParam;
+
       for (var i = 0; i < events.length; i++) {
         if (events[i].type !== 'ApplicationEvents' && events[i].type !== undefined) {
           if (events[i].eventSource.hostname !== undefined && events[i].dataParam.direction !== undefined) {
@@ -50,22 +52,29 @@
             note = getNote(events[i]);
 
             if (source === null || source === "") {
-              source = NOT_FOUND;
+              source = SME_NODE;
             }
 
             if (remote === null || remote === "") {
-              remote = NOT_FOUND;
+              remote = SME_NODE;
             }
 
             //incommig call
             if (events[i].dataParam.direction === 'in') {
-              messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '\"' + remote + '\"' + TRANSITION_ARROW + '\"' + source + '\"' + ': ';
+              } else {
+                messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+              }
             } else {
-              messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+              if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
+                messageBody += '\"' + source + '\"' + TRANSITION_ARROW + '\"' + remote + '\"' + ': ';
+              } else {
+                messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+              }
             }
 
-            eventNote = '[' + (($filter('orderBy')(svc.events, ['"@timestamp"'])).indexOf(events[i]) + 1) + '] ';
-            eventNote += note;
+            eventNote = note;
             eventNote += events[i].dataParam.msgType;
             messageBody += '\"' + eventNote.replace('"', ' ') + '\"\n';
           }
@@ -88,8 +97,12 @@
     }
 
     function getRemoteAlias(event) {
-      var remoteAlias = {};
-      if (event.dataParam.remoteName !== undefined && event.eventSource.hostname !== undefined) {
+      if (!_.isUndefined(event.dataParam.remoteAlias)) {
+        if (event.dataParam.remoteAlias.indexOf('Cisco') > -1 && event.dataParam.remoteAlias.indexOf('SME') > -1) {
+          return SME_NODE;
+        }
+      }
+      if (!_.isUndefined(event.dataParam.remoteName) && !_.isUndefined(event.eventSource.hostname)) {
         if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('cms') > -1) {
           return 'Line Hedge';
         } else if (event.dataParam.remoteName.match(/^[0-9a-zA-Z]+$/i) && event.eventSource.hostname.indexOf('sme') > -1) {
@@ -103,7 +116,7 @@
         } else {
           return event.dataParam.remoteName.replace(/-/g, '\\-');
         }
-      } else if (event.eventSource.hostname !== undefined) {
+      } else if (!_.isUndefined(event.eventSource.hostname)) {
         if (event.eventSource.hostname.indexOf('line') > -1) {
           return 'Start Point';
         } else {

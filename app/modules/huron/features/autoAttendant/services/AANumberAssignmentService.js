@@ -33,13 +33,13 @@
     // Get the assigned numbers for an AA
     function getAANumberAssignments(customerId, cesId) {
 
-      return AssignAutoAttendantService.query({
+      return AssignAutoAttendantService.get({
         customerId: customerId,
         cesId: cesId
       }).$promise.then(
         function (response) {
           // success
-          return response[0].numbers;
+          return response.numbers;
         },
         function (response) {
           // failure

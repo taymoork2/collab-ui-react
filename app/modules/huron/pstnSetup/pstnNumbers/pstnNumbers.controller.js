@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, PstnServiceAddressService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -83,13 +83,21 @@
           labelfield: 'name',
           valuefield: 'abbreviation',
           onChangeFn: getStateInventory,
-          placeholder: $translate.instant('pstnSetup.selectState'),
-          inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
+          placeholder: $translate.instant('pstnSetup.searchStates'),
           filter: true
         },
         controller: /* @ngInject */ function ($scope) {
           TerminusStateService.query().$promise.then(function (states) {
             $scope.to.options = states;
+            if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+              vm.model.state = {
+                abbreviation: PstnSetup.getServiceAddress().state,
+                name: _.result(_.find(states, {
+                  'abbreviation': PstnSetup.getServiceAddress().state
+                }), 'name')
+              };
+              getStateInventory();
+            }
           });
         }
       }, {
