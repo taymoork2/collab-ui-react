@@ -23,7 +23,7 @@
         } catch (error) {
           return;
         }
-        if (_.get(response, '[0].e164') === null) {
+        if (!_.get(response, '[0].e164')) {
           vm.info.push({
             label: $translate.instant('pstnOrderDetail.pendingNumbers', {
               count: response.length
