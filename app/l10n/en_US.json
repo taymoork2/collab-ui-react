@@ -1936,6 +1936,20 @@
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
+  "pstnOrderOverview": {
+    "pstnOrders": "PSTN Orders",
+    "successful": "Successful",
+    "inProgress": "In Progress",
+    "advanceOrder": "Advance Numbers",
+    "newNumberOrder": "New Numbers",
+    "portNumberOrder": "Porting Numbers",
+    "searchPlaceholder": "Search Orders"
+  },
+  "pstnOrderDetail": {
+    "orderNumber": "Order #{{orderId}}",
+    "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
+    "searchPlaceholder": "Search Phone Numbers"
+  },
   "serviceAddress": {
     "streetAddress": "Street Address",
     "unit": "Unit",
@@ -2296,7 +2310,9 @@
     "SD": "Spark Room System",
     "deleteOrg": "Delete Org {{orgName}}",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted"
+    "deleteOrgError": "{{orgName}} was not deleted",
+    "pstnOrders": "PSTN Orders",
+    "addNumbers": "Add Numbers"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
