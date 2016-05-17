@@ -1014,6 +1014,19 @@
               csvImportObj: null
             }
           })
+          .state('site-csv', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'SiteCSVModalCtrl',
+                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                controllerAs: 'siteCSVModalCtrl'
+              }
+            },
+            params: {
+              csvImportObj: null
+            }
+          })
           .state('site-csv-results', {
             parent: 'modal',
             views: {

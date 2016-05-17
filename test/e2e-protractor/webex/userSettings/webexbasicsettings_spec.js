@@ -2,7 +2,7 @@
 
 /*global webEx*/
 
-describe('WebEx user settings', function () {
+xdescribe('WebEx user settings', function () {
 
   beforeAll(function () {
     login.loginUsingIntegrationBackend('wbxUserSettingsTestAdmin');

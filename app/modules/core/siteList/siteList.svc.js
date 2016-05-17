@@ -519,10 +519,12 @@
           }
           // End of hiding CSV info if admin user does not have feature toggle
 
-          // don't show the Actions column if admin user does not have feature toggle
+          /*
+          // delete the Actions column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(2, 1);
           }
+          */
 
           updateGridColumns();
         }, // checkWebExFeaturToggleSuccess()
