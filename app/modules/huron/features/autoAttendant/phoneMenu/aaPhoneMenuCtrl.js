@@ -37,6 +37,11 @@
     vm.createOptionMenu = createOptionMenu;
 
     // TBD means the action isn't supported in the backend yet
+    /**
+     * This include the list of feature which are production ready.
+     * Adding option here lets it be visible in production. If option is not production ready
+     * add it under function addAvailableFeature.
+     */
     vm.keyActions = [
       // {
       //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
@@ -239,11 +244,17 @@
       AACommonService.setPhoneMenuStatus(true);
     }
 
+    /**
+     * This include the list of feature which are not production ready yet
+     */
     function addAvailableFeatures() {
       if (Config.isDev() || Config.isIntegration()) {
-
         // push features here
-        // vm.keyActions.push();
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+          name: 'phoneMenuRouteQueue',
+          action: 'routeToQueue'
+        });
 
       }
     }

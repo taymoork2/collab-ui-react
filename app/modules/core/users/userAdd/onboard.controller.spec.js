@@ -79,7 +79,9 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(Notification, 'notify');
-    spyOn(Orgservice, 'getUnlicensedUsers').and.returnValue(unlicensedUsers);
+    spyOn(Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
+      callback(unlicensedUsers, 200);
+    });
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
@@ -429,6 +431,7 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.filterList('sqtest');
       $timeout.flush();
       expect(Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
+      expect($scope.showSearch).toEqual(true);
     });
   });
 
