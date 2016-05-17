@@ -1,12 +1,11 @@
-@import '../../bower_components/cisco-ui/scss/cisco-ui';
+@import '../../node_modules/collab-ui/scss/collab-ui';
 
 $fa-font-path: "../fonts";
 
 @import "../../bower_components/font-awesome/scss/font-awesome";
 
 // ******** Variables **********
-// @brand-font-folder: '../bower_components/bootstrap-cisco/fonts';
-// @icon-font-path: '../bower_components/bootstrap-cisco/fonts/';
+
 
 // ******* Variables & Mixins **************
 @import 'partials/variables';
