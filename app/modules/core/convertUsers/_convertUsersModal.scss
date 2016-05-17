@@ -7,6 +7,11 @@
     height: 271px;
     background-color: $brand-white;
   }
+
+  .explanation {
+    margin-bottom: 10px;
+  }
+
   .search {
     width: 800px;
     position: relative;
@@ -24,5 +29,9 @@
       top: 10px;
       left: 10px;
     }
+  }
+   .spinner-example--large {
+    font-size: 2rem;
+    padding-left: 350px;
   }
 }

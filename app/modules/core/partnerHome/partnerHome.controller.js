@@ -18,6 +18,7 @@
     $scope.launchCustomerPortal = launchCustomerPortal;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
+    $scope.getDaysAgo = getDaysAgo;
 
     init();
 
@@ -59,6 +60,10 @@
       } else {
         return 'success';
       }
+    }
+
+    function getDaysAgo(daysLeft) {
+      return Math.abs(daysLeft);
     }
 
     function getTrialsList() {
