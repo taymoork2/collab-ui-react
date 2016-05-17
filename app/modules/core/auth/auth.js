@@ -242,7 +242,7 @@
     function updateOauthTokens(response) {
       var accessToken = _.get(response, 'data.access_token', '');
 
-      if (!Storage.get('refreshToken') && _.has(response, 'data.refresh_token')) {
+      if (_.has(response, 'data.refresh_token')) {
         var refreshToken = _.get(response, 'data.refresh_token');
         Storage.put('refreshToken', refreshToken);
       }
