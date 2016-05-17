@@ -3009,8 +3009,8 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Records requested:",
-    "csvExportRecordsSuccessful": "Records returned:",
+    "csvExportRecordsAvailable": "Total records available:",
+    "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
 
     "csvImportTitle": "Import Results",
@@ -3020,8 +3020,8 @@
     "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
-    "csvFinished": "Completed:",
-    "csvRecordsFailed": "Errors:"
+    "csvFinished": "Finished:",
+    "csvRecordsFailed": "Records failed:"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3227,7 +3227,6 @@
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
-    "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "Export is in progress and may take a while to complete. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
