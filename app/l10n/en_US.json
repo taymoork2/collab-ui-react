@@ -3870,7 +3870,13 @@
       "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
-      "title": "Support"
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
     }
   },
   "my-company": {
