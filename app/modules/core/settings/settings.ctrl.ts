@@ -16,7 +16,7 @@ namespace globalsettings {
     public authinfo:any;
 
     /* @ngInject */
-    constructor(Authinfo, $translate, AuthModeService) {
+    constructor(Authinfo, $translate, AuthModeService, Orgservice) {
 
       this.translate = $translate;
       this.authinfo = Authinfo;
@@ -28,6 +28,7 @@ namespace globalsettings {
         ];
       } else {
         this.settings = [
+          new SupportSetting(this),
           new SecuritySetting(this),
           new PrivacySetting(this),
           new DomainsSetting(this),
@@ -38,7 +39,20 @@ namespace globalsettings {
           new DataPolicySetting(this)
         ];
       }
+      Orgservice.getOrg(_.partial(this.forwardEvent.bind(this), 'orgEventHandler'));
+
     }
+
+    private forwardEvent(handlerName, ...eventArgs:Array<any>) {
+      console.log("Forwarding event: ", handlerName, eventArgs);
+
+    _.each(this.settings, function (setting) {
+      if (typeof (setting[handlerName]) === 'function') {
+        console.log("Forwarding event to: ", setting);
+        setting[handlerName].apply(setting, eventArgs);
+      }
+    });
+  }
 
     public getSettings():Array<Setting> {
       return this.settings;
