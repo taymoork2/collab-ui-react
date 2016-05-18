@@ -16,11 +16,7 @@
     //      return deferredResolve({});
     //    }
     //
-    //    function randomString() {
-    //      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    //      var random = _.sample(possible, 5).join('');
-    //
-    //    }
+
     //
     //    function createMockReportEntry(status, name, createdBy) {
     //      return {
@@ -76,6 +72,9 @@
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
+        }).then(function (res) {
+          //console.log("created, post to runUrl", res)
+          return $http.post(res.data.runUrl, {});
         })
         .catch(function (data) {
           //console.log("error createReport: " + data)
