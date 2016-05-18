@@ -79,7 +79,6 @@
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
-            Storage.put('refreshToken', token);
             $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
           }, function () {
             Auth.redirectToLogin();

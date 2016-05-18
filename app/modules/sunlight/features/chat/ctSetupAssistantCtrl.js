@@ -42,7 +42,30 @@
 
     vm.template = {
       name: '',
-      mediaType: 'chat'
+      mediaType: 'chat',
+      configuration: {
+        pages: {
+          customerInformation: {
+            enabled: true
+          },
+          agentUnavailable: {
+            enabled: true
+          },
+          offHours: {
+            enabled: true
+          },
+          feedback: {
+            enabled: true
+          }
+        }
+      }
+    };
+
+    vm.overview = {
+      customerInformation: 'circle-user',
+      agentUnavailable: 'circle-comp-negative',
+      offHours: 'circle-clock-hands',
+      feedback: 'circle-star'
     };
 
     function cancelModal() {

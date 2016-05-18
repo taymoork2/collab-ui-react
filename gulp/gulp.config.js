@@ -168,7 +168,6 @@ module.exports = function () {
         vendor + '/angular/angular.js',
         vendor + '/angular-animate/angular-animate.js',
         vendor + '/angular-ui-utils/ui-utils.js',
-        vendor + '/angular-cookie/angular-cookie.js',
         vendor + '/angular-cookies/angular-cookies.js',
         vendor + '/angular-sanitize/angular-sanitize.js',
         vendor + '/angular-dialog-service/dialogs.js',
