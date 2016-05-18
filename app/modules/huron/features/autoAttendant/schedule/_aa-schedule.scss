@@ -15,6 +15,14 @@
     line-height: 1;
     font-family: $brand-font-thin;
     font-weight: normal;
+    &:hover {
+      cursor: pointer;
+      .icon {
+        color: $aa-builder-icon-click-color;
+      }
+    }
+    margin: -20px;
+    padding: 20px;
   }
   .icon {
     color: $aa-builder-icon-color;
@@ -37,7 +45,6 @@
   &-time {
     display: inline-block;
     vertical-align: text-top;
-    @include vr-spacing(mr, 2);
   }
   &-trash {
     font-size: 1.25rem;
@@ -45,6 +52,7 @@
   }
   &-days {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
   &-add {
@@ -72,11 +80,10 @@
   }
   &-holidays-time {
     display: inline-block;
-    float: right;
-    width: vr-adjust(170);
-    &:last-of-type {
-      @include vr-spacing(mr, 2);
-    }
+    vertical-align: top;
+  }
+  &-holidays-date {
+    @include vr-spacing(mb, 1);
   }
   .cs-checkbox-group {
     display: inline-block;

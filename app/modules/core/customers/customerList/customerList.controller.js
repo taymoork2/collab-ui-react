@@ -7,6 +7,7 @@
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
     $scope.searchStr = '';
@@ -16,6 +17,7 @@
     $scope.filterAction = filterAction;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
+    $scope.getUserAuthInfo = getUserAuthInfo;
     $scope.getTrialsList = getTrialsList;
     $scope.partnerClicked = partnerClicked;
     $scope.isPartnerOrg = isPartnerOrg;
@@ -309,6 +311,10 @@
         });
     }
 
+    function getUserAuthInfo(customerOrgId) {
+      PartnerService.getUserAuthInfo(customerOrgId);
+    }
+
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
@@ -328,7 +334,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Localytics.tagEvent('Start Trial Button Click', {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
           from: $state.current.name
         });
       }

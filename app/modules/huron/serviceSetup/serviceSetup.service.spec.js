@@ -217,6 +217,32 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('verifyIsObject', function () {
+    var testArray = [{
+      name: 'test'
+    }];
+
+    var testObject = {
+      name: 'test'
+    };
+
+    it('should receive an array and return an object', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testArray);
+      ServiceSetup.listCosRestrictions();
+      $httpBackend.flush();
+
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
+    });
+
+    it('should receive an object and return an object', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testObject);
+      ServiceSetup.listCosRestrictions();
+      $httpBackend.flush();
+
+      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
+    });
+  });
+
   describe('listInternalNumberRanges', function () {
     var internalNumberRanges = [{
       beginNumber: '5000',

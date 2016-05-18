@@ -8,7 +8,13 @@
     .factory('TimingInterceptor', TimingInterceptor);
 
   /* @ngInject */
-  function TimingInterceptor($q, $log, Authinfo, Config) {
+  function TimingInterceptor($q, $log, $injector, Config) {
+
+    return {
+      request: requestHandler,
+      response: responseHandler,
+      responseError: responseError
+    };
 
     function requestHandler(config) {
       config.requestTimestamp = new Date().getTime();
@@ -16,6 +22,8 @@
     }
 
     function responseHandler(responseOrRejection) {
+      // injected manually to get around circular dependency problem with $translateProvider
+      var Authinfo = $injector.get('Authinfo');
       var requestTimestamp = _.get(responseOrRejection, 'config.requestTimestamp');
       if (requestTimestamp) {
         var config = responseOrRejection.config;
@@ -36,13 +44,9 @@
       return responseOrRejection;
     }
 
-    return {
-      request: requestHandler,
-      response: responseHandler,
-      responseError: function (responseOrRejection) {
-        return $q.reject(responseHandler(responseOrRejection));
-      }
-    };
+    function responseError(responseOrRejection) {
+      return $q.reject(responseHandler(responseOrRejection));
+    }
   }
 
 })();

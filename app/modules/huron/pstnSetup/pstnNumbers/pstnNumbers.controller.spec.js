@@ -11,7 +11,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     "data": {
       "numbers": "+12145551000"
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var consecutiveOrder = {
     "data": {
@@ -20,7 +20,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551001"
       ]
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var nonconsecutiveOrder = {
     "data": {
@@ -29,7 +29,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145551678"
       ]
     },
-    "type": "newOrders"
+    "type": "NUMBER_ORDER"
   };
   var portOrder = {
     "data": {
@@ -38,7 +38,7 @@ describe('Controller: PstnNumbersCtrl', function () {
         "+12145557002"
       ]
     },
-    "type": "portOrders"
+    "type": "PORT_ORDER"
   };
   var advancedOrder = {
     data: {
@@ -46,7 +46,7 @@ describe('Controller: PstnNumbersCtrl', function () {
       length: 2,
       consecutive: false
     },
-    type: "advancedOrders"
+    type: "BLOCK_ORDER"
   };
 
   var states = [{
@@ -54,13 +54,23 @@ describe('Controller: PstnNumbersCtrl', function () {
     abbreviation: 'TX'
   }];
 
-  var areaCodes = [{
-    code: '123',
-    count: 15
-  }, {
-    code: '456',
-    count: 30
-  }];
+  var response = {
+    areaCodes: [{
+      code: '123',
+      count: 15
+    }, {
+      code: '456',
+      count: 30
+    }]
+  };
+
+  var serviceAddress = {
+    address1: '123 example st',
+    address2: '',
+    city: 'Sample',
+    state: 'TX',
+    zip: '77777'
+  };
 
   beforeEach(module('Huron'));
 
@@ -81,6 +91,8 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetup.setProvider(customerCarrierList[0]);
 
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'getCarrierInventory').and.returnValue($q.when(response));
+    spyOn(PstnSetup, 'getServiceAddress').and.returnValue(serviceAddress);
     spyOn(Notification, 'error');
     spyOn($state, 'go');
     spyOn(TerminusStateService, 'query').and.returnValue({
@@ -111,11 +123,15 @@ describe('Controller: PstnNumbersCtrl', function () {
 
   describe('initial/default data', function () {
     it('should not have an areaCodeOptions array', function () {
-      expect(controller.areaCodeOptions).toBeUndefined();
+      expect(controller.areaCodeOptions).toBeDefined();
     });
 
     it('should have 1 quantity', function () {
       expect(controller.model.quantity).toEqual(1);
+    });
+
+    it('should have state set through pstnSetupService on first time', function () {
+      expect(controller.model.state).toEqual(states[0]);
     });
   });
 
@@ -231,14 +247,14 @@ describe('Controller: PstnNumbersCtrl', function () {
       };
       controller.model.quantity = advancedOrder.data.length;
       controller.model.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(PstnSetupService.ADVANCED_ORDERS);
+      controller.addToCart(PstnSetupService.BLOCK_ORDER);
       expect(controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
           consecutive: advancedOrder.data.consecutive
         },
-        type: PstnSetupService.ADVANCED_ORDERS
+        type: PstnSetupService.BLOCK_ORDER
       });
     });
   });

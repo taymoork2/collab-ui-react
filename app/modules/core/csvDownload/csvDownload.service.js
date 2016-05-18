@@ -5,7 +5,7 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService) {
+  function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService, UserCsvService) {
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
@@ -13,6 +13,7 @@
     var typeHeaders = 'headers';
     var typeExport = 'export';
     var typeAny = 'any';
+    var typeError = 'error';
     var userExportUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/%s';
     var downloadInProgress = false;
     var isTooManyUsers = false;
@@ -22,6 +23,7 @@
       typeTemplate: typeTemplate,
       typeUser: typeUser,
       typeAny: typeAny,
+      typeError: typeError,
       getCsv: getCsv,
       openInIE: openInIE,
       createObjectUrl: createObjectUrl,
@@ -39,7 +41,6 @@
     function getCsv(csvType, tooManyUsers, fileName) {
       tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
       isTooManyUsers = tooManyUsers;
-      var options = null;
       if (tooManyUsers) {
         return UserListService.exportCSV().then(function (csvData) {
           var csvString = $.csv.fromObjects(csvData, {
@@ -58,6 +59,18 @@
             return createObjectUrl(csvData.data, csvType, fileName);
           }).finally(function () {
             canceler = undefined;
+          });
+        } else if (csvType === typeError) {
+          return $q(function (resolve, reject) {
+            var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
+            var csvString = $.csv.fromObjects(_.union([{
+              row: 'Row Number',
+              email: 'User ID/Email',
+              error: 'Error Message'
+            }], csvErrorArray), {
+              headers: false
+            });
+            resolve(createObjectUrl(csvString, csvType, fileName));
           });
         } else {
           url = Utils.sprintf(userExportUrl, [csvType]);

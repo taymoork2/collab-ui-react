@@ -327,8 +327,8 @@
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteRow=" + "\n" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // $log.log(logMsg);
 
       //initialize display control flags
       siteRow.showCSVInfo = true;
@@ -380,9 +380,9 @@
 
         } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
-          siteRow.grayedExportLink = true;
-
           siteRow.showImportInProgressLink = true;
+
+          siteRow.grayedExportLink = true;
 
         } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
@@ -464,8 +464,8 @@
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
-          _this.updateDisplayControlFlagsInRow(siteRow);
 
+          _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -479,9 +479,10 @@
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
+
           _this.updateDisplayControlFlagsInRow(siteRow);
 
-          // siteRow.showCSVInfo = true;
+          siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumnInRow()
@@ -519,10 +520,12 @@
           }
           // End of hiding CSV info if admin user does not have feature toggle
 
-          // don't show the Actions column if admin user does not have feature toggle
+          /*
+          // delete the Actions column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(2, 1);
           }
+          */
 
           updateGridColumns();
         }, // checkWebExFeaturToggleSuccess()

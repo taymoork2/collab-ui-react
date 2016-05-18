@@ -18,12 +18,12 @@ while (1 >= sitesettings.testInfo.describeCount) {
   describe(sitesettings.testInfo.describeText, function () {
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should signin as ' + sitesettings.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t31Info.testAdminUsername, sitesettings.t31Info.testAdminPassword);
+      beforeAll(function () {
+        login.loginUsingIntegrationBackend('t31RegressionTestAdmin');
       });
     } else {
-      it('should signin as ' + sitesettings.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t30Info.testAdminUsername, sitesettings.t30Info.testAdminPassword);
+      beforeAll(function () {
+        login.loginUsingIntegrationBackend('t30RegressionTestAdmin');
       });
     }
 
@@ -33,13 +33,13 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
         utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t31CardsSectionId);
       });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
         utils.click(sitesettings.t30ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t30CardsSectionId);
@@ -150,17 +150,19 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.wait(sitesettings.siteSettingsPanel);
     });
 
-    xit('should click on common settings email template link', function () {
-      utils.click(sitesettings.configureCommonEmailTemplateLink);
-      utils.wait(sitesettings.siteSettingPanel);
-      utils.wait(sitesettings.emaillTemplateId);
-      utils.wait(sitesettings.iFramePage);
-    });
+    /*
+        xit('should click on common settings email template link', function () {
+          utils.click(sitesettings.configureCommonEmailTemplateLink);
+          utils.wait(sitesettings.siteSettingPanel);
+          utils.wait(sitesettings.emaillTemplateId);
+          utils.wait(sitesettings.iFramePage);
+        });
 
-    xit('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.click(sitesettings.siteSettingsCrumb);
-      utils.wait(sitesettings.siteSettingsPanel);
-    });
+        xit('should click on settings index breadcrumb and navigate to site settings index', function () {
+          utils.click(sitesettings.siteSettingsCrumb);
+          utils.wait(sitesettings.siteSettingsPanel);
+        });
+    */
 
     it('should click on common settings mobile link', function () {
       utils.click(sitesettings.configureCommonMobileLink);
@@ -245,7 +247,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
     //   browser.pause()
     // });
 
-    it('should log out', function () {
+    afterAll(function () {
       navigation.logout();
     });
   });

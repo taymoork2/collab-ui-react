@@ -38,7 +38,6 @@
     'ngFileUpload',
     'dialogs',
     'ngCsv',
-    'ipCookie',
     'ui.router',
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.future',
@@ -77,6 +76,8 @@
 
   angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
 
+  angular.module('Ediscovery', ['Core']);
+
   angular.module('Mediafusion', ['Core']);
 
   angular.module('WebExApp', ['Core']);
@@ -94,6 +95,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
+    'Ediscovery',
     'Mediafusion',
     'WebExApp',
     'Messenger',
