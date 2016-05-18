@@ -311,6 +311,7 @@
       ],
       'squared-fusion-media': [
         //'mediafusionconnector',
+        'metrics',
         'media-service',
         'connector-details'
       ],
