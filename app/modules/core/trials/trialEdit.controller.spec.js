@@ -333,28 +333,18 @@ describe('Controller: TrialEditCtrl:', function () {
         });
     });
 
-    describe('Toggling ship devices modal with Orgservice call', function () {
-      var orgserviceSpy;
-      beforeEach(function () {
-        orgserviceSpy = spyOn(Orgservice, "getAdminOrg").and.callFake(function () {
-          controller.canSeeDevicePage = true;
-        });
-      });
-
-      it('should enable ship devices modal for any other org', function () {
-        Orgservice.getAdminOrg();
-        $scope.$apply();
-        expect(controller.canSeeDevicePage).toBeTruthy();
-      });
-
-      it('should disable ship devices modal since test org is used', function () {
-        orgserviceSpy.and.callFake(function () {
-          controller.callTrial.enabled = false;
-        });
+    describe('Set ship devices modal display with Orgservice call', function () {
+      it('should disable ship devices modal for test org', function () {
+        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+          data: {
+            success: true,
+            isTestOrg: true
+          }
+        }));
+        controller.setDeviceModal();
         $scope.$apply();
         expect(controller.canSeeDevicePage).toBeFalsy();
       });
     });
-
   });
 });
