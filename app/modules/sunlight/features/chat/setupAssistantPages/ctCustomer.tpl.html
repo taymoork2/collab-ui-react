@@ -8,7 +8,7 @@
   <div class="ct-customer">
     <cs-card-layout block-view="true" class="cardScroll">
       <cs-card>
-        <header class="cardHeader1">Screen</header>
+        <header class="cardHeader1" translate="careChatTpl.screenCard"></header>
         <article class="ct-article header-border header-background articleHeight">
 
           <header class="customeHeader ct-selectable-container"
@@ -94,7 +94,7 @@
       </cs-card>
 
       <cs-card>
-        <header class="cardHeader1">Attributes</header>
+        <header class="cardHeader1" translate="careChatTpl.attributesCard"></header>
         <article class="ct-article articleHeight">
           <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
@@ -128,7 +128,7 @@
                 />
               </div>
 
-              <div ng-if="attribute.type == 'select'" class="large-11">
+              <div ng-if="attribute.type == 'select'">
                 <cs-select
                   ng-model="attribute.value"
                   options="attribute.options"

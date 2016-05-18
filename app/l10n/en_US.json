@@ -3519,6 +3519,8 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "screenCard": "Screen",
+    "attributesCard": "Attributes",
     "windowTitleLabel": "Window Title",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",

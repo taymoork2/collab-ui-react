@@ -162,7 +162,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     var isDefinedRes = controller.isDefined(testObj, "trees-15");
     expect(isDefinedRes).toBe(true);
   });
-  
+
   it("should be false for undefined object or field", function () {
     var testObj = {
       "trees-14": "x-10000",
