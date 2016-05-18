@@ -2238,13 +2238,10 @@
           })
           .state('care.ChatSA', {
             url: '/careChat',
-            views: {
-              'main@': {
-                templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-                controller: 'CareChatSetupAssistantCtrl',
-                controllerAs: 'careChatSA'
-              }
-            }
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+            controller: 'CareChatSetupAssistantCtrl',
+            controllerAs: 'careChatSA'
           });
       }
     ]);
