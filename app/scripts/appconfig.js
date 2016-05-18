@@ -2073,6 +2073,16 @@
               }
             }
           })
+          /*.state('media-service.metrics', {
+            url: '/mediaservice/metrics',
+            views: {
+              'fullPane': {
+                controllerAs: 'GraphUtilCtrl',
+                controller: 'AnalyticsUtilizationGraphController',
+                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
+              }
+            }
+          })*/
           .state('connector-details', {
             parent: 'sidepanel',
             views: {

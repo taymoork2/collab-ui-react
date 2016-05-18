@@ -1,0 +1,66 @@
+<div class="media-service mediafusion mediafusion-fix-paragraphs">
+
+  <!--cs-page-header title="Media Resource Utilization" ></cs-page-header-->
+
+  <div ui-view="fullPane" class="small-padding-top">
+
+    <div class="mediafusion typography-airy large-margin">
+
+    <cs-page-sub-header>
+      <cs-page-sub-header-left> 
+      <h4> Cluster :&nbsp;</h4> <div class="large-2">
+         <cs-select
+          ng-model="GraphUtilCtrl.selectedCluster"
+          options="GraphUtilCtrl.optionsCluster"
+          placeholder="GraphUtilCtrl.selectPlaceholderCluster"
+          on-change-fn="GraphUtilCtrl.getHosts()"
+          ></cs-select></div>
+          <h4>&nbsp;ECP:&nbsp;</h4> <div class="large-2">
+         <cs-select
+          ng-model="GraphUtilCtrl.selectedHost"
+          options="GraphUtilCtrl.optionsHost"
+          placeholder="GraphUtilCtrl.selectPlaceholderHost"
+          on-change-fn="GraphUtilCtrl.plotGraphForHost()"
+          ></cs-select></div>
+          <h4>&nbsp; From :&nbsp;</h4>
+          <cs-datepicker ng-model="GraphUtilCtrl.fromDate" placeholder="Start Date" ></cs-datepicker>
+          <h4> &nbsp;To :&nbsp;</h4>
+          <cs-datepicker ng-model="GraphUtilCtrl.toDate" placeholder="End Date"></cs-datepicker>
+          &nbsp;&nbsp;<button translate="Go"  style="margin-top: 20px;" class="btn btn--people btn--large" ng-click="GraphUtilCtrl.changeDate()"> 
+          </button>   
+          <div ng-show= "GraphUtilCtrl.dateRange">
+           <font color="red">&nbsp;&nbsp;&nbsp;Date out of Range!</font> </div>
+           <div ng-hide= "GraphUtilCtrl.dateRange">
+           </div>
+      </cs-page-sub-header-left>
+
+      <cs-page-sub-header-right>
+     <h4>Time :&nbsp;&nbsp;&nbsp;</h4> <div class="medium-3">
+         <cs-select class="large-1" 
+        ng-model="GraphUtilCtrl.selectedTime" 
+        options="GraphUtilCtrl.optionsTime"
+         placeholder="GraphUtilCtrl.timePlaceholderCluster" 
+         on-change-fn="GraphUtilCtrl.plotGraphForHost()"
+         ></cs-select></div>
+      </cs-page-sub-header-right>
+      </cs-page-sub-header>
+        
+
+      <p> <div class="row page-header graph-title">Linus Call Volume for {{GraphUtilCtrl.selectedCluster}} {{GraphUtilCtrl.selectedHost}} Node </div>
+      </p>
+      <div id="linusActiveMediaCountDiv" class="row page-header graph-div"></div>
+
+
+      <p><div class="row page-header graph-title">Cluster Availability for {{GraphUtilCtrl.selectedCluster}} {{GraphUtilCtrl.selectedHost}} Node</div>
+      </p>
+      <div id="clusterAvailabilityDiv" class="row page-header graph-div"></div>
+
+      <p><div class="row page-header graph-title">Call Rejects  for {{GraphUtilCtrl.selectedCluster}} {{GraphUtilCtrl.selectedHost}} Node</div>
+      </p>
+      <div id="cpuOverloadDiv" class="row page-header graph-div"></div>
+      
+    </div>
+
+  </div>
+
+</div>
