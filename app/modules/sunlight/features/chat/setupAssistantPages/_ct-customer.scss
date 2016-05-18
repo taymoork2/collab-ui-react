@@ -1,0 +1,216 @@
+.ct-customer {
+
+  @mixin placeholder {
+    ::-webkit-input-placeholder {
+      @content
+    }
+    :-moz-placeholder {
+      @content
+    }
+    ::-moz-placeholder {
+      @content
+    }
+    :-ms-input-placeholder {
+      @content
+    }
+  }
+
+  .cs-card {
+    width: rem-calc(400px);
+    height: rem-calc(490px);
+    display: flex;
+    flex-flow: column;
+    .cardHeader1 {
+      margin-left: rem-calc(160px);
+    }
+    .articleHeight {
+      height: 100%;
+    }
+    .customeHeader {
+      background-color:$gray-light-4;
+      &:hover {
+        background-color:$color-primary-lighter;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .cardScroll {
+    padding: rem-calc(15px) rem-calc(60px) rem-calc(50px) rem-calc(60px);
+  }
+
+  .cs-card-layout.cs-card-block {
+    height: rem-calc(530px);
+  }
+
+  .ct-left-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+  }
+
+  .welcomeText {
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(22px);
+    color: $color-primary-base;
+    @include vr-spacing(mb, 0);
+    max-width: 100%;
+  }
+
+  .orgText {
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(16px);
+    color: $gray-dark-2;
+    margin-bottom: 0;
+  }
+
+  .labelText {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.25);
+    color: $gray-dark-2;
+    opacity: .5;
+    max-width: 70%;
+  }
+
+  .textOverflow{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .typeText {
+    @include vr-spacing(mt, 0.25);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.25);
+    color: $gray-dark-2;
+    opacity: .5;
+  }
+
+  .inputField {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+    font-family: "CiscoSansTT Light";
+    color: $gray-dark-2;
+  }
+
+  .inputField_select {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+    color: $gray-dark-2;
+    width: 90%;
+    .form-control{
+      background-color: white;
+    }
+  }
+
+  .ct-left-cs-input {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 1);
+    @extend .cs-input;
+    border-color: $gray-light-3;
+    cursor: default;
+    color: $gray-dark-1;
+    pointer-events: none;
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(16px);
+    width: 90%
+  }
+
+  .ct-footer {
+    color: $gray-light-1;
+    border-top: 1px solid $gray-light-3;
+    @include vr-spacing(pv, 0.75);
+    @include vr-spacing(pl, 0.5);
+  }
+
+  .ct-selectable-element {
+    &.active {
+      color: $color-primary-darker;
+      border-color: $color-primary-darker;
+    }
+  }
+
+  .ct-selectable-container {
+    &.active {
+      border-color: $color-primary-darker;
+      border-style: solid;
+      border-width: rem-calc(1px);
+      background-color: white;
+    }
+  }
+
+  .ct-flex-center {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  .ct-flex-topleft {
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      text-align: center;
+      flex: 0;
+      font-family: "CiscoSansTT Light";
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-field-helptext {
+    @include vr-spacing(pt, 0.25);
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(mt, 0);
+    font: italic 12px "CiscoSansTT Regular";
+    color: $gray-light-1;
+  }
+
+  .ct-attribute-field-label {
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+    font-family: "CiscoSansTT Regular";
+  }
+
+  .ct-attribute-field-textbox {
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+    font-family: "CiscoSansTT Light";
+    @include vr-spacing(ml, 1);
+    width: 90%;
+  }
+
+  .ct-attribute-field-radio {
+    margin-left: rem-calc(16px);
+    margin-top: rem-calc(17px);
+    margin-bottom: rem-calc(4px);
+    font-family: "CiscoSansTT Light";
+  }
+
+
+  .ct-flex-container {
+    display: flex;
+    -webkit-flex-direction: row;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      max-width: 60%;
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+}

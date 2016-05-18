@@ -83,6 +83,98 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     expect($modal.open).toHaveBeenCalled();
   });
 
+  it("should set the active item", function () {
+    var returnObj = {
+      attributes: [{
+        name: 'header',
+        type: 'text',
+        value: 'careChatTpl.defaultWelcomeText',
+        label: 'careChatTpl.windowTitleLabel'
+      }, {
+        name: 'organization',
+        type: 'text',
+        value: 'careChatTpl.defaultOrgText',
+        label: 'careChatTpl.defaultOrgLabel'
+      }]
+    };
+    controller.setActiveItem("welcomeHeader");
+    expect(controller.activeItem).toEqual(returnObj);
+  });
+
+  it("should get the attribute param", function () {
+    var attrParam = controller.getAttributeParam("label", "organization", "welcomeHeader");
+    expect(attrParam).toEqual("careChatTpl.defaultOrgLabel");
+  });
+
+  it("should not get the attribute param for incorrect param", function () {
+    var attrParam = controller.getAttributeParam("displaytext", "organization", "welcomeHeader");
+    expect(attrParam).toBe(undefined);
+  });
+
+  it("should not get the attribute param for incorrect attribute", function () {
+    var attrParam = controller.getAttributeParam("label", "displaytext", "welcomeHeader");
+    expect(attrParam).toBe(undefined);
+  });
+
+  it("should not get the attribute param for incorrect field", function () {
+    var attrParam = controller.getAttributeParam("label", "organization", "field");
+    expect(attrParam).toBe(undefined);
+  });
+
+  it("should not get the attribute param for undefined field", function () {
+    var attrParam = controller.getAttributeParam("label", "organization", undefined);
+    expect(attrParam).toBe(undefined);
+  });
+
+  it("should be true for dynamic field", function () {
+    var isDynamicRes = controller.isDynamicFieldType("field1");
+    expect(isDynamicRes).toBe(true);
+  });
+
+  it("should be false for static field", function () {
+    var isDynamicRes = controller.isDynamicFieldType("welcome");
+    expect(isDynamicRes).toBe(false);
+  });
+
+  it("should be true for static field", function () {
+    var isStaticRes = controller.isStaticFieldType("welcome");
+    expect(isStaticRes).toBe(true);
+  });
+
+  it("should be false for dynamic field", function () {
+    var isStaticRes = controller.isStaticFieldType("field1");
+    expect(isStaticRes).toBe(false);
+  });
+
+  it("should be false for undefined field", function () {
+    var isDynamicRes = controller.isDynamicFieldType(undefined);
+    expect(isDynamicRes).toBe(false);
+    var isStaticRes = controller.isStaticFieldType(undefined);
+    expect(isStaticRes).toBe(false);
+  });
+
+  it("should be true for defined object field", function () {
+    var testObj = {
+      "trees-14": "x-10000",
+      "trees-15": "x-20000",
+      "trees-16": "x-30000"
+    };
+    var isDefinedRes = controller.isDefined(testObj, "trees-15");
+    expect(isDefinedRes).toBe(true);
+  });
+  
+  it("should be false for undefined object or field", function () {
+    var testObj = {
+      "trees-14": "x-10000",
+      "trees-15": "x-20000",
+      "trees-16": ""
+    };
+    var isDefinedRes = controller.isDefined(testObj, "trees-17");
+    expect(isDefinedRes).toBe(false);
+    isDefinedRes = controller.isDefined(testObj, "trees-16");
+    expect(isDefinedRes).toBe(false);
+  });
+
   describe('Chat Template - Overview Page', function () {
 
     it("should have previous and next button enabled", function () {

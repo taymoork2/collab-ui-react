@@ -3519,6 +3519,30 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "windowTitleLabel": "Window Title",
+    "defaultOrgLabel": "Organization",
+    "defaultWelcomeText": "Welcome to",
+    "defaultOrgText": "Cumulus Customer Care",
+    "defaultNameText": "Name",
+    "defaultNameHint": "",
+    "defaultEmailText": "Your email or customer ID",
+    "defaultEmail": "e.g. abc@xyz.com",
+    "defaultQuestionText": "How may I assist you?",
+    "optionalText": "(Optional)",
+    "field3HintText": "Select from the list or type",
+    "defaultTypeMessageText": "Type your message and press enter",
+    "selectFieldText": "Select a field on the left to change it's attribute.",
+    "ciHelpText": "Help directs customers to the right agent",
+    "riHelpText": "",
+    "requiredField": "Required Field",
+    "optionalField": "Optional Field",
+    "categoryLabel": "Category",
+    "categoryTextCustomer": "Customer Information",
+    "categoryTextRequest": "Request Information",
+    "label": "Label",
+    "hintText": "Hint Text",
+    "type": "Type",
+    "defaultRightCardText": "Select a field on the left to change it's attribute.",
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3537,7 +3561,6 @@
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
     }
-
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

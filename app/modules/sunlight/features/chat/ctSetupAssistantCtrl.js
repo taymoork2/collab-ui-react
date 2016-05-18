@@ -6,7 +6,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $timeout) {
+  function CareChatSetupAssistantCtrl($modal, $timeout, $translate) {
     var vm = this;
 
     vm.cancelModal = cancelModal;
@@ -67,6 +67,11 @@
       offHours: 'circle-clock-hands',
       feedback: 'circle-star'
     };
+
+    //Model for ctSetupAssistance data
+    vm.selectFieldOptions = [];
+    vm.selectFieldSelected = '';
+    vm.selectFieldPlaceholder = 'Select from the list or type';
 
     function cancelModal() {
       $modal.open({
@@ -142,5 +147,266 @@
       }, vm.animationTimeout);
     }
 
+    /**
+     * Type enumerations
+     */
+
+    vm.STATIC_FIELD_TYPES = {
+      "welcome": {
+        text: "welcome",
+        htmlType: "label"
+      }
+    };
+
+    var TYPE_OPTIONS = [{
+      text: "email",
+      htmlType: "email",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_email"
+      }
+    }, {
+      text: "name",
+      htmlType: "text",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_name"
+      }
+    }, {
+      text: "category",
+      htmlType: "select",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_category"
+      }
+    }, {
+      text: "phone",
+      htmlType: "tel",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_phone"
+      }
+    }, {
+      text: "id",
+      htmlType: "id",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_email"
+      }
+    }];
+
+    var CATEGORY_TYPE_OPTIONS = [{
+      text: $translate.instant('careChatTpl.categoryTextCustomer'),
+      id: 'customerInfo',
+      helpText: $translate.instant('careChatTpl.ciHelpText')
+    }, {
+      text: $translate.instant('careChatTpl.categoryTextRequest'),
+      id: 'requestInfo',
+      helpText: $translate.instant('careChatTpl.riHelpText')
+    }];
+
+    var REQUIRED_OPTIONS = [{
+      text: $translate.instant('careChatTpl.requiredField'),
+      id: 'required'
+    }, {
+      text: $translate.instant('careChatTpl.optionalField'),
+      id: 'optional'
+    }];
+
+    vm.getCategoryTypeObject = function (typeId) {
+      for (var key in CATEGORY_TYPE_OPTIONS) {
+        if (CATEGORY_TYPE_OPTIONS.hasOwnProperty(key) && CATEGORY_TYPE_OPTIONS[key].id === typeId.toString()) {
+          return CATEGORY_TYPE_OPTIONS[key];
+        }
+      }
+    };
+
+    vm.getTypeObject = function (typeText) {
+      for (var key in TYPE_OPTIONS) {
+        if (TYPE_OPTIONS.hasOwnProperty(key) && TYPE_OPTIONS[key].text === typeText.toString()) {
+          return TYPE_OPTIONS[key];
+        }
+      }
+    };
+
+    /**
+     * Default model should be replaced with service
+     */
+
+    vm.model = {
+      customerInfo: {
+        fields: {
+          'welcomeHeader': {
+            attributes: [{
+              name: 'header',
+              type: 'text',
+              value: $translate.instant('careChatTpl.defaultWelcomeText'),
+              label: $translate.instant('careChatTpl.windowTitleLabel')
+            }, {
+              name: 'organization',
+              type: 'text',
+              value: $translate.instant('careChatTpl.defaultOrgText'),
+              label: $translate.instant('careChatTpl.defaultOrgLabel')
+            }]
+          },
+          'field1': {
+            attributes: [{
+              name: 'required',
+              type: 'radio',
+              value: 'required',
+              options: REQUIRED_OPTIONS
+            }, {
+              name: 'categoryText',
+              type: 'select',
+              label: $translate.instant('careChatTpl.categoryLabel'),
+              defaultValue: '',
+              value: vm.getCategoryTypeObject('customerInfo'),
+              options: CATEGORY_TYPE_OPTIONS
+            }, {
+              name: 'label',
+              type: 'text',
+              label: $translate.instant('careChatTpl.label'),
+              defaultValue: '',
+              value: $translate.instant('careChatTpl.defaultNameText')
+            }, {
+              name: 'hintText',
+              type: 'text',
+              label: $translate.instant('careChatTpl.hintText'),
+              defaultValue: '',
+              value: $translate.instant('careChatTpl.defaultNameHint')
+            }, {
+              name: 'type',
+              type: 'select',
+              label: $translate.instant('careChatTpl.type'),
+              value: vm.getTypeObject('name'),
+              defaultValue: '',
+              options: TYPE_OPTIONS
+            }]
+          },
+
+          'field2': {
+            attributes: [{
+              name: 'required',
+              type: 'radio',
+              value: 'required',
+              options: REQUIRED_OPTIONS
+            }, {
+              name: 'categoryText',
+              type: 'select',
+              label: $translate.instant('careChatTpl.categoryLabel'),
+              defaultValue: '',
+              value: vm.getCategoryTypeObject('customerInfo'),
+              options: CATEGORY_TYPE_OPTIONS
+            }, {
+              name: 'label',
+              type: 'text',
+              label: $translate.instant('careChatTpl.label'),
+              defaultValue: $translate.instant('careChatTpl.defaultEmailText'),
+              value: $translate.instant('careChatTpl.defaultEmailText')
+            }, {
+              name: 'hintText',
+              type: 'text',
+              label: $translate.instant('careChatTpl.hintText'),
+              defaultValue: '',
+              value: $translate.instant('careChatTpl.defaultEmail')
+            }, {
+              name: 'type',
+              type: 'select',
+              label: $translate.instant('careChatTpl.type'),
+              value: vm.getTypeObject('email'),
+              defaultValue: '',
+              options: TYPE_OPTIONS
+            }]
+          },
+
+          'field3': {
+            attributes: [{
+              name: 'required',
+              type: 'radio',
+              value: 'optional',
+              options: REQUIRED_OPTIONS
+            }, {
+              name: 'categoryText',
+              type: 'select',
+              label: 'Category',
+              defaultValue: '',
+              value: vm.getCategoryTypeObject('customerInfo'),
+              options: CATEGORY_TYPE_OPTIONS
+            }, {
+              name: 'label',
+              type: 'text',
+              label: $translate.instant('careChatTpl.label'),
+              defaultValue: $translate.instant('careChatTpl.defaultQuestionText'),
+              value: $translate.instant('careChatTpl.defaultQuestionText')
+            }, {
+              name: 'hintText',
+              type: 'text',
+              label: $translate.instant('careChatTpl.hintText'),
+              defaultValue: '',
+              value: $translate.instant('careChatTpl.field3HintText')
+            }, {
+              name: 'type',
+              type: 'select',
+              label: $translate.instant('careChatTpl.type'),
+              value: vm.getTypeObject('category'),
+              defaultValue: '',
+              options: TYPE_OPTIONS
+            }]
+          }
+        }
+      }
+    };
+
+    vm.activeItem = undefined;
+
+    /**
+     * Utility Methods Section
+     */
+
+    vm.getFieldByName = function (fieldName) {
+      return vm.model.customerInfo.fields[fieldName];
+    };
+
+    vm.getAttributeByName = function (attributeName, fieldName) {
+      var fields = vm.model.customerInfo.fields;
+      var foundAttribute;
+      if (typeof fieldName !== 'undefined' && fields.hasOwnProperty(fieldName.toString())) {
+        for (var key in fields[fieldName].attributes) {
+          if (fields[fieldName].attributes.hasOwnProperty(key)) {
+            var attribute = fields[fieldName].attributes[key];
+            if (attribute.name == attributeName) {
+              foundAttribute = attribute;
+            }
+          }
+        }
+      }
+      return foundAttribute;
+    };
+
+    vm.getAttributeParam = function (paramName, attributeName, fieldName) {
+      var attribute = vm.getAttributeByName(attributeName, fieldName);
+      if (typeof attribute !== 'undefined' && attribute.hasOwnProperty(paramName.toString())) {
+        return attribute[paramName.toString()];
+      }
+    };
+
+    vm.setActiveItem = function (val) {
+      vm.activeItem = vm.getFieldByName(val.toString());
+    };
+
+    vm.isDynamicFieldType = function (val) {
+      return typeof val !== 'undefined' && vm.model.customerInfo.fields.hasOwnProperty(val.toString());
+    };
+
+    vm.isStaticFieldType = function (val) {
+      return typeof val !== 'undefined' && vm.STATIC_FIELD_TYPES.hasOwnProperty(val.toString());
+    };
+
+    vm.isDefined = function (object, field) {
+      var value = object[field];
+      return typeof value !== 'undefined' && value.trim() !== '';
+    };
+
+    vm.translate = $translate.instant;
   }
 })();
