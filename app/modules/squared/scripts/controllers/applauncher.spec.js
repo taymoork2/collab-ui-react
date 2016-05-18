@@ -28,6 +28,7 @@ describe('ApplauncherCtrl', function () {
     sinon.stub(Utils, 'isIPhone').returns(false);
     sinon.stub(Utils, 'isWeb').returns(true);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getWebClientUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getWebClientUrl() + urlparams)).toBe(true);
   });
@@ -37,6 +38,7 @@ describe('ApplauncherCtrl', function () {
     sinon.stub(Utils, 'isIPhone').returns(true);
     sinon.stub(Utils, 'isWeb').returns(false);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getSquaredAppUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getSquaredAppUrl())).toBe(true);
     $timeout.flush();
@@ -49,6 +51,7 @@ describe('ApplauncherCtrl', function () {
     sinon.stub(Utils, 'isIPhone').returns(false);
     sinon.stub(Utils, 'isWeb').returns(false);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getAndroidStoreUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getAndroidStoreUrl())).toBe(true);
   });

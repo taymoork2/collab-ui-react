@@ -2,14 +2,15 @@
 
 describe('AppdownloadCtrl', function () {
 
-  var $controller, UrlConfig, Utils, WindowLocation;
+  var $controller, $timeout, UrlConfig, Utils, WindowLocation;
 
   beforeEach(module('Squared'));
 
-  beforeEach(inject(function (_$controller_, _UrlConfig_, _Utils_) {
+  beforeEach(inject(function (_$controller_, _UrlConfig_, _Utils_, _$timeout_) {
     $controller = _$controller_;
     UrlConfig = _UrlConfig_;
     Utils = _Utils_;
+    $timeout = _$timeout_;
     WindowLocation = {
       set: sinon.stub()
     };
@@ -22,6 +23,7 @@ describe('AppdownloadCtrl', function () {
     sinon.stub(Utils, 'isAndroid').returns(false);
     sinon.stub(Utils, 'isIPhone').returns(true);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getItunesStoreUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getItunesStoreUrl())).toBe(true);
   });
@@ -30,6 +32,7 @@ describe('AppdownloadCtrl', function () {
     sinon.stub(Utils, 'isAndroid').returns(true);
     sinon.stub(Utils, 'isIPhone').returns(false);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getAndroidStoreUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getAndroidStoreUrl())).toBe(true);
   });
@@ -38,6 +41,7 @@ describe('AppdownloadCtrl', function () {
     sinon.stub(Utils, 'isAndroid').returns(false);
     sinon.stub(Utils, 'isIPhone').returns(false);
     initController();
+    $timeout.flush();
     expect(UrlConfig.getWebClientUrl.called).toBe(true);
     expect(WindowLocation.set.calledWith(UrlConfig.getWebClientUrl())).toBe(true);
   });

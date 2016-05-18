@@ -6,18 +6,25 @@
     .controller('AppdownloadCtrl', AppdownloadCtrl);
 
   /* @ngInject */
-  function AppdownloadCtrl($document, UrlConfig, Utils, WindowLocation, Localytics) {
-    var platform = Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web');
+  function AppdownloadCtrl($document, $timeout, UrlConfig, Utils, WindowLocation, Localytics) {
+    // Note: only keep $timeout and Localytics until we gathered enough data usage
     Localytics.tagEvent('Display /appdownload', {
       from: $document[0].referrer,
-      platform: platform
+      platform: Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web')
     });
+
+    var redirectUrl;
+
     if (Utils.isIPhone()) {
-      WindowLocation.set(UrlConfig.getItunesStoreUrl());
+      redirectUrl = UrlConfig.getItunesStoreUrl();
     } else if (Utils.isAndroid()) {
-      WindowLocation.set(UrlConfig.getAndroidStoreUrl());
+      redirectUrl = UrlConfig.getAndroidStoreUrl();
     } else {
-      WindowLocation.set(UrlConfig.getWebClientUrl());
+      redirectUrl = UrlConfig.getWebClientUrl();
     }
+
+    $timeout(function () {
+      WindowLocation.set(redirectUrl);
+    }, 2000);
   }
 })();
