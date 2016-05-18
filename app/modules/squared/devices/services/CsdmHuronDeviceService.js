@@ -166,6 +166,12 @@
           });
     }
 
+    function setTimezoneForDevice(huronDevice, timezone) {
+      return $http.put(huronDevice.url, {
+        timezone: timezone
+      });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -197,6 +203,7 @@
       getDeviceList: getDeviceList,
       getLinesForDevice: getLinesForDevice,
       getTimezoneForDevice: getTimezoneForDevice,
+      setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       updateTags: updateTags

@@ -156,10 +156,18 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
         </div>
       </div>
+
+
+
       <div class="form-group" ng-show="deviceOverview.currentDevice.timeZone">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{deviceOverview.currentDevice.timeZone}}</p>
+          <sq-editable-input
+              ng-if="deviceOverview.currentDevice.timeZone"
+              sq-save="deviceOverview.setTimezone(newText)"
+              ng-model="deviceOverview.currentDevice.timeZone">
+          </sq-editable-input>
+          <!--<p class="form-control-static">{{deviceOverview.currentDevice.timeZone}}</p>-->
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">

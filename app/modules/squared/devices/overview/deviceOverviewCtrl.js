@@ -14,9 +14,10 @@
 
     deviceOverview.linesAreLoaded = false;
 
+    deviceOverview.currentDevice.timeZone = "oslo";
     if (deviceOverview.currentDevice.isHuronDevice) {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
-        deviceOvervew.timeZone = result;
+        deviceOverview.timeZone = result;
       });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
@@ -42,6 +43,12 @@
           .updateDeviceName(deviceOverview.currentDevice.url, newName)
           .catch(XhrNotificationService.notify);
       }
+    };
+
+    deviceOverview.setTimezone = function (timezone) {
+      huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
+        deviceOvervew.timeZone = timezone;
+      });
     };
 
     deviceOverview.reportProblem = function () {
