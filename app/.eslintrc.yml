@@ -62,6 +62,7 @@
     expect: true
     fail: true
     getJSONFixture: true
+    Image: true
     inject: true
     installPromiseMatchers: true
     it: true
