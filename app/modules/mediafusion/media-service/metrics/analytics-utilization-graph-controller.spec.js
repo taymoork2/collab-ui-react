@@ -1,4 +1,4 @@
-/*'use strict';
+'use strict';
 
 describe('Controller: AnalyticsUtilizationGraphController', function () {
 
@@ -49,7 +49,7 @@ describe('Controller: AnalyticsUtilizationGraphController', function () {
     expect(controller).toBeDefined();
   });
 
-  it('cpuUtlization should be defined', function () {
+  /*it('cpuUtlization should be defined', function () {
     expect(controller.cpuUtlization).toBeDefined();
   });
 
@@ -154,6 +154,6 @@ describe('Controller: AnalyticsUtilizationGraphController', function () {
      controller.getRelativeTimeCallReject();
      expect(MediaFusionAnalyticsService.getRelativeTimeCallReject).toHaveBeenCalled();
 
-   });
+   });*/
 
-});*/
+});

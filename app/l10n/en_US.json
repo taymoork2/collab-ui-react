@@ -2578,6 +2578,18 @@
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
+    "metrics": {
+      "cluster": "Cluster :",
+      "ecp": "ECP :",
+      "fromDate": "From :",
+      "toDate": "To :",
+      "outOfRange": "Date out of Range!",
+      "time": "Time :",
+      "callVolume": "Linus Call Volume for",
+      "clusterAvailability": "Cluster Availability for",
+      "callReject": "Call Rejects  for",
+      "node": "Node"
+    },
     "serviceStatus": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",

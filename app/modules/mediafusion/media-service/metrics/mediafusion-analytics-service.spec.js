@@ -1,10 +1,10 @@
-/*'use strict';
+'use strict';
 
 describe('Service: MediaFusionAnalyticsService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, $location, Service, overload, utilization;
-  var rootPath = 'http://10.196.5.245:8080/athena/api/v1';
+  var rootPath = 'https://athena-integration.wbx2.com/athena/api/v1';
   var ping = rootPath + '/ping';
 
   beforeEach(function () {
@@ -51,7 +51,7 @@ describe('Service: MediaFusionAnalyticsService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });*/
 
-/*it("Service should be defined", function () {
+  it("Service should be defined", function () {
     expect(Service).toBeDefined();
   });
 
@@ -67,7 +67,7 @@ describe('Service: MediaFusionAnalyticsService', function () {
     expect(Service.getClusterAvailability).toBeDefined();
   });
 
-  it('should call getActiveMediaCount and return data from the correct backend', function () {
+  /*it('should call getActiveMediaCount and return data from the correct backend', function () {
 
     $httpBackend
       .when('GET', rootPath + '/organizations/' + null + '/cluster/' + utilization.cluster() + '/media_count?startTime=' + utilization.time() + '&endTime=' + utilization.time()).respond(200, {});
@@ -441,6 +441,6 @@ describe('Service: MediaFusionAnalyticsService', function () {
     });
 
     $httpBackend.flush();
-  });
+  });*/
 
-});*/
+});
