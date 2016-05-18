@@ -1,14 +1,17 @@
 <div class="setting">
-  <input
-    cs-input
-    type="checkbox"
-    ng-model="setting.allowReadOnlyOrgAccess"
-    id="allowReadOnlyOrgAccess"
-    name="allowReadOnlyOrgAccess"
-    cs-input-label="{{setting.getSettingString('allowReadOnlyOrgAccess')}}"
-    ng-change="setting.allowReadOnlyOrgAccessUpdate()"
-    ng-disabled="setting.allowReadOnlyOrgAccess===undefined">
-
+  <div ng-hide="!setting.showAllowReadOnlyAccessCheckbox">
+    <div class="sub-section">
+      <h5 class="sub-section__label" >{{setting.getSettingString('supportAccessHeader')}}</h5>
+      <p class="sub-section__description" translate="{{setting.supportAccessDescription}}"></p>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="setting.allowReadOnlyOrgAccess"
+      cs-input-label="{{setting.getSettingString('allowReadOnlyOrgAccess')}}"
+      ng-change="setting.allowReadOnlyOrgAccessUpdate()"
+      ng-disabled="setting.allowReadOnlyOrgAccess===undefined">
+  </div>
   <div class="sub-section">
     <h5 class="sub-section__label" >{{setting.getSettingString('usageDataHeader')}}</h5>
   </div>
@@ -17,8 +20,6 @@
     cs-input
     type="checkbox"
     ng-model="setting.sendUsageData"
-    id="sendUsageData"
-    name="sendUsageData"
     cs-input-label="{{setting.getSettingString('usageDataDescription')}}"
     ng-change="setting.sendUsageDataUpdate()"
     ng-disabled="setting.sendUsageData===undefined">

@@ -3858,8 +3858,8 @@
     },
     "privacy": {
       "title": "Privacy",
-      "subsectionLabel": "Support Access",
-      "subsectionDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
       "usageDataHeader": "Usage Data Sent to Cisco Partner",
       "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
