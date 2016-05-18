@@ -1912,9 +1912,9 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
-          .state('landing-page', {
+          .state('cluster-list', {
             url: '/services/resource',
-            templateUrl: 'modules/hercules/landing-page/resource-list.html',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
             controller: 'FusionResourceListController',
             controllerAs: 'resourceList',
             parent: 'main',
@@ -1924,7 +1924,7 @@
               }
             }
           })
-          .state('resource-settings-page', {
+          .state('cluster-settings-page', {
             url: '/services/resource/settings/:clusterid',
             templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
             controller: 'FusionResourceSettingsController',

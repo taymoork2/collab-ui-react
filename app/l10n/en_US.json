@@ -1356,6 +1356,17 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    },
+    "fusion": {
+      "list": {
+        "title": "Clusters",
+        "empty": "There are no clusters to display.",
+        "users": "Users:",
+        "releaseChannel": "Release Channels:",
+        "upgradeTime": "Upgrade Time:",
+        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "settings": "Settings"
+      }
     }
   },
   "ediscovery": {

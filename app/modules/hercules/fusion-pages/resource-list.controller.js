@@ -6,7 +6,7 @@
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
-  function FusionResourceListController($window, $filter, hasFeatureToggle, FusionClusterService, XhrNotificationService, $log) {
+  function FusionResourceListController($window, $filter, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // show a white page…
       return;
@@ -33,7 +33,7 @@
       count: 0,
     }];
     vm.addResource = addResource;
-    vm.countNodes = countNodes;
+    vm.countHosts = countHosts;
     vm.setFilter = setFilter;
     vm.searchData = searchData;
 
@@ -55,7 +55,7 @@
       $window.alert('yo');
     }
 
-    function countNodes(cluster) {
+    function countHosts(cluster) {
       return _.chain(cluster.connectors)
         .map('hostname')
         .uniq()

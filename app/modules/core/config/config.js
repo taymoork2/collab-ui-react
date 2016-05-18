@@ -301,14 +301,14 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
-        'landing-page',
+        'cluster-list',
         'call-service',
-        'resource-settings-page'
+        'cluster-settings-page'
       ],
       'squared-fusion-cal': [
-        'landing-page',
+        'cluster-list',
         'calendar-service',
-        'resource-settings-page'
+        'cluster-settings-page'
       ],
       'squared-team-member': [
         'organization'
@@ -344,8 +344,8 @@
         'media-service',
         'hurondetails',
         'huronsettings',
-        'landing-page',
-        'resource-settings-page',
+        'cluster-list',
+        'cluster-settings-page',
         'calendar-service',
         'call-service',
         'management-service'
