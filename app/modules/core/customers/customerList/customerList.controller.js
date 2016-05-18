@@ -14,6 +14,7 @@
     $scope.timeoutVal = 1000;
 
     $scope.isOrgSetup = isOrgSetup;
+    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.filterAction = filterAction;
@@ -154,6 +155,10 @@
       return _.every(customer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
+    }
+
+    function isPartnerAdminWithCall(customer) {
+      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
     }
 
     function isOwnOrg(customer) {
