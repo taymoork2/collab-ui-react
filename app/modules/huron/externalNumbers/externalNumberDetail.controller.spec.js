@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification, $interval, $intervalSpy;
+  var controller, $controller, $interval, $intervalSpy, $q, $scope, $state, $stateParams, ModalService, ExternalNumberService, DialPlanService, Notification, PartnerService;
 
   var externalNumbers, modalDefer;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _$interval_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$interval_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _PartnerService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -16,6 +16,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     ExternalNumberService = _ExternalNumberService_;
     DialPlanService = _DialPlanService_;
     Notification = _Notification_;
+    PartnerService = _PartnerService_;
     $q = _$q_;
     $interval = _$interval_;
 
@@ -45,6 +46,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.when('+1'));
+    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
 
     controller = $controller('ExternalNumberDetailCtrl', {
       $scope: $scope,
@@ -204,6 +206,15 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false
       });
+    });
+  });
+
+  describe('should call getUserAuthInfo correctly', function () {
+    it('should call getUserAuthInfo', function () {
+      var customerOrgId = '1234-34534-afdagfg-425345-afaf';
+      expect(customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
+      controller.getUserAuthInfo(customerOrgId);
+      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
   });
 });

@@ -13,25 +13,26 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
 
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.filterAction = filterAction;
-    $scope.openAddTrialModal = openAddTrialModal;
-    $scope.openEditTrialModal = openEditTrialModal;
     $scope.getUserAuthInfo = getUserAuthInfo;
     $scope.getTrialsList = getTrialsList;
-    $scope.partnerClicked = partnerClicked;
-    $scope.isPartnerOrg = isPartnerOrg;
+    $scope.openAddTrialModal = openAddTrialModal;
+    $scope.openEditTrialModal = openEditTrialModal;
+    $scope.actionEvents = actionEvents;
+    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
-    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    $scope.actionEvents = actionEvents;
-    $scope.closeActionsDropdown = closeActionsDropdown;
+    $scope.partnerClicked = partnerClicked;
+    $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
+    $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.addNumbers = addNumbers;
-    $scope.isOrgSetup = isOrgSetup;
-    $scope.isOwnOrg = isOwnOrg;
+
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
