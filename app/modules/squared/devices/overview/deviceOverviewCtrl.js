@@ -15,6 +15,9 @@
     deviceOverview.linesAreLoaded = false;
 
     if (deviceOverview.currentDevice.isHuronDevice) {
+      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
+        deviceOvervew.timeZone = result;
+      });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);

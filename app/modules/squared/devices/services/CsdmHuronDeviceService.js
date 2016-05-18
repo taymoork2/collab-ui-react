@@ -155,6 +155,17 @@
         });
     }
 
+    function getTimezoneForDevice(huronDevice) {
+      return $http.get(huronDevice.url)
+          .then(function (res) {
+            var timeZone = null;
+            if (res.data) {
+              timeZone = data.timeZone;
+            }
+            return timeZone;
+          });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -185,6 +196,7 @@
       on: deviceCache.on,
       getDeviceList: getDeviceList,
       getLinesForDevice: getLinesForDevice,
+      getTimezoneForDevice: getTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       updateTags: updateTags
