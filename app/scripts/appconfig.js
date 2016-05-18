@@ -2177,8 +2177,6 @@
       }
     ]);
 
-
-
   angular
     .module('Messenger')
     .config(['$stateProvider',
