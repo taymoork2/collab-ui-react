@@ -75,8 +75,8 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
             addToManagedOrgsList(uuid, customerOrgId);
-            Localytics.tagEvent('PATCHED User Count', {
-              from: response.data.orgId
+            Localytics.tagEvent('patch user call', {
+              by: response.data.orgId
             });
           }
         } else {
