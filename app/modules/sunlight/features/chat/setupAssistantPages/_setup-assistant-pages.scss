@@ -1,4 +1,6 @@
 @import "ct-name";
+@import "ct-profile";
+@import "ct-overview";
 
 .ct-title {
   display: flex;
@@ -6,7 +8,7 @@
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  @include vr-spacing(pt, 3);
+  @include vr-spacing(pt, 1);
 }
 
 .ct-title-icon {

@@ -65,7 +65,6 @@
         WebExApiGatewayService.csvImport(vm).then(
           function success(response) {
             Notification.success($translate.instant('siteList.importStartedToast'));
-            SiteListService.updateCSVColumnInRow(vm.csvImportObj);
 
             if (_.isFunction($scope.$close)) {
               $scope.$close();
@@ -79,7 +78,6 @@
         ).catch(
           function catchError(response) {
             Notification.error($translate.instant('siteList.importRejectedToast'));
-            SiteListService.updateCSVColumnInRow(vm.csvImportObj);
           }
         ); // WebExApiGatewayService.csvImport()
       }

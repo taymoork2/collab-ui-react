@@ -101,7 +101,7 @@
 
     function populateUiModel() {
       vm.messageInput = vm.actionEntry.getValue();
-      vm.languageOptions = AALanguageService.getLanguageOptions();
+      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());

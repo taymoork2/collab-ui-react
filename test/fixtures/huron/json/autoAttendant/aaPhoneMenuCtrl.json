@@ -242,6 +242,23 @@
         "password": "",
         "type": "MENU_OPTION",
         "url": ""
+      }, {
+        "description": "",
+        "type": "",
+        "key": "7",
+        "language": "",
+        "voice": "",
+        "actions": [{
+          "name": "routeToQueue",
+          "value": "ffbf68c5-864f-45c5-93cb-40639dc2522e",
+          "voice": "",
+          "description": ""
+        }],
+        "timeout": "",
+        "username": "",
+        "password": "",
+        "type": "MENU_OPTION",
+        "url": ""
       }],
       "headers": [{
         "description": "",

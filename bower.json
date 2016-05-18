@@ -6,7 +6,6 @@
     "alertify.js": "~0.3.11",
     "angular": "~1.4.0",
     "angular-animate": "~1.4.0",
-    "angular-cookie": "~4.0.2",
     "angular-cookies": "~1.4.0",
     "angular-dialog-service": "~3.1.0",
     "angular-libphonenumber": "~0.0.7",

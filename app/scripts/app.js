@@ -38,7 +38,6 @@
     'ngFileUpload',
     'dialogs',
     'ngCsv',
-    'ipCookie',
     'ui.router',
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.future',

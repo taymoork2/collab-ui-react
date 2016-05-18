@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $rootScope, $scope, $httpBackend, HuronConfig, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, $window, TrialService, Orgservice, Log, Notification, $q;
+  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, Notification, Orgservice, PartnerService, TrialService;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -28,38 +28,36 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _HuronConfig_, _Authinfo_, _$stateParams_, _$translate_, _$state_, _PartnerService_, _$window_, _TrialService_, _Orgservice_, _Notification_, _$controller_, _$q_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+    $controller = _$controller_;
+    $httpBackend = _$httpBackend_;
+    $q = _$q_;
     $scope = $rootScope.$new();
-    Authinfo = _Authinfo_;
+    $state = _$state_;
     $stateParams = _$stateParams_;
     $translate = _$translate_;
-    $state = _$state_;
-    PartnerService = _PartnerService_;
     $window = _$window_;
-    TrialService = _TrialService_;
-    Orgservice = _Orgservice_;
-    Notification = _Notification_;
-    $scope.timeoutVal = 1;
-    $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
     HuronConfig = _HuronConfig_;
+    Notification = _Notification_;
+    Orgservice = _Orgservice_;
+    PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
+    $scope.timeoutVal = 1;
     $rootScope.typeOfExport = {
       USER: 1,
       CUSTOMER: 2
     };
 
-    $controller = _$controller_;
-    $q = _$q_;
-
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
+    spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
-    spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
 
-    spyOn(TrialService, 'getTrial').and.returnValue($q.when());
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
+    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
@@ -67,6 +65,9 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+
+    spyOn(TrialService, 'getTrial').and.returnValue($q.when());
+    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
   }));
 
   function initController() {
@@ -221,6 +222,16 @@ describe('Controller: CustomerListCtrl', function () {
         customerEmail: org.customerEmail,
         customerCommunicationLicenseIsTrial: false
       });
+    });
+  });
+
+  describe('getUserAuthInfo should be called correctly', function () {
+    beforeEach(initController);
+
+    it('should have called PartnerService.getUserAuthInfo', function () {
+      expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
+      $scope.getUserAuthInfo(testOrg.customerOrgId);
+      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
   });
 });
