@@ -163,7 +163,6 @@
         } else {
           adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
         }
-
       } else {
         if (searchStr) {
           adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers?searchPrefix=" + searchStr;

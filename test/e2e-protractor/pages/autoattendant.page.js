@@ -6,7 +6,7 @@ var AutoAttendantPage = function () {
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
-  this.openClosedAA = element(by.css('.icon-OpenClosed'));
+  this.openClosedAA = element(by.css('.icon-BusinessHours'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -52,8 +52,12 @@ var AutoAttendantPage = function () {
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
 
-  this.addStep = element.all(by.css('div.aa-panel-round')).first();
+  this.addStepFirst = element.all(by.css('div.aa-panel-round')).first();
   this.addStepLast = element.all(by.css('div.aa-panel-round')).last();
+
+  this.addStep = function addStep(n) {
+    return element.all(by.css('div.aa-panel-round')).get(n);
+  }
 
   this.newStep = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
@@ -158,14 +162,15 @@ var AutoAttendantPage = function () {
   this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
   this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
+  this.importSchedule = element(by.id('importSchedule'));
+  this.importContinue = element(by.id('importCtn'));
+  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
   this.assertDeleteSuccess = assertDeleteSuccess;
-  this.importSchedule = element(by.id('importSchedule'));
-  this.importContinue = element(by.id('importCtn'));
-  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
+  this.scrollIntoView = scrollIntoView;
 
   function assertUpdateSuccess(test) {
     notifications.assertSuccess(test + ' updated successfully');
@@ -176,7 +181,7 @@ var AutoAttendantPage = function () {
   }
 
   function assertImportSuccess(hours, holidays) {
-    notifications.assertSuccess("Imported " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
+    notifications.assertSuccess("Copied " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
   }
 
   function assertCalendarUpdateSuccess(test) {
@@ -185,6 +190,13 @@ var AutoAttendantPage = function () {
 
   function assertDeleteSuccess(test) {
     notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
+  }
+
+  function scrollIntoView(el) {
+    var webel = el.getWebElement();
+    browser.executeScript(function (e) {
+      e.scrollIntoView();
+    }, webel);
   }
 
 };

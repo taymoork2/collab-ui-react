@@ -193,21 +193,21 @@
       var flag = false;
       _.each(vm.holidays, function (holiday) {
         flag = false;
-        if (holiday.name === undefined || holiday.name == '') {
+        if (_.isEmpty(holiday.name)) {
           return flag;
         }
         if (holiday.exactDate) {
-          if (holiday.date === undefined || holiday.date == '') {
+          if (_.isEmpty(holiday.date)) {
             return flag;
           }
         } else {
-          if (holiday.month === undefined || holiday.month == '') {
+          if (_.isEmpty(holiday.month)) {
             return flag;
           }
-          if (holiday.rank === undefined || holiday.rank == '') {
+          if (_.isEmpty(holiday.rank)) {
             return flag;
           }
-          if (holiday.day === undefined || holiday.day == '') {
+          if (_.isEmpty(holiday.day)) {
             return flag;
           }
         }

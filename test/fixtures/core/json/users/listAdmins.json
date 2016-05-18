@@ -1,0 +1,19 @@
+{
+  "totalResults": "1",
+  "itemsPerPage": "1",
+  "startIndex": "0",
+  "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+  "Resources": [{
+    "userName": "atlaspartneradmin@atlas.test.com",
+    "name": {
+      "givenName": "Jackson",
+      "familyName": "Smith"
+    },
+    "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
+    "id": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
+    "displayName": "Partner Administrator",
+    "roles": ["id_full_admin"],
+    "active": true,
+    "avatarSyncEnabled": false
+  }]
+}

@@ -76,6 +76,8 @@
 
   angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
 
+  angular.module('Ediscovery', ['Core']);
+
   angular.module('Mediafusion', ['Core']);
 
   angular.module('WebExApp', ['Core']);
@@ -93,6 +95,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
+    'Ediscovery',
     'Mediafusion',
     'WebExApp',
     'Messenger',

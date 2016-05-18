@@ -848,7 +848,6 @@
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
-              vm.model.site.extensionLength = site.extensionLength || "4";
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });

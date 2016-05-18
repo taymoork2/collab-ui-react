@@ -10,22 +10,9 @@
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
-      userUrl: userUrl,
-      resolveInvitedUser: resolveInvitedUser
+      userUrl: userUrl
     };
 
     return service;
-
-    function resolveInvitedUser(encryptedParam) {
-      return Auth.setAccessToken().then(function () {
-        return $http({
-          method: 'PATCH',
-          url: userUrl + 'invitations',
-          data: {
-            'encryptedQueryString': encryptedParam
-          }
-        });
-      });
-    }
   }
 })();

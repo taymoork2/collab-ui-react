@@ -50,7 +50,6 @@
     "ng-tags-input": "~3.0.0",
     "pako": "~0.2.8",
     "angular-cache": "~4.4.2",
-    "parse-address-bobbr": "",
     "clipboard": "~1.5.5",
     "query-command-supported": "~1.0.0",
     "punycode": "^1.4.0",
