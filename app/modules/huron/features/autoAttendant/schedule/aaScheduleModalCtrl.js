@@ -186,7 +186,7 @@
     }
 
     function isSavable() {
-      return (vm.openhours.length == 0 || isHoursSavable()) && ((vm.holidays.length == 0 || isHolidaysSavable()));
+      return (vm.openhours.length == 0 || isHoursSavable()) && (vm.holidays.length == 0 || isHolidaysSavable());
     }
 
     function isHolidaysSavable() {
