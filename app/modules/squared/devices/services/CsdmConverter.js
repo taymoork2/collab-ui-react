@@ -33,7 +33,7 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.hasRemoteSupport = true;
-        this.canEditDisplayName = true;
+        this.canEditDisplayName = obj.accountType === 'MACHINE';
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
@@ -69,6 +69,7 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.supportsCustomTags = true;
+        this.accountType = obj.accountType || 'PERSON';
         this.displayName = obj.displayName;
         this.tags = getTags(decodeHuronTags(obj.description));
         this.tagString = getTagString(decodeHuronTags(obj.description));

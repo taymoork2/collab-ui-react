@@ -114,6 +114,18 @@ describe('CsdmConverterSpec', function () {
         accountType: 'PERSON'
       }];
       expect(converter.convertDevices(arr)[0].accountType).toBe('PERSON');
+      expect(converter.convertDevices(arr)[0].canEditDisplayName).toBeFalsy();
+      expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
+      expect(converter.convertDevices(arr)[0].canEditDisplayName).toBeFalsy();
+    });
+
+    it('default accountType', function () {
+      var arr = [{
+      }];
+      expect(converter.convertDevices(arr)[0].accountType).toBe('MACHINE');
+      expect(converter.convertDevices(arr)[0].canEditDisplayName).toBeTruthy();
+      expect(converter.convertHuronDevices(arr)[0].accountType).toBe('PERSON');
+      expect(converter.convertDevices(arr)[0].canEditDisplayName).toBeFalsy();
     });
 
     it('photos', function () {
