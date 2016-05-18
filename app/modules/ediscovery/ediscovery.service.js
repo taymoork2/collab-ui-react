@@ -74,7 +74,9 @@
     function createReport(displayName) {
       var orgId = Authinfo.getOrgId();
       return $http
-        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {"displayName": displayName})
+        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
+          "displayName": displayName
+        })
         .catch(function (data) {
           //console.log("error createReport: " + data)
         });
