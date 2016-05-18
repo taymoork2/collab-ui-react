@@ -39,11 +39,13 @@
       vm.modalId = "csvExport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
+      /*
       vm.gridRows.push({
         id: 'export-started-time',
         title: $translate.instant("webexCSVResultsModal.csvStarted"),
         value: vm.csvStatusObj.details.created,
       });
+      */
 
       vm.gridRows.push({
         id: 'export-finished-time',
@@ -69,13 +71,14 @@
         value: vm.csvStatusObj.details.failedRecords,
       });
 
+      /*
       vm.gridRows.push({
         id: 'export-download-csv-file',
         title: $translate.instant("webexCSVResultsModal.csvExportDownloadFile"),
         value: null,
       });
+      */
 
-      // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink.slice(vm.csvStatusObj.details.exportFileLink.lastIndexOf("/") + 1);
       vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
       vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
 
@@ -92,17 +95,21 @@
       vm.modalId = "csvImport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");
 
+      /*
       vm.gridRows.push({
         id: 'import-file-name',
         title: $translate.instant("webexCSVResultsModal.csvImportFileName"),
         value: vm.csvStatusObj.details.importFileName,
       });
+      */
 
+      /*
       vm.gridRows.push({
         id: 'import-started-time',
         title: $translate.instant("webexCSVResultsModal.csvImportFileName"),
         value: vm.csvStatusObj.details.created,
       });
+      */
 
       vm.gridRows.push({
         id: 'import-finished-time',
@@ -135,7 +142,6 @@
           value: null,
         });
 
-        // vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink.slice(vm.csvStatusObj.details.errorLogLink.lastIndexOf("/") + 1);
         vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
         vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
 

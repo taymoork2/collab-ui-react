@@ -18,6 +18,7 @@
     $scope.launchCustomerPortal = launchCustomerPortal;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
+    $scope.getDaysAgo = getDaysAgo;
 
     init();
 
@@ -42,7 +43,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Localytics.tagEvent('Start Trial Button Click', {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
           from: $state.current.name
         });
       }
@@ -59,6 +60,10 @@
       } else {
         return 'success';
       }
+    }
+
+    function getDaysAgo(daysLeft) {
+      return Math.abs(daysLeft);
     }
 
     function getTrialsList() {

@@ -6,7 +6,7 @@
     .controller('CdrLadderDiagramCtrl', CdrLadderDiagramCtrl);
 
   /* @ngInject */
-  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $state, $translate, $stateParams, CdrLadderDiagramService, $sce, Log, $window) {
+  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $q, $state, $translate, $stateParams, CdrLadderDiagramService, $sce, Log, $window) {
     var vm = this;
 
     vm.downLoadLabel = $translate.instant('cdrLadderDiagram.downLoadEvents');
@@ -39,6 +39,8 @@
     vm.error = '';
     var LOCUS = 'Locus:';
     var SIP_MESSAGE = 'sipmsg';
+    var NO_DATA = 'No data';
+    var SUCCESS = 'Success';
 
     vm.close = function () {
       clearDownloads();
@@ -52,12 +54,15 @@
     };
 
     $scope.$on('event-query-resolved', function (event, args) {
-      getSparkData();
+      getSparkData().then(function () {
+        generateLadderDiagram();
+      });
     });
 
     function getSparkData() {
+      var defer = $q.defer();
       if (_.isUndefined(vm.events)) {
-        return [];
+        defer.reject(NO_DATA);
       }
       var locusId = null;
       var start = null;
@@ -72,14 +77,15 @@
       _.forEach(vm.events, function (event, key) {
         if (!_.isUndefined(event.eventSource)) {
           var message = JSON.parse(event.message);
-          if ((message.id === SIP_MESSAGE) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
+          if ((message.id === SIP_MESSAGE) && !_.isUndefined(message.dataParam.rawMsg) && (message.dataParam.rawMsg.indexOf(LOCUS) > 0)) {
             if (_.isNull(locusId)) {
               startIndex = message.dataParam.rawMsg.indexOf(LOCUS);
               endIndex = message.dataParam.rawMsg.indexOf("Content-Length");
-              if (endIndex === -1) {
-                endIndex = message.dataParam.rawMsg.indexOf("Content-Type");
-              }
               locusId = message.dataParam.rawMsg.substring(startIndex + 7, endIndex).replace("\\n", "").replace("\\r", "");
+              endIndex = locusId.indexOf("Content-Type");
+              if (endIndex > 0) {
+                locusId = locusId.substring(0, endIndex);
+              }
               start = event['@timestamp'];
             }
             end = event['@timestamp'];
@@ -97,9 +103,12 @@
               });
             }
             vm.events = $filter('orderBy')(vm.events, ['"@timestamp"']);
-            generateLadderDiagram();
+            defer.resolve(SUCCESS);
           });
+      } else {
+        defer.resolve(SUCCESS);
       }
+      return defer.promise;
     }
 
     function processActivitiesData(value, key) {
@@ -272,7 +281,7 @@
         function (response) {
           if (response.hits.hits.length > 0) {
             vm.events = formatEventsResponse(response);
-            vm.huronEvents = formatEventsResponse(response);
+            vm.huronEvents = angular.copy(vm.events);
             $rootScope.$broadcast('event-query-resolved');
           } else {
             vm.error = 'Response was undefined';

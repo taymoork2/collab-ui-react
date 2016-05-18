@@ -109,6 +109,7 @@
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .success(function (data, status) {
             data = data || {};
+            $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
             callback(data, status);
           })

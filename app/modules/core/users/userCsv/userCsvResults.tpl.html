@@ -69,5 +69,8 @@
         </tbody>
       </table>
     </div>
+    <div ng-if="!csv.model.isProcessing && csv.model.userErrorArray.length > 0">
+      <csv-download type="error" filename="errors.csv" no-icon anchor-text="{{csv.model.exportErrorsAnchorText}}"></csv-download>
+    </div>
   </div>
 </div>

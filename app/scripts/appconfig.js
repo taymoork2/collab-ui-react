@@ -1014,6 +1014,19 @@
               csvImportObj: null
             }
           })
+          .state('site-csv', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'SiteCSVModalCtrl',
+                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                controllerAs: 'siteCSVModalCtrl'
+              }
+            },
+            params: {
+              csvImportObj: null
+            }
+          })
           .state('site-csv-results', {
             parent: 'modal',
             views: {
@@ -1303,6 +1316,29 @@
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
             data: {
               displayName: 'Phone Numbers'
+            }
+          })
+          .state('customer-overview.pstnOrderOverview', {
+            controller: 'PstnOrderOverviewCtrl',
+            controllerAs: 'pstnOrderOverview',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            data: {
+              displayName: 'PSTN Orders'
+            },
+            params: {
+              currentCustomer: {}
+            }
+          })
+          .state('customer-overview.pstnOrderDetail', {
+            parent: 'customer-overview.pstnOrderOverview',
+            controller: 'PstnOrderDetailCtrl',
+            controllerAs: 'pstnOrderDetail',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            data: {
+              displayName: 'Order'
+            },
+            params: {
+              currentOrder: {}
             }
           })
           .state('modal', {
@@ -2056,6 +2092,16 @@
               }
             }
           })
+          /*.state('media-service.metrics', {
+            url: '/mediaservice/metrics',
+            views: {
+              'fullPane': {
+                controllerAs: 'GraphUtilCtrl',
+                controller: 'AnalyticsUtilizationGraphController',
+                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
+              }
+            }
+          })*/
           .state('connector-details', {
             parent: 'sidepanel',
             views: {
@@ -2114,6 +2160,39 @@
               dispName: null
             }
           });
+      }
+    ]);
+
+  angular
+    .module('Ediscovery')
+    .config(['$stateProvider',
+      function ($stateProvider) {
+        $stateProvider
+
+          .state('ediscovery-main', {
+          views: {
+            'main@': {
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
+              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+
+        .state('ediscovery', {
+            url: '/ediscovery',
+            template: '<div ui-view></div>',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            parent: 'ediscovery-main'
+          })
+          .state('ediscovery.search', {
+            url: '/',
+            templateUrl: 'modules/ediscovery/ediscovery.html'
+          });
+
       }
     ]);
 

@@ -213,7 +213,7 @@ exports.deleteTestSchedule = function (aaUrl, token) {
       if (!error && response.statusCode === 200) {
         var scheduleId = JSON.parse(body).scheduleId;
         if (scheduleId !== undefined) {
-          var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['huron-int1'].org, scheduleId);
+          var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['aa-admin'].org, scheduleId);
           return exports.deleteSchedules(scheduleUrl, token);
         }
       }

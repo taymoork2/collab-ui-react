@@ -75,7 +75,7 @@
     "yes": "YES",
     "resend": "Resend Invitation",
     "resendActivation": "Resend Activation",
-    "deleteUserSuccess": "User {{email}} deleted successfully",
+    "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
@@ -739,7 +739,7 @@
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
-    "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
+    "invalidMinLength": "This entry is too short. Minimum length is {{min}}.",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "invalidMax": "Maximum value is {{max}}.",
     "on": "On",
@@ -770,6 +770,7 @@
     "users": "Users",
     "settings": "Settings",
     "resources": "Resources",
+    "metrics": "Metrics",
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
@@ -782,7 +783,8 @@
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
     "postpone": "Postpone",
-    "continue": "Continue"
+    "continue": "Continue",
+    "warning": "Warning"
   },
   "notifications": {
     "success": "Success notifications",
@@ -909,13 +911,17 @@
     "tzDescription": "Specify the time zone to use for schedule-based call routing. For example, this time zone applies to calls routed based on business hours and holiday schedules.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
+    "extensionLength": "Internal Extension Length",
+    "extensionLengthDescription": "Specify the length of internal numbers.",
+    "extensionLengthChangeWarning": "Changing the extension length will change all extensions in the system.",
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
     "siteCode": "Site Code",
     "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
+    "extensionRangeChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
     "internalExtensionRange": "Internal Extension Range",
-    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
+    "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
@@ -1117,7 +1123,7 @@
       "report": "Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add a Resource",
+      "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define SIP Domain"
     },
@@ -1352,6 +1358,17 @@
       }
     }
   },
+  "ediscovery": {
+    "browserTabHeaderTitle": "eDiscovery",
+    "ediscovery": "eDiscovery",
+    "searchHeading": "eDiscovery search",
+    "navHeaderTitle": "eDiscovery Dashboard",
+    "searchHelp": "Search Help",
+    "searchingPleaseWait": "Finding information, please wait...",
+    "help": {
+      "title": "eDiscovery Help"
+    }
+  },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
     "simple": "Manually add users",
@@ -1584,7 +1601,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Imported {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1639,6 +1656,7 @@
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
     "phoneMenuRouteAA": "Route to Auto Attendant",
+    "phoneMenuRouteQueue": "Route to Queue",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
     "phoneMenuRepeatTwice": "Twice",
@@ -1646,6 +1664,13 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
+    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
+    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
+    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
+    "phoneMenuErrorRouteToQueueTargetMissing": "Key {{key}} is missing a Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target for the {{schedule}} schedule at Phone Menu {{at}}.",
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target for the {{schedule}} schedule at Phone Menu {{at}}.",
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target for the {{schedule}} schedule at Phone Menu {{at}}.",
@@ -1672,8 +1697,8 @@
     "on": "On",
     "day": "Day",
     "selectAA": "Select Auto Attendant",
-    "importSchedule": "Import Schedule",
-    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
+    "importSchedule": "Copy Schedule",
+    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -1922,6 +1947,20 @@
     "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
+  },
+  "pstnOrderOverview": {
+    "pstnOrders": "PSTN Orders",
+    "successful": "Successful",
+    "inProgress": "In Progress",
+    "advanceOrder": "Advance Numbers",
+    "newNumberOrder": "New Numbers",
+    "portNumberOrder": "Porting Numbers",
+    "searchPlaceholder": "Search Orders"
+  },
+  "pstnOrderDetail": {
+    "orderNumber": "Order #{{orderId}}",
+    "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
+    "searchPlaceholder": "Search Phone Numbers"
   },
   "serviceAddress": {
     "streetAddress": "Street Address",
@@ -2283,7 +2322,9 @@
     "SD": "Spark Room System",
     "deleteOrg": "Delete Org {{orgName}}",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted"
+    "deleteOrgError": "{{orgName}} was not deleted",
+    "pstnOrders": "PSTN Orders",
+    "addNumbers": "Add Numbers"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2547,6 +2588,18 @@
       "schedule": "Set a Schedule",
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
+    },
+    "metrics": {
+      "cluster": "Cluster :",
+      "ecp": "ECP :",
+      "fromDate": "From :",
+      "toDate": "To :",
+      "outOfRange": "Date out of Range!",
+      "time": "Time :",
+      "callVolume": "Linus Call Volume for",
+      "clusterAvailability": "Cluster Availability for",
+      "callReject": "Call Rejects  for",
+      "node": "Node"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3007,19 +3060,19 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Total records available:",
-    "csvExportRecordsSuccessful": "Records successfully exported:",
+    "csvExportRecordsAvailable": "Records requested:",
+    "csvExportRecordsSuccessful": "Records returned:",
     "csvExportDownloadFile": "Download CSV file:",
 
     "csvImportTitle": "Import Results",
-    "csvImportFileName": "File Name:",
+    "csvImportFileName": "File name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
-    "csvFinished": "Finished:",
-    "csvRecordsFailed": "Records failed:"
+    "csvFinished": "Completed:",
+    "csvRecordsFailed": "Errors:"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3059,12 +3112,9 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
-    "brandingInfo": "Customize your tenant’s experience of Cisco applications by uploading your company logo below.",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
     "allowCustomerLogo": "Enable all customers to use their own logo",
-    "useCiscoLogo": "Use default logos from Cisco",
-    "userOwnLogo": "Use your own log ",
-    "exampleLink": "(see example)",
-    "uploadNote": "For best results logo should be transparent with no padding around the outside of the image. Image file size must be less than 1 MB.",
+    "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
     "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
@@ -3079,10 +3129,7 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
-    "brandingTitle": {
-      "custom": "Custom Branding",
-      "tenant": "Tenant Branding"
-    },
+    "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -3112,7 +3159,7 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "brandingInfo": "Customize your employee’s experience of Cisco applications by uploading your company logo below.",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
 
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
@@ -3124,10 +3171,6 @@
     "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
-  },
-  "brandingExample": {
-    "title": "Examples of Custom Branding",
-    "description": "Logo Placement Examples: <br/>After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3211,11 +3254,11 @@
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
-    "licenseTypes": "License Types",
+    "licenseTypes": "License Type",
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
-    "siteCsvColumnHeader": "User Attributes",
+    "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3225,25 +3268,26 @@
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
-    "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
+    "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
+    "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
-    "exportFinishedWithErrorsTooltip": "Export finished with errors",
-    "exportFailedTooltip": "Export failed",
+    "exportFinishedWithErrorsTooltip": "Export finished with errors.",
+    "exportFailedTooltip": "Export failed.",
     "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
-    "exportRejectedToast": "Export failed, try again.",
+    "exportRejectedToast": "Export failed. Try again.",
     "importButton": "Import",
     "importStartModalTitle": "Import WebEx User Attributes",
-    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
-    "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select Import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
+    "importBlockedTooltip": "In order to Import, you must wait for your Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
-    "importFinishedWithErrorsTooltip": "Import finished with errors",
-    "importFailedTooltip": "Import failed",
+    "importFinishedWithErrorsTooltip": "Import finished with errors.",
+    "importFailedTooltip": "Import failed.",
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
-    "importRejectedToast": "Import failed, try again.",
+    "importRejectedToast": "Import failed. Try again.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
-    "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
+    "siteCSVNotAvailableTooltip": "You must upgrade this site to access the Bulk Modify User Attributes feature",
     "authError": "You are not entitled to access this site.",
     "systemError": "Unable to connect to site.",
     "multipleLicenses": "Multiple...",
@@ -3488,7 +3532,26 @@
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "ctOverview": {
+      "customerInformation": {
+        "title": "Customer Info",
+        "desc": "This is the screen a customer fills out before chatting with an agent"
+      },
+      "agentUnavailable": {
+        "title": "Agent Unavailable",
+        "desc": "This screen is shown to a customer when no agent is available to assist"
+      },
+      "offHours": {
+        "title": "Off-Hours",
+        "desc": "This screen is shown during business off-hours"
+      },
+      "feedback": {
+        "title": "Feedback",
+        "desc": "This screen is used to collect feedback from the customer after chat ends"
+      }
+    }
+
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3659,8 +3722,8 @@
     "thisMonth": "This month",
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
-    "contactCsb": "Contact",
-    "telstraMarketplace": "Telstra Marketplace",
+    "visitCsb": "Visit",
+    "telstraMarketplace": "Telstra App Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3960,7 +4023,8 @@
     "removeFile": "Remove File",
     "newUsers": "Added",
     "existingUsers": "Updated",
-    "errorUsers": "Errors"
+    "errorUsers": "Errors",
+    "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {
     "confirmTitle": "Are you sure?",

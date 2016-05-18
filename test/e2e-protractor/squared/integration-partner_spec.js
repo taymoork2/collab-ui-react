@@ -75,6 +75,7 @@ describe('Partner flow', function () {
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
@@ -167,6 +168,7 @@ describe('Partner flow', function () {
     it('Should close customer portal', function () {
       browser.close();
       browser.switchTo().window(appWindow);
+      browser.refresh();
     });
 
   }, LONG_TIMEOUT);

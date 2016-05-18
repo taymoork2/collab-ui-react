@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -24,6 +24,8 @@
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
+      addToManagedOrgsList: addToManagedOrgsList,
+      getUserAuthInfo: getUserAuthInfo,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -42,6 +44,40 @@
       return $http.get(managedOrgsUrl, {
         params: {
           customerName: searchText
+        }
+      });
+    }
+
+    function addToManagedOrgsList(uuid, orgId) {
+      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
+
+      var payload = {
+        'schemas': [
+          'urn:scim:schemas:core:1.0',
+          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
+        ],
+        'managedOrgs': [{
+          'orgId': orgId,
+          'role': 'ID_Full_Admin'
+        }]
+      };
+
+      return $http({
+        method: 'PATCH',
+        url: authUrl,
+        data: payload
+      });
+    }
+
+    function getUserAuthInfo(customerOrgId) {
+      Auth.getAuthorizationUrlList().then(function (response) {
+        if (response.status === 200) {
+          var uuid = response.data.uuid;
+          if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
+            addToManagedOrgsList(uuid, customerOrgId);
+          }
+        } else {
+          Log.error('Query for userauthinfo failed. Status: ' + response.status);
         }
       });
     }

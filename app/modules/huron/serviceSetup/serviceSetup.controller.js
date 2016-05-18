@@ -18,6 +18,7 @@
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
+    var DEFAULT_EXT_LEN = '4';
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
@@ -42,12 +43,16 @@
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
+    vm.availableExtensions = [
+      '3', '4', '5'
+    ];
 
     vm.model = {
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
         steeringDigit: DEFAULT_SD,
         siteSteeringDigit: DEFAULT_SITE_SD,
+        extensionLength: DEFAULT_EXT_LEN,
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
@@ -56,6 +61,7 @@
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
+      previousLength: DEFAULT_EXT_LEN,
       //var to hold ranges in view display
       displayNumberRanges: [],
       globalMOH: mohOptions[0],
@@ -63,8 +69,16 @@
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
       },
-      ftswSteeringDigit: undefined
+      ftswSteeringDigit: undefined,
+      hideExtensionLength: true
     };
+
+    FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
+      vm.model.hideExtensionLength = !result;
+      vm.fields = vm.initialFields;
+    }).catch(function (response) {
+      vm.fields = vm.initialFields;
+    });
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
     vm.hasVoicemailService = false;
@@ -185,7 +199,7 @@
       return false;
     };
 
-    vm.fields = [{
+    vm.initialFields = [{
       model: vm.model.site,
       className: 'service-setup',
       fieldGroup: [{
@@ -271,12 +285,53 @@
         }
       }]
     }, {
+      model: vm.model.site,
+      key: 'extensionLength',
+      type: 'select',
+      className: 'service-setup service-setup-extension-length',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.extensionLength'),
+        description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+        isWarn: false,
+        options: vm.availableExtensions,
+        onChange: function () {
+          if (vm.model.site.extensionLength !== vm.model.previousLength) {
+            return ModalService.open({
+                title: $translate.instant('common.warning'),
+                message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+                close: $translate.instant('common.continue'),
+                dismiss: $translate.instant('common.cancel'),
+                type: 'negative'
+              })
+              .result.then(function () {
+                for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
+                  vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
+                  vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
+                  vm.model.previousLength = vm.model.site.extensionLength;
+                }
+              })
+              .catch(function () {
+                vm.model.site.extensionLength = vm.model.previousLength;
+                return $q.reject();
+              });
+          }
+        }
+      },
+      hideExpression: function () {
+        return vm.model.hideExtensionLength;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+        }
+      }
+    }, {
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.internalExtensionRange'),
-        description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
         fields: [{
           className: 'formly-field-inline service-setup-extension-range',
           fieldGroup: [{
@@ -314,16 +369,23 @@
             },
             templateOptions: {
               required: true,
-              maxlength: 4,
-              minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
-              isWarn: false
+              maxlength: vm.model.site.extensionLength,
+              minlength: vm.model.site.extensionLength,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
               },
-              'templateOptions.isWarn': vm.steerDigitOverLapValidation
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation,
+              'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
+                return vm.model.site.extensionLength;
+              },
+              'templateOptions.maxlength': function () {
+                return vm.model.site.extensionLength;
+              }
             }
           }, {
             className: 'form-inline formly-field service-setup-extension-range-to',
@@ -369,10 +431,11 @@
               }
             },
             templateOptions: {
-              maxlength: 4,
-              minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
-              isWarn: false,
+              maxlength: vm.model.site.extensionLength,
+              minlength: vm.model.site.extensionLength,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              }),
               required: true
             },
             expressionProperties: {
@@ -382,9 +445,21 @@
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
               'data.validate': function (viewValue, modelValue, scope) {
-                return scope.fc && scope.fc.$validate();
+                if (scope.fc) {
+                  if (_.isArray(scope.fc)) {
+                    return scope.fc[0].$validate();
+                  } else {
+                    return scope.fc.$validate();
+                  }
+                } else return false;
               },
-              'templateOptions.isWarn': vm.steerDigitOverLapValidation
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation,
+              'templateOptions.minlength': function () {
+                return vm.model.site.extensionLength;
+              },
+              'templateOptions.maxlength': function () {
+                return vm.model.site.extensionLength;
+              }
             }
           }, {
             type: 'button',
@@ -416,6 +491,13 @@
             }
           }]
         }]
+      },
+      expressionProperties: {
+        'templateOptions.description': function () {
+          return $translate.instant('serviceSetupModal.internalNumberRangeDescription', {
+            'length': vm.model.site.extensionLength
+          });
+        }
       },
       hideExpression: function () {
         return vm.hideFieldInternalNumberRange;
@@ -598,6 +680,7 @@
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              vm.model.site.extensionLength = site.extensionLength;
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
@@ -636,6 +719,12 @@
       }).then(function () {
         return loadExternalNumberPool();
       });
+    }
+
+    function adjustExtensionRanges(range, char) {
+      var length = parseInt(vm.model.site.extensionLength);
+
+      return (length < range.length) ? range.slice(0, length) : _.padRight(range, length, char);
     }
 
     function loadExternalNumberPool(pattern) {
@@ -740,8 +829,8 @@
 
             if (vm.model.displayNumberRanges.length === 0) {
               vm.model.displayNumberRanges.push({
-                beginNumber: DEFAULT_FROM,
-                endNumber: DEFAULT_TO
+                beginNumber: '',
+                endNumber: ''
               });
             }
             Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {

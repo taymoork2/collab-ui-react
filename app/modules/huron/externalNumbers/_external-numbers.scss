@@ -2,9 +2,12 @@
   .icon-spinner {
     vertical-align: middle;
   }
+  .add-number-link {
+    color: $color-primary-base
+  }
 }
 
-.external-number-detail {
+.external-number-detail, .pstn-order-detail, .pstn-order-overview {
 
   .tab-content {
     border: 0;
@@ -46,6 +49,25 @@
   .filter-count {
     margin-bottom: 15px;
     color: $gray-dark;
+  }
+  
+  .bottom-pad {
+    padding-bottom: 1rem;
+  }
+}
+
+.detail-group {
+  margin-left: 1.5rem;
+  margin-top: 1rem;
+  margin-right: 1.5rem;
+  
+  .detail-group-item {
+    font-family: $brand-font-regular;
+    font-size: 0.875rem;
+    padding: 1.25rem 0.5rem;
+    height: 35px;
+    display: flex;
+    align-items: center;
   }
 }
 
