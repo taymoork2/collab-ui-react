@@ -1358,6 +1358,17 @@
       }
     }
   },
+  "ediscovery": {
+    "browserTabHeaderTitle": "eDiscovery",
+    "ediscovery": "eDiscovery",
+    "searchHeading": "eDiscovery search",
+    "navHeaderTitle": "eDiscovery Dashboard",
+    "searchHelp": "Search Help",
+    "searchingPleaseWait": "Finding information, please wait...",
+    "help": {
+      "title": "eDiscovery Help"
+    }
+  },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
     "simple": "Manually add users",

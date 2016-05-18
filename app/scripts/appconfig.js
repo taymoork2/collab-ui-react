@@ -2145,6 +2145,41 @@
     ]);
 
   angular
+    .module('Ediscovery')
+    .config(['$stateProvider',
+      function ($stateProvider) {
+        $stateProvider
+
+          .state('ediscovery-main', {
+          views: {
+            'main@': {
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
+              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+
+        .state('ediscovery', {
+            url: '/ediscovery',
+            template: '<div ui-view></div>',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            parent: 'ediscovery-main'
+          })
+          .state('ediscovery.search', {
+            url: '/',
+            templateUrl: 'modules/ediscovery/ediscovery.html'
+          });
+
+      }
+    ]);
+
+
+
+  angular
     .module('Messenger')
     .config(['$stateProvider',
       function ($stateProvider) {
