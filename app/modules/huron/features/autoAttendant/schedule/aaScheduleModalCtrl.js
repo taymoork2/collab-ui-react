@@ -31,7 +31,7 @@
     vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
-    vm.toggleHours = false;
+    vm.toggleHours = true;
     vm.holidays = [];
     vm.holidayBehavior = false;
     vm.oneAtATime = true;
@@ -465,6 +465,10 @@
       });
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+
+      if (!_.isEmpty(vm.ui.toggleSection)) {
+        toggleSection(vm.ui.toggleSection);
+      }
     }
 
     function openImportModal() {

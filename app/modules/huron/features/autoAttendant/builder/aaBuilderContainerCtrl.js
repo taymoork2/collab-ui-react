@@ -20,11 +20,11 @@
       return (Config.isDev() || Config.isIntegration());
     }
 
-    function openScheduleModal() {
+    function openScheduleModal(toggleSection) {
       if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
         return;
       }
-
+      vm.ui.toggleSection = toggleSection;
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
