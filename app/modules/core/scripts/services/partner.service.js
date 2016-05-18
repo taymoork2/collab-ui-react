@@ -76,7 +76,7 @@
           if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
             addToManagedOrgsList(uuid, customerOrgId);
             Localytics.tagEvent('PATCHED User Count', {
-              from: response.data.orgName
+              from: response.data.orgId
             });
           }
         } else {
