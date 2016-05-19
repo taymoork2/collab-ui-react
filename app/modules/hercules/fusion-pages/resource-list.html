@@ -19,27 +19,11 @@
             <h4>{{::cluster.name}}</h4>
             <div class="cluster-type-orb">EW</div>
           </header>
-          <!-- <section>
-            <table class="cluster-table">
-              <tr>
-                <td>Users:</td>
-                <td>Everybody</td>
-              </tr>
-              <tr>
-                <td>Release Channel:</td>
-                <td>Production</td>
-              </tr>
-              <tr>
-                <td>Upgrade time:</td>
-                <td>03:00 AM every Sunday<br>United States: America/Los_Angeles</td>
-              </tr>
-            </table>
-          </section> -->
           <section>
             <ul class="service-list">
               <li ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
                 <div ng-hide="service.total === 0">
-                  <a href="#"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+                  <a ng-click="resourceList.openService(service.serviceId)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
                 </div>
               </li>
             </ul>

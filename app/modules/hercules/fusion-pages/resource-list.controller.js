@@ -6,7 +6,7 @@
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
-  function FusionResourceListController($window, $filter, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionResourceListController($filter, $state, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // show a white page…
       return;
@@ -32,10 +32,10 @@
       filterValue: 'non-expressway',
       count: 0,
     }];
-    vm.addResource = addResource;
     vm.countHosts = countHosts;
     vm.setFilter = setFilter;
     vm.searchData = searchData;
+    vm.openService = openService;
 
     loadClusters();
 
@@ -49,10 +49,6 @@
         .finally(function () {
           vm.loading = false;
         });
-    }
-
-    function addResource() {
-      $window.alert('yo');
     }
 
     function countHosts(cluster) {
@@ -92,6 +88,14 @@
         vm.displayedClusters = clustersCache;
       } else {
         vm.displayedClusters = $filter('filter')(clustersCache, searchStr);
+      }
+    }
+
+    function openService(serviceId) {
+      if (serviceId === 'squared-fusion-uc') {
+        $state.go('call-service.list');
+      } else if (serviceId === 'squared-fusion-cal') {
+        $state.go('calendar-service.list');
       }
     }
   }
