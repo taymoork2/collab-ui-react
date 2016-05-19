@@ -2,7 +2,6 @@
 /// <reference path="myCompanyPageInfoCtrl.ts"/>
 namespace myCompanyPage {
   describe('MyCompanyPageInfoCtrl', ()=> {
-    let $httpBackend;
     let ctrl;
 
     beforeEach(angular.mock.module('Core'));
@@ -10,8 +9,6 @@ namespace myCompanyPage {
 
       let listpartnerCall;
       beforeEach(inject(($injector, $controller)=> {
-        $httpBackend = $injector.get('$httpBackend');
-        //$httpBackend.when('GET', /\/services/).respond([]);
         listpartnerCall = {};
         ctrl = $controller('MyCompanyPageInfoCtrl', {
           UserListService: {
