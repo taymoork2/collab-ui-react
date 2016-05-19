@@ -89,7 +89,7 @@
     function setSipUriNotification() {
       Orgservice.getOrg(function (data, status) {
         if (status === 200) {
-          vm.isCloudSipUriSet = (data.orgSettings.sipCloudDomain) ? true : false;
+          vm.isCloudSipUriSet = !!data.orgSettings.sipCloudDomain;
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
