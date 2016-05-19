@@ -10,7 +10,9 @@
     var vm = this;
 
     vm.createReport = createReport;
+    vm.deleteReports = deleteReports;
     vm.showSearchHelp = showSearchHelp;
+    vm.downloadReport = downloadReport;
 
     vm.searchCriteria = {
       "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
@@ -18,31 +20,36 @@
     };
     vm.reports = [];
 
-    // Initial testing, just delete all reports and create a new one...
-    // EdiscoveryService.deleteReports().then(function (res) {
-    //   //console.log("response from delete reports", res);
-    //   return EdiscoveryService.createReport("initialReport");
-    // }).then(function (res) {
-    //   //console.log("create report response", res)
-    //   return EdiscoveryService.getReport();
-    // }).then(function (res) {
-    //   //console.log("getReport result ", res)
-    // }).finally(function (res) {
-    //   pollAvalonReport();
-    // });
     pollAvalonReport();
 
     function getStartDate() {
       return vm.searchCriteria.startDate;
     }
 
+    function getEndDate() {
+      return vm.searchCriteria.endDate;
+    }
+
     function setEndDate(endDate) {
       vm.searchCriteria.endDate = endDate;
+    }
+
+    function validDuration() {
+      if (getEndDate() < getStartDate()) {
+        //alert("Oh no!   End date is before start date !!!!");
+        return false;
+      } else {
+        return true;
+      }
     }
 
     $scope.$watch(getStartDate, function (startDate) {
       var endDate = moment(startDate).add(1, 'days');
       setEndDate(endDate);
+    });
+
+    $scope.$watch(getEndDate, function (endDate) {
+      validDuration();
     });
 
     function downloadReport() {
@@ -96,6 +103,12 @@
       //console.log("createReport, searchCriteria", vm.searchCriteria)
       EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
         //console.log("create result", res)
+      });
+    }
+
+    function deleteReports() {
+      EdiscoveryService.deleteReports().then(function (res) {
+        //console.log("deleted reports result", res)
       });
     }
 

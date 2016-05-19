@@ -1,4 +1,4 @@
-<button type="button" ng-class="{'btn--primary': row.entity.actions === DOWNLOAD, 'btn--attention': row.entity.actions !== DOWNLOAD}" class="fit btn btn--circle btn--small">
-  <span ng-show="row.entity.actions === DOWNLOAD" class="icon icon-download"></span>
-  <span ng-show="row.entity.actions !== DOWNLOAD" class="icon icon-exit"></span>
+<button type="button" ng-class="{'btn--primary': row.entity.state === 'COMPLETED', 'btn--attention': row.entity.state !== 'COMPLETED'}" class="fit btn btn--circle btn--small">
+  <span ng-show="row.entity.state === 'COMPLETED'" class="icon icon-download" ng-click="ediscoveryCtrl.downloadReport()"></span>
+  <span ng-show="row.entity.state !== 'COMPLETED'" class="icon icon-exit" ng-click="ediscoveryCtrl.cancelReport()"></span>
 </button>
