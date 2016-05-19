@@ -242,19 +242,15 @@
     }];
 
     vm.getCategoryTypeObject = function (typeId) {
-      for (var key in CATEGORY_TYPE_OPTIONS) {
-        if (CATEGORY_TYPE_OPTIONS.hasOwnProperty(key) && CATEGORY_TYPE_OPTIONS[key].id === typeId.toString()) {
-          return CATEGORY_TYPE_OPTIONS[key];
-        }
-      }
+      return _.find(CATEGORY_TYPE_OPTIONS, {
+        id: typeId
+      });
     };
 
     vm.getTypeObject = function (typeText) {
-      for (var key in TYPE_OPTIONS) {
-        if (TYPE_OPTIONS.hasOwnProperty(key) && TYPE_OPTIONS[key].text === typeText.toString()) {
-          return TYPE_OPTIONS[key];
-        }
-      }
+      return _.find(TYPE_OPTIONS, {
+        text: typeText
+      });
     };
 
     /**
@@ -397,18 +393,13 @@
 
     vm.getAttributeByName = function (attributeName, fieldName) {
       var fields = vm.model.customerInfo.fields;
-      var foundAttribute;
-      if (typeof fieldName !== 'undefined' && fields.hasOwnProperty(fieldName.toString())) {
-        for (var key in fields[fieldName].attributes) {
-          if (fields[fieldName].attributes.hasOwnProperty(key)) {
-            var attribute = fields[fieldName].attributes[key];
-            if (attribute.name == attributeName) {
-              foundAttribute = attribute;
-            }
-          }
-        }
+      var field = _.get(fields, fieldName);
+      if (field) {
+        return _.find(field.attributes, {
+          name: attributeName
+        });
       }
-      return foundAttribute;
+      return undefined;
     };
 
     vm.getAttributeParam = function (paramName, attributeName, fieldName) {

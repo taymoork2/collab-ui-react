@@ -190,9 +190,9 @@
   }
 
   .ct-attribute-field-radio {
-    margin-left: rem-calc(16px);
-    margin-top: rem-calc(17px);
-    margin-bottom: rem-calc(4px);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 0);
     font-family: "CiscoSansTT Light";
   }
 
