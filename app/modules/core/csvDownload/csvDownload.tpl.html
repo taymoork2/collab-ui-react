@@ -1,9 +1,11 @@
 <div class="csv-download">
   <div>
     <a href="" ng-click="downloadCsv()">
-      <i ng-show="!downloading" class="icon icon-circle-download">
-        <span class="sr-only" translate="common.download"></span>
-      </i>
+      <span tooltip-placement="top" tooltip="{{tooltipMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
+        <i ng-show="!downloading" class="icon icon-circle-download">
+          <span class="sr-only" translate="common.download"></span>
+        </i>
+      </span>
     </a>
   </div>
   <div>

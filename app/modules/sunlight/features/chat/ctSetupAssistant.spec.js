@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
@@ -191,3 +191,4 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   });
 });
+*/

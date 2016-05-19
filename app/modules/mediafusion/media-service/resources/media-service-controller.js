@@ -23,13 +23,19 @@
     vm.currentServiceId = "squared-fusion-media";
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
-    vm.tabs = [{
-      title: $translate.instant('common.resources'),
-      state: 'media-service.list',
-    }, {
-      title: $translate.instant('common.settings'),
-      state: 'media-service.settings',
-    }];
+    vm.tabs = [
+      /*{
+            title: $translate.instant('common.metrics'),
+            state: 'media-service.metrics',
+          },*/
+      {
+        title: $translate.instant('common.resources'),
+        state: 'media-service.list',
+      }, {
+        title: $translate.instant('common.settings'),
+        state: 'media-service.settings',
+      }
+    ];
     vm.clusters = _.values(MediaClusterService.getClusters());
     vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters());
     vm.clusterLength = clusterLength;

@@ -101,7 +101,7 @@
           </section>
 
           <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
-            <div class="row" ng-repeat="attribute in careChatSA.activeItem.attributes">
+            <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
 
               <label
                 ng-if="attribute.type != 'radio'"

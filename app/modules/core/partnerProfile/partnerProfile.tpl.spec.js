@@ -31,7 +31,7 @@ describe('Template: partnerProfile', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$log_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -123,11 +123,6 @@ describe('Template: partnerProfile', function () {
 
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
-
-    describe('Example Link', function () {
-      it('show be exist near use custom logo radio', expectExampleLinkExist(USE_CUSTOM_EXAMPLE_LINK));
-      it('show be exist near allow Custom Logo checkbox', expectExampleLinkExist(ALLOW_CUSTOM_EXAMPLE_LINK));
-    });
 
     describe('Save buttons should not be visible with autosave changes', function () {
       afterEach(expectButtonContainerNotVisible);

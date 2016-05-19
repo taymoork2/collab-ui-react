@@ -2049,6 +2049,13 @@
       function ($stateProvider) {
         $stateProvider
 
+          .state('metrics', {
+            url: '/metrics',
+            controllerAs: 'GraphUtilCtrl',
+            controller: 'AnalyticsUtilizationGraphController',
+            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
+            parent: 'main'
+          })
           .state('media-service', {
             templateUrl: 'modules/mediafusion/media-service/overview.html',
             controller: 'MediaServiceController',
@@ -2073,6 +2080,16 @@
               }
             }
           })
+          /*.state('media-service.metrics', {
+            url: '/mediaservice/metrics',
+            views: {
+              'fullPane': {
+                controllerAs: 'GraphUtilCtrl',
+                controller: 'AnalyticsUtilizationGraphController',
+                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
+              }
+            }
+          })*/
           .state('connector-details', {
             parent: 'sidepanel',
             views: {
@@ -2135,6 +2152,39 @@
     ]);
 
   angular
+    .module('Ediscovery')
+    .config(['$stateProvider',
+      function ($stateProvider) {
+        $stateProvider
+
+          .state('ediscovery-main', {
+          views: {
+            'main@': {
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
+              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+
+        .state('ediscovery', {
+            url: '/ediscovery',
+            template: '<div ui-view></div>',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            parent: 'ediscovery-main'
+          })
+          .state('ediscovery.search', {
+            url: '/',
+            templateUrl: 'modules/ediscovery/ediscovery.html'
+          });
+
+      }
+    ]);
+
+  angular
     .module('Messenger')
     .config(['$stateProvider',
       function ($stateProvider) {
@@ -2188,13 +2238,10 @@
           })
           .state('care.ChatSA', {
             url: '/careChat',
-            views: {
-              'main@': {
-                templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-                controller: 'CareChatSetupAssistantCtrl',
-                controllerAs: 'careChatSA'
-              }
-            }
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+            controller: 'CareChatSetupAssistantCtrl',
+            controllerAs: 'careChatSA'
           });
       }
     ]);
