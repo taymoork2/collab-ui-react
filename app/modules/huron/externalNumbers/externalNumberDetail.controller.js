@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($interval, $q, $scope, $state, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, PartnerService, PstnSetupService, TelephoneNumberService) {
+  function ExternalNumberDetail($interval, $q, $scope, $state, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, PstnSetupService, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -26,7 +26,6 @@
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
     vm.addNumbers = addNumbers;
-    vm.getUserAuthInfo = getUserAuthInfo;
     vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
@@ -127,10 +126,6 @@
           });
         }
       });
-    }
-
-    function getUserAuthInfo(org) {
-      PartnerService.getUserAuthInfo(org.customerOrgId);
     }
 
     function getQuantity(type) {
