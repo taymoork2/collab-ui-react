@@ -426,8 +426,6 @@
       return typeof value !== 'undefined' && value.trim() !== '';
     };
 
-    vm.translate = $translate.instant;
-
     function setTemplateProfile() {
       if (vm.selectedTemplateProfile === vm.profiles.org) {
         vm.template.configuration.mediaSpecificConfiguration = {
