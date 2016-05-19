@@ -33,7 +33,7 @@ describe('assignServices', function () {
   beforeEach(module('Messenger'));
 
   beforeEach(inject(function ($compile, $resource, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _GroupService_, _HybridService_,
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
     _Orgservice_, _Userservice_) {
 
     $scope = $rootScope.$new();
@@ -56,10 +56,6 @@ describe('assignServices', function () {
     };
     $scope.wizard = {};
     $scope.wizard.current = current;
-
-    spyOn(_GroupService_, 'getGroupList').and.callFake(function (callback) {
-      callback({});
-    });
 
     spyOn($state, 'go');
 
