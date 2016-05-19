@@ -126,6 +126,10 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
+    function getPhoneUrl(deviceId) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/phones/' + deviceId;
+    }
+
     function encodeHuronTags(description) {
       return (description || "").replace(/"/g, "'");
     }
@@ -156,7 +160,7 @@
     }
 
     function getTimezoneForDevice(huronDevice) {
-      return $http.get(huronDevice.url)
+      return $http.get(getPhoneUrl(huronDevice.huronId))
           .then(function (res) {
             var timeZone = null;
             if (res.data) {

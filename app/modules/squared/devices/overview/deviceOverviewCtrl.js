@@ -14,7 +14,6 @@
 
     deviceOverview.linesAreLoaded = false;
 
-    deviceOverview.currentDevice.timeZone = "oslo";
     if (deviceOverview.currentDevice.isHuronDevice) {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
