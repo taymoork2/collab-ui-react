@@ -1,9 +1,9 @@
 <div class="servicesLanding" ng-if="servicesLandingCtrl.featureEnabled">
 
-  <cs-page-header title="Services"></cs-page-header>
+  <cs-page-header translate="servicesOverview.title"></cs-page-header>
 
   <div class="servicesBlock">
-    <h5><span>Cloud services</span></h5>
+    <h5><span translate="servicesOverview.cloudServices"></span></h5>
     <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
                ng-repeat="card in servicesLandingCtrl.cloudCards()">
@@ -11,12 +11,12 @@
       </cs-card>
     </cs-card-layout>
 
-    <h5><span>Hybrid services</span>
+    <h5><span translate="servicesOverview.hybridServices"></span>
       <cs-header-right>
         <i class="icon icon-three-dots" ng-click="servicesLandingCtrl.toggleDropdown()"></i>
         <ul class="dropdown" ng-if="servicesLandingCtrl.showFilterDropDown">
-          <li ng-click="servicesLandingCtrl.filterHybridCard('all')">{{}}Show all cards</li>
-          <li ng-click="servicesLandingCtrl.filterHybridCard('active')">Show active cards only</li>
+          <li translate="servicesOverview.showAllCards" ng-click="servicesLandingCtrl.filterHybridCard('all')"></li>
+          <li translate="servicesOverview.showActiveCards" ng-click="servicesLandingCtrl.filterHybridCard('active')"></li>
         </ul>
       </cs-header-right>
     </h5>

@@ -6,9 +6,9 @@
 
   /* @ngInject */
   function TabsCtrl($rootScope, $scope, $location, Utils, Authinfo, FeatureToggleService) {
-    var tc = this;
-    tc.features = [];
-    tc.tabs = [];
+    var vm = this;
+    vm.features = [];
+    vm.tabs = [];
     initTabs();
 
     $scope.$on('AuthinfoUpdated', initTabs);
@@ -40,20 +40,20 @@
     }
 
     function updateScopeTabs() {
-      $scope.tabs = filterFeatureToggledTabs(tc.tabs, tc.features);
+      $scope.tabs = filterFeatureToggledTabs(vm.tabs, vm.features);
       setActiveTab();
     }
 
     function initTabs() {
-      tc.tabs = Authinfo.getTabs();
-      updateFeatureTogglesFromTabs(tc.tabs, tc.features);
-      getFeatureToggles(tc.features);
+      vm.tabs = Authinfo.getTabs();
+      updateFeatureTogglesFromTabs(vm.tabs, vm.features);
+      getFeatureToggles(vm.features);
       updateScopeTabs();
     }
 
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
-        return !tab.feature || _.any(features, {
+        return !tab.feature || _.some(features, {
           feature: tab.feature.replace(/^!/, ''),
           enabled: !/^!/.test(tab.feature)
         });
