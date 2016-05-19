@@ -21,7 +21,7 @@
     }
 
     function openScheduleModal() {
-      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
+      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         return;
       }
 

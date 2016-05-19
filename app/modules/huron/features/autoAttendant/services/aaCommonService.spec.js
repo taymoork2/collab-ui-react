@@ -57,6 +57,14 @@
         expect(AACommonService.isValid()).toBeTruthy();
       });
 
+      it('is making properly formatted key', function () {
+
+        var k = AACommonService.makeKey('openHours', '0', 'someTag');
+
+        expect(k).toEqual('openHours' + '-' + '0' + '-' + 'someTag');
+
+      });
+
       it('is valid or invalid as set for multiple items', function () {
         AACommonService.setIsValid("1", false);
         expect(AACommonService.isValid()).toBeFalsy();
