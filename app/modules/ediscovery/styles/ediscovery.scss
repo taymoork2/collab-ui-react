@@ -1,12 +1,5 @@
 .ediscovery-app-container {
 
-
-
-
-
-
-
-
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
 
@@ -34,6 +27,22 @@
 
   .ediscovery-content-view {
 
+    button.fit {
+      height: 36px;
+      width: 36px;
+      line-height: 36px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    label.fit {
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    button.align {
+      margin-top: 1.5rem;
+    }
 
     .cs-input-group {
       padding-left: 1rem;
@@ -248,4 +257,3 @@
   }
 
 }
-

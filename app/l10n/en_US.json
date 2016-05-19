@@ -1184,7 +1184,8 @@
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
-      "pending": "Pending"
+      "pending": "Pending",
+      "initializing": "Initializing"
     },
     "setup": {
       "label": "Connector Management",
@@ -1356,6 +1357,17 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    }
+  },
+  "ediscovery": {
+    "browserTabHeaderTitle": "eDiscovery",
+    "ediscovery": "eDiscovery",
+    "searchHeading": "eDiscovery search",
+    "navHeaderTitle": "eDiscovery Dashboard",
+    "searchHelp": "Search Help",
+    "searchingPleaseWait": "Finding information, please wait...",
+    "help": {
+      "title": "eDiscovery Help"
     }
   },
   "firstTimeWizard": {
@@ -3522,6 +3534,23 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "profileSelector": "Profile",
+    "screen": "Screen",
+    "attributes": "Attributes",
+    "org": "Organization",
+    "agent": "Agent",
+    "agentAlias": "Allow agent to use alias",
+    "agentRealName": "Use agent real name",
+    "agentNamePreview": "Agent Name",
+    "agentAliasPreview": "Agent Alias",
+    "image": "Image",
+    "displayText": "Display Text",
+    "agentMsg": "Hi, I need help with the MFI key.",
+    "agentMsgTime": "10:10 AM",
+    "customerMsg": "Sure, I will help you with that.",
+    "customerMsgTime": "10:11 AM",
+    "agentEnteredStatus": "Agent has entered chat room",
+    "typeNewMsg": "Type your message and press enter.",
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3540,7 +3569,6 @@
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
     }
-
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

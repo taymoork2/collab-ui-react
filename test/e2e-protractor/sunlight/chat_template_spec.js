@@ -48,7 +48,23 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfProfilePage() {
-    validateTitleAndDesc('Chat Template Profile', 'Select how your company will be represented');
+    // TODO:Refactor the tile and icon html part in other pages
+    // validateTitleAndDesc('Chat Template Profile', 'Select how your company will be represented');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitle, 'Chat Template Profile');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitleDesc, 'Select how your company will be represented');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.orgProfile, 'Organization');
+    utils.clear(careChatTemplateSetupPage.OrgName);
+    utils.sendKeys(careChatTemplateSetupPage.OrgName, careChatTemplateSetupPage.testOrgName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, careChatTemplateSetupPage.testOrgName);
+    utils.click(careChatTemplateSetupPage.agentProfile);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
+    utils.click(careChatTemplateSetupPage.agentNameRadio);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, 'Agent Name');
+    utils.click(careChatTemplateSetupPage.agentAliasRadio);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, 'Agent Alias');
+    utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
   }
 
   function validateContentsOfOverviewPage() {
