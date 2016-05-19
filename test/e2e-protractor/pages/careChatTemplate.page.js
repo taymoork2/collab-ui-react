@@ -25,6 +25,20 @@ var ChatTemplateCreation = function () {
   this.overviewCard = element.all(by.css('.ct-card-overview'));
   this.customerInfoEnabledCard = element.all(by.css('.ct-card-border-enabled')).first();
   this.customerInfoDisabledCard = element.all(by.css('.ct-card-border-disabled')).first();
+  this.customerInfo_Header_Welcome = element(by.css('.welcomeText'));
+  this.customerInfo_Header_Org = element(by.css('.orgText'));
+  this.customerInfo_attCard_default_Content = element(by.css('.ct-default-msg'));
+  this.customerInfo_attCard_textField1 = element.all(by.css('.ct-attribute-field-textbox')).get(0);
+  this.customerInfo_attCard_textField2 = element.all(by.css('.ct-attribute-field-textbox')).get(1);
+  this.customerInfo_attCard_textField3 = element.all(by.css('.ct-attribute-field-textbox')).get(2);
+  this.customerInfo_attCard_textField4 = element.all(by.css('.ct-attribute-field-textbox')).get(3);
+  this.customerInfo_screen_div1 = element.all(by.css('.ct-left-row')).get(0);
+  this.customerInfo_screen_field1Label = element.all(by.css('.labelText')).get(0);
+  this.customerInfo_screen_div2 = element.all(by.css('.ct-left-row')).get(1);
+  this.customerInfo_screen_optional1 = element(by.id('optionalField1'));
+  this.customerInfo_screen_optional2 = element(by.id('optionalField2'));
+  this.customerInfo_screen_optional3 = element(by.id('optionalField3'));
+  this.customerInfo_attCard_redioOptional = element.all(by.css('.cs-radio')).get(1);
 };
 
 module.exports = ChatTemplateCreation;

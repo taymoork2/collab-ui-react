@@ -80,6 +80,67 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfCustomerInfoPage() {
     validateTitleAndDesc('Customer Info Screen', 'This is the screen a customer fills out before they chat with an agent');
+    validateCustomerInfoDefaultPage();
+    validateHeaderChange();
+    validateField1Change();
+    validateField2Change();
+  }
+
+  function validateCustomerInfoDefaultPage() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Welcome);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Org);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional3);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_default_Content);
+  }
+
+  function validateHeaderChange() {
+    utils.click(careChatTemplateSetupPage.customerInfo_Header_Welcome);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Welcome Msq");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Welcome, "Custom Welcome Msq");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "OrgName1");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Org, "OrgName1");
+  }
+
+  function validateField1Change() {
+    utils.click(careChatTemplateSetupPage.customerInfo_screen_div1);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
+    utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
+  }
+
+  function validateField2Change() {
+    utils.click(careChatTemplateSetupPage.customerInfo_screen_div2);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
+    utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
   }
 
   function validateContentsOfFeedbackPage() {
