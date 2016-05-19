@@ -2,7 +2,6 @@
   'use strict';
 
   /* global window, document */
-  /* eslint no-unused-expressions: ["error", { "allowShortCircuit": true, "allowTernary": true }] */
 
   /**
    * @ngdoc overview
@@ -26,6 +25,7 @@
   }(window, document, 'script', 'll'));
 
   /** start Mixpanel **/
+  /* eslint-disable no-unused-expressions */
   (function (e, b) {
     if (!b.__SV) {
       var a, f, i, g;
@@ -67,6 +67,7 @@
     }
   })(document, window.mixpanel || []);
   mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
+  /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 
   angular.module('Core', [
