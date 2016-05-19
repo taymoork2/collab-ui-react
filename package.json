@@ -7,6 +7,7 @@
   "homepage": "",
   "license": "Copyright 2013-2016 Cisco Systems, Inc.",
   "dependencies": {
+    "angularjs-toaster": "~0.4.12",
     "collab-ui": "~2.23.3",
     "collab-ui-angular": "~1.0.3",
     "collab-amcharts": "~3.19.4"
