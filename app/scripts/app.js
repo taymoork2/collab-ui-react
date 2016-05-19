@@ -24,7 +24,7 @@
     window.ll('init', 'f725f885fe2646751d3c8a3-075b0c4e-a82c-11e5-c7e0-00d0fea82624', {});
   }(window, document, 'script', 'll'));
 
-  /** start Mixpanel **/
+  /** start Mixpanel, code from: https://mixpanel.com/help/reference/javascript **/
   /* eslint-disable no-unused-expressions */
   (function (e, b) {
     if (!b.__SV) {
