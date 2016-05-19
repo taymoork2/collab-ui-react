@@ -23,8 +23,12 @@
               ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
           
   <div class="modal-body">
-    <p>
-      <b>{{siteCSVResult.siteUrl}}</b>
+    <h4>
+      {{siteCSVResult.siteUrl}}
+    </h4>
+    
+    <p style="font-size:25%">
+      &nbsp;
     </p>
     
     <p ng-repeat="gridRow in siteCSVResult.gridRows">
@@ -37,13 +41,6 @@
                  ('exportCompletedWithErr' == siteCSVResult.csvStatusObj.status)">
                    
       <webex-csv-download type='webexexport'
-                          siteurl={{siteCSVResult.siteUrl}}
-                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
-                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
-    </span>
-    
-    <span ng-if="('exportCompletedWithErr' == siteCSVResult.csvStatusObj.status)">
-      <webex-csv-download type='webeximport'
                           siteurl={{siteCSVResult.siteUrl}}
                           filedownloadurl={{siteCSVResult.downloadFileUrl}}
                           filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
