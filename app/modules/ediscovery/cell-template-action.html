@@ -1,0 +1,4 @@
+<button type="button" ng-class="{'btn--primary': row.entity.actions === DOWNLOAD, 'btn--attention': row.entity.actions !== DOWNLOAD}" class="fit btn btn--circle btn--small">
+  <span ng-show="row.entity.actions === DOWNLOAD" class="icon icon-download"></span>
+  <span ng-show="row.entity.actions !== DOWNLOAD" class="icon icon-exit"></span>
+</button>

@@ -27,6 +27,16 @@
 
   .ediscovery-content-view {
 
+    button.fit {
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+    }
+
+    label.fit {
+      text-align: left;
+      margin-bottom: 0;
+    }
 
     .cs-input-group {
       padding-left: 1rem;
@@ -241,4 +251,3 @@
   }
 
 }
-

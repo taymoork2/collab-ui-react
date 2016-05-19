@@ -89,7 +89,8 @@
         field: 'actions',
         displayName: 'Actions',
         sortable: false,
-        cellTemplate: '<span ng-if="row.entity.state === \'COMPLETED\'">' + '<button type="button" class="button btn--primary" ng-click="ediscoveryCtrl.downloadReport()">Download</button>' + '</span>'
+        //cellTemplate: '<span ng-if="row.entity.state === \'COMPLETED\'">' + '<button type="button" class="button btn--primary" ng-click="ediscoveryCtrl.downloadReport()">Download</button>' + '</span>'
+        cellTemplate: 'modules/ediscovery/cell-template-action.html'
       }]
     };
 
