@@ -198,7 +198,7 @@ module.exports = function () {
         vendor + '/humanize-duration/humanize-duration.js',
         vendor + '/angular-libphonenumber/dist/libphonenumber.js',
         vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
-        vendor + '/angularjs-toaster/toaster.js',
+        node_modules + '/angularjs-toaster/toaster.js',
         vendor + '/ng-file-upload/ng-file-upload.js',
         vendor + '/jstimezonedetect/jstz.js',
         node_modules + '/masonry-layout/dist/masonry.pkgd.js',
