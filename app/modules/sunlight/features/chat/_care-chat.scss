@@ -2,6 +2,13 @@
 
 .careChatSetup {
   @extend %content-header;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .cs-setupassistant--content {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }
 .care-chat {
   &.overlay-panel {

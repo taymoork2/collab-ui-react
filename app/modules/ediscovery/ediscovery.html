@@ -27,15 +27,12 @@
 
     </div>
 
-
     <div class="cs-input-group columns medium-2">
       <button type="button" class="button btn--primary" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
     </div>
 
 
   </div>
-
-
 
   <div class="row grid">
 
@@ -44,18 +41,11 @@
   </div>
 
 
-
-
-
-
-
-
   <table>
     <tr ng-repeat="report in reports">
       <td>{{report.id}}</td>
       <td>{{report.name}}</td>
       <td>{{report.progress}} %</td>
-      <td ng-show="report.progress === 100">[CLICK TO DOWNLOAD FULL REPORT]</td>
     </tr>
   </table>
 
