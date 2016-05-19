@@ -12,7 +12,8 @@
     vm.createReport = createReport;
     vm.deleteReports = deleteReports;
     vm.showSearchHelp = showSearchHelp;
-    vm.downloadReport = downloadReport;
+    $scope.downloadReport = downloadReport;
+    $scope.cancelReport = cancelReport;
 
     vm.searchCriteria = {
       "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
@@ -54,6 +55,10 @@
 
     function downloadReport() {
       //console.log("Download not implemented");
+    }
+
+    function cancelReport() {
+      //console.log("Cancel not implemented");
     }
 
     vm.gridOptions = {
