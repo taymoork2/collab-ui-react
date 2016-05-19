@@ -87,7 +87,10 @@
       if (searchStr === '') {
         vm.displayedClusters = clustersCache;
       } else {
-        vm.displayedClusters = $filter('filter')(clustersCache, searchStr);
+        // Filter on the cluster name only
+        vm.displayedClusters = $filter('filter')(clustersCache, {
+          name: searchStr
+        });
       }
     }
 
