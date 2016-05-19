@@ -2,8 +2,10 @@
 
 
   <div class="row">
-    <div class="cs-input-group columns medium-2">
+    <div class="cs-input-group columns large-2">
+      <label class="cs-input__label fit" for="startDate">Start Date</label>
       <cs-datepicker
+        id="startDate"
         ng-model="ediscoveryCtrl.searchCriteria.startDate"
         placeholder="Choose a start Day"
         view-format="YYYY-MM-DD">
@@ -11,31 +13,32 @@
 
     </div>
 
-    <div class="cs-input-group columns medium-2">
+    <div class="cs-input-group columns large-2">
+      <label class="cs-input__label fit" for="endDate">End Date</label>
       <cs-datepicker
+        id="endDate"
         ng-model="ediscoveryCtrl.searchCriteria.endDate"
         placeholder="Choose an end Day"
         view-format="YYYY-MM-DD">
       </cs-datepicker>
     </div>
 
-    <div class="cs-input-group columns medium-6">
-      <input cs-input
+    <div class="cs-input-group columns large-6">
+       <label class="cs-input__label fit" for="roomId">Room Id</label>
+      <input id="roomId"
+             class="cs-input"
              size="50"
              placeholder="Enter room id"
              ng-model="ediscoveryCtrl.searchCriteria.searchString">
 
     </div>
 
-
-    <div class="cs-input-group columns medium-2">
-      <button type="button" class="button btn--primary" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
+    <div class="cs-input-group columns large-2">
+      <button type="button" class="button btn--primary align" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
     </div>
 
 
   </div>
-
-
 
   <div class="row grid">
 
@@ -44,21 +47,19 @@
   </div>
 
 
-
-
-
-
-
-
   <table>
     <tr ng-repeat="report in reports">
       <td>{{report.id}}</td>
       <td>{{report.name}}</td>
       <td>{{report.progress}} %</td>
-      <td ng-show="report.progress === 100">[CLICK TO DOWNLOAD FULL REPORT]</td>
     </tr>
   </table>
 
 
+
+
+  <div class="cs-input-group columns large-2">
+    <button type="button" class="button btn--primary align" ng-click="ediscoveryCtrl.deleteReports()">Delete reports...</button>
+  </div>
 
 </div>

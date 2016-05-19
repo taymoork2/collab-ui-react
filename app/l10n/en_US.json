@@ -770,6 +770,7 @@
     "users": "Users",
     "settings": "Settings",
     "resources": "Resources",
+    "metrics": "Metrics",
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
@@ -1183,7 +1184,8 @@
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
-      "pending": "Pending"
+      "pending": "Pending",
+      "initializing": "Initializing"
     },
     "setup": {
       "label": "Connector Management",
@@ -1355,6 +1357,17 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    }
+  },
+  "ediscovery": {
+    "browserTabHeaderTitle": "eDiscovery",
+    "ediscovery": "eDiscovery",
+    "searchHeading": "eDiscovery search",
+    "navHeaderTitle": "eDiscovery Dashboard",
+    "searchHelp": "Search Help",
+    "searchingPleaseWait": "Finding information, please wait...",
+    "help": {
+      "title": "eDiscovery Help"
     }
   },
   "firstTimeWizard": {
@@ -1936,6 +1949,20 @@
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
+  "pstnOrderOverview": {
+    "pstnOrders": "PSTN Orders",
+    "successful": "Successful",
+    "inProgress": "In Progress",
+    "advanceOrder": "Advance Numbers",
+    "newNumberOrder": "New Numbers",
+    "portNumberOrder": "Porting Numbers",
+    "searchPlaceholder": "Search Orders"
+  },
+  "pstnOrderDetail": {
+    "orderNumber": "Order #{{orderId}}",
+    "pendingNumbers": "{count, plural, one{There is # number} other{There are # numbers}} pending for this order",
+    "searchPlaceholder": "Search Phone Numbers"
+  },
   "serviceAddress": {
     "streetAddress": "Street Address",
     "unit": "Unit",
@@ -2296,7 +2323,9 @@
     "SD": "Spark Room System",
     "deleteOrg": "Delete Org {{orgName}}",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted"
+    "deleteOrgError": "{{orgName}} was not deleted",
+    "pstnOrders": "PSTN Orders",
+    "addNumbers": "Add Numbers"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2560,6 +2589,18 @@
       "schedule": "Set a Schedule",
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
+    },
+    "metrics": {
+      "cluster": "Cluster :",
+      "ecp": "ECP :",
+      "fromDate": "From :",
+      "toDate": "To :",
+      "outOfRange": "Date out of Range!",
+      "time": "Time :",
+      "callVolume": "Linus Call Volume for",
+      "clusterAvailability": "Cluster Availability for",
+      "callReject": "Call Rejects  for",
+      "node": "Node"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3020,8 +3061,8 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Total records available:",
-    "csvExportRecordsSuccessful": "Records successfully exported:",
+    "csvExportRecordsAvailable": "Records requested:",
+    "csvExportRecordsSuccessful": "Records returned:",
     "csvExportDownloadFile": "Download CSV file:",
 
     "csvImportTitle": "Import Results",
@@ -3031,8 +3072,8 @@
     "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
-    "csvFinished": "Finished:",
-    "csvRecordsFailed": "Records failed:"
+    "csvFinished": "Completed:",
+    "csvRecordsFailed": "Errors:"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3072,12 +3113,9 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
-    "brandingInfo": "Customize your tenant’s experience of Cisco applications by uploading your company logo below.",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
     "allowCustomerLogo": "Enable all customers to use their own logo",
-    "useCiscoLogo": "Use default logos from Cisco",
-    "userOwnLogo": "Use your own log ",
-    "exampleLink": "(see example)",
-    "uploadNote": "For best results logo should be transparent with no padding around the outside of the image. Image file size must be less than 1 MB.",
+    "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
     "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
@@ -3092,10 +3130,7 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
-    "brandingTitle": {
-      "custom": "Custom Branding",
-      "tenant": "Tenant Branding"
-    },
+    "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -3125,7 +3160,7 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "brandingInfo": "Customize your employee’s experience of Cisco applications by uploading your company logo below.",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
 
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
@@ -3137,10 +3172,6 @@
     "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
-  },
-  "brandingExample": {
-    "title": "Examples of Custom Branding",
-    "description": "Logo Placement Examples: <br/>After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3238,6 +3269,7 @@
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
+    "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
     "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors.",
@@ -3502,6 +3534,23 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "profileSelector": "Profile",
+    "screen": "Screen",
+    "attributes": "Attributes",
+    "org": "Organization",
+    "agent": "Agent",
+    "agentAlias": "Allow agent to use alias",
+    "agentRealName": "Use agent real name",
+    "agentNamePreview": "Agent Name",
+    "agentAliasPreview": "Agent Alias",
+    "image": "Image",
+    "displayText": "Display Text",
+    "agentMsg": "Hi, I need help with the MFI key.",
+    "agentMsgTime": "10:10 AM",
+    "customerMsg": "Sure, I will help you with that.",
+    "customerMsgTime": "10:11 AM",
+    "agentEnteredStatus": "Agent has entered chat room",
+    "typeNewMsg": "Type your message and press enter.",
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3520,7 +3569,6 @@
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
     }
-
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
