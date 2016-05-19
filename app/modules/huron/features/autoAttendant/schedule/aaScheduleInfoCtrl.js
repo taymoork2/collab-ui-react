@@ -140,7 +140,6 @@
 
     function getClosedHours() {
       var hh = moment().set('hour', '00').set('minute', '00').format('hh:mm A');
-      var endhh = moment().set('hour', '23').set('minute', '59').format('hh:mm A');
       var dayhour = {
         starttime: 0,
         endtime: 0
@@ -148,16 +147,16 @@
       var closedHours = angular.copy(AAICalService.getDefaultDayHours());
       _.each(vm.days, function (day, index) {
         if (angular.isUndefined(day.hours) || day.hours.length === 0) {
-          //Inactive days will have all day closed 12:00am  - 11:59pm
+          //Inactive days will have all day closed 12:00am  - 12:00am
           dayhour.starttime = hh;
-          dayhour.endtime = endhh;
+          dayhour.endtime = hh;
           addUniqueHours(closedHours[index], dayhour);
         }
         _.each(day.hours, function (hour, i) {
           var numberOfHours = day.hours.length;
           if (!is24HoursOpen(hour)) {
-            var starttime = moment(hour.starttime).subtract(1, 'm').format('hh:mm A');
-            var endtime = moment(hour.endtime).add(1, 'm').format('hh:mm A');
+            var starttime = moment(hour.starttime).format('hh:mm A');
+            var endtime = moment(hour.endtime).format('hh:mm A');
             if (!i && moment(hour.starttime).format('hh:mm A') !== hh) {
               //First interval starts at 12:00AM if it is not part of open hours
               dayhour.starttime = hh;
@@ -166,13 +165,13 @@
             }
             if (i + 1 < numberOfHours) {
               dayhour.starttime = endtime;
-              dayhour.endtime = moment(day.hours[i + 1].starttime).subtract(1, 'm').format('hh:mm A');
+              dayhour.endtime = moment(day.hours[i + 1].starttime).format('hh:mm A');
               addUniqueHours(closedHours[index], dayhour);
             }
-            if (i + 1 === numberOfHours && moment(hour.endtime).format('hh:mm A') !== endhh) {
-              //last interval ends with 11:59pm if it is not part of open hours
+            if (i + 1 === numberOfHours && moment(hour.endtime).format('hh:mm A') !== hh) {
+              //last interval ends with 12:00AM if it is not part of open hours
               dayhour.starttime = endtime;
-              dayhour.endtime = endhh;
+              dayhour.endtime = hh;
               addUniqueHours(closedHours[index], dayhour);
             }
           }
@@ -244,8 +243,8 @@
             _.forEach(open24hours.days, function (day) {
               day.active = true;
             });
-            open24hours.starttime = "12:00 AM";
-            open24hours.endtime = "23:59 PM";
+            open24hours.starttime = '12:00 AM';
+            open24hours.endtime = '12:00 AM';
             vm.openhours = [open24hours];
           }
 

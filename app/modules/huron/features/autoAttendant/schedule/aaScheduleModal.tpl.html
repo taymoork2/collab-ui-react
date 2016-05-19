@@ -7,8 +7,8 @@
        translate="autoAttendant.schedule"></p>
   </div>
   <div class="modal-body">
-    <p class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('hours')">{{'autoAttendant.scheduleOpenClosed' | translate}}<a
-      class="icon icon-right-arrow pull-right"
+    <p name="hours-subtitle" class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('hours')">{{'autoAttendant.scheduleOpen' | translate}} ({{aaScheduleModalCtrl.openhours.length}})
+      <a class="icon icon-right-arrow pull-right"
       ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHours">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
@@ -55,7 +55,7 @@
 
 
   <div class="modal-body">
-    <p class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('holidays')">{{'autoAttendant.scheduleHolidays' | translate}}
+    <p name="holidays-subtitle" class="aa-schedule-subtitle" ng-click="aaScheduleModalCtrl.toggleSection('holidays')">{{'autoAttendant.scheduleHolidays' | translate}} ({{aaScheduleModalCtrl.holidays.length}})
       <a id="toggleHolidays"
          class="icon icon-right-arrow pull-right"
          ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
