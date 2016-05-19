@@ -40,15 +40,11 @@ namespace globalsettings {
         ];
       }
       Orgservice.getOrg(_.partial(this.forwardEvent.bind(this), 'orgEventHandler'));
-
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-      console.log("Forwarding event: ", handlerName, eventArgs);
-
     _.each(this.settings, function (setting) {
       if (typeof (setting[handlerName]) === 'function') {
-        console.log("Forwarding event to: ", setting);
         setting[handlerName].apply(setting, eventArgs);
       }
     });

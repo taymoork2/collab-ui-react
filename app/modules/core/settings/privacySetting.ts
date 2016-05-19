@@ -3,8 +3,8 @@ namespace globalsettings {
 
   export class PrivacySetting extends Setting {
 
-    allowReadOnlyOrgAccess:boolean = false;//undefined;
-    sendUsageData:boolean = false;//undefined;
+    allowReadOnlyOrgAccess:boolean = undefined;
+    sendUsageData:boolean = undefined;
     showAllowReadOnlyAccessCheckbox:boolean = false;
 
     constructor(ctrl:SettingsController) {

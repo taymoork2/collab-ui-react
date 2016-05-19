@@ -3,7 +3,7 @@ namespace globalsettings {
 
   export class SupportSetting extends Setting {
 
-    useCustomProblemUrl:boolean = false;//undefined;
+    useCustomProblemUrl:boolean = undefined;
     customProblemUrl:string = undefined;
     customProblemText:string = undefined;
     disableSaveProblemReportSiteBtn:boolean = true;

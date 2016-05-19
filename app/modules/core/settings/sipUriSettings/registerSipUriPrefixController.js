@@ -12,7 +12,7 @@
     var oldSSOValue = 0;
 
     //SIP URI Domain Controller code
-    $scope.cloudSipUriField = {
+    $scope.cloudSipDomainField = {
       inputValue: '',
       isDisabled: true,
       isUrlAvailable: false,
@@ -26,7 +26,7 @@
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
-    var sipField = $scope.cloudSipUriField;
+    var sipField = $scope.cloudSipDomainField;
     init();
 
     function init() {
