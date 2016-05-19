@@ -18,20 +18,19 @@
     };
     vm.reports = [];
 
-    initSearchStatus();
-
     // Initial testing, just delete all reports and create a new one...
-    EdiscoveryService.deleteReports().then(function (res) {
-      //console.log("response from delete reports", res);
-      return EdiscoveryService.createReport("initialReport");
-    }).then(function (res) {
-      //console.log("create report response", res)
-      return EdiscoveryService.getReport();
-    }).then(function (res) {
-      //console.log("getReport result ", res)
-    }).finally(function (res) {
-      pollAvalonReport();
-    });
+    // EdiscoveryService.deleteReports().then(function (res) {
+    //   //console.log("response from delete reports", res);
+    //   return EdiscoveryService.createReport("initialReport");
+    // }).then(function (res) {
+    //   //console.log("create report response", res)
+    //   return EdiscoveryService.getReport();
+    // }).then(function (res) {
+    //   //console.log("getReport result ", res)
+    // }).finally(function (res) {
+    //   pollAvalonReport();
+    // });
+    pollAvalonReport();
 
     function getStartDate() {
       return vm.searchCriteria.startDate;
@@ -45,12 +44,6 @@
       var endDate = moment(startDate).add(1, 'days');
       setEndDate(endDate);
     });
-
-    function initSearchStatus() {
-      vm.searchStatus = {
-        string: "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      };
-    }
 
     function downloadReport() {
       //console.log("Download not implemented");
@@ -101,21 +94,17 @@
 
     function createReport() {
       //console.log("createReport, searchCriteria", vm.searchCriteria)
-      initSearchStatus();
-
       EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
         //console.log("create result", res)
       });
-      //      EdiscoveryService.createAvalonReport(vm.searchStatus.string).then(function (res) {
-      //        //console.log("Response from create report", res);
-      //      });
     }
 
     function pollAvalonReport() {
-      EdiscoveryService.roomQuery().then(function (res) {
+      EdiscoveryService.getReport().then(function (res) {
         //console.log("Response from poll reports", res)
         vm.reports = res;
-        $timeout(pollAvalonReport, 2000);
+      }).finally(function (res) {
+        $timeout(pollAvalonReport, 5000);
       });
     }
 
@@ -131,7 +120,6 @@
         setSearchFieldFocus();
       });
     }
-
   }
 
   angular
