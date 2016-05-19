@@ -3,12 +3,12 @@
     <div class="h1 ct-title" translate="careChatTpl.profile"></div>
     <div class="h4 ct-title-desc" translate="careChatTpl.profileDesc"></div>
   </div>
-  <div class="ct-profile-body">
+  <div class="ct-profile-body ct-sa-content">
     <div>
       <span class="h4 preview" translate="careChatTpl.screen"></span>
       <span class="h4 attributes" translate="careChatTpl.attributes"></span>
     </div>
-    <div class="cs-card-container ">
+    <div class="cs-card-container">
       <cs-card-layout block-view="true">
         <cs-card class="medium header-border">
           <article class="ct-profile-preview">
@@ -23,11 +23,10 @@
                  </div>
               </div>
               <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
-               <div title="{{ careChatSA.orgName | translate}}" class="orgOrAgentName">{{careChatSA.orgName | translate}}</div>
-               <div class="desc" translate="careChatTpl.org"></div>
+               <div title="{{ careChatSA.orgName | translate}}" class="orgName">{{careChatSA.orgName | translate}}</div>
               </div>
                <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                  <div class="orgOrAgentName">{{careChatSA.agentNamePreview | translate}}</div>
+                  <div class="agentName">{{careChatSA.agentNamePreview | translate}}</div>
                   <div class="desc" translate="careChatTpl.agent"></div>
                 </div>
               <div class="right action-details">
@@ -47,9 +46,10 @@
                 </span>
                 <span class="customer-msg" translate="careChatTpl.customerMsg"></span>
                 <div class="body-smallest timer" translate="careChatTpl.agentMsgTime"></div>
+                <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
               </div>
+
             </section>
-            <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
             <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
           </article>
         </cs-card>

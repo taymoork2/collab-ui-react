@@ -1,14 +1,11 @@
 .ct-profile {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-
   .ct-profile-body {
-    @include vr-spacing(mt, 5.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     .preview {
-      @include vr-spacing(ml, 14);
+      @include vr-spacing(ml, 2);
     }
     .attributes {
       @include vr-spacing(ml, 22);
@@ -17,11 +14,8 @@
 
   .cs-card {
     width: rem-calc(400);
-    @include vr-spacing(ml, 2.5);
-  }
-
-  .cs-card-layout.cs-card-block {
     height: rem-calc(430);
+    @include vr-spacing(ml, 2.5);
   }
 
   .cs-card article header {
@@ -61,12 +55,18 @@
       }
       .name-details {
         float: left;
-        .orgOrAgentName {
+        .orgName {
           height: 0.5rem;
           width: rem-calc(200);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          @include vr-spacing(pt, 0.75);
+          @include vr-spacing(pb, 1.5);
+        }
+        .agentName {
+          height: 0.5rem;
+          width: rem-calc(200);
           @include vr-spacing(pb, 1.5);
         }
         .desc {
@@ -146,6 +146,8 @@
         .timer {
           @include vr-spacing(mt, 0.5);
           @include vr-spacing(ml, 2);
+          @include vr-spacing(mb, 9);
+
         }
       }
     }
@@ -176,12 +178,11 @@
 
   .ct-profile-img {
     text-align: center;
-    //background: $gray-light-1;
     width: 9rem;
     height: 9rem;
     border-radius: 50%;
     position: relative;
-    @include vr-spacing(ml, 5);
+    @include vr-spacing(ml, 6.5);
     .preview-img {
       font-size:9rem;
     }
@@ -206,7 +207,7 @@
     border-radius: 50%;
     border: 1px solid $gray-light-1;
     position: relative;
-    @include vr-spacing(ml, 5);
+    @include vr-spacing(ml, 6.5);
 
     .agent-img {
       font-size: 6rem;
