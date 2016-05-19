@@ -21,7 +21,8 @@
     display: flex;
     flex-flow: column;
     .cardHeader1 {
-      margin-left: rem-calc(160px);
+      text-align: center;
+      color: $gray-dark-1;
     }
     .articleHeight {
       height: 100%;
