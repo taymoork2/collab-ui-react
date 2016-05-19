@@ -7,7 +7,6 @@ namespace myCompanyPage {
     private _accountNumber:String;
     private _isPartner:boolean;
     private isManaged:boolean;
-    private mockIfEmpty = false;
 
     get accountNumber():String {
       return this._accountNumber;
@@ -41,26 +40,6 @@ namespace myCompanyPage {
       this._isPartner = Authinfo.isPartner();
 
       UserListService.listPartners(orgId, (data:{partners:Array<Partner>})=> {
-        if (_.isEmpty(data.partners) && this.mockIfEmpty) {
-          //mock data
-          data.partners = [{
-            userName: 'test@example.com',
-            displayName: 'Jan jansen',
-            name: {givenName: 'Jan', familyName: 'Jansen'}
-          }, {
-            userName: 'testola@example.com',
-            displayName: 'Ola Nordmann',
-            name: {givenName: 'Ola', familyName: 'Nordmann'}
-          }, {
-            userName: 'test@cisco.com',
-            displayName: 'Test Testerson',
-            name: {givenName: 'Test', familyName: 'Testerson'}
-          }, {
-            userName: 'test2@cisco.com',
-            displayName: 'Testify Testerson',
-            name: {givenName: 'Testify', familyName: 'Testerson'}
-          }];
-        }
         if (_.isEmpty(data.partners)) {
           return;
         }

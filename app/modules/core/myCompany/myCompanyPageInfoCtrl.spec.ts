@@ -21,7 +21,6 @@ namespace myCompanyPage {
             }
           }
         });
-        ctrl.mockIfEmpty = false;
       }));
 
       it('with empty partner list should keep partners and representatives empty', ()=> {

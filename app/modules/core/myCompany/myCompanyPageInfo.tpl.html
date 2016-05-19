@@ -1,22 +1,3 @@
-<!--<form class="cs-form">-->
-<!--<div class="cs-form__section" ng-repeat="setting in mcpInfo.settings">-->
-<!--<div class="section__info">-->
-<!--<h4 class="section__title" translate="{{setting.title}}"></h4>-->
-<!--</div>-->
-<!--<div class="section__content">-->
-<!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
-<!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
-<!--<p ng-if="setting.subsectionDescription" class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>-->
-<!--</div>-->
-<!--<article ng-include="setting.template"></article>-->
-<!--</div>-->
-<!--</div>-->
-<!--</form>-->
-
-
-<!-- if the use of settings  as in global settings, then replace with above-->
-
-
 <form class="cs-form" id="my-company-info">
   <div class="cs-form__section">
     <!-- company name / account number -->
@@ -24,11 +5,6 @@
       <h4 class="section__title" translate="partnerProfile.companyInfo"></h4>
     </div>
     <div class="section__content">
-      <!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
-      <!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
-      <!--<p ng-if="setting.subsectionDescription" class="sub-section__description"-->
-      <!--translate="{{setting.subsectionDescription}}"></p>-->
-      <!--</div>-->
       <article>
         <div class="form-group">
           <!-- <div class="columns small-4"> -->
@@ -54,16 +30,11 @@
       <h4 class="section__title" ng-if="!mcpInfo.isPartner" translate="customerProfile.supportContacts"></h4>
     </div>
     <div class="section__content">
-      <!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
-      <!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
-      <!--<p ng-if="setting.subsectionDescription" class="sub-section__description"-->
-      <!--translate="{{setting.subsectionDescription}}"></p>-->
-      <!--</div>-->
       <div ng-show="mcpInfo.showSupportContacts" class="form-spacing">
         <h4 ng-if="mcpInfo.isPartner" translate="partnerProfile.ciscoRep"></h4>
         <h4 ng-if="!mcpInfo.isPartner" translate="customerProfile.supportContacts"></h4>
         <div ng-repeat="representative in mcpInfo.representatives">
-          <span class="rep-info"><strong>{{representative.name.givenName | translate}} {{representative.name.familyName | translate}}</strong></span>, 
+          <span class="rep-info"><strong>{{representative.name.givenName | translate}} {{representative.name.familyName | translate}}</strong></span>,
           <span class="rep-info">{{representative.displayName}}</span> <br>
           <span class="rep-info">{{representative.userName}}</span><br>
         </div>

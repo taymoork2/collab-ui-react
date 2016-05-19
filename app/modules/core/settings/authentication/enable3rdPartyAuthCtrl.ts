@@ -6,7 +6,7 @@ namespace globalsettings {
     private _loadTime;
 
     /* @ngInject */
-    constructor(private AuthModeService:AuthModeService, private $previousState, $translate, private LogMetricsService) {
+    constructor(private AuthModeService:AuthModeService, private $previousState) {
       this._loadTime = moment();
     }
 
