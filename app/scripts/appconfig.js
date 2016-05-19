@@ -2049,6 +2049,13 @@
       function ($stateProvider) {
         $stateProvider
 
+          .state('metrics', {
+            url: '/metrics',
+            controllerAs: 'GraphUtilCtrl',
+            controller: 'AnalyticsUtilizationGraphController',
+            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
+            parent: 'main'
+          })
           .state('media-service', {
             templateUrl: 'modules/mediafusion/media-service/overview.html',
             controller: 'MediaServiceController',
@@ -2231,13 +2238,10 @@
           })
           .state('care.ChatSA', {
             url: '/careChat',
-            views: {
-              'main@': {
-                templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-                controller: 'CareChatSetupAssistantCtrl',
-                controllerAs: 'careChatSA'
-              }
-            }
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+            controller: 'CareChatSetupAssistantCtrl',
+            controllerAs: 'careChatSA'
           });
       }
     ]);
