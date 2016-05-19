@@ -245,7 +245,7 @@
               $scope.obtainedTotalUserCount = true;
             } else {
               UserListService.getUserCount().then(function (count) {
-                if (count === -1) {
+                if (_.isNull(count) || _.isNaN(count) || count === -1) {
                   count = $scope.USER_EXPORT_THRESHOLD + 1;
                 }
                 $scope.totalUsers = count;
