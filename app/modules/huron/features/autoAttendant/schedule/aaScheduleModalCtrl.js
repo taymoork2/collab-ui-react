@@ -144,7 +144,7 @@
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
       if (startTime && endTime) {
-        if (startTime !== '12:00 AM' && endTime === '12:00 AM') {
+        if (endTime === '12:00 AM') {
           return false;
         }
         var start = moment(startTime, "hh:mm A");

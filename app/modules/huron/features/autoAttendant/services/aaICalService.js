@@ -143,7 +143,7 @@
                 'minutes': 0
               };
               endData = {
-                'hours': 0,
+                'hours': 24,
                 'minutes': 0
               };
             } else {
@@ -195,6 +195,7 @@
           calendar.addSubcomponent(vevent);
         }
       }
+      console.log(calendar.toString());
     }
 
     function getNextOpenDate(days) {

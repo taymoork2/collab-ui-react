@@ -666,12 +666,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeTruthy();
     });
 
-    it('should true', function () {
+    it('should false', function () {
       var hours = {
         starttime: '12:00 AM',
         endtime: '12:00 AM'
       };
-      expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeTruthy();
+      expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeFalsy();
     });
   });
 
