@@ -1,7 +1,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, $q, $state, $stateParams, GroupService, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, DialPlanService, Authinfo, CsvDownloadService;
+  var controller, $scope, $timeout, $q, $state, $stateParams, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, DialPlanService, Authinfo, CsvDownloadService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -22,14 +22,13 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
     $stateParams = _$stateParams_;
-    GroupService = _GroupService_;
     Notification = _Notification_;
     DialPlanService = _DialPlanService_;
     Userservice = _Userservice_;
@@ -51,9 +50,6 @@ describe('OnboardCtrl: Ctrl', function () {
     }
     $scope.wizard.isLastStep = isLastStep;
 
-    spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
-      callback({});
-    });
     spyOn($state, 'go');
 
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
@@ -391,36 +387,43 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
   });
+
   describe('status errors during onboarding', function () {
     beforeEach(initController);
 
     it('checkClaimedDomain', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400084')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkOutsideClaimedDomain', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400091')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExists', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400081')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExistsInDiffOrg', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400090')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUnauthorizedToAdd', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400096')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('check hybrid services without paid licenses', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
+      $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });

@@ -29,7 +29,12 @@
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
-        size: 'lg'
+        size: 'lg',
+        resolve: {
+          sectionToToggle: function () {
+            return sectionToToggle;
+          }
+        }
       });
 
       modalInstance.result.then(function (result) {

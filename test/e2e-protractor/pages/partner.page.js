@@ -97,7 +97,7 @@ var PartnerHomePage = function () {
   this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
-  this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
+  this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
