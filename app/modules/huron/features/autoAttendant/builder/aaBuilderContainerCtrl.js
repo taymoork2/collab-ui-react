@@ -20,7 +20,7 @@
       return (Config.isDev() || Config.isIntegration());
     }
 
-    function openScheduleModal() {
+    function openScheduleModal(sectionToToggle) {
       if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         return;
       }
