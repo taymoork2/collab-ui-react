@@ -112,6 +112,9 @@
             };
             starttime = moment(hoursRange.starttime, 'hh:mm A').set(dateData);
             endtime = moment(hoursRange.endtime, 'hh:mm A').set(dateData);
+            if (hoursRange.endtime === '12:00 AM') {
+              endtime = endtime.add(1, 'day');
+            }
           } else if (type === 'holiday') {
             vevent.addPropertyWithValue('summary', 'holiday');
             var description = hoursRange.name;
@@ -140,8 +143,8 @@
                 'minutes': 0
               };
               endData = {
-                'hours': 23,
-                'minutes': 59
+                'hours': 0,
+                'minutes': 0
               };
             } else {
               var time = moment(hoursRange.starttime, 'hh:mm A');
@@ -157,6 +160,9 @@
             }
             starttime = moment().set(dateData).set(startData);
             endtime = moment().set(dateData).set(endData);
+            if (hoursRange.allDay || hoursRange.endtime === '12:00 AM') {
+              endtime = endtime.add(1, 'day');
+            }
             if (hoursRange.recurAnnually) {
               //Set the rule in the calendar
               strRRule = '';
@@ -370,7 +376,7 @@
             month: dtstart.month - 1,
             date: dtstart.day
           }).format('YYYY-MM-DD');
-          if (dtstart.hour === 0 && dtstart.minute === 0 && dtend.hour === 23 && dtend.minute === 59) {
+          if (dtstart.hour === 0 && dtstart.minute === 0 && dtend.hour === 0 && dtend.minute === 0) {
             hoursRange.allDay = true;
             hoursRange.starttime = undefined;
             hoursRange.endtime = undefined;
