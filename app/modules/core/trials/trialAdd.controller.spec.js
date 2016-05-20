@@ -49,7 +49,8 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.meetingTrial.enabled).toBeTruthy();
     expect(controller.webexTrial.enabled).toBeTruthy();
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
-    expect(controller.callTrial.enabled).toBeFalsy();
+    expect(controller.callTrial.enabled).toBeTruthy();
+    expect(controller.pstnTrial.enabled).toBeTruthy();
   });
 
   it('should start in trialAdd.info state', function () {
@@ -112,6 +113,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('basic behavior', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -127,6 +130,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle enabled', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = true;
         controller.startTrial(callback);
         $scope.$apply();
@@ -139,6 +144,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle disabled', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
@@ -151,6 +158,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with addNumbers callback', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
       });
@@ -166,6 +175,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('without addNumbers callback', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -181,12 +192,12 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('With Squared UC', function () {
       beforeEach(function () {
-        controller.callTrial.enabled = true;
         controller.pstnTrial.enabled = false;
       });
 
       it('should have Squared UC offer', function () {
         expect(controller.callTrial.enabled).toBeTruthy();
+        expect(controller.pstnTrial.enabled).toBeFalsy();
       });
 
       it('should notify success', function () {
@@ -208,11 +219,6 @@ describe('Controller: TrialAddCtrl', function () {
     });
 
     describe('With Squared UC and PSTN', function () {
-      beforeEach(function () {
-        controller.callTrial.enabled = true;
-        controller.pstnTrial.enabled = true;
-      });
-
       it('should have Squared UC offer', function () {
         expect(controller.callTrial.enabled).toBeTruthy();
         expect(controller.pstnTrial.enabled).toBeTruthy();

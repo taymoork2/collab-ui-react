@@ -63,7 +63,8 @@ describe('Partner flow', function () {
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
-      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
+      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
