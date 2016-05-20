@@ -20,16 +20,21 @@
       return (Config.isDev() || Config.isIntegration());
     }
 
-    function openScheduleModal(toggleSection) {
+    function openScheduleModal(sectionToToggle) {
       if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
         return;
       }
-      vm.ui.toggleSection = toggleSection;
+
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
-        size: 'lg'
+        size: 'lg',
+        resolve: {
+          sectionToToggle: function () {
+            return sectionToToggle;
+          }
+        }
       });
 
       modalInstance.result.then(function (result) {
