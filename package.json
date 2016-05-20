@@ -8,11 +8,20 @@
   "license": "Copyright 2013-2016 Cisco Systems, Inc.",
   "dependencies": {
     "angularjs-toaster": "~0.4.12",
+    "angular": "~1.5.5",
+    "angular-animate": "~1.5.5",
+    "angular-cookies": "~1.5.5",
+    "angular-messages": "~1.5.5",
+    "angular-resource": "~1.5.5",
+    "angular-route": "~1.5.5",
+    "angular-sanitize": "~1.5.5",
     "collab-ui": "~2.23.3",
     "collab-ui-angular": "~1.0.3",
     "collab-amcharts": "~3.19.4"
   },
   "devDependencies": {
+    "angular-mocks": "~1.5.5",
+    "angular-scenario": "~1.5.5",
     "browser-sync": "^2.7.1",
     "compression": "~1.6.0",
     "cross-spawn": "^2.2.3",
