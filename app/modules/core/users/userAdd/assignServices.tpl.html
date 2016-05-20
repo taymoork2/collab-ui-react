@@ -1,18 +1,3 @@
-<div class="collab-options" ng-if="false">
-  <input type="radio" name="collabRadio" id="collabRadio2" value="2" ng-model="collabRadio">
-  <span id="collabRadioLabel2" class="collab-radio" ng-click="setRadio(2)">{{collabRadio2.label}}</span>
-  <div class="select-grp">
-    <select ng-model="selectedGroup" ng-options="group as group.displayName for group in groups"></select>
-    <a href="" class="manage-groups">
-      <span id="btnManage" translate="onboardModal.manageBtn"></span>
-    </a>
-  </div>
-</div>
-<div class="collab-options" ng-if="false">
-  <input type="radio" name="collabRadio" id="collabRadio1" value="1" ng-model="collabRadio">
-  <span id="collabRadioLabel1" class="collab-svc-radio" ng-click="setRadio(1)">{{collabRadio1.label}}</span>
-</div>
-
 <div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
   <div class="bold">
     <span translate="onboardModal.entitlements"></span>
