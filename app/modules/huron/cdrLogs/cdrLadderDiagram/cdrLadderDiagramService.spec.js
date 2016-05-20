@@ -43,6 +43,7 @@ describe('Controller: CdrLadderDiagramService', function () {
     '</g>' +
     '</svg>';
 
+  var cdrEvents = getJSONFixture('huron/json/cdrDiagram/cdrEvents.json');
   var messageSquence = getJSONFixture('huron/json/cdrDiagram/messageSquence.json');
   var activitiesResponse = getJSONFixture('huron/json/cdrDiagram/activities.json');
   var diagnosticsServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/ladderdiagram';
@@ -81,9 +82,9 @@ describe('Controller: CdrLadderDiagramService', function () {
   });
 
   it('should return a Ladder Diagram from the Diagnostics Service', function () {
-    $httpBackend.whenPOST(diagnosticsServiceUrl).respond(diagnosticsResponse);
+    $httpBackend.expectPOST(diagnosticsServiceUrl, messageSquence).respond(diagnosticsResponse);
 
-    CdrLadderDiagramService.createLadderDiagram(messageSquence).then(function (response) {
+    CdrLadderDiagramService.createLadderDiagram(cdrEvents).then(function (response) {
       expect(response).toEqual(diagnosticsResponse);
     });
 

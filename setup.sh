@@ -18,7 +18,7 @@ if [ -n "$1" ]; then
             echo "  Same as above, but prevent overwriting manifest files"
             echo "  `basename $0` --restore-soft"
             echo ""
-            echo "ex. Run with '--quick' to skip removing component directores and clearing bower cache"
+            echo "ex. Run with '--quick' to skip removing component directores"
             echo ""
             exit 1
             ;;
@@ -78,19 +78,6 @@ else
     echo "NPM is already installed"
 fi
 
-# Check and install bower
-which bower > /dev/null 2>&1
-BOWER_RET=$?
-if [ $BOWER_RET -ne 0 ]; then
-  echo "bower not found, installing:"
-  npm install -g bower
-else
-  echo "bower is already installed"
-fi
-
-# Updating bower to the latest
-npm update -g bower
-
 # Check and install gulp
 which gulp > /dev/null 2>&1
 GULP_RET=$?
@@ -101,13 +88,10 @@ else
   echo "gulp is already installed"
 fi
 
-# Remove component directories and clear bower cache
+# Remove component directories
 if [ $quick = "false" ]; then
   echo "Removing component directories..."
-  rm -rf bower_components
   rm -rf node_modules
-  echo "Clearing bower cache..."
-  bower cache clean
 fi
 
 # # Check for cleanup script and run
@@ -125,7 +109,6 @@ time_start=$(date +"%s")
 # Install dependecies
 echo "Install all dependencies..."
 npm install
-npm update -g bower
 npm prune
 
 # npm install succeeded
@@ -143,14 +126,3 @@ rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz
 time_npm=$(date +"%s")
 npm_duration=$(($time_npm-$time_start))
 echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
-
-# bower install succeeded
-(bower install && bower update) || exit $?
-
-# - make a tar archive of the bower deps, and rm older versions
-mk_bower_deps_tar
-rm_all_but_last 1 .cache/bower-deps-for-*.tar.gz
-
-time_bower=$(date +"%s")
-bower_duration=$(($time_bower-$time_npm))
-echo "bower completed after $(($bower_duration / 60)) minutes and $(($bower_duration % 60)) seconds."

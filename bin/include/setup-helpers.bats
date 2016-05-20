@@ -83,20 +83,6 @@ source ./setup-helpers
     cd ~-
 }
 
-@test "mk_bower_deps_tar - should make a 'bower-deps-for-*.tar.gz' archive in the './.cache' subdir" {
-    local expected_archive_file=${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/bower-deps-for-myid.tar.gz
-
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    mkdir -p ./bower_components
-    touch bower.json
-    run mk_bower_deps_tar "myid"
-
-    [ -f ${expected_archive_file} ]
-
-    rm -f ${expected_archive_file}
-    cd ~-
-}
-
 @test "mk_deps_tar - should make a *.tar.gz archive in the './.cache' subdir" {
     local expected_archive_file=${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/myarchive-for-myid.tar.gz
 
