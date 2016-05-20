@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics) {
+  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -568,24 +568,6 @@
     if (Authinfo.isInitialized()) {
       getAccountServices();
     }
-
-    GroupService.getGroupList(function (data, status) {
-      if (data.success) {
-        $scope.groups = data.groups || [];
-        if ($scope.groups && $scope.groups.length === 0) {
-          var defaultGroup = {
-            displayName: 'Default License Group'
-          };
-          $scope.groups.push(defaultGroup);
-        }
-        $scope.selectedGroup = $scope.groups[0];
-      } else {
-        Log.debug('Failed to retrieve group list. Status: ' + status);
-        Notification.notify([$translate.instant('onboardModal.apiError', {
-          status: status
-        })], 'error');
-      }
-    });
 
     $scope.collabRadio1 = {
       label: $translate.instant('onboardModal.enableCollab'),
