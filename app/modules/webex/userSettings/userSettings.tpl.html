@@ -1,21 +1,22 @@
 <cs-sp-buttons ng-if="userSettingsView.form.$dirty">
   <button id="saveBtn"
-          name="saveBtn"
-          class="btn btn--primary"
-          translate="common.save"
-          type="submit"
-          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
-          ng-click="btnSave(userSettingsView.form)"
-          ng-disabled="userSettingsModel.disableSave">
+    name="saveBtn"
+    class="btn btn--primary"
+    cs-btn
+    loading="loading.saveBtn"
+    type="submit"
+    ng-click="btnSave(userSettingsView.form)"
+    ng-disabled="userSettingsModel.disableSave">
+    <span translate="common.save"></span>
   </button>
 
   <button id="resetBtn"
-          name="resetBtn"
-         
-          translate="common.cancel"
-          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
-          ng-click="btnReset(userSettingsView.form)"
-          ng-disabled="userSettingsModel.disableCancel">
+    name="resetBtn"
+    cs-btn
+    loading="loading.resetBtn"
+    ng-click="btnReset(userSettingsView.form)"
+    ng-disabled="userSettingsModel.disableCancel">
+    <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
 
@@ -43,12 +44,13 @@
           </button>
 
           <button id="reloadBtn"
-                  name="reloadBtn"
-                  translate="webexUserSettings.reload"
-                  class="btn btn--people wiz-onboard-btn"
-                  ng-if="userSettingsModel.allowRetry"
-                  ng-click="btnReload()"
-                  data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
+            name="reloadBtn"
+            cs-btn
+            loading="loading.reloadBtn"
+            class="btn btn--people wiz-onboard-btn"
+            ng-if="userSettingsModel.allowRetry"
+            ng-click="btnReload()">
+            <span translate="webexUserSettings.reload"></span>
           </button>
         </div>
       </div>
