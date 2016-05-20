@@ -4,6 +4,7 @@
   </button>
   <h5 class="modal-title" translate="hercules.export.modalTitle"></h5>
 </div>
+
 <div class="modal-body">
   <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
   <form name="userStatusesExport">
@@ -17,10 +18,12 @@
           ng-model="exportUserStatusesCtrl.statusTypes[$index].selected"
           cs-input-label="{{item.text}} ({{item.count}})">
       </div>
-    </form>
+    </div>
+   </form>
     <p><strong translate="hercules.export.modalNote"></strong></p>
-  </div>
-  <div class="modal-footer">
+</div>
+
+<div class="modal-footer">
     <button
       class="btn"
       ng-click="exportUserStatusesCtrl.cancelExport();$dismiss()"

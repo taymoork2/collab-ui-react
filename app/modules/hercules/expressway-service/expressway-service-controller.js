@@ -127,9 +127,10 @@
 
     function openUserStatusReportModal(serviceId) {
       $scope.modal = $modal.open({
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        type: 'small',
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html',
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
@@ -164,6 +165,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        type: 'small',
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
@@ -180,6 +182,7 @@
         controller: 'RedirectTargetController',
         controllerAs: 'redirectTarget',
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+        type: 'small',
         modalClass: 'redirect-target'
       });
     }
@@ -199,9 +202,10 @@
       };
       $scope.modal = $modal.open({
         scope: $scope,
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        type: 'small',
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html',
         resolve: {
           serviceId: function () {
             return vm.serviceId;

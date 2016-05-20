@@ -135,6 +135,7 @@
     vm.confirmCertDelete = function (cert) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-certificate-delete.html',
+        type: 'small',
         controller: ConfirmCertificateDeleteController,
         controllerAs: 'confirmCertificateDelete',
         resolve: {

@@ -62,6 +62,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return [serviceId];

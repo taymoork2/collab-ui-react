@@ -121,6 +121,7 @@
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
         templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;
@@ -155,6 +156,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;

@@ -67,7 +67,8 @@
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+          type: 'small'
         })
         .result.then(function (data) {
           $state.sidepanel.close();
@@ -77,6 +78,7 @@
     function showUpgradeDialog() {
       $modal.open({
         templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
+        type: 'small',
         controller: 'SoftwareUpgradeController',
         controllerAs: 'softwareUpgradeCtrl',
         resolve: {
