@@ -1,7 +1,9 @@
 <cs-sp-buttons ng-if="showButtons">
-  <button id="btn-save" class="btn--primary btn-save" translate="common.save"
-          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
-          ng-click="updateEntitlements()"></button>
+  <button id="btn-save" class="btn--primary btn-save"
+    cs-btn loading="saveLoading"
+    ng-click="updateEntitlements()">
+    <span translate="common.save"></span>
+  </button>
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
           ng-click="resetEntitlements()"></button>
 </cs-sp-buttons>

@@ -5,7 +5,7 @@
     .controller('LandingPageCtrl', LandingPageCtrl);
 
   /* @ngInject */
-  function LandingPageCtrl($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state, chartColors, UrlConfig) {
+  function LandingPageCtrl($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, Config, $translate, CannedDataService, $state, chartColors, UrlConfig) {
 
     $scope.isAdmin = false;
     var callsChart, conversationsChart, contentSharedChart;
@@ -293,13 +293,6 @@
         $scope.isCallConnectAcknowledged = true;
       }
       Orgservice.setHybridServiceAcknowledged(serviceName);
-    };
-
-    $scope.inviteUsers = function () {
-      var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
-      dlg.result.then(function () {
-
-      });
     };
 
     $scope.isAdmin = Authinfo.isUserAdmin();
