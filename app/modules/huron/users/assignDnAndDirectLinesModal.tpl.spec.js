@@ -2,7 +2,7 @@
 
 describe('Template: assignDnAndDirectLinesModal', function () {
   var $compile, $q, $scope, $templateCache, $controller, controller;
-  var GroupService, Orgservice, TelephonyInfoService, DialPlanService, Userservice, FeatureToggleService, CsvDownloadService;
+  var Orgservice, TelephonyInfoService, DialPlanService, Userservice, FeatureToggleService, CsvDownloadService;
   var internalNumbers, externalNumbers, externalNumberPool, externalNumberPoolMap, getUserMe;
   var getMigrateUsers, getMyFeatureToggles, sites, fusionServices, headers, getMessageServices;
   var view;
@@ -20,14 +20,13 @@ describe('Template: assignDnAndDirectLinesModal', function () {
   beforeEach(compileView);
   beforeEach(initSpies);
 
-  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
+  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
     $templateCache = _$templateCache_;
     $controller = _$controller_;
     $q = _$q_;
 
-    GroupService = _GroupService_;
     DialPlanService = _DialPlanService_;
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
@@ -48,10 +47,6 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
-
-    spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
-      callback({});
-    });
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {

@@ -30,31 +30,20 @@
              size="50"
              placeholder="Enter room id"
              ng-model="ediscoveryCtrl.searchCriteria.searchString">
-
     </div>
 
     <div class="cs-input-group columns large-2">
       <button type="button" class="button btn--primary align" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
     </div>
 
-
   </div>
 
   <div class="row grid">
-
     <div gridscrollbar class="gridStyle" ui-grid="ediscoveryCtrl.gridOptions" ui-grid-selection></div>
-
   </div>
 
-
-  <table>
-    <tr ng-repeat="report in reports">
-      <td>{{report.id}}</td>
-      <td>{{report.name}}</td>
-      <td>{{report.progress}} %</td>
-    </tr>
-  </table>
-
-
+  <div class="cs-input-group columns large-2">
+    <button type="button" class="button btn--primary align" ng-click="ediscoveryCtrl.deleteReports()">Delete reports...</button>
+  </div>
 
 </div>
