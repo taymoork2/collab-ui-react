@@ -216,7 +216,7 @@
       },
     }];
 
-    vm.hasCallEntitlement = Authinfo.isSquaredUC();
+    vm.hasCallEntitlement = true; // US12171 - always entitle call (previously Authinfo.isSquaredUC())
     vm.hasTrial = hasTrial;
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;

@@ -1,0 +1,4 @@
+<button type="button" ng-class="{'btn--primary': row.entity.state === 'COMPLETED', 'btn--attention': row.entity.state !== 'COMPLETED'}" class="fit btn btn--circle btn--small">
+  <span ng-show="row.entity.state === 'COMPLETED'" class="icon icon-download" ng-click="grid.appScope.downloadReport()"></span>
+  <span ng-show="row.entity.state !== 'COMPLETED'" class="icon icon-exit" ng-click="grid.appScope.cancelReport()"></span>
+</button>

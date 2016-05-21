@@ -4,9 +4,9 @@
 * Install current node.js [Long-term Support (LTS) v4.x](https://nodejs.org/en/download/)
   ![g-gif-update](https://sqbu-github.cisco.com/github-enterprise-assets/0000/2093/0000/5682/dbe73b7e-f717-11e5-9cbf-4d1c308fc385.gif)
 * Run `./setup.sh` (found in the root directory)
-  * Use `./setup.sh --restore` if ever needing to restore 'node_modules' and 'bower_components' dirs from the most recently successfully built dependencies (requires at least 1 successful run)
+  * Use `./setup.sh --restore` if ever needing to restore 'node_modules' dirs from the most recently successfully built dependencies (requires at least 1 successful run)
 * Launch the app: `gulp serve`
-* After git pulls, run bower install and npm install to make sure to pull new dependencies.
+* After git pulls, run npm install to make sure to pull new dependencies.
 
 ## Recommended plugins for your Text Editor / IDE
 
@@ -24,6 +24,7 @@
 
 ## Adding External Dependencies
 
-* Dependencies are added to the project through Bower
-* Add dependencies with `bower install package_name --save`
+* Dependencies are added to the project through npm
+* Add application dependencies with `npm install package_name --save`
+* Add build dependencies with `npm install package_name --save-dev`
 * Dependencies added to the `gulp.config.js` file will be automatically added to `index.html` and `karma.conf.js` files
