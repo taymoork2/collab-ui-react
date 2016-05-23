@@ -156,7 +156,7 @@
     }
 
     function getTimezoneForDevice(huronDevice) {
-      return $http.get(huronDevice.url)
+      return $http.get(huronDevice.url.replace('/lists',''))
           .then(function (res) {
             var timeZone = null;
             if (res.data) {
@@ -167,7 +167,7 @@
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
-      return $http.put(huronDevice.url, {
+      return $http.put(huronDevice.url.replace('/lists',''), {
         timezone: timezone
       });
     }
