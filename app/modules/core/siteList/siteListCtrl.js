@@ -188,14 +188,14 @@
         function success(response) {
           Notification.success($translate.instant('siteList.exportStartedToast'));
 
-          SiteListService.updateCSVColumnInRow(siteRow);
+          SiteListService.updateCSVStatusInRow(siteRow);
         },
 
         function error(response) {
           // Notification.error($translate.instant('csvRejectedToast-' + response.errorCode));
           Notification.error($translate.instant('siteList.csvRejectedToast-' + response.errorCode));
 
-          SiteListService.updateCSVColumnInRow(siteRow);
+          SiteListService.updateCSVStatusInRow(siteRow);
         }
       ).catch(
         function catchError(response) {
@@ -208,7 +208,7 @@
 
           Notification.error($translate.instant('siteList.exportRejectedToast'));
 
-          SiteListService.updateCSVColumnInRow(siteRow);
+          SiteListService.updateCSVStatusInRow(siteRow);
         }
       ); // WebExApiGatewayService.csvExport()
     }; // csvExport()
