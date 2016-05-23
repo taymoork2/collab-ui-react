@@ -54,7 +54,6 @@ namespace servicesOverview {
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-      // console.log("forwarding event", eventArgs, "this", this);
       _.each(this.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);

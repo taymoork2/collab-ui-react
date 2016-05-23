@@ -26,7 +26,7 @@ namespace servicesOverview {
     ];
 
     getButtons():Array<servicesOverview.CardButton> {
-      if(this.active)
+      if (this.active)
         return _.take(this._buttons, 3);
       return [this._setupButton];
     }
@@ -42,7 +42,7 @@ namespace servicesOverview {
         text: this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']),
         link: 'services/expressway-management'
       };
-      // this._active = this.filterAndGetEnabledService(services, ['squared-fusion-mgmt']);
+
       this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal'])
         || this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc'])
         || this.filterAndGetEnabledService(services, ['squared-fusion-media']);
