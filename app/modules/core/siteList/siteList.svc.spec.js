@@ -207,7 +207,7 @@ describe('SiteListService: csv status error handling', function () {
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
   })); // beforeEach(inject())
 
-  it('can process resolve.reject() from WebExApiGatewayService.csvStatus()', function () {
+  it('can process reject from WebExApiGatewayService.csvStatus()', function () {
     SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.reject({});
