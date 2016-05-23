@@ -91,7 +91,7 @@
         var funcName = "displayResultAndCloseModal()";
         var logMsg = "";
 
-        SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+        SiteListService.updateCSVStatusInRow(vm.csvImportObj);
 
         if (isSuccess) {
           Notification.success($translate.instant(resultMsg));
