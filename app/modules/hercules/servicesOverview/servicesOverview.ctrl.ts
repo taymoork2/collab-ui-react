@@ -63,13 +63,8 @@ namespace servicesOverview {
     }
 
     private loadWebexSiteList() {
-      this.$q((resolve, reject)=> {
-        let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-        resolve(siteList);
-      }).then((siteList)=> {
-        this.forwardEvent('updateWebexSiteList', siteList);
-      });
-
+      let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+      this.forwardEvent('updateWebexSiteList', siteList);
     }
   }
   angular
