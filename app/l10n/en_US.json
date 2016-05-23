@@ -1362,8 +1362,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "eDiscovery",
     "ediscovery": "eDiscovery",
-    "searchHeading": "eDiscovery search",
-    "navHeaderTitle": "eDiscovery Dashboard",
+    "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {

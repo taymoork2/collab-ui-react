@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($timeout, $window, $scope, $state, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       //setSearchFieldFocus();
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
@@ -17,7 +17,8 @@
 
     vm.searchCriteria = {
       "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": moment()
+      "startDate": moment(),
+      "endDate": moment(moment()).add(1, 'days')
     };
     vm.reports = [];
 
@@ -35,12 +36,39 @@
       vm.searchCriteria.endDate = endDate;
     }
 
-    function validDuration() {
-      if (getEndDate() < getStartDate()) {
-        //alert("Oh no!   End date is before start date !!!!");
-        $modal.open({
-          templateUrl: "modules/ediscovery/dateValidationDialog.html"
-        });
+    function dateErrors(start, end) {
+      var errors = [];
+      if (moment(start).isAfter(moment(end))) {
+        errors.push("Start date must be before end date");
+      }
+      //console.log("start", start);
+      //console.log("moment()", moment());
+      if (moment(start).isAfter(moment())) {
+        errors.push("Start date cannot be in the future");
+      }
+      return errors;
+    }
+
+    function openGenericModal(title, messages) {
+      $modal.open({
+        templateUrl: "modules/ediscovery/genericModal.html",
+        controller: 'EdiscoveryGenericModalCtrl as modal',
+        resolve: {
+          title: function () {
+            return title;
+          },
+          messages: function () {
+            return messages;
+          }
+        }
+      });
+    }
+
+    function validateDate() {
+      var title = "Date validation";
+      var errors = dateErrors(getStartDate(), getEndDate());
+      if (errors.length > 0) {
+        openGenericModal(title, errors);
         return false;
       } else {
         return true;
@@ -48,20 +76,20 @@
     }
 
     $scope.$watch(getStartDate, function (startDate) {
-      var endDate = moment(startDate).add(1, 'days');
-      setEndDate(endDate);
+      //validateDate();
     });
 
     $scope.$watch(getEndDate, function (endDate) {
-      validDuration();
+      //validateDate();
     });
 
     function downloadReport() {
-      //console.log("Download not implemented");
+      openGenericModal("Note", "Function not implemented");
+
     }
 
     function cancelReport() {
-      //console.log("Cancel not implemented");
+      openGenericModal("Note", "Function not implemented");
     }
 
     vm.gridOptions = {
@@ -115,6 +143,9 @@
     }
 
     function createReport() {
+      if (!validateDate()) {
+        return;
+      }
       //console.log("createReport, searchCriteria", vm.searchCriteria)
       EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
         //console.log("create result", res)
@@ -151,7 +182,14 @@
     }
   }
 
+  function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {
+    var vm = this;
+    vm.messages = $.isArray(messages) ? messages : [messages];
+    vm.title = title;
+  }
+
   angular
     .module('Ediscovery')
-    .controller('EdiscoveryController', EdiscoveryController);
+    .controller('EdiscoveryController', EdiscoveryController)
+    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
 }());
