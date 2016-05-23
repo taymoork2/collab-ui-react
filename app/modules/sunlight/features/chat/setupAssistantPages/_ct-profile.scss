@@ -4,17 +4,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .preview {
-      @include vr-spacing(ml, 2);
-    }
-    .attributes {
-      @include vr-spacing(ml, 22);
+    .card-info {
+      text-align: center;
+      @include vr-spacing(pb, 0.5)
     }
   }
 
   .cs-card {
     width: rem-calc(400);
-    height: rem-calc(430);
+    height: rem-calc(480);
     @include vr-spacing(ml, 2.5);
   }
 
@@ -146,8 +144,7 @@
         .timer {
           @include vr-spacing(mt, 0.5);
           @include vr-spacing(ml, 2);
-          @include vr-spacing(mb, 9);
-
+          margin-bottom: rem-calc(154);
         }
       }
     }
@@ -165,10 +162,17 @@
   }
 
   .ct-profile-attributes {
-    @include vr-spacing(p, 1);
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(ph, 1);
+    @include vr-spacing(pb, 1.25);
 
-    .img-txt {
+    .subheader-text{
       @include vr-spacing(pt, 0);
+      @include vr-spacing(pb, 0.5);
+    }
+
+    .agent-name-options {
+      @include vr-spacing(mb, 0.5, 0px, true);
     }
   }
 
@@ -218,6 +222,5 @@
 
   .ct-display-txt {
     @include vr-spacing(pb, 0.5);
-    @include vr-spacing(pt, 1);
   }
 }

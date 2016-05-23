@@ -178,7 +178,7 @@ describe('Testing controller: SiteListCtrl', function () {
 
     spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvExport.promise);
     spyOn(SiteListService, 'updateGrid');
-    spyOn(SiteListService, 'updateCSVColumnInRow');
+    spyOn(SiteListService, 'updateCSVStatusInRow');
     spyOn(Notification, 'success');
 
     SiteListCtrl = $controller('SiteListCtrl', {
@@ -205,7 +205,7 @@ describe('Testing controller: SiteListCtrl', function () {
 
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
     expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
-    expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
 
   });
 
