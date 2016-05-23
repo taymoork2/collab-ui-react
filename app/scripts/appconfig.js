@@ -2160,8 +2160,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHeaderController',
-              controllerAs: 'helpdeskHeaderCtrl',
+              controller: 'EdiscoveryController',
+              controllerAs: 'ediscoveryCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
