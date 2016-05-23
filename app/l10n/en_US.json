@@ -3260,6 +3260,7 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
+    "siteCsvModalText": "Export user attributes, edit csv file and import the edited version",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
