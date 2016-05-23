@@ -131,7 +131,6 @@
     };
 
     function deleteSuccess() {
-      angular.element('#deleteButton').button('reset');
       Notification.notify([$translate.instant('mediaFusion.defuseSuccess')], 'success');
       //Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
 

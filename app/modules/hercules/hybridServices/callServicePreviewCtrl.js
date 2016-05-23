@@ -7,6 +7,7 @@
 
   /*@ngInject*/
   function CallServicePreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, FeatureToggleService, UriVerificationService, DomainManagementService) {
+    $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
@@ -100,7 +101,7 @@
         });
       }
 
-      angular.element('#btn-save').button('loading');
+      $scope.saveLoading = true;
 
       Userservice.updateUsers(user, null, entitlements, 'updateEntitlement', function (data) {
         var entitleResult = {
@@ -133,7 +134,7 @@
           if (userStatus !== 200) {
             Notification.notify([entitleResult.msg], entitleResult.type);
           }
-          angular.element('#btn-save').button('reset');
+          $scope.saveLoading = false;
 
         } else {
           entitleResult = {
@@ -141,7 +142,7 @@
             type: 'error'
           };
           Notification.notify([entitleResult.msg], entitleResult.type);
-          angular.element('#btn-save').button('reset');
+          $scope.saveLoading = false;
         }
         $scope.saving = false;
       });

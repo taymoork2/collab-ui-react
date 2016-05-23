@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics) {
+  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics, addressparser) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -638,7 +638,7 @@
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.usrlist = $window.addressparser.parse($scope.model.userList);
+        $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
 
@@ -1030,7 +1030,7 @@
     }
 
     var getUsersList = function () {
-      return $window.addressparser.parse($scope.model.userList);
+      return addressparser.parse($scope.model.userList);
     };
 
     $scope.validateTokensBtn = function () {
