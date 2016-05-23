@@ -11,14 +11,12 @@
     var allowedList = [
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
-      '/WBXService/XMLService',
       '/resendinvitation/invoke',
       '/sendverificationcode/invoke',
       '/elevatereadonlyadmin/invoke',
+      '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
-      '/meetingsapi/v1/users/importexportstatus',
-      '/meetingsapi/v1/users/export',
-      '/meetingsapi/v1/users/import'
+      '/meetingsapi/v1/files/'
     ];
 
     return {
@@ -43,7 +41,7 @@
 
     function isInAllowedList(url) {
       var found = _.find(allowedList, function (p) {
-        return _.endsWith(url, p);
+        return _.includes(url, p);
       });
       if (found) {
         return true;
