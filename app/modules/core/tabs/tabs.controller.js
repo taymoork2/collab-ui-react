@@ -5,7 +5,7 @@
     .controller('TabsCtrl', TabsCtrl);
 
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $location, Utils, Authinfo, FeatureToggleService) {
+  function TabsCtrl($rootScope, $scope, $location, $q, Utils, Authinfo, FeatureToggleService) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
@@ -20,8 +20,8 @@
 
       var tab = _.find($scope.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-            return matchesLocationPath(subTab.link);
-          });
+          return matchesLocationPath(subTab.link);
+        });
       });
 
       if (tab) {
@@ -54,14 +54,13 @@
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
-            feature: tab.feature.replace(/^!/, ''),
-            enabled: !/^!/.test(tab.feature)
-          });
+          feature: tab.feature.replace(/^!/, ''),
+          enabled: !/^!/.test(tab.feature)
+        });
       });
     }
 
     function getUpdatedFeatureTogglesFromTabs(tabs, existingFeatures) {
-
       //keep the enabled flag from previous load.
       var updatedExistingFeatures = existingFeatures.slice(0);
 
@@ -92,11 +91,15 @@
     }
 
     function getFeatureToggles(features) {
-      _.forEach(features, function (feature) {
-        FeatureToggleService.supports(feature.feature).then(function (supports) {
-          feature.enabled = !!supports;
-          updateScopeTabs();
+      var toggles = _.map(features,
+        function (feature) {
+          return FeatureToggleService.supports(feature.feature).then(
+            function (supports) {
+              feature.enabled = !!supports;
+            });
         });
+      $q.all(toggles).then(function () {
+        updateScopeTabs();
       });
     }
   }
