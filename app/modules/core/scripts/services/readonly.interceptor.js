@@ -41,7 +41,7 @@
 
     function isInAllowedList(url) {
       var found = _.find(allowedList, function (p) {
-        return _.endsWith(url, p) || _.includes(url, p);
+        return _.includes(url, p);
       });
       if (found) {
         return true;
