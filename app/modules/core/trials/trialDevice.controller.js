@@ -101,11 +101,14 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 2,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
 
       expressionProperties: {
@@ -113,12 +116,9 @@
           return vm.sx10.enabled;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.sx10.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.sx10.readonly;
+          return _setQuantityInputState(scope, vm.sx10, 2);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
@@ -153,22 +153,21 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8865.enabled;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8865.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8865.readonly;
+          return _setQuantityInputState(scope, vm.phone8865, 1);
         }
       },
       watcher: _addWatcher(),
@@ -202,23 +201,23 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8845.enabled;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8845.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8845.readonly;
+          return _setQuantityInputState(scope, vm.phone8845, 1);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addPhonesValidators()
@@ -251,22 +250,21 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8841.enabled;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8841.readonly;
+          return _setQuantityInputState(scope, vm.phone8841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -300,22 +298,21 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone7841.enabled;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone7841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone7841.readonly;
+          return _setQuantityInputState(scope, vm.phone7841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -426,6 +423,16 @@
       key: 'postalCode',
       type: 'input',
       className: 'columns medium-6',
+      /* validators: {
+         noChecks: {
+           expression: function (viewValue, modelValue) {
+             var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
+             return quantity > 0;
+           },
+           message: 'No quantity'
+         }
+       },*/
+      validators: _checkValidators(),
       templateOptions: {
         labelClass: 'columns medium-2 medium-offset-1 text-right',
         inputClass: 'columns medium-5',
@@ -508,7 +515,7 @@
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity > 5);
+        return !(quantity < 2 || quantity > 5);
       }
     }
 
@@ -518,7 +525,7 @@
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity > 5);
+        return !(quantity < 2 || quantity > 5);
       }
     }
 
@@ -555,6 +562,18 @@
         .reduce(_.add) || 0;
     }
 
+    function _setQuantityInputState(scope, checkboxControl, defaultValue) {
+
+      var disabled = !checkboxControl.enabled;
+      if (disabled) {
+        scope.model.quantity = 0;
+      } else if (scope.model.quantity == 0) {
+        scope.model.quantity = defaultValue;
+      }
+      return disabled || vm.sx10.readonly;
+
+    }
+
     function _addWatcher() {
       return {
         expression: function () {
@@ -563,6 +582,12 @@
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             // trigger validation when quantity has changed
+            /*  $log.log('VALIDATING!');
+              if (field.model.enabled)
+              {
+              field.formControl.$setDirty();
+              field.formControl.$setTouched();
+            }*/
             field.formControl.$validate();
           }
         }
@@ -643,7 +668,11 @@
       var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
 
       _.forEach(vm.shippingFields, function (field) {
+
         field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
+        if (field.templateOptions.disabled && field.formControl) {
+          field.formControl.$setViewValue("");
+        }
       });
     }
 
@@ -654,7 +683,7 @@
         .filter({
           enabled: true
         })
-        .isEmpty();
+        .isEmpty().value();
     }
 
     function validateChecks($viewValue, $modelValue, scope) {
