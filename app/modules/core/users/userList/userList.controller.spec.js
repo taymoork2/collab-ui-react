@@ -3,7 +3,7 @@
 describe('UserListCtrl: Ctrl', function () {
   var controller, $controller, $scope, $rootScope, $state, $timeout, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
-  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser;
+  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
   currentUser = getJSONFixture('core/json/currentUser.json');
   listUsers = getJSONFixture('core/json/users/listUsers.json');
@@ -37,6 +37,13 @@ describe('UserListCtrl: Ctrl', function () {
     var successData = {
       success: true
     };
+    failedData = {
+      success: false,
+      status: 403,
+      Errors: [{
+        errorCode: '100106'
+      }]
+    };
 
     spyOn($scope, '$emit').and.callThrough();
     spyOn(Notification, 'success');
@@ -53,7 +60,7 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(UserListService, 'listPartners').and.callFake(function (orgId, callback) {
       callback(_.extend(listPartners, successData), 200);
     });
-    spyOn(UserListService, 'getUserCount').and.returnValue($q.when({}));
+    spyOn(UserListService, 'getUserCount').and.returnValue($q.when(100));
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
       callback(getOrgJson, 200);
     });
@@ -203,6 +210,23 @@ describe('UserListCtrl: Ctrl', function () {
       $scope.startExportUserList();
       $scope.$apply();
       expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", "user", true);
+    });
+  });
+
+  describe('getUserCount() returns NaN', function () {
+    beforeEach(function () {
+      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
+        callback(failedData, 200, searchStr);
+      });
+      UserListService.getUserCount.and.returnValue($q.when(NaN));
+      initController();
+    });
+
+    it('should set user count to USER_EXPORT_THRESHOLD + 1', function () {
+      // $scope.obtainedTotalUserCount = false;
+      $scope.getUserList(); // 0 index
+      expect($scope.obtainedTotalUserCount).toEqual(true);
+      expect($scope.totalUsers).toEqual($scope.USER_EXPORT_THRESHOLD + 1);
     });
   });
 });

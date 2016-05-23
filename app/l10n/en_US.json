@@ -1184,7 +1184,8 @@
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
-      "pending": "Pending"
+      "pending": "Pending",
+      "initializing": "Initializing"
     },
     "setup": {
       "label": "Connector Management",
@@ -3071,19 +3072,15 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Records requested:",
-    "csvExportRecordsSuccessful": "Records returned:",
-    "csvExportDownloadFile": "Download CSV file:",
-
     "csvImportTitle": "Import Results",
-    "csvImportFileName": "File name:",
-    "csvImportRecordsRequested": "Total records requested:",
-    "csvImportRecordsUpdated": "Records successfully updated:",
-    "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
     "csvFinished": "Completed:",
-    "csvRecordsFailed": "Errors:"
+    "csvRecordsRequested": "Records requested:",
+    "csvRecordsReturned": "Records returned:",
+    "csvRecordsUpdated": "Records updated:",
+    "csvRecordsFailed": "Errors:",
+    "csvDownloadImportErr": "Download import error log"
   },
   "leaderBoard": {
     "actions": "Actions",

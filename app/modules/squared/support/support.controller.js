@@ -474,13 +474,11 @@
             }
           } else {
             $scope.getPending = false;
-            angular.element('#logInfoPendingBtn').button('reset');
             Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
           }
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          angular.element('#logInfoPendingBtn').button('reset');
           Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
             status: status
           })], 'error');
