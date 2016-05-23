@@ -42,7 +42,9 @@ gulp.task('optimize:app', function () {
     .pipe(assets)
     .pipe($.sourcemaps.init())
     .pipe(cssFilter)
-    .pipe($.minifyCss())
+    .pipe($.minifyCss({
+      restructuring: false
+    }))
     .pipe(cssFilter.restore)
     .pipe(jsFilter)
     .pipe($.ngAnnotate({

@@ -186,7 +186,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
     });
 
@@ -206,7 +207,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
     });
 
@@ -240,7 +242,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
     });
 
@@ -267,7 +270,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.calendar = calendar;
       controller.openhours = openhours;
@@ -291,7 +295,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.calendar = calendar;
       controller.openhours = openhours;
@@ -316,7 +321,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.openhours = [];
       controller.holidays = [];
@@ -347,7 +353,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.isDeleted = false;
       controller.save();
@@ -368,7 +375,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
     });
 
@@ -404,7 +412,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
     });
 
@@ -441,7 +450,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
@@ -457,7 +467,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
       expect(controller.holidays.length).toEqual(2);
@@ -473,7 +484,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
       controller.holidays = [{}];
@@ -495,7 +507,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.holidaysForm = {
         $valid: true,
@@ -547,7 +560,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
       controller.holidaysForm = {
@@ -632,7 +646,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
     });
@@ -684,7 +699,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.holidaysForm = {
         holidayForm0: {
@@ -741,7 +757,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       controller.hoursForm = {
         endtime0: {
@@ -787,7 +804,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
         AAModelService: AAModelService,
-        AAUiModelService: AAUiModelService
+        AAUiModelService: AAUiModelService,
+        sectionToToggle: 'hours'
       });
       $scope.$apply();
     });
@@ -884,7 +902,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        $modalInstance: $modalInstance
+        $modalInstance: $modalInstance,
+        sectionToToggle: 'hours'
       });
     });
 

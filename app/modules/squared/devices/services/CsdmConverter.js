@@ -147,6 +147,7 @@
         this.isUnused = true;
         this.canDelete = true;
         this.hasIssues = true;
+        this.accountType = obj.accountType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
         this.diagnosticsEvents = [{
           type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
@@ -174,6 +175,7 @@
         this.canDelete = true;
         this.canEditDisplayName = true;
         this.image = "images/devices-hi/unknown.png";
+        this.accountType = obj.accountType || 'MACHINE';
         this.supportsCustomTags = true;
         this.updateName = function (newName) {
           this.displayName = newName;

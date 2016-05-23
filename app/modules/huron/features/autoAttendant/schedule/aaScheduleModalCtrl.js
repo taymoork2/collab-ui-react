@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -31,7 +31,7 @@
     vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
-    vm.toggleHours = false;
+    vm.toggleHours = true;
     vm.holidays = [];
     vm.holidayBehavior = false;
     vm.oneAtATime = true;
@@ -468,6 +468,10 @@
       });
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+
+      if (!_.isEmpty(sectionToToggle)) {
+        toggleSection(sectionToToggle);
+      }
     }
 
     function openImportModal() {

@@ -39,14 +39,6 @@
       vm.modalId = "csvExport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
-      /*
-      vm.gridRows.push({
-        id: 'export-started-time',
-        title: $translate.instant("webexCSVResultsModal.csvStarted"),
-        value: vm.csvStatusObj.details.created,
-      });
-      */
-
       vm.gridRows.push({
         id: 'export-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
@@ -55,13 +47,13 @@
 
       vm.gridRows.push({
         id: 'export-records-total',
-        title: $translate.instant("webexCSVResultsModal.csvExportRecordsAvailable"),
+        title: $translate.instant("webexCSVResultsModal.csvRecordsRequested"),
         value: vm.csvStatusObj.details.totalRecords,
       });
 
       vm.gridRows.push({
         id: 'export-records-successful',
-        title: $translate.instant("webexCSVResultsModal.csvExportRecordsSuccessful"),
+        title: $translate.instant("webexCSVResultsModal.csvRecordsReturned"),
         value: vm.csvStatusObj.details.successRecords,
       });
 
@@ -70,14 +62,6 @@
         title: $translate.instant("webexCSVResultsModal.csvRecordsFailed"),
         value: vm.csvStatusObj.details.failedRecords,
       });
-
-      /*
-      vm.gridRows.push({
-        id: 'export-download-csv-file',
-        title: $translate.instant("webexCSVResultsModal.csvExportDownloadFile"),
-        value: null,
-      });
-      */
 
       vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
       vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
@@ -95,22 +79,6 @@
       vm.modalId = "csvImport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");
 
-      /*
-      vm.gridRows.push({
-        id: 'import-file-name',
-        title: $translate.instant("webexCSVResultsModal.csvImportFileName"),
-        value: vm.csvStatusObj.details.importFileName,
-      });
-      */
-
-      /*
-      vm.gridRows.push({
-        id: 'import-started-time',
-        title: $translate.instant("webexCSVResultsModal.csvImportFileName"),
-        value: vm.csvStatusObj.details.created,
-      });
-      */
-
       vm.gridRows.push({
         id: 'import-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
@@ -119,13 +87,13 @@
 
       vm.gridRows.push({
         id: 'import-records-total',
-        title: $translate.instant("webexCSVResultsModal.csvImportRecordsRequested"),
+        title: $translate.instant("webexCSVResultsModal.csvRecordsRequested"),
         value: vm.csvStatusObj.details.totalRecords,
       });
 
       vm.gridRows.push({
         id: 'import-records-updated',
-        title: $translate.instant("webexCSVResultsModal.csvImportRecordsUpdated"),
+        title: $translate.instant("webexCSVResultsModal.csvRecordsUpdated"),
         value: vm.csvStatusObj.details.successRecords,
       });
 
@@ -136,12 +104,6 @@
       });
 
       if (0 < vm.csvStatusObj.details.failedRecords) {
-        vm.gridRows.push({
-          id: 'import-download-err-file',
-          title: $translate.instant("webexCSVResultsModal.csvImportDownloadErr"),
-          value: null,
-        });
-
         vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
         vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
 

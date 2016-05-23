@@ -149,6 +149,23 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
     });
 
+    it('should successfully change a Say-Message button to a Route-To-User button', function () {
+      var ceMenuWithSay = angular.copy(data.ceMenuWithSay);
+      var ceMenuWithRouteToUser = angular.copy(data.ceMenuWithRouteToUser);
+      var phoneMenuEntry = raw2MenuEntry(ceMenuWithSay.entries[0]);
+      var expectEntry = raw2MenuEntry(ceMenuWithRouteToUser.entries[0]);
+      var phoneMenu = {
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      };
+      phoneMenu.entries.push(phoneMenuEntry);
+      controller.menuEntry = phoneMenu;
+
+      controller.keyActionChanged(0, data.selectedActionsRouteUser[0].action);
+      expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
+    });
+
   });
 
   describe('createOptionMenu', function () {
