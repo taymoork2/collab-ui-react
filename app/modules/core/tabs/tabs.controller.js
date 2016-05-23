@@ -20,8 +20,8 @@
 
       var tab = _.find($scope.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-          return matchesLocationPath(subTab.link);
-        });
+            return matchesLocationPath(subTab.link);
+          });
       });
 
       if (tab) {
@@ -46,7 +46,7 @@
 
     function initTabs() {
       vm.tabs = Authinfo.getTabs();
-      updateFeatureTogglesFromTabs(vm.tabs, vm.features);
+      vm.features = getUpdatedFeatureTogglesFromTabs(vm.tabs, vm.features);
       getFeatureToggles(vm.features);
       updateScopeTabs();
     }
@@ -54,14 +54,17 @@
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
-          feature: tab.feature.replace(/^!/, ''),
-          enabled: !/^!/.test(tab.feature)
-        });
+            feature: tab.feature.replace(/^!/, ''),
+            enabled: !/^!/.test(tab.feature)
+          });
       });
     }
 
-    function updateFeatureTogglesFromTabs(tabs, features) {
-      // return s && s.replace(/^!/g, '');
+    function getUpdatedFeatureTogglesFromTabs(tabs, existingFeatures) {
+
+      //keep the enabled flag from previous load.
+      var updatedExistingFeatures = existingFeatures.slice(0);
+
       var newFeatures = _.chain(tabs)
         .map('feature')
         .compact()
@@ -75,15 +78,17 @@
         }).value();
 
       _.forEach(newFeatures, function (feature) {
-        var existing = _.find(features, {
+        var existing = _.find(updatedExistingFeatures, {
           feature: feature.feature
         });
         if (existing) {
           //noop , keep the enabled flag from previous load.
         } else {
-          features.push(feature);
+          updatedExistingFeatures.push(feature);
         }
       });
+
+      return updatedExistingFeatures;
     }
 
     function getFeatureToggles(features) {

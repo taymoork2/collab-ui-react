@@ -131,11 +131,11 @@
         performFeatureToggleTest('featureDependent', 'tab-feature-test', true, true);
       });
 
-      it('a tab with a negated feature toggel should be visible when feature is not available', function () {
+      it('a tab with a negated feature toggle should be visible when feature is not available', function () {
         performFeatureToggleTest('featureDependent', '!tab-feature-test', false, true);
       });
 
-      it('a tab with a negated feature toggel should be gone when feature is available', function () {
+      it('a tab with a negated feature toggle should be gone when feature is available', function () {
         performFeatureToggleTest('featureDependent', '!tab-feature-test', true, false);
       });
     });

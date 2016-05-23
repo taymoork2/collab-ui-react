@@ -15,25 +15,29 @@ namespace servicesOverview {
 
       cards = [
         {
-          card: new ServicesOverviewHybridCallCard(), services: ['squared-fusion-ec', 'squared-fusion-uc']
+          card: new ServicesOverviewHybridCallCard(),
+          services: ['squared-fusion-ec', 'squared-fusion-uc']
         },
-        // management card depends on state on multiple services
+        // management card depends on state on multiple services:
         {
-          card: new ServicesOverviewHybridManagementCard(), services: ['squared-fusion-mgmt', 'squared-fusion-cal']
+          card: new ServicesOverviewHybridManagementCard(),
+          services: ['squared-fusion-mgmt', 'squared-fusion-cal']
         }, {
-          card: new ServicesOverviewHybridManagementCard(), services: ['squared-fusion-mgmt', 'squared-fusion-ec']
+          card: new ServicesOverviewHybridManagementCard(),
+          services: ['squared-fusion-mgmt', 'squared-fusion-ec']
         }, {
-          card: new ServicesOverviewHybridManagementCard(), services: ['squared-fusion-mgmt', 'squared-fusion-uc']
+          card: new ServicesOverviewHybridManagementCard(),
+          services: ['squared-fusion-mgmt', 'squared-fusion-uc']
         }, {
-          card: new ServicesOverviewHybridManagementCard(), services: ['squared-fusion-mgmt', 'squared-fusion-media']
+          card: new ServicesOverviewHybridManagementCard(),
+          services: ['squared-fusion-mgmt', 'squared-fusion-media']
         }, {
-          card: new ServicesOverviewCalendarCard(), services: ['squared-fusion-cal']
+          card: new ServicesOverviewCalendarCard(),
+          services: ['squared-fusion-cal']
         }, {
-          card: new ServicesOverviewHybridMediaCard(), services: ['squared-fusion-media']
-        },
-        // {
-        //   card: new ServicesOverviewHybridContextCard(), services: ['contact-center-context']
-        // }
+          card: new ServicesOverviewHybridMediaCard(),
+          services: ['squared-fusion-media']
+        }
       ];
 
       cards.forEach((cardService)=> {
