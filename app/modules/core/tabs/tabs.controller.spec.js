@@ -127,7 +127,7 @@
         performFeatureToggleTest('featureDependent', 'tab-feature-test', false, false);
       });
 
-      it('a tab with a feature toggle should be gone when feature is not available', function () {
+      it('a tab with a feature toggle should be visible when feature is available', function () {
         performFeatureToggleTest('featureDependent', 'tab-feature-test', true, true);
       });
 

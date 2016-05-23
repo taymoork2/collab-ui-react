@@ -62,9 +62,7 @@
 
     function getUpdatedFeatureTogglesFromTabs(tabs, existingFeatures) {
       //keep the enabled flag from previous load.
-      var updatedExistingFeatures = existingFeatures.slice(0);
-
-      var newFeatures = _.chain(tabs)
+      return _.chain(tabs)
         .map('feature')
         .compact()
         .invoke(String.prototype.replace, /^!/, '')
@@ -72,22 +70,12 @@
         .map(function (feature) {
           return {
             feature: feature,
-            enabled: false
+            enabled: _.some(existingFeatures, {
+              feature: feature.feature,
+              enabled: true
+            })
           };
         }).value();
-
-      _.forEach(newFeatures, function (feature) {
-        var existing = _.find(updatedExistingFeatures, {
-          feature: feature.feature
-        });
-        if (existing) {
-          //noop , keep the enabled flag from previous load.
-        } else {
-          updatedExistingFeatures.push(feature);
-        }
-      });
-
-      return updatedExistingFeatures;
     }
 
     function getFeatureToggles(features) {
