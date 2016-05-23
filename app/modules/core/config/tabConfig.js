@@ -144,6 +144,11 @@
       desc: 'tabs.mediaOnHoldTabDesc',
       state: 'mediaonhold',
       link: '#mediaonhold'
+    }, {
+      title: 'tabs.metricsDetailsTab',
+      //desc: 'tabs.metricsDetailsTabDesc',
+      state: 'metrics',
+      link: '#metrics'
     }]
   }];
 

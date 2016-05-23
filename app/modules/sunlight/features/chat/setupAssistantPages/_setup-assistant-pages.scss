@@ -1,5 +1,10 @@
 @import "ct-name";
+@import "ct-profile";
 @import "ct-overview";
+
+// These variables define the height of chat template setup assistant page title and desc
+$ct-title-height : 80px;
+$ct-desc-height: 32px;
 
 .ct-title {
   display: flex;
@@ -7,7 +12,7 @@
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  @include vr-spacing(pt, 3);
+  @include vr-spacing(pt, 1);
 }
 
 .ct-title-icon {
@@ -18,4 +23,12 @@
 .ct-title-desc {
   text-align: center;
   color: $gray-base;
+}
+
+.ct-sa-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - #{($top-bar-height + $page-header-height + $ct-title-height + $ct-desc-height)});
+  overflow: auto;
 }

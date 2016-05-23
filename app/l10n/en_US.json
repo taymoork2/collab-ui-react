@@ -1185,7 +1185,8 @@
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
-      "pending": "Pending"
+      "pending": "Pending",
+      "initializing": "Initializing"
     },
     "setup": {
       "label": "Connector Management",
@@ -3061,19 +3062,15 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Records requested:",
-    "csvExportRecordsSuccessful": "Records returned:",
-    "csvExportDownloadFile": "Download CSV file:",
-
     "csvImportTitle": "Import Results",
-    "csvImportFileName": "File name:",
-    "csvImportRecordsRequested": "Total records requested:",
-    "csvImportRecordsUpdated": "Records successfully updated:",
-    "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
     "csvFinished": "Completed:",
-    "csvRecordsFailed": "Errors:"
+    "csvRecordsRequested": "Records requested:",
+    "csvRecordsReturned": "Records returned:",
+    "csvRecordsUpdated": "Records updated:",
+    "csvRecordsFailed": "Errors:",
+    "csvDownloadImportErr": "Download import error log"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3534,6 +3531,23 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "profileSelector": "Profile",
+    "screen": "Screen",
+    "attributes": "Attributes",
+    "org": "Organization",
+    "agent": "Agent",
+    "agentAlias": "Allow agent to use alias",
+    "agentRealName": "Use agent real name",
+    "agentNamePreview": "Agent Name",
+    "agentAliasPreview": "Agent Alias",
+    "image": "Image",
+    "displayText": "Display Text",
+    "agentMsg": "Hi, I need help with the MFI key.",
+    "agentMsgTime": "10:10 AM",
+    "customerMsg": "Sure, I will help you with that.",
+    "customerMsgTime": "10:11 AM",
+    "agentEnteredStatus": "Agent has entered chat room",
+    "typeNewMsg": "Type your message and press enter.",
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3552,7 +3566,6 @@
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
     }
-
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

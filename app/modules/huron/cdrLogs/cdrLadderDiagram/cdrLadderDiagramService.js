@@ -5,7 +5,7 @@
     .service('CdrLadderDiagramService', CdrLadderDiagramService);
 
   /* @ngInject */
-  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
+  function CdrLadderDiagramService($rootScope, $http, $q, Config, $translate, Notification, Log, UrlConfig) {
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;
@@ -196,7 +196,7 @@
 
     svc.createLadderDiagram = function (events) {
       svc.events = events;
-      var message = generateMessagebody($filter('orderBy')(svc.events, ['"@timestamp"']));
+      var message = generateMessagebody(_.sortBy(svc.events, '@timestamp'));
       return proxyDiagnosticService(message);
     };
 

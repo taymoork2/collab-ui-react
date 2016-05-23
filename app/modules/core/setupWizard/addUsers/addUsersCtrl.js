@@ -5,7 +5,8 @@
     .controller('AddUserCtrl', AddUserCtrl);
 
   /* @ngInject */
-  function AddUserCtrl($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, FeatureToggleService) {
+  function AddUserCtrl($scope, $q, $location, addressparser, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, FeatureToggleService) {
+    $scope.maxUsers = 1100;
     var invalidcount = 0;
     $scope.options = {
       addUsers: 0
@@ -397,7 +398,7 @@
     }
 
     function getUsersList() {
-      return $window.addressparser.parse(angular.element('#usersfield-wiz').tokenfield('getTokensList'));
+      return addressparser.parse(angular.element('#usersfield-wiz').tokenfield('getTokensList'));
     }
 
     var resetUsersfield = function () {

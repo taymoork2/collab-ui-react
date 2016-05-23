@@ -5,8 +5,8 @@ fi
 
 last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
-manifest_files="package.json bower.json config/tsd.json"
-dependency_dirs="./node_modules ./bower_components"
+manifest_files="package.json config/tsd.json"
+dependency_dirs="./node_modules"
 project_root_env_var_name="WX2_ADMIN_WEB_CLIENT_HOME"
 
 # reset function (use this when needing to re-source this file)
@@ -137,14 +137,6 @@ function mk_npm_deps_tar {
     cd ~-
 }
 
-function mk_bower_deps_tar {
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    local target_files="bower.json bower_components"
-    local commit_id="${1:-`get_head_commit_id`}"
-    mk_deps_tar "bower-deps" "${commit_id}" ${target_files}
-    cd ~-
-}
-
 function mk_deps_tar {
     local cache_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"
     local archive_basename="${1}"
@@ -166,14 +158,12 @@ function restore_latest_deps {
     get_top_dir >/dev/null || return 1
     top_dir="`get_top_dir`"
     last_npm_deps_tar="`get_most_recent ${top_dir}/.cache/npm-deps-for-*`"
-    last_bower_deps_tar="`get_most_recent ${top_dir}/.cache/bower-deps-for-*`"
     tar_opts="$@"
 
-    if [ -n "${last_npm_deps_tar}" -a -n "${last_bower_deps_tar}" ]; then
+    if [ -n "${last_npm_deps_tar}" ]; then
         set -x
-        rm -rf ./node_modules ./bower_components
+        rm -rf ./node_modules
         tar ${tar_opts} -xzf ${last_npm_deps_tar}
-        tar ${tar_opts} -xzf ${last_bower_deps_tar}
         set +x
     else
         # no built deps exist
