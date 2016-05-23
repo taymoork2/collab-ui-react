@@ -183,17 +183,13 @@
     }
 
     vm.featureToggled = false;
+
     function isFeatureToggled() {
       return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
     }
-    isFeatureToggled().then(function(reply) {
+    isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
     });
-
-
-
-
-
 
   }
 }());

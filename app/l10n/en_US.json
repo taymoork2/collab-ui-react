@@ -1361,12 +1361,14 @@
     "fusion": {
       "list": {
         "title": "Clusters",
-        "empty": "There are no clusters to display.",
+        "empty": "No clusters to display.",
         "users": "Users:",
         "releaseChannel": "Release Channels:",
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
-        "settings": "Settings"
+        "settings": "Settings",
+        "expressway": "Expressway",
+        "non-expressway": "Non-Expressway"
       }
     }
   },

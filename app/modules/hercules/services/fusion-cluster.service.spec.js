@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: ExampleService', function () {
+describe('Service: FusionClusterService', function () {
   var FusionClusterService, $httpBackend;
 
   beforeEach(module('Hercules'));
@@ -36,16 +36,18 @@ describe('Service: ExampleService', function () {
       FusionClusterService.getAll();
     });
 
-    it('should filter out non-fused clusters', function () {
+    fit('should filter out non-fused clusters', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond([{
-          state: 'fused',
-          connectors: []
-        }, {
-          state: 'defused',
-          connectors: []
-        }]);
+        .respond({
+          clusters: [{
+            state: 'fused',
+            connectors: []
+          }, {
+            state: 'defused',
+            connectors: []
+          }]
+        });
       FusionClusterService.getAll()
         .then(function (clusters) {
           expect(clusters.length).toBe(1);

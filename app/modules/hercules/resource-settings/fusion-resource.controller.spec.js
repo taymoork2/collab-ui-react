@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: FusionResourceSettingsController', function () {
+describe('Controller: FusionResourceSettingsController', function () {
   var controller, $scope, $controller, $q, FusionClusterService;
 
   beforeEach(module('Hercules'));

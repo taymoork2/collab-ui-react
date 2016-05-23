@@ -6,10 +6,10 @@
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
-  function FusionResourceListController($filter, $state, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionResourceListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
-      // show a white page…
-      return;
+      // simulate a 404
+      $state.go('login');
     }
 
     var vm = this;
@@ -24,11 +24,11 @@
       count: 0
     };
     vm.filters = [{
-      name: 'Expressway',
+      name: $translate.instant('hercules.fusion.list.expressway'),
       filterValue: 'expressway',
       count: 0,
     }, {
-      name: 'Non-Expressway',
+      name: $translate.instant('hercules.fusion.list.non-expressway'),
       filterValue: 'non-expressway',
       count: 0,
     }];

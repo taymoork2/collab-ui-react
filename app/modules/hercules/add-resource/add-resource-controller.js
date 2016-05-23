@@ -5,7 +5,6 @@
     .module("Hercules")
     .controller("AddResourceController", AddResourceController);
 
-
   /* @ngInject */
   function AddResourceController($modalInstance, $window, $translate) {
     var vm = this;
@@ -21,12 +20,9 @@
       'label': 'anaess-dummy.rd.cisco.com'
     }];
 
-
-
-    vm.goNext = function() {
+    vm.goNext = function () {
       /* */
-    }
-
+    };
 
   }
 }());
