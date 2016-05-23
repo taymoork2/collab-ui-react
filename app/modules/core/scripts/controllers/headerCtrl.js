@@ -18,18 +18,15 @@
     init();
 
     function init() {
-
+      $scope.icon = 'icon-cisco-logo';
+      $translate('loginPage.title').then(function (title) {
+        $scope.headerTitle = title;
+      });
+      $scope.navStyle = 'admin';
+      FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
+        vm.newTabDisplay = !!support;
+      });
     }
-    $scope.icon = 'icon-cisco-logo';
-    $translate('loginPage.title').then(function (title) {
-      $scope.headerTitle = title;
-    });
-
-    $scope.navStyle = 'admin';
-
-    FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
-      vm.newTabDisplay = !!support;
-    });
 
     function originalTabDisplay() {
       return !_.isUndefined(vm.newTabDisplay) && !vm.newTabDisplay;
