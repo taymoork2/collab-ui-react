@@ -9,6 +9,17 @@
     var vm = this;
     vm.newTabDisplay = false;
 
+    vm.showOrgName = showOrgName;
+    vm.showFirstTimeSetupDropDown = showFirstTimeSetupDropDown;
+    vm.showLicenseUsageDropDown = showLicenseUsageDropDown;
+    vm.showUserDropDown = showUserDropDown;
+    vm.showMyCompany = showMyCompany;
+
+    init();
+
+    function init() {
+
+    }
     $scope.icon = 'icon-cisco-logo';
     $translate('loginPage.title').then(function (title) {
       $scope.headerTitle = title;
@@ -24,24 +35,24 @@
       return !_.isUndefined(vm.newTabDisplay) && !vm.newTabDisplay;
     }
 
-    vm.showOrgName = function () {
+    function showOrgName() {
       return originalTabDisplay() && Utils.isAdminPage();
-    };
+    }
 
-    vm.showFirstTimeSetupDropDown = function () {
+    function showFirstTimeSetupDropDown() {
       return originalTabDisplay() && Utils.isAdminPage();
-    };
+    }
 
-    vm.showLicenseUsageDropDown = function () {
+    function showLicenseUsageDropDown() {
       return originalTabDisplay() && Utils.isAdminPage();
-    };
+    }
 
-    vm.showUserDropDown = function () {
+    function showUserDropDown() {
       return Utils.isAdminPage();
-    };
+    }
 
-    vm.showMyCompany = function () {
+    function showMyCompany() {
       return !!vm.newTabDisplay;
-    };
+    }
   }
 })();
