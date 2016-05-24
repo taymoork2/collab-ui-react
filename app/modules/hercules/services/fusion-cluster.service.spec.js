@@ -57,20 +57,22 @@ describe('Service: FusionClusterService', function () {
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond([{
-          state: 'fused',
-          connectors: [{
-            alarms: [],
-            connectorType: 'c_mgmt',
-            runningState: 'running',
-            hostname: 'a.elg.no'
-          }, {
-            alarms: [],
-            connectorType: 'c_mgmt',
-            runningState: 'stopped',
-            hostname: 'b.elg.no'
+        .respond({
+          clusters: [{
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'c_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }, {
+              alarms: [],
+              connectorType: 'c_mgmt',
+              runningState: 'stopped',
+              hostname: 'b.elg.no'
+            }]
           }]
-        }]);
+        });
       FusionClusterService.getAll()
         .then(function (clusters) {
           expect(clusters[0].servicesStatuses[0].state.label).toBe('error');
