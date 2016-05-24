@@ -28,6 +28,7 @@
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
+    grantNotification();
     pollAvalonReport();
 
     function getStartDate() {
@@ -215,7 +216,7 @@
       });
     }
 
-    funnction grantNotification() {
+    function grantNotification() {
       if ($window.Notification) {
         $window.Notification.requestPermission().then(function (result) {});
       }
