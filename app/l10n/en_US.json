@@ -3871,6 +3871,28 @@
     "info": "Info",
     "order": "Order History"
   },
+  "subscriptions": {
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "room": "Room Systems",
+    "hybrid": "Hybrid Services",
+    "subscription": "Subscription: ",
+    "usage": "Usage: ",
+    "licenseTypes": {
+      "MS": "Standard Team Rooms",
+      "CF": "Meeting 25 Party",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "WebEx Collaboration Meeting Rooms",
+      "CO": "Call",
+      "ST": "Storage",
+      "SD": "Spark Room Systems"
+    }
+  },
   "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
