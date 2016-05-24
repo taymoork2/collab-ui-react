@@ -1,0 +1,71 @@
+<div class="setting" id="supportSettings" ng-controller="PartnerProfileCtrl">
+  <div class="columns">
+    <!-- support title / description -->
+    <div class="form-section" id="supportTitleAndDescPanel">
+      <h4 translate="partnerProfile.supportTitle"></h4>
+      <div class="form-spacing">
+        <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
+        <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
+      </div>
+    </div>
+    <!-- trouble ticket reporting location form -->
+    <div class="cs-radio-group" id="troubleReportingPanel">
+      <h4 translate="partnerProfile.supportSetup"></h4>
+      <!-- partner problem reporting site form -->
+      <div class="cs-input-group cs-input-radio" id="troubleReportingCiscoPanel" ng-click="setProblemRadio(0)">
+        <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0" ng-model="problemSiteRadioValue">
+        <label for="problemSiteRadio0">
+          <a href="" ng-click="sendFeedback()">
+            <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+            <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+            <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
+          </a>
+        </label>
+      </div>
+      <div class="cs-input-group cs-input-radio" id="problemReportsInput">
+        <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1" ng-model="problemSiteRadioValue">
+        <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanelRadio">
+          <div class="radio-input-flex">
+            <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
+                </textarea>
+            <h6 translate="partnerProfile.matchingTix"></h6>
+            <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="cs-radio-group" id="helpPanel">
+      <h4 translate="partnerProfile.helpFaq"></h4>
+      <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
+        <input type="radio" id="helpSiteRadio0" name="helpSiteRadio" ng-value="0" ng-model="helpSiteRadioValue">
+        <label for="helpSiteRadio0" ng-click="setHelpRadio(0)">
+          <a ng-href="{{profileHelpUrl}}" target="_blank">
+            <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+            <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+            <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
+          </a>
+        </label>
+      </div>
+      <div class="cs-input-group cs-input-radio" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
+        <input type="radio" id="helpSiteRadio1" name="helpSiteRadio" ng-value="1" ng-model="helpSiteRadioValue">
+        <label for="helpSiteRadio1" class="radio-input-spacing" id="helpPartnerPanelRadio">
+          <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl">
+        </label>
+      </div>
+    </div>
+
+    <div ng-show="showAllowReadOnlyAccessCheckbox">
+      <h4 translate="customerProfile.supportAccessTitle"></h4>
+      <div class="form-spacing">
+        <span translate="customerProfile.supportAccessInfo"></span>
+      </div>
+      <input id="profileSettingsAllowReadOnlyAccess" type="checkbox" ng-model="allowReadOnlyAccess">
+      <label class="cs-checkbox" for="profileSettingsAllowReadOnlyAccess">
+        <span translate="customerProfile.supportAccessCheckbox"></span>
+      </label>
+    </div>
+
+  </div>
+</div>

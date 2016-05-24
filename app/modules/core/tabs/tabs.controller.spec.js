@@ -2,12 +2,22 @@
   'use strict';
 
   describe('Controller: TabsCtrl', function () {
-    var controller, $controller, $rootScope, $scope, $location, Authinfo;
+    var controller, $q, $controller, $rootScope, $scope, $location, Authinfo;
+    var userService = {};
+    var featureToggleService = {
+      supports: sinon.stub()
+    };
     var tabConfig;
 
     beforeEach(module('Core'));
 
-    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _Authinfo_) {
+    beforeEach(module(function ($provide) {
+      $provide.value("FeatureToggleService", featureToggleService);
+      //$provide.value("HuronCustomerFeatureToggleService", huronFeature);
+    }));
+
+    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_) {
+      $q = _$q_;
       $controller = _$controller_;
       $rootScope = _$rootScope_;
       $scope = $rootScope.$new();
@@ -97,6 +107,36 @@
         broadcastEvent('TABS_UPDATED');
 
         expect(hasActiveTab('tab3')).toBeTruthy();
+      });
+    });
+
+    describe('feature toggle', function () {
+      var performFeatureToggleTest = function (tab, feature, featureIsEnabled, expectedResult) {
+        tabConfig.push({
+          tab: tab,
+          feature: feature
+        });
+        spyOn(featureToggleService, 'supports').and.returnValue($q.when(featureIsEnabled));
+        broadcastEvent('TABS_UPDATED');
+        $scope.$apply();
+        expect(_.some($scope.tabs, {
+          tab: tab
+        })).toBe(expectedResult);
+      };
+      it('a tab with a feature toggle should be gone when feature is not available', function () {
+        performFeatureToggleTest('featureDependent', 'tab-feature-test', false, false);
+      });
+
+      it('a tab with a feature toggle should be visible when feature is available', function () {
+        performFeatureToggleTest('featureDependent', 'tab-feature-test', true, true);
+      });
+
+      it('a tab with a negated feature toggle should be visible when feature is not available', function () {
+        performFeatureToggleTest('featureDependent', '!tab-feature-test', false, true);
+      });
+
+      it('a tab with a negated feature toggle should be gone when feature is available', function () {
+        performFeatureToggleTest('featureDependent', '!tab-feature-test', true, false);
       });
     });
 

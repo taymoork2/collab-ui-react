@@ -15,7 +15,7 @@ while (1 >= sitereports.testInfo.describeCount) {
     sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t31Info.siteUrl;
   }
 
-  xdescribe(sitereports.testInfo.describeText, function () {
+  describe(sitereports.testInfo.describeText, function () {
 
     if (sitereports.testInfo.testType == "T31") {
       beforeAll(function () {

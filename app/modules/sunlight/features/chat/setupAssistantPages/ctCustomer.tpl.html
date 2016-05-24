@@ -4,4 +4,150 @@
     <span class="h2" translate="careChatTpl.customerInfo"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.customerInfoDesc"></div>
+
+  <div class="ct-customer">
+    <cs-card-layout block-view="true" class="cardScroll">
+      <cs-card>
+        <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
+        <article class="ct-article header-border header-background articleHeight">
+
+          <header class="customeHeader ct-selectable-container"
+                  selectable ng-click="careChatSA.setActiveItem('welcomeHeader')">
+            <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
+                   class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
+            <label title="{{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}"
+                    class="orgText textOverflow">{{careChatSA.getAttributeParam('value', 'organization', 'welcomeHeader')}}</label>
+          </header>
+
+          <section>
+            <div class="row ct-left-row" selectable ng-click="careChatSA.setActiveItem('field1')">
+              <div class="ct-flex-container">
+
+                <label title=" {{careChatSA.getAttributeParam('value', 'label', 'field1')}}"
+                  class="cs-input__label h5 labelText ct-selectable-element strong textOverflow"
+                  for="field1">
+                    {{careChatSA.getAttributeParam('value', 'label', 'field1')}}
+                </label>
+
+                <label
+                  class="ct-input__label h6 labelText textOverflow"
+                  ng-show="careChatSA.getAttributeParam('value', 'required', 'field1') != 'required'">
+                  <em id="optionalField1" translate="careChatTpl.optionalText"></em>
+                </label>
+              </div>
+
+              <input
+                id="field1"
+                class="h5 ct-left-cs-input ct-selectable-element large-11"
+                type="text"
+                placeholder="{{careChatSA.getAttributeParam('value', 'hintText', 'field1')}}">
+            </div>
+
+            <div class="row ct-left-row" selectable ng-click="careChatSA.setActiveItem('field2')">
+              <div class="ct-flex-container">
+                <label title="{{careChatSA.getAttributeParam('value', 'label', 'field2')}}"
+                  class="cs-input__label h5 labelText ct-selectable-element strong textOverflow"
+                  for="field2">{{careChatSA.getAttributeParam('value', 'label', 'field2')}}
+                </label>
+
+                <label
+                  class="ct-input__label h6 labelText textOverflow"
+                  ng-show="careChatSA.getAttributeParam('value', 'required', 'field2') != 'required'">
+                  <em id="optionalField2" translate="careChatTpl.optionalText"></em>
+                </label>
+              </div>
+
+              <input
+                id="field2"
+                class="ct-left-cs-input ct-selectable-element large-11"
+                type="text"
+                placeholder="{{careChatSA.getAttributeParam('value', 'hintText', 'field2')}}">
+            </div>
+
+            <div class="row ct-left-row" selectable ng-click="careChatSA.setActiveItem('field3')">
+              <div class="ct-flex-container">
+                <label title="{{careChatSA.getAttributeParam('value', 'label', 'field3')}}"
+                  class="cs-input__label h5 labelText ct-selectable-element strong textOverflow">
+                  {{careChatSA.getAttributeParam('value', 'label', 'field3')}}
+                </label>
+
+                <label
+                  class="ct-input__label h6 labelText textOverflow"
+                  ng-show="careChatSA.getAttributeParam('value', 'required', 'field3') != 'required'">
+                  <em id="optionalField3" translate="careChatTpl.optionalText"></em>
+                </label>
+              </div>
+              <form>
+                <cs-select
+                  id="field3"
+                  class="h5 inputField_select ct-selectable-element large-11"
+                  ng-model="careChatSA.selectFieldOptions">
+                  <option value="">{{careChatSA.getAttributeParam('value', 'hintText', 'field2')}}</option>
+                </cs-select>
+              </form>
+            </div>
+          </section>
+          <footer class="ct-footer">
+            <label class="h5 typeText" translate="careChatTpl.defaultTypeMessageText"></label>
+          </footer>
+        </article>
+      </cs-card>
+
+      <cs-card>
+        <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
+        <article class="ct-article articleHeight">
+          <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
+            <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
+          </section>
+
+          <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
+            <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
+
+              <label
+                ng-if="attribute.type != 'radio'"
+                class="cs-input__label ct-attribute-field-label  h4 large-11">{{attribute.label}}
+              </label>
+
+              <input
+                ng-if="attribute.type == 'text'"
+                id="attribute.fieldName"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                type="text"
+                ng-model="attribute.value"/>
+
+              <div ng-if="attribute.type == 'radio'" class="h6 cs-radio-group ct-attribute-field-radio">
+                <input
+                  cs-input
+                  ng-repeat="option in attribute.options"
+                  type="radio"
+                  ng-model="attribute.value"
+                  id="{{option.id}}"
+                  name="{{option.id}}"
+                  value="{{option.id}}"
+                  cs-input-label="{{option.text}}"
+                />
+              </div>
+
+              <div ng-if="attribute.type == 'select'">
+                <cs-select
+                  ng-model="attribute.value"
+                  options="attribute.options"
+                  labelfield="text"
+                  valuefield="text"
+                  class="ct-attribute-field-textbox"
+                  placeholder="attribute.defaultValue">
+                </cs-select>
+                <label
+                  ng-if="careChatSA.isDefined(attribute.value, 'helpText')"
+                  class="cs-input__label ct-attribute-field-helptext large-11">
+                  <em>{{attribute.value.helpText}}</em>
+                </label>
+              </div>
+
+            </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
 </div>

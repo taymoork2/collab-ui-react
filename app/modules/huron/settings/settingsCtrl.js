@@ -961,6 +961,7 @@
           vm.model.callerId.uuid = companyCallerId.uuid;
           vm.model.callerId.callerIdName = companyCallerId.name;
           vm.model.callerId.callerIdNumber = TelephoneNumberService.getDIDLabel(companyCallerId.pattern);
+          vm.existingCallerIdName = companyCallerId.name;
 
           // set only if there is an existing callerIdNumber
           vm.model.callerId.externalNumber = companyCallerId.externalNumber;
@@ -1106,7 +1107,6 @@
     }
 
     function saveCallerId() {
-      var uuidExternalNumber = '';
       var rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
 
       var existingCallerIdNumber = _.find(vm.allExternalNumbers, function (externalNumber) {
@@ -1124,16 +1124,6 @@
                 pattern: rawPattern
               };
 
-              uuidExternalNumber = _.result(_.find(vm.allExternalNumbers, function (externalNumber) {
-                return externalNumber.pattern === rawPattern;
-              }), 'uuid');
-
-              if (uuidExternalNumber) {
-                data.externalNumber = {
-                  uuid: uuidExternalNumber,
-                  pattern: rawPattern
-                };
-              }
               return $q.when(true)
                 .then(deleteCallerId)
                 .then(function () {
@@ -1143,6 +1133,14 @@
                 .catch(function (response) {
                   return $q.reject(response);
                 });
+            } else {
+              // update if the name is changing
+              if (vm.model.callerId.uuid && (vm.existingCallerIdName !== vm.model.callerId.callerIdName)) {
+                var data = {
+                  name: vm.model.callerId.callerIdName
+                };
+                return CallerId.updateCompanyNumber(vm.model.callerId.uuid, data);
+              }
             }
           } else if (!_.isEmpty(_.get(vm, 'model.callerId.externalNumber.uuid'))) {
             return $q.when(true)

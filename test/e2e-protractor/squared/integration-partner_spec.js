@@ -65,6 +65,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
       utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
+      utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

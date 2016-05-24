@@ -29,9 +29,6 @@
         });
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
-        vm.huronDeviceListSubscription = csdmHuronOrgDeviceService.on('data', angular.noop, {
-          scope: $scope
-        });
 
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (
@@ -43,7 +40,7 @@
         vm.shouldShowList = function () {
           return vm.codesListSubscription.eventCount !== 0 &&
             (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
-            (vm.huronDeviceListSubscription.eventCount !== 0 || csdmHuronOrgDeviceService.getDeviceList().length > 0);
+            (csdmHuronOrgDeviceService.dataLoaded() || csdmHuronOrgDeviceService.getDeviceList().length > 0);
         };
 
         vm.isEntitledToRoomSystem = function () {
