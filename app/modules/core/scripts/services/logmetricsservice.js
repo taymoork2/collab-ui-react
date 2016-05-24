@@ -54,7 +54,8 @@
         domainManageVerify: 'DOMAINVER',
         domainManageInstructions: 'DOMAININST',
         helpdeskSearch: 'HELPDESKSEARCH',
-        helpdeskOperation: 'HELPDESKOPERATION'
+        helpdeskOperation: 'HELPDESKOPERATION',
+        siteListPage: 'SITELISTPAGE'
       },
 
       getEventAction: function (eAction) {
