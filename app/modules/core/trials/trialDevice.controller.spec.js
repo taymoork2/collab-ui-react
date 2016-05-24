@@ -27,9 +27,13 @@ describe('Controller: TrialDeviceController', function () {
       var phones = _.filter(controller.details.phones, {
         enabled: true
       });
+      var shippingInfo = _.find(controller.details.shippingInfo, {
+        enabled: true
+      });
 
       expect(roomSystems).toBeUndefined();
       expect(phones.length).toBe(0);
+      expect(shippingInfo).toBeUndefined();
     });
 
     // the back end expects this as an enum and enums cant start with numbers
@@ -404,13 +408,9 @@ describe('Controller: TrialDeviceController', function () {
       spyOn(controller, 'calcQuantity').and.returnValues(0, 2);
       controller.toggleShipFields();
 
-      expect(controller.shippingFields[0].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[1].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[2].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[3].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[4].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[5].templateOptions.disabled).toBe(false);
-      expect(controller.shippingFields[6].templateOptions.disabled).toBe(false);
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeFalsy();
+      });
     });
 
     it('should be enabled when device quantity does not exceed 7', function () {
