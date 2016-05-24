@@ -2160,8 +2160,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryController',
-              controllerAs: 'ediscoveryCtrl',
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },

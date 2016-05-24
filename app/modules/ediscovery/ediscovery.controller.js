@@ -28,14 +28,14 @@
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
-    vm.pageTitle = "eDiscovery";
-    vm.headerTabs = [{
-      title: 'Search',
-      state: 'ediscovery.search'
-    }, {
-      title: 'Reports',
-      state: 'ediscovery.reports'
-    }];
+    // vm.pageTitle = "eDiscovery";
+    // vm.headerTabs = [{
+    //   title: 'Search',
+    //   state: 'ediscovery.search'
+    // }, {
+    //   title: 'Reports',
+    //   state: 'ediscovery.reports'
+    // }];
 
     pollAvalonReport();
 
