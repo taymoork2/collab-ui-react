@@ -322,7 +322,7 @@
         return deferred.promise;
       }
 
-      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
+      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         deferred.reject({
           statusText: '',
           status: 'VALIDATION_FAILURE'

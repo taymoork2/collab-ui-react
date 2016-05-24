@@ -74,7 +74,7 @@
     fetch();
 
     function dataLoaded() {
-      return !huronEnabled() || loadedData;
+      return !Authinfo.isSquaredUC() || loadedData;
     }
 
     function getDeviceList() {
