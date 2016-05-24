@@ -22,6 +22,15 @@
     };
     vm.reports = [];
 
+    vm.pageTitle = "eDiscovery";
+    vm.headerTabs = [{
+      title: 'Search',
+      state: 'ediscovery.search'
+    }, {
+      title: 'Reports',
+      state: 'ediscovery.reports'
+    }];
+
     pollAvalonReport();
 
     function getStartDate() {

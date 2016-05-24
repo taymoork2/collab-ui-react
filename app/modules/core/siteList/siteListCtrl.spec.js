@@ -80,7 +80,7 @@ describe('SiteListCtrl(): grid update test', function () {
 
 }); // describe()
 
-describe('Testing controller: SiteListCtrl', function () {
+describe('SiteListCtrl(): SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -178,8 +178,9 @@ describe('Testing controller: SiteListCtrl', function () {
 
     spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvExport.promise);
     spyOn(SiteListService, 'updateGrid');
-    spyOn(SiteListService, 'updateCSVColumnInRow');
+    spyOn(SiteListService, 'updateCSVStatusInRow');
     spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
 
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
@@ -188,25 +189,42 @@ describe('Testing controller: SiteListCtrl', function () {
 
   }));
 
-  it('should be able to call export function with expected parameters', function () {
-
-    deferredCsvExport.resolve({
-      siteUrl: 'fake.webex.com',
-      isTestResult: true,
-      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
-      completionDetails: null,
-    });
-
+  it('can process resolve from WebExApiGatewayService.csvExport() ', function () {
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
 
     scope.csvExport(fakeSiteRow);
-    scope.$apply();
 
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
-    expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
-    expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
 
+    deferredCsvExport.resolve({
+      siteUrl: 'fake.webex.com',
+      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+      completionDetails: null,
+    });
+
+    scope.$apply();
+
+    expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
   });
 
+  it('can process reject from WebExApiGatewayService.csvExport() ', function () {
+    expect(SiteListCtrl).toBeDefined();
+    expect(scope).toBeDefined();
+
+    scope.csvExport(fakeSiteRow);
+
+    expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
+
+    deferredCsvExport.reject({
+      "errorCode": "060100",
+      "errorMessage": "Your request has been prevented because a task is now running. Try again later."
+    });
+
+    scope.$apply();
+
+    expect(Notification.error).toHaveBeenCalledWith('siteList.csvRejectedToast-060100');
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
+  });
 });
