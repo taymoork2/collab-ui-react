@@ -306,11 +306,15 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
-        'call-service'
+        'cluster-list',
+        'call-service',
+        'cluster-settings-page'
       ],
       'squared-fusion-cal': [
         'calendar-service',
-        'services-overview'
+        'services-overview',
+        'cluster-list',
+        'cluster-settings-page'
       ],
       'squared-team-member': [
         'organization'
@@ -347,6 +351,8 @@
         'media-service',
         'hurondetails',
         'huronsettings',
+        'cluster-list',
+        'cluster-settings-page',
         'calendar-service',
         'call-service',
         'management-service'

@@ -1974,6 +1974,25 @@
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
           })
+          .state('cluster-list', {
+            url: '/services/resource',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
+            controller: 'FusionResourceListController',
+            controllerAs: 'resourceList',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('cluster-settings-page', {
+            url: '/services/resource/settings/:clusterid',
+            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+            controller: 'FusionResourceSettingsController',
+            controllerAs: 'resourceSetting',
+            parent: 'main'
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
             controller: 'ExpresswayServiceController',
