@@ -197,11 +197,11 @@ describe('Controller: TrialDeviceController', function () {
       var device = {
         model: 'CISCO_SX10',
         enabled: false,
-        quantity: 0,
+        quantity: 3,
         readonly: false,
         valid: true
       };
-      controller.setQuantityInputState(device, 1);
+      device.quantity = controller.getQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(0);
     });
 
@@ -215,7 +215,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true
       };
-      controller.setQuantityInputState(device, 1);
+      device.quantity = controller.getQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(1);
     });
 
@@ -229,7 +229,7 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true
       };
-      controller.setQuantityInputState(device, 1);
+      device.quantity = controller.getQuantityInputDefault(device, 1);
       expect(device.quantity).toBe(3);
     });
 

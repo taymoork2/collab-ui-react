@@ -36,7 +36,7 @@
     vm.disabledChecks = disabledChecks;
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
-    vm.setQuantityInputState = _setQuantityInputState;
+    vm.getQuantityInputDefault = _getQuantityInputDefault;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -117,7 +117,10 @@
           return vm.sx10.enabled;
         },
         'templateOptions.disabled': function () {
-          return vm.setQuantityInputState(vm.sx10, 2);
+          return !vm.sx10.enabled || vm.sx10.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.sx10, 2);
         }
 
       },
@@ -168,7 +171,10 @@
           return vm.phone8865.enabled;
         },
         'templateOptions.disabled': function () {
-          return vm.setQuantityInputState(vm.phone8865, 1);
+          return !vm.phone8865.enabled || vm.phone8865.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8865, 1);
         }
       },
       watcher: _addWatcher(),
@@ -216,7 +222,10 @@
           return vm.phone8845.enabled;
         },
         'templateOptions.disabled': function () {
-          return vm.setQuantityInputState(vm.phone8845, 1);
+          return !vm.phone8845.enabled || vm.phone8845.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8845, 1);
         }
 
       },
@@ -265,7 +274,10 @@
           return vm.phone8841.enabled;
         },
         'templateOptions.disabled': function () {
-          return vm.setQuantityInputState(vm.phone8841, 1);
+          return !vm.phone8841.enabled || vm.phone8841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -313,7 +325,10 @@
           return vm.phone7841.enabled;
         },
         'templateOptions.disabled': function () {
-          return vm.setQuantityInputState(vm.phone7841, 1);
+          return !vm.phone7841.enabled || vm.phone7841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone7841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -543,16 +558,16 @@
         .reduce(_.add) || 0;
     }
 
-    function _setQuantityInputState(device, defaultValue) {
+    function _getQuantityInputDefault(device, defaultValue) {
 
       var disabled = !device.enabled;
       if (disabled) {
-        device.quantity = 0;
-      } else if (!device.quantity) {
-        device.quantity = defaultValue;
+        return 0;
+      } else if (device.quantity === 0) {
+        return defaultValue;
+      } else {
+        return device.quantity;
       }
-      return disabled || device.readonly;
-
     }
 
     function _validateTypeQuantity(scope, deviceType) {
