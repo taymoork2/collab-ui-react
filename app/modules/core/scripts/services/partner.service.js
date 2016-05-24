@@ -185,6 +185,7 @@
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
+        dealId: customer.dealId,
         offer: {},
         offers: customer.offers,
         status: customer.state,

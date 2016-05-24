@@ -73,13 +73,6 @@
       hideExtensionLength: true
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-      vm.model.hideExtensionLength = !result;
-      vm.fields = vm.initialFields;
-    }).catch(function (response) {
-      vm.fields = vm.initialFields;
-    });
-
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
@@ -663,6 +656,9 @@
         // Get the timezone feature toggle setting
         return enableTimeZoneFeatureToggle();
       }).then(function () {
+        // Get the extemsion length feature toggle setting
+        return enableExtensionLengthFeatureToggle();
+      }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
@@ -717,6 +713,7 @@
           });
         }
       }).then(function () {
+        vm.fields = vm.initialFields;
         return loadExternalNumberPool();
       });
     }
@@ -752,6 +749,14 @@
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
+      });
+    }
+
+    function enableExtensionLengthFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
+        vm.model.hideExtensionLength = !result;
+      }).catch(function (response) {
+        // extension length feature toggle not enabled for customer
       });
     }
 

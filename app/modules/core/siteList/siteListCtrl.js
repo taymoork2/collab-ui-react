@@ -192,7 +192,6 @@
         },
 
         function error(response) {
-          // Notification.error($translate.instant('csvRejectedToast-' + response.errorCode));
           Notification.error($translate.instant('siteList.csvRejectedToast-' + response.errorCode));
 
           SiteListService.updateCSVStatusInRow(siteRow);
