@@ -15,6 +15,7 @@
     WebExUserSettingsFact,
     Notification
   ) {
+    $scope.loading = WebExUserSettingsFact.loading;
     // Update the breadcrumb with site url
     $state.current.data.displayName = $stateParams.site;
     $rootScope.$broadcast('displayNameUpdated');

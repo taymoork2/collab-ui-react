@@ -26,14 +26,40 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId) {
       var orgId = Authinfo.getOrgId();
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
         }).then(function (res) {
           //console.log("created, post to runUrl", res)
-          return $http.post(res.data.runUrl, {});
+          return $http.post(res.data.runUrl, {
+            "roomId": roomId
+          });
+        })
+        .catch(function (data) {
+          //console.log("error createReport: " + data)
+        });
+    }
+
+    function patchReport(id, patchData) {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
+        .then(function (res) {
+          //console.log("patching", res);
+        })
+        .catch(function (data) {
+          //console.log("error createReport: " + data)
+        });
+    }
+
+    function deleteReport(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
+        .then(function (res) {
+          //console.log("deleted", res);
         })
         .catch(function (data) {
           //console.log("error createReport: " + data)
@@ -52,7 +78,9 @@
     return {
       getReport: getReport,
       deleteReports: deleteReports,
-      createReport: createReport
+      createReport: createReport,
+      patchReport: patchReport,
+      deleteReport: deleteReport
     };
   }
 

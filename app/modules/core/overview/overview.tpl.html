@@ -64,7 +64,7 @@
                       ng-click="overview.setHybridAcknowledged('call-connect-service')"></button>
             </div>
             <!--cloud-sip-uri -->
-            <div class="notification-style" ng-if="!overview.isCloudSipUriSet && !overview.isSipUriAcknowledged">
+            <div class="notification-style" ng-if="overview.isCloudSipUriSet !== undefined && !overview.isCloudSipUriSet && !overview.isSipUriAcknowledged">
               <span class="badge warning" translate="homePage.todo"></span>
               <div class="notification-spacing">
                 <span translate="homePage.setupCloudSipUriMessage"></span>

@@ -1,0 +1,24 @@
+<div class="domainModal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="enable3rdPartyAuth.cancel()"><span class="sr-only" translate="common.close"></span></button>
+    <h4 class="modal-title" translate="Enable3rdPartyAuth"></h4>
+  </div>
+  <div class="modal-body">
+    <section>
+      <p>This will enable your 3rd party auth provider.</p>
+    </section>
+  </div>
+
+  <div ng-if="enable3rdPartyAuth.error" class="modal-body domWarning domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p>{{enable3rdPartyAuth.error}}</p>
+    </section>
+  </div>
+
+  <div class="modal-footer">
+    <button ng-click="enable3rdPartyAuth.cancel()" translate="common.cancel"></button>
+    <button ng-click="enable3rdPartyAuth.enable()" ng-disabled="!enable3rdPartyAuth.operationAllowed" class="btn--primary"
+            translate="Enable"></button>
+  </div>
+</div>
