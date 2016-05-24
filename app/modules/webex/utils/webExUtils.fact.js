@@ -250,64 +250,64 @@
       }; // getEnableT30UnifiedAdmin()
 
       obj.getAllSitesWebexLicenseInfo = function () {
-          var deferredGetWebexLicenseInfo = $q.defer();
+        var deferredGetWebexLicenseInfo = $q.defer();
 
-          Orgservice.getValidLicenses().then(
-            function getValidLicensesSuccess(licenses) {
-              var funcName = "getValidLicensesSuccess()";
-              var logMsg = "";
+        Orgservice.getValidLicenses().then(
+          function getValidLicensesSuccess(licenses) {
+            var funcName = "getValidLicensesSuccess()";
+            var logMsg = "";
 
-              logMsg = funcName + ": " + "\n" +
-                "licenses=" + JSON.stringify(licenses);
-              // $log.log(logMsg);
+            logMsg = funcName + ": " + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            // $log.log(logMsg);
 
-              var allSitesLicenseInfo = [];
+            var allSitesLicenseInfo = [];
 
-              licenses.forEach(
-                function checkLicense(license) {
-                  if (
-                    ("CONFERENCING" == license.licenseType) ||
-                    ("CMR" == license.licenseType)
-                  ) {
+            licenses.forEach(
+              function checkLicense(license) {
+                if (
+                  ("CONFERENCING" == license.licenseType) ||
+                  ("CMR" == license.licenseType)
+                ) {
 
-                    var capacity = license.capacity;
-                    var licenseFields = license.licenseId.split("_");
-                    var webexSite = licenseFields[licenseFields.length - 1];
-                    var offerCode = licenseFields[0];
+                  var capacity = license.capacity;
+                  var licenseFields = license.licenseId.split("_");
+                  var webexSite = licenseFields[licenseFields.length - 1];
+                  var offerCode = licenseFields[0];
 
-                    var licenseInfo = {
-                      'webexSite': webexSite,
-                      'offerCode': offerCode,
-                      'capacity': capacity
-                    };
+                  var licenseInfo = {
+                    'webexSite': webexSite,
+                    'offerCode': offerCode,
+                    'capacity': capacity
+                  };
 
-                    allSitesLicenseInfo.push(licenseInfo);
-                  }
-                } // checkLicense()
-              ); // licenses.forEach()
+                  allSitesLicenseInfo.push(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
 
-              if (0 < allSitesLicenseInfo.length) {
-                deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
-              } else {
-                deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
-              }
-            }, // getValidLicensesSuccess()
+            if (0 < allSitesLicenseInfo.length) {
+              deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
+            } else {
+              deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
+            }
+          }, // getValidLicensesSuccess()
 
-            function getValidLicensesError(info) {
-              var funcName = "getValidLicensesError()";
-              var logMsg = "";
+          function getValidLicensesError(info) {
+            var funcName = "getValidLicensesError()";
+            var logMsg = "";
 
-              logMsg = funcName + ": " + "\n" +
-                "info=" + JSON.stringify(info);
-              $log.log(logMsg);
+            logMsg = funcName + ": " + "\n" +
+              "info=" + JSON.stringify(info);
+            $log.log(logMsg);
 
-              deferredGetWebexLicenseInfo.reject(info);
-            } // getValidLicensesError()
-          ); // Orgservice.getValidLicenses().then()
+            deferredGetWebexLicenseInfo.reject(info);
+          } // getValidLicensesError()
+        ); // Orgservice.getValidLicenses().then()
 
-          return deferredGetWebexLicenseInfo.promise;
-        }; // getAllSitesWebexLicenseInfo()
-        
+        return deferredGetWebexLicenseInfo.promise;
+      }; // getAllSitesWebexLicenseInfo()
+
       obj.setInfoCardLicenseInfo = function (
         licenseInfo,
         infoCardObj
