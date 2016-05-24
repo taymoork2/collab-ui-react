@@ -5,11 +5,12 @@
     .controller('ExternalNumberOverviewCtrl', ExternalNumberOverview);
 
   /* @ngInject */
-  function ExternalNumberOverview($scope, $stateParams, ExternalNumberService, Notification) {
+  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
     vm.allNumbersCount = 0;
+    vm.isTerminusCustomer = isTerminusCustomer;
     var ALL = 'all';
 
     updatePhoneNumberCount();
@@ -38,6 +39,30 @@
     function getNumberCount() {
       vm.allNumbersCount = ExternalNumberService.getQuantity(ALL);
       vm.loading = false;
+    }
+
+    function isTerminusCustomer() {
+      ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId).then(function (response) {
+        if (response) {
+          return $state.go('pstnSetup', {
+            customerId: vm.currentCustomer.customerOrgId,
+            customerName: vm.currentCustomer.customerName,
+            customerEmail: vm.currentCustomer.customerEmail,
+            customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer)
+          });
+        } else {
+          return $state.go('didadd', {
+            currentOrg: vm.currentCustomer
+          });
+        }
+      });
+    }
+
+    function getCommTrial(org) {
+      if (!!org.isPartner) {
+        return false;
+      }
+      return _.get(org, 'communications.isTrial', true);
     }
   }
 })();

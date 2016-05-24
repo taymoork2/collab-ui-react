@@ -9,14 +9,12 @@
   /* @ngInject */
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
-      pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
-      atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
@@ -43,14 +41,13 @@
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
+      extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
-      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',
@@ -89,6 +86,7 @@
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
       muteByDefault: 'mute-by-default',
+      myCompanyPage: 'atlas-my-company-page',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
@@ -100,6 +98,7 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
+      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
@@ -125,8 +124,9 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials',
-      enableCrashLogs: 'csdm-enable-crash-logs'
+      enableCrashLogs: 'csdm-enable-crash-logs',
+      readonlyAdmin: 'atlas-read-only-admin',
+      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
 
     var toggles = {};

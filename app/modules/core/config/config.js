@@ -96,7 +96,8 @@
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
         helpdesk: 'atlas-portal.partner.helpdesk',
-        spark_synckms: 'spark.synckms'
+        spark_synckms: 'spark.synckms',
+        readonly_admin: 'id_readonly_admin'
       },
 
       roles: {
@@ -108,7 +109,8 @@
         reports: 'Reports',
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
-        spark_synckms: 'Spark_SyncKms'
+        spark_synckms: 'Spark_SyncKms',
+        readonly_admin: 'Readonly_Admin'
       },
 
       roleState: {
@@ -224,6 +226,7 @@
         'cdr-overview',
         'cdrladderdiagram',
         'activateProduct',
+        'settings',
         'userRedirect'
       ],
       Readonly_Admin: [
@@ -240,21 +243,23 @@
         'support',
         'editService',
         'trialExtInterest',
-        'activateProduct'
+        'activateProduct',
+        'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
       User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
+        'site-csv',
         'site-csv-results',
         'site-settings',
         'site-setting',
@@ -286,11 +291,14 @@
         'huntgroupedit',
         'devices',
         'device-overview',
-        'devices-redux'
+        'devices-redux',
+        'services-overview'
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
-        'management-service'
+        'management-service',
+        'services-overview',
+        'my-company'
       ],
       'spark-room-system': [
         'devices',
@@ -298,24 +306,22 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
-        'call-service'
+        'cluster-list',
+        'call-service',
+        'cluster-settings-page'
       ],
       'squared-fusion-cal': [
-        'calendar-service'
+        'calendar-service',
+        'services-overview',
+        'cluster-list',
+        'cluster-settings-page'
       ],
       'squared-team-member': [
         'organization'
       ],
       'squared-fusion-media': [
-        'meetings',
-        'vts',
-        'utilization',
-        'metrics',
-        'threshold',
-        'fault',
-        'alarms',
-        'events',
         //'mediafusionconnector',
+        'metrics',
         'media-service',
         'connector-details'
       ],
@@ -345,6 +351,8 @@
         'media-service',
         'hurondetails',
         'huronsettings',
+        'cluster-list',
+        'cluster-settings-page',
         'calendar-service',
         'call-service',
         'management-service'

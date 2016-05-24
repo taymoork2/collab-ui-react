@@ -39,7 +39,7 @@
       function downloadCsv(csvType, tooManyUsers) {
         csvType = csvType || scope.type;
 
-        if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser) {
+        if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser || csvType === CsvDownloadService.typeError) {
           startDownload(csvType);
           CsvDownloadService.getCsv(csvType, tooManyUsers, FILENAME).then(function (url) {
             finishDownload(csvType, url);
@@ -100,7 +100,7 @@
 
       function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+          if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
                 href: url,
@@ -190,6 +190,9 @@
       }
       if (attrs.anchorText) {
         downloadAnchor.html(attrs.anchorText);
+      }
+      if (scope.type === CsvDownloadService.typeUser) {
+        scope.tooltipMessage = $translate.instant('usersPage.csvBtnTitle');
       }
 
       // if the template Object URL is already loaded, change the anchor's attributes to download from blob

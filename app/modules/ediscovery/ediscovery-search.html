@@ -1,0 +1,54 @@
+<div class="ediscovery-search">
+
+
+  <div class="row">
+    <div class="cs-input-group columns large-2">
+      <label class="cs-input__label fit" for="startDate">Start Date</label>
+      <cs-datepicker
+        id="startDate"
+        ng-model="ediscoverySearchCtrl.searchCriteria.startDate"
+        placeholder="Choose a start Day"
+        view-format="YYYY-MM-DD">
+      </cs-datepicker>
+
+    </div>
+
+    <div class="cs-input-group columns large-2">
+      <label class="cs-input__label fit" for="endDate">End Date</label>
+      <cs-datepicker
+        id="endDate"
+        ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
+        placeholder="Choose an end Day"
+        view-format="YYYY-MM-DD">
+      </cs-datepicker>
+    </div>
+
+    <div class="cs-input-group columns large-6">
+       <label class="cs-input__label fit" for="roomId">Room Id</label>
+      <input id="roomId"
+             class="cs-input"
+             size="50"
+             placeholder="Enter room id"
+             ng-model="ediscoverySearchCtrl.searchCriteria.searchString">
+    </div>
+
+    <div class="cs-input-group columns large-2">
+      <button type="button" class="button btn--primary align" ng-click="ediscoverySearchCtrl.createReport()">Create Report</button>
+    </div>
+
+
+
+
+  </div>
+
+  <div>
+    Search Result
+  </div>
+  <div>
+    Status: {{ediscoverySearchCtrl.searchResult.status}}
+  </div>
+  <div>
+    Data: {{ediscoverySearchCtrl.searchResult.data}}
+  </div>
+
+</div>

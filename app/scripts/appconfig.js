@@ -331,26 +331,21 @@
             }
           });
 
+        // See http://angular-translate.github.io/docs/#/guide/19_security
+        $translateProvider.useSanitizeValueStrategy('escapeParameters');
+        $translateProvider.useStaticFilesLoader({
+          prefix: 'l10n/',
+          suffix: '.json'
+        });
+        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
+        $translateProvider.preferredLanguage('en_US');
+        $translateProvider.fallbackLanguage('en_US');
+
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-
-        // See ... http://angular-translate.github.io/docs/#/guide/19_security
-        $translateProvider.useSanitizeValueStrategy('escapeParameters');
-
-        $translateProvider.useStaticFilesLoader({
-          prefix: 'l10n/',
-          suffix: '.json'
-        });
-
-        $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-
-        var defaultLang = 'en_US';
-
-        //Tell the module what language to use by default
-        $translateProvider.preferredLanguage(defaultLang);
       }
     ]);
 
@@ -513,6 +508,23 @@
               loggedOnUser: null
             }
           })
+          .state('settings', {
+            url: '/settings',
+            templateUrl: 'modules/core/settings/settings.tpl.html',
+            controller: 'SettingsCtrl',
+            controllerAs: 'settingsCtrl',
+            parent: 'main'
+          })
+          .state('settings.enable3rdPartyAuth', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'Enable3rdPartyAuthCtrl',
+                controllerAs: 'enable3rdPartyAuth',
+                templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'
+              }
+            }
+          })
           .state('profile', {
             url: '/profile',
             templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
@@ -563,6 +575,44 @@
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
             parent: 'main'
+          })
+          .state('my-company', {
+            // url: '/my-company',
+            templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+            controller: 'MyCompanyPageCtrl',
+            controllerAs: 'mcp',
+            parent: 'main',
+            abstract: true
+          })
+          .state('my-company.subscriptions', {
+            url: '/my-company/subscriptions',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpSubscription',
+                controller: 'MyCompanyPageSubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+              }
+            }
+          })
+          .state('my-company.info', {
+            url: '/my-company',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpInfo',
+                controller: 'MyCompanyPageInfoCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html'
+              }
+            }
+          })
+          .state('my-company.orders', {
+            url: '/my-company/orders',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpOrder',
+                controller: 'MyCompanyPageOrderCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+              }
+            }
           })
           .state('users', {
             abstract: true,
@@ -1019,6 +1069,19 @@
               csvImportObj: null
             }
           })
+          .state('site-csv', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'SiteCSVModalCtrl',
+                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                controllerAs: 'siteCSVModalCtrl'
+              }
+            },
+            params: {
+              siteRow: null
+            }
+          })
           .state('site-csv-results', {
             parent: 'modal',
             views: {
@@ -1308,6 +1371,29 @@
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
             data: {
               displayName: 'Phone Numbers'
+            }
+          })
+          .state('customer-overview.pstnOrderOverview', {
+            controller: 'PstnOrderOverviewCtrl',
+            controllerAs: 'pstnOrderOverview',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            data: {
+              displayName: 'PSTN Orders'
+            },
+            params: {
+              currentCustomer: {}
+            }
+          })
+          .state('customer-overview.pstnOrderDetail', {
+            parent: 'customer-overview.pstnOrderOverview',
+            controller: 'PstnOrderDetailCtrl',
+            controllerAs: 'pstnOrderDetail',
+            templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            data: {
+              displayName: 'Order'
+            },
+            params: {
+              currentOrder: {}
             }
           })
           .state('modal', {
@@ -1881,6 +1967,32 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
+          .state('services-overview', {
+            url: '/services/overview',
+            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            controller: 'ServicesOverviewCtrl',
+            controllerAs: 'servicesOverviewCtrl',
+            parent: 'main'
+          })
+          .state('cluster-list', {
+            url: '/services/resource',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
+            controller: 'FusionResourceListController',
+            controllerAs: 'resourceList',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('cluster-settings-page', {
+            url: '/services/resource/settings/:clusterid',
+            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+            controller: 'FusionResourceSettingsController',
+            controllerAs: 'resourceSetting',
+            parent: 'main'
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
             controller: 'ExpresswayServiceController',
@@ -2017,90 +2129,12 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
-          .state('meetings', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            //url: '/meetings',
-            //templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-            //controller: 'ListMeetingsCtrl',
-            parent: 'main'
-          })
-          .state('meetings.list', {
-            url: '/meetings',
-            templateUrl: 'modules/mediafusion/meetings/meetingList/meetingList.tpl.html',
-            controller: 'ListMeetingsCtrl',
-            params: {
-              showAddUsers: {}
-            }
-          })
-          .state('meetings.list.preview', {
-            templateUrl: 'modules/mediafusion/meetings/meetingPreview/meetingPreview.tpl.html',
-            controller: 'MeetingPreviewCtrl'
-          })
+
           .state('metrics', {
             url: '/metrics',
-            templateUrl: 'modules/mediafusion/metrics/metricsList/metricsList.tpl.html',
-            controller: 'MetricsCtrl',
-            parent: 'main'
-          })
-          .state('metrics.preview', {
-            templateUrl: 'modules/mediafusion/metrics/metricsPreview/metricsPreview.tpl.html',
-            controller: 'MetricsPreviewCtrl'
-          })
-          .state('threshold', {
-            url: '/threshold',
-            templateUrl: 'modules/mediafusion/threshold/thresholdList/thresholdList.tpl.html',
-            controller: 'ThresholdCtrl',
-            parent: 'main'
-          })
-          .state('threshold.preview', {
-            templateUrl: 'modules/mediafusion/threshold/thresholdPreview/thresholdPreview.tpl.html',
-            controller: 'ThresholdPreviewCtrl'
-          })
-          .state('fault', {
-            url: '/fault',
-            templateUrl: 'modules/mediafusion/faultRules/faultRules.tpl.html',
-            controller: 'FaultRulesCtrl',
-            parent: 'main'
-          })
-          .state('vts', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('vts.list', {
-            url: '/vts',
-            templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourceList/enterpriseResourceList.tpl.html',
-            controller: 'ListVtsCtrl'
-          })
-          .state('vts.list.preview', {
-            templateUrl: 'modules/mediafusion/enterpriseResource/enterpriseResourcePreview/enterpriseResourcePreview.tpl.html',
-            controller: 'VtsPreviewCtrl'
-          })
-          .state('alarms', {
-            url: '/alarms',
-            templateUrl: 'modules/mediafusion/alarms/alarmList/alarmList.tpl.html',
-            controller: 'AlarmListCtrl',
-            parent: 'main'
-          })
-          .state('alarms.preview', {
-            templateUrl: 'modules/mediafusion/alarms/alarmPreview/alarmPreview.tpl.html',
-            controller: 'AlarmPreviewCtrl'
-          })
-          .state('events', {
-            url: '/events',
-            templateUrl: 'modules/mediafusion/events/eventList/eventList.tpl.html',
-            controller: 'EventListCtrl',
-            parent: 'main'
-          })
-          .state('events.preview', {
-            templateUrl: 'modules/mediafusion/events/eventPreview/eventPreview.tpl.html',
-            controller: 'EventPreviewCtrl'
-          })
-          .state('utilization', {
-            url: '/utilization',
-            templateUrl: 'modules/mediafusion/utilization/overAllUtilization.tpl.html',
-            controller: 'UtilizationCtrl',
+            controllerAs: 'GraphUtilCtrl',
+            controller: 'AnalyticsUtilizationGraphController',
+            templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
             parent: 'main'
           })
           .state('media-service', {
@@ -2127,6 +2161,16 @@
               }
             }
           })
+          /*.state('media-service.metrics', {
+            url: '/mediaservice/metrics',
+            views: {
+              'fullPane': {
+                controllerAs: 'GraphUtilCtrl',
+                controller: 'AnalyticsUtilizationGraphController',
+                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
+              }
+            }
+          })*/
           .state('connector-details', {
             parent: 'sidepanel',
             views: {
@@ -2189,6 +2233,44 @@
     ]);
 
   angular
+    .module('Ediscovery')
+    .config(['$stateProvider',
+      function ($stateProvider) {
+        $stateProvider
+
+          .state('ediscovery-main', {
+          views: {
+            'main@': {
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
+              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+
+        .state('ediscovery', {
+            url: '/ediscovery',
+            template: '<div ui-view></div>',
+            parent: 'ediscovery-main'
+          })
+          .state('ediscovery.search', {
+            url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+          })
+          .state('ediscovery.reports', {
+            url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-reports.html'
+          });
+      }
+    ]);
+
+  angular
     .module('Messenger')
     .config(['$stateProvider',
       function ($stateProvider) {
@@ -2242,13 +2324,10 @@
           })
           .state('care.ChatSA', {
             url: '/careChat',
-            views: {
-              'main@': {
-                templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
-                controller: 'CareChatSetupAssistantCtrl',
-                controllerAs: 'careChatSA'
-              }
-            }
+            parent: 'care.Details',
+            templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+            controller: 'CareChatSetupAssistantCtrl',
+            controllerAs: 'careChatSA'
           });
       }
     ]);

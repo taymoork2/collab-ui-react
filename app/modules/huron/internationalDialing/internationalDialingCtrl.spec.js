@@ -5,7 +5,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
   var url;
   var getDeferred;
   var currentUser = getJSONFixture('core/json/currentUser.json');
-  var cosRestrictions = getJSONFixture('huron/json/user/cosRestrictions.json');
+  var cosRestrictionsObject = getJSONFixture('huron/json/user/cosRestrictionsObject.json');
 
   var $stateParams = {
     currentUser: currentUser
@@ -25,7 +25,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/features/restrictions';
 
     spyOn(Notification, 'notify');
-    spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.when(cosRestrictions));
+    spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.when(cosRestrictionsObject));
     spyOn(InternationalDialing, 'updateCosRestriction').and.returnValue($q.when());
 
     controller = $controller('InternationalDialingInfoCtrl', {
@@ -44,5 +44,6 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
 
     expect(InternationalDialing.updateCosRestriction).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(controller.model.internationalDialingEnabled.value).toEqual('1');
   });
 });

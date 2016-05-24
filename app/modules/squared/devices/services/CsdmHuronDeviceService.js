@@ -6,51 +6,11 @@
     .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
     .service('CsdmHuronUserDeviceService', CsdmHuronUserDeviceService);
 
-  function CsdmHuronUserDeviceService($injector, $q, $http, CsdmConverter, CsdmCacheFactory, Authinfo, CsdmConfigService) {
-
-    function huronEnabled() {
-      return $q.when(Authinfo.isSquaredUC());
-    }
-
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
-    }
-
+  function CsdmHuronUserDeviceService($injector, Authinfo, CsdmConfigService) {
     function create(userId) {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
-      var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
-      var initialDataPromise = huronEnabled().then(function (enabled) {
-        return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
-          return CsdmConverter.convertHuronDevices(res.data);
-        });
-      });
-      var deviceCache = CsdmCacheFactory.create({
-        fetch: function () {
-          return huronEnabled().then(function (enabled) {
-            return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
-              return CsdmConverter.convertHuronDevices(res.data);
-            });
-          });
-        },
-        update: function (url, obj) {
-          return $http.put(url, obj).then(function (res) {
-            var device = _.clone(deviceCache.list()[url]);
-            if (obj.description) {
-              try {
-                device.tags = JSON.parse(decodeHuronTags(obj.description));
-              } catch (e) {
-                device.tags = [];
-              }
-            }
-            return device;
-          });
-        },
-        initializeData: initialDataPromise
-      });
-
       return $injector.instantiate(CsdmHuronDeviceService, {
-        deviceCache: deviceCache
+        devicesUrl: devicesUrl
       });
     }
     return {
@@ -58,53 +18,11 @@
     };
   }
 
-  function CsdmHuronOrgDeviceService($injector, $q, $http, CsdmConverter, CsdmCacheFactory, Authinfo, CsdmConfigService) {
-
-    function huronEnabled() {
-      return $q.when(Authinfo.isSquaredUC());
-    }
-
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
-    }
-
+  function CsdmHuronOrgDeviceService($injector, Authinfo, CsdmConfigService) {
     function create() {
       var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
-      var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
-
-      var initialDataPromise = huronEnabled().then(function (enabled) {
-        return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
-          return CsdmConverter.convertHuronDevices(res.data);
-        });
-      });
-
-      var deviceCache = CsdmCacheFactory.create({
-        fetch: function () {
-          return huronEnabled().then(function (enabled) {
-            return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
-              return CsdmConverter.convertHuronDevices(res.data);
-            });
-          });
-        },
-        update: function (url, obj) {
-          return $http.put(url, obj).then(function (res) {
-            var device = _.clone(deviceCache.list()[url]);
-            if (obj.description) {
-              try {
-                device.tags = JSON.parse(decodeHuronTags(obj.description));
-              } catch (e) {
-                device.tags = [];
-              }
-            }
-            return device;
-          });
-        },
-        initializeData: initialDataPromise
-      });
-
       return $injector.instantiate(CsdmHuronDeviceService, {
-        deviceCache: deviceCache
+        devicesUrl: devicesUrl
       });
     }
     return {
@@ -112,7 +30,16 @@
     };
   }
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, HuronConfig, CsdmConverter, deviceCache) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, devicesUrl) {
+
+    function huronEnabled() {
+      return $q.when(Authinfo.isSquaredUC());
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
+    }
 
     function getCmiUploadLogsUrl(userId, deviceId) {
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
@@ -130,8 +57,42 @@
       return (description || "").replace(/"/g, "'");
     }
 
+    var deviceList = {};
+    var loadedData = false;
+
+    function fetch() {
+      return huronEnabled().then(function (enabled) {
+        return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+          loadedData = true;
+          _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
+        }, function (err) {
+          loadedData = true;
+        });
+      });
+    }
+
+    fetch();
+
+    function dataLoaded() {
+      return !Authinfo.isSquaredUC() || loadedData;
+    }
+
     function getDeviceList() {
-      return deviceCache.list();
+      return deviceList;
+    }
+
+    function update(url, obj) {
+      return $http.put(url, obj).then(function (res) {
+        var device = _.clone(deviceList[url]);
+        if (obj.description) {
+          try {
+            device.tags = JSON.parse(decodeHuronTags(obj.description));
+          } catch (e) {
+            device.tags = [];
+          }
+        }
+        return device;
+      });
     }
 
     function getLinesForDevice(huronDevice) {
@@ -168,9 +129,9 @@
       if (jsonTags.length >= 128) {
         return $q.reject("List of tags is longer than supported.");
       }
-      deviceCache.list()[url].tags = tags; // update ui asap
-      deviceCache.list()[url].tagString = tags.join(', '); // update ui asap
-      return deviceCache.update(url, {
+      deviceList[url].tags = tags; // update ui asap
+      deviceList[url].tagString = tags.join(', '); // update ui asap
+      return update(url, {
         description: jsonTags
       });
     }
@@ -182,7 +143,7 @@
     }
 
     return {
-      on: deviceCache.on,
+      dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
       getLinesForDevice: getLinesForDevice,
       resetDevice: resetDevice,

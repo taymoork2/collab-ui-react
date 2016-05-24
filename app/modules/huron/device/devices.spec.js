@@ -41,13 +41,13 @@ describe('Controller: DevicesCtrlHuron', function () {
       getDeviceList: function () {
         return null;
       },
-      on: function () {}
+      dataLoaded: function () {
+        return true;
+      }
     };
 
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
-    spyOn(poller, 'on').and.stub();
     spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
-
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
 
     controller = _$controller_('DevicesCtrlHuron', {

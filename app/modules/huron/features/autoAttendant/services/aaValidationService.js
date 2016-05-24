@@ -6,11 +6,38 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, AACommonService, $translate) {
+
+    var routeToCalls = [{
+      'name': 'goto',
+      errRCMsg: 'autoAttendant.routeCallErrorRouteToAATargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing'
+    }, {
+      name: 'routeToHuntGroup',
+      errRCMsg: 'autoAttendant.routeCallErrorRouteToHGTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing'
+    }, {
+      name: 'routeToUser',
+      errRCMsg: 'autoAttendant.routeCallErrorRouteToUserTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing'
+    }, {
+      name: 'routeToVoiceMail',
+      errRCMsg: 'autoAttendant.routeCallErrorRouteToVoicemailTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing'
+    }, {
+      name: 'route',
+      errRCMsg: 'autoAttendant.routeCallErrorRouteToPhoneNumberTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing'
+    }, {
+      name: 'routeToQueue',
+      /* not implemented */
+      errRCMsg: '',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing'
+    }];
 
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
-      isPhoneMenuValidationSuccess: isPhoneMenuValidationSuccess
+      isRouteToValidationSuccess: isRouteToValidationSuccess
     };
 
     return service;
@@ -39,46 +66,101 @@
       return true;
     }
 
-    function checkAllKeys(optionMenu) {
+    function actionValid(entry, whichLane, whichMenu, tag, type) {
+      var action;
+
+      if (type === 'MENU_OPTION' && _.isEmpty(entry.key)) {
+        /* entry was a phone menu with no selected entry for the key, ignore */
+        return true;
+      }
+
+      if (_.isEmpty(entry.actions[0])) {
+        /* no actions to validate */
+        return true;
+      }
+
+      action = entry.actions[0];
+
+      // special case - when action is route we need to check for valid phone number
+      if (action.name === 'route') {
+        /* AACommonService maintains a list which looks like: 
+           holiday-2-0 for phoneMenu 
+           holiday-1-RouteCalls for route call
+        */
+
+        var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, whichMenu, tag));
+        /* getInvalid returns false if an error, undefined if no error */
+        return angular.isUndefined(ret);
+
+      }
+
+      /* checking entry for blank value. Not empty? auto passes */
+      if (!_.isEmpty(action.value)) {
+        return true;
+      }
+
+      return false;
+
+    }
+
+    /* whichMenu - index into the original array..position in the lane of this screen
+       whichLane - openHours, closeHours, holiday
+     */
+    function checkAllActions(optionMenu, whichMenu, whichLane) {
+      var m;
+
+      if (actionValid(optionMenu, whichLane, whichMenu, 'RouteCall', optionMenu.type)) {
+        return;
+      }
+
+      /* got here? error */
+
+      m = _.find(routeToCalls, {
+        name: optionMenu.actions[0].name
+      });
+
+      /* might be Say Message, not in the routeCalls list */
+      if (m) {
+        return m.errRCMsg;
+      }
+
+      return;
+    }
+
+    /* whichMenu - index into the original array..position in the lane of this screen
+       whichLane - openHours, closeHours, holiday
+     */
+    function checkAllKeys(optionMenu, whichMenu, whichLane) {
       var outErrors = [];
-      var entry = _.forEach(optionMenu.entries, function (entry) {
-        if (entry.key && 'goto' === entry.actions[0].name && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
-            key: entry.key
-          });
+
+      _.forEach(optionMenu.entries, function (entry, index) {
+
+        if (actionValid(entry, whichLane, whichMenu, index, optionMenu.type)) {
+          return;
         }
-        if (entry.key && 'routeToHuntGroup' === entry.actions[0].name && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
-            key: entry.key
-          });
-        }
-        if (entry.key && 'routeToUser' === entry.actions[0].name && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing',
-            key: entry.key
-          });
-        }
-        if (entry.key && 'routeToVoiceMail' === entry.actions[0].name && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
-            key: entry.key
-          });
-        }
-        if (entry.key && 'route' === entry.actions[0].name && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
-            key: entry.key
-          });
-        }
+
+        /* got here? error */
+
+        _.find(routeToCalls, function (routeTo) {
+          if (routeTo.name === entry.actions[0].name) {
+            outErrors.push({
+              msg: routeTo.errPhoneMsg,
+              key: entry.key
+            });
+
+            return true;
+
+          }
+
+        });
+
       });
 
       return outErrors;
 
     }
 
-    function isPhoneMenuValidationSuccess(ui) {
+    function isRouteToValidationSuccess(ui) {
       var openHoursValid = true;
       var closedHoursValid = true;
       var holidaysValid = true;
@@ -92,44 +174,85 @@
 
       var closedHoliday = _.get(ui, 'holidaysValue') === 'closedHours';
       if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
-        openHoursValid = checkForValid(ui.openHours, openHoursLabel);
+        openHoursValid = checkForValid(ui.openHours, 'openHours', openHoursLabel);
       }
       if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
-        closedHoursValid = checkForValid(ui.closedHours,
+        closedHoursValid = checkForValid(ui.closedHours, 'closedHours',
           closedHoliday ? closedHolidayHoursLabel : closedHoursLabel);
       }
 
       /* if holiday follows closed behavior, then don't validate */
       if (ui.isHolidays && (!closedHoliday) && _.has(ui, 'holidays.entries')) {
-        holidaysValid = checkForValid(ui.holidays, holidayHoursLabel);
+        holidaysValid = checkForValid(ui.holidays, 'holidays', holidayHoursLabel);
       }
 
       return openHoursValid && closedHoursValid && holidaysValid;
 
     }
 
-    function checkForValid(uiCombinedMenu, fromLane) {
+    function checkForValid(uiCombinedMenu, fromLane, scheduleLabel) {
       var isValid = true;
-      var errors = [];
+      var error;
+
+      /* save menuOptions array so we can compute which Phone menu  had 
+         the offending field */
 
       var menuOptions = _.filter(uiCombinedMenu.entries, {
         'type': 'MENU_OPTION'
       });
 
-      _.forEach(menuOptions, function (optionMenu) {
+      /* segregate the RouteCall menus so we can determine which 
+         RouteCall menu has the error
+       */
 
-        if (_.has(optionMenu, 'entries')) {
-          errors = checkAllKeys(optionMenu);
+      var routeTosOnly = _.filter(uiCombinedMenu.entries, function (menu) {
+        var actionName = _.get(menu, 'actions[0].name');
+        return _.find(routeToCalls, {
+          'name': actionName
+        });
+      });
+
+      /* we need to iterate over the original array so we can discern the 
+         position ('index') of this menu. Needed for aaCommonService.js's 
+         getInvalid()
+       */
+
+      _.forEach(uiCombinedMenu.entries, function (optionMenu, index) {
+
+        if (optionMenu.type === 'MENU_OPTION') {
+
+          var errors = [];
+
+          if (_.has(optionMenu, 'entries')) {
+            errors = checkAllKeys(optionMenu, index, fromLane);
+          }
+
+          _.forEach(errors, function (err) {
+            isValid = false;
+
+            AANotificationService.error(err.msg, {
+              key: err.key,
+              schedule: scheduleLabel,
+              at: _.indexOf(menuOptions, optionMenu) + 1
+            });
+          });
+
+          return;
+
+        } /* option in menu (phone) */
+        /* else must be welcome menu - process routeCalls */
+
+        error = checkAllActions(optionMenu, index, fromLane);
+
+        if (error) {
+          isValid = false;
+
+          AANotificationService.error(error, {
+            schedule: scheduleLabel,
+            at: _.indexOf(routeTosOnly, optionMenu) + 1
+          });
         }
 
-        _.forEach(errors, function (err) {
-          isValid = false;
-          AANotificationService.error(err.msg, {
-            key: err.key,
-            schedule: fromLane,
-            at: _.indexOf(menuOptions, optionMenu) + 1
-          });
-        });
       });
 
       return isValid;

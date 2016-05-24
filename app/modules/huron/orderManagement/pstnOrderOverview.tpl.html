@@ -1,0 +1,22 @@
+<cs-sp-container class="pstn-order-overview">
+  <cs-sp-section>
+    <div class="section-title-row">
+      <span class="section-name" translate="pstnOrderOverview.pstnOrders"></span>
+    </div>
+    <div class="filter bottom-pad">
+      <input type="text" class="form-control" ng-model="pstnOrderOverview.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderOverview.searchPlaceholder' | translate}}">
+      <i class="icon icon-search"></i>
+    </div>
+    <ul class="list-group">
+      <li class="feature" ng-repeat="order in filteredOrders = (pstnOrderOverview.orders | filter:pstnOrderOverview.filter | orderBy:'-sortDate')">  
+        <a ui-sref="customer-overview.pstnOrderDetail({currentOrder: order})">
+          <span class="feature-name" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: order.carrierOrderId}"></span>
+          <span class="feature-status">
+            <span>{{order.status}}</span>
+          </span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </cs-sp-section>
+</cs-sp-container>

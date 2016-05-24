@@ -1,4 +1,3 @@
-/* global parseAddress */
 (function () {
   'use strict';
 
@@ -42,16 +41,10 @@
     function formatServiceAddress(_address) {
       // copy address for manipulation
       var address = angular.copy(_address);
-      // create a parseable address
-      var parseableAddress = _.chain([address.streetAddress, address.unit, address.city, address.state, address.zip]).compact().join(', ').value();
-      // merge in parsed street address values
-      _.merge(address, parseAddress.parseAddress(parseableAddress));
-      //if library cannot parse number and street correctly, split into number and street by first space
-      if (_.isUndefined(address.number) && _.isUndefined(address.street)) {
-        var index = address.streetAddress.indexOf(" ");
-        address.number = address.streetAddress.slice(0, index);
-        address.street = address.streetAddress.slice(index + 1);
-      }
+      var streetAddressArray = _.get(address, 'streetAddress', '').split(/\s+/);
+      address.number = _.first(streetAddressArray);
+      address.street = _.tail(streetAddressArray).join(' ');
+
       // transform a return object based on our mapping structure
       var serviceAddress = _.transform(serviceAddressMapping, function (result, val, key) {
         // Set mapped value, default to empty string if not found

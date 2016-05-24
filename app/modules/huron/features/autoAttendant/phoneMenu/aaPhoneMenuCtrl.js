@@ -37,6 +37,11 @@
     vm.createOptionMenu = createOptionMenu;
 
     // TBD means the action isn't supported in the backend yet
+    /**
+     * This include the list of feature which are production ready.
+     * Adding option here lets it be visible in production. If option is not production ready
+     * add it under function addAvailableFeature.
+     */
     vm.keyActions = [
       // {
       //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
@@ -130,12 +135,13 @@
       var _keyAction = findKeyAction(keyAction.name);
       if (angular.isDefined(_keyAction)) {
         var phoneMenuEntry = vm.menuEntry.entries[index];
+        // Phone menu option now could have multiple actions in it, e.g., say message.
+        // When switching between phone menu options, clear the actions array to
+        // make sure no old option data are carried over to the new option.
+        phoneMenuEntry.actions = [];
+        phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
         var action = phoneMenuEntry.actions[0];
         action.name = keyAction.action;
-        // When switch between action, the action value is set to empty string,
-        // simplest way to handle action switching.
-        action.value = '';
-        delete action.inputType;
         if (angular.isDefined(_keyAction.inputType)) {
           // some action names are overloaded and are distinguished
           // by inputType
@@ -239,11 +245,17 @@
       AACommonService.setPhoneMenuStatus(true);
     }
 
+    /**
+     * This include the list of feature which are not production ready yet
+     */
     function addAvailableFeatures() {
       if (Config.isDev() || Config.isIntegration()) {
-
         // push features here
-        // vm.keyActions.push();
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+          name: 'phoneMenuRouteQueue',
+          action: 'routeToQueue'
+        });
 
       }
     }

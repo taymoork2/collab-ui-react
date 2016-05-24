@@ -36,6 +36,52 @@
   }
 }
 
+// Enterprise Sip Domain
+
+.enterprise-sipDomain-page {
+  #sipDomainTitle {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-space {
+    margin-left: .7rem
+  }
+  .space {
+    margin-left: 1rem
+  }
+  .space-flow {
+    margin-bottom: 2.2rem
+  }
+  .url-examples-style {
+    margin-bottom: 1rem
+  }
+  .sip-domain-input {
+    margin-bottom: 2.2rem
+  }
+  .inline {
+    float: left;
+  }
+  .domain-check-space {
+    clear: both;
+  }
+  .red-error-icon {
+    color: red;
+  }
+  .green-check {
+    color: green;
+  }
+  .confirm-box {
+    position: absolute;
+    margin-top: 2rem;
+  }
+  .font-regular {
+    font-size: 1rem
+  }
+  .paragraphSpacing {
+    margin-bottom: 1rem;
+  }
+}
+
 // SSO
 
 .sso-container {
@@ -98,4 +144,3 @@
     }
   }
 }
-
