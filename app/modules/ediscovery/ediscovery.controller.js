@@ -28,15 +28,6 @@
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
-    // vm.pageTitle = "eDiscovery";
-    // vm.headerTabs = [{
-    //   title: 'Search',
-    //   state: 'ediscovery.search'
-    // }, {
-    //   title: 'Reports',
-    //   state: 'ediscovery.reports'
-    // }];
-
     pollAvalonReport();
 
     function getStartDate() {
@@ -204,6 +195,7 @@
     function pollAvalonReport() {
       EdiscoveryService.getReport().then(function (res) {
         vm.reports = res;
+        notifyOnEvent(vm.reports);
       }).finally(function (res) {
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
@@ -221,6 +213,24 @@
       }).result.finally(function () {
         setSearchFieldFocus();
       });
+    }
+
+    Notification.requestPermission().then(function (result) {});
+
+    function notifyOnEvent(reports) {
+      var completedReports = _.filter(reports, function (r) {
+        console.log('state', r.state);
+        return r.state == 'COMPLETED';
+      });
+      if (completedReports && completedReports.length > 0) {
+        var options = {
+          body: 'You have ' + completedReports.length + ' completed reports',
+          icon: 'images/cisco_logo.png',
+          tag: 'ediscovery'
+        };
+        var n = new Notification('eDiscovery Dashboard', options);
+        setTimeout(n.close.bind(n), 3000);
+      }
     }
   }
 
