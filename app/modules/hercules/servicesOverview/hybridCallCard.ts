@@ -36,9 +36,9 @@ namespace servicesOverview {
       this._status = {
         status: this.filterAndGetCssStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
         text: this.filterAndGetTxtStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
-        link: ''
+        link: 'services/call'
       };
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc']);
+      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-uc']);
       this._loading = false;
     }
   }
