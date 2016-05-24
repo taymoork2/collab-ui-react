@@ -2160,8 +2160,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHeaderController',
-              controllerAs: 'helpdeskHeaderCtrl',
+              controller: 'EdiscoveryController',
+              controllerAs: 'ediscoveryCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2177,10 +2177,13 @@
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
-            url: '/',
-            templateUrl: 'modules/ediscovery/ediscovery.html'
+            url: '/search',
+            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+          })
+          .state('ediscovery.reports', {
+            url: '/reports',
+            templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-
       }
     ]);
 

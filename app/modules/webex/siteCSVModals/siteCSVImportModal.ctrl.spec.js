@@ -118,4 +118,26 @@ describe('SiteCSVImportModalCtrl test', function () {
     expect(Notification.error).toHaveBeenCalled();
     expect($scope.$close).not.toHaveBeenCalled();
   });
+
+  it('can process reject from WebExApiGatewayService.csvExport() ', function () {
+    $rootScope.$apply();
+
+    expect(fakeSiteRow).not.toBe(null);
+
+    SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
+    SiteCSVImportModalCtrl.startImport();
+
+    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
+
+    deferredCSVImport.reject({
+      "errorCode": "060100",
+      "errorMessage": "Your request has been prevented because a task is now running. Try again later."
+    });
+
+    $rootScope.$apply();
+
+    expect(Notification.error).toHaveBeenCalledWith('siteList.csvRejectedToast-060100');
+    expect($scope.$close).toHaveBeenCalled();
+  });
+
 }); // describe()
