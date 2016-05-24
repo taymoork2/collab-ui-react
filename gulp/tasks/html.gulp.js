@@ -39,7 +39,8 @@ gulp.task('index:build', function () {
       series(
         gulp.src(jsFiles, {
           read: false
-        }), gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+        }),
+        gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsManifest), {
           read: false
         })), {
         ignorePath: config.build,

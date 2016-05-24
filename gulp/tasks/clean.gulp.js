@@ -64,7 +64,10 @@ gulp.task('clean:test', function () {
 
 gulp.task('clean:ts', function () {
   var files = [
-    config.typeScript.compiledTestFiles
+    config.typeScript.compiledTestFiles,
+    config.typeScript.previousCompiledTestFiles, //to be removed when it has socked (and most people have cleaned old transpiled spec files)
+    config.app + config.tsManifest,
+    config.app + config.tsTestManifest
   ];
   messageLogger('Cleaning TypeScript compiled tests', files);
   return del(files);
