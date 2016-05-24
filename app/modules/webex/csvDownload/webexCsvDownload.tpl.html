@@ -1,33 +1,28 @@
-<div class="webex-csv-download">
-  <div>
+  <div ng-if="( 'webexexport' == webexCsvDownload.type )">
     <a id="download-csv-{{webexCsvDownload.type}}" 
        href="" 
        ng-click="webexCsvDownload.downloadCsv()">
       
-      <font color=#049FD9>
-        <i ng-show="!webexCsvDownload.downloading" 
-           id="download-icon" 
-           class="icon icon-content-share">
-         
-          <span class="sr-only" 
-                translate="common.download"></span>
-        </i>
-      </font>
+      <button cs-btn 
+              type="button" 
+              class="btn btn--primary" 
+              loading="webexCsvDownload.downloading">
+              
+        <span translate="common.download"></span>
+      </button>
     </a>
   </div>
-  
-  <div>
-    <a tooltip-placement="top" 
-       cs-tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" 
-       tooltip-animation="false" 
-       tooltip-append-to-body="true">
+
+  <div ng-if="( 'webeximport' == webexCsvDownload.type )">
+    <a ng-show="!webexCsvDownload.downloading"
+       id="download-csv-{{webexCsvDownload.type}}" 
+       href="" 
+       ng-click="webexCsvDownload.downloadCsv()">
        
-      <i ng-show="webexCsvDownload.downloading" 
-         class="icon icon-spinner">
-         
-        <span class="sr-only" 
-              translate="common.downloading"></span>
-      </i>
+      <span translate="webexCSVResultsModal.csvDownloadImportErr"></span>
     </a>
+    
+    <i ng-show="webexCsvDownload.downloading" 
+       class="icon icon-spinner grid-vcenter">
+    </i>
   </div>
-</div>

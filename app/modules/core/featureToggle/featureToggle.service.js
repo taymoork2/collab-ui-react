@@ -41,7 +41,6 @@
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       extensionLength: 'huron-extension-length',
       featureToggleRules: 'feature-toggle-rules',
@@ -87,6 +86,7 @@
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
       muteByDefault: 'mute-by-default',
+      myCompanyPage: 'atlas-my-company-page',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
@@ -98,6 +98,7 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
+      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
@@ -123,9 +124,9 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      readonlyAdmin: 'atlas-read-only-admin'
+      readonlyAdmin: 'atlas-read-only-admin',
+      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
 
     var toggles = {};

@@ -5,7 +5,7 @@
     .module('Core')
     .controller('SettingsMenuCtrl', SettingsMenuCtrl);
 
-  function SettingsMenuCtrl($state, $stateParams, $translate, Authinfo, $rootScope, languages) {
+  function SettingsMenuCtrl($state, $translate, Authinfo, $rootScope, languages) {
     var vm = this;
 
     vm.options = _.map(languages, function (lang) {
@@ -22,10 +22,7 @@
     vm.updateLanguage = function () {
       $translate.use(vm.selected.value).then(function () {
         Authinfo.initializeTabs();
-        $state.go($state.current, $stateParams, {
-          notify: true,
-          reload: true
-        });
+        $state.go('login');
         $rootScope.$broadcast('TABS_UPDATED');
       });
     };

@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -31,7 +31,7 @@
     vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
-    vm.toggleHours = false;
+    vm.toggleHours = true;
     vm.holidays = [];
     vm.holidayBehavior = false;
     vm.oneAtATime = true;
@@ -144,6 +144,9 @@
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
       if (startTime && endTime) {
+        if (endTime === '12:00 AM') {
+          return false;
+        }
         var start = moment(startTime, "hh:mm A");
         var end = moment(endTime, "hh:mm A");
         return start.isSame(end) || start.isAfter(end);
@@ -193,21 +196,21 @@
       var flag = false;
       _.each(vm.holidays, function (holiday) {
         flag = false;
-        if (holiday.name === undefined || holiday.name == '') {
+        if (_.isEmpty(holiday.name)) {
           return flag;
         }
         if (holiday.exactDate) {
-          if (holiday.date === undefined || holiday.date == '') {
+          if (_.isEmpty(holiday.date)) {
             return flag;
           }
         } else {
-          if (holiday.month === undefined || holiday.month == '') {
+          if (_.isEmpty(holiday.month)) {
             return flag;
           }
-          if (holiday.rank === undefined || holiday.rank == '') {
+          if (_.isEmpty(holiday.rank)) {
             return flag;
           }
-          if (holiday.day === undefined || holiday.day == '') {
+          if (_.isEmpty(holiday.day)) {
             return flag;
           }
         }
@@ -465,6 +468,10 @@
       });
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+
+      if (!_.isEmpty(sectionToToggle)) {
+        toggleSection(sectionToToggle);
+      }
     }
 
     function openImportModal() {

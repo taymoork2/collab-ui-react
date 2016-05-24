@@ -110,7 +110,7 @@
           data: {
             numbers: numbers
           },
-          type: PstnSetupService.NEW_ORDERS
+          type: PstnSetupService.NUMBER_ORDER
         }];
         PstnSetup.setOrders(swivelOrder);
         $state.go('pstnSetup.review');

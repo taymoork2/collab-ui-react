@@ -6,7 +6,7 @@ var AutoAttendantPage = function () {
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
-  this.openClosedAA = element(by.css('.icon-OpenClosed'));
+  this.openClosedAA = element(by.css('.icon-BusinessHours'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -22,6 +22,8 @@ var AutoAttendantPage = function () {
   this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
+
+  this.lanesWrapper = element(by.css('div.aa-lanes-wrapper'));
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
@@ -153,8 +155,8 @@ var AutoAttendantPage = function () {
   this.openHoursEndCall = element(by.name('openLane')).element(by.name('endCall'));
   this.selectOpenHoursBox = element(by.name('openHours'));
   this.selectHolidayHoursBox = element(by.name('holidays'));
-  this.selectOpenCloseBar = element(by.xpath("//div[@class='modal-content']//p[.='Open/Closed']"));
-  this.selectHolidaysBar = element(by.xpath("//div[@class='modal-content']//p[normalize-space(.)='Holidays']"));
+  this.selectOpenCloseBar = element(by.name('hours-subtitle'));
+  this.selectHolidaysBar = element(by.name('holidays-subtitle'));
   this.closedHoursLane = element(by.name('closedLane')).element(by.name('closedHours'));
   this.closedHoursSayMessage = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.closedHoursPhoneMenu = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
@@ -164,7 +166,7 @@ var AutoAttendantPage = function () {
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
   this.importSchedule = element(by.id('importSchedule'));
   this.importContinue = element(by.id('importCtn'));
-  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
+  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
@@ -181,7 +183,7 @@ var AutoAttendantPage = function () {
   }
 
   function assertImportSuccess(hours, holidays) {
-    notifications.assertSuccess("Imported " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
+    notifications.assertSuccess("Copied " + hours + " Open Hours and " + holidays + " Holidays Successfully");
   }
 
   function assertCalendarUpdateSuccess(test) {

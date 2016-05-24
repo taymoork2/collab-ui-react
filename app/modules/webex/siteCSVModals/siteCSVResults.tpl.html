@@ -17,87 +17,37 @@
         
       {{siteCSVResult.modalTitle}}
     </h3>
+  </div>
+  
+  <div class="modal-body">
+    <h4>
+      {{siteCSVResult.siteUrl}}
+    </h4>
     
-    <p>
+    <p style="font-size:25%">
       &nbsp;
     </p>
     
-    <table class="wx-csv-results-table">
-      <tr class="wx-csv-results-tr"
-          ng-repeat="gridRow in siteCSVResult.gridRows"
-          id="gridRow.id">
-        
-        <td class="wx-csv-results-td-lt">
-          {{gridRow.title}}
-        </td>
-      
-        <td class="wx-csv-results-td-rt">
-          <span ng-if="( gridRow.id != 'export-records-failed' ) &&
-                       ( gridRow.id != 'import-records-failed' ) &&
-                       ( gridRow.id != 'export-download-csv-file' ) &&
-                       ( gridRow.id != 'import-download-err-file' )">
-                       
-            <b>{{gridRow.value}}</b>
-          </span> 
-                         
-          <span ng-if="( gridRow.id == 'export-records-failed' ) || 
-                       ( gridRow.id == 'import-records-failed' )">
-                       
-            <span ng-if="( gridRow.value == 0 )">
-              <b>{{gridRow.value}}</b>
-            </span>
-
-            <span ng-if="( gridRow.value > 0 )">
-              <font color="red">
-                <b>{{gridRow.value}}</b>
-              </font>
-            </span>
-          </span>
-          
-          <!-- 
-          <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
-                              type='webexexport'
-                              siteurl={{siteCSVResult.siteUrl}}
-                              filedownloadurl="kttps://dummy.dummy.com"
-                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
-          -->
-          
-          <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
-                              type='webexexport'
-                              siteurl={{siteCSVResult.siteUrl}}
-                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
-                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
-          
-          <webex-csv-download ng-if="(gridRow.id == 'import-download-err-file')"
-                              type='webeximport'
-                              siteurl={{siteCSVResult.siteUrl}}
-                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
-                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
-          
-          <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
-                       ( gridRow.id == 'import-download-err-file' )">
-            
-            <!--
-            <webex-csv-download type="export" 
-                                filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
-            -->
-            
-            <!--                    
-            <a ng-click="siteCSVResult.csvFileDownload(siteCSVResult.downloadFileUrl);">
-              <font color=#049FD9>
-                <i class="icon icon-content-share"></i>
-              </font>
-            </a>
-            -->
-          </span>
-        </td>
-      </tr>
-    </table>
-    <!-- 
-    <div gridscrollbar 
-         class="gridStyle" 
-         ui-grid="siteCSVResult.gridOptions">
-    </div>
-    -->
+    <p ng-repeat="gridRow in siteCSVResult.gridRows">
+      {{gridRow.title}}&nbsp;{{gridRow.value}}
+    </p>
+    
+    <p ng-if="( 'importCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
+      <webex-csv-download type='webeximport'
+                          siteurl={{siteCSVResult.siteUrl}}
+                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
+    </p>
+  </div>
+    
+  <div class="modal-footer">
+    <span ng-if="( 'exportCompletedNoErr' == siteCSVResult.csvStatusObj.status ) || 
+                 ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
+                   
+      <webex-csv-download type='webexexport'
+                          siteurl={{siteCSVResult.siteUrl}}
+                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
+    </span>
   </div>
 </div>

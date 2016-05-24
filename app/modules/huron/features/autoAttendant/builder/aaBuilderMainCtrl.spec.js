@@ -222,7 +222,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
-    var phoneMenuValidationSpy;
     var aaNameChangedSpy;
 
     beforeEach(function () {
@@ -239,7 +238,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AATrackChangeService, 'track');
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
-      phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
@@ -475,7 +473,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should set up a say PhoneMenu open hours template using real template1', function () {
 
-      $scope.vm.templateName = 'template1';
+      $scope.vm.templateName = 'Basic';
       controller.setupTemplate();
 
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
@@ -881,7 +879,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui = {};
       $scope.vm.ui.ceInfo = {};
       $scope.vm.ui.builder = {};
-      $scope.vm.ui.aaTemplate = 'OpenClosedHoursTemplate';
+      $scope.vm.ui.aaTemplate = 'BusinessHours';
       $scope.vm.ui.builder.ceInfo_name = 'AA';
       $scope.vm.isAANameDefined = false;
 
@@ -896,7 +894,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(controller, 'delete8To5Schedule');
     });
 
-    it('should save a 8to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
+    it('should save a 8to5 schedule and save current CE definition for BusinessHours creation.', function () {
       $rootScope.$broadcast('AANameCreated');
       save8To5ScheduleDefer.resolve();
       saveCeDefinitionDefer.resolve();
@@ -909,7 +907,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should invoke saveAARecords for Basic template creation', function () {
-      $scope.vm.ui.aaTemplate = 'template1';
+      $scope.vm.ui.aaTemplate = 'Basic';
       $rootScope.$broadcast('AANameCreated');
       saveAARecordDefer.resolve();
 

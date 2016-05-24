@@ -1,0 +1,264 @@
+.ediscovery-app-container {
+
+  background-color: $brand-white;
+  overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
+
+  //.top-bar {
+  //  .sparkstatus-info {
+  //    @extend .user-info;
+  //  }
+  //  .btn-sparkstatus {
+  //    @extend .btn--user;
+  //    border-left: 1px solid $gray-light !important;
+  //  }
+  //  .history-info {
+  //    @extend .user-info;
+  //  }
+  //  .btn-history {
+  //    @extend .btn--user;
+  //    border-left: 1px solid $gray-light !important;
+  //    color: $gray-light-1;
+  //    font-size: 1.2rem;
+  //    &:hover {
+  //      color: $color-primary-base;
+  //    }
+  //  }
+  //}
+
+  .ediscovery-content-view {
+
+    button.fit {
+      height: 30px;
+      width: 30px;
+      line-height: 30px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    label.fit {
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    button.align {
+      margin-top: 1.5rem;
+    }
+
+    .cs-input-group {
+      padding-left: 1rem;
+    }
+
+    span.icon {
+      font-size: 20px;
+      line-height: 40px;
+      cursor: pointer;
+    }
+
+    font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: $brand-white;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    min-height: 95vh;
+    a:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+    .circle-status-icon {
+      font-size: 0.575rem;
+      margin-right: 0.5rem;
+    }
+    //.helpdesk-details {
+    //  h3 {
+    //    color: $gray-dark-4;
+    //    margin-bottom: 1.0rem;
+    //    word-wrap: break-word;
+    //  }
+    //  h4 {
+    //    margin-top: 0;
+    //    margin-bottom: 1rem;
+    //  }
+    //  .head {
+    //    margin-bottom: 1rem;
+    //    margin-top: 2rem;
+    //  }
+    //  .org-card-footer {
+    //    background-color: $gray-light-4;
+    //    padding-bottom: 0.5rem;
+    //    padding-top: 0.5rem;
+    //    padding-right: 1rem;
+    //    border-radius: 0 0 3px 3px;
+    //    font-size: 0.675rem;
+    //    .status {
+    //      line-height: 1rem;
+    //    }
+    //    .operational {
+    //      color: $color-cta-base;
+    //    }
+    //    .warning,
+    //    .partial_outage {
+    //      color: $color-attention-base;
+    //    }
+    //    .error {
+    //      color: $color-alerts-base;
+    //    }
+    //    .unknown {
+    //      color: $gray-base;
+    //    }
+    //  }
+    //  .customer-or-partner {
+    //    font-size: 0.75rem;
+    //    color: $gray-dark-1;
+    //    margin-top: -0.5rem;
+    //    margin-bottom: 1rem;
+    //  }
+    //  .device {
+    //    margin-top: 1rem;
+    //    .device-name {
+    //      color: $gray-dark-4;
+    //      margin-left: 0.5rem;
+    //    }
+    //  }
+    //  .details-heading {
+    //    color: $gray-dark-4;
+    //    margin-bottom: 1rem;
+    //  }
+    //  .details-value {
+    //    color: $gray-dark-1;
+    //    word-wrap: break-word;
+    //  }
+    //  .details-value-device {
+    //    color: $gray-dark-1;
+    //    word-wrap: break-word;
+    //  }
+    //  .cs-card-layout.cs-card-block {
+    //    padding-right: 0;
+    //    padding-left: 1.5rem;
+    //  }
+    //  .text-align-center {
+    //    text-align:center;
+    //  }
+    //  .large-number {
+    //    font-size:2rem;
+    //    color: $color-primary-base;
+    //    margin-top: 0.4rem;
+    //  }
+    //  .launch-button {
+    //    margin-top: 1.5rem;
+    //    margin-bottom: 1.0rem;
+    //  }
+    //
+    //}
+  }
+
+  .ediscovery-search {
+    padding-top: 1rem;
+    text-align: center;
+    .pointer {
+      cursor: pointer;
+    }
+    //table {
+    //  margin-left: auto;
+    //  margin-right: auto;
+    //  tbody {
+    //    tr {
+    //      border-top: transparent;
+    //    }
+    //    td a,
+    //    .td a {
+    //      color: $anchor-font-color;
+    //    }
+    //    td a:hover,
+    //    .td a:hover {
+    //      color: $anchor-font-color-hover;
+    //    }
+    //  }
+    //}
+  //  .main-heading {
+  //    display: inline-block;
+  //    text-align: right;
+  //    .help {
+  //      color: $gray-light-1;
+  //      position: relative;
+  //      top: -0.6rem;
+  //      padding-right: 2px;
+  //      font-size: 1.0rem;
+  //      cursor: pointer;
+  //      i {
+  //        top: 2px;
+  //        left: 3px;
+  //      }
+  //    }
+  //    @media only screen and (max-width: 500px) {
+  //      .help {
+  //        font-size: 0.7rem;
+  //      }
+  //    }
+  //  }
+  //  h1 {
+  //    color: $color-primary-base;
+  //  }
+  //  h2 {
+  //    margin-bottom: 1rem;
+  //  }
+  //  h4 {
+  //    margin-top: 1rem;
+  //    margin-bottom: 1rem;
+  //  }
+  //  p {
+  //    margin-bottom: 1rem;
+  //  }
+  //  .no-top-margin {
+  //    margin-top: 0;
+  //  }
+  //  .typeahead-large .input-description:before {
+  //    display: none;
+  //  }
+  //  .typeahead-large .input-description {
+  //    padding: 0;
+  //  }
+  //  .typeahead-large {
+  //    position: relative;
+  //    max-width: 100%;
+  //    margin-left: auto;
+  //    margin-right: auto;
+  //    .searchInputForm {
+  //      margin-bottom: 0px;
+  //    }
+  //    input {
+  //      font-size: 28px;
+  //    }
+  //    form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
+  //      max-width: 100%;
+  //      display: block;
+  //      height: auto;
+  //      position: relative;
+  //      z-index: 1;
+  //      border: 0px;
+  //    }
+  //    .icon-search {
+  //      position: absolute;
+  //      right: 0;
+  //      bottom: 0.75rem;
+  //      font-size: 1rem;
+  //      width: 2.5rem;
+  //      height: 2.5rem;
+  //      z-index: 3;
+  //      min-width: 2.5rem;
+  //      @media screen and (-moz-images-in-menus:0) {
+  //        top: 0 !important;
+  //      }
+  //    }
+  //  }
+  //  .search-result {
+  //    padding-top:1rem;
+  //    padding-left:2rem;
+  //    padding-right:2rem;
+  //  }
+  }
+
+}

@@ -285,7 +285,7 @@
             return;
           }
 
-          _this.updateCSVColumnInRow(siteRow);
+          _this.updateCSVStatusInRow(siteRow);
 
           // start CSV status poll
           // var pollInterval = 3600000; // 1hr
@@ -293,7 +293,7 @@
           // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              _this.updateCSVColumnInRow(siteRow);
+              _this.updateCSVStatusInRow(siteRow);
             },
 
             pollInterval
@@ -327,12 +327,11 @@
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteRow=" + "\n" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // $log.log(logMsg);
 
       //initialize display control flags
       siteRow.showCSVInfo = true;
-      siteRow.showAsyncErr = false;
 
       siteRow.showExportLink = false;
       siteRow.showExportInProgressLink = false;
@@ -346,69 +345,61 @@
       siteRow.showImportResultsLink = false;
       siteRow.importFinishedWithErrors = false;
 
-      if (siteRow.asyncErr) {
-        siteRow.showAsyncErr = true;
+      if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
 
-      } else {
+        siteRow.showExportLink = true;
 
-        if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
 
-          siteRow.showImportLink = true;
+        siteRow.showExportInProgressLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
+        siteRow.grayedImportLink = true;
 
-          siteRow.showExportInProgressLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
 
-          siteRow.grayedImportLink = true;
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
-          siteRow.showExportResultsLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
 
-          siteRow.showImportLink = true;
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
+        siteRow.exportFinishedWithErrors = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
-          siteRow.showExportResultsLink = true;
-          siteRow.exportFinishedWithErrors = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
-          siteRow.showImportLink = true;
+        siteRow.showImportInProgressLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
+        siteRow.grayedExportLink = true;
 
-          siteRow.grayedExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
-          siteRow.showImportInProgressLink = true;
+        siteRow.showExportLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
 
-          siteRow.showExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
 
-          siteRow.showImportLink = true;
-          siteRow.showImportResultsLink = true;
+        siteRow.showExportLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
-
-          siteRow.showExportLink = true;
-
-          siteRow.showImportLink = true;
-          siteRow.showImportResultsLink = true;
-          siteRow.importFinishedWithErrors = true;
-
-        }
-
-        siteRow.showCSVInfo = true;
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
+        siteRow.importFinishedWithErrors = true;
 
       }
 
+      siteRow.showCSVInfo = true;
     }; //updateDisplayControlFlagsInRow()
 
-    this.updateCSVColumnInRow = function (siteRow) {
-      var funcName = "updateCSVColumnInRow()";
+    this.updateCSVStatusInRow = function (siteRow) {
+      var funcName = "updateCSVStatusInRow()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
@@ -464,8 +455,8 @@
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
-          _this.updateDisplayControlFlagsInRow(siteRow);
 
+          _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -479,12 +470,13 @@
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
+
           _this.updateDisplayControlFlagsInRow(siteRow);
 
-          // siteRow.showCSVInfo = true;
+          siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
-    }; // updateCSVColumnInRow()
+    }; // updateCSVStatusInRow()
 
     this.updateGrid = function (vm) {
       var funcName = "updateGrid()";

@@ -19,7 +19,7 @@
     Config,
     UrlConfig
   ) {
-
+    $scope.loading = WebExUserSettingsFact.loading;
     // Localize the breadcrumb
     $state.current.data.displayName = $translate.instant("webexUserSettingLabels.priviligesLable");
     $rootScope.$broadcast('displayNameUpdated');

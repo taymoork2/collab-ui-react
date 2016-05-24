@@ -73,13 +73,6 @@
       hideExtensionLength: true
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-      vm.model.hideExtensionLength = !result;
-      vm.fields = vm.initialFields;
-    }).catch(function (response) {
-      vm.fields = vm.initialFields;
-    });
-
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
@@ -248,47 +241,6 @@
           'templateOptions.isWarn': vm.steeringDigitChangeValidation
         }
       }, {
-        key: 'extensionLength',
-        type: 'select',
-        className: 'service-setup-extension-length',
-        templateOptions: {
-          label: $translate.instant('serviceSetupModal.extensionLength'),
-          description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
-          warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
-          isWarn: false,
-          options: vm.availableExtensions,
-          onChange: function () {
-            if (vm.model.site.extensionLength !== vm.model.previousLength) {
-              return ModalService.open({
-                  title: $translate.instant('common.warning'),
-                  message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
-                  close: $translate.instant('common.continue'),
-                  dismiss: $translate.instant('common.cancel'),
-                  type: 'negative'
-                })
-                .result.then(function () {
-                  for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
-                    vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
-                    vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
-                    vm.model.previousLength = vm.model.site.extensionLength;
-                  }
-                })
-                .catch(function () {
-                  vm.model.site.extensionLength = vm.model.previousLength;
-                  return $q.reject();
-                });
-            }
-          }
-        },
-        hideExpression: function () {
-          return vm.model.hideExtensionLength;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return angular.isDefined(scope.model.uuid);
-          }
-        }
-      }, {
         key: 'siteSteeringDigit',
         type: 'select',
         className: 'service-setup-steering-digit',
@@ -325,6 +277,48 @@
           }
         }
       }]
+    }, {
+      model: vm.model.site,
+      key: 'extensionLength',
+      type: 'select',
+      className: 'service-setup service-setup-extension-length',
+      templateOptions: {
+        label: $translate.instant('serviceSetupModal.extensionLength'),
+        description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+        isWarn: false,
+        options: vm.availableExtensions,
+        onChange: function () {
+          if (vm.model.site.extensionLength !== vm.model.previousLength) {
+            return ModalService.open({
+                title: $translate.instant('common.warning'),
+                message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
+                close: $translate.instant('common.continue'),
+                dismiss: $translate.instant('common.cancel'),
+                type: 'negative'
+              })
+              .result.then(function () {
+                for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
+                  vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
+                  vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
+                  vm.model.previousLength = vm.model.site.extensionLength;
+                }
+              })
+              .catch(function () {
+                vm.model.site.extensionLength = vm.model.previousLength;
+                return $q.reject();
+              });
+          }
+        }
+      },
+      hideExpression: function () {
+        return vm.model.hideExtensionLength;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+        }
+      }
     }, {
       key: 'displayNumberRanges',
       type: 'repeater',
@@ -662,6 +656,9 @@
         // Get the timezone feature toggle setting
         return enableTimeZoneFeatureToggle();
       }).then(function () {
+        // Get the extemsion length feature toggle setting
+        return enableExtensionLengthFeatureToggle();
+      }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
@@ -716,6 +713,7 @@
           });
         }
       }).then(function () {
+        vm.fields = vm.initialFields;
         return loadExternalNumberPool();
       });
     }
@@ -751,6 +749,14 @@
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
+      });
+    }
+
+    function enableExtensionLengthFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
+        vm.model.hideExtensionLength = !result;
+      }).catch(function (response) {
+        // extension length feature toggle not enabled for customer
       });
     }
 

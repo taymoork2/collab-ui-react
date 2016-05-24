@@ -194,7 +194,7 @@
       mockFlag
     ) {
 
-      var funcName = 'csvExport()';
+      var funcName = 'WebExApiGatewayService.csvExport()';
       var logMsg = '';
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl;
@@ -208,19 +208,7 @@
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         "mockFlag=" + mockFlag + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
-
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
-
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
+      // $log.log(logMsg);
 
       var deferredResponse = $q.defer();
 
@@ -231,34 +219,12 @@
       ).then(
 
         function success(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.success()";
-          var logMsg = "";
-
-          $log.log(funcName);
-
-          deferredResponse.resolve(successResult);
+          deferredResponse.resolve(response);
         },
 
         function error(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.error()";
-          var logMsg = "";
-
-          $log.log(funcName);
-
-          deferredResponse.reject(errorResult);
+          deferredResponse.reject(response);
         }
-
-      ).catch(
-
-        function catchError(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.catchError()";
-          var logMsg = "";
-
-          $log.log(funcName);
-
-          deferredResponse.reject(errorResult);
-        }
-
       ); // WebExRestApiFact.csvExportReq()
 
       return deferredResponse.promise;
@@ -283,11 +249,11 @@
       return blob;
     }; // webexCreateImportBlob()
 
-    this.csvImport = function (
+    this.csvImportOld = function (
       vm
     ) {
 
-      var funcName = 'csvImport()';
+      var funcName = 'csvImportOld()';
       var logMsg = '';
 
       var siteUrl = vm.siteUrl;
@@ -297,18 +263,6 @@
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
         'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
       //$log.log(logMsg);
-
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
-
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
 
       var csvHttpsObj = _this.csvConstructHttpsObj(
         siteUrl,
@@ -333,19 +287,61 @@
       ).then(
 
         function success(response) {
-          deferredResponse.resolve(successResult);
+          deferredResponse.resolve(response);
         },
 
         function error(response) {
-          deferredResponse.reject(errorResult);
+          deferredResponse.reject(response);
         }
+      ); // WebExRestApiFact.csvExportReq()
 
-      ).catch(
+      return deferredResponse.promise;
+    }; // csvImportOld()
 
-        function catchError(response) {
-          deferredResponse.reject(errorResult);
+    this.csvImport = function (
+      vm
+    ) {
+
+      var funcName = 'csvImport()';
+      var logMsg = '';
+
+      var siteUrl = vm.siteUrl;
+      var mockFlag = vm.siteRow.csvMock.mockImport;
+      var csvFile = vm.modal.file;
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
+        'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
+      //$log.log(logMsg);
+
+      var csvHttpsObj = _this.csvConstructHttpsObj(
+        siteUrl,
+        WebExApiGatewayConstsService.csvRequests.csvImport
+      );
+
+      var fd = new $window.FormData();
+      fd.append("importCsvFile", _this.webexCreateImportBlob(csvFile));
+
+      csvHttpsObj.data = fd;
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      //$log.log(logMsg);
+
+      var deferredResponse = $q.defer();
+
+      WebExRestApiFact.csvApiRequest(
+        mockFlag,
+        null,
+        csvHttpsObj
+      ).then(
+
+        function success(response) {
+          deferredResponse.resolve(response);
+        },
+
+        function error(response) {
+          deferredResponse.reject(response);
         }
-
       ); // WebExRestApiFact.csvExportReq()
 
       return deferredResponse.promise;

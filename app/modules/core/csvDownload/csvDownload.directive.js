@@ -191,6 +191,9 @@
       if (attrs.anchorText) {
         downloadAnchor.html(attrs.anchorText);
       }
+      if (scope.type === CsvDownloadService.typeUser) {
+        scope.tooltipMessage = $translate.instant('usersPage.csvBtnTitle');
+      }
 
       // if the template Object URL is already loaded, change the anchor's attributes to download from blob
       if (attrs.type && attrs.type === 'template' && CsvDownloadService.getObjectUrlTemplate()) {
