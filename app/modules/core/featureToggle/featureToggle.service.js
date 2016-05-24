@@ -125,7 +125,8 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      readonlyAdmin: 'atlas-read-only-admin'
+      readonlyAdmin: 'atlas-read-only-admin',
+      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
 
     var toggles = {};

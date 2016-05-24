@@ -1,0 +1,64 @@
+<div class="add-resource">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title"><span>Add Resource™</span></h5>
+  </div>
+
+  <div class="modal-body">
+    <form name="myRadioForm">
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          ng-model="addResource.selected"
+          id="NewExpressway"
+          name="NewExpressway"
+          value="new"
+          cs-input-label="Register new Expressway cluster">
+
+        <input
+          cs-input
+          type="radio"
+          ng-model="addResource.selected"
+          id="ExistingExpressway"
+          name="ExistingExpressway"
+          value="existing"
+          cs-input-label="Add service to existing Expressway cluster">
+
+      </div>
+    </form>
+
+    <form ng-show="addResource.selected === 'new'" class="inputbox">
+      <span>Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud</span>
+      <input type="text"
+             ng-model="addResource.newHostname"
+             placeholder="Enter Expressway hostname">
+    </form>
+
+    <form ng-show="addResource.selected === 'existing'" class="inputbox">
+      <span>Select one or more existing Expressway clusters.</span>
+      <cs-select
+        ng-model="addResource.selectedClusters"
+        options="addResource.expresswayOptions"
+        multi="true"
+        placeholder="addResource.placeholder"
+        singular="Expressway"
+        plural="Expressways"
+      >
+      </cs-select>
+    </form>
+
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn" ng-click="$close()">
+      <span translate="common.cancel"></span>
+    </button>
+    <button class="btn activate-button btn--primary" ng-click="addResource.goNext()">
+      <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    </button>
+  </div>
+</div>
