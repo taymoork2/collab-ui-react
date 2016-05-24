@@ -2881,6 +2881,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2934,6 +2935,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -2981,6 +2983,7 @@
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
+    "inactive_user": "Inactive Users",
 
     "training_usage": "Training Usage",
     "registration": "Registration",
@@ -3036,6 +3039,7 @@
     "meeting_usage": "Meeting Usage",
     "recording_usage": "Recording Usage",
     "storage_utilization": "Storage Usage",
+    "inactive_user": "Inactive Users",
     "event_center_overview": "Event Overview",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
@@ -3256,6 +3260,8 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
+    "siteCsvModalText": "Export user attributes, edit csv file and import the edited version",
+    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
