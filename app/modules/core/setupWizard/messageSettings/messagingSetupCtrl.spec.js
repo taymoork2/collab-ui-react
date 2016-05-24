@@ -21,10 +21,16 @@ describe('Controller: messagingSetupCtrl', function () {
     spyOn(AccountOrgService, 'getServices').and.returnValue({
       success: _.noop
     });
+
+    spyOn(AccountOrgService, 'getAppSecurity').and.returnValue($q.when({
+      data: {
+        enforceClientSecurity: true
+      }
+    }));
+
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Notification, 'notify');
-
+    spyOn(Notification, 'error');
   }));
 
   function initController() {
@@ -57,4 +63,25 @@ describe('Controller: messagingSetupCtrl', function () {
       expect(controller.showAppSecurity).toBe(true);
     });
   });
+
+  describe('test that getAppSecurity function and sets enforceClientSecurity: ', function () {
+    beforeEach(initController);
+
+    it('should check if getAppSecurity in return sets AppSecurity to true', function () {
+      expect(controller.appSecurity).toEqual(true);
+    });
+  });
+
+  describe('test getAppSecurity error condition: ', function () {
+    beforeEach(function () {
+      AccountOrgService.getAppSecurity = jasmine.createSpy().and.returnValue($q.reject());
+      initController();
+    });
+
+    it('getAppSecurity call should gracefully error', function () {
+      controller.currentAppSecurity = false;
+      expect(Notification.error).toHaveBeenCalled();
+    });
+  });
+
 });

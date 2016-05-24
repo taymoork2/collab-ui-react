@@ -6,7 +6,7 @@
     .service('AccountOrgService', AccountOrgService);
 
   /* @ngInject */
-  function AccountOrgService($http, $rootScope, Config, Auth, UrlConfig) {
+  function AccountOrgService($http, $q, $rootScope, Config, Auth, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -18,10 +18,30 @@
       addOrgDataRetentionPeriodDays: addOrgDataRetentionPeriodDays,
       modifyOrgDataRetentionPeriodDays: modifyOrgDataRetentionPeriodDays,
       deleteOrgSettings: deleteOrgSettings,
-      getOrgSettings: getOrgSettings
+      getOrgSettings: getOrgSettings,
+      getAppSecurity: getAppSecurity,
+      setAppSecurity: setAppSecurity
     };
 
     return service;
+
+    function setDeviceSettingUrl(org) {
+      var url = accountUrl + 'organizations/' + org + '/settings';
+
+      return url;
+    }
+
+    function setServiceUrl(org) {
+      var url = accountUrl + 'organizations/' + org + '/services';
+
+      return url;
+    }
+
+    function setAccountSettingUrl(org) {
+      var url = accountUrl + 'organization/' + org + '/settings';
+
+      return url;
+    }
 
     function getAccount(org) {
       var url = accountUrl + 'organization/' + org + '/accounts';
@@ -30,7 +50,7 @@
     }
 
     function getServices(org, filter) {
-      var url = accountUrl + 'organizations/' + org + '/services';
+      var url = setServiceUrl(org);
       if (!_.isUndefined(filter) && !_.isNull(filter)) {
         url += '?filter=' + filter;
       }
@@ -39,20 +59,20 @@
     }
 
     function addMessengerInterop(org) {
-      var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
+      var url = setServiceUrl(org) + '/messengerInterop';
       var request = {};
 
       return $http.post(url, request);
     }
 
     function deleteMessengerInterop(org) {
-      var url = accountUrl + 'organizations/' + org + '/services/messengerInterop';
+      var url = setServiceUrl(org) + '/messengerInterop';
 
       return $http.delete(url);
     }
 
     function addOrgCloudSipUri(org, cloudSipUri) {
-      var url = accountUrl + 'organization/' + org + '/settings';
+      var url = setAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -65,7 +85,7 @@
     }
 
     function addOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = accountUrl + 'organization/' + org + '/settings';
+      var url = setAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -78,7 +98,7 @@
     }
 
     function modifyOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = accountUrl + 'organization/' + org + '/settings';
+      var url = setAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -91,15 +111,46 @@
     }
 
     function deleteOrgSettings(org) {
-      var url = accountUrl + 'organization/' + org + '/settings/' + org;
+      var url = setAccountSettingUrl(org) + '/' + org;
 
       return $http.delete(url);
     }
 
     function getOrgSettings(org) {
-      var url = accountUrl + 'organization/' + org + '/settings/' + org;
+      var url = setAccountSettingUrl(org) + '/' + org;
 
       return $http.get(url);
+    }
+
+    // Get the account App Security Status from the enforceClientSecurity API(boolean)
+    function getAppSecurity(org) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      } else {
+        var url = setDeviceSettingUrl(org) + '/enforceClientSecurity';
+
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      }
+    }
+
+    // Sets the updated App Security Status to enforceClientSecurity API on Save button event
+    function setAppSecurity(org, appSecurityStatus) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      } else {
+        var url = setDeviceSettingUrl(org) + '/enforceClientSecurity';
+
+        return $http({
+          method: 'PUT',
+          url: url,
+          data: {
+            enforceClientSecurity: appSecurityStatus
+          }
+        });
+      }
     }
   }
 })();
