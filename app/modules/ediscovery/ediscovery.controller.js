@@ -215,11 +215,17 @@
       });
     }
 
-    Notification.requestPermission().then(function (result) {});
+    funnction grantNotification() {
+      if ($window.Notification) {
+        $window.Notification.requestPermission().then(function (result) {});
+      }
+    }
 
     function notifyOnEvent(reports) {
+      if (!$window.Notification || $window.Notification.permission != 'granted') {
+        return;
+      }
       var completedReports = _.filter(reports, function (r) {
-        console.log('state', r.state);
         return r.state == 'COMPLETED';
       });
       if (completedReports && completedReports.length > 0) {
@@ -228,7 +234,7 @@
           icon: 'images/cisco_logo.png',
           tag: 'ediscovery'
         };
-        var n = new Notification('eDiscovery Dashboard', options);
+        var n = new $window.Notification('eDiscovery Dashboard', options);
         setTimeout(n.close.bind(n), 3000);
       }
     }
