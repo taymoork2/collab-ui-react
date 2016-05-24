@@ -233,7 +233,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     spyOn(WebExRestApiFact, 'csvApiRequest').and.returnValue(deferredCsvApiRequest.promise);
   }));
 
-  it('can call webex import blob', function () {
+  xit('can call webex import blob', function () {
     expect(WebExApiGatewayService).toBeDefined();
     expect(fakeViewModel).toBeDefined();
 
