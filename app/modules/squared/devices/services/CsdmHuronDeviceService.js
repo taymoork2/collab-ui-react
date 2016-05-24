@@ -65,6 +65,8 @@
         return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
+        }, function (err) {
+          loadedData = true;
         });
       });
     }
