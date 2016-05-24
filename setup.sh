@@ -91,6 +91,8 @@ fi
 # Remove component directories
 if [ $quick = "false" ]; then
   echo "Removing component directories..."
+  # remove deprecated bower_components to clean up workspace
+  rm -rf bower_components
   rm -rf node_modules
 fi
 
@@ -108,8 +110,8 @@ time_start=$(date +"%s")
 
 # Install dependecies
 echo "Install all dependencies..."
-npm install
-npm prune
+npm install || exit $?
+npm prune || exit $?
 
 # npm install succeeded
 # - make a tar archive of the npm-shrinkwrap.json file, and rm older versions

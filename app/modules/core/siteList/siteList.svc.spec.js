@@ -44,13 +44,10 @@ describe('SiteListService.updateWebExColumnsInRow() test', function () {
       },
 
       csvMock: {
-        mockStatus: true,
-        mockStatusStartIndex: 0,
-        mockStatusEndIndex: 0,
-        mockStatusCurrentIndex: null,
-        mockExport: true,
-        mockImport: true,
-        mockFileDownload: true
+        mockExport: false,
+        mockImport: false,
+        mockFileDownload: false,
+        mockStatus: false,
       },
 
       csvPollIntervalObj: null
@@ -159,6 +156,68 @@ describe('SiteListService.updateWebExColumnsInRow() test', function () {
   });
 }); // describe()
 
+describe('SiteListService: csv status error handling', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+
+  var $q;
+  var $rootScope;
+
+  var deferredCsvStatus;
+
+  var SiteListService;
+  var WebExApiGatewayConstsService;
+  var WebExApiGatewayService;
+
+  var fakeSiteRow = null;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExApiGatewayConstsService_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredCsvStatus = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      showCSVInfo: false,
+
+      csvMock: {
+        mockExport: false,
+        mockImport: false,
+        mockFileDownload: false,
+        mockStatus: false,
+      },
+    }; // fakeSiteRow = {}
+
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+  })); // beforeEach(inject())
+
+  it('can process reject from WebExApiGatewayService.csvStatus()', function () {
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
+
+    deferredCsvStatus.reject({});
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(false);
+  });
+}); // describe()
+
 describe('SiteListService: csv status tests', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -218,13 +277,10 @@ describe('SiteListService: csv status tests', function () {
       importFinishedWithErrors: false,
 
       csvMock: {
-        mockStatus: true,
-        mockStatusStartIndex: 0,
-        mockStatusEndIndex: 0,
-        mockStatusCurrentIndex: null,
-        mockExport: true,
-        mockImport: true,
-        mockFileDownload: true
+        mockExport: false,
+        mockImport: false,
+        mockFileDownload: false,
+        mockStatus: false,
       },
     };
 
@@ -252,25 +308,16 @@ describe('SiteListService: csv status tests', function () {
   })); // beforeEach(inject())
 
   it('can process csvStatus="none"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 0,
-      checkEnd: 0,
-      checkIndex: 0
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.none,
       completionDetails: null,
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
     expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
 
@@ -290,25 +337,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportInProgress"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 1,
-      checkEnd: 1,
-      checkIndex: 1
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.exportInProgress,
       completionDetails: null,
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
     expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
 
@@ -328,25 +366,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedNoErr"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 2,
-      checkEnd: 2,
-      checkIndex: 2
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
       completionDetails: {},
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
     expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
 
@@ -366,25 +395,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedWithErr"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 3,
-      checkEnd: 3,
-      checkIndex: 3
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
       completionDetails: {},
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
     expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
 
@@ -404,25 +424,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importInProgress"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 4,
-      checkEnd: 4,
-      checkIndex: 4
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.importInProgress,
       completionDetails: null,
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
     expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
 
@@ -442,25 +453,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedNoErr"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 5,
-      checkEnd: 5,
-      checkIndex: 5
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
       completionDetails: {},
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
     expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
 
@@ -480,25 +482,16 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedWithErr"', function () {
-    fakeSiteRow.csvStatusCheckMode = {
-      isOn: true,
-      checkStart: 6,
-      checkEnd: 6,
-      checkIndex: 6
-    };
-
-    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+    SiteListService.updateCSVStatusInRow(fakeSiteRow);
 
     deferredCsvStatus.resolve({
       siteUrl: 'fake.webex.com',
-      isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
       completionDetails: {},
     });
 
     $rootScope.$apply();
 
-    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
     expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
     expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
 

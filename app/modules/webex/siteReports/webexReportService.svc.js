@@ -22,9 +22,11 @@
 
     //var loc = $translate.use().replace("_", "-");
 
-    var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
+    var common_reports_pageids = ["meeting_in_progess",
+      "meeting_usage",
       "recording_usage",
-      "storage_utilization"
+      "storage_utilization",
+      "inactive_user",
     ];
 
     var event_center_pageids = ["event_center_overview",
@@ -60,6 +62,7 @@
       "meeting_usage": "meeting_usage",
       "recording_usage": "recording_storage_usage",
       "storage_utilization": "storage_utilization_by_user",
+      "inactive_user": "inactive_user",
       "event_center_overview": "ec_report_summary",
       "event_center_scheduled_events": "ec_scheduled_events",
       "event_center_held_events": "ec_held_events",
