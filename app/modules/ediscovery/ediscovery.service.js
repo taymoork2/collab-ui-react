@@ -40,6 +40,30 @@
         });
     }
 
+    function patchReport(id, patchData) {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
+        .then(function (res) {
+          //console.log("patching", res);
+        })
+        .catch(function (data) {
+          //console.log("error createReport: " + data)
+        });
+    }
+
+    function deleteReport(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
+        .then(function (res) {
+          //console.log("deleted", res);
+        })
+        .catch(function (data) {
+          //console.log("error createReport: " + data)
+        });
+    }
+
     function deleteReports() {
       var orgId = Authinfo.getOrgId();
       return $http
@@ -52,7 +76,9 @@
     return {
       getReport: getReport,
       deleteReports: deleteReports,
-      createReport: createReport
+      createReport: createReport,
+      patchReport: patchReport,
+      deleteReport: deleteReport
     };
   }
 

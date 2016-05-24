@@ -12,8 +12,12 @@
     vm.createReport = createReport;
     vm.deleteReports = deleteReports;
     vm.showSearchHelp = showSearchHelp;
+    $scope.downloadable = downloadable;
     $scope.downloadReport = downloadReport;
+    $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
+    $scope.deletable = deletable;
+    $scope.deleteReport = deleteReport;
 
     vm.searchCriteria = {
       "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
@@ -21,6 +25,8 @@
       "endDate": moment(moment()).add(1, 'days')
     };
     vm.reports = [];
+
+    var avalonPoller = $timeout(pollAvalonReport, 0);
 
     vm.pageTitle = "eDiscovery";
     vm.headerTabs = [{
@@ -50,8 +56,6 @@
       if (moment(start).isAfter(moment(end))) {
         errors.push("Start date must be before end date");
       }
-      //console.log("start", start);
-      //console.log("moment()", moment());
       if (moment(start).isAfter(moment())) {
         errors.push("Start date cannot be in the future");
       }
@@ -92,13 +96,43 @@
       //validateDate();
     });
 
-    function downloadReport() {
+    function downloadReport(id) {
       openGenericModal("Note", "Function not implemented");
-
     }
 
-    function cancelReport() {
-      openGenericModal("Note", "Function not implemented");
+    function cancelReport(id) {
+      EdiscoveryService.patchReport(id, {
+        state: "ABORTED"
+      }).then(function (res) {
+        pollAvalonReport();
+      });
+    }
+
+    function deleteReport(id) {
+      EdiscoveryService.deleteReport(id).then(function (res) {
+        pollAvalonReport();
+      });
+    }
+
+    function cancable(id) {
+      var r = findReportById(id);
+      return r && r.state === "RUNNING";
+    }
+
+    function deletable(id) {
+      var r = findReportById(id);
+      return r && (r.state === "COMPLETED" || r.state === "ABORTED");
+    }
+
+    function downloadable(id) {
+      var r = findReportById(id);
+      return r && r.state === "COMPLETED";
+    }
+
+    function findReportById(id) {
+      return _.find(vm.reports, function (report) {
+        return report.id === id;
+      });
     }
 
     vm.gridOptions = {
@@ -130,6 +164,7 @@
         field: 'state',
         displayName: 'State',
         sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-state.html'
       }, {
         field: 'failureReason',
         displayName: 'Reason',
@@ -137,7 +172,7 @@
       }, {
         field: 'sizeInBytes',
         displayName: 'Size (bytes)',
-        sortable: false,
+        sortable: false
       }, {
         field: 'actions',
         displayName: 'Actions',
@@ -155,25 +190,23 @@
       if (!validateDate()) {
         return;
       }
-      //console.log("createReport, searchCriteria", vm.searchCriteria)
       EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
-        //console.log("create result", res)
         pollAvalonReport();
       });
     }
 
     function deleteReports() {
       EdiscoveryService.deleteReports().then(function (res) {
-        //console.log("deleted reports result", res)
+        pollAvalonReport();
       });
     }
 
     function pollAvalonReport() {
       EdiscoveryService.getReport().then(function (res) {
-        //console.log("Response from poll reports", res)
         vm.reports = res;
       }).finally(function (res) {
-        $timeout(pollAvalonReport, 5000);
+        $timeout.cancel(avalonPoller);
+        avalonPoller = $timeout(pollAvalonReport, 5000);
       });
     }
 
