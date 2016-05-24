@@ -190,6 +190,51 @@ describe('Controller: TrialDeviceController', function () {
     });
   });
 
+  describe('input quantity default setting', function () {
+
+    it('should change the quantity to 0 when disabled', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_SX10',
+        enabled: false,
+        quantity: 0,
+        readonly: false,
+        valid: true
+      };
+      controller.setQuantityInputState(device, 1);
+      expect(device.quantity).toBe(0);
+    });
+
+    it('should change the quantity to default when enabled and has quantity 0', function () {
+
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_SX10',
+        enabled: true,
+        quantity: 0,
+        readonly: false,
+        valid: true
+      };
+      controller.setQuantityInputState(device, 1);
+      expect(device.quantity).toBe(1);
+    });
+
+    it('should not change the quantity when enabled and has quantity other than 0', function () {
+
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_SX10',
+        enabled: true,
+        quantity: 3,
+        readonly: false,
+        valid: true
+      };
+      controller.setQuantityInputState(device, 1);
+      expect(device.quantity).toBe(3);
+    });
+
+  });
+
   describe('input quantity validation', function () {
     it('should validate when device is not enabled', function () {
       var valid = controller.validateInputQuantity(2, 2, {

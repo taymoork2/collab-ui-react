@@ -36,6 +36,7 @@
     vm.disabledChecks = disabledChecks;
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
+    vm.setQuantityInputState = _setQuantityInputState;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -115,8 +116,8 @@
         'templateOptions.required': function () {
           return vm.sx10.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return _setQuantityInputState(scope, vm.sx10, 2);
+        'templateOptions.disabled': function () {
+          return vm.setQuantityInputState(vm.sx10, 2);
         }
 
       },
@@ -166,8 +167,8 @@
         'templateOptions.required': function () {
           return vm.phone8865.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return _setQuantityInputState(scope, vm.phone8865, 1);
+        'templateOptions.disabled': function () {
+          return vm.setQuantityInputState(vm.phone8865, 1);
         }
       },
       watcher: _addWatcher(),
@@ -214,8 +215,8 @@
         'templateOptions.required': function () {
           return vm.phone8845.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return _setQuantityInputState(scope, vm.phone8845, 1);
+        'templateOptions.disabled': function () {
+          return vm.setQuantityInputState(vm.phone8845, 1);
         }
 
       },
@@ -263,8 +264,8 @@
         'templateOptions.required': function () {
           return vm.phone8841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return _setQuantityInputState(scope, vm.phone8841, 1);
+        'templateOptions.disabled': function () {
+          return vm.setQuantityInputState(vm.phone8841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -311,8 +312,8 @@
         'templateOptions.required': function () {
           return vm.phone7841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return _setQuantityInputState(scope, vm.phone7841, 1);
+        'templateOptions.disabled': function () {
+          return vm.setQuantityInputState(vm.phone7841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -423,15 +424,6 @@
       key: 'postalCode',
       type: 'input',
       className: 'columns medium-6',
-      /* validators: {
-         noChecks: {
-           expression: function (viewValue, modelValue) {
-             var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
-             return quantity > 0;
-           },
-           message: 'No quantity'
-         }
-       },*/
       validators: _checkValidators(),
       templateOptions: {
         labelClass: 'columns medium-2 medium-offset-1 text-right',
@@ -510,23 +502,12 @@
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity < 2 || quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems);
+
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialCallData.details.phones);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity < 2 || quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialCallData.details.phones);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -562,16 +543,26 @@
         .reduce(_.add) || 0;
     }
 
-    function _setQuantityInputState(scope, checkboxControl, defaultValue) {
+    function _setQuantityInputState(device, defaultValue) {
 
-      var disabled = !checkboxControl.enabled;
+      var disabled = !device.enabled;
       if (disabled) {
-        scope.model.quantity = 0;
-      } else if (scope.model.quantity == 0) {
-        scope.model.quantity = defaultValue;
+        device.quantity = 0;
+      } else if (!device.quantity) {
+        device.quantity = defaultValue;
       }
-      return disabled || vm.sx10.readonly;
+      return disabled || device.readonly;
 
+    }
+
+    function _validateTypeQuantity(scope, deviceType) {
+      var quantity = vm.calcQuantity(deviceType);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity < 2 || quantity > 5);
+      }
     }
 
     function _addWatcher() {
@@ -581,13 +572,6 @@
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            // trigger validation when quantity has changed
-            /*  $log.log('VALIDATING!');
-              if (field.model.enabled)
-              {
-              field.formControl.$setDirty();
-              field.formControl.$setTouched();
-            }*/
             field.formControl.$validate();
           }
         }
@@ -671,7 +655,7 @@
 
         field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
         if (field.templateOptions.disabled && field.formControl) {
-          field.formControl.$setViewValue("");
+          field.formControl.$setViewValue('');
         }
       });
     }
