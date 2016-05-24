@@ -1,0 +1,10 @@
+<div class="ui-grid-cell-contents">
+  <span ng-show="row.entity.state === 'RUNNING'">
+    <span class="spinner-example--small">
+      <i class="icon icon-spinner"></i>
+    </span>
+    <span ng-if="row.entity.progress > 0">
+      {{row.entity.progress}}%
+    </span>
+  </span>
+</div>

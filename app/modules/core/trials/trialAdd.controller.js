@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
@@ -27,6 +27,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.isTestOrg = false;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -49,6 +50,10 @@
     vm.navStates = ['trialAdd.info'];
     vm.showWebex = false;
     vm.startTrial = startTrial;
+    vm.setDeviceModal = setDeviceModal;
+    vm.devicesModal = _.find(vm.trialStates, {
+      name: 'trialAdd.call'
+    });
 
     vm.custInfoFields = [{
       model: vm.details,
@@ -252,9 +257,10 @@
           updateTrialService(messageTemplateOptionId);
         }
 
-        var devicesModal = _.find(vm.trialStates, {
-          name: 'trialAdd.call'
-        });
+        // TODO: US12063 overrides using this var but requests code to be left in for now
+        //var devicesModal = _.find(vm.trialStates, {
+        //  name: 'trialAdd.call'
+        // });
         var meetingModal = _.find(vm.trialStates, {
           name: 'trialAdd.webex'
         });
@@ -267,9 +273,11 @@
 
         pstnModal.enabled = vm.pstnTrial.enabled;
         emergAddressModal.enabled = vm.pstnTrial.enabled;
-        devicesModal.enabled = results[2];
         meetingModal.enabled = results[1];
-
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and only test orgs that have feature toggle enabled (US12063)
+        //devicesModal.enabled = results[2];
+        setDeviceModal();
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;
@@ -480,6 +488,26 @@
 
     function showDefaultFinish() {
       return !vm.webexTrial.enabled;
+    }
+
+    function setDeviceModal() {
+      var devicesModal = _.find(vm.trialStates, {
+        name: 'trialAdd.call'
+      });
+      Orgservice.getAdminOrg(_.noop)
+        .then(function (response) {
+          if (response.data.success) {
+            vm.isTestOrg = response.data.isTestOrg;
+            // If the test org has the atlasTrialsShipDevices toggle on then negate that it is a test org
+            if (response.data.isTestOrg) {
+              FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices, function (result) {
+                vm.isTestOrg = !result;
+              });
+            }
+          }
+        }).finally(function (response) {
+          vm.devicesModal.enabled = !vm.isTestOrg;
+        });
     }
   }
 })();
