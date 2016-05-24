@@ -52,7 +52,7 @@
         };
         dayhour.starttime = moment(hour.starttime, "hh:mm A").set(consolidateDate);
         dayhour.endtime = moment(hour.endtime, "hh:mm A").set(consolidateDate);
-        if(hour.endtime === '12:00 AM'){
+        if (hour.endtime === '12:00 AM') {
           dayhour.endtime.add(1, 'day');
         }
         _.forEach(hour.days, function (wday, index) {
