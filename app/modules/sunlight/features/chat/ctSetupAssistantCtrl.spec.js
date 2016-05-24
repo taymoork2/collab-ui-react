@@ -114,6 +114,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   });
 
+  describe('Feedback Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[4];
+    });
+
+    it('next and previous buttons should be enabled by default', function () {
+      controller.template.name = templateName;
+      controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
+      expect(controller.previousButton()).toEqual(true);
+      expect(controller.nextButton()).toEqual(true);
+    });
+  });
+
   describe('Profile Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
