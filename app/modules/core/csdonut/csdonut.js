@@ -3,7 +3,10 @@
 
   /* global d3 */
 
-  angular.module('csDonut', []).directive('csDonut', function csDonut() {
+  angular.module('csDonut', []).directive('csDonut', csDonut);
+
+  /* @ngInject */
+  function csDonut() {
 
     return {
       restrict: 'EA',
@@ -248,5 +251,5 @@
         }, true);
       }
     };
-  });
+  }
 })();
