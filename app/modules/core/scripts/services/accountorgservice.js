@@ -25,19 +25,20 @@
 
     return service;
 
-    function setDeviceSettingUrl(org) {
+    //Url returns
+    function getDeviceSettingUrl(org) {
       var url = accountUrl + 'organizations/' + org + '/settings';
 
       return url;
     }
 
-    function setServiceUrl(org) {
+    function getServiceUrl(org) {
       var url = accountUrl + 'organizations/' + org + '/services';
 
       return url;
     }
 
-    function setAccountSettingUrl(org) {
+    function getAccountSettingUrl(org) {
       var url = accountUrl + 'organization/' + org + '/settings';
 
       return url;
@@ -50,7 +51,7 @@
     }
 
     function getServices(org, filter) {
-      var url = setServiceUrl(org);
+      var url = getServiceUrl(org);
       if (!_.isUndefined(filter) && !_.isNull(filter)) {
         url += '?filter=' + filter;
       }
@@ -59,20 +60,20 @@
     }
 
     function addMessengerInterop(org) {
-      var url = setServiceUrl(org) + '/messengerInterop';
+      var url = getServiceUrl(org) + '/messengerInterop';
       var request = {};
 
       return $http.post(url, request);
     }
 
     function deleteMessengerInterop(org) {
-      var url = setServiceUrl(org) + '/messengerInterop';
+      var url = getServiceUrl(org) + '/messengerInterop';
 
       return $http.delete(url);
     }
 
     function addOrgCloudSipUri(org, cloudSipUri) {
-      var url = setAccountSettingUrl(org);
+      var url = getAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -85,7 +86,7 @@
     }
 
     function addOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = setAccountSettingUrl(org);
+      var url = getAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -98,7 +99,7 @@
     }
 
     function modifyOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = setAccountSettingUrl(org);
+      var url = getAccountSettingUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -111,13 +112,13 @@
     }
 
     function deleteOrgSettings(org) {
-      var url = setAccountSettingUrl(org) + '/' + org;
+      var url = getAccountSettingUrl(org) + '/' + org;
 
       return $http.delete(url);
     }
 
     function getOrgSettings(org) {
-      var url = setAccountSettingUrl(org) + '/' + org;
+      var url = getAccountSettingUrl(org) + '/' + org;
 
       return $http.get(url);
     }
@@ -127,7 +128,7 @@
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
       } else {
-        var url = setDeviceSettingUrl(org) + '/enforceClientSecurity';
+        var url = getDeviceSettingUrl(org) + '/enforceClientSecurity';
 
         return $http({
           method: 'GET',
@@ -141,7 +142,7 @@
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
       } else {
-        var url = setDeviceSettingUrl(org) + '/enforceClientSecurity';
+        var url = getDeviceSettingUrl(org) + '/enforceClientSecurity';
 
         return $http({
           method: 'PUT',
