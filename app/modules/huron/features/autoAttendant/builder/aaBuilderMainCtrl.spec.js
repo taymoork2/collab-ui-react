@@ -6,6 +6,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
+  var FeatureToggleService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -52,7 +53,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -77,6 +78,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AACalendarService = _AACalendarService_;
     AATrackChangeService = _AATrackChangeService_;
     AADependencyService = _AADependencyService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -84,6 +86,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,

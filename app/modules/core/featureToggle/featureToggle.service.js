@@ -24,6 +24,7 @@
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
+      huronAASchedules: 'huronAASchedules',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
