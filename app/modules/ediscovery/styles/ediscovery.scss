@@ -48,6 +48,11 @@
       padding-left: 1rem;
     }
 
+    span.icon {
+      font-size: 20px;
+      line-height: 40px;
+      cursor: pointer;
+    }
 
     font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: $brand-white;
