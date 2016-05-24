@@ -3,6 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy-Report-Only" content="
+      default-src 'self' file: *.statuspage.io *.webex.com *.wbx2.com *.localytics.com *.webexconnect.com ;
+      style-src 'self' 'unsafe-inline' ;
+      script-src 'self' 'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=' 'unsafe-eval' *.webex.com *.localytics.com ;
+      img-src 'self' data: *.localytics.com *.rackcdn.com *.clouddrive.com ;
+      connect-src 'self' *.cisco.com *.huron-int.com *.huron.uno *.huron-dev.com *.ciscoccservice.com *.statuspage.io *.webex.com *.wbx2.com *.webexconnect.com ;">
     <title ng-bind="Localize.varTitle()"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
@@ -26,11 +32,11 @@
       You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
     </div>
     <![endif]-->
-
     <script>
       var preload = new Image();
-      preload.src = "images/bg_3515.jpg";
+      preload.src = 'images/bg_3515.jpg';
     </script>
+
     <!-- build:js scripts/index.scripts.js -->
     <!-- inject:js -->
     <!-- endinject -->

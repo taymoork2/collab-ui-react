@@ -1,0 +1,33 @@
+
+#my-company-info{
+  display: block;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.btn--myCompany{
+  .icon{
+    position: static !important;
+    margin-left: 0.75rem !important;
+  }
+}
+
+.company-left-tabs{
+  .page-header__right{
+    padding-top: 1.5rem;
+    padding-left: 0.75rem;
+
+    -webkit-align-items: flex-start !important;
+    -webkit-box-pack: start !important;
+
+    -webkit-box-justify-content: flex-start !important;
+
+    -ms-flex-align: start !important;
+    -ms-box-pack: start !important;
+
+    align-items:flex-start !important;
+    justify-content: flex-start !important;
+
+    order: -1 !important;
+  }
+}

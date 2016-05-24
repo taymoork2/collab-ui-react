@@ -2,66 +2,74 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       //setSearchFieldFocus();
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    //console.log("EdiscoveryController...")
 
-    vm.createReport = createReport;
     vm.deleteReports = deleteReports;
-    vm.showSearchHelp = showSearchHelp;
+    $scope.downloadable = downloadable;
     $scope.downloadReport = downloadReport;
+    $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
 
-    vm.searchCriteria = {
-      "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": moment()
-    };
+    var avalonPoller = $timeout(pollAvalonReport, 0);
+
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(avalonPoller);
+    });
+
     vm.reports = [];
 
+    var avalonPoller = $timeout(pollAvalonReport, 0);
+
+    //grantNotification();
     pollAvalonReport();
 
-    function getStartDate() {
-      return vm.searchCriteria.startDate;
+    function openGenericModal(title, messages) {
+      $modal.open({
+        templateUrl: "modules/ediscovery/genericModal.html",
+        controller: 'EdiscoveryGenericModalCtrl as modal',
+        resolve: {
+          title: function () {
+            return title;
+          },
+          messages: function () {
+            return messages;
+          }
+        }
+      });
     }
 
-    function getEndDate() {
-      return vm.searchCriteria.endDate;
+    function cancable(id) {
+      var r = findReportById(id);
+      return r && r.state === "RUNNING";
     }
 
-    function setEndDate(endDate) {
-      vm.searchCriteria.endDate = endDate;
+    function cancelReport(id) {
+      EdiscoveryService.patchReport(id, {
+        state: "ABORTED"
+      }).then(function (res) {
+        pollAvalonReport();
+      });
     }
 
-    function validDuration() {
-      if (getEndDate() < getStartDate()) {
-        //alert("Oh no!   End date is before start date !!!!");
-        $modal.open({
-          templateUrl: "modules/ediscovery/dateValidationDialog.html"
-        });
-        return false;
-      } else {
-        return true;
-      }
+    function downloadable(id) {
+      var r = findReportById(id);
+      return r && r.state === "COMPLETED";
     }
 
-    $scope.$watch(getStartDate, function (startDate) {
-      var endDate = moment(startDate).add(1, 'days');
-      setEndDate(endDate);
-    });
-
-    $scope.$watch(getEndDate, function (endDate) {
-      validDuration();
-    });
-
-    function downloadReport() {
-      //console.log("Download not implemented");
+    function downloadReport(id) {
+      openGenericModal("Note", "Download not implemented yet!");
     }
 
-    function cancelReport() {
-      //console.log("Cancel not implemented");
+    function findReportById(id) {
+      return _.find(vm.reports, function (report) {
+        return report.id === id;
+      });
     }
 
     vm.gridOptions = {
@@ -75,12 +83,8 @@
 
       columnDefs: [{
         field: 'displayName',
-        displayName: 'Report Name',
+        displayName: 'Name',
         sortable: true
-      }, {
-        field: 'id',
-        displayName: 'Id',
-        sortable: false
       }, {
         field: 'createdTime',
         displayName: 'Date Generated',
@@ -93,6 +97,7 @@
         field: 'state',
         displayName: 'State',
         sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-state.html'
       }, {
         field: 'failureReason',
         displayName: 'Reason',
@@ -100,7 +105,7 @@
       }, {
         field: 'sizeInBytes',
         displayName: 'Size (bytes)',
-        sortable: false,
+        sortable: false
       }, {
         field: 'actions',
         displayName: 'Actions',
@@ -109,49 +114,55 @@
       }]
     };
 
-    function randomString() {
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-      return _.sample(possible, 5).join('');
-    }
-
-    function createReport() {
-      //console.log("createReport, searchCriteria", vm.searchCriteria)
-      EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
-        //console.log("create result", res)
-        pollAvalonReport();
-      });
-    }
-
     function deleteReports() {
       EdiscoveryService.deleteReports().then(function (res) {
-        //console.log("deleted reports result", res)
+        pollAvalonReport();
       });
     }
 
     function pollAvalonReport() {
       EdiscoveryService.getReport().then(function (res) {
-        //console.log("Response from poll reports", res)
         vm.reports = res;
+        //notifyOnEvent(vm.reports);
       }).finally(function (res) {
-        $timeout(pollAvalonReport, 5000);
+        $timeout.cancel(avalonPoller);
+        avalonPoller = $timeout(pollAvalonReport, 5000);
       });
     }
 
-    function setSearchFieldFocus() {
-      angular.element('#searchInput').focus();
+    function grantNotification() {
+      if ($window.Notification) {
+        $window.Notification.requestPermission().then(function (result) {});
+      }
     }
 
-    function showSearchHelp() {
-      var searchHelpUrl = "modules/ediscovery/search-help-dialog.html";
-      $modal.open({
-        templateUrl: searchHelpUrl
-      }).result.finally(function () {
-        setSearchFieldFocus();
+    function notifyOnEvent(reports) {
+      if (!$window.Notification || $window.Notification.permission != 'granted') {
+        return;
+      }
+      var completedReports = _.filter(reports, function (r) {
+        return r.state == 'COMPLETED';
       });
+      if (completedReports && completedReports.length > 0) {
+        var options = {
+          body: 'You have ' + completedReports.length + ' completed reports',
+          icon: 'images/cisco_logo.png',
+          tag: 'ediscovery'
+        };
+        var n = new $window.Notification('eDiscovery Dashboard', options);
+        setTimeout(n.close.bind(n), 3000);
+      }
     }
+  }
+
+  function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {
+    var vm = this;
+    vm.messages = $.isArray(messages) ? messages : [messages];
+    vm.title = title;
   }
 
   angular
     .module('Ediscovery')
-    .controller('EdiscoveryController', EdiscoveryController);
+    .controller('EdiscoveryController', EdiscoveryController)
+    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
 }());

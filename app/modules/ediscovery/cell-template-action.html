@@ -1,4 +1,8 @@
-<button type="button" ng-class="{'btn--primary': row.entity.state === 'COMPLETED', 'btn--attention': row.entity.state !== 'COMPLETED'}" class="fit btn btn--circle btn--small">
-  <span ng-show="row.entity.state === 'COMPLETED'" class="icon icon-download" ng-click="grid.appScope.downloadReport()"></span>
-  <span ng-show="row.entity.state !== 'COMPLETED'" class="icon icon-exit" ng-click="grid.appScope.cancelReport()"></span>
-</button>
+<span ng-if="grid.appScope.downloadable(row.entity.id)">
+    <span tooltip-placement="top" cs-tooltip="Download" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-download" ng-click="grid.appScope.downloadReport(row.entity.id)"></span>
+</span>
+
+<span ng-if="grid.appScope.cancable(row.entity.id)">
+    <span tooltip-placement="top" cs-tooltip="Cancel" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-exit" ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
+</span>
+
