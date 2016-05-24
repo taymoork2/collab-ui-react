@@ -222,7 +222,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
-    var phoneMenuValidationSpy;
     var aaNameChangedSpy;
 
     beforeEach(function () {
@@ -239,7 +238,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AATrackChangeService, 'track');
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
-      phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
