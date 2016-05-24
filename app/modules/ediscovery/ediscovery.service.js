@@ -26,14 +26,16 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId) {
       var orgId = Authinfo.getOrgId();
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
         }).then(function (res) {
           //console.log("created, post to runUrl", res)
-          return $http.post(res.data.runUrl, {});
+          return $http.post(res.data.runUrl, {
+            "roomId": roomId
+          });
         })
         .catch(function (data) {
           //console.log("error createReport: " + data)

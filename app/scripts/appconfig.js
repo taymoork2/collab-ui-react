@@ -2253,16 +2253,18 @@
         .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
-            controller: 'EdiscoveryController',
-            controllerAs: 'ediscoveryCtrl',
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
             url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html'
           })
           .state('ediscovery.reports', {
             url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
       }

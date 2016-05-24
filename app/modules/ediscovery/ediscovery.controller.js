@@ -2,57 +2,32 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       //setSearchFieldFocus();
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
+    //console.log("EdiscoveryController...")
 
-    vm.createReport = createReport;
     vm.deleteReports = deleteReports;
-    vm.showSearchHelp = showSearchHelp;
     $scope.downloadable = downloadable;
     $scope.downloadReport = downloadReport;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
-    $scope.deletable = deletable;
-    $scope.deleteReport = deleteReport;
 
-    vm.searchCriteria = {
-      "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": moment(),
-      "endDate": moment(moment()).add(1, 'days')
-    };
+    var avalonPoller = $timeout(pollAvalonReport, 0);
+
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(avalonPoller);
+    });
+
     vm.reports = [];
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
-    grantNotification();
+    //grantNotification();
     pollAvalonReport();
-
-    function getStartDate() {
-      return vm.searchCriteria.startDate;
-    }
-
-    function getEndDate() {
-      return vm.searchCriteria.endDate;
-    }
-
-    function setEndDate(endDate) {
-      vm.searchCriteria.endDate = endDate;
-    }
-
-    function dateErrors(start, end) {
-      var errors = [];
-      if (moment(start).isAfter(moment(end))) {
-        errors.push("Start date must be before end date");
-      }
-      if (moment(start).isAfter(moment())) {
-        errors.push("Start date cannot be in the future");
-      }
-      return errors;
-    }
 
     function openGenericModal(title, messages) {
       $modal.open({
@@ -69,27 +44,9 @@
       });
     }
 
-    function validateDate() {
-      var title = "Date validation";
-      var errors = dateErrors(getStartDate(), getEndDate());
-      if (errors.length > 0) {
-        openGenericModal(title, errors);
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    $scope.$watch(getStartDate, function (startDate) {
-      //validateDate();
-    });
-
-    $scope.$watch(getEndDate, function (endDate) {
-      //validateDate();
-    });
-
-    function downloadReport(id) {
-      openGenericModal("Note", "Function not implemented");
+    function cancable(id) {
+      var r = findReportById(id);
+      return r && r.state === "RUNNING";
     }
 
     function cancelReport(id) {
@@ -100,25 +57,13 @@
       });
     }
 
-    function deleteReport(id) {
-      EdiscoveryService.deleteReport(id).then(function (res) {
-        pollAvalonReport();
-      });
-    }
-
-    function cancable(id) {
-      var r = findReportById(id);
-      return r && r.state === "RUNNING";
-    }
-
-    function deletable(id) {
-      var r = findReportById(id);
-      return r && (r.state === "COMPLETED" || r.state === "ABORTED");
-    }
-
     function downloadable(id) {
       var r = findReportById(id);
       return r && r.state === "COMPLETED";
+    }
+
+    function downloadReport(id) {
+      openGenericModal("Note", "Download not implemented yet!");
     }
 
     function findReportById(id) {
@@ -138,12 +83,8 @@
 
       columnDefs: [{
         field: 'displayName',
-        displayName: 'Report Name',
+        displayName: 'Name',
         sortable: true
-      }, {
-        field: 'id',
-        displayName: 'Id',
-        sortable: false
       }, {
         field: 'createdTime',
         displayName: 'Date Generated',
@@ -173,20 +114,6 @@
       }]
     };
 
-    function randomString() {
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-      return _.sample(possible, 5).join('');
-    }
-
-    function createReport() {
-      if (!validateDate()) {
-        return;
-      }
-      EdiscoveryService.createReport("whatever_" + randomString()).then(function (res) {
-        pollAvalonReport();
-      });
-    }
-
     function deleteReports() {
       EdiscoveryService.deleteReports().then(function (res) {
         pollAvalonReport();
@@ -196,23 +123,10 @@
     function pollAvalonReport() {
       EdiscoveryService.getReport().then(function (res) {
         vm.reports = res;
-        notifyOnEvent(vm.reports);
+        //notifyOnEvent(vm.reports);
       }).finally(function (res) {
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
-      });
-    }
-
-    function setSearchFieldFocus() {
-      angular.element('#searchInput').focus();
-    }
-
-    function showSearchHelp() {
-      var searchHelpUrl = "modules/ediscovery/search-help-dialog.html";
-      $modal.open({
-        templateUrl: searchHelpUrl
-      }).result.finally(function () {
-        setSearchFieldFocus();
       });
     }
 
