@@ -127,7 +127,8 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       readonlyAdmin: 'atlas-read-only-admin',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
-      atlasCareTrials: 'atlas-care-trials'
+      atlasCareTrials: 'atlas-care-trials',
+      mediaServiceMetrics: 'media-service-metrics'
     };
 
     var toggles = {};
