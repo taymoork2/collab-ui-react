@@ -88,7 +88,7 @@ gulp.task('browser-sync', function () {
                 notifier.notify({
                   title: 'CSP violation',
                   subtitle: 'You violated ' + report['effective-directive'],
-                  message: 'Blocked URI:' + report['blocked-uri'],
+                  message: 'Blocked URI: ' + report['blocked-uri'],
                   icon: 'http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/01/01f7232ab1dd5845a83b18ae92552a188ec0530d_full.jpg',
                   contentImage: 'http://memesvault.com/wp-content/uploads/Nooo-Meme-04.jpg',
                   wait: true
