@@ -1,8 +1,14 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
-  function CertService($http, ConfigService, Utils, $q) {
+  angular
+    .module('Hercules')
+    .service('CertService', CertService);
+
+  /* @ngInject */
+  function CertService($http, UrlConfig, Utils, $q, $window) {
+
+    var CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
 
     function extractData(res) {
       return res.data;
@@ -10,15 +16,15 @@
 
     function getCerts(orgId) {
       return $http
-        .get(ConfigService.getCertsUrl() + '/certificates?expand=decoded&orgId=' + orgId)
+        .get(CertsUrl + '/certificates?expand=decoded&orgId=' + orgId)
         .then(extractData);
     }
 
     function uploadCert(orgId, file) {
       var deferred = $q.defer();
-      var reader = new FileReader();
+      var reader = new $window.FileReader();
       reader.onloadend = function () {
-        $http.post(ConfigService.getCertsUrl() + '/certificates?orgId=' + orgId, {
+        $http.post(CertsUrl + '/certificates?orgId=' + orgId, {
             cert: Utils.Base64.encode(reader.result)
           })
           .then(deferred.resolve, deferred.reject);
@@ -28,7 +34,7 @@
     }
 
     function deleteCert(certId) {
-      return $http.delete(ConfigService.getCertsUrl() + '/certificates/' + certId);
+      return $http.delete(CertsUrl + '/certificates/' + certId);
     }
 
     return {
@@ -38,5 +44,4 @@
     };
   }
 
-  angular.module('Hercules').service('CertService', CertService);
 }());

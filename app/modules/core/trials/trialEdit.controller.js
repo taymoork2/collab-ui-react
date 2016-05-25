@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -27,6 +27,8 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.isTestOrg = false;
+    vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -52,10 +54,6 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
-      name: 'trialEdit.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
-    }, {
       name: 'trialEdit.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -65,10 +63,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-
-    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -152,7 +147,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
@@ -187,9 +182,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-12",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: 'trialRoomSystem',
         class: 'columns medium-12',
       },
@@ -209,10 +204,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: "columns medium-12 small-offset-1",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -265,22 +260,23 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
-        vm.showRoomSystems = results[0];
-        vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
+        //vm.showRoomSystems = results[0];
+        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        vm.showRoomSystems = true;
+        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
         vm.webexTrial.enabled = results[1] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
         vm.showWebex = results[1];
-        vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
-        vm.supportsHuronCallTrials = results[4];
-        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
-
-        vm.canSeeDevicePage = results[3];
+        vm.pstnTrial.enabled = vm.hasCallEntitlement;
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and do not show to test orgs (US12063)
+        //vm.canSeeDevicePage = results[2];
+        setDeviceModal();
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
@@ -327,11 +323,10 @@
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
-      setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
       setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
@@ -576,6 +571,23 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
+    }
+
+    function setDeviceModal() {
+      Orgservice.getAdminOrg(_.noop)
+        .then(function (response) {
+          if (response.data.success) {
+            vm.isTestOrg = response.data.isTestOrg;
+            // If the test org has the atlasTrialsShipDevices toggle on then negate that it is a test org
+            if (response.data.isTestOrg) {
+              FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices, function (result) {
+                vm.isTestOrg = !result;
+              });
+            }
+          }
+        }).finally(function (response) {
+          vm.canSeeDevicePage = !vm.isTestOrg;
+        });
     }
   }
 })();

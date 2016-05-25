@@ -6,8 +6,10 @@
   </div>
 <div class="header-info">
     <div class="header-info-wrap">
-      <a ui-sref="connector-details.group-settings({clusterList:groupDetails.clusterList})">
-        <div class="header-title" title="">{{groupDetails.displayName}}</div>
+      <a ui-sref="connector-details.group-settings({clusterList:groupDetails.clusterList, dispName:groupDetails.displayName})">
+        <div class="header-title">
+          <span>{{groupDetails.displayName}}</span>
+        </div>
         <span class="edit-link">{{'common.edit' | translate | lowercase}}</span>
       </a>
     </div>

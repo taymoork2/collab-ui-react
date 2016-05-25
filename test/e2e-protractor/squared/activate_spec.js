@@ -8,7 +8,6 @@ describe('Self Registration Activation Page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = true;
-    utils.dumpConsoleErrors();
   });
 
   var token;

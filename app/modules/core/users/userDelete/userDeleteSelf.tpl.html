@@ -9,20 +9,15 @@
     </h3>
   </div>
   <div class="delete-user-body">
-    <div ng-if="!userDelete.isMsgrSyncEnabled"> <!-- not in messenger user sync mode -->
-      <p><span translate="usersPage.deleteUserSelfConfText" translate-values="{ email: userDelete.deleteUsername }"></span></p>
-      <p><span translate="usersPage.typeYestoDelete" ></span></p>
-      <p><input class="input-block" id="inputYes" name="response" aria-label="YES" type="text" ng-model="userDelete.confirmation"></p>
-    </div>
-    <div ng-if="userDelete.isMsgrSyncEnabled"> <!-- in messenger user sync mode -->
-      <p class="msgrsync-desc-deleteuser" translate="firstTimeWizard.msgrSyncDesc"></p>
-    </div>
+    <p><span translate="usersPage.deleteUserSelfConfText" translate-values="{ email: userDelete.deleteUsername }"></span></p>
+    <p><span translate="usersPage.typeYestoDelete" ></span></p>
+    <p><input class="input-block" id="inputYes" name="response" aria-label="YES" type="text" ng-model="userDelete.confirmation"></p>
   </div>
   <div class="modal-footer">
     <button id="cancelButton" class="btn" ng-click="$dismiss();">
       <span translate="common.cancel"></span>
     </button>
-    <button id="deleteUserButton" cs-btn loading="userDelete.loading" class="btn btn--alert" ng-disabled="userDelete.deleteCheck() || userDelete.isMsgrSyncEnabled" ng-click="userDelete.deactivateUser();">
+    <button id="deleteUserButton" cs-btn loading="userDelete.loading" class="btn btn--alert" ng-disabled="userDelete.deleteCheck()" ng-click="userDelete.deactivateUser();">
       <span translate="usersPage.deleteUser"></span>
     </button>
   </div>

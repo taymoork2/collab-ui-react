@@ -1,117 +1,141 @@
 'use strict';
 
-//Below is the Test Suit written for FaultRuleService
-describe('partnerProfileCtrl Test', function () {
+describe('Controller: PartnerProfileCtrl', function () {
+  var $scope, $controller, controller, $q;
+  var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion;
 
-  //load the service's module
-  //beforeEach(module('wx2AdminWebClientApp'));
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+  beforeEach(initController);
 
-  var WebexClientVersion, httpBackend, $translate, Config, PartnerProfileCtrl_1, $controller, Authinfo;
-  var $scope, $q, FeatureToggleService, $rootScope, controller;
-
-  //beforeEach(inject(function ($injector, _Config_, _WebexClientVersion_, _PartnerProfileCtrl_) {
-
-  beforeEach(inject(function ($injector, _Config_, _$controller_, _$rootScope_, _Authinfo_, _WebexClientVersion_, _$q_, _FeatureToggleService_) {
-
-    $controller = _$controller_;
-    $rootScope = _$rootScope_;
+  function dependencies($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_) {
     $scope = $rootScope.$new();
-    Authinfo = _Authinfo_;
+    $controller = _$controller_;
     $q = _$q_;
+    Notification = _Notification_;
+    Orgservice = _Orgservice_;
+    UserListService = _UserListService_;
+    BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
-
-    // var PartnerProfileCtrl_1 = $controller(
-    //   'PartnerProfileCtrl', {
-    //     $scope: $scope
-
-    //   }
-    // );
-
     WebexClientVersion = _WebexClientVersion_;
-    Config = _Config_;
+  }
 
-    var testJson = {
-      'data': {
-        'partnerId': 'xyzpid'
-      }
-    };
+  function initSpies() {
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
+    spyOn(UserListService, 'listPartners');
+    spyOn(Orgservice, 'getOrg');
+    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when('logoUrl'));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
+  }
 
-    var jsonTestData = {
-      'data': {
-        'partnerTemplateId': 'someTemplateId',
-        'partnerId': 'somePartnerId',
-        'clientVersion': 'T38SP8',
-        'useLatest': false
-      }
-    };
-
-    spyOn(Authinfo, 'isPartner').and.returnValue(true);
-    spyOn(Authinfo, 'getOrgId').and.returnValue('xyz');
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.callFake(function () {
-      var deferred = $q.defer();
-      deferred.resolve(['c1', 'c2', 'c3']);
-      return deferred.promise;
+  function initController() {
+    controller = $controller('PartnerProfileCtrl', {
+      $scope: $scope
     });
-    //spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when(['c1', 'c2', 'c3']));
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when(testJson));
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when(jsonTestData));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('marvelpartners@gmail.com');
+    $scope.$apply();
+  }
 
-    //non-existing parthertemplate.
-    var jsonTestData2 = {
-      'data': {
-        'partnerTemplateId': '',
-        'partnerId': '',
-        'clientVersion': '',
-        'useLatest': false
+  describe('validation()', function () {
+
+    describe('saving org settings data', function () {
+
+      it('saves data via Orgservice', function () {
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.cisco;
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
+        $scope.supportUrl = 'supportUrl';
+        $scope.supportText = 'this is support text';
+        $scope.allowReadOnlyAccess = false;
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
+        $scope.helpUrl = 'helpUrl';
+        $scope.validation();
+        var expectedOrgSettings = {
+          reportingSiteUrl: 'supportUrl',
+          reportingSiteDesc: 'this is support text',
+          helpUrl: 'helpUrl',
+          isCiscoHelp: false,
+          isCiscoSupport: false,
+          allowReadOnlyAccess: false,
+          allowCrashLogUpload: false
+        };
+        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
+      });
+
+    });
+
+    describe('should save successfully', function () {
+      afterEach(saveAndNotifySuccess);
+
+      it('with default cisco options', function () {
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.cisco;
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
+      });
+
+      it('with custom problem site', function () {
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
+        $scope.supportUrl = 'supportUrl';
+      });
+
+      it('with custom help site', function () {
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
+        $scope.helpUrl = 'helpUrl';
+      });
+
+      function saveAndNotifySuccess() {
+        $scope.validation();
+        expect($scope.orgProfileSaveLoad).toEqual(true);
+        $scope.$apply();
+        expect($scope.orgProfileSaveLoad).toEqual(false);
+        expect(Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
       }
-    };
+    });
 
-    controller = $controller(
-      'PartnerProfileCtrl', {
-        $scope: $scope,
-        Authinfo: Authinfo,
-        WebexClientVersion: WebexClientVersion,
-        FeatureToggleService: FeatureToggleService,
+    describe('should notify error response', function () {
+      beforeEach(initSpyFailure);
+
+      it('when update fails', saveAndNotifyErrorResponse);
+
+      function initSpyFailure() {
+        Orgservice.setOrgSettings.and.returnValue($q.reject({}));
       }
-    );
-    $scope.init();
-  }));
 
-  afterEach(function () {
-    //httpBackend.verifyNoOutstandingExpectation();
-    //httpBackend.verifyNoOutstandingRequest();
-  });
-
-  xit('initWbxClientVersions is called', function () {
-    //controller.$scope.init();
-    var c = $controller(
-      'PartnerProfileCtrl', {
-        $scope: $scope,
-        Authinfo: Authinfo,
-        WebexClientVersion: WebexClientVersion,
-        FeatureToggleService: FeatureToggleService,
+      function saveAndNotifyErrorResponse() {
+        $scope.validation();
+        expect($scope.orgProfileSaveLoad).toEqual(true);
+        $scope.$apply();
+        expect($scope.orgProfileSaveLoad).toEqual(false);
+        expect(Notification.errorResponse).toHaveBeenCalled();
       }
-    );
-    c.$scope.init();
-    expect($scope.init()).toHaveBeenCalled();
-  });
+    });
 
-  xit('After call initWbxClientVersions should have useLatestWbxVersion set correctly', function () {
-    expect($scope.useLatestWbxVersion).toBe(false);
-  });
+    describe('should notify validation error', function () {
+      afterEach(saveAndNotifyError);
 
-  xit('After call initWbxClientVersions should have wbxclientversionselected set correctly', function () {
-    //$scope.initWbxClientVersions();
-    expect($scope.wbxclientversionselected).toBe('T38SP8');
-  });
+      it('when picking a custom problem site without a value', function () {
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
+        $scope.supportUrl = '';
+      });
 
-  it('Test Test', function () {
-    expect('z').toBe('z');
+      it('when picking a custom help site without a value', function () {
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
+        $scope.helpUrl = '';
+      });
+
+      function saveAndNotifyError() {
+        $scope.validation();
+        $scope.$apply();
+        expect(Notification.error).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
+      }
+    });
   });
 
 });

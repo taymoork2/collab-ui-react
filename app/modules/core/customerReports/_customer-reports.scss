@@ -50,10 +50,10 @@
     height: 0;
     margin: 0;
     transform: scale(1, 0);
-    animation: scaleDownCard 1.2s linear;
+    animation: scaleDownCard .5s linear;
     article {
       transform: scale(1, 0);
-      animation: scaleDownCard 1.2s linear;
+      animation: scaleDownCard .5s linear;
       .timechartDiv, .barchart {
         display: none;
       }
@@ -61,12 +61,12 @@
   }
   .report-card {
     min-width: rem-calc(650);
-    animation: scaleUpCard 1.2s linear;
+    animation: scaleUpCard .5s linear;
     article {
       min-height: vr-adjust(590);
       min-width: rem-calc(650);
       padding: rem-calc(15);
-      animation: scaleUpCard 1.2s linear;
+      animation: scaleUpCard .5s linear;
     }
     .report-section-header {
       font-family: $brand-font-cisco-TT-Light;

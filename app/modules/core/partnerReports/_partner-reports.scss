@@ -71,10 +71,10 @@
     height: 0;
     margin: 0;
     transform: scale(1, 0);
-    animation: scaleDownCard 1.2s linear;
+    animation: scaleDownCard .5s linear;
     article {
       transform: scale(1, 0);
-      animation: scaleDownCard 1.2s linear;
+      animation: scaleDownCard .5s linear;
       .timechartDiv, .barchart, .table {
         display: none;
       }
@@ -85,11 +85,11 @@
   }
   .report-card, .report-box {
     min-width: rem-calc(650);
-    animation: scaleUpCard 1.2s linear;
+    animation: scaleUpCard .5s linear;
     article {
       min-width: rem-calc(650);
       padding: rem-calc(15);
-      animation: scaleUpCard 1.2s linear;
+      animation: scaleUpCard .5s linear;
     }
     .no-data-warning {
       color: $color-attention-base;

@@ -22,10 +22,6 @@ describe('Onboard Users using CSV File', function () {
     utils.click(users.closeSidePanel);
   }
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users');
   });

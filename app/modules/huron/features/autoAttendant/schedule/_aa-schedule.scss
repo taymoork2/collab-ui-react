@@ -1,104 +1,218 @@
-.aa-holidays {
-	background: $gray-light-4;
-	@include vr-spacing(mh, 1.875);
-	.aa-schedule-subtitle {
-		@include vr-spacing(p, 1.25);
-	}
-	.aa-hour-right {
-		@include vr-spacing(pt, 1.75);
-		.cs-input-group {
-			@include vr-spacing(mb, 1.5);
-		}
-	}
-}
-.left-margin-20 {
-	@include vr-spacing(ml, 1.25);
-}
-#addHoliday {
-	padding-bottom: 10px;
-	padding-left: 10px;
-  display: block;
-  i {
-  	padding: 10px;
+// Schedule Panel
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
+
+  h3 {
+    display: inline-block;
   }
 }
-.simple-accordion {
-	font-size: 14px;
-	.icon-trash {
-		cursor: pointer;
-		color: $gray;
-		&:hover {
-			color: $gray-dark-1
-		}
-	}
-	.collapse {
-		@include vr-spacing(mt, -1.5);
-	}
-	.accordion {
-		border-top: 1px solid $gray;
+
+// Schedule Modal
+.aa-schedule {
+  .modal-body &-subtitle {
+    font-size: 1.25rem;
+    line-height: 1;
+    font-family: $brand-font-thin;
+    font-weight: normal;
+    &:hover {
+      cursor: pointer;
+      .icon {
+        color: $aa-builder-icon-click-color;
+      }
+    }
+    margin: -20px;
+    padding: 20px;
+  }
+  .icon {
+    color: $aa-builder-icon-color;
+    &:hover {
+      color: $aa-builder-icon-click-color;
+    }
+  }
+  .down {
+    color: $aa-builder-icon-click-color;
+    transform: rotate(90deg);
+  }
+  &-hour {
+    @include vr-spacing(pt, 1);
     border-bottom: 1px solid $gray;
-		.accordion--navigation {
-			a {
-				background: transparent;
-				border: none;
-				border-top: 1px solid $gray;
-				border-radius: 0;
-				margin-top: 0;
-				color: $gray;
-				padding: 0;
-				> .row {
-					padding: .5rem 1rem;
-					div {
-						width: 30%;
-						float: left;
-						@include vr-spacing(pl, .5);
-					}
-					div:last-child {
-						width: 70%;
-					}
-				}
-				&:before {
-					content: initial;
-				}
-				&.active {
-					display: none;
-				}
-				&:hover {
-					background: transparent;
-				}
-				&:focus {
-					box-shadow: none;
-				}
-			}
-			.content {
-				margin-top: 0;
-				border-radius: 0;
-				background: transparent;
-				border: none;
-				border-top: 1px solid $gray;
-				@include vr-spacing(pb, 1.5);
-			}
-			&:first-child {
-				a {
-					border-top: none;
-				}
-				.content {
-					border-top: none;
-				}
-			}
-		}
-		.cs-checkbox {
-			@include vr-spacing(mb, 1.75);
-		}
-	}
+    &:nth-of-type(1) {
+      @include vr-spacing(mt, 1);
+      border-top: 1px solid $gray;
+    }
+  }
+  &-time {
+    display: inline-block;
+    vertical-align: text-top;
+  }
+  &-trash {
+    font-size: 1.25rem;
+    float: right;
+  }
+  &-days {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  &-add {
+    i {
+      @include vr-spacing(pr, 0.5);
+    }
+    > .icon {
+      font-size: 1.25rem;
+      vertical-align: middle;
+      color: $anchor-font-color;
+    }
+    &:hover {
+      cursor: pointer;
+      color: $anchor-font-color-hover;
+    }
+  }
+  &-holidays-behavior {
+    @include vr-spacing(mt, 1);
+  }
+  &-recur-annually-box {
+    @include vr-spacing(pt, 1.75);
+  }
+  &-holidays-recur-select-container {
+    @include vr-spacing(mb, 6);
+  }
+  &-holidays-time {
+    display: inline-block;
+    vertical-align: top;
+  }
+  &-holidays-date {
+    @include vr-spacing(mb, 1);
+  }
+  .cs-checkbox-group {
+    display: inline-block;
+    &.aa-schedule-holidays-behavior {
+      @include vr-spacing(mb, 0);
+    }
+  }
+  .accordion {
+    border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+    .accordion--navigation {
+      > a {
+        background: transparent;
+        border: none;
+        border-top: 1px solid $gray;
+        border-radius: 0;
+        @include vr-spacing(mt, 0);
+        @include vr-spacing(p, 0);
+        color: $gray;
+        > .row {
+          @include vr-spacing(pv, .5);
+          .aa-schedule-holidays-name-collapse {
+            width: 30%;
+            float: left;
+            @include vr-spacing(pl, .5);
+          }
+          div {
+            display: inline-block;
+            font-size: $paragraph-font-size;
+          }
+        }
+        &:before {
+          content: none;
+        }
+        &.active {
+          display: none;
+        }
+        &:hover {
+          background: transparent;
+          border-top: 1px solid $gray;
+        }
+        &:focus {
+          box-shadow: none;
+        }
+        &.text-muted {
+          color: $gray;
+        }
+      }
+      .content {
+        border-radius: 0;
+        background: transparent;
+        border: none;
+        border-top: 1px solid $gray;
+        @include vr-spacing(mt, 0);
+        @include vr-spacing(pb, 1.5);
+        &.active {
+          background: transparent;
+          @include vr-spacing(ph, 0);
+        }
+      }
+      &:first-child {
+        > a {
+          border-top: none;
+        }
+        .content {
+          border-top: none;
+        }
+      }
+    }
+  }
+}
+
+// Schedule Info Box
+.aa-schedule-info {
+  @include vr-spacing(pt, 0.5);
+  display: flex;
+  align-items: flex-start;
+
+  &:first-of-type {
+    @include vr-spacing(pt, 0);
+  }
+
+  &-closed-holiday:first-of-type {
+    @include vr-spacing(mt, 1);
+  }
+
+  &-item {
+    @include vr-spacing(pb, .5);
+    line-height: 1rem;
+    text-align: left;
+  }
+
+  &-day {
+    @extend .aa-schedule-info-item;
+    @include vr-spacing(pr, 0.3);
+  }
+
+  &-hours {
+    @extend .aa-schedule-info-item;
+    color: $gray-light-1;
+    text-align: left;
+  }
+
+  &-holidays-date {
+    display: inline-block;
+    @include vr-spacing(pr, 1);
+  }
+
+  &-holidays-name {
+    display: inline-block;
+    @include vr-spacing(pr, 1);
+  }
 }
 
 /* Should go in toolkit for timepicker error state */
 
 .error .cs-datapicker-normal {
-	border-color: $color-alerts-base;
-	background-color: $color-alerts-lighter;
-	input[type="text"][readonly].cs-datepicker-input {
-		background-color: $color-alerts-lighter;
-	}
+  border-color: $color-alerts-base;
+  background-color: $color-alerts-lighter;
+  input[type="text"][readonly].cs-datepicker-input {
+    background-color: $color-alerts-lighter;
+  }
+}
+
+/* Should go in toolkit for cs-select error state */
+.error .select-toggle {
+  border-color: $color-alerts-base;
+  background-color: $color-alerts-lighter;
+}
+.closed-holiday {
+  padding-top: rem(12);
 }

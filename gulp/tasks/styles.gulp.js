@@ -5,9 +5,8 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var processEnvUtil = require('../utils/processEnvUtil.gulp')();
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var jsonImporter = require('node-sass-json-importer');
@@ -24,7 +23,7 @@ gulp.task('scss:build', ['clean:css'], function () {
     .pipe($.sourcemaps.init())
     .pipe($.plumber(function (error) {
       log(colors.red(error));
-      if (config.isJenkins()) {
+      if (processEnvUtil.isJenkins()) {
         log('Environment is jenkins, aborting...');
         process.exit(1);
       } else {

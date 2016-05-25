@@ -32,12 +32,16 @@
       }
     });
 
+    // the label is only a stake holder right now
     vm.adminTypes = Object.freeze({
       org: {
         label: $translate.instant(translatePrefix + 'labelOrgAdmin')
       },
       ops: {
         label: $translate.instant(translatePrefix + 'labelOpsAdmin')
+      },
+      read: {
+        label: $translate.instant(translatePrefix + 'labelReadAdmin')
       },
       unknown: {
         label: $translate.instant(translatePrefix + 'labelUnauthorizedUser')
@@ -154,42 +158,47 @@
     function checkUserType() {
       var defer = $q.defer();
 
-      // All users must have CI Full Admin role
+      // All users must have CI Full Admin role except new ReadAdmin
       //
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
-      CiService.hasRole(fullAdminRole)
-        .then(function (hasAdminRole) {
-          if (hasAdminRole) {
-            // Now check for Customer Success Admin or not
-            CiService.hasRole(customerSuccessRole)
-              .then(function (hasCSRole) {
-                if (hasCSRole) {
-                  setOpsAdmin();
-                  defer.resolve();
-                } else {
-                  // Not a Customer Success Admin, must have entitlements
-                  CiService.hasEntitlements(requiredEntitlements)
-                    .then(function (hasEntitlements) {
-                      if (hasEntitlements) {
-                        setOrgAdmin();
-                        defer.resolve();
-                      } else {
-                        defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
-                      }
-                    }, function (errorMsg) {
-                      defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
-                    });
-                }
-              }, function (errorMsg) {
-                defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
-              });
-          } else {
-            defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
-          }
-        }, function (errorMsg) {
-          defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
-        });
+      if (Authinfo.isReadOnlyAdmin()) {
+        setReadAdmin();
+        defer.resolve();
+      } else {
+        CiService.hasRole(fullAdminRole)
+          .then(function (hasAdminRole) {
+            if (hasAdminRole) {
+              // Now check for Customer Success Admin or not
+              CiService.hasRole(customerSuccessRole)
+                .then(function (hasCSRole) {
+                  if (hasCSRole) {
+                    setOpsAdmin();
+                    defer.resolve();
+                  } else {
+                    // Not a Customer Success Admin, must have entitlements
+                    CiService.hasEntitlements(requiredEntitlements)
+                      .then(function (hasEntitlements) {
+                        if (hasEntitlements) {
+                          setOrgAdmin();
+                          defer.resolve();
+                        } else {
+                          defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
+                        }
+                      }, function (errorMsg) {
+                        defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
+                      });
+                  }
+                }, function (errorMsg) {
+                  defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
+                });
+            } else {
+              defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
+            }
+          }, function (errorMsg) {
+            defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
+          });
+      }
 
       return defer.promise;
     }
@@ -234,6 +243,10 @@
 
     function setOpsAdmin() {
       vm.adminType = vm.adminTypes.ops;
+    }
+
+    function setReadAdmin() {
+      vm.adminType = vm.adminTypes.read;
     }
 
     function patchSync() {

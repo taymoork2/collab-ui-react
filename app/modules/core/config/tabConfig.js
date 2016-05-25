@@ -29,6 +29,14 @@
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
+    feature: 'atlas-services-overview',
+    state: 'services-overview',
+    link: 'services/overview'
+  }, {
+    tab: 'servicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    feature: "!atlas-services-overview",
     subPages: [{
       title: 'tabs.conferencing',
       desc: 'tabs.conferencingDesc',
@@ -39,6 +47,11 @@
       desc: 'tabs.huronLineDetailsTabDesc',
       state: 'huronsettings',
       link: '#hurondetails/settings'
+    }, {
+      title: 'tabs.careTab',
+      desc: 'tabs.careTabDesc',
+      state: 'care.Features',
+      link: '#careDetails/features'
     }, {
       title: 'tabs.fusionDetailsTab',
       desc: 'tabs.fusionDetailsTabDesc',
@@ -103,15 +116,25 @@
     state: 'profile',
     link: '/profile'
   }, {
+    tab: 'settingsTab',
+    icon: 'icon-sliders',
+    title: 'tabs.settingsTab',
+    state: 'settings',
+    feature: "atlas-global-settings",
+    link: '/settings'
+  }, {
+    tab: 'organizationTab',
+    icon: 'icon-admin',
+    title: 'tabs.organizationTab',
+    state: 'organizations',
+    link: '/organizations'
+  }, {
+    // DEPRECATED - REPLACE WITH FEATURE TOGGLES - DO NOT ADD MORE PAGES UNDER developmentTab
     tab: 'developmentTab',
     icon: 'icon-tools',
     title: 'tabs.developmentTab',
+    hideProd: true,
     subPages: [{
-      title: 'tabs.organizationTab',
-      desc: 'tabs.organizationTabDesc',
-      state: 'organizations',
-      link: '#organizations'
-    }, {
       title: 'tabs.callRoutingTab',
       desc: 'tabs.callRoutingTabDesc',
       state: 'callrouting',
@@ -123,39 +146,9 @@
       link: '#mediaonhold'
     }, {
       title: 'tabs.metricsDetailsTab',
-      desc: 'tabs.metricsDetailsTabDesc',
+      //desc: 'tabs.metricsDetailsTabDesc',
       state: 'metrics',
       link: '#metrics'
-    }, {
-      title: 'tabs.thresholdDetailsTab',
-      desc: 'tabs.thresholdDetailsTabDesc',
-      state: 'threshold',
-      link: '#threshold'
-    }, {
-      title: 'tabs.meetingDetailsTab',
-      desc: 'tabs.meetingDetailsTabDesc',
-      state: 'meetings',
-      link: '#meetings'
-    }, {
-      title: 'tabs.vtsDetailsTab',
-      desc: 'tabs.vtsDetailsTabDesc',
-      state: 'vts',
-      link: '#vts'
-    }, {
-      title: 'tabs.entResUtilizationTab',
-      desc: 'tabs.entResUtilizationTabDesc',
-      state: 'utilization',
-      link: '#utilization'
-    }, {
-      title: 'tabs.alarmsTab',
-      desc: 'tabs.alarmsTabDesc',
-      state: 'alarms',
-      link: '#alarms'
-    }, {
-      title: 'tabs.eventsTab',
-      desc: 'tabs.eventsTabDesc',
-      state: 'events',
-      link: '#events'
     }]
   }];
 

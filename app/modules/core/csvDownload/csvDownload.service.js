@@ -5,81 +5,128 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, $resource, UrlConfig) {
+  function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService, UserCsvService) {
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
     var typeUser = 'user';
     var typeHeaders = 'headers';
     var typeExport = 'export';
-    var csvUserResource = $resource(UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/:type', {
-      type: '@type'
-    }, {
-      get: {
-        method: 'GET',
-        // override transformResponse function because $resource
-        // returns string array in the case of CSV file download
-        transformResponse: function (data, headers) {
-          if (_.isString(data)) {
-            if (_.startsWith(data, '{') || _.startsWith(data, '[')) {
-              data = angular.fromJson(data);
-            } else {
-              data = {
-                content: data
-              };
-            }
-          }
-          return data;
-        }
-      }
-    });
+    var typeAny = 'any';
+    var typeError = 'error';
+    var userExportUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/%s';
+    var downloadInProgress = false;
+    var isTooManyUsers = false;
+    var canceler, objectBlob, templateBlob;
 
     var service = {
       typeTemplate: typeTemplate,
       typeUser: typeUser,
+      typeAny: typeAny,
+      typeError: typeError,
       getCsv: getCsv,
+      openInIE: openInIE,
       createObjectUrl: createObjectUrl,
       revokeObjectUrl: revokeObjectUrl,
       getObjectUrl: getObjectUrl,
       setObjectUrl: setObjectUrl,
       getObjectUrlTemplate: getObjectUrlTemplate,
-      setObjectUrlTemplate: setObjectUrlTemplate
+      setObjectUrlTemplate: setObjectUrlTemplate,
+      downloadInProgress: downloadInProgress,
+      cancelDownload: cancelDownload
     };
 
     return service;
 
-    function getCsv(type) {
-      if (type === typeTemplate) {
-        return csvUserResource.get({
-          type: typeTemplate
-        }).$promise;
-      } else if (type === typeUser) {
-        return csvUserResource.get({
-          type: typeExport
-        }).$promise;
-      } else if (type === typeHeaders) {
-        return csvUserResource.get({
-          type: typeHeaders
-        }).$promise;
+    function getCsv(csvType, tooManyUsers, fileName) {
+      tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
+      isTooManyUsers = tooManyUsers;
+      if (tooManyUsers) {
+        return UserListService.exportCSV().then(function (csvData) {
+          var csvString = $.csv.fromObjects(csvData, {
+            headers: false
+          });
+          return createObjectUrl(csvString, csvType, fileName);
+        });
+      } else {
+        var url = '';
+        if (csvType === typeUser) {
+          url = Utils.sprintf(userExportUrl, [typeExport]);
+          canceler = $q.defer();
+          return $http.get(url, {
+            timeout: canceler.promise
+          }).then(function (csvData) {
+            return createObjectUrl(csvData.data, csvType, fileName);
+          }).finally(function () {
+            canceler = undefined;
+          });
+        } else if (csvType === typeError) {
+          return $q(function (resolve, reject) {
+            var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
+            var csvString = $.csv.fromObjects(_.union([{
+              row: 'Row Number',
+              email: 'User ID/Email',
+              error: 'Error Message'
+            }], csvErrorArray), {
+              headers: false
+            });
+            resolve(createObjectUrl(csvString, csvType, fileName));
+          });
+        } else {
+          url = Utils.sprintf(userExportUrl, [csvType]);
+          return $http.get(url).then(function (csvData) {
+            if (csvType === typeHeaders) {
+              return csvData.data;
+            } else {
+              return createObjectUrl(csvData.data, csvType, fileName);
+            }
+          });
+        }
       }
     }
 
-    function createObjectUrl(data, type) {
-      var blob = new Blob([data], {
+    function cancelDownload() {
+      if (!isTooManyUsers) {
+        if (canceler) {
+          canceler.resolve();
+        }
+      }
+    }
+
+    function createObjectUrl(data, type, fileName) {
+      var blob = new $window.Blob([data], {
         type: 'text/plain'
       });
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-      setObjectUrl(oUrl);
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
       if (type === typeTemplate) {
+        templateBlob = blob;
         setObjectUrlTemplate(oUrl);
+      } else {
+        objectBlob = blob;
+        setObjectUrl(oUrl);
       }
+
+      // IE download option since IE won't download the created url
+      if ($window.navigator.msSaveOrOpenBlob) {
+        openInIE(type, fileName);
+      }
+
       return oUrl;
+    }
+
+    function openInIE(type, fileName) {
+      if (type === typeTemplate && templateBlob) {
+        $window.navigator.msSaveOrOpenBlob(templateBlob, fileName);
+      } else if (type !== typeTemplate && objectBlob) {
+        $window.navigator.msSaveOrOpenBlob(objectBlob, fileName);
+      }
     }
 
     function revokeObjectUrl() {
       if (getObjectUrl()) {
-        (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
+        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
+        objectBlob = null;
       }
     }
 

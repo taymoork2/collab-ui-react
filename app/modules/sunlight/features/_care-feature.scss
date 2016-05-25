@@ -1,0 +1,29 @@
+.care-features {
+  @extend %content-header;
+}
+
+.no-features {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: $brand-white;
+
+  .icon {
+    font-size: 10rem
+  }
+  .ct-desc {
+    max-width: rem-calc(330);
+  }
+
+  .new-btn {
+    @include vr-spacing(pt, 1.5);
+  }
+
+  & div {
+    @include vr-spacing(pt, 1);
+  }
+}

@@ -1,25 +1,24 @@
 (function () {
   'use strict';
 
-  /**
-   * @ngdoc function
-   * @name wx2AdminWebClientApp.controller:ProcessorderCtrl
-   * @description
-   * # ProcessorderCtrl
-   * Controller of the wx2AdminWebClientApp
-   */
-  angular.module('Squared')
+  angular
+    .module('Squared')
     .controller('ProcessorderCtrl', ProcessorderCtrl);
 
   /* @ngInject */
-  function ProcessorderCtrl($scope, $location, $window, Orgservice) {
-    $scope.enc = $location.search().enc;
+  function ProcessorderCtrl($scope, $location, $timeout, WindowLocation, Orgservice, Localytics) {
+    // Note: only keep $timeout and Localytics until we gathered enough data usage
+    Localytics.tagEvent('Display /processorder', {
+      enc: !!$location.search().enc
+    });
     $scope.isProcessing = true;
-    //TODO: redo #processOrderErrorModal modal dialogue conforming to angularjs conventions
+    $scope.enc = $location.search().enc;
     Orgservice.createOrg($scope.enc, function (data, status) {
       $scope.isProcessing = false;
       if (data.success) {
-        $window.location.href = data.redirectUrl;
+        $timeout(function () {
+          WindowLocation.set(data.redirectUrl);
+        }, 2000);
       } else {
         $('#processOrderErrorModal').modal('show');
       }

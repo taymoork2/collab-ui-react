@@ -2,13 +2,17 @@
   <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="externalNumberPanel.phoneNumbers"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right">
+      <span cr-feature-toggle feature-hide="huron-order-management" cs-dropdown class="actions-menu dropdown pull-right">
         <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li cr-feature-toggle feature-show="huron-pstn-setup"><a ui-sref="pstnSetup({customerId: externalNumbers.currentCustomer.customerOrgId, customerName: externalNumbers.currentCustomer.customerName, customerEmail: externalNumbers.currentCustomer.customerEmail})" translate="pstnSetup.setupPstn"></a></li>
-          <li cr-feature-toggle feature-hide="huron-pstn-setup"><a ui-sref="didadd({currentOrg: externalNumbers.currentCustomer})" translate="didManageModal.buttonText"></a></li>
+          <li>
+            <a ng-click="externalNumbers.addNumbers(externalNumbers.currentCustomer)">
+              <span ng-show="externalNumbers.showPstnSetup" translate="pstnSetup.setupPstn"></span>
+              <span ng-hide="externalNumbers.showPstnSetup" translate="didManageModal.buttonText"></span>
+            </a>
+          </li>
         </ul>
       </span>
     </div>
@@ -18,23 +22,26 @@
         <hr-external-number-list
           numbers="externalNumbers.allNumbers"
           count-translate-key="externalNumberPanel.allNumbers"
-          external-numbers="externalNumbers">
+          external-numbers="externalNumbers"
+          quantity="externalNumbers.getQuantity('all')">
         </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.pendingText}}">
         <hr-external-number-list
-          numbers="externalNumbers.pendingNumbers"
+          numbers="externalNumbers.pendingList"
           count-translate-key="externalNumberPanel.pendingNumbers"
           external-numbers="externalNumbers"
           tooltip-text="{{:: 'externalNumberPanel.pendingNumbersTooltip' | translate}}"
-          tooltip-class="icon-information">
+          tooltip-class="icon-information"
+          quantity="externalNumbers.getQuantity('pending')">
         </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.unassignedText}}">
         <hr-external-number-list
           numbers="externalNumbers.unassignedNumbers"
           count-translate-key="externalNumberPanel.unassignedNumbers"
-          external-numbers="externalNumbers">
+          external-numbers="externalNumbers"
+          quantity="externalNumbers.getQuantity('unassigned')">
         </hr-external-number-list>
       </tab>
     </tabset>

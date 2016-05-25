@@ -6,7 +6,7 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
+  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -17,6 +17,7 @@
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
+      deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
@@ -39,7 +40,7 @@
         scomUrl = scomUrl + '?disableCache=true';
       }
 
-      $http.get(scomUrl)
+      return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -61,7 +62,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid) {
+    function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -69,7 +70,12 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      $http.get(adminUrl)
+      var cacheDisabled = !!disableCache;
+      return $http.get(adminUrl, {
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -149,12 +155,20 @@
       return d.promise;
     }
 
-    function getUnlicensedUsers(callback, oid) {
+    function getUnlicensedUsers(callback, oid, searchStr) {
       var adminUrl = null;
       if (oid) {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+        if (searchStr) {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers?searchPrefix=" + searchStr;
+        } else {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+        }
       } else {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+        if (searchStr) {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers?searchPrefix=" + searchStr;
+        } else {
+          adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+        }
       }
 
       $http.get(adminUrl)
@@ -183,31 +197,20 @@
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
-    function setOrgSettings(orgId, settings, callback) {
+    function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
 
-      getOrg(function (orgData, orgStatus) {
-        var orgSettings = orgData.orgSettings;
-        _.assign(orgSettings, settings);
+      return getOrg(_.noop, orgId, true)
+        .then(function (response) {
+          var orgSettings = _.get(response, 'data.orgSettings', {});
+          _.assign(orgSettings, settings);
 
-        $http({
+          return $http({
             method: 'PATCH',
             url: orgUrl,
             data: orgSettings
-          })
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            Log.debug('PATCHed orgSettings: ' + orgSettings);
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
           });
-      }, orgId, true);
+        });
     }
 
     function createOrg(enc, callback) {
@@ -232,11 +235,34 @@
       });
     }
 
+    function deleteOrg(currentOrgId) {
+      if (!currentOrgId) {
+        return $q.reject('currentOrgId is not set');
+      }
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
+
+      return $http({
+        method: 'DELETE',
+        url: serviceUrl
+      });
+    }
+
     function listOrgs(filter) {
       if (!filter || filter.length <= 3) {
         return $q.reject('filter does not match requirements');
       }
       var orgUrl = UrlConfig.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
+
+      if (Utils.isUUID(filter)) {
+        return getAdminOrg(_.noop, filter).then(function (result) {
+          // return it in the same manner as listOrgs
+          return {
+            data: {
+              organizations: [result.data]
+            }
+          };
+        });
+      }
 
       return $http.get(orgUrl);
     }

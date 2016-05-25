@@ -5,6 +5,7 @@
 
   /*@ngInject*/
   function SiteCSVImportModalCtrl(
+    $scope,
     $state,
     $stateParams,
     $translate,
@@ -19,7 +20,7 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    $log.log(logMsg);
+    // $log.log(logMsg);
 
     vm.modal = {};
 
@@ -28,9 +29,9 @@
     vm.viewReady = true;
     vm.resetFile = resetFile;
 
-    vm.onFileSizeError = function () {
+    /**vm.onFileSizeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvMaxSizeError'));
-    };
+    };**/
 
     vm.onFileTypeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvFileTypeError'));
@@ -45,30 +46,63 @@
       var funcName = "SiteCSVImportModalCtrl.startImport()";
 
       logMsg = funcName + "\n" +
-        "vm.siteUrl=" + JSON.stringify(vm.siteUrl) +
-        "vm.csvImportObj=" + JSON.stringify(vm.csvImportObj) +
-        "vm.modal.file=" + JSON.stringify(vm.modal.file);
-      //$log.log(logMsg);
+        "vm.siteUrl=" + JSON.stringify(vm.siteUrl);
+      // $log.log(logMsg);
 
-      //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
-      WebExApiGatewayService.csvImport(vm.siteUrl, vm.modal.file).then(
-        function success(response) {
-          //TBD Close the modal before showing the green toast
-          Notification.success($translate.instant('siteList.importStartedToast'));
-          SiteListService.updateCSVColumnInRow(vm.csvImportObj);
-        },
+      if (
+        (null == vm.modal.file) ||
+        (0 == vm.modal.file.length)
+      ) {
 
-        function error(response) {
-          // TBD: Actual error result handling
-          Notification.error($translate.instant('siteList.importRejectedToast'));
+        Notification.error('siteList.importInvalidFileToast');
+
+      } else {
+
+        //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
+        WebExApiGatewayService.csvImportOld(vm).then(
+          function success(response) {
+            displayResultAndCloseModal(
+              true,
+              'siteList.importStartedToast'
+            );
+          },
+
+          function error(response) {
+            displayResultAndCloseModal(
+              false,
+              'siteList.csvRejectedToast-' + response.errorCode
+            );
+          }
+        ).catch(
+          function catchError(response) {
+            displayResultAndCloseModal(
+              false,
+              'siteList.importRejectedToast'
+            );
+          }
+        ); // WebExApiGatewayService.csvImportOld()
+      }
+
+      function displayResultAndCloseModal(
+        isSuccess,
+        resultMsg
+      ) {
+
+        var funcName = "displayResultAndCloseModal()";
+        var logMsg = "";
+
+        SiteListService.updateCSVStatusInRow(vm.csvImportObj);
+
+        if (isSuccess) {
+          Notification.success($translate.instant(resultMsg));
+        } else {
+          Notification.error($translate.instant(resultMsg));
         }
-      ).catch(
-        function catchError(response) {
-          Notification.error($translate.instant('siteList.importRejectedToast'));
-          SiteListService.updateCSVColumnInRow(vm.csvImportObj);
-        }
-      ); // WebExApiGatewayService.csvImport()
-    };
 
+        if (_.isFunction($scope.$close)) {
+          $scope.$close();
+        }
+      } // displayResultAndCloseModal()
+    }; // startImport()
   } // SiteCSVImportModalCtrl()
 })(); // top level function

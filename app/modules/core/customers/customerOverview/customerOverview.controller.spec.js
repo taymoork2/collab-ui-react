@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService, FeatureToggleService, TrialService;
+  var controller, $scope, $stateParams, $state, $window, $q, Authinfo, BrandService, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
+  var testOrg;
 
   function LicenseFeature(name, state) {
     this['id'] = name.toString();
@@ -15,7 +16,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -46,12 +47,17 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getOrgName: function () {
         return "xyz123";
+      },
+      isPartnerAdmin: function () {
+        return true;
       }
     };
     BrandService = {
       getSettings: function () {}
     };
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
+    PartnerService = _PartnerService_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -71,6 +77,11 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
+    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
+    spyOn($window, 'confirm').and.returnValue(true);
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
@@ -127,6 +138,28 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('should call getUserAuthInfo correctly', function () {
+    it('should expect PartnerService.getUserAuthInfo to be called', function () {
+      expect(controller.customerOrgId).toBe('123-456');
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
+      controller.getUserAuthInfo();
+      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
+    });
+  });
+
+  describe('should call isTestOrg successfully', function () {
+    it('should identify as a test org', function () {
+      expect(controller.isTest).toBe(true);
+    });
+  });
+
+  describe('should call deleteOrg successfully', function () {
+    it('should call deleteTestOrg', function () {
+      controller.deleteTestOrg();
+      expect($window.confirm).toHaveBeenCalled();
     });
   });
 

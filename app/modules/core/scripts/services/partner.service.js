@@ -5,9 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, TrialService, UrlConfig) {
-
-    var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -25,8 +23,9 @@
 
     var factory = {
       customerStatus: customerStatus,
-      getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
+      addToManagedOrgsList: addToManagedOrgsList,
+      getUserAuthInfo: getUserAuthInfo,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -41,12 +40,49 @@
 
     return factory;
 
-    function getTrialsList() {
-      return $http.get(trialsUrl);
+    function getManagedOrgsList(searchText) {
+      return $http.get(managedOrgsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
     }
 
-    function getManagedOrgsList() {
-      return $http.get(managedOrgsUrl);
+    function addToManagedOrgsList(uuid, orgId) {
+      var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
+
+      var payload = {
+        'schemas': [
+          'urn:scim:schemas:core:1.0',
+          'urn:scim:schemas:extension:cisco:commonidentity:1.0'
+        ],
+        'managedOrgs': [{
+          'orgId': orgId,
+          'role': 'ID_Full_Admin'
+        }]
+      };
+
+      return $http({
+        method: 'PATCH',
+        url: authUrl,
+        data: payload
+      });
+    }
+
+    function getUserAuthInfo(customerOrgId) {
+      Auth.getAuthorizationUrlList().then(function (response) {
+        if (response.status === 200) {
+          var uuid = response.data.uuid;
+          if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
+            addToManagedOrgsList(uuid, customerOrgId);
+            Localytics.tagEvent('patch user call', {
+              by: response.data.orgId
+            });
+          }
+        } else {
+          Log.error('Query for userauthinfo failed. Status: ' + response.status);
+        }
+      });
     }
 
     // Series of fns dont make any sense, unless isTrial = null means something...
@@ -129,9 +165,9 @@
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
-        customerOrgId: customer.customerOrgId,
-        customerName: customer.customerName,
-        customerEmail: customer.customerEmail,
+        customerOrgId: customer.customerOrgId || customer.id,
+        customerName: customer.customerName || customer.displayName,
+        customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         numUsers: customer.licenseCount,
         daysLeft: 0,
@@ -149,19 +185,22 @@
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
+        dealId: customer.dealId,
         offer: {},
         offers: customer.offers,
         status: customer.state,
         state: customer.state,
         isAllowedToManage: true,
         isSquaredUcOffer: false,
-        notes: {}
+        notes: {},
+        isPartner: false
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer);
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
 
@@ -239,7 +278,7 @@
               licenseType: Config.licenseTypes.CONFERENCING
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATIONS
+              licenseType: Config.licenseTypes.COMMUNICATION
             });
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
@@ -287,6 +326,17 @@
 
       var deviceServiceText = [];
       var userServices = [];
+
+      _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
+        if (!licenseInfo) {
+          return;
+        }
+        switch (licenseInfo.licenseType) {
+        case Config.licenseTypes.COMMUNICATION:
+          partial.isSquaredUcOffer = true;
+          break;
+        }
+      });
 
       for (var offer in _.get(customer, 'offers', [])) {
         var offerInfo = customer.offers[offer];

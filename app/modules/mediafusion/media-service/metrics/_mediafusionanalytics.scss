@@ -1,0 +1,263 @@
+.mediafusionanalytics {
+  background-color: $brand-white;
+
+  .tags {
+    border-radius: 3px;
+    .tag-item {
+      background: none;
+      background-color: $brand-primary-light;
+      color: $brand-white;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
+  }
+
+  .typography-airy {
+    h5{
+      font-weight: bold;
+      margin-bottom: .25rem;
+      margin-top: .5rem;
+    }
+    p:first-line{
+      margin-bottom: 1rem;
+    }
+    p:last-child{
+      margin-bottom: 1rem;
+    }
+    hr{
+      margin-top:0.3rem;
+      margin-bottom:0.3rem;
+    }
+  }
+
+  .large-margin {
+    padding-left:2rem;
+    padding-right:2rem;
+    padding-top:1rem;
+    padding-bottom:1rem;
+  }
+
+  .small-margin {
+    padding-left:1rem;
+    padding-right:1rem;
+    padding-top:0.5rem;
+    padding-bottom:0.3rem;
+  }
+
+  .title-align {
+    padding-left:2rem;
+    padding-right:2rem;
+    padding-top:2rem;
+    padding-bottom:50rem;
+  }
+
+  .graph-title {
+    font-size: 22px;
+    line-height: 1;
+    font-family: "CiscoSansTT Thin";
+  }
+
+  .graph-div {
+    margin-right: 1rem;
+    height: 350px;
+    width: 100%
+  }
+
+
+  .small-padding-top {
+    /*border-top:1px solid $brand-white;*/
+  }
+
+  .page-header {
+    .title-heading {
+      margin-right: 1rem;
+    }
+    .menu {
+      position: absolute;
+      right: 0;
+      bottom: 24px;
+      a {
+        color: $brand-default;
+        font-size: 1.25rem;
+        padding-bottom: 24px;
+        margin-right: 1rem;
+      }
+      a:hover {
+        color: $brand-default;
+        border-bottom: 3px solid $brand-default;
+      }
+      a.active {
+        color: $brand-primary;
+        border-bottom: 3px solid $brand-primary;
+        padding-bottom: 23px;
+        margin-right: 1rem;
+        box-shadow: none;
+      }
+    }
+    .page-title {
+      position: relative;
+    }
+  }
+
+  .centered-info-pane {
+    background-color: $brand-white;
+    width:100%;
+    height:100%;
+    text-align:center;
+    padding:20%;
+    color: $gray-base;
+
+    h2 {
+      color: black;
+    }
+    h3 {
+      color: $gray-base;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .full-height {
+    min-height: 100vh;
+    min-height: calc(100vh - 150px);
+  }
+
+  .btn--alert{
+    margin-left:0;
+  }
+  .btn--primary,.btn--alert {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+/**
+  Toolkit fixes
+  */
+  .mediafusion.large-margin{
+    .large-4{
+      margin-right: 2rem !important;
+    }
+  }
+
+/**
+  Overwritten from Toolkit somehwere in Atlas -
+  Fix it before removing this code
+  */
+  .mediafusion.large-margin{
+    p{
+      margin-bottom: 1rem;
+    }
+  }
+  .mediafusion{
+    .alert,.button.alert,button.alert{
+      margin-left:0!important;
+    }
+  }
+
+  /* Has to be fixed in TK before we can fix the code in Atlas */
+  .black-header{
+    color:black !important;
+  }
+
+/**
+ Work around the extra col-md-12 class in views/main.tpl.html
+ */
+.mediafusion {
+  margin: {
+    right: -0.5rem;
+    left: -0.5rem;
+  };
+}
+
+/* Fix alert crap */
+.fix-alert-margins {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.media-service {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+}
+
+.mediafusion-fix-paragraphs {
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.media-clusters-list {
+  i {
+    margin-right: 10px;
+  }
+  .ngVerticalBar {
+    display: none;
+  }
+}
+
+.mediafusion-state-alarm {
+  color: $color-attention-base;
+}
+
+.mediafusion-state-stopped {
+  color: $color-attention-base;
+}
+.mediafusion-state-running {
+  color: $color-cta-base;
+}
+.mediafusion-state-installing {
+  color: $color-attention-base;
+}
+.mediafusion-state-not_configured {
+  color: $color-attention-base
+}
+.mediafusion-state-disabled {
+  color: $color-attention-base;
+}
+.mediafusion-state-not_installed {
+  color: $gray-base;
+}
+.mediafusion-state-offline {
+  color: $color-negative-base;
+}
+.mediafusion-state-unknown {
+  color: $gray-base;
+}
+.mediafusion-state-nohosts {
+  color: $color-attention-base;
+}
+.mediafusion-settings-table {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+      width: 70px;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}
+
+
+.mediafusion-cluster-settings {
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+}
+
+

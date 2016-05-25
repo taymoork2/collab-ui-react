@@ -1,0 +1,38 @@
+{
+  "customers": [{
+    "customerId": "1",
+    "customerName": "Atlas_Test_1",
+    "customerOrgId": "1",
+    "customerAdminEmail": "test@test.com",
+    "partnerId": "1",
+    "partnerOrgId": "1",
+    "licenses": [{
+      "licenseId": "MS_1",
+      "offerName": "MS",
+      "licenseType": "MESSAGING",
+      "features": ["squared-room-moderation"],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "1",
+      "status": "ACTIVE"
+    }, {
+      "licenseId": "CF_1",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "features": ["squared-syncup"],
+      "volume": 100,
+      "isTrial": false,
+      "trialId": "1",
+      "status": "ACTIVE"
+    }, {
+      "licenseId": "CO_1",
+      "offerName": "CO",
+      "licenseType": "COMMUNICATION",
+      "features": ["ciscouc"],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "1",
+      "status": "ACTIVE"
+    }]
+  }]
+}

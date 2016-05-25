@@ -9,7 +9,7 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, ExternalNumberPoolService) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, TelephonyInfoService) {
 
     var feature;
     var customerId = Authinfo.getOrgId();
@@ -19,7 +19,6 @@
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
       checkAANumberAssignments: checkAANumberAssignments,
-      formatAAE164ResourcesBasedOnList: formatAAE164ResourcesBasedOnList,
       formatAAE164ResourcesBasedOnCMI: formatAAE164ResourcesBasedOnCMI,
       formatAAExtensionResourcesBasedOnCMI: formatAAExtensionResourcesBasedOnCMI,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
@@ -34,13 +33,13 @@
     // Get the assigned numbers for an AA
     function getAANumberAssignments(customerId, cesId) {
 
-      return AssignAutoAttendantService.query({
+      return AssignAutoAttendantService.get({
         customerId: customerId,
         cesId: cesId
       }).$promise.then(
         function (response) {
           // success
-          return response[0].numbers;
+          return response.numbers;
         },
         function (response) {
           // failure
@@ -95,64 +94,52 @@
 
     }
 
-    // Format AA E164 resources based on a list of external numbers from CMI
-    function formatAAE164ResourcesBasedOnList(resources, externalNumberList) {
-      var formattedResources = _.map(resources, function (res) {
-        if (res.getType() === service.EXTERNAL_NUMBER) {
-          var fmtRes = angular.copy(res);
-          var extNum = _.find(externalNumberList, function (n) {
-            if (res.number)
-              return n.number.replace(/\D/g, '') === res.number.replace(/\D/g, '');
-            else
-              return n.number.replace(/\D/g, '') === res.id.replace(/\D/g, '');
+    function formatAAE164Resource(res, extNum) {
+      if (res.getType() === service.EXTERNAL_NUMBER) {
+        var fmtRes = angular.copy(res);
+        if (extNum instanceof Array) {
+          var num = res.id ? res.id.replace(/\D/g, '') : res.number.replace(/\D/g, '');
+          extNum = _.find(extNum, function (obj) {
+            return obj.pattern.replace(/\D/g, '') === num;
           });
-          if (extNum) {
-            // For external numbers, save the number in id so it's matched in call processsing
-            // Save the E164 in number
-            fmtRes.number = extNum.number;
-            fmtRes.id = extNum.number.replace(/\D/g, '');
-          } else {
-            // We didn't find in CMI - shouldn't happen - but let's try to fixup any empty fields
-            if (!fmtRes.number) {
-              fmtRes.number = fmtRes.id;
-            }
-            if (!fmtRes.id) {
-              fmtRes.id = fmtRes.number;
-            }
-          }
-          return fmtRes;
-        } else {
-          return res;
-        }
-      });
 
-      return formattedResources;
+        }
+
+        if (extNum) {
+          // For external numbers, save the number in id so it's matched in call processsing
+          // Save the E164 in number
+          fmtRes.number = extNum.pattern;
+          fmtRes.id = extNum.pattern.replace(/\D/g, '');
+        } else {
+          // We didn't find in CMI - shouldn't happen - but let's try to format fields
+          // Note we are returning a copy (see above), not altering input parms, so this leaves CE structures alone
+          // We should try to format as best as possible for CMI assignment
+          fmtRes.number = phoneUtils.formatE164(fmtRes.id, phoneUtils.getRegionCodeForNumber(fmtRes.id));
+          fmtRes.id = fmtRes.number.replace(/\D/g, '');
+        }
+        return fmtRes;
+      } else {
+        return res;
+      }
     }
 
     // Format AA E164 resources based on entries in CMI external number list
     function formatAAE164ResourcesBasedOnCMI(resources) {
 
-      return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          order: 'pattern'
-        }).$promise
-        .then(function (extPool) {
+      var formattedResources = _.map(resources, function (res) {
 
-          var externalNumberList = [];
+        return TelephonyInfoService.loadExternalNumberPool(res.number.replace(/\D/g, '')).then(function (extNums) {
+          return formatAAE164Resource(res, extNums);
+        });
 
-          for (var i = 0; i < extPool.length; i++) {
+      });
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern
-            };
-
-            // the externalNumberList will contain the info as it came from CMI
-            externalNumberList.push(dn);
-
-          }
-
-          return formatAAE164ResourcesBasedOnList(resources, externalNumberList);
+      return $q.all(formattedResources).then(function (value) {
+          return value;
+        },
+        function (response) {
+          // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
+          return $q.reject(response);
         });
 
     }

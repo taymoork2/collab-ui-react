@@ -16,16 +16,12 @@
   }
 }
 
-.client-version-indent {
-    padding-left: 0.8cm;
-    font-style: italic;
-    font-size: 12px;
-    color: #AEAEAF;
+#webex_client_version_drop_down {
+  padding-top: 10px;
 }
 
-.client-version-checkbox-label {
-    font-size: 14px;
-    color: #6A6B6C;
+#webex_client_versions_label_and_dropdown {
+  padding-bottom: 12px;
 }
 
 .partner-profile {
@@ -37,61 +33,39 @@
     @include vr-spacing(pb, 0.5);
   }
 
+  .icon-information {
+    position: relative;
+    top: rem-calc(3);
+    color: $gray-light-1;
+  }
+  .icon-information:hover {
+    color: $color-primary-base;
+  }
+  .tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+  }
+
+  .radio-input-spacing {
+    align-items: flex-start;
+
+    &:before {
+      margin-top: calc((#{$input-height-base} / 2) - 10px)
+    }
+
+    > input, .radio-input-flex {
+      flex: 1;
+    }
+  }
+
   background: $white;
 
   & .form-section {
     @include vr-spacing(pb, 1);
   }
 
-  & .float-radio {
-    width: 2rem;
-    min-height: rem-calc(24);
-    display: inline-block;
-    float: left;
-
-    & + div {
-      display: inline-block;
-      float: left;
-      width: calc(100% - 2rem);
-    }
-
-    & .problem-reports {
-      display: inline-block;
-      float: left;
-      width: calc(100% - 2rem);
-    }
-  }
-
-  input[type="radio"], input[type="checkbox"] {
-    & + span {
-      @include vr-spacing(mb, 0.5);
-
-      display: flex;
-
-      & > div {
-        display: inline-block;
-        float: left;
-        width: calc(100% - 2rem);
-      }
-    }
-  }
-
   &:first-child {
     @include vr-spacing(pb, 1);
-  }
-
-  .nav {
-    float: left;
-    margin-left: 50px;
-  }
-
-  .tab-content {
-    float: left;
-    padding-top: 3px;
-    margin-left: 50px;
-    background-color: transparent;
-    border: none;
-    max-width: 600px;
   }
 
   .form-group {
@@ -104,102 +78,20 @@
     @include vr-spacing(pb, 1);
   }
 
-  .title {
-    h3 {
-      margin-top: 0px;
-    }
-  }
-
-  .support-row {
-    h5 {
-      margin-top: 0px;
-    }
-  }
-
-  .add-link {
-    @include vr-spacing(mt, 0.5);
-  }
-
-  .input-group {
-    width: 100%;
-  }
-
   .rep-info {
     display: block;
-  }
-
-  .support-row {
-    border-bottom: $gray-light;
-    border-width: 1px;
-    border-bottom-style: solid;
-
-    @include vr-spacing(p, 0.5);
-  }
-
-  .support-content {
-    @include vr-spacing(p, 0.5);
-  }
-
-  .custom-url {
-    display: inline-flex;
-
-    @include vr-spacing(pr, 3);
   }
 
   .grant-row {
     @include vr-spacing(pt, 1);
   }
 
-  .description-url {
-    @include vr-spacing(pt, 1.5);
-
-    @include vr-spacing(pl, 1.5);
-  }
-
-  .radio-column {
-    width: 10px;
-
-    @include vr-spacing(pr, 1);
-  }
-
   .optional-row {
     @include vr-spacing(mt, 0.5);
   }
 
-  .admin-options {
-    display: block;
-
-    .cs-radio {
-      display: inline-block;
-    }
-  }
-
-  .default-link-row {
-    @include vr-spacing(pt, 0.5);
-  }
-
-  .input-row {
-    @include vr-spacing(pt, 0.5);
-  }
-
-  .account-link {
-    display: flex;
-  }
-
-  .left-btn {
-    @include vr-spacing(mr, 1);
-  }
-
   .cisco-rep-panel {
     @include vr-spacing(mb, 1);
-  }
-
-  & input[type="radio"] {
-    & + span {
-      & + .btn {
-        @include vr-spacing(ml, 2);
-      }
-    }
   }
 
   .drop-box {
@@ -209,7 +101,6 @@
     @include vr-spacing(mb, 0.25);
 
     @include vr-spacing(p, 0.25);
-
     height: 150px;
     background-color: $brand-white;
     border: 1px solid $gray-light;

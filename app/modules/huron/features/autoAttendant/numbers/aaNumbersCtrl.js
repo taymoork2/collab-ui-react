@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -88,7 +88,6 @@
       vm.availablePhoneNums.sort(function (a, b) {
         return compareNumbersExternalThenInternal(a.value, b.value);
       });
-
       deleteAAResource(number);
 
       // clear selection
@@ -144,7 +143,6 @@
 
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
-
         function (response) {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
@@ -166,13 +164,13 @@
               }
 
               sortAssignedResources(resources);
+              AACommonService.setCENumberStatus(true);
 
             },
             function (response) {
-              Notification.error('autoAttendant.errorAddCMI', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
-                statusText: response.statusText,
-                status: response.status
+                statusText: response.statusText
               });
 
               resources.pop();
@@ -181,7 +179,7 @@
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorAddCMI', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
             status: response.status
@@ -207,9 +205,13 @@
 
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
-        vm.aaModel.aaRecordUUID, resources).catch(
+        vm.aaModel.aaRecordUUID, resources).then(function () {
+        AACommonService.setCENumberStatus(true);
+      }).catch(
         function (response) {
-          Notification.error('autoAttendant.errorRemoveCMI');
+          /* Use AACommonService to thwart the saving when it is in this state. */
+          AACommonService.setIsValid('errorRemoveCMI', false);
+          AANotificationService.errorResponse(response, 'autoAttendant.errorRemoveCMI');
         });
 
     }
@@ -278,7 +280,7 @@
 
       vm.availablePhoneNums = [];
 
-      getExternalNumbers().then(function () {
+      getExternalNumbers(pattern).finally(function () {
         getInternalNumbers(pattern);
       });
 
@@ -298,7 +300,6 @@
     function getInternalNumbers(pattern) {
 
       return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
-
         for (var i = 0; i < intPool.length; i++) {
 
           var number = intPool[i].pattern.replace(/\D/g, '');
@@ -315,40 +316,38 @@
       });
     }
 
-    function getExternalNumbers() {
+    function getExternalNumbers(pattern) {
 
       vm.externalNumberList = [];
 
-      return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern'
-        }).$promise
-        .then(function (extPool) {
-          for (var i = 0; i < extPool.length; i++) {
+      return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (extPool) {
+        for (var i = 0; i < extPool.length; i++) {
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern
-            };
+          if (extPool[i].uuid.toUpperCase() === "NONE")
+            continue;
 
-            // the externalNumberList will contain the info as it came from CMI
-            vm.externalNumberList.push(dn);
+          var dn = {
+            id: extPool[i].uuid,
+            number: extPool[i].pattern
+          };
 
-            var number = extPool[i].pattern.replace(/\D/g, '');
+          // the externalNumberList will contain the info as it came from CMI
+          vm.externalNumberList.push(dn);
 
-            vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+          var number = extPool[i].pattern.replace(/\D/g, '');
 
-            // Add to the available phone number list if not already used
-            if (!getDupeNumberAnyAA(number)) {
-              // For the option list, format the number for the label,
-              // and return the value as just the number
-              addToAvailableNumberList(telephoneNumberFilter(number), number);
+          vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
-            }
+          // Add to the available phone number list if not already used
+          if (!getDupeNumberAnyAA(number)) {
+            // For the option list, format the number for the label,
+            // and return the value as just the number
+            addToAvailableNumberList(telephoneNumberFilter(number), number);
 
           }
-        });
+
+        }
+      });
     }
 
     // Warn the user when discrepancies are found between CMI and CES number assignment
@@ -369,22 +368,24 @@
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCMIOnly', {
+            AANotificationService.error('autoAttendant.errorNumbersCMIOnly', {
               phoneNumbers: onlyCMI
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCESOnly', {
+            AANotificationService.error('autoAttendant.errorNumbersCESOnly', {
               phoneNumbers: onlyResources
             });
           }
         },
         function (response) {
-          // if we failed to read CMI, we might have discrepancy, and should warn user, unless we have no numbers in CE, and thus no entry in CMI is OK
           if (currentResources.length > 0) {
-            vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorReadCMI');
+
+            // Use AACommonService to thwart the saving when it is in this state
+            AACommonService.setIsValid('readErrorCMI', false);
+
+            AANotificationService.errorResponse(response, 'autoAttendant.errorReadCMI');
           }
         });
     }

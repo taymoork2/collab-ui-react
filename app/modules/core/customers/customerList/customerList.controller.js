@@ -5,23 +5,37 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, $window, TrialService, Orgservice, Log, Notification) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
+    $scope.isTestOrg = false;
+    $scope.searchStr = '';
+    $scope.timeoutVal = 1000;
 
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
+    $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
+    $scope.filterAction = filterAction;
+    $scope.getUserAuthInfo = getUserAuthInfo;
+    $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
-    $scope.getTrialsList = getTrialsList;
-    $scope.partnerClicked = partnerClicked;
-    $scope.isPartnerOrg = isPartnerOrg;
+    $scope.actionEvents = actionEvents;
+    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
-    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    $scope.closeActionsDropdown = closeActionsDropdown;
+    $scope.partnerClicked = partnerClicked;
+    $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
+    $scope.closeActionsDropdown = closeActionsDropdown;
+    $scope.addNumbers = addNumbers;
+
+    $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
+    $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -44,19 +58,6 @@
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
-
-    $scope.isOrgSetup = isOrgSetup;
-    $scope.isOwnOrg = isOwnOrg;
-
-    function isOrgSetup(customer) {
-      return _.every(customer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
-    }
-
-    function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
-    }
 
     $scope.gridOptions = {
       data: 'gridData',
@@ -141,6 +142,27 @@
       resetLists().then(function () {
         setFilter($stateParams.filter);
       });
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          $scope.isTestOrg = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      });
+    }
+
+    function isOrgSetup(customer) {
+      return _.every(customer.unmodifiedLicenses, {
+        status: 'ACTIVE'
+      });
+    }
+
+    function isPartnerAdminWithCall(customer) {
+      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
+    }
+
+    function isOwnOrg(customer) {
+      return customer.customerName === Authinfo.getOrgName();
     }
 
     function serviceSort(a, b) {
@@ -228,6 +250,13 @@
       }
     }
 
+    function filterAction(value) {
+      $scope.searchStr = value;
+      resetLists().then(function () {
+        setFilter($scope.activeFilter);
+      });
+    }
+
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
@@ -246,15 +275,18 @@
       });
     }
 
-    function getManagedOrgsList() {
+    function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList()];
+      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
 
-      if (Authinfo.isPartnerAdmin()) {
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // move our org to the top of the list
         // dont know why this is here yet
         // this should be handled by a sorting fn
-        promiselist.push(getMyOrgDetails());
+        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
+          promiselist.push(getMyOrgDetails());
+        }
+
       }
 
       return $q.all(promiselist)
@@ -270,7 +302,11 @@
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false);
 
           if (results[1]) {
-            managed.unshift(results[1]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (_.isArray(results[1])) {
+              managed.unshift(results[1][0]);
+            }
           }
 
           $scope.managedOrgsList = managed;
@@ -282,11 +318,15 @@
         });
     }
 
+    function getUserAuthInfo(customerOrgId) {
+      PartnerService.getUserAuthInfo(customerOrgId);
+    }
+
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
-    function getTrialsList() {
-      return PartnerService.getTrialsList()
+    function getTrialsList(searchText) {
+      return TrialService.getTrialsList(searchText)
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -300,6 +340,11 @@
     }
 
     function openAddTrialModal() {
+      if ($scope.isTestOrg) {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
+          from: $state.current.name
+        });
+      }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);
       });
@@ -317,7 +362,7 @@
     }
 
     function resetLists() {
-      return $q.all([getTrialsList(), getManagedOrgsList()]);
+      return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
     }
 
     function launchCustomerPortal(trial) {
@@ -327,6 +372,21 @@
         customerOrgId: customer.customerOrgId,
         customerOrgName: customer.customerName
       }));
+    }
+
+    function actionEvents($event, action, org) {
+      $event.stopPropagation();
+      if (action === 'myOrg') {
+        closeActionsDropdown();
+      } else if (action === 'customer') {
+        closeActionsDropdown();
+        getUserAuthInfo(org.customerOrgId);
+      } else if (action === 'pstn') {
+        closeActionsDropdown();
+        addNumbers(org);
+        getUserAuthInfo(org.customerOrgId);
+      }
+      return;
     }
 
     function isLicenseInfoAvailable(licenses) {
@@ -370,6 +430,29 @@
 
     function closeActionsDropdown() {
       angular.element('.open').removeClass('open');
+    }
+
+    function getIsTrial(org) {
+      if (!!org.isPartner) return false;
+      return _.get(org, 'communications.isTrial', true);
+    }
+
+    function addNumbers(org) {
+      return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
+        .then(function (response) {
+          if (response) {
+            return $state.go('pstnSetup', {
+              customerId: org.customerOrgId,
+              customerName: org.customerName,
+              customerEmail: org.customerEmail,
+              customerCommunicationLicenseIsTrial: getIsTrial(org)
+            });
+          } else {
+            return $state.go('didadd', {
+              currentOrg: org
+            });
+          }
+        });
     }
   }
 })();

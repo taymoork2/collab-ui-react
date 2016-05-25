@@ -1,0 +1,27 @@
+.read-only-modal {
+  h3 {
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  p {
+    margin: 1rem 1rem;
+    font-size: 0.8rem;
+  }
+  div {
+    margin: 1rem 1rem;
+  }
+}
+
+.read-only-banner {
+  color: white;
+  text-align: center;
+  background-color: $color-attention-light;
+  height: 2.75rem;
+  line-height: 2.625rem;
+  font-size: 1.0625rem;
+}
+
+.side-panel-correction {
+  top: 97px;
+}

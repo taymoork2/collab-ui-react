@@ -5,9 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var messageLogger = require('../utils/messageLogger.gulp')();
 var pkg = require('../../package.json');
 var runSeq = require('run-sequence');
@@ -15,8 +13,7 @@ var runSeq = require('run-sequence');
 gulp.task('optimize', function (done) {
   runSeq(
     [
-      'optimize:app',
-      'optimize:unsupported'
+      'optimize:app'
     ],
     done
   );
@@ -28,8 +25,12 @@ gulp.task('optimize:app', function () {
   var assets = $.useref.assets({
     searchPath: config.build
   });
-  var cssFilter = $.filter('**/*.css');
-  var jsFilter = $.filter('**/*.js');
+  var cssFilter = $.filter('**/*.css', {
+    restore: true
+  });
+  var jsFilter = $.filter('**/*.js', {
+    restore: true
+  });
   var ngOpts = {
     remove: false,
     add: true,
@@ -41,8 +42,10 @@ gulp.task('optimize:app', function () {
     .pipe(assets)
     .pipe($.sourcemaps.init())
     .pipe(cssFilter)
-    .pipe($.minifyCss())
-    .pipe(cssFilter.restore())
+    .pipe($.minifyCss({
+      restructuring: false
+    }))
+    .pipe(cssFilter.restore)
     .pipe(jsFilter)
     .pipe($.ngAnnotate({
       add: true
@@ -50,34 +53,7 @@ gulp.task('optimize:app', function () {
     .pipe($.uglify({
       mangle: false
     }))
-    .pipe(jsFilter.restore())
-    .pipe($.header(config.banner, {
-      pkg: pkg
-    }))
-    .pipe($.rev())
-    .pipe(assets.restore())
-    .pipe($.useref())
-    .pipe($.revReplace())
-    .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest(config.dist));
-});
-
-// Optimize unsupported files
-gulp.task('optimize:unsupported', function () {
-  messageLogger('Optimizing the JavaScript, CSS, and HTML for production unsupported.html');
-  var assets = $.useref.assets({
-    searchPath: config.build
-  });
-  var jsFilter = $.filter('**/*.js');
-
-  return gulp
-    .src(config.build + '/unsupported.html')
-    .pipe($.plumber())
-    .pipe(assets)
-    .pipe($.sourcemaps.init())
-    .pipe(jsFilter)
-    .pipe($.uglify())
-    .pipe(jsFilter.restore())
+    .pipe(jsFilter.restore)
     .pipe($.header(config.banner, {
       pkg: pkg
     }))

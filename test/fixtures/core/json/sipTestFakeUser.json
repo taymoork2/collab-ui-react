@@ -34,7 +34,6 @@
     "avatarSyncEnabled": false,
     "roles": ["id_full_admin"]
   },
-
   "fakeUser2": {
     "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
     "userName": "fakegmuser+siptestuser1@gmail.com",
@@ -63,6 +62,37 @@
       "type": "cloud-calling",
       "value": "fakegmuser+siptestuser786@atlastesting234.ciscospark.com"
     }, {
+      "type": "enterprise",
+      "value": "fakegmuser+siptestuser999@atlastesting234.ciscospark.com"
+    }],
+    "avatarSyncEnabled": false,
+    "roles": ["atlas-portal.application"]
+  },
+  "fakeUser3": {
+    "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+    "userName": "fakegmuser+siptestuser1@gmail.com",
+    "emails": [{
+      "primary": true,
+      "type": "work",
+      "value": "fakegmuser+siptestuser1@gmail.com"
+    }],
+    "name": {
+      "givenName": "fname1",
+      "familyName": "lname1"
+    },
+    "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
+    "id": "271f9c9b-0e6c-46ac-8660-f31f4a14b376",
+    "meta": {
+      "created": "2016-02-12T15:56:49.628Z",
+      "lastModified": "2016-03-15T23:25:45.525Z",
+      "version": "40701921686",
+      "location": "https://identity.webex.com/identity/scim/7d749678-de2b-4ae7-b286-fb8d407e1310/v1/Users/271f9c9b-0e6c-46ac-8660-f31f4a14b376",
+      "organizationID": "7d749678-de2b-4ae7-b286-fb8d407e1310"
+    },
+    "displayName": "fakegmuser+siptestuser1@gmail.com",
+    "active": true,
+    "licenseID": ["CF_00310767-34d8-4e1e-98e8-bc0786904225", "MS_8003da1c-9356-47af-8086-fa937df25a82"],
+    "sipAddresses": [{
       "type": "enterprise",
       "value": "fakegmuser+siptestuser999@atlastesting234.ciscospark.com"
     }],

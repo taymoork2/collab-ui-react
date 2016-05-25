@@ -2,10 +2,25 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
+  var waitTime = 12000;
+
+  var initialIgnoreSync = true;
 
   beforeAll(function () {
-    login.login('huron-int1');
+
+    initialIgnoreSync = browser.ignoreSynchronization;
+
+    login.login('aa-admin');
   }, 120000);
+
+  // See AUTOATTN-556
+  beforeEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = initialIgnoreSync;
+  });
 
   describe('Create and Delete AA', function () {
 
@@ -21,63 +36,131 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should create a new auto attendant named "' + deleteUtils.testAAImportName + '"', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
 
       // select AA
-      utils.wait(autoattendant.featureTypeAA, 12000);
+      utils.wait(autoattendant.featureTypeAA, waitTime);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.wait(autoattendant.customAA, 12000);
+      utils.wait(autoattendant.customAA, waitTime);
+      utils.click(autoattendant.customAA);
+
+      // enter AA name
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAImportName);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
+
+      // assert we see the create successful message
+      autoattendant.assertCreateSuccess(deleteUtils.testAAImportName);
+
+    }, 120000);
+
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, waitTime);
+      utils.click(autoattendant.toggleHolidays);
+      utils.click(autoattendant.addholiday);
+      utils.click(autoattendant.holidayBehaviour);
+      utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.selectdate);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertCalendarUpdateSuccess(deleteUtils.testAAImportName);
+    }, 60000);
+
+    it('should expect a lane with Closed/Holiday Label', function () {
+      utils.expectIsDisplayed(autoattendant.closedHoursLane);
+      utils.click(autoattendant.closeEditButton);
+    });
+
+    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      // ensure prior create/update messages are cleared
+      notifications.clearNotifications();
+
+      // click new feature
+      utils.click(autoattendant.newFeatureButton);
+
+      // select AA
+      utils.wait(autoattendant.featureTypeAA, waitTime);
+      utils.click(autoattendant.featureTypeAA);
+
+      utils.wait(autoattendant.customAA, waitTime);
       utils.click(autoattendant.customAA);
 
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
-      // assert we see the create successful message
-      autoattendant.assertCreateSuccess();
+      autoattendant.assertCreateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
-    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      utils.wait(autoattendant.addAANumbers, 12000);
-      utils.click(autoattendant.numberDropDownArrow);
+    it('should add a Schedule to AA by importing', function () {
+      // ensure prior create/update messages are cleared
+      notifications.clearNotifications();
 
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
+      utils.wait(autoattendant.addAANumbers, waitTime);
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, waitTime);
+      utils.click(autoattendant.importSchedule);
+      utils.wait(autoattendant.importScheduleTitle, waitTime);
+      utils.expectIsDisabled(autoattendant.importContinue);
+      utils.selectDropdown('.import-schedule-modal', deleteUtils.testAAImportName);
+      utils.expectIsEnabled(autoattendant.importContinue);
+      utils.click(autoattendant.importContinue);
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertImportSuccess(0, 1);
 
-    }, 60000);
+      // verify open/close and holiday bars are clickable
+      utils.click(autoattendant.selectHolidaysBar);
+      utils.expectIsDisplayed(autoattendant.holidayBehaviour);
+      utils.click(autoattendant.selectOpenCloseBar);
+      utils.expectIsDisplayed(autoattendant.addschedule);
 
-    it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
 
-      utils.click(autoattendant.numberIconClose);
+    }, 120000);
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
+    it('should click schdule lane header boxes and see the schedule config page can be opened', function () {
 
-    }, 60000);
+      utils.click(autoattendant.selectOpenHoursBox);
+      utils.click(autoattendant.scheduleCloseButton);
+      utils.click(autoattendant.selectHolidayHoursBox);
+      utils.click(autoattendant.scheduleCloseButton);
 
-    it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    });
 
-      utils.click(autoattendant.numberDropDownArrow);
+    it('should close AA edit and return to landing page', function () {
 
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
+      utils.click(autoattendant.closeEditButton);
 
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
+    });
+
+    it('should delete new AAs named "' + deleteUtils.testAAName + '" and "' + deleteUtils.testAAImportName + '"', function () {
+
+      // click delete X on the AA card for e2e test AA
+      utils.click(autoattendant.testCardDelete);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
+      });
+
+      // click delete X on the AA card for import schedule test AA
+      utils.click(autoattendant.testImportCardDelete);
+
+      // confirm dialog with import schedule test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAImportName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAImportName)
+      });
 
     }, 60000);
 

@@ -17,21 +17,23 @@ var SiteListPage = function () {
     testAdminPassword: 'Cisco!23'
   };
 
-  this.t30csvNotAvailableUser = {
+  this.t30csvWbxNotEntitledUser = {
     siteUrl: 't30citestprov9.webex.com',
-    testAdminUsername: 't30citestprov9-csvadm1@mailinator.com',
+    testAdminUsername: 't30citestprov9_csvadm2@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
-  this.siteCommErrorUser = {
-    siteUrl: 't30citestprov3.webex.com',
-    testAdminUsername: 't30citestprov3_csvadm1@mailinator.com',
+  this.t30csvNotAvailableUser = {
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30citestprov9_csvadm3@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
   this.siteListPageId = element(by.id('site-list'));
   this.conferencingLink = element(by.css('a[href="#site-list"]'));
   this.csvColumnId = element(by.id('id-siteCsvColumnHeader'));
+  this.actionReportsLinkID = element(by.id('id-IframeWebexSiteReportsLink'));
+  this.actionSiteConfigLinkID = element(by.id('id-IframeWebexSiteConfigLink'));
   this.licenseTypesColumnId = element(by.id('site-license-types'));
   this.singleLicenseSiteId = element(by.id('t30citestprov44.webex.com_licenseType'));
   this.multiLicenseSiteId = element(by.id('t30citestprov6.webex.com_licenseType'));
@@ -50,11 +52,8 @@ var SiteListPage = function () {
   //check T30citestprov9.webex.com 'Not Available'
   this.t30csvNotAvail = element(by.id(this.t30csvNotAvailableUser.siteUrl + "_notAvailable"));
 
-  //check cisjsite031.webex.com for 'Unable to communicate with WebEx site' error icon
-  this.siteCommError = element(by.id(this.siteCommErrorUser.siteUrl + "_errorIcon"));
-
   //check sjsite04.webex.com for 'Entitlement authentication failure' warning icon
-  this.siteEntitlementAuthFailure = element(by.id("sjsite04.webex.com" + "_warningIcon"));
+  this.siteEntitlementAuthFailure = element(by.id(this.t30csvWbxNotEntitledUser.siteUrl + "_warningIcon"));
 
 };
 

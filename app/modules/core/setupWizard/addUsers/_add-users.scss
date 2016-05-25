@@ -161,6 +161,7 @@
   .table-header {
     border: $gray-light solid 1px;
     border-bottom: 0;
+    overflow-y: hidden !important;
     .table {
       border-color: $gray-lightest;
     }
@@ -199,7 +200,7 @@
   }
   .error-table {
     min-height: 46px;
-    max-height: 360px;
+    max-height: 100%;
     min-width: 400px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -229,18 +230,6 @@
       border-top: none;
     }
   }
-}
-
-.msgrsync-desc {
-  color: $gray-darker;
-  font-size: 18px;
-  background-color: $brand-warning-light;
-  margin-right: 200px;
-  padding-bottom: 5px;
-}
-
-.msgrsync-input {
-  margin-top: 24px;
 }
 
 .add-user-container {

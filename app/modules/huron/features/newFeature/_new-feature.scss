@@ -1,29 +1,32 @@
-.huron-new-feature-modal {  // The modal body.
+.huron-new-feature-modal {
+  // The modal body.
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 2);
-
-  & button {               // The button options in the body.
+  & button {
+    // The button options in the body.
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    flex: 1;
+    flex: 1 1 200px;
     color: $gray-darkest;
     background-color: $gray-lightest;
     border-style: hidden;
     @include vr-spacing(mr, .125);
+    @include vr-spacing(ml, .5);
+    @include vr-spacing(mb, 1);
     @include vr-spacing(p, 0);
-
     &:hover {
       background-color: $gray-light;
     }
   }
 }
 
-.feature-modal-loading{
+.feature-modal-loading {
   font-size: 3rem;
   text-align: center;
 }
@@ -35,6 +38,7 @@
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     color: $gray-base;
     &.show-line:before {
       content: ' ';
@@ -42,18 +46,28 @@
       height: 1rem;
       position: relative;
       top: rem-calc(46);
-      left: 50%;
     }
     &.no-line {
-       padding-top: 1rem;
+      padding-top: 1rem;
+    }
+    &.show-tree-line:before {
+      content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
+      border-top: 1px solid $gray-base;
+      border-left: 1px solid $gray-base;
+      border-right: 1px solid $gray-base;
+      height: 0.875rem;
+      margin-bottom: 0.125rem;
+      width: 4rem;
+      position: relative;
+      top: rem-calc(46);
     }
   }
   .icon {
     font-size: 24px;
-    flex: 1;
+    flex-basis: 50%;
     &:first-child {
       flex-basis: 100%;
-      padding-bottom: 24px;
+      padding-bottom: 26px;
     }
   }
 }
@@ -80,6 +94,7 @@
 .feature-icon-color-HG {
   color: $color-eggplant;
 }
+
 .feature-icon-color-CP {
   color: $color-alerts;
 }
@@ -94,6 +109,6 @@
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
   &.text-center {
-    padding: 20px 30%;
+    padding: 20px 20%;
   }
 }

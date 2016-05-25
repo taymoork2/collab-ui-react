@@ -56,44 +56,7 @@ describe('Authinfo:', function () {
       });
       Authinfo = setupUser();
 
-      accountData = {
-        accounts: [{
-          accountId: '1',
-          accountName: 'Atlas_Test_1',
-          accountOrgId: '1',
-          customerAdminEmail: 'test@test.com',
-          partnerId: '1',
-          partnerOrgId: '1',
-          licenses: [{
-            licenseId: 'MS_1',
-            offerName: 'MS',
-            licenseType: 'MESSAGING',
-            features: ['squared-room-moderation'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CF_1',
-            offerName: 'CF',
-            licenseType: 'CONFERENCING',
-            features: ['squared-syncup'],
-            volume: 100,
-            isTrial: false,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CO_1',
-            offerName: 'CO',
-            licenseType: 'COMMUNICATION',
-            features: ['ciscouc'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }]
-        }]
-      };
+      accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
     });
 
     it('should return true if license isTrial is true', function () {
@@ -271,6 +234,7 @@ describe('Authinfo:', function () {
 
   describe('initializeTabs', function () {
     var tabConfig;
+    var states;
     beforeEach(function () {
       tabConfig = [{
         tab: 'tab1',
@@ -297,8 +261,30 @@ describe('Authinfo:', function () {
           state: 'subTab2',
           link: '/subTab2'
         }]
+      }, {
+        tab: 'devTab',
+        icon: 'devTab.icon',
+        title: 'devTab.title',
+        desc: 'devTab.desc',
+        state: 'devTab',
+        link: '/devTab',
+        hideProd: true
+      }, {
+        tab: 'devMenu',
+        icon: 'devMenu.icon',
+        title: 'devMenu.title',
+        hideProd: true,
+        subPages: [{
+          tab: 'subDevTab',
+          icon: 'subDevTab.icon',
+          title: 'subDevTab.title',
+          desc: 'subDevTab.desc',
+          state: 'subDevTab',
+          link: '/subDevTab'
+        }]
       }];
       provide.value('tabConfig', tabConfig);
+      states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
     });
 
     it('should remove all tabs not allowed', function () {
@@ -310,7 +296,7 @@ describe('Authinfo:', function () {
 
     it('should remove a single tab that is not allowed', function () {
       setupConfig({
-        publicStates: ['subTab1', 'subTab2']
+        publicStates: _.difference(states, ['tab1'])
       });
       var Authinfo = setupUser();
 
@@ -323,7 +309,7 @@ describe('Authinfo:', function () {
 
     it('should remove a single subPage that is not allowed', function () {
       setupConfig({
-        publicStates: ['tab1', 'subTab2']
+        publicStates: _.difference(states, ['subTab1'])
       });
       var Authinfo = setupUser();
 
@@ -336,7 +322,7 @@ describe('Authinfo:', function () {
 
     it('should remove a subPage parent if all subPages are not allowed', function () {
       setupConfig({
-        publicStates: ['tab1']
+        publicStates: _.difference(states, ['subTab1', 'subTab2'])
       });
       var Authinfo = setupUser();
 
@@ -349,13 +335,62 @@ describe('Authinfo:', function () {
 
     it('should keep tab structure if all pages are allowed', function () {
       setupConfig({
-        publicStates: ['tab1', 'subTab1', 'subTab2']
+        publicStates: states
       });
       var Authinfo = setupUser();
 
       Authinfo.initializeTabs();
       expect(Authinfo.getTabs()).toEqual(tabConfig);
     });
+
+    it('should remove hideProd tabs and subPages of hideProd tabs if in production', function () {
+      setupConfig({
+        publicStates: states,
+        isProd: function () {
+          return true;
+        }
+      });
+      var Authinfo = setupUser();
+      _.remove(tabConfig, {
+        tab: 'devTab'
+      });
+      _.remove(tabConfig, {
+        tab: 'devMenu'
+      });
+
+      Authinfo.initializeTabs();
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+
+    describe('customer with CONFERENCING license', function () {
+      var accountData = {
+        "customers": [{
+          "customerId": "1",
+          "customerName": "Atlas_Test_1",
+          "licenses": [{
+            "licenseType": "CONFERENCING",
+            "siteUrl": "whatever"
+          }]
+        }]
+      };
+
+      it('is patched with Site_Admin role if customer has full admin role.', function () {
+        var Authinfo = setupUser({
+          roles: ['Full_Admin']
+        });
+        var a = Authinfo.updateAccountInfo(accountData);
+        expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+      });
+
+      it('is patched with Site_Admin role if customer has read only admin role.', function () {
+        var Authinfo = setupUser({
+          roles: ['Readonly_Admin']
+        });
+        var a = Authinfo.updateAccountInfo(accountData);
+        expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+      });
+    });
+
   });
 
   function setupConfig(override) {

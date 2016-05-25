@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl:', function () {
-  var controller, $scope, $state, $q, $translate, $window, Notification, TrialService, HuronCustomer, FeatureToggleService;
+  var controller, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, HuronCustomer, FeatureToggleService, Orgservice;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
@@ -16,16 +16,18 @@ describe('Controller: TrialEditCtrl:', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
     $window = _$window_;
+    $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'success');
@@ -36,7 +38,11 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($state, 'href');
     spyOn($window, 'open');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getDeviceTrialsLimit');
+
+    $httpBackend
+      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .respond({});
 
     controller = $controller('TrialEditCtrl', {
       $scope: $scope,
@@ -325,6 +331,20 @@ describe('Controller: TrialEditCtrl:', function () {
               expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
             });
         });
+    });
+
+    describe('Set ship devices modal display with Orgservice call', function () {
+      it('should disable ship devices modal for test org', function () {
+        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+          data: {
+            success: true,
+            isTestOrg: true
+          }
+        }));
+        controller.setDeviceModal();
+        $scope.$apply();
+        expect(controller.canSeeDevicePage).toBeFalsy();
+      });
     });
   });
 });

@@ -57,7 +57,7 @@
         'usePartnerLogo': true
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function useCustomLogo(orgId) {
@@ -65,7 +65,7 @@
         'usePartnerLogo': false
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function enableCustomerLogos(orgId) {
@@ -73,7 +73,7 @@
         'allowCustomerLogos': true
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function disableCustomerLogos(orgId) {
@@ -81,7 +81,13 @@
         'allowCustomerLogos': false
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
+    }
+
+    function setOrgSetting(orgId, settings) {
+      return Orgservice.setOrgSettings(orgId, settings)
+        .then(notifySuccess)
+        .catch(notifyError);
     }
 
     function resetCdnLogo(orgId) {
@@ -105,16 +111,14 @@
       });
     }
 
-    function notify(data, status) {
-      if (data.success) {
-        Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
-      } else {
-        var error = $translate.instant('errors.statusError', {
-          status: status
-        });
+    function notifySuccess() {
+      Notification.success('partnerProfile.processing');
+    }
 
-        Notification.notify(error, 'error');
-      }
+    function notifyError(response) {
+      Notification.errorResponse(response, 'errors.statusError', {
+        status: response.status
+      });
     }
   }
 })();

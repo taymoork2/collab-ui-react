@@ -10,38 +10,50 @@ module.exports = function () {
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
-  var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
-  var tsSpecSuffix = '.ts.spec.js';
+  var tsSpecSuffix = '.spec.ts.js';
+  var tsSuffix = '.ts.js';
+  var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
+  var prevCompiledTestFiles = app + '/**/*.ts.spec.js';
+  var examples = 'examples';
+  var cache = '.cache';
+  var tsManifest = '/../ts/ts-manifest.txt';
+  var tsTestManifest = '/../ts/ts-test-manifest.txt';
 
   var config = {
     build: build,
     dist: dist,
     test: test,
-    vendor: vendor,
+    vendor: node_modules,
     coverage: 'coverage',
-    e2e: 'test/e2e-protractor',
+    e2e: e2e,
     e2eFailRetry: '.e2e-fail-retry',
+    e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
+    e2eReports: e2e + '/reports',
     app: 'app',
-    unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
     images: 'images',
     css: 'styles',
     docs: 'docs',
     cssName: 'main',
     jsIndexName: 'index.scripts',
-    jsUnsupportedName: 'unsupported.scripts',
-    cache: '.cache',
-
+    cache: cache,
+    examples: examples,
+    tsManifest: tsManifest,
+    tsTestManifest: tsTestManifest,
     gulpFiles: gulpFiles,
 
     appFiles: {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
+      ],
+      notTs: [
+        '!' + app + '/modules/**/*.ts.js',
+        '!' + app + '/scripts/**/*.js'
       ],
       json: app + '/**/*.json',
       csv: app + '/**/*.csv',
@@ -56,17 +68,10 @@ module.exports = function () {
     typeScript: {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
+      compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
-      compiledTestFiles: app + '/**/*' + tsSpecSuffix
-    },
-
-    unsupported: {
-      dir: 'unsupported',
-      file: 'unsupportedApp.js',
-      js: [
-        app + '/unsupported/**/*.js',
-      ],
-      name: 'unsupported.scripts',
+      compiledTestFiles: compiledTestFiles,
+      previousCompiledTestFiles: prevCompiledTestFiles
     },
 
     templateCache: {
@@ -84,20 +89,28 @@ module.exports = function () {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
       ],
+      notTs: [
+        '!' + build + '/scripts/**/*.ts.js',
+        '!' + build + '/scripts/**/*.ts.spec.js',
+        '!' + build + '/modules/**/*.module.ts.js',
+        '!' + build + '/modules/**/*.module.ts.spec.js',
+        '!' + build + '/modules/**/*.ts.js',
+        '!' + build + '/modules/**/*.ts.spec.js'
+      ],
       js: [
-        vendor + '/angular-mocks/angular-mocks.js',
-        vendor + '/jasmine-jquery/lib/jasmine-jquery.js',
-        vendor + '/sinon-ng/sinon-ng.js',
-        vendor + '/es5-shim/es5-shim.js',
+        node_modules + '/angular-mocks/angular-mocks.js',
+        node_modules + '/jasmine-jquery/lib/jasmine-jquery.js',
+        node_modules + '/sinon-ng/sinon-ng.js',
+        node_modules + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
-        vendor + '/bardjs/dist/bard.js',
-        vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
+        node_modules + '/bardjs/dist/bard.js',
+        node_modules + '/jasmine-sinon/lib/jasmine-sinon.js',
+        node_modules + 'karma-ng-html2js-preprocessor/lib/index.js'
       ],
       global: [
         test + '/global.spec.js',
@@ -106,6 +119,7 @@ module.exports = function () {
         all: app + '/**/*.spec.js',
         core: appModules + '/core/**/*.spec.js',
         digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
+        example: [examples + '/unit/example.module.js', examples + '/unit/*'],
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
@@ -126,114 +140,94 @@ module.exports = function () {
     },
 
     vendorFiles: {
-      unsupported: [
-        vendor + '/json3/lib/json3.min.js',
-        vendor + '/angular/angular.js',
-        vendor + '/angular-translate/angular-translate.js',
-        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-      ],
       js: [
-        vendor + '/x2js/xml2json.js',
-        vendor + '/jquery/dist/jquery.js',
-        vendor + '/bootstrap/dist/js/bootstrap.js',
-        vendor + '/addressparser/src/addressparser.js',
-        vendor + '/alertify.js/lib/alertify.js',
-        vendor + '/cisco-amcharts/amcharts/amcharts.js',
-        vendor + '/cisco-amcharts/amcharts/pie.js',
-        vendor + '/cisco-amcharts/amcharts/serial.js',
-        vendor + '/cisco-amcharts/amcharts/funnel.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/export.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/fabric.js/fabric.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/blob.js/blob.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/jszip.js/jszip.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
-        vendor + '/typeahead.js/dist/typeahead.bundle.js',
-        vendor + '/lodash/lodash.min.js',
-        vendor + '/draggable/draggable.min.js',
-        vendor + '/moment/moment.js',
-        vendor + '/base64/base64.js',
-        vendor + '/nicescroll/jquery.nicescroll.js',
-        vendor + '/punycode/punycode.js',
-        vendor + '/angular/angular.js',
-        vendor + '/angular-animate/angular-animate.js',
-        vendor + '/angular-ui-utils/ui-utils.js',
-        vendor + '/angular-cookie/angular-cookie.js',
-        vendor + '/angular-cookies/angular-cookies.js',
-        vendor + '/angular-sanitize/angular-sanitize.js',
-        vendor + '/angular-dialog-service/dialogs.js',
-        vendor + '/angular-resource/angular-resource.js',
-        vendor + '/angular-route/angular-route.js',
-        vendor + '/angular-messages/angular-messages.js',
-        vendor + '/angular-translate/angular-translate.js',
-        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-        vendor + '/messageformat/messageformat.js',
-        vendor + '/messageformat/locale/*.js',
-        vendor + '/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js',
-        vendor + '/angular-ui-router/release/angular-ui-router.js',
-        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
-        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.sticky.js',
-        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.transition.js',
-        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.future.js',
-        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.previous.js',
-        vendor + '/ng-csv/build/ng-csv.min.js',
-        vendor + '/api-check/dist/api-check.js',
-        vendor + '/angular-formly/dist/formly.js',
-        vendor + '/cisco-ui/dist/js/cisco-ui.js',
-        vendor + '/cisco-ui/dist/js/cisco-formly.js',
-        vendor + '/angular-wizard/dist/angular-wizard.js',
-        vendor + '/ng-grid/build/ng-grid.js',
-        vendor + '/angular-ui-grid/ui-grid.js',
-        vendor + '/angular-nicescroll/angular-nicescroll.js',
-        vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
-        vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
-        vendor + '/ng-clip/src/ngClip.js',
-        vendor + '/zeroclipboard/dist/ZeroClipboard.js',
-        vendor + '/d3/d3.min.js',
-        vendor + '/jquery-csv/src/jquery.csv.js',
-        vendor + '/angular-timer/dist/angular-timer.js',
-        vendor + '/humanize-duration/humanize-duration.js',
-        vendor + '/angular-libphonenumber/dist/libphonenumber.js',
-        vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
-        vendor + '/angularjs-toaster/toaster.js',
-        vendor + '/ng-file-upload/ng-file-upload.js',
-        vendor + '/jstimezonedetect/jstz.js',
-        vendor + '/masonry/dist/masonry.pkgd.js',
-        vendor + '/imagesloaded/imagesloaded.pkgd.js',
-        vendor + '/ng-tags-input/ng-tags-input.min.js',
-        vendor + '/pako/dist/pako.js',
-        vendor + '/angular-cache/dist/angular-cache.js',
-        vendor + '/parse-address-bobbr/parse-address.min.js',
-        vendor + '/clipboard/dist/clipboard.js',
-        vendor + '/query-command-supported/dist/queryCommandSupported.js',
-        vendor + '/ical.js/build/ical.js',
-        vendor + '/angular-ical/dist/js/angular-ical.js'
+        node_modules + '/x2js/xml2json.min.js',
+        node_modules + '/jquery/dist/jquery.js',
+        node_modules + '/emailjs-addressparser/src/emailjs-addressparser.js',
+        node_modules + '/collab-amcharts/amcharts/amcharts.js',
+        node_modules + '/collab-amcharts/amcharts/pie.js',
+        node_modules + '/collab-amcharts/amcharts/serial.js',
+        node_modules + '/collab-amcharts/amcharts/funnel.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/export.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/fabric.js/fabric.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/blob.js/blob.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/jszip.js/jszip.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
+        node_modules + '/typeahead.js/dist/typeahead.bundle.js',
+        node_modules + '/lodash/index.js',
+        node_modules + '/draggable.js/draggable.js',
+        node_modules + '/moment/moment.js',
+        node_modules + '/Base64/base64.js',
+        node_modules + '/jquery.nicescroll/jquery.nicescroll.js',
+        node_modules + '/punycode/punycode.js',
+        node_modules + '/angular/angular.js',
+        node_modules + '/angular-animate/angular-animate.js',
+        node_modules + '/angular-cookies/angular-cookies.js',
+        node_modules + '/angular-sanitize/angular-sanitize.js',
+        node_modules + '/angular-resource/angular-resource.js',
+        node_modules + '/angular-messages/angular-messages.js',
+        node_modules + '/angular-translate/dist/angular-translate.js',
+        node_modules + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+        node_modules + '/messageformat/messageformat.js',
+        node_modules + '/messageformat/locale/*.js',
+        node_modules + '/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js',
+        node_modules + '/angular-ui-router/release/angular-ui-router.js',
+        node_modules + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
+        node_modules + '/ui-router-extras/release/modular/ct-ui-router-extras.sticky.js',
+        node_modules + '/ui-router-extras/release/modular/ct-ui-router-extras.transition.js',
+        node_modules + '/ui-router-extras/release/modular/ct-ui-router-extras.future.js',
+        node_modules + '/ui-router-extras/release/modular/ct-ui-router-extras.previous.js',
+        node_modules + '/ng-csv/build/ng-csv.js',
+        node_modules + '/api-check/dist/api-check.js',
+        node_modules + '/angular-formly/dist/formly.js',
+        node_modules + '/collab-ui-angular/dist/collab-ui.js',
+        node_modules + '/collab-ui-angular/dist/collab-formly.js',
+        node_modules + '/angular-ui-grid/ui-grid.js',
+        node_modules + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+        node_modules + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+        node_modules + '/moment-range/dist/moment-range.js',
+        node_modules + '/d3/d3.js',
+        node_modules + '/jquery-csv/src/jquery.csv.js',
+        node_modules + '/angular-timer/dist/angular-timer.js',
+        node_modules + '/humanize-duration/humanize-duration.js',
+        node_modules + '/angular-libphonenumber/dist/libphonenumber.full.js',
+        node_modules + '/angular-libphonenumber/dist/angular-libphonenumber.js',
+        node_modules + '/angularjs-toaster/toaster.js',
+        node_modules + '/ng-file-upload/dist/ng-file-upload.js',
+        node_modules + '/jstimezonedetect/dist/jstz.js',
+        node_modules + '/masonry-layout/dist/masonry.pkgd.js',
+        node_modules + '/imagesloaded/imagesloaded.pkgd.js',
+        node_modules + '/ng-tags-input/build/ng-tags-input.js',
+        node_modules + '/pako/dist/pako.js',
+        node_modules + '/angular-cache/dist/angular-cache.js',
+        node_modules + '/clipboard/dist/clipboard.js',
+        node_modules + '/ngclipboard/dist/ngclipboard.js',
+        node_modules + '/query-command-supported/dist/queryCommandSupported.js',
+        node_modules + '/ical.js/build/ical.js',
+        node_modules + '/angular-ical/dist/js/angular-ical.js'
       ],
       scss: {
         paths: [
-          './' + vendor + '/bootstrap-sass/assets/stylesheets',
-          './' + vendor + '/foundation/scss',
+          './' + node_modules + '/bootstrap-sass/assets/stylesheets',
+          './' + node_modules + '/foundation-sites/scss',
         ],
         files: [
-          vendor + '/cisco-ui/scss/**/*.scss',
+          node_modules + '/collab-ui/scss/**/*.scss',
         ]
       },
       css: [
-        vendor + '/alertify.js/themes/alertify.core.css',
-        vendor + '/alertify.js/themes/alertify.default.css',
-        vendor + '/angular-wizard/dist/angular-wizard.css',
-        vendor + '/angular-dialog-service/dialogs.css',
-        vendor + '/animate.css/animate.css',
-        vendor + '/ng-tags-input/ng-tags-input.css',
-        vendor + '/cisco-amcharts/amcharts/plugins/export/export.css',
+        node_modules + '/animate.css/animate.css',
+        node_modules + '/ng-tags-input/build/ng-tags-input.css',
+        node_modules + '/collab-amcharts/amcharts/plugins/export/export.css',
       ],
       fonts: [
-        vendor + '/cisco-ui/dist/fonts/*',
-        vendor + '/font-awesome/fonts/*',
+        node_modules + '/collab-ui/fonts/*',
+        node_modules + '/font-awesome/fonts/*',
       ],
       images: [
-        vendor + '/cisco-ui/dist/images/*',
+        node_modules + '/collab-ui/images/*',
       ]
     },
 
@@ -243,24 +237,17 @@ module.exports = function () {
       ' */\n' +
       '',
 
-    isJenkins: isJenkins,
-
     beautifyFiles: [
       app + '/**/*.js',
       app + '/**/*.json',
       test + '/**/*.js',
       test + '/**/*.json',
       gulpFiles,
+      '!' + compiledTestFiles,
       '!test/karma-unit.js',
       '!karma.conf.js'
     ]
   };
 
   return config;
-
-  ////////////////
-
-  function isJenkins() {
-    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
-  }
 };

@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <div class="modal-title"><span translate="common.deactivate"></span> <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span></div>
+</div>
+<div class="modal-body hercules-fix-paragraphs">
+  <p translate="hercules.settings.call.disableConfirmDialogText1"></p>
+  <p>
+    <i class="{{disableConfirmDialog.serviceIconClass}} icon-2x" style="vertical-align: middle;"></i>
+    <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+  </p>
+  <p translate="hercules.settings.call.disableConfirmDialogText2"></p>
+  <p>
+    <ul>
+      <li translate="hercules.settings.call.disableConfirmDialogText3"></li>
+      <li translate="hercules.settings.call.disableConfirmDialogText4"></li>
+      <li translate="hercules.settings.call.disableConfirmDialogText5"></li>
+    </ul>
+  </p>
+  <p translate="hercules.settings.call.disableConfirmDialogText6"></p>
+</div>
+<div class="modal-footer">
+  <button ng-click="disableConfirmDialog.cancel()" class="btn" translate="common.cancel"></button>
+  <button ng-click="disableConfirmDialog.ok()" class="btn btn--alert fix-alert-margins" translate="common.confirm"></button>
+</div>

@@ -1,0 +1,9 @@
+[{
+  "value": "America/Anchorage",
+  "label": "(GMT-09:00) Alaska",
+  "timezoneid": "3"
+}, {
+  "value": "America/Los_Angeles",
+  "label": "(GMT-08:00) Pacific Time (US & Canada)",
+  "timezoneid": "4"
+}]

@@ -3,20 +3,19 @@
  */
 'use strict';
 
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var config = require('../gulp.config')();
 var gulp = require('gulp');
-var karma = require('karma').server;
+var Server = require('karma').Server;
 var log = $.util.log;
 var messageLogger = require('../utils/messageLogger.gulp')();
 var logWatch = require('../utils/logWatch.gulp')();
 var path = require('path');
 var reload = browserSync.reload;
 var typeScriptUtil = require('../utils/typeScript.gulp.js');
+var series = require('stream-series');
 
 var changedFiles;
 var testFiles;
@@ -119,10 +118,20 @@ gulp.task('watch:vendorjs', function () {
 
 gulp.task('karma-watch', ['karma-config-watch'], function (done) {
   if (!args.nounit) {
-    karma.start({
+    var server = new Server({
       configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
       singleRun: true
-    }, done);
+    }, function (result) {
+      if (result) {
+        // Exit process if we have an error code
+        // Avoids having gulp formatError stacktrace
+        process.exit(result);
+      } else {
+        // Otherwise end task like normal
+        done();
+      }
+    });
+    server.start();
   } else {
     log($.util.colors.yellow('--nounit **Skipping Karma Config Task'));
     done();
@@ -135,6 +144,7 @@ gulp.task('karma-config-watch', function () {
   var unitTestFiles = [].concat(
     config.vendorFiles.js,
     config.testFiles.js,
+    config.testFiles.notTs,
     config.testFiles.app,
     config.testFiles.global,
     testFiles
@@ -142,16 +152,25 @@ gulp.task('karma-config-watch', function () {
 
   return gulp
     .src(config.testFiles.karmaTpl)
-    .pipe($.inject(gulp.src(unitTestFiles, {
-      read: false
-    }), {
-      addRootSlash: false,
-      starttag: 'files: [',
-      endtag: ',',
-      transform: function (filepath, file, i, length) {
-        return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-      }
-    }))
+    .pipe($.inject(
+      series(
+        gulp.src(unitTestFiles, {
+          read: false
+        }),
+        gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsManifest), {
+          read: false
+        }),
+        gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest), {
+          read: false
+        })
+      ), {
+        addRootSlash: false,
+        starttag: 'files: [',
+        endtag: ',',
+        transform: function (filepath, file, i, length) {
+          return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+        }
+      }))
     .pipe($.rename({
       basename: 'karma-watch',
       extname: '.js'

@@ -1,112 +1,97 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').controller('ReportsIframeCtrl', [
-    '$scope',
-    '$rootScope',
-    '$log',
-    '$translate',
-    '$filter',
-    '$state',
-    '$stateParams',
-    '$sce',
-    '$timeout',
-    '$window',
-    'Authinfo',
-    'Notification',
-    'Config',
-    'Storage',
-    'WebExUtilsFact',
+  angular.module('WebExApp').controller('ReportsIframeCtrl', ReportsIframeCtrl);
 
-    function reportsIframeCtrl(
-      $scope,
-      $rootScope,
-      $log,
-      $translate,
-      $filter,
-      $state,
-      $stateParams,
-      $sce,
-      $timeout,
-      $window,
-      Authinfo,
-      Notification,
-      Config,
-      Storage,
-      WebExUtilsFact
-    ) {
+  /* @ngInject */
+  function ReportsIframeCtrl(
+    $scope,
+    $rootScope,
+    $log,
+    $translate,
+    $filter,
+    $state,
+    $stateParams,
+    $sce,
+    $timeout,
+    $window,
+    Authinfo,
+    Notification,
+    Config,
+    Storage,
+    WebExUtilsFact
+  ) {
 
-      var _this = this;
+    var _this = this;
 
-      _this.funcName = "ReportsIframeCtrl()";
-      _this.logMsg = "";
+    _this.funcName = "ReportsIframeCtrl()";
+    _this.logMsg = "";
 
-      $scope.isIframeLoaded = false;
-      $scope.siteUrl = $stateParams.siteUrl;
-      $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
-      $scope.reportPageId = $stateParams.reportPageId;
-      $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
-      $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
-      $scope.iframeUrl = $stateParams.reportPageIframeUrl;
+    $scope.isIframeLoaded = false;
+    $scope.siteUrl = $stateParams.siteUrl;
+    $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
+    $scope.reportPageId = $stateParams.reportPageId;
+    $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
+    $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
+    $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
-      // for iframe request
-      if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
-        $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
-      $scope.adminEmail = Authinfo.getPrimaryEmail();
-      $scope.authToken = Storage.get('accessToken');
-      $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-      $scope.siteName = $stateParams.siteUrl;
-      $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
-      $scope.fullSparkDNS = window.location.origin;
+    // for iframe request
+    if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+      $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+    $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
+    $scope.adminEmail = Authinfo.getPrimaryEmail();
+    $scope.authToken = Storage.get('accessToken');
+    $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
+    $scope.siteName = $stateParams.siteUrl;
+    $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
+    $scope.fullSparkDNS = $window.location.origin;
 
-      _this.logMsg = _this.funcName + ": " + "\n" +
-        "siteUrl=" + $scope.siteUrl + "\n" +
-        "reportPageId=" + $scope.reportPageId + "\n" +
-        "reportPageTitle=" + $scope.reportPageTitle + "\n" +
-        "reportPageIframeUrl=" + $scope.reportPageIframeUrl + "\n" +
-        "iframeUrl=" + $scope.iframeUrl + "\n" +
-        "adminEmail=" + $scope.adminEmail + "\n" +
-        "locale=" + $scope.locale + "\n" +
-        "trustIframeUrl=" + $scope.trustIframeUrl;
-      $log.log(_this.logMsg);
+    _this.logMsg = _this.funcName + ": " + "\n" +
+      "siteUrl=" + $scope.siteUrl + "\n" +
+      "reportPageId=" + $scope.reportPageId + "\n" +
+      "reportPageTitle=" + $scope.reportPageTitle + "\n" +
+      "reportPageIframeUrl=" + $scope.reportPageIframeUrl + "\n" +
+      "iframeUrl=" + $scope.iframeUrl + "\n" +
+      "adminEmail=" + $scope.adminEmail + "\n" +
+      "locale=" + $scope.locale + "\n" +
+      "trustIframeUrl=" + $scope.trustIframeUrl;
+    $log.log(_this.logMsg);
 
-      $rootScope.lastSite = $stateParams.siteUrl;
-      $log.log("last site " + $rootScope.lastSite);
+    $rootScope.lastSite = $stateParams.siteUrl;
+    $log.log("last site " + $rootScope.lastSite);
 
-      var parser = document.createElement('a');
-      parser.href = $scope.iframeUrl;
-      $rootScope.nginxHost = parser.hostname;
-      $log.log("nginxHost " + $rootScope.nginxHost);
+    var parser = $window.document.createElement('a');
+    parser.href = $scope.iframeUrl;
+    $rootScope.nginxHost = parser.hostname;
+    $log.log("nginxHost " + $rootScope.nginxHost);
 
-      $timeout(
-        function loadIframe() {
-          var submitFormBtn = document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-        }, // loadIframe()
+    $timeout(
+      function loadIframe() {
+        var submitFormBtn = $window.document.getElementById('submitFormBtn');
+        submitFormBtn.click();
+      }, // loadIframe()
 
-        0
-      );
+      0
+    );
 
-      $window.iframeLoaded = function (iframeId) {
-        var funcName = "iframeLoaded()";
-        var logMsg = funcName;
+    $window.iframeLoaded = function (iframeId) {
+      var funcName = "iframeLoaded()";
+      var logMsg = funcName;
 
-        var currScope = angular.element(iframeId).scope();
-        var phase = currScope.$$phase;
+      var currScope = angular.element(iframeId).scope();
+      var phase = currScope.$$phase;
 
-        logMsg = funcName + "\n" +
-          "phase=" + phase;
-        $log.log(logMsg);
+      logMsg = funcName + "\n" +
+        "phase=" + phase;
+      $log.log(logMsg);
 
-        if (!phase) {
-          currScope.$apply(
-            function updateScope() {
-              currScope.isIframeLoaded = true;
-            }
-          );
-        }
-      }; // iframeLoaded()
-    } // reportsIframeCtrl()
-  ]); // angular.module().controller()
+      if (!phase) {
+        currScope.$apply(
+          function updateScope() {
+            currScope.isIframeLoaded = true;
+          }
+        );
+      }
+    }; // iframeLoaded()
+  } // reportsIframeCtrl()
 })(); // function()

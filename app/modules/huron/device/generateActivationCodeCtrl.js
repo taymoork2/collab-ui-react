@@ -53,8 +53,8 @@
       vm.showEmail = true;
     }
 
-    function clipboardFallback(copy) {
-      $window.prompt($translate.instant('generateActivationCodeModal.clipboardFallback'), copy);
+    function clipboardFallback() {
+      $window.prompt($translate.instant('generateActivationCodeModal.clipboardFallback'), _.get(vm, 'otp.friendlyCode'));
     }
 
     function sendActivationCodeEmail() {

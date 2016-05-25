@@ -1,0 +1,24 @@
+{
+  "days": [{
+    "label": "Monday",
+    "active": false
+  }, {
+    "label": "Tuesday",
+    "active": false
+  }, {
+    "label": "Wednesday",
+    "active": false
+  }, {
+    "label": "Thursday",
+    "active": true
+  }, {
+    "label": "Friday",
+    "active": true
+  }, {
+    "label": "Saturday",
+    "active": true
+  }, {
+    "label": "Sunday",
+    "active": true
+  }]
+}

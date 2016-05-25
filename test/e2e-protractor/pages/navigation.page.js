@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
@@ -288,20 +290,18 @@ var Navigation = function () {
     return browser.get(getUrl(url));
   };
 
-  this.navigateToUsingIntegrationForTesting = function (url) {
-    return browser.get(url);
+  this.navigateUsingIntegrationBackend = function (url) {
+    return browser.get(getUrl(url, {
+      forceIntegration: true
+    }));
   };
 
-  function getUrl(url) {
+  function getUrl(url, opts) {
+    var forceIntegration = opts && opts.forceIntegration;
     var url = url || '#/login';
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'test-env-config=e2e-prod';
-    }
+    url += ~url.indexOf('?') ? '&' : '?';
+    url += 'test-env-config=';
+    url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';
     return url;
   }
 

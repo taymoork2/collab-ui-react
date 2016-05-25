@@ -5,9 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -21,7 +19,6 @@ gulp.task('copy:build', function (done) {
   messageLogger('Copying Build Files');
   runSeq([
       'copy:build-app-files',
-      'copy:build-unsupported-js',
       'copy:build-vendor-css',
       'copy:build-vendor-fonts',
       'copy:build-vendor-images',
@@ -45,19 +42,6 @@ gulp.task('copy:build-app-files', function () {
   messageLogger('Copying application files', files);
   return gulp
     .src(files, {
-      base: config.app
-    })
-    .pipe($.if(args.verbose, $.print()))
-    .pipe(gulp.dest(config.build))
-    .pipe(reload({
-      stream: true
-    }));
-});
-
-gulp.task('copy:build-unsupported-js', function () {
-  messageLogger('Copying unsupported JS files', config.unsupported.js);
-  return gulp
-    .src(config.unsupported.js, {
       base: config.app
     })
     .pipe($.if(args.verbose, $.print()))
@@ -103,7 +87,7 @@ gulp.task('copy:build-vendor-images', function () {
 });
 
 gulp.task('copy:build-vendor-js', function () {
-  messageLogger('Copying vendor CSS files', config.vendorFiles.js);
+  messageLogger('Copying vendor JS files', config.vendorFiles.js);
   return gulp
     .src(config.vendorFiles.js, {
       base: config.vendor

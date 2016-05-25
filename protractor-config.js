@@ -1,9 +1,13 @@
 'use strict';
 
+/* eslint global-require:0 */
+/* global jasmine, browser, _ */
+
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var config = require('./gulp/gulp.config')();
+var gulpConfig = require('./gulp/gulp.config')();
+var processEnvUtil = require('./gulp/utils/processEnvUtil.gulp')();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -13,7 +17,7 @@ var agent = mkProxyAgent();
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
-var E2E_FAIL_RETRY = config.e2eFailRetry;
+var E2E_FAIL_RETRY = gulpConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 exports.config = {
@@ -40,6 +44,18 @@ exports.config = {
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
   },
 
+  plugins: [{
+    package: 'protractor-console-plugin',
+    failOnWarning: false, // (Default - false),
+    failOnError: false,   // (Default - true),
+    logWarnings: true,    // (Default - true),
+    exclude: [            // Array of strings and regex (Default - [])
+      /executionContextId/,
+      /object Object/,
+      /favicon/
+    ]
+  }],
+
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
@@ -57,6 +73,9 @@ exports.config = {
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
 
+    global.getE2eRunCounter = processEnvUtil.getE2eRunCounter;
+    global.getE2eRunCounterMax = processEnvUtil.getE2eRunCounterMax;
+
     global.baseUrl = exports.config.baseUrl;
 
     global.helper = require('./test/api_sanity/test_helper');
@@ -71,6 +90,7 @@ exports.config = {
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
+    var CustomersPage = require('./test/e2e-protractor/pages/customers.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
     var LandingPage = require('./test/e2e-protractor/pages/landing.page.js');
     var ManagePage = require('./test/e2e-protractor/pages/manage.page.js');
@@ -79,7 +99,6 @@ exports.config = {
     var CdrPage = require('./test/e2e-protractor/pages/cdr.page.js');
     var SSOWizardPage = require('./test/e2e-protractor/pages/ssowizard.page.js');
     var DirSyncWizardPage = require('./test/e2e-protractor/pages/dirsync.page.js');
-    var InvitePage = require('./test/e2e-protractor/pages/invite.page.js');
     var DownloadPage = require('./test/e2e-protractor/pages/download.page.js');
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
@@ -87,7 +106,6 @@ exports.config = {
     var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
-    var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
     var FirstTimeWizard = require('./test/e2e-protractor/pages/wizard.page.js');
     var ServiceSetup = require('./test/e2e-protractor/pages/servicesetup.page.js');
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
@@ -108,10 +126,13 @@ exports.config = {
     var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
     var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
     var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
+    var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
+    var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
     global.users = new UsersPage();
+    global.customers = new CustomersPage();
     global.login = new LoginPage();
     global.landing = new LandingPage();
     global.manage = new ManagePage();
@@ -120,7 +141,6 @@ exports.config = {
     global.cdr = new CdrPage();
     global.ssowizard = new SSOWizardPage();
     global.disyncwizard = new DirSyncWizardPage();
-    global.invite = new InvitePage();
     global.download = new DownloadPage();
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
@@ -128,7 +148,6 @@ exports.config = {
     global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
-    global.partner = new PartnerPage();
     global.wizard = new FirstTimeWizard();
     global.servicesetup = new ServiceSetup();
     global.roles = new RolesPage();
@@ -149,13 +168,16 @@ exports.config = {
     global.huntGroup = new HuntGroup();
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
+    global.careLandingPage = new CareLandingPage();
+    global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
 
     function initReporters(config) {
       var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+      var jenkinsSubdir = processEnvUtil.isJenkins() ? process.env.BUILD_TAG : '';
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
-          savePath: 'test/e2e-protractor/reports',
+          savePath: 'test/e2e-protractor/reports/' + jenkinsSubdir + '/run-' + processEnvUtil.getE2eRunCounter(),
           consolidateAll: false
         })
       );

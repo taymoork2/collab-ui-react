@@ -9,79 +9,45 @@
             id="closeCSVResultsModal">
             
       <span class="sr-only" 
-            translate="common.close">
-      </span>
+            translate="common.close"></span>
     </button>
     
-    <h3 class="modal-title">
+    <h3 id="siteCSVResult.modalId"
+        class="modal-title">
+        
       {{siteCSVResult.modalTitle}}
     </h3>
+  </div>
+  
+  <div class="modal-body">
+    <h4>
+      {{siteCSVResult.siteUrl}}
+    </h4>
     
-    <p>
+    <p style="font-size:25%">
       &nbsp;
     </p>
     
-    <table class="wx-table">
-      <tr class="wx-tr"
-          valign="top"
-          ng-repeat="gridRow in siteCSVResult.gridRows">
-        
-        <td class="wx-csv-modal-td"
-            width="50%">
-            
-          {{gridRow.title}}
-        </td>
-      
-        <td class="wx-td"
-            width="50%">
-            
-          <span ng-if="( gridRow.id != 'export-records-failed' ) &&
-                       ( gridRow.id != 'import-records-failed' ) &&
-                       ( gridRow.id != 'export-download-csv-file' ) &&
-                       ( gridRow.id != 'import-download-err-file' )">
-                       
-            <b>{{gridRow.value}}</b>
-          </span> 
-                         
-          <span ng-if="( gridRow.id == 'export-records-failed' ) || 
-                       ( gridRow.id == 'import-records-failed' )">
-                       
-            <span ng-if="( gridRow.value == 0 )">
-              <b>{{gridRow.value}}</b>
-            </span>
-
-            <span ng-if="( gridRow.value > 0 )">
-              <font color="red">
-                <b>{{gridRow.value}}</b>
-              </font>
-            </span>
-          </span>
-            
-          <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
-                       ( gridRow.id == 'import-download-err-file' )">
-             
-            <!-- 
-            <a href={{gridRow.fileDownloadUrl}}>
-              <font color=#049FD9>
-                {{gridRow.value}}
-              </font>
-            </a>
-            -->
-            
-            <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
-              <font color=#049FD9>
-                {{gridRow.value}}
-              </font>
-            </a>
-          </span>
-        </td>
-      </tr>
-    </table>
-    <!-- 
-    <div gridscrollbar 
-         class="gridStyle" 
-         ui-grid="siteCSVResult.gridOptions">
-    </div>
-    -->
+    <p ng-repeat="gridRow in siteCSVResult.gridRows">
+      {{gridRow.title}}&nbsp;{{gridRow.value}}
+    </p>
+    
+    <p ng-if="( 'importCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
+      <webex-csv-download type='webeximport'
+                          siteurl={{siteCSVResult.siteUrl}}
+                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
+    </p>
+  </div>
+    
+  <div class="modal-footer">
+    <span ng-if="( 'exportCompletedNoErr' == siteCSVResult.csvStatusObj.status ) || 
+                 ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
+                   
+      <webex-csv-download type='webexexport'
+                          siteurl={{siteCSVResult.siteUrl}}
+                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
+    </span>
   </div>
 </div>

@@ -13,9 +13,6 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.mockService(LogMetricsService, {});
-  });
-
-  beforeEach(function () {
     bard.mockService(Authinfo, {
       getOrgId: '1',
       getLicenses: [{
@@ -25,6 +22,14 @@ describe('Service: Trial Service:', function () {
       }, {
         'trialId': 'fake-uuid-value-2'
       }]
+    });
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond({
+      activeDeviceTrials: 17,
+      maxDeviceTrials: 20
+    });
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials' + '?customerName=searchStr').respond({
+      activeDeviceTrials: 17,
+      maxDeviceTrials: 20
     });
   });
 
@@ -40,6 +45,7 @@ describe('Service: Trial Service:', function () {
 
     beforeEach(function () {
       TrialService.getData();
+      $httpBackend.flush();
     });
 
     afterEach(function () {
@@ -130,8 +136,9 @@ describe('Service: Trial Service:', function () {
             model: 'CISCO_8865',
             quantity: 3
           }];
-          var devices = angular.fromJson(data).details.devices;
-          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]);
+          var dataJson = angular.fromJson(data);
+          var devices = dataJson.details.devices;
+          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == "Enabled deal");
         }).respond(200);
 
         TrialService.startTrial();
@@ -176,7 +183,7 @@ describe('Service: Trial Service:', function () {
     describe('start call trial with skipped devices', function () {
       beforeEach(function () {
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.skipCallTrial
+          getData: trialData.enabled.trials.skipDeviceTrial
         });
         TrialService.getData();
       });
@@ -361,6 +368,17 @@ describe('Service: Trial Service:', function () {
           fakeToday = new Date(Date.UTC(2016, 1, 1, 23, 59, 59, 999));
           fakeStartDate = new Date(Date.UTC(2016, 1, 1, 0, 0, 0, 0));
           expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+      });
+
+      describe('getTrials with customerName search string', function () {
+        it('should successfully return 17 active device trials  with customerName search', function () {
+          TrialService.getTrialsList('searchStr').then(function (response) {
+            expect(response.data.activeDeviceTrials).toBe(17);
+            expect(response.data.maxDeviceTrials).toBe(20);
+            expect(response.status).toBe(200);
+          });
+          $httpBackend.flush();
         });
       });
 

@@ -4,7 +4,9 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <div class="header-title" translate="cdrLogs.advancedCDR"></div>
+      <div class="header-title">
+        <span translate="cdrLogs.advancedCDR"></span>
+      </div>
       <div class="header-sub-info">
         <span class="user-info-1"><b translate="cdrLogs.local"></b> {{::cdrpanel.localSessionID}}</span>
       </div>
@@ -19,7 +21,7 @@
     <div class="row">
       <input type="text" class="columns medium-4 cdr-overview-controls" placeholder="{{::cdrpanel.searchPlaceholder}}" ng-model="cdrpanel.searchField"></input>
       <div class="columns medium-4 cdr-overview-controls">
-        <a class="btn btn--primary cdr-overview-button" download="cdr.json" ng-href="{{::cdrpanel.jsonUrl}}" translate="cdrLogs.cdrSave"></a>
+        <a id="cdrDownloadButton" class="btn btn-primary cdr-overview-button" download="{{::cdrpanel.filename}}" ng-href="{{::cdrpanel.jsonUrl}}" translate="cdrLogs.cdrSave" ng-click="cdrpanel.cdrClick()"></a>
         <button class="btn btn-primary cdr-overview-button" translate="cdrLogs.ladderDiagram" ng-click="cdrpanel.openLadderDiagram()"></button>
       </div>
     </div>
@@ -48,7 +50,7 @@
         <tbody>
           <tr  ng-repeat="item in cdrpanel.cdr | filter:cdrpanel.searchField">
             <td>{{::item.key}}</td>
-              <td>{{::item.value}}</td>
+            <td>{{::item.value}}</td>
           </tr>
           </tbody>
       </table>

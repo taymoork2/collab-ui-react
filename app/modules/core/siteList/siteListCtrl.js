@@ -16,7 +16,7 @@
     Notification
   ) {
 
-    var funcName = "siteListCtrl()";
+    var funcName = "SiteListCtrl()";
     var logMsg = "";
 
     var vm = this;
@@ -68,13 +68,14 @@
           conferenceService.isIframeSupported = false;
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isCSVSupported = false;
+          conferenceService.showCSVIconAndResults = false;
 
           // define the range of csv states to mock
           // list of states are in the file apiGatewayConsts.svc.js
           conferenceService.csvMock = {
             mockExport: false,
-            mockImport: true,
-            mockFileDownload: true,
+            mockImport: false,
+            mockFileDownload: false,
             mockStatus: false,
 
             // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
@@ -105,14 +106,23 @@
     vm.gridOptions.columnDefs.push({
       field: 'license.siteUrl',
       displayName: $translate.instant('siteList.siteName'),
-      sortable: false
+      sortable: false,
+      width: '25%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteConfLicenses',
       displayName: $translate.instant('siteList.licenseTypes'),
       cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '17%'
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteActions',
+      displayName: $translate.instant('siteList.siteActions'),
+      cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
+      sortable: false,
     });
 
     vm.gridOptions.columnDefs.push({
@@ -121,15 +131,16 @@
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
       headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
       sortable: false,
-      width: '30%'
+      width: '25%'
     });
 
+    /*
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
       displayName: $translate.instant('siteList.siteSettings'),
       cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
       sortable: false,
-      width: '10%'
+      width: '9%'
     });
 
     vm.gridOptions.columnDefs.push({
@@ -137,8 +148,9 @@
       displayName: $translate.instant('siteList.siteReports'),
       cellTemplate: 'modules/core/siteList/siteReportsColumn.tpl.html',
       sortable: false,
-      width: '10%'
+      width: '9%'
     });
+    */
 
     // make sure that we have the signed in admin user email before we update the columns
     if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
@@ -156,17 +168,17 @@
     }
 
     $scope.csvExport = function (siteRow) {
-      var funcName = "csvExport()";
+      var funcName = "SiteListCtrl.csvExport()";
       var logMsg = "";
       var siteUrl = siteRow.license.siteUrl;
 
       logMsg = funcName + "\n" +
         "siteRow=" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+      // $log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
-      //$log.log(logMsg);
+      // $log.log(logMsg);
 
       WebExApiGatewayService.csvExport(
         siteUrl,
@@ -174,48 +186,31 @@
       ).then(
 
         function success(response) {
-          var funcName = "WebExApiGatewayService.csvExport.success()";
-          var logMsg = "";
-
-          $log.log(logMsg);
-
           Notification.success($translate.instant('siteList.exportStartedToast'));
-          SiteListService.updateCSVColumnInRow(siteRow);
+
+          SiteListService.updateCSVStatusInRow(siteRow);
         },
 
         function error(response) {
-          var funcName = "WebExApiGatewayService.csvExport.error()";
-          var logMsg = "";
+          Notification.error($translate.instant('siteList.csvRejectedToast-' + response.errorCode));
 
-          $log.log(logMsg);
-
-          //TBD: Actual error result handling
-          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVStatusInRow(siteRow);
         }
       ).catch(
         function catchError(response) {
-          var funcName = "WebExApiGatewayService.csvExport.catchError()";
+          var funcName = "SiteListCtrl.csvExport().catchError()";
           var logMsg = "";
 
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           Notification.error($translate.instant('siteList.exportRejectedToast'));
-          SiteListService.updateCSVColumnInRow(siteRow);
+
+          SiteListService.updateCSVStatusInRow(siteRow);
         }
       ); // WebExApiGatewayService.csvExport()
-
     }; // csvExport()
-
-    // TODO: remove csvImport() once we start implementing the import modal
-    $scope.csvImport = function (siteUrl) {
-      var funcName = "csvImport()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-
-      $log.log(logMsg);
-    }; // csvImport()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
@@ -227,7 +222,7 @@
           if (null != siteRow.csvPollIntervalObj) {
             logMsg = funcName + "\n" +
               "siteUrl=" + siteRow.license.siteUrl;
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);
           }

@@ -8,15 +8,6 @@ describe('Partner flow', function () {
   var accessToken;
   var appWindow;
 
-  beforeEach(function () {
-    log.verbose = true;
-  });
-
-  afterEach(function () {
-    log.verbose = false;
-    utils.dumpConsoleErrors();
-  });
-
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
@@ -72,7 +63,9 @@ describe('Partner flow', function () {
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
-      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
+      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
+      utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -84,6 +77,7 @@ describe('Partner flow', function () {
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
@@ -92,7 +86,7 @@ describe('Partner flow', function () {
       });
     }, LONG_TIMEOUT);
 
-    it('should edit an exisiting trial', function () {
+    xit('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -176,6 +170,7 @@ describe('Partner flow', function () {
     it('Should close customer portal', function () {
       browser.close();
       browser.switchTo().window(appWindow);
+      browser.refresh();
     });
 
   }, LONG_TIMEOUT);
@@ -209,29 +204,10 @@ describe('Partner flow', function () {
   });
 
   describe('Partner landing page reports', function () {
-
     it('should show the reports', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
       utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-
-    it('should show active users chart', function () {
-      utils.click(partner.activeUsersTab);
-      utils.expectIsDisplayed(partner.activeUsersChart);
-      utils.expectIsDisplayed(partner.activeUsersCount);
-    });
-
-    it('should show average calls chart', function () {
-      utils.click(partner.averageCallsTab);
-      utils.expectIsDisplayed(partner.averageCallsChart);
-      utils.expectIsDisplayed(partner.averageCallsCount);
-    });
-
-    it('should show content shared chart', function () {
-      utils.click(partner.contentSharedTab);
-      utils.expectIsDisplayed(partner.contentSharedChart);
-      utils.expectIsDisplayed(partner.contentSharedCount);
     });
   });
 });

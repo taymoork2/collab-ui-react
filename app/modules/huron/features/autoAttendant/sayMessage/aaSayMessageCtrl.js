@@ -31,6 +31,7 @@
       label: '',
       value: ''
     };
+
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
 
     vm.menuEntry = {};
@@ -56,7 +57,6 @@
     vm.isMessageInputOnly = isMessageInputOnly;
 
     /////////////////////
-
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
       setVoiceOption();
@@ -101,7 +101,7 @@
 
     function populateUiModel() {
       vm.messageInput = vm.actionEntry.getValue();
-      vm.languageOptions = AALanguageService.getLanguageOptions();
+      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), properties.LABEL);
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.actionEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.actionEntry.getVoice());

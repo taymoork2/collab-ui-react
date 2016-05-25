@@ -66,7 +66,8 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
+
+  return utils.sendRequest(options).then(function (result) {
     return 200;
   });
 };
@@ -86,7 +87,7 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 
   var ceId = exports.extractUUID(aaUrl);
 
-  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['huron-int1'].org + '/features/autoattendants/' + ceId + '/numbers';
+  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['aa-admin'].org + '/features/autoattendants/' + ceId + '/numbers';
 
   var options = {
     method: 'delete',
@@ -96,15 +97,32 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
-    return 204;
+
+  return utils.sendRequest(options).then(function (result) {
+    return 200;
   });
 };
 
 // Save the test AA name here, this is also accessed from
 // auto-attendant_spec.js
 exports.testAAName = 'AA for Atlas e2e Tests';
-// deleteTestAA - Delete the Test AA via the CES API
+exports.testAAImportName = 'AA for Atlas e2e Import Tests';
+
+// deleteTestAA - Delete a single AA via the CES API
+//
+// bearer - token with access to our API
+// aaUrl - the AA URL
+exports.deleteTestAA = function (bearer, aaUrl) {
+
+  var aaDeleteTasks = [];
+
+  aaDeleteTasks.push(exports.deleteAutoAttendant(aaUrl, bearer));
+  aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
+  aaDeleteTasks.push(exports.deleteTestSchedule(aaUrl, bearer));
+  return Promise.all(aaDeleteTasks);
+}
+
+// deleteTestAAs - Delete the Test AAs via the CES API
 //
 // Check all of the autoattendants eturned for this
 // customer and if our test one is there send it to
@@ -114,18 +132,19 @@ exports.testAAName = 'AA for Atlas e2e Tests';
 //
 // bearer - token with access to our API
 // data - query results from our CES GET API
-exports.deleteTestAA = function (bearer, data) {
-
+exports.deleteTestAAs = function (bearer, data) {
+  var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
-    if (data[i].callExperienceName === this.testAAName) {
+    var AAsToDelete = [];
 
-      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
-
-        return exports.deleteNumberAssignments(data[i].callExperienceURL, bearer);
-
-      });
+    if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
+      AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
+
   }
+
+  return Promise.all(AAsToDelete);
+
 };
 
 //
@@ -134,10 +153,10 @@ exports.deleteTestAA = function (bearer, data) {
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
 
-  helper.getBearerToken('huron-int1')
+  helper.getBearerToken('aa-admin')
     .then(function (bearer) {
       var options = {
-        url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
+        url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
           Authorization: 'Bearer ' + bearer
         }
@@ -156,8 +175,47 @@ exports.findAndDeleteTestAA = function () {
           }
         });
       return defer.promise.then(function (data) {
-        return exports.deleteTestAA(bearer, data);
+        return exports.deleteTestAAs(bearer, data);
       });
 
+    });
+};
+
+//deleteSchedules - Delete schedules ccreated in last test run
+// Called by deleteTestAA below.
+exports.deleteSchedules = function (scheduleUrl, token) {
+  var options = {
+    method: 'delete',
+    url: scheduleUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  return utils.sendRequest(options).then(function (results) {
+    return 200;
+  });
+};
+
+/**
+ *This will delete the  required schedule
+ */
+exports.deleteTestSchedule = function (aaUrl, token) {
+  var options = {
+    method: 'get',
+    url: aaUrl,
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  request(options,
+    function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var scheduleId = JSON.parse(body).scheduleId;
+        if (scheduleId !== undefined) {
+          var scheduleUrl = config.getAutoAttendantsSchedulesUrl(helper.auth['aa-admin'].org, scheduleId);
+          return exports.deleteSchedules(scheduleUrl, token);
+        }
+      }
     });
 };

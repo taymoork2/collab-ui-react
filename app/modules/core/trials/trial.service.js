@@ -20,6 +20,8 @@
 
     var service = {
       getTrial: getTrial,
+      getTrialsList: getTrialsList,
+      getDeviceTrialsLimit: getDeviceTrialsLimit,
       editTrial: editTrial,
       startTrial: startTrial,
       getData: getData,
@@ -41,11 +43,29 @@
       }).$promise;
     }
 
+    function getTrialsList(searchText) {
+      return $http.get(trialsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
+    }
+
+    function getDeviceTrialsLimit() {
+      return service.getTrialsList().then(function (response) {
+        return {
+          activeDeviceTrials: response.data.activeDeviceTrials,
+          maxDeviceTrials: response.data.activeDeviceTrialsLimit
+        };
+      });
+    }
+
     function editTrial(custId, trialId) {
       var data = _trialData;
       var trialData = {
         customerOrgId: custId,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         details: _getDetails(data),
         offers: _getOffers(data)
       };
@@ -67,6 +87,7 @@
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
         offers: _getOffers(data)
@@ -191,6 +212,7 @@
         customerName: '',
         customerEmail: '',
         licenseDuration: 90,
+        dealId: '',
         licenseCount: 100
       };
 
@@ -206,6 +228,8 @@
           pstnTrial: TrialPstnService.getData()
         },
       };
+
+      _trialData.trials.deviceTrial.limitsPromise = service.getDeviceTrialsLimit();
 
       return _trialData;
     }

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
+  var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification, SSOService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -16,6 +16,8 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   beforeEach(module('Core'));
 
+  beforeEach(installPromiseMatchers);
+
   beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_, _SparkDomainManagementService_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
@@ -26,6 +28,12 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     Notification = _Notification_;
     $q = _$q_;
 
+    $scope.wizard = {
+      nextTab: sinon.stub()
+    };
+
+    spyOn($scope.wizard, 'nextTab');
+
     SparkDomainManagementService.checkDomainAvailability = jasmine.createSpy().and.returnValue($q.when({
       data: {
         isDomainAvailable: true,
@@ -33,7 +41,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       }
     }));
 
-    SparkDomainManagementService.addSipUriDomain = jasmine.createSpy().and.returnValue($q.when({
+    SparkDomainManagementService.addSipDomain = jasmine.createSpy().and.returnValue($q.when({
       data: {
         isDomainAvailable: false,
         isDomainReserved: true
@@ -55,6 +63,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   function initController() {
     controller = $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
+      $rootScope: rootScope,
       Authinfo: authInfo
     });
 
@@ -68,7 +77,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       expect(controller).toBeDefined();
     });
     it('should call the Orgservice and set the displayName', function () {
-      expect($scope.cloudSipUriField.inputValue).not.toBe('');
+      expect($scope.cloudSipDomainField.inputValue).not.toBe('');
     });
   });
 
@@ -76,7 +85,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     beforeEach(function () {
       Orgservice.getOrg.and.callFake(function (callback, status) {
         callback({
-          verifiedDomains: ['AtlasTestSipUri.com', 'AtlasTest.com'],
+          verifiedDomains: ['AtlasTestSipDomain.com', 'AtlasTest.com'],
           orgSettings: {}
         }, 200);
       });
@@ -84,7 +93,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('should set displayName using the verifiedDomains from response', function () {
-      expect($scope.cloudSipUriField.inputValue).toBe('atlastestsipuri');
+      expect($scope.cloudSipDomainField.inputValue).toBe('atlastestsipdomain');
     });
   });
 
@@ -101,44 +110,111 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
   });
 
-  describe('test if checkSipUriAvailability function sets isUrlAvailable to true', function () {
+  describe('test if checkSipDomainAvailability function sets isUrlAvailable to true', function () {
     beforeEach(initController);
 
-    it('should check if checkSipUriAvailability in success state sets isUrlAvailable to true ', function (done) {
-      $scope.cloudSipUriField.inputValue = 'shatest1';
-      $scope.checkSipUriAvailability().then(function () {
-        expect($scope.cloudSipUriField.isUrlAvailable).toEqual(true);
-        expect(SparkDomainManagementService.checkDomainAvailability).toHaveBeenCalledWith($scope.cloudSipUriField.inputValue);
+    it('should check if checkSipDomainAvailability in success state sets isUrlAvailable to true ', function (done) {
+      $scope.cloudSipDomainField.inputValue = 'shatest1';
+      $scope.checkSipDomainAvailability().then(function () {
+        expect($scope.cloudSipDomainField.isUrlAvailable).toEqual(true);
+        expect(SparkDomainManagementService.checkDomainAvailability).toHaveBeenCalledWith($scope.cloudSipDomainField.inputValue);
         done();
       });
       $scope.$apply();
     });
 
     it('should disable the field and clear error on the field validation', function () {
-      $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isConfirmed = true;
+      $scope.cloudSipDomainField.isUrlAvailable = true;
+      $scope.cloudSipDomainField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
-      expect($scope.cloudSipUriField.isError).toEqual(false);
-      expect($scope.cloudSipUriField.isDisabled).toEqual(true);
+      expect($scope.cloudSipDomainField.isError).toEqual(false);
+      expect($scope.cloudSipDomainField.isDisabled).toEqual(true);
     });
 
-    it('should check if checkSipUriAvailability in success state is set to false ', function () {
-      $scope.cloudSipUriField.inputValue = 'amtest2';
-      $scope.checkSipUriAvailability();
-      expect($scope.cloudSipUriField.isUrlAvailable).toEqual(false);
+    it('should check if checkSipDomainAvailability in success state is set to false ', function () {
+      $scope.cloudSipDomainField.inputValue = 'amtest2';
+      $scope.checkSipDomainAvailability();
+      expect($scope.cloudSipDomainField.isUrlAvailable).toEqual(false);
     });
   });
 
-  describe('test if addSipUriDomain errors gracefully', function () {
+  describe('test the ssoEnabled settings', function () {
+    beforeEach(initController);
+
+    it('should set ssoEnabled field to true in the scope', function () {
+      rootScope.ssoEnabled = true;
+      $scope.updateSSO();
+      $scope.$apply();
+      expect($scope.ssoEnabled).toEqual(true);
+    });
+
+    it('should set ssoEnabled field to false in the scope', function () {
+      rootScope.ssoEnabled = false;
+      $scope.updateSSO();
+      $scope.$apply();
+      expect($scope.ssoEnabled).toEqual(false);
+    });
+
+    it('should go to next tab if sso is on and user clicks on next without clicking modify', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = false;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+    });
+
+    it('should go to next tab if sso is on and user clicks modify and switches from advanced to simple', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = true;
+      $scope.options.deleteSSOBySwitchingRadio = true;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+      //modify flag should be reset
+      expect($scope.options.modifySSO).toEqual(false);
+    });
+
+    it('should go to next step if sso is on and user clicks modify and clicks next without switching from advanced to simple', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = true;
+      $scope.options.deleteSSOBySwitchingRadio = false;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeResolved();
+      expect($scope.options.modifySSO).toEqual(false);
+    });
+
+    it('should go to next tab if sso is off and user selects simple option', function () {
+      $scope.ssoEnabled = false;
+      $scope.options.configureSSO = 1;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+    });
+
+    it('should go to next step if sso is off and user selects advanced option', function () {
+      $scope.ssoEnabled = false;
+      $scope.options.configureSSO = 0;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeResolved();
+    });
+
+  });
+
+  describe('test if addSipDomain errors gracefully', function () {
     beforeEach(function () {
-      SparkDomainManagementService.addSipUriDomain.and.returnValue($q.reject());
+      SparkDomainManagementService.addSipDomain.and.returnValue($q.reject());
       initController();
     });
 
-    it('addSipUriDomain should error gracefully', function () {
-      $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isConfirmed = true;
+    it('addSipDomain should error gracefully', function () {
+      $scope.cloudSipDomainField.isUrlAvailable = true;
+      $scope.cloudSipDomainField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect(Notification.error).toHaveBeenCalled();
@@ -149,7 +225,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     beforeEach(initController);
 
     it('checkRoomLicense should set Room license to true', function () {
-      expect($scope.cloudSipUriField.isRoomLicensed).toEqual(true);
+      expect($scope.cloudSipDomainField.isRoomLicensed).toEqual(true);
     });
   });
 
@@ -164,7 +240,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('checkRoomLicense should set Room license to false', function () {
-      expect($scope.cloudSipUriField.isRoomLicensed).toEqual(false);
+      expect($scope.cloudSipDomainField.isRoomLicensed).toEqual(false);
     });
   });
 });

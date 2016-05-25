@@ -5,7 +5,7 @@
     .module('wx2AdminWebClientApp')
     .run(wx2AdminWebClientApp);
 
-  function wx2AdminWebClientApp($location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState, Localytics, TrackingId, $animate) {
+  function wx2AdminWebClientApp($location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $window, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState, Localytics, TrackingId, $animate) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -38,6 +38,9 @@
           if (!Authinfo.isAllowedState(to.name)) {
             e.preventDefault();
             $state.go('unauthorized');
+          } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+            e.preventDefault();
+            $state.go('firsttimewizard');
           }
         } else {
           e.preventDefault();
@@ -65,18 +68,17 @@
 
     if (!Storage.get('accessToken')) {
       var params;
-      if (document.URL.indexOf('access_token') !== -1) {
-        params = getFromGetParams(document.URL);
+      if ($window.document.URL.indexOf('access_token') !== -1) {
+        params = getFromGetParams($window.document.URL);
         $rootScope.status = 'loaded';
         Storage.put('accessToken', params.access_token);
-      } else if (document.URL.indexOf('code') !== -1) {
-        params = getFromStandardGetParams(document.URL);
+      } else if ($window.document.URL.indexOf('code') !== -1) {
+        params = getFromStandardGetParams($window.document.URL);
         $rootScope.status = 'loading';
         Auth.getNewAccessToken(params)
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
-            Storage.put('refreshToken', token);
             $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
           }, function () {
             Auth.redirectToLogin();
@@ -145,13 +147,17 @@
 
     function getMinLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMinLength', {
-        min: scope.options.templateOptions.minlength
+        min: function () {
+          return scope.options.templateOptions.minlength;
+        }
       });
     }
 
     function getMaxLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMaxLength', {
-        max: scope.options.templateOptions.maxlength
+        max: function () {
+          return scope.options.templateOptions.maxlength;
+        }
       });
     }
 
@@ -188,5 +194,4 @@
       return result;
     }
   }
-
 }());

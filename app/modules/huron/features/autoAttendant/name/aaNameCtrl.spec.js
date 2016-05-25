@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: aaBuilderNameCtrl', function () {
-  var controller, Notification, AutoAttendantCeService;
+  var controller, AANotificationService, AutoAttendantCeService;
   var AAModelService, AutoAttendantCeInfoModelService;
   var $rootScope, $scope, $q, $translate, $stateParams;
 
@@ -43,7 +43,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _Notification_,
+  beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
@@ -57,7 +57,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
-    Notification = _Notification_;
+    AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
@@ -78,8 +78,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
     beforeEach(function () {
       saveCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(Notification, 'error');
-      spyOn(Notification, 'success');
+      spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'success');
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
@@ -136,16 +136,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
     });
     **** */
 
-    it('should have called setCeInfo', function () {
-
-      controller.name = rawCeInfo.callExperienceName;
-
-      controller.saveUiModel();
-
-      $scope.$apply();
-
-      expect(AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalled();
-    });
   });
 
 });

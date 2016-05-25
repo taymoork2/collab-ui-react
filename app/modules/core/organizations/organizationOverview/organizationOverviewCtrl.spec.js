@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: organizationOverviewCtrl', function () {
-  var controller, rootScope, $scope, $stateParams, Config, Orgservice, $q, $controller, Notification;
+  var controller, rootScope, $scope, Config, Orgservice, $q, $controller, Notification;
   var adminServicesJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
 
   var authInfo = {
@@ -14,7 +14,7 @@ describe('Controller: organizationOverviewCtrl', function () {
 
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $stateParams, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     Orgservice = _Orgservice_;
@@ -22,7 +22,6 @@ describe('Controller: organizationOverviewCtrl', function () {
     $controller = _$controller_;
     Notification = _Notification_;
     $q = _$q_;
-    $stateParams = $stateParams;
 
     Orgservice.getEftSetting = jasmine.createSpy().and.returnValue($q.when({
       data: {
@@ -40,10 +39,14 @@ describe('Controller: organizationOverviewCtrl', function () {
   }));
 
   function initController() {
-    _.set($stateParams, 'currentOrganization.id', '1');
     controller = $controller('OrganizationOverviewCtrl', {
       $scope: $scope,
-      Authinfo: authInfo
+      Authinfo: authInfo,
+      $stateParams: {
+        currentOrganization: {
+          id: 1
+        }
+      }
     });
 
     $scope.$apply();

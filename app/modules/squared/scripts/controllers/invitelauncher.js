@@ -1,30 +1,23 @@
-'use strict';
+(function () {
+  'use strict';
 
-/**
- * @ngdoc function
- * @name wx2AdminWebClientApp.controller:InvitelauncherCtrl
- * @description
- * # InvitelauncherCtrl
- * Controller of the wx2AdminWebClientApp
- */
-angular.module('Squared')
-  .controller('InvitelauncherCtrl', ['$window', 'ipCookie', 'Log', 'UrlConfig',
-    function ($window, ipCookie, Log, UrlConfig) {
+  angular
+    .module('Squared')
+    .controller('InvitelauncherCtrl', InvitelauncherCtrl);
 
-      var redirect = function () {
-
-        // check if cookie exists.
-        var cookieName = 'invdata';
-        var inviteCookie = ipCookie(cookieName);
-
-        //console.log('cookie:');
-        //console.log(inviteCookie);
-
-        // launch app with URL: squared://invitee/?invdata=inviteCookie
-        var redirectUrl = UrlConfig.getSquaredAppUrl() + 'invitee/?invdata=' + JSON.stringify(inviteCookie);
-        $window.location.href = redirectUrl;
-      };
-      redirect();
-    }
-
-  ]);
+  /* @ngInject */
+  function InvitelauncherCtrl($cookies, $timeout, UrlConfig, WindowLocation, Localytics) {
+    // Note: only keep $timeout and Localytics until we gathered enough data usage
+    Localytics.tagEvent('Display /invitelauncher', {
+      inviteCookie: !!$cookies.getObject(cookieName)
+    });
+    // check if cookie exists.
+    var cookieName = 'invdata';
+    var inviteCookie = $cookies.getObject(cookieName) || '';
+    // launch app with URL: squared://invitee/?invdata=inviteCookie
+    var redirectUrl = UrlConfig.getSquaredAppUrl() + 'invitee/?invdata=' + JSON.stringify(inviteCookie);
+    $timeout(function () {
+      WindowLocation.set(redirectUrl);
+    }, 2000);
+  }
+})();

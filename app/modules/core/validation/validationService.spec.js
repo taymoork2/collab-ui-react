@@ -41,4 +41,13 @@ describe('Service: ValidationService', function () {
     });
   });
 
+  describe('Max Number 100', function () {
+    it('should reject 101 as invalid', function () {
+      expect(ValidationService.maxNumber100(101)).toBe(false);
+    });
+    it('should accept 100 as valid', function () {
+      expect(ValidationService.maxNumber100(100)).toBe(true);
+    });
+  });
+
 });

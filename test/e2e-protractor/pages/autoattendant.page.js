@@ -6,6 +6,7 @@ var AutoAttendantPage = function () {
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
+  this.openClosedAA = element(by.css('.icon-BusinessHours'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -13,12 +14,16 @@ var AutoAttendantPage = function () {
   this.saveButton = element(by.name('saveButton'));
   this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+  this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+  this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
 
   this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
+
+  this.lanesWrapper = element(by.css('div.aa-lanes-wrapper'));
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
@@ -30,12 +35,13 @@ var AutoAttendantPage = function () {
   this.sayMessageVoice = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.sayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
-  this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
+  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
+  this.phoneMenuSay = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
   this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.phonesayMessageVoice = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
-  this.phonesayMessageVoiceOptions = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
+  this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.css('.icon-plus-circle'));
@@ -48,8 +54,12 @@ var AutoAttendantPage = function () {
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
 
-  this.addStep = element.all(by.css('div.aa-panel-round')).first();
+  this.addStepFirst = element.all(by.css('div.aa-panel-round')).first();
   this.addStepLast = element.all(by.css('div.aa-panel-round')).last();
+
+  this.addStep = function addStep(n) {
+    return element.all(by.css('div.aa-panel-round')).get(n);
+  }
 
   this.newStep = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
@@ -87,14 +97,10 @@ var AutoAttendantPage = function () {
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
 
-  // since we added a Phone Menu via Add New Step, there should be more than 1 from now on.
-  // Get them all so we can check:
-  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
-
-  this.phoneSayMessageLanguageFirst = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
+  this.phoneSayMessageLanguageFirst = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
 
   // let's select galician (10th selection starting from 0 == 9) for a change of pace
-  this.phoneLanguageDropDownOptionsTenth = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(9);
+  this.phoneLanguageDropDownOptionsTenth = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(9);
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
@@ -113,25 +119,86 @@ var AutoAttendantPage = function () {
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
-  this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
+  this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
   this.addholiday = element(by.css('#addHoliday'));
+  this.deleteHoliday = element(by.name('aaScheduleModalCtrl.holidaysForm')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));
-  this.selectdate = element(by.css('.calendar span:nth-child(5) .day'));
+  this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
+  this.recurAnnually = element(by.name('recurAnnually1'));
+  this.exactDate = element(by.name('exactDate1'));
+  this.selectEvery = element(by.css('div.content.active')).element(by.css('select[name="month"] + div a.select-toggle'));
+  this.selectEveryJanuary = element(by.css('div.content.active')).element(by.css('select[name="month"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectRank = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div a.select-toggle'));
+  this.selectRankFirst = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectDay = element(by.css('div.content.active')).element(by.css('select[name="day"] + div a.select-toggle'));
+  this.selectDayMonday = element(by.css('div.content.active')).element(by.css('select[name="day"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectdate = element(by.css('.calendar span:nth-child(15) .day'));
   this.date = element(by.css('cs-datepicker input'));
-  this.starttime = element(by.id('starttime'));
-  this.endtime = element(by.id('endtime'));
+  this.starttime = element(by.id('starttime0'));
+  this.endtime = element(by.id('endtime0'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
+  this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
+  this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));
+  this.day4 = element(by.cssContainingText('cs-checkbox', 'Thursday'));
+  this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
+  this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
+  this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
+  this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
+  this.modalcancel = element(by.id('cancelDeleteFeature'));
+  this.scheduleCloseButton = element(by.css('.modal-header button.close'));
+
+  this.openHoursLane = element(by.name('openLane')).element(by.name('openHours'));
+  this.openHoursSayMessage = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.openHoursPhoneMenu = element(by.name('openLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.openHoursEndCall = element(by.name('openLane')).element(by.name('endCall'));
+  this.selectOpenHoursBox = element(by.name('openHours'));
+  this.selectHolidayHoursBox = element(by.name('holidays'));
+  this.selectOpenCloseBar = element(by.name('hours-subtitle'));
+  this.selectHolidaysBar = element(by.name('holidays-subtitle'));
+  this.closedHoursLane = element(by.name('closedLane')).element(by.name('closedHours'));
+  this.closedHoursSayMessage = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.closedHoursPhoneMenu = element(by.name('closedLane')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.closedHoursEndCall = element(by.name('closedLane')).element(by.name('endCall'));
+  this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
+  this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
+  this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
+  this.importSchedule = element(by.id('importSchedule'));
+  this.importContinue = element(by.id('importCtn'));
+  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Copy Schedule'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
+  this.assertImportSuccess = assertImportSuccess;
+  this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
+  this.assertDeleteSuccess = assertDeleteSuccess;
+  this.scrollIntoView = scrollIntoView;
 
-  function assertUpdateSuccess() {
-    notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+  function assertUpdateSuccess(test) {
+    notifications.assertSuccess(test + ' updated successfully');
   }
 
-  function assertCreateSuccess() {
-    notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
+  function assertCreateSuccess(test) {
+    notifications.assertSuccess(test + ' created successfully');
+  }
+
+  function assertImportSuccess(hours, holidays) {
+    notifications.assertSuccess("Copied " + hours + " Open Hours and " + holidays + " Holidays Successfully");
+  }
+
+  function assertCalendarUpdateSuccess(test) {
+    notifications.assertSuccess('Calendar for ' + test + ' updated successfully');
+  }
+
+  function assertDeleteSuccess(test) {
+    notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
+  }
+
+  function scrollIntoView(el) {
+    var webel = el.getWebElement();
+    browser.executeScript(function (e) {
+      e.scrollIntoView();
+    }, webel);
   }
 
 };

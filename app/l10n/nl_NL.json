@@ -9,25 +9,28 @@
     "assignServices": "Services toewijzen",
     "assignDnAndDirectLines": "Nummers Toewijzen",
     "inviteModalBtn": "Gebruikers toevoegen",
-    "manageUsers": "Gebruikers",
+    "pageTitle": "Gebruikers",
     "subTitleAdd": "Gebruikers beheren",
     "subTitleEnable": "Gebruikers machtigen",
     "email": "E-mailadres",
     "clear": "Wissen",
     "add": "Gebruikers toevoegen",
     "entitle": "Machtigen",
+    "invitePending": "Uitnodiging in behandeling",
+    "inviteMsg": "Gebruikersservices zijn in behandeling en worden hier weergegeven wanneer de gebruiker zijn/haar account activeert",
+    "resendInvitation": "Uitnodiging opnieuw verzenden",
     "firstnameHeader": "Voornaam",
     "lastnameHeader": "Achternaam",
     "displayNameHeader": "Weergavenaam",
     "emailHeader": "E-mailadres",
-    "sipUri": "SIP-URI van de cloud",
+    "sipUri": "SIP-adres Spark",
     "actionHeader": "Acties",
     "invite": "Uitnodigingen versturen",
     "addedHeader": "TOEGEVOEGD",
     "statusHeader": "STATUS/TOOLS",
     "modify": "Wijzigen",
     "existingUsers": "Bestaande gebruikers",
-    "userInput": "Voer door komma's gescheiden e-mailadressen of groepmailers in.",
+    "userInput": "Voer door komma's gescheiden e-mailadressen in.",
     "userInputDescription": "Bijvoorbeeld: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "firstNamePlaceHolder": "Voornaam",
     "lastNamePlaceHolder": "Achternaam",
@@ -39,6 +42,7 @@
     "duplicateDnFound": "Dubbel intern toestelnummer ingevoerd.",
     "duplicateDidFound": "Dubbele rechtstreekse lijn ingevoerd.",
     "noUsersInput": "Er zijn geen gebruikers ingevoerd.",
+    "userGettingCount": "Gebruikers worden geteld",
     "csvBtnTitle": "Exporteren naar CSV",
     "csvBtnExportingTitle": "Wordt geëxporteerd",
     "csvFilename": "geëxporteerde_gebruikers.csv",
@@ -59,6 +63,10 @@
     "all": "Alles",
     "administrators": "Beheerders",
     "inviteUsers": "Gebruikers toevoegen",
+    "manageUsers": "Gebruikers beheren",
+    "exportUserList": "Gebruikerslijst exporteren",
+    "importUserList": "Gebruikerslijst importeren",
+    "viewLastImport": "Laatste import weergeven",
     "partners": "Partnerbeheerders",
     "deleteUser": "Gebruiker verwijderen",
     "deleteUserConfText": "Weet u zeker dat u {{email}} wilt verwijderen?",
@@ -68,12 +76,14 @@
     "resend": "Uitnodiging opnieuw verzenden",
     "resendActivation": "Activering opnieuw versturen",
     "deleteUserSuccess": "Gebruiker {{email}} is verwijderd",
-    "deleteUserError": "Fout bij het verwijderen van de gebruiker. Status: {{status}}.",
+    "deleteUserError": "Fout bij het verwijderen van de gebruiker.",
     "onboardSuccess": "{email} is geÃ¯ntegreerd",
     "onboardError": "{{email}} is niet geÃ¯ntegreerd. Status: {{status}}.",
     "ciscoucError": "De gespreksservice is niet geïntegreerd in {{email}}.",
     "messageError": "Bericht: {{message}}",
     "userListError": "Fout bij het ophalen van de lijst met gebruikers. Probeer de pagina opnieuw te laden.",
+    "hybridServicesError": "Kan deze bewerking niet uitvoeren voor sommige gebruikers. Hybride services zijn beschikbaar voor gelicentieerde gebruikers. Controleer de licenties van uw gebruikers en probeer het opnieuw.",
+    "hybridServicesComboError": "U hebt een combinatie van services gekozen (Gespreksservices en Spark-gesprek) die niet wordt ondersteund. Verwijder een van de services en probeer het opnieuw.",
     "searchUser": "Een gebruiker zoeken",
     "tooManyUsers": "De gebruikerslijst wordt niet weergegeven, omdat er meer dan 1000 gebruikers zijn",
     "emailSuccess": "De e-mail is met succes verzonden.",
@@ -93,7 +103,8 @@
     "steeringDigitOverlapWarning": "Het eerste cijfer van de internationale extensie overlapt met het cijfer voor uitgaand kiezen ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Er zijn te veel zoekresultaten gevonden. Verfijn uw zoekcriteria.",
     "userExistsError": "Gebruiker {{email}} bestaat al. Gebruik de conversieoptie op de pagina Overzicht om de gebruiker over te zetten naar uw organisatie. Als de gebruiker niet kan worden geconverteerd, verzendt u een probleemrapport.",
-    "claimedDomainError": "{{email}} kan niet worden toegevoegd. Gebruikersdomein moet gelijk zijn aan een van de geclaimde domeinen van uw organisaties, of, als uw bedrijf geen domein heeft geclaimd, moet het domein niet zijn geclaimd door een andere organisatie."
+    "claimedDomainError": "{{email}} kan niet worden toegevoegd. Gebruikersdomein moet gelijk zijn aan een van de geclaimde domeinen van uw organisaties, of, als uw bedrijf geen domein heeft geclaimd, moet het domein niet zijn geclaimd door een andere organisatie.",
+    "userExistsInDiffOrgError": "{{email}} kan niet worden toegevoegd. De gebruiker bestaat al in een andere organisatie."
   },
   "groupsPage": {
     "manageGroups": "Groepen",
@@ -109,7 +120,7 @@
     "cancel": "Annuleren",
     "clear": "Wissen",
     "addUserText": "Wie wilt u toevoegen?",
-    "userInput": "Voer door komma's gescheiden e-mailadressen of groepmailers in.",
+    "userInput": "Voer door komma's gescheiden e-mailadressen in.",
     "enableServiceText": "Services inschakelen",
     "enableCollab": "Samenwerkingsservices afzonderlijk inschakelen",
     "enableCollabGroup": "Samenwerkingsservices inschakelen op basis van groepslidmaatschap",
@@ -149,7 +160,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communicatie",
     "cloudExtensions": "Hybride services",
-    "cmr": "Samenwerkingsvergaderruimte",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "rechten toegekend",
       "404": "bestaat niet",
@@ -173,6 +184,7 @@
     "fullAdmin": "Volledig beheer",
     "generateActivationCode": "Activeringscode genereren",
     "generateActivationCodeText": "Genereer een activeringscode om een nieuw apparaat in te schakelen voor deze gebruiker.",
+    "generateActivationCodeDesc": "Als u uw code bent kwijtgeraakt, genereert u een nieuwe activeringscode of neemt u contact op met de klantenservice. ",
     "activationCodeTitle": "Activeringscode",
     "expires": "Vervalt",
     "editServices": "Services bewerken",
@@ -211,7 +223,7 @@
     "fusionDetailsTabDesc": "Connectorbeheer",
     "huronLineDetailsTab": "Bellen",
     "huronLineDetailsTabDesc": "Nummers en instellingen",
-    "MediafusionDetailsTab": "Mediaservicebeheer",
+    "MediafusionDetailsTab": "Hybride services: media",
     "MediafusionDetailsTabDesc": "Mediaservicebeheer",
     "callRoutingTab": "Gespreksomleiding",
     "callRoutingTabDesc": "Beheer functies voor gespreksomleiding, zoals 'Gesprek parkeren'",
@@ -312,6 +324,8 @@
     "onehundredeightyDays": "180",
     "numberOfLicenses": "Aantal licenties",
     "invalidOrganizationLicenseCount": "U dient meer dan 0 en minder dan 1000 licenties te selecteren.",
+    "isEFT": "EFT ingeschakeld?",
+    "eftError": "Kan EFT-service niet bereiken",
     "organizationInformation": "Gegevens van organisatie",
     "createOrganization": "Organisatie maken",
     "cancel": "Annuleren",
@@ -362,13 +376,17 @@
     "saveAs": "Opslaan als",
     "allCalls": "Alle gesprekken",
     "videoCalls": "Videogesprekken",
-    "audioCalls": "Alleen-audiogesprekken"
+    "audioCalls": "Alleen-audiogesprekken",
+    "customer": "Klant",
+    "customers": "Klanten",
+    "customerSelect": "Een klant selecteren",
+    "trackingId": "Traceer-id: "
   },
   "activeUsers": {
     "active": "Actief",
     "activeUsers": "Actieve gebruikers",
     "overallActiveUserGraphError": "Er is een fout opgetreden tijdens het laden van de gedetailleerde gegevens over de actieve gebruikers.",
-    "activeUserTableError": "Er is een fout opgetreden bij het laden van de gegevens van de meest actieve gebruikers voor {{customer}}.",
+    "activeUserTableError": "Er is een fout opgetreden bij het laden van de gegevens van de meest actieve gebruikers voor de geselecteerde klant(en).",
     "mostActiveError": "Er is een fout opgetreden bij het laden van de gegevens van de meeste actieve gebruikers.",
     "calls": "Gesprekken",
     "customer": "Klant",
@@ -381,9 +399,9 @@
     "user": "Gebruiker",
     "users": "Gebruikers",
     "search": "Zoeken",
-    "description": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Spark-toepassing heeft gebruikt. In dit rapport kunt u het totale aantal geregistreerde gebruikers vergelijken met het aantal actieve gebruikers van de geselecteerde klant(en) in een periode van een {{time}}.",
-    "mostActiveDescription": "Gedurende de {{time}} zijn dit de meest actieve gebruikers voor {{customer}}.",
-    "customerPortalDescription": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Spark-toepassing heeft gebruikt. In dit rapport kunt u het totale aantal geregistreerde gebruikers vergelijken met het aantal actieve gebruikers in een periode van een {{time}}.",
+    "description": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Cisco Spark-app heeft gebruikt. In dit rapport kunt u het aantal geregistreerde gebruikers vergelijken met het aantal actieve gebruikers van de geselecteerde klant(en) in een periode van een {{time}}.",
+    "mostActiveDescription": "Gedurende de {{time}} zijn dit de meest actieve gebruikers voor de geselecteerde klant(en).",
+    "customerPortalDescription": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Cisco Spark-app heeft gebruikt. In dit rapport kunt u het totale aantal geregistreerde gebruikers vergelijken met het aantal actieve gebruikers in een periode van een {{time}}.",
     "customerMostActiveDescription": "De onderstaande tabel geeft de gebruikersactiviteit weer van de 500 meest actieve gebruikers. De tabel kan worden gesorteerd op gebruikersnaam, totaal aantal gesprekken of Spark-berichten en zoekopdrachten op basis van de gebruikersnaam."
   },
   "avgRooms": {
@@ -410,9 +428,10 @@
     "good": "Goed",
     "fair": "Matig",
     "poor": "Slecht",
-    "description": "Mediakwaliteit wordt bepaald door het meten van de hoeveelheid pakketverlies die wordt gerapporteerd via de geregistreerde apparaten tijdens de gesprekken die langer dan vijftien seconden duren.",
-    "descriptionCustomer": "Mediakwaliteit wordt bepaald door het meten van de hoeveelheid pakketverlies die wordt gerapporteerd via de geregistreerde apparaten tijdens de gesprekken die langer dan vijftien seconden duren. De gegevens kunnen worden gefilterd op Alle gesprekken, Alleen audiogesprekken en Videogesprekken.",
-    "mediaQualityGraphError": "Er is een fout opgetreden bij het laden van de gegevens van gesprekskwaliteit voor {{customer}}.",
+    "description": "Mediakwaliteit wordt bepaald door het meten van de hoeveelheid pakketverlies die tijdens de gesprekken door de geregistreerde apparaten wordt gerapporteerd. Alleen gesprekken die langer dan vijftien seconden duren worden meegeteld.",
+    "descriptionCustomer": "Mediakwaliteit wordt bepaald door het meten van de hoeveelheid pakketverlies die tijdens de gesprekken door de geregistreerde apparaten wordt gerapporteerd. Alleen gesprekken die langer dan vijftien seconden duren worden meegeteld. De gegevens kunnen worden gefilterd op Alle gesprekken, Alleen audiogesprekken en Videogesprekken.",
+    "mediaQualityGraphError": "Er is een fout opgetreden bij het laden van de gegevens over de gesprekskwaliteit voor de geselecteerde klant(en).",
+    "packetLossDefinition": "Bij het bepalen van de gesprekskwaliteit wordt het pakketverlies berekend als het percentage verloren pakketten tijdens het gesprek. Als de verliesverhouding lager is dan 1,5%, wordt het gesprek beoordeeld als 'Goed'. Als de verliesverhouding tussen de 1,5% en 3% ligt, wordt het gesprek beoordeeld als 'Redelijk'. Alle resterende gesprekken, waarbij de verliesverhouding hoger is dan 3%, worden beoordeeld als 'Slecht'.",
     "customerError": "Er is een fout opgetreden bij het laden van de gegevens van gesprekskwaliteit.",
     "minutes": "Minuten"
   },
@@ -422,7 +441,7 @@
     "callConditionPoorMedia": "Slechte media",
     "callConditionSuccessful": "Gelukt",
     "callMetrics": "Gespreksstatistieken",
-    "callMetricsChartError": "Er is een fout opgetreden bij het laden van de gegevens van gespreksstatistieken voor {{customer}}.",
+    "callMetricsChartError": "Er is een fout opgetreden bij het laden van de gegevens van gespreksstatistieken voor de geselecteerde klant(en).",
     "customerError": "Er is een fout opgetreden bij het laden van de gegevens van gespreksstatistieken.",
     "callMetricsDesc": "Deze grafiek toont het totale aantal gevoerde gesprekken en hoe lang deze duurden over de periode van een {{time}}. U kunt ook het percentage geslaagde en mislukte oproepen van de geselecteerde klanten vaststellen.",
     "customerDescription": "Deze grafiek geeft het totale aantal geslaagde gesprekken weer gedurende de {{time}}, opgedeeld in video- en alleen-audiogesprekken. Onder de grafiek staat aanvullende informatie over het totaal aantal gesprekken, totaal aantal minuten en het totaal aantal mislukte gesprekken.",
@@ -439,7 +458,7 @@
     "maxRegisteredDevices": "Apparaten {{time}} (min./max.)",
     "totalRegistered": "Totaal van gisteren",
     "trend": "Trend gedurende de {{time}}",
-    "registeredEndpointsError": "Er is een fout opgetreden bij het laden van de geregistreerde eindpunten voor {{customer}}.",
+    "registeredEndpointsError": "Er is een fout opgetreden bij het laden van de geregistreerde eindpunten voor de geselecteerde klant(en).",
     "description": "Een geregistreerd eindpunt is een apparaat dat is verbonden met de cloud in de {{time}}. Met de hier gepresenteerde gegevens kunt u bepalen wat de trends in apparaattoepassing en -gebruik op een hoog niveau zijn.",
     "customerDescription": "Een geregistreerd eindpunt is een apparaat dat is verbonden met de cloud in de {{time}}. De gegevens kunnen worden uitgesplitst per apparaattype en worden gebruikt om te bepalen wat de trends in apparaattoepassing en -gebruik op een hoog niveau zijn.",
     "customerError": "Er is een fout opgetreden bij het laden van de geregistreerde eindpunten.",
@@ -447,10 +466,10 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "Actieve gebruikerspopulatie per bedrijf",
-    "description": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Spark-toepassing heeft gebruikt. Gebruikersactiviteit is de basis van het meten van betrokkenheid. Met dit rapport kunt u zien hoe betrokken uw geselecteerde klanten zijn in vergelijking met de gemiddelde betrokkenheid van al uw klanten.",
+    "description": "Een actieve gebruiker wordt gedefinieerd als iemand die op een apparaat een oproep heeft geplaatst of ontvangen of die de Cisco Spark-app heeft gebruikt. Gebruikersactiviteit vormt de basis voor het meten van betrokkenheid. Met dit rapport kunt u zien hoe betrokken uw geselecteerde klanten zijn in vergelijking met de gemiddelde betrokkenheid van al uw klanten.",
     "averageLabel": "Gemiddelde interactie",
     "acrossCustomers": "Onder alle gebruikers",
-    "loadingCustomer": "Voorbeeld van klantgegevens"
+    "loadingCustomer": "Voorbeeldklant"
   },
   "profilePage": {
     "userProfile": "Gebruikersprofiel",
@@ -476,7 +495,7 @@
   },
   "supportPage": {
     "title": "Ondersteuning",
-    "subtitleLogs": "Zoeken naar logbestanden",
+    "subtitleLogs": "Zoeken naar ondersteuningslogboeken",
     "listlogsbtn": "Zoeken",
     "noResults": "Er zijn geen resultaten gevonden.",
     "searching": "Bezig met zoeken...",
@@ -521,7 +540,7 @@
     "tx": "Uitgaand",
     "errCallInfoQuery": "Fout bij het ophalen van de gespreksgegevens. Status: {{status}}.",
     "subTitleCallFlow": "Gespreksverloop",
-    "downloading": "Een ogenblikje geduld. Het downloaden kan circa 5 minuten duren...",
+    "downloading": "Het downloaden kan circa 5 minuten duren.",
     "operational": "Alle systemen operationeel",
     "error": "Fout in systeem",
     "supportResources": "Ondersteuningsresources",
@@ -535,10 +554,11 @@
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
     "roles": "Rollen",
+    "readOnlyHeader": "Alleen-lezen",
+    "readOnlyAccessNotEnabled": "Alleen-lezentoegang voor de helpdesk is niet ingeschakeld. U kunt dit wijzigen in uw accountinstellingen.",
     "downloadLogFailed": "Downloaden van logboek is mislukt",
     "callflowResultsFailed": "Resultaten van gespreksverloop downloaden naar het bijbehorende logbestand is mislukt.",
     "status": "Spark-status",
-    "cdrLogs": "CDR-gespreksverloop",
     "tabs": {
       "status": "Status",
       "logs": "Logboeken",
@@ -548,7 +568,15 @@
       "sparkStatus": "Spark-status",
       "helpDesk": "Helpdesk-ondersteuning",
       "supportResources": "Ondersteuningsresources",
-      "tools": "Tools"
+      "tools": {
+        "tools": "Tools",
+        "helpdeskSupport": "Helpdesk-ondersteuning",
+        "viewHelpdeskSupport": "Helpdesk-ondersteuning weergeven",
+        "launchHelpdeskDesc": "Open de portal Helpdesk in een nieuw tabblad",
+        "cdrLogs": "CDR-gespreksverloop",
+        "viewCdrCallFlow": "CDR-gespreksverloop weergeven",
+        "viewCdrCallFlowDesc": "De tool in een nieuw tabblad openen"
+      }
     }
   },
   "cdrLogs": {
@@ -576,6 +604,7 @@
     "jsonSizeError": "Het bestand is groter dan het maximum van 10 MB.",
     "jsonTypeError": "Upload een geldig JSON-bestand.",
     "jsonSyntaxError": "Het bestand bevat syntaxisfouten. Corrigeer de fouten voordat u het bestand opnieuw verzendt.",
+    "jsonAllowedFormatError": "Het bestand bevat geen CDR-records of is onjuist ingedeeld. Controleer de inhoud van het bestand voordat u het opnieuw verzendt.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Aantal CDR's: {{numberOfCdrs}} - Totale duur: {{totalDuration}} seconden",
     "timeStamp": "Tijdstempel",
     "callingDeviceName": "Apparaatnaam van beller",
@@ -588,14 +617,20 @@
     "callsSubtitle": "Bellijst",
     "sessionIds": "Sessie-id's",
     "cdrTableTitle": "CDR's gegenereerd tijdens oproep",
-    "cdrRetrievalError": "Fout bij het ophalen van CDR-records.",
-    "cdr401Unauthorized": "Gebruiker is niet geautoriseerd om CDR-records op te halen.",
-    "cdrRecursiveError": "Aangevraagde recordgrootte te groot om alle gerelateerde CDR-gegevens op te halen. Verlaag het aantal bij 'Treffergrootte' en dien de aanvraag opnieuw in om gegevens op te halen.",
+    "cdr401And403Error": "Gebruiker is niet geautoriseerd om CDR-records op te halen.",
+    "cdr404Error": "Elastisch zoeken reageert momenteel niet. Probeer het later opnieuw.",
+    "cdr408Error": "Time-out voor aanvraag tijdens het wachten op een respons van Elastisch zoeken. Probeer het later opnieuw.",
+    "cdr409Error": "Aanvraag is mislukt vanwege een verwerkingsconflict. Controleer de zoekgegevens en probeer het opnieuw.",
+    "cdr500Error": "Er is een interne fout opgetreden bij Elastisch zoeken. Hierdoor kunnen CDR-records ontbreken of onvolledig zijn. Mogelijk voorkomt u meer fouten als u de treffergrootte verlaagt voordat u het opnieuw probeert.",
+    "cdr500ShortError": "Er is een interne fout opgetreden bij Elastisch zoeken. Hierdoor kunnen CDR-records ontbreken of onvolledig zijn.",
+    "cdr502And503Error": "Elastisch zoeken is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
     "required": "Dit is een verplicht veld.",
     "userDataError": "Gegevens voor de gebruikers-id(s) ophalen mislukt. Verifieer het id van de gebruiker en probeer het opnieuw, of gebruik het UUID als u dit hebt.",
     "userUuidError": "Voer een gebruikers-id of UUID van 36 tekens in.",
     "userUuidMatchError": "Gebruikers-id's of UUID's van de beller en die van de gebelde partij mogen niet hetzelfde zijn.",
-    "invalidDate": "De einddatum dient dezelfde datum te zijn als of een datum na de startdatum.",
+    "invalidStartDate": "De einddatum dient dezelfde datum te zijn als of een datum voor de einddatum.",
+    "invalidEndDate": "De einddatum dient dezelfde datum te zijn als of een datum na de startdatum.",
+    "invalidFutureDate": "De datum mag niet in de toekomst liggen.",
     "tomorrowError": "Selecteer de datum van vandaag of een eerdere datum.",
     "invalidTime": "Gebruik de indeling 'uu:mm:ss AM/PM'. Indien 'AM/PM' wordt weggelaten, wordt ervan uitgegaan dat de 24-uurs tijdsindeling wordt gebruikt.",
     "invalidTimeTwo": "De eindtijd mag niet gelijk zijn aan of vroeger zijn dan de starttijd.",
@@ -603,6 +638,7 @@
     "phoneNumberErrorTwo": "Het nummer van de bellende partij en dat van de gebelde partij mogen niet hetzelfde zijn.",
     "deviceNameError": "De apparaatnaam van de beller en die van de gebelde mogen niet hetzelfde zijn.",
     "hitSizeError": "De aangevraagde treffergrootte moet tussen 1 en 50 liggen.",
+    "invalidNumber": "Voer een geldige treffergrootte in met de cijfers [0-9].",
     "advancedCDR": "Geavanceerd CDR-rapport",
     "local": "Lokaal:",
     "remote": "Extern:",
@@ -633,7 +669,12 @@
     "diagramRetrievalError": "Fout bij het ophalen van het ladderdiagram van {{server}}.",
     "reload": "Opnieuw laden",
     "reloadMessage": "Probeer de pagina opnieuw te laden.",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "401And403Error": "De gebruiker is niet geautoriseerd om een ladderdiagram te maken.",
+    "404Error": "De diagnostische service reageert momenteel niet. Probeer het later opnieuw.",
+    "408Error": "Time-out voor aanvraag tijdens het wachten op een respons van de diagnostische service. Probeer het later opnieuw.",
+    "500Error": "Er is een interne fout opgetreden bij de diagnostische service.",
+    "502And503Error": "De diagnostische service is tijdelijk niet beschikbaar. Probeer het later opnieuw."
   },
   "billingPage": {
     "title": "Verwerking van de bestelling",
@@ -657,6 +698,13 @@
     "friday": "vrijdag",
     "saturday": "zaterdag",
     "sunday": "zondag"
+  },
+  "ranks": {
+    "first": "Eerste",
+    "second": "Tweede",
+    "third": "Derde",
+    "fourth": "Vierde",
+    "last": "Laatste"
   },
   "common": {
     "delete": "Verwijderen",
@@ -721,7 +769,10 @@
     "unknown": "Onbekend",
     "description": "Beschrijving",
     "user": "Gebruiker",
-    "ipAddress": "IP-adres"
+    "ipAddress": "IP-adres",
+    "tryAgain": "Probeer het opnieuw",
+    "postpone": "Uitstellen",
+    "continue": "Doorgaan"
   },
   "notifications": {
     "success": "Succesmeldingen",
@@ -780,9 +831,9 @@
     "spark": "Spark",
     "sso": "Eenmalige aanmelding (SSO)",
     "goSetupCloudSipUri": "Klik hier om deze configuratie te voltooien",
-    "setupCloudSipUriMessage": "Het SIP URI-domein van de cloud van uw organisatie is niet gedefinieerd. Deze waarde is vereist om bepaalde gespreksfuncties goed te laten werken.",
+    "setupCloudSipUriMessage": "Het SIP-domein van uw organisatie is niet gedefinieerd. Deze waarde is vereist voor bepaalde gespreksfuncties om goed te werken.",
     "dirsync": "Adreslijstsynchronisatie",
-    "setUpCalendarService": "Agendaservice is beschikbaar. Gebruikers kunnen @spark toevoegen om een Cisco Spark-ruimte te maken, en @webex om een WebEx aan een uitnodiging toe te voegen.",
+    "setUpCalendarService": "Agendaservice is beschikbaar. Gebruik @spark en @webex in vergaderuitnodigingen om automatisch gegevens van de vergaderruimte toe te voegen.",
     "setUpCallAwareService": "Gespreksservice Aware is beschikbaar. Gebruikers kunnen hun bureaublad direct delen vanaf hun Cisco Spark-client tijdens een gesprek.",
     "setUpCallConnectService": "Call Service Connect is beschikbaar. Gebruikers kunnen gesprekken beantwoorden op hun werktelefoons op hun Cisco Spark-clienten, en oproepen plaatsen naar de werktelefoons van anderen vanaf hun Cisco Spark-cliënten.",
     "getStarted": "Aan de slag"
@@ -809,7 +860,8 @@
     "importMetadataNote": "Opmerking: bij het importeren van het metagegevensbestand wordt SSO <b>ingeschakeld</b>. Als u alleen SSO wilt testen, schakelt u SSO in het volgende scherm uit.",
     "exportMetadataDesc1": "Download het volgende bestand met vertrouwde metagegevens uit de samenwerkingsservice van Cisco en upload het via de beheerinterface van uw identiteitsprovider.",
     "exportMetadataDesc2": "Wanneer u klaar bent met het uploaden van het bestand, keert u terug naar dit scherm en drukt u op 'Volgende'.",
-    "testSSOSetupDesc": "U bent nu klaar om uw SSO-configuratie te testen. Druk op de onderstaande knop om een nieuw venster te openen. Wanneer u zich succesvol kunt aanmelden, kunt u terugkeren naar dit scherm. Druk vervolgens op 'Volgende' om uw SSO-configuratie af te ronden.",
+    "testSSOSetupDesc": "Druk op de onderstaande knop om uw configuratie voor eenmalige aanmelding (SSO) te testen. De test wordt geopend in een nieuw browservenster. Voer geldige SSO-aanmeldgegevens in en controleer of de aanmelding is geslaagd.",
+    "testSSOSetupDesc2": "Als uw test is geslaagd, schakelt u hieronder Eenmalige aanmelding in. Anders schakelt u eenmalige aanmelding uit of keert u terug naar de vorige stappen.",
     "enableSSODesc": "Druk op de knop 'Voltooien' wanneer u klaar bent om de eenmalige aanmelding in te schakelen voor alle gebruikers. Alle gebruikers worden dan geverifieerd via uw nieuwe SSO-provider.",
     "IdPFileLabel": "Bestand met metagegevens van identiteitsprovider",
     "chooseFilePlaceHolder": "Bestand selecteren...",
@@ -843,6 +895,7 @@
     "siteSteeringDigit": "Sneltoets voor bellen van locatie naar locatie",
     "siteSteeringDigitDescription": "Geef op welk nummer gebruikers moeten kiezen voor ze een gesprek naar een andere locatie kunnen starten.",
     "siteCode": "Locatiecode",
+    "steeringDigitChangeWarning": "Wijziging van het cijfer voor uitgaand kiezen leidt ertoe dat er belvertraging ontstaat op toestellen die met hetzelfde cijfer beginnen. Zorg dat toestelnummers niet beginnen met hetzelfde cijfer als het cijfer voor uitgaand kiezen.",
     "siteCodeDescription": "Geef een uniek cijfer op om een specifieke locatie aan te geven.",
     "internalExtensionRange": "Reeks voor interne toestelnummers",
     "internalNumberRangeDescription": "Specificeer het bereik van de interne nummers, die uit 4 cijfers moeten bestaan.",
@@ -864,6 +917,7 @@
     "customerPutError": "Klantenservices bijwerken is mislukt.",
     "customerDialPlanDetailsGetError": "Kan details voor het kiesplan van de klant niet ophalen.",
     "carrierCountryGetError": "Kan gegevens van provider niet ophalen.",
+    "siteUpdateError": "Kan site niet bijwerken.",
     "voicemailGetError": "Kan nummer voor bedrijfsvoicemail niet ophalen.",
     "voicemailUpdateError": "Kan nummer voor bedrijfsvoicemail niet bijwerken.",
     "voicemailNoExternalNumbersError": "U moet beschikbare rechtstreekse lijnen hebben om Voicemail in te schakelen. Neem contact op met uw partner of beheerder.",
@@ -954,8 +1008,9 @@
     "videoError": "Er is een probleem met de video die u wilt afspelen."
   },
   "spacesPage": {
+    "addTag": "Tag toevoegen",
     "title": "Apparaten",
-    "modalTitle": "Een nieuw apparaat activeren",
+    "modalTitle": "Een nieuw apparaat toevoegen",
     "activateDevice": "Een nieuw apparaat activeren",
     "addBtn": "Apparaat toevoegen",
     "deleteActivationCode": "Activeringscode wissen",
@@ -965,11 +1020,13 @@
     "actionsHeader": "Acties",
     "account": "Account",
     "unactivatedDevice": "Niet-geactiveerd apparaat",
-    "informationHeader": "Informatie",
+    "informationHeader": "Instellingen",
     "customTagsHeader": "Aangepaste labels",
     "newCustomTagPlaceholder": "Label invoeren...",
     "addDeviceStep1": "Waar wordt dit apparaat geïnstalleerd?",
     "addDeviceStep1Desc": "We raden u aan om de naam in te voeren van uw vergaderruimte of gedeelde ruimte. Deze naam wordt in uw bedrijfsdirectory getoond en zal ook in het video-adres worden gebruikt. Bovendien kunt u het apparaat op een later moment zo gemakkelijker terugvinden.",
+    "addPersonalDevice": "Wilt u een persoonlijk apparaat toevoegen?",
+    "addPersonalDeviceDesc": "U kunt een persoonlijk apparaat toevoegen door op de pagina <a ng-click=\"{{onclick}}\">Gebruikers</a> een activeringscode te genereren voor een specifieke gebruiker.",
     "addDeviceStep2": "Uw activeringscode is gemaakt",
     "addDeviceStep2Desc": "Wanneer u deze activeringscode gebruikt, wordt deze automatisch weergeven als apparaat.",
     "emptyDevices1": "Nadat u een nieuw apparaat hebt toegevoegd,",
@@ -977,6 +1034,7 @@
     "deleteDevice": "Apparaat verwijderen",
     "rebootDevice": "Apparaat opnieuw starten",
     "reboot": "Opnieuw starten",
+    "cancel": "Annuleren",
     "reportProblem": "Probleem melden",
     "deleteDeviceConfText": "Weet u zeker dat u dit apparaat wilt verwijderen?",
     "rebootDeviceConfText": "Weet u zeker dat u dit apparaat wilt herstellen?",
@@ -993,7 +1051,10 @@
     "reset": "Herstellen",
     "rsuKeyWasReset": "De Remote Support-sleutel is hersteld. Alle sleutels die u met Cisco Support hebt gedeeld, zijn nu niet meer bruikbaar.",
     "rsuKeyResetFailed": "De Remote Support-sleutel kan niet worden hersteld. Het apparaat heeft niet op tijd een nieuwe sleutel geretourneerd.",
-    "noDevices": "Geen apparaten gevonden...",
+    "nothingHere": "Er zijn nog geen apparaten.",
+    "noDevices": "Schakel samenwerkingsapparaten in",
+    "noneFound": "Er zijn geen apparaten gevonden",
+    "tryAgain": "Een andere zoekactie proberen",
     "licenseWarningTitle": "Licentie",
     "licenseWarningHeader": "Er is een probleem met de licentie voor deze service.",
     "licenseSuspendedWarning": "Uw licentie voor ruimtesystemen is opgeschort.",
@@ -1002,6 +1063,10 @@
   },
   "hercules": {
     "page_title": "Connectorbeheer",
+    "domain-verification": {
+      "domain-not-verified": "Het domein voor deze adressenlijst-URI moet worden geverifieerd voor deze service om goed te werken. ",
+      "navigateToCallSettings": "Verifieer het domein in <a ng-click=\"{{onclick}}\">Instellingen gespreksservice</a>."
+    },
     "connectors": {
       "group_by": "Services groeperen op:",
       "cluster_id": "Cluster",
@@ -1012,10 +1077,11 @@
       "version": "Versie",
       "status": "Status",
       "alarms": "Alarmen",
-      "serial": "Serienummer",
       "hosts": "Hosts",
       "goToHost": "Ga naar Host",
-      "remove": "Verwijderen"
+      "removeButton": "Verwijderen",
+      "removeSectionHeader": "Verwijderen",
+      "removeSectionBody": "Verwijder deze host uit Cisco Collaboration Cloud."
     },
     "export": {
       "modalTitle": "Statusrapport gebruiker",
@@ -1032,8 +1098,9 @@
       "loading": "Laden. Een moment geduld...",
       "clusters-title": "Expressway-clusters",
       "status-title": "Servicestatus",
-      "add-resource-button": "Resource toevoegen",
-      "add-resource-button-information": " om de registratie en configuratie van uw Expressways te starten."
+      "add-resource-button": "Een resource toevoegen",
+      "add-resource-button-information": " om de registratie en configuratie van uw Expressways te starten.",
+      "setupCloudSipUriHeader": "SIP-domein definiëren"
     },
     "redirect-target-dialog": {
       "title": "Nieuwe Expressway registreren",
@@ -1041,11 +1108,11 @@
       "hostname-placeholder": "Hostnaam van de Expressway invoeren",
       "activate-resource-button": "Volgende",
       "register-resource-button": "Naar Expressway gaan",
-      "grant-registration-success-header": "U kunt de <strong>{{hostname}}</strong> van de Expressway nu bij Cisco Collaboration Cloud registreren.",
+      "grant-registration-success-header": "U kunt de {{hostname}} van de Expressway nu bij Cisco Collaboration Cloud registreren.",
       "grant-success-information": "Ga binnen één uur naar uw Expressway om de registratie te voltooien."
     },
     "activateService": {
-      "ingress": "De Cloud uitbreiden naar uw lokale omgeving",
+      "ingress": "De cloud uitbreiden naar uw lokale omgeving",
       "serviceNames": {
         "squared-fusion-uc": "Gespreksservice activeren",
         "squared-fusion-cal": "Agendaservice activeren",
@@ -1071,7 +1138,9 @@
       "deregisterCausesListItem3": "Als het systeem in een cluster zit, hoeft u de overige peers niet uit te schrijven. Dit gebeurt automatisch.",
       "deregisterErrorGeneric": "Kan {{clusterName}} niet uitschrijven. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Kan {{clusterName}} niet uitschrijven. De versie van de connectorbeheersoftware biedt geen ondersteuning voor het uitschrijven bij de cloud. Werk de connector bij of schrijf u uit via de Cisco Expressway-webinterface.",
-      "notInstalled": "De {{serviceName}} is niet geïnstalleerd op dit cluster."
+      "notInstalled": "De {{serviceName}} is niet geïnstalleerd op dit cluster.",
+      "deregisterSectionHeader": "Uitschrijven",
+      "deregisterSectionBody": "Verbreek de verbinding van dit cluster met Cisco Collaboration Cloud en verwijder alle connectors en verwante configuratie."
     },
     "status": {
       "unknown": "Status onbekend",
@@ -1103,20 +1172,32 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Gespreksservice",
-      "squared-fusion-uc.full": "Gespreksservice: Aware",
+      "squared-fusion-uc.full": "Gespreksservice Aware",
       "squared-fusion-cal": "Agendaservice",
       "squared-fusion-media": "Mediaservice",
       "contact-center-context": "Context Center-service",
-      "squared-fusion-ec": "Gespreksservice: Connect",
+      "squared-fusion-ec": "Bel de servicedienst",
       "squared-fusion-mgmt": "Expressway-beheerservice "
     },
+    "connectorNames": {
+      "squared-fusion-uc": "Gespreksconnector",
+      "squared-fusion-uc.full": "Gespreksconnector",
+      "squared-fusion-cal": "Agendaconnector",
+      "squared-fusion-media": "Mediaservice",
+      "contact-center-context": "Context Center-service",
+      "squared-fusion-ec": "Gespreksconnector",
+      "squared-fusion-mgmt": "Beheerconnector"
+    },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Met de gespreksservice Aware kunnen uw gebruikers tijdens een gesprek meteen hun bureaublad delen via hun Cisco Spark-client. Met Bel de servicedienst kunnen gebruikers oproepen beantwoorden op hun werktelefoon via hun Cisco Spark-client en oproepen naar de werktelefoons van anderen kunnen plaatsen vanaf hun Cisco Spark-client.",
-      "squared-fusion-cal": "Met de agendaservice kunnen uw gebruikers meteen samenwerken. Voeg @spark toe om een Spark-ruimte te maken. Voeg @webex toe om een WebEx aan uw uitnodiging toe te voegen.",
+      "squared-fusion-uc": "Met de gespreksservice Aware kunnen uw gebruikers tijdens een gesprek meteen hun bureaublad delen via hun Cisco Spark-client. Met Bel de servicedienst kunnen uw gebruikers oproepen beantwoorden op hun werktelefoon en oproepen naar andere werktelefoons plaatsen via hun Cisco Spark-client.",
+      "squared-fusion-cal": "Met de agendaservice kunnen uw gebruikers meteen samenwerken. Voeg @spark toe om een Spark-ruimte te maken. Voeg @webex toe om een WebEx-koppeling aan uw uitnodiging toe te voegen.",
       "squared-fusion-media": "",
       "contact-center-context": "",
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "De beheerservice is de algemene configuratieservice voor agenda- en gespreksservices. Deze pagina wordt geactiveerd nadat u een van deze services activeert."
+    },
+    "serviceHelpInfo": {
+      "servicePrivacyStatement": "Via connectors van de hybride Cisco-service wordt bepaalde informatie over de implementatie van uw hybride service verzameld en verzonden naar Cisco Collaboration Cloud. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Klik hier</a> voor meer informatie."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Mislukt! Uw organisatie mist de benodigde rechten om {{serviceName}} toe te voegen. Vraag uw ondersteuningsmedewerker om het probleem op te lossen.",
@@ -1131,9 +1212,9 @@
         "squared-fusion-ec": "Verbinden"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Gebruikers kunnen hun bureaublad delen in hun Cisco Spark-client terwijl ze hun werktelefoon gebruiken.",
+        "squared-fusion-uc": "Tijdens een gesprek met hun werktelefoon kunnen gebruikers inhoud delen vanuit de Cisco Spark-app en hun gespreksgeschiedenis weergeven in de app.",
         "squared-fusion-cal": "Voeg @spark toe aan een uitnodiging om een Cisco Spark-ruimte voor uw vergadering te maken. Voeg @webex toe om uw WebEx persoonlijke ruimte bij te voegen.",
-        "squared-fusion-ec": "Gebruikers kunnen hun werktelefoon beantwoorden of collega's bellen vanuit Cisco Spark."
+        "squared-fusion-ec": "Binnenkomende gesprekken van gebruikers gaan over op hun werktelefoon en in de Cisco Spark-app. Gebruikers kunnen hun collega's ook bellen met hun telefoon of vanuit de app."
       }
     },
     "alarms": {
@@ -1152,12 +1233,14 @@
       "softwareUpgrade": "Software-upgrade",
       "currentVersion": "Huidige versie",
       "newVersion": "Nieuwe versie",
-      "explanation": "U staat op het punt de software voor de {{serviceName}} te upgraden op alle hosts in het geselecteerde Cisco Expressway-cluster:",
+      "explanation": "U staat op het punt {{connectorType}} te upgraden voor alle hosts in het geselecteerde Cisco Expressway-cluster:",
       "pending": "In behandeling",
       "upgrade": "Upgrade",
       "upgradeNow": "Nu upgraden",
       "upgradingHost": "{{host}} upgraden naar {{version}}",
-      "upgradeDone": "De upgrade is voltooid."
+      "upgradeDone": "De upgrade is voltooid.",
+      "upToDate": "{{connectorType}} is bijgewerkt in dit cluster.",
+      "upgradeImpossible": "{{connectorType}} is niet geconfigureerd in dit cluster. Voordat u de upgrade start, configureert u de connector en start u deze."
     },
     "settings": {
       "deactivateServiceHeading": "Service deactiveren",
@@ -1174,15 +1257,11 @@
         "featureHeading": "Functie-instellingen",
         "feature": "Functies van Gespreksservice inschakelen of uitschakelen",
         "awareHeading": "Status",
-        "aware": "Deel uw bureaublad met Spark terwijl u uw werktelefoon gebruikt.",
-        "on": "Standaard ingeschakeld",
-        "connectHeading": "Verbinden",
-        "connect": "Gebruikers kunnen hun werktelefoon beantwoorden of collega's bellen vanuit Cisco Spark.",
-        "connectSettingsHeading": "Connect-instellingen",
-        "connectSettings": "Vereiste instellingen voor de functie Connect.",
         "aware": "Tijdens een gesprek met hun werktelefoon kunnen gebruikers inhoud delen vanuit de Cisco Spark-app en hun gespreksgeschiedenis weergeven in de app.",
         "on": "Standaard ingeschakeld",
         "connectHeading": "Verbinden",
+        "connectSettingsHeading": "Connect-instellingen",
+        "connectSettings": "Vereiste instellingen voor de functie Connect.",
         "connect": "Binnenkomende gesprekken van gebruikers gaan over op hun werktelefoon en in de Cisco Spark-app. Gebruikers kunnen hun collega's ook bellen met hun telefoon of vanuit de app.",
         "certificatesHeading": "Certificaten",
         "certificates": "Gebruik certificaten die worden geleverd in de standaardvertrouwenslijst van Cisco Collaboration voor gecodeerde SIP-oproepen. U kunt ook uw eigen certificaten uploaden.",
@@ -1194,23 +1273,50 @@
         "disableConfirmDialogText3": "De service wordt bij al uw gebruikers gedeactiveerd.",
         "disableConfirmDialogText4": "Uw Cisco Expressway verwijdert de serviceconnector.",
         "disableConfirmDialogText5": "Gegevens voor de serviceconnector worden verwijderd.",
-        "disableConfirmDialogText6": "Als er geen andere services zijn geïnstalleerd voor uw Cisco Expressway, moet u Cisco Expressway uitschrijven. Meld u aan en schrijf Cisco Expressway uit via Toepassingen &gt; Hybride services &gt; Connectorbeheer.",
+        "disableConfirmDialogText6": "Als er geen andere services zijn geïnstalleerd voor uw Cisco Expressway, moet u deze uitschrijven.",
         "sipDomainHeading": "SIP-bestemming",
-        "sipDomainButtonTooltip": "Voer een SRV-domein, hostnaam:poort of IP-adres:poort in die verwijst naar uw Expressway-E voor wederzijdse TLS.",
+        "sipDomainButtonTooltip": "Voer een SRV-domein, hostnaam:poort of IP-adres:poort in die verwijst naar uw Expressway-E voor wederzijdse TLS. Als uw SRV-record '_sips._tcp.sipmtls.example.com' is, voert u hier 'sipmtls.example.com' in.",
         "sipDomainPlaceholder": "Voer een SIP-bestemming in",
-        "sipDomainExample": "Bijvoorbeeld: voorbeeld.org"
+        "sipDomainExample": "Bijvoorbeeld: sipmtls.example.com"
       },
       "scheduleUpgrade": {
         "title": "Automatische software-upgrades",
         "description": "Stel de starttijd in voor het starten van upgrades op de connectors.",
-        "defaultWarning": "De standaardplanning bevestigen"
+        "defaultWarning": "De standaardplanning bevestigen",
+        "postponeLabel": "De volgende beschikbare upgrade start volgens de planning op:",
+        "postponeAction": "De planning uitstellen",
+        "postponeModalTitle": "De upgrade uitstellen",
+        "postponeModalText": "Weet u zeker dat u de start van de geplande upgrade wilt verplaatsen naar:"
+
       }
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "Zie <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> voor ondersteuning.",
+      "callAware": {
+        "title": "Gespreksservice Aware voor gebruikers inschakelen",
+        "navigateToUsers": "Ga naar <a ng-click=\"{{onclick}}\">Gebruikers- en groepsbeheer</a> om gespreksservice Aware voor uw gebruikers in te schakelen."
+      },
+      "calendar": {
+        "title": "Agendaservice voor gebruikers inschakelen",
+        "navigateToUsers": "Ga naar <a ng-click=\"{{onclick}}\">Gebruikers- en groepsbeheer</a> om de agendaservice voor uw gebruikers in te schakelen."
+      },
+      "connect": {
+        "title": "Gespreksservice Connect voor gebruikers inschakelen",
+        "navigateToUsers": "U hebt de gespreksservice Connect geconfigureerd. Ga naar <a ng-click=\"{{onclick}}\">Gebruikers- en groepsbeheer</a> om de gespreksservice Connect voor uw gebruikers in te schakelen. Zorg ervoor dat u de juiste methode in Expressway hebt geselecteerd voor het maken van externe CTI-apparaten voor uw gebruikers. "
+      },
       "scheduleUpgrade": {
         "title": "Bevestig de geplande upgrade",
         "description": "Voor de clusters voor deze service is een standaardtijd voor een geplande upgrade ingesteld",
         "action": "U moet deze tijd <a ng-click=\"{{onclick}}\">wijzigen of bevestigen.</a>"
+      },
+      "configure-connector": {
+        "title": "De connector configureren en starten",
+        "description": "Uw Cisco Expressway is geregistreerd voor hybride services.",
+        "action": "Configureer vervolgens de connector in de Expressway."
+      },
+      "no-domain-verified": {
+        "title": "Een domein verifiëren",
+        "description": "U hebt minimaal één geverifieerd domein nodig om gebruik te kunnen maken van gespreksservices. Voeg domeinen toe onder instellingen."
       }
     }
   },
@@ -1226,12 +1332,12 @@
     "downloadError": "Er is een probleem met het downloaden van het bestand.",
     "downloadHeadersError": "Er is een probleem met het downloaden van de sjabloonkopteksten.",
     "uploading": "Bezig met uploaden...",
-    "uploadPrompt": "Sleep een CSV-bestand en zet het neer of gebruik de",
+    "uploadPrompt": "Sleep een bestand en zet het neer of gebruik de",
     "fileBrowser": "bestandsbrowser",
     "uploadCsvEmpty": "Upload een geldig CSV-bestand.",
     "csvFileTypeError": "Upload een geldig bestandstype.",
     "csvMaxSizeError": "Het bestand is groter dan het maximum van 10 MB.",
-    "csvMaxLinesError": "Het CSV-bestand bevat meer gebruikers dan is toegestaan. Beperk het aantal gebruikers tot 250 of minder en upload het CSV-bestand opnieuw.",
+    "csvMaxLinesError": "Het CSV-bestand bevat meer gebruikers dan is toegestaan. Beperk het aantal gebruikers tot {{max}} of minder en upload het CSV-bestand opnieuw.",
     "processCsvStep": "CSV verwerken",
     "processing": "Verwerken...",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
@@ -1264,14 +1370,13 @@
     "resultRowHeader": "Rijnummer",
     "resultErrorHeader": "Foutbericht",
     "uploadDirSyncEmpty": "Upload gebruikers vanuit de addressenlijstserver.",
-    "dirsyncMaxLinesError": "De adressenlijst bevat meer gebruikers dan is toegestaan. Beperk het aantal gebruikers tot 250 of minder.",
     "dirSyncStatus": "Synchronisatiestatus",
     "processDirSyncStep": "Synchroniseren met adressenlijst",
     "dirSyncResultStep": "Resultaat adressenlijstsynchronisatie",
     "runDirSyncAgain": "Opnieuw synchroniseren",
     "advanced": "Geavanceerd",
     "simpleSub": "U hebt alleen de e-mailadressen van gebruikers nodig.",
-    "uploadSub": "De beste manier om veel gebruikers tegelijkertijd toe te voegen.",
+    "uploadSub": "Beste methode voor het toevoegen van {{maxUsers}} gebruikers tegelijk.",
     "downloadSub": "CSV-sjabloon downloaden",
     "advancedSub": "Synchroniseer gebruikers uit Active Directory.",
     "needHelp": "Hulp nodig - ",
@@ -1301,17 +1406,18 @@
     "claimSipUriDomainTitle": "SIP URI-domein",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "Deze functie is momenteel alleen beschikbaar voor testorganisaties. Ga door met de volgende stap.",
-    "setSipUriDescPartOne": "Met deze waarde maakt u een domein met een brandingnaam van uw keuze. Hiermee genereert u ook een Spark-SIP-adres dat aan uw gebruikers wordt toegewezen. Met deze adressen kunnen uw gebruikers worden gebeld vanaf externe SIP-apparaten.",
-    "setSipUriDescPartTwo": "John Smith werkt bijvoorbeeld bij Acme. Zijn collega kan hem bereiken door jsmith@acme.call.ciscospark.com te kiezen vanaf een standaard-SIP-apparaat.",
-    "setSipUriDescPartThree": "We hebben het veld voor u gevuld met een standaardwaarde.",
+    "setSipUriDescPartOne": "Maak een aangepast SIP-domein voor uw organisatie. Als u dit hebt gemaakt, wordt er een Spark-SIP-adres gegenereerd voor elke gebruiker in uw organisatie. Hierdoor kunnen uw gebruikers bellen met en gebeld worden door apparaten die werken met SIP.",
+    "setSipUriDescPartTwo": "John Smith werkt bijvoorbeeld bij het bedrijf Voorbeeld. Zijn collega kan hem bereiken door jsmith@voorbeeld.gesprek.ciscospark.com te kiezen vanaf een standaard-SIP-apparaat.",
+    "setSipUriDescPartThree": "We hebben een naam voorgesteld op basis van de naam van uw organisatie. U kunt een andere naam invoeren als u dit liever hebt, en wij kunnen dan controleren of deze naam beschikbaar is voor uw bedrijf.",
     "setSipUriDescPartFour": "Als u hier liever uw eigen waarde invoert, controleren we of deze beschikbaar is voor uw bedrijf:",
-    "setSipUriDomainMsg": "Een SIP URI-domeinnaam invoeren",
-    "setSipUriDomainTitle": "SIP URI-domein van de cloud",
-    "setSipUriDomainCompNames": "Bedrijfsdomeinnaam",
+    "setSipUriDomainMsg": "Voer een prefix in voor het SIP-domein",
+    "setSipUriDomainTitle": "SIP-domein",
+    "setSipUriDomainCompNames": "SIP-domeinen van uw organisatie:",
     "setSipUriDomainCheckAvailability": "Beschikbaarheid controleren",
     "setSipUriPlaceholder": "een uniek domein invoeren",
     "setSipUriErrorMessage": "Niet beschikbaar. Probeer een andere naam",
-    "setSipUriDomainSuccessMessage": "Het SIP URI-domein is opgeslagen",
+    "setSipUriErrorMessageInvalidDomain": "Ongeldig domein. Probeer een andere naam",
+    "setSipUriDomainSuccessMessage": "Het SIP-domein is opgeslagen",
     "sparkDomainManagementServiceErrorMessage": "Kan de service Spark Domain Management niet bereiken",
     "messageSettings": "Berichtinstellingen",
     "callSettings": "Gespreksinstellingen",
@@ -1327,7 +1433,6 @@
     "addUsers": "Gebruikers toevoegen",
     "addUsersSubDescription": "Gebruikers uitnodigen en services toewijzen",
     "addUsersDescription": "Selecteer een methode voor het uploaden van uw gebruikers.",
-    "msgrSyncDesc": "Uw organisatie heeft gebruikersgegevens die worden gesynchroniseerd met de WebEx Messenger-service. Als u gebruikersgegevens wilt toevoegen, verwijderen of bewerken, moet u de WebEx Messenger-beheertool gebruiken.",
     "getStarted": "Aan de slag",
     "startTrial": "Proefperiode starten",
     "doLater": "Dit later doen",
@@ -1396,22 +1501,15 @@
     "assignDnAndDirectLines": "Nummers Toewijzen",
     "assignDnAndDirectlineDesc": "Verifieer de toestelnummers en rechtstreekse lijnen die aan uw gebruikers worden toegewezen. U kunt de laatste vier cijfers van de rechtstreekse lijn gebruiken zodat deze overeenkomen met het toestelnummer van de gebruiker. U kunt dit doen door hieronder op Rechtstreekse lijn toewijzen met toestelnummer te drukken",
     "mapDirectLineWithExt": "Rechtstreekse lijn toewijzen met toestelnummer",
-    "reset": "Herstellen"
+    "reset": "Herstellen",
+    "tosReadAndAgree": "Ik heb deze",
+    "tosTermsAndConditions": "voorwaarden gelezen en ga ermee akkoord"
   },
   "reports": {
     "title": "Rapporten",
     "engagementTab": "Activiteit",
     "qualityTab": "Kwaliteit",
     "opportunitiesTab": "Mogelijkheden",
-    "time": "Alle tijden",
-    "week": "Voorgaande week",
-    "month": "Voorgaande maand",
-    "threeMonths": "Afgelopen drie maanden",
-    "mostEngaged": "5 meest actief",
-    "leastEngaged": "5 minst actief",
-    "highQuality": "5 hoogste kwaliteit",
-    "leastQuality": "5 laagste kwaliteit",
-    "services": "Alle services",
     "UsersOnboarded": "geïntegreerde gebruikers deze maand",
     "AvgCallsPerUser": "Gemiddeld aantal gesprekken per gebruiker deze maand",
     "AvgRoomsPerUser": "Gem. aantal ruimten per gebruiker deze maand",
@@ -1423,11 +1521,10 @@
     "ContentShared": "Gedeelde bestanden deze maand",
     "AmountofContentShared": "GB gedeelde inhoud deze maand",
     "UserEngagement": "Gebruikersengagement",
-    "weekOf": "Week die eindigt",
     "numberOfCallsAxis": "Aantal gesprekken (totaal)",
     "numberOfRoomsAxis": "Aantal ruimten (gem.)",
     "numberActiveAxis": "Aantal actieve gebruikers (totaal)",
-    "oneRoomAxis": "Aantal één-op-één-ruimten (totaal)",
+    "oneRoomAxis": "Aantal een-op-een-ruimten (totaal)",
     "groupRoomsAxis": "Aantal groepsruimten (totaal)",
     "videoCallsAxis": "Aantal videogesprekken (totaal)",
     "avgCallsAxis": "Gespreksduur in minuten (gem.)",
@@ -1435,9 +1532,8 @@
     "numberCallsAxis": "Aantal gesprekken (totaal)",
     "filesSharedAxis": "Aantal gedeelde bestanden (totaal)",
     "gbSharedAxis": "Aantal gedeelde gigabytes (totaal)",
-    "orgDsc": "Het totaal aantal gebruikers in een organisatie.",
-    "onboardDsc": "Het totaal aantal gebruikers die zich aangemeld hebben of rechten hebben voor Spark.",
-    "activeDsc": "Het totaal aantal gebruikers die een bericht hebben verzonden/gelezen of een ruimte hebben gemaakt/betreden in de voorbije week.",
+    "error": "Er is een probleem opgetreden bij het laden van gegevens voor {{graph}}.",
+    "weekOf": "Week die eindigt",
     "allCustomers": "Alle klanten"
   },
   "callRouting": {
@@ -1454,34 +1550,51 @@
     "title": "Virtuele operator",
     "modalDescription": "Virtuele operators spelen aangepaste prompts af en geven bellers menuopties voor het doorschakelen van hun oproepen in het systeem.",
     "namePlaceholder": "Naam invoeren",
-    "repeatMenu": "Menu herhalen",
+    "repeatMenu": "Herhalen",
     "errorReadCe": "{{name}} lezen is mislukt: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} is gemaakt.",
     "successDeleteCe": "{{name}} is verwijderd.",
     "successUpdateCe": "{{name}} is bijgewerkt.",
+    "successImport": "Er zijn {{hours}} uren Geopend/gesloten en {{holidays}} feestdagen geïmporteerd",
     "errorCreateCe": "Kan {{name}} niet maken: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Kan {{name}} niet verwijderen: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Kan {{name}} niet bijwerken: {{statusText}} ({{status}}).",
+    "errorCreateSchedule": "Kan planning voor {{name}} niet maken: {{statusText}} ({{status}}).",
+    "errorDeletePredefinedSchedule": "Kan de vooraf gedefinieerde planning voor {{name}} niet verwijderen: {{statusText}} ({{status}}).",
     "newCardCustom": "Maak aangepaste berichten, zet telefoonmenu's op en routeer oproepen.",
     "resourceCountPlusMore": "+ nog {{count}}",
     "builderTitle": "Builder voor virtuele operator",
     "builderAddNewStep": "Nieuwe stap toevoegen",
     "builderNewStep": "Nieuwe stap",
+    "builderNewStepHelp": "U kunt zoveel stappen toevoegen aan het gespreksverloop als u wilt.",
     "builderNewStepInfo": "U kunt hier acties toevoegen aan uw virtuele operator. Maak zoveel acties als u wilt en koppel ze aan elkaar.",
-    "builderNewStepChoiceHelp": "Bericht inspreken: speel een opname die niet kan worden onderbroken af aan de beller",
     "builderNumbers": "Nummers",
     "actionPlaceholder": "Actie kiezen...",
     "actionSayMessage": "Bericht inspreken",
+    "actionSayMessageHint": "Speel een bericht af dat niet onderbroken kan worden.",
     "actionPhoneMenu": "Telefoonmenu",
-    "actionRouteCall": "Oproep doorverbinden",
+    "actionPhoneMenuHint": "Speel een bericht af en onderneem actie op basis van de invoer van de beller.",
+    "actionRouteCall": "Gesprek doorschakelen",
+    "actionRouteCallHint": "Leid het gesprek om naar een bestemming zoals een Hunt-groep, een virtuele operator of een toestel.",
+    "actionDialByExtensionHint": "Meld bij de beller een intern toestel en leid het gesprek om.",
+    "actionDialByExtensionHelp": "Voer het bericht in dat wordt gebruikt om de beller te vragen het toestelnummer te kiezen. Selecteer de taal en de stem voor deze zin.",
     "actionEndCall": "Gesprek eindigen",
     "schedule": "Planning",
     "scheduleAllDay": "24 uur per dag geopend",
+    "scheduleOpenClosed": "Open/gesloten",
     "scheduleOpen": "Geopend",
     "scheduleClosed": "Gesloten",
     "scheduleHolidays": "Feestdagen",
+    "hoursMissing": "Geen tijden gedefinieerd.",
+    "holidaysMissing": "Geen feestdagen gedefinieerd.",
+    "scheduleOpenTime": "Tijd open",
+    "scheduleClosedTime": "Tijd gesloten",
+    "scheduleClosedTimeCheck": "'Tijd gesloten' moet later dan 'Tijd open' zijn",
+    "holidayScheduleEndTimeCheck": "De eindtijd moet na de starttijd liggen",
+    "scheduleAddHours": "Tijdstippen toevoegen",
     "invalidBuilderNameMissing": "Voer een naam voor de virtuele operator in.",
     "invalidBuilderNameNotUnique": "Deze naam is al in gebruik voor een virtuele operator. Voer een unieke naam voor de virtuele operator in.",
+    "routeCallMenuHelp": "Het juiste eindpunt voor de overdracht selecteren",
     "phoneMenuAddDigit": "Nog een invoercijfer toevoegen",
     "phoneMenuTimeout": "Time-out/ongeldig",
     "phoneMenuContinue": "Naar volgende stap gaan",
@@ -1495,7 +1608,6 @@
     "phoneMenuRouteHunt": "Verzenden naar Hunt-groep",
     "phoneMenuRouteVM": "Verzenden naar voicemail",
     "phoneMenuRouteAA": "Verzenden naar virtuele operator",
-    "phoneMenuAddDigit": "Nog een invoercijfer toevoegen",
     "phoneMenuListening": "Tijdens het luisteren naar de volgende gebruikersinvoer",
     "phoneMenuRepeatOnce": "Eén keer",
     "phoneMenuRepeatTwice": "Twee keer",
@@ -1510,6 +1622,7 @@
     "phoneMenuErrorRouteToUserTargetMissing": "Doel voor Verzenden naar gebruiker ontbreekt voor sleutel {{key}}.",
     "addNumberMsg": "Deze virtuele operator beantwoordt alle oproepen naar de volgende nummers. U kunt op elk gewenst moment nummers toevoegen of verwijderen.",
     "numberInfoPopover": "Als u hier geen nummer invoert, is dat geen probleem. De oproepen kunnen gewoon binnenkomen via een andere virtuele operator.",
+    "routeCallPopover": "Selecteer hoe u het gesprek wilt omleiden.",
     "selectPlaceHolder": "Zoeken of Selecteren",
     "selectNumberPlaceHolder": "Een nummer zoeken of selecteren",
     "inputPlaceHolder": "Begin hier met typen",
@@ -1517,6 +1630,19 @@
     "sayMessagePlaceholder": "Voer uw bericht hier in.",
     "sayMessageUninterrupt": "Het afspelen van berichten kan niet worden onderbroken.",
     "sayMessageVoice": "Spraak",
+    "scheduleAddAdditionalHolidays": "Feestdagen toevoegen",
+    "selectDate": "Datum selecteren",
+    "allDay": "De hele dag",
+    "recurAnnually": "Jaarlijks herhalen",
+    "exactDate": "Exacte datum",
+    "every": "Elke",
+    "on": "Aan",
+    "day": "Dag",
+    "selectAA": "Virtuele operator selecteren",
+    "importSchedule": "Planning importeren",
+    "importDesc": "Selecteer een bestaande virtuele operator om de planning Geopend/gesloten en Feestdagen te importeren van",
+    "closedBehavious": "Op feestdagen gelden de tijden voor gesloten",
+    "failureImport": "Fout bij het ophalen van de planningen. Status: {{status}} ",
     "voices": {
       "male": "mannelijk",
       "female": "vrouwelijk",
@@ -1587,7 +1713,7 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Selecteer de gewenste taal en spraak waarmee de zin voor de beller wordt ingesproken. Bericht inspreken is optioneel. Als geen bericht wordt ingevoerd, gaat het gesprek verder naar de volgende stap.",
-    "errorReadCMI": "Kan toegewezen telefoonnummers niet toewijzen",
+    "errorReadCMI": "Kan de toegewezen telefoonnummers niet laden. De optie Opslaan is uitgeschakeld. Open deze virtuele operator opnieuw.",
     "errorAddCMI": "Kan telefoonnummer {{phoneNumber}} niet toewijzen: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Kan toegewezen telefoonnummer(s) niet verwijderen.",
     "errorResetCMI": "Kan niet terugzetten naar eerder toegewezen telefoonnummer(s)",
@@ -1596,7 +1722,13 @@
     "errorNumbersCESOnly": "Nummer(s) zijn in de virtuele operator, maar zijn niet toegewezen:{{phoneNumbers}}",
     "errorInvalidTemplate": "De sjabloon kon niet worden geladen: {{template}}.",
     "errorInvalidTemplateDef": "Ongeldige sjabloondefinitie voor sjabloon: {{template}}.",
-    "routeExtNumPlaceHolder": "Voer nummer in"
+    "routeExtNumPlaceHolder": "Voer nummer in",
+    "newAAText": "Nieuwe virtuele operator maken",
+    "AABasic": "Basis",
+    "AABasicDesc": "Eenvoudige afgespeelde berichten met aangepast telefoonmenu.",
+    "AACustom": "Aangepast",
+    "AACustomDesc": "Maak een aangepaste virtuele operator.",
+    "AAOpenClosedDesc": "Eenvoudige planning Geopend/gesloten met aangepast bericht en telefoonmenu."
   },
   "callPark": {
     "code": "GP",
@@ -1731,8 +1863,9 @@
     "useGlobal": "Algemene instellingen",
     "alwaysAllow": "Altijd toestaan",
     "neverAllow": "Nooit toestaan",
-    "on": "AAN",
-    "off": "UIT"
+    "on": "Aan",
+    "off": "Uit",
+    "getLicenseIsTrialError": "Het ophalen van de proefperiodestatus voor de COMMUNICATIE-licentie is mislukt."
   },
   "voicemailPanel": {
     "success": "De voicemailconfiguratie is succesvol opgeslagen",
@@ -1746,6 +1879,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "Telefoonnummers",
     "editNumbers": "Telefoonnummers bewerken",
+    "pendingNumbersTooltip": "Nummers kunnen om verschillende redenen in behandeling zijn. Bedankt voor uw geduld tijdens de gebruikelijke verwerkingstijd. Neem contact op met uw provider als het langer duurt dan verwacht.",
     "listError": "Lijst met telefoonnummers kan niet worden geladen.",
     "deleteNumber": "Nummer verwijderen",
     "deleteConfirmation": "Weet u zeker dat u {{pattern}} wilt verwijderen?",
@@ -1768,6 +1902,10 @@
     "setupNumbers": "PSTN-nummers instellen",
     "placeOrder": "Bestelling plaatsen",
     "orderBlock": "Geblokkeerde nummers bestellen",
+    "newNumbersTab": "Nieuwe nummers",
+    "portNumbersTab": "Poortnummers",
+    "portNumbersPrompt": "Kopieer en plak de nummers van klanten die een poort moeten krijgen.",
+    "portNumbersLabel": "Nummers toewijzen aan poorten",
     "manualAdd": "Handmatig nieuwe nummers toevoegen",
     "state": "Status",
     "selectState": "Status selecteren",
@@ -1777,17 +1915,19 @@
     "searchAreaCodes": "Netnummer zoeken",
     "quantity": "Kwantiteit",
     "consecutive": "Opeenvolgend",
+    "block": "Blokkeren",
     "reviewAndOrder": "Bestelling controleren en plaatsen",
     "package": "Pakket",
     "adding": "Toevoeging",
     "numbersTitle": "Nummers",
     "numbers": "{count, plural, one{# nummer} other{# nummers}}",
     "newNumbers": "{{count}} nieuw",
+    "portNumbers": "{{count}} poort",
     "thankYou": "Hartelijk dank",
     "setupSuccess": "U hebt de PTSN-service ingesteld.",
     "nextStep": "Volgende stap",
     "checkOrderStatus": "Bestelstatus controleren",
-    "launchPortal": "Start dan de bedrijfsportal op",
+    "launchPortal": "Spark-service instellen",
     "carrierListError": "Lijst met providers ophalen mislukt voor deze klant.",
     "listSiteError": "Het ophalen van de sitelijst voor deze klant is mislukt.",
     "orderNumbersPrompt": "Er moeten nummers worden toegevoegd om door te gaan.",
@@ -1806,7 +1946,18 @@
     "serviceAddress": "Serviceadres",
     "serviceAddressPrompt": "Wanneer er een alarmnummer wordt gebeld, gebruiken de hulpdiensten dit adres om de beller te traceren.",
     "serviceAddressConfirmation": "Is dit het adres?",
-    "serviceAddressNotFound": "Kan het adres niet vinden. Voer de update uit en probeer het opnieuw."
+    "serviceAddressNotFound": "Kan het adres niet vinden. Voer de update uit en probeer het opnieuw.",
+    "advancedOrder": {
+      "noResults": "Er zijn geen zoekresultaten, maar er is wel een oplossing.",
+      "detail": "Hoewel we geen nummers in de zoekresultaten kunnen weergeven, kunnen we wel opdracht geven om de netnummers van {{areaCode}} op te halen. Het kan de provider ongeveer vijf dagen kosten om deze speciale opdracht uit te voeren.",
+      "addNumbers": "Nummers toevoegen",
+      "tooltip": "Voor Blokkeren kunt u een grote hoeveelheid opvolgende en niet-opvolgende nummers toevoegen.",
+      "extra": "*Voor opeenvolgende nummers geldt een toeslag"
+    },
+    "errors": {
+      "states": "Kan de staten niet ophalen",
+      "inventory": "Kan PSTN-overzicht niet ophalen"
+    }
   },
   "pstnContractInformation": {
     "title": "PSTN-contractinformatie",
@@ -1909,8 +2060,14 @@
     },
     "call": {
       "title": "Proefperiode instellen: apparaten verzenden",
+      "deviceTrialCapacityHeader": "Kan geen apparaten toevoegen",
+      "remainingDeviceTrials": "Van de 20 actieve gelijktijdige proefperioden voor apparaten hebt u er nog {{number}} over.",
+      "deviceTrialLimitReached": "Uw organisatie heeft de limiet van {{number}} gelijktijdige actieve proefperioden voor apparaten bereikt. Zodra u bestaande proefperioden hebt geconverteerd, kunt u meer proefperioden voor apparaten toevoegen.",
+      "deviceTrialLimitHelp": "Voor vragen over deze limiet kunt u contact opnemen met de partnerhelpdesk: webexpartnerhelp@cisco.com of 1-800-553-6387",
+      "deviceTrialTip": "Doorlopende proefperiode met verzonden apparaten",
+      "deviceTrialUnavailable": "Kan tijdelijk geen apparaten toevoegen. Probeer het later opnieuw.",
       "selectDevicesHeader": "Selecteer apparaten",
-      "deviceLimitDescription": "Kies in totaal minimaal 2 en maximaal 7 apparaten (maximaal 5 per type)",
+      "deviceLimitDescription": "Kies in totaal maximaal 7 apparaten (tussen 2 en 5 apparaten per type)",
       "meetingRoomCamera": "Spark-ruimtesysteem",
       "deskPhones": "Persoonlijke en gedeelde bureautelefoons",
       "skipAddDevices": "Toevoegen van apparaten overslaan",
@@ -1933,12 +2090,50 @@
       "phone": "Telefoonnummer",
       "country": "Land",
       "address": "Adres",
+      "unit": "Unit",
       "city": "Plaats",
       "state": "Status",
       "zip": "Postcode"
     },
     "numbers": {
       "title": "Nieuwe proefperiode starten: nummers toevoegen"
+    },
+    "pstn": {
+      "title": "Proefperiode instellen: oproepen plaatsen",
+      "pstnProvider": "PSTN-provider",
+      "provider": "Provider",
+      "serviceProvider": "Uw serviceprovider selecteren",
+      "phoneNumbers": "Telefoonnummers",
+      "pleaseAdd": "Voeg telefoonnummers voor de klant toe",
+      "pleaseAdd10": "Voeg maximaal 10 telefoonnummers voor de klant toe",
+      "pleaseAdd5": "Voeg maximaal 5 telefoonnummers voor de klant toe",
+      "state": "Status",
+      "areaCode": "Netnummer",
+      "numbers": "Nummers",
+      "contract": "PSTN-contractinformatie",
+      "company": "Officiële bedrijfsnaam",
+      "firstName": "Voornaam ondertekenaar",
+      "lastName": "Achternaam ondertekenaar",
+      "email": "E-mailadres ondertekenaar",
+      "esa": "Serviceadres in geval van nood",
+      "esaDesc": "Wanneer er een alarmnummer wordt gebeld, gebruiken de hulpdiensten dit adres om de beller te traceren.",
+      "address": "Adres",
+      "unit": "Unit",
+      "city": "Plaats",
+      "zip": "Postcode",
+      "skip": "Overslaan en nummers later toevoegen",
+      "popover": "Geef informatie op over de juridische contactpersoon die het contract kan tekenen",
+      "addrRetry": "Een ander e-mailadres gebruiken",
+      "addrFound": "Dit is het adres dat in het systeem is gevonden.",
+      "error": {
+        "areaCodes": "Het ophalen van de netnummers voor de geselecteerde regio is mislukt",
+        "numbers": "Het ophalen van de nummers voor het geselecteerde netnummer is mislukt",
+        "noAddress": "Het adres is niet gevonden",
+        "reserveFail": "De nummers zijn niet gereserveerd",
+        "customerFail": "De klant is niet gemaakt",
+        "orderFail": "De nummers zijn niet besteld",
+        "siteFail": "De site is niet gemaakt"
+      }
     },
     "trialSuccess": "Uw proefversie is klaar",
     "nextStepPrompt": "Wilt u services voor de klant configureren?",
@@ -1957,10 +2152,17 @@
     "licenseQuantity": "Aantal licenties",
     "users": "Gebruikers",
     "message": "Bericht",
-    "messageAndMeeting": "Bericht en vergadering",
-    "meeting": "Vergadering en WebEx",
+    "meeting": "Vergadering met 25 partijen",
+    "webex": "WebEx Enterprise Edition 200",
     "call": "Bellen",
-    "roomSystem": "Spark-ruimtesysteem"
+    "roomSystem": "Spark-ruimtesysteem",
+    "expireWarningMsg": "Uw proefperiode eindigt over {{numDaysLeft}} dag(en).",
+    "expiredMsg": "Uw proefperiode is verlopen.",
+    "requestPurchaseMsg": "Wilt u aankoopinformatie aanvragen?",
+    "requestConfirmMsg": "Er is een bericht met een aankoopaanvraag verzonden naar {{partnerAdminDisplayName}}",
+    "requestPurchaseBtn": "Aankoop aanvragen",
+    "requestAgainBtn": "Opnieuw aanvragen",
+    "requestConfirmNotifyMsg": "Er is een melding naar {{partnerAdminDisplayName}} verzonden over uw voornemen tot aankoop"
   },
 
   "status": {
@@ -1976,9 +2178,9 @@
     "message": "Bericht",
     "call": "Bellen",
     "meeting": "Vergadering",
+    "roomSystems": "Ruimtesystemen",
     "notes": "Aantekeningen",
     "active": "Actief",
-    "trial": "Proefperiode",
     "free": "Gratis",
     "daysRemaining": "{{count}} dagen resterend",
     "expiringToday": "Verloopt vandaag",
@@ -2029,7 +2231,6 @@
     "allowCustomerLogo": "Klantlogo inschakelen voor {{customer}}",
     "myOrganization": "Mijn organisatie",
     "meetingParty": "Vergadering met 25 partijen",
-    "call": "Bellen",
     "roomSystem": "Spark-ruimtesysteem",
     "branding": "Klantbranding",
     "MS": "Bericht",
@@ -2042,7 +2243,10 @@
     "EE": "WebEx Enterprise Edition",
     "CO": "Bellen",
     "ST": "Opslag",
-    "SD": "Spark-ruimtesysteem"
+    "SD": "Spark-ruimtesysteem",
+    "deleteOrg": "Organisatie {{orgName}} verwijderen",
+    "deleteOrgSuccess": "{{orgName}} is verwijderd",
+    "deleteOrgError": "{{orgName}} is niet verwijderd"
   },
   "didAddModal": {
     "title": "Telefoonnummers toevoegen (optioneel)"
@@ -2070,6 +2274,14 @@
     "savePrompt": "Dit adres opslaan?",
     "saveSuccess": "Serviceadres in geval van nood bijgewerkt.",
     "saveError": "Er is een fout opgetreden bij het bijwerken van het serviceadres in geval van nood."
+  },
+  "settingsServiceNumber": {
+    "label": "Servicenummer in geval van nood",
+    "description": "Een alternatief noodnummer dat gebruikt word in geval aan het belapparaat geen individueel telefoonnummer is toegewezen.",
+    "savePrompt": "Dit nummer opslaan?",
+    "saveSuccess": "Servicenummer in geval van nood bijgewerkt.",
+    "saveError": "Er is een fout opgetreden bij het bijwerken van het serviceadres in geval van nood.",
+    "warning": "Selecteer een nummer dat is toegewezen aan een gebruiker of aan een gespreksfunctie van Spark."
   },
   "didManageModal": {
     "buttonText": "Nummers toevoegen",
@@ -2117,18 +2329,22 @@
     "serial": "Serienummer",
     "ipAddr": "IP-adres",
     "macAddr": "MAC-adres",
+    "sipUrl": "SIP-adres",
     "issues": "Problemen",
-    "lastSeen": "Offline sinds:",
-    "codeExpires": "Deze activeringscode verloopt",
-    "deviceCodeExpires": "De activeringscode voor dit apparaat verloopt",
+    "lastSeen": "sinds:",
+    "notYetActivated": "Er is geen apparaat geactiveerd voor deze locatie.",
+    "deleteLocation": "Locatie verwijderen",
+    "codeExpires": "Deze activeringscode verloopt {{inXDays}}",
+    "deviceCodeExpires": "De huidige activeringscode verloopt {{inXDays}}",
+    "getNewCode": "Een nieuwe code verkrijgen",
     "channelUpdated": "Software-update van kanaal bijgewerkt",
     "channelUpdateFailed": "Het apparaat heeft het kanaal voor updates niet op tijd bijgewerkt"
   },
   "generateActivationCodeModal": {
     "title": "Activeringscode",
     "activateBody": "Schakel uw nieuwe Cisco-bureautelefoon of TelePresence-apparaat in en voer de activeringscode in wanneer daar om wordt gevraagd. U kunt ook de QR-code scannen met de camera van het apparaat.",
-    "emailCode": "Code per e-mail versturen",
-    "copyToClipboard": "Naar klembord kopiëren",
+    "emailCode": "E-mailadres",
+    "copyToClipboard": "Kopiëren",
     "print": "Afdrukken",
     "send": "Verzenden",
     "to": "Aan",
@@ -2240,7 +2456,6 @@
     "takeOffline": "Offline halen",
     "bringOnline": "Online zetten",
     "actionsHeader": "Acties",
-    "deleteResource": "Resource uitschakelen",
     "deleteResourceConfText1": "Weet u zeker dat u deze resource wilt uitschakelen?",
     "deleteResourceConfText2": "De resource heeft dan geen verbinding meer met de cloud en wordt offline gehaald.",
     "cancel": "Annuleren",
@@ -2267,7 +2482,7 @@
       "hosts": "Hosts"
     },
     "activateService": {
-      "ingress": "De Cloud uitbreiden naar uw lokale omgeving",
+      "ingress": "De cloud uitbreiden naar uw lokale omgeving",
       "serviceName": "Mediaservice activeren",
       "label": "ACTIVEREN EN CONFIGURATIE STARTEN"
     },
@@ -2307,7 +2522,16 @@
       "running": "Gaande",
       "needs_attention": "Vraagt bijzondere aandacht",
       "alarm": "Alarm",
-      "Unknown": "Registreren"
+      "Unknown": "Registreren",
+      "nohosts": "Er zijn geen hosts geregistreerd"
+    },
+    "deleteGroup": {
+      "title": "Cluster verwijderen",
+      "message": "Weet u zeker dat u {{groupName}} wilt verwijderen uit Cisco Collaboration Cloud?",
+      "errorHeader": "Onverwachte fout",
+      "errorMessage": "Kan {{groupName}} niet verwijderen.",
+      "keep": "Behouden",
+      "delete": "Verwijderen"
     },
     "clusters": {
       "listing": {
@@ -2320,9 +2544,9 @@
       "deregisterHeader": "Uitschrijving bevestigen",
       "deregisterErrorHeader": "Onverwachte fout",
       "deregisterAreYouSure": "U staat op het punt mediaserver {{clusterName}} uit te schrijven bij organisatie {{organizationName}}.",
-      "deregisterCausesListItem1": "Dit systeem accepteert dan geen gesprekken meer.",
+      "deregisterCausesListItem1": "Het systeem accepteert geen oproepen meer.",
       "deregisterCausesListItem2": "De bestaande gesprekken gaan door.",
-      "defuseAreYouSure": "Weet u zeker dat u mediaserver {{clusterName} {{clusterName}} wilt uitschrijven bij organisatie {{organizationName}?",
+      "defuseAreYouSure": "Weet u zeker dat u mediaserver {{clusterName}} wilt uitschrijven bij organisatie {{organizationName}}?",
       "defuseCausesListItem1": "De cluster {{groupName} wordt van het systeem verwijderd.",
       "deregisterErrorGeneric": "Kan {{clusterName}} niet uitschrijven. {{errorMessage}}"
     },
@@ -2348,11 +2572,16 @@
     },
     "add-resource-dialog": {
       "title": "Een nieuwe mediaserver registreren",
-      "text1": "Maak een nieuwe of kies een bestaande mediacluster om de nieuwe mediaserver aan toe te wijzen.",
+      "text1": "Maak een nieuwe of kies een bestaande mediacluster om de nieuwe mediaserver aan toe te wijzen:",
       "text2": "Voer de hostnaam of het IP-adres in van de mediaserver die u bij de cloud wilt registreren. Klik op RESOURCE REGISTREREN, meld u aan bij uw mediaserver en registreer de resource.",
-      "register": "RESOURCE REGISTREREN",
-      "cancel": "ANNULEREN",
-      "hostname-placeholder": "Hostnaam of IP-adres invoeren"
+      "register": "Naar de mediaserver gaan",
+      "cancel": "Annuleren",
+      "hostname-placeholder": "Hostnaam of IP-adres invoeren",
+      "grant-registration-success-header-old-cluster": "U kunt mediaserver <strong>{{hostname}}</strong> van <strong>{{clustername}}</strong> nu bij Cisco Collaboration Cloud registreren.",
+      "grant-registration-success-header-new-cluster": "U kunt mediaserver <strong>{{hostname}}</strong> van het nieuwe cluster <strong>{{clustername}}</strong> nu bij Cisco Collaboration Cloud registreren.",
+      "grant-success-information": "Ga binnen één uur naar uw mediaserver om de registratie te voltooien.",
+      "next": "Volgende",
+      "back": "Terug"
     },
     "mediaServiceActivationFailure": "Problemen met het inschakelen van de service",
     "mediaAgentOrgMappingFailure": "Problemen met het inschakelen van Orpheus voor MediaFusion",
@@ -2386,7 +2615,8 @@
     "noCluster": "Geen mediaserviceclusters verbonden met Spark",
     "close": "Sluiten",
     "reassignCluster": "Opnieuw aan cluster toewijzen",
-    "moveHost": "HOST VERPLAATSEN"
+    "moveHost": "HOST VERPLAATSEN",
+    "deleteCluster": "CLUSTER VERWIJDEREN"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Inschakeling sessietype bijgewerkt.",
@@ -2395,6 +2625,7 @@
     "pmrErrorTelephonyPrivilegesHybridVOIP": "U moet telefonierechten of geïntegreerde VoIP instellen voor deze gebruiker voordat u een persoonlijke ruimte kunt maken.",
     "pmrErrorHybridAudio": "WebEx-audio moet zijn ingeschakeld voordat u een persoonlijke ruimte kunt maken. Neem contact op met WebEx-ondersteuning voor meer informatie.",
     "mustHavePROorSTDifPMRenabled": "Selecteer het juiste Meeting Center-vergaderingstype voor de persoonlijke ruimte om een persoonlijke ruimte voor deze gebruiker aan te maken.",
+    "mustHaveAtLeastOneSessionTypeEnabled": "Selecteer minimaal één sessietype onder elk WebEx Center.",
     "reload": "Probeer het opnieuw",
     "cancel": "Ga terug"
   },
@@ -2438,7 +2669,6 @@
     "030035": "030035",
     "030036": "Het gebruikersaccount ondersteunt teleconferenties met gratis inbellen niet.",
     "030037": "De gebruiker of de locatie ondersteunt Eén-klik niet.",
-    "030039": "030039",
     "030039": "030039",
     "030040": "030040",
     "030041": "030041",
@@ -2495,6 +2725,7 @@
     "defaultProcessError": "Kan verzoek niet verwerken",
     "defaultNotWebExAdminError": "U bent nog niet voor deze locatie doorgevoerd als beheerder. Dit proces kan even duren.",
     "defaultAccessError": "Momenteel geen toegang tot deze server.",
+    "defaultDbMismatchError": "De gebruikersaccountwijzigingen worden gesynchroniseerd tussen de servers. Dit proces kan enige tijd in beslag nemen.",
     "defaultReloadMsg": "Probeer de pagina opnieuw te laden."
   },
   "webexUserSettingLabels": {
@@ -2524,7 +2755,7 @@
     "breadcrumbsAltText": "U bent hier"
   },
   "webexSiteSettingsLabels": {
-    "siteSettingsIndexPageTitle": "Configureren",
+    "siteSettingsIndexPageTitle": "De WebEx-site configureren",
     "siteSettingsIndexPageTitleFull": "{{siteUrl}} configureren",
     "hostAccountsTitle": "Hostaccounts",
     "activeTitle": "Actief",
@@ -2540,7 +2771,7 @@
     "indexPageLabel_SiteInfo_site_info": "Sitegegevens",
     "indexPageLabel_SiteInfo_site_features": "Sitefuncties",
 
-    "indexPageLabel_CommonSettings_cmr": "Samenwerkingsvergaderruimten (CMR)",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Mobiel",
     "indexPageLabel_CommonSettings_navigation": "Aanpassing navigatie",
     "indexPageLabel_CommonSettings_scheduler": "Planner",
@@ -2729,6 +2960,24 @@
     "pageId_xxxx": "Ongedefinieerd",
     "pageId_underDevelopment": "In ontwikkeling"
   },
+  "webexCSVResultsModal": {
+    "csvExportTitle": "Resultaten exporteren",
+    "csvExportRecordsAvailable": "Totaal beschikbare records:",
+    "csvExportRecordsSuccessful": "De records zijn geëxporteerd:",
+    "csvExportDownloadFile": "CSV-bestand downloaden:",
+    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
+
+    "csvImportTitle": "Resultaten importeren",
+    "csvImportFileName": "Bestandsnaam:",
+    "csvImportRecordsRequested": "Totaal aantal aangevraagde records:",
+    "csvImportRecordsUpdated": "De records zijn bijgewerkt:",
+    "csvImportDownloadErr": "Foutenlogboek downloaden:",
+    "csvImportErrFilename": "WebEx-ImportErr.tsv",
+
+    "csvStarted": "Gestart:",
+    "csvFinished": "Voltooid:",
+    "csvRecordsFailed": "Mislukte records:"
+  },
   "leaderBoard": {
     "actions": "Acties",
     "licenseUsage": "Licentiegebruik",
@@ -2752,7 +3001,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Samenwerkingsvergaderruimte",
+    "CMR": "WebEx Collaboration Meeting Rooms (samenwerkingsvergaderruimten)",
     "CO": "Bellen",
     "ST": "Opslag",
     "SD": "Spark-ruimtesysteem"
@@ -2799,14 +3048,26 @@
     "orgSettingsSuccess": "orgSettings zijn bijgewerkt voor de organisatie",
     "orgSettingsError": "orgSettings bijwerken is mislukt voor de organisatie",
     "orgSettingsForPartnerSuccess": "orgSettings zijn bijgewerkt voor de partner en de managedOrgs",
-    "orgSettingsForPartnerError": "orgSettings bijwerken is mislukt voor de partner en de managedOrgs"
+    "orgSettingsForPartnerError": "orgSettings bijwerken is mislukt voor de partner en de managedOrgs",
+    "alwaysProvisionWithLatest": "Configureer nieuwe WebEx-sites met de nieuwste clientversie",
+    "webexClientVersionUpdated": "WebEx-clientversie bijgewerkt",
+    "webexClientVersionUpdatedFailed": "Bijwerken WebEx-clientversie mislukt",
+    "webexVersionUseLatestTrue": "Nieuwste versie van WebEx-client wordt gebruikt",
+    "webexVersionUseLatestFalse": "Geselecteerde versie van WebEx-client wordt gebruikt",
+    "webexVersionUseLatestUpdateFailed": "Kan niet bijwerken",
+    "selectAWbxClientVersion": "Selecteer een WebEx-clientversie",
+    "WbxClientVersionOnlyOnNewSites": "Deze instelling is alleen van toepassing op sites die vanaf nu worden ingesteld en heeft geen invloed op bestaande sites.",
+    "webexClientVersion": "Versie Cisco WebEx-toepassing"
   },
   "customerProfile": {
     "supportContacts": "Contactpersonen bij Ondersteuning",
     "partnerAdmin": "Partnerbeheerders",
     "brandingInfo": "Indien u uw eigen branding wilt weergeven naast Cisco Spark, kunt u uw logo hieronder uploaden.",
     "usePartnerLogo": "Gebruik hetzelfde logo als {{partner}}",
-    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u uw ondersteuningsparameters hieronder in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Spark-toepassing."
+    "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u uw ondersteuningsparameters hieronder in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Spark-toepassing.",
+    "supportAccessTitle": "Toegang ondersteunen",
+    "supportAccessInfo": "Met deze instelling krijgt Cisco of een partner alleen-lezentoegang tot uw organisatie en kunnen er geen wijzigingen worden aangebracht aan de gegevens van uw organisatie.",
+    "supportAccessCheckbox": "Geef de afdeling Ondersteuning van Cisco of een partner alleen-lezentoegang tot uw organisatie."
   },
   "fileUpload": {
     "uploading": "Bestand uploaden",
@@ -2845,7 +3106,7 @@
     "events": "Gebeurtenissen"
   },
   "processOrderPage": {
-    "errOrgCreation": "Bestelnummer {{orderId}} wordt verwerkt. Controleer de status na 24 uur opnieuw.",
+    "errOrgCreation": "Uw bestelling wordt verwerkt. Controleer de status na 24 uur opnieuw.",
     "info": "Status",
     "wait": "Even geduld terwijl u wordt omgeleid"
   },
@@ -2857,7 +3118,7 @@
     "spanishSpain": "Español (España)",
     "spanishColumbian": "Español (América Latina)",
     "french": "Français (France)",
-    "indonesian": "Bahasa Indonesia",
+    "indionesian": "Bahasa Indonesia",
     "italian": "Italiano",
     "japanese": "日本語",
     "korean": "한국어",
@@ -2870,44 +3131,55 @@
     "turkish": "Tϋrkçe",
     "chineseMandarin": "简体中文",
     "chineseTraditional": "繁體中文",
-    "englishAustralian": "Engels (Australisch)",
-    "catalan": "Catalaans",
-    "dutch": "Nederlands",
     "frenchCanadian": "Français (Canada)",
-    "finnish": "Fins",
-    "galician": "Galicisch",
-    "greek": "Grieks",
-    "spanishArgentine": "Spaans (Argentinië)",
-    "spanishChilean": "Spaans (Chileens)",
-    "spanishMexican": "Spaans (Mexicaans)",
+    "finnish": "Suomi",
+    "galician": "Galego",
+    "greek": "Ελληνικά",
+    "spanishArgentine": "Español (Argentina)",
+    "spanishChilean": "Español (Chile)",
+    "spanishMexican": "Español (Mexicano)",
     "portuguese": "Português",
-    "valencian": "Valenciaans"
+    "englishAustralian": "Engels (Australisch)",
+    "valencian": "Valenciano",
+    "catalan": "Català"
   },
   "siteList": {
     "conferencing": "WebEx-sites",
     "siteName": "Naam locatie",
     "licenseCount": "Aantal licenties",
-    "type": "Type",
+    "licenseTypes": "Licentietypen",
     "siteSettings": "Configureren",
     "siteReports": "Rapporten",
     "siteCsvColumnHeader": "Gebruikerskenmerken",
     "siteCsvExportLinkLabel": "Exporteren",
     "siteCsvExportInProgressLinkLabel": "Exporteren...",
+    "siteCsvExportResultsLinkLabel": "Resultaten exporteren",
     "siteCsvImportLinkLabel": "Importeren",
     "siteCsvImportInProgressLinkLabel": "Importeren...",
     "siteCsvDownloadLinkLabel": "Bestand downloaden",
+    "siteCsvImportResultsLinkLabel": "Resultaten importeren",
     "userAttributesTooltip": "Wijzig gebruikerskenmerken voor meerdere WebEx-gebruikers tegelijk via een spreadsheetprogramma. Exporteer uw gebruikers in een CSV-bestand, bewerk de gebruikersgegevens en importeer het bijgewerkte CSV-bestand weer in de WebEx-site.",
     "exportBlockedTooltip": "U kunt pas exporteren als het importeren is voltooid.",
     "exportInProgressTooltip": "Het kan even duren voordat alles is geëxporteerd. Dit proces wordt vervolgd tot het is voltooid, ook als u zich afmeldt of als u op een andere site gebruikerskenmerken importeert of exporteert. Na voltooiing van het exporteren verschijnt er een downloadkoppeling op deze pagina.",
     "exportFinishedWithErrorsTooltip": "Het exporteren is voltooid met fouten",
     "exportFailedTooltip": "Het exporteren is mislukt",
+    "exportStartedToast": "Het kan even duren voordat alles is geëxporteerd. Dit proces wordt vervolgd tot het is voltooid, ook als u zich afmeldt of als u op een andere site gebruikerskenmerken importeert of exporteert. Na voltooiing van het exporteren verschijnt er een downloadkoppeling op deze pagina.",
+    "exportRejectedToast": "Export mislukt. Probeer het opnieuw.",
+    "importButton": "Importeren",
+    "importStartModalTitle": "WebEx-gebruikerskenmerken importeren",
+    "importStartModalInstruction_1": "Als u een kommagescheiden bestand wilt uploaden, selecteert u het bestand en vervolgens importeren. Als het importbestand niet-ASCII-tekens bevat, moet het verifiëren met een kommagescheiden bestand in Unicode.",
     "importBlockedTooltip": "U kunt pas importeren als het exporteren is voltooid.",
     "importInProgressTooltip": "Het kan even duren voordat alles is geïmporteerd. Dit proces wordt vervolgd tot het is voltooid, ook als u zich afmeldt. Als u wilt kunt u op een andere site gebruikerskenmerken importeren of exporteren.",
     "importFinishedWithErrorsTooltip": "Het importeren is voltooid met fouten",
     "importFailedTooltip": "Het importeren is mislukt",
+    "importStartedToast": "Het kan even duren voordat alles is geïmporteerd. Dit proces wordt vervolgd tot het is voltooid, ook als u zich afmeldt. Als u wilt kunt u op een andere site gebruikerskenmerken importeren of exporteren.",
+    "importRejectedToast": "Import mislukt. Probeer het opnieuw.",
+    "importInvalidFileToast": "Kies een te importeren bestand.",
     "siteCSVNotAvailable": "Niet beschikbaar",
+    "siteCSVNotAvailableTooltip": "U moet deze site bijwerken om toegang te krijgen tot deze functie.",
     "authError": "Kan niet verifiëren. Controleer uw rechten voor deze site.",
-    "systemError": "Kan niet met deze WebEx-site communiceren. Neem contact op met de ondersteuning."
+    "systemError": "Kan niet met deze WebEx-site communiceren. Neem contact op met de ondersteuning.",
+    "multipleLicenses": "Meerdere..."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybride services",
@@ -2979,7 +3251,7 @@
         "message": "Deze hardwareversie van de SX10 heeft geen ingebouwde ultrasone luidspreker."
       },
       "MissingEncryptionKey": {
-        "type": " De sleutel voor de coderingsoptie ontbreekt",
+        "type": "De sleutel voor de coderingsoptie ontbreekt",
         "message": "Voeg een sleutel voor de coderingsoptie toe"
       },
       "ConfiguredForTestAutomation": {
@@ -3043,7 +3315,8 @@
     "cp": "GP",
     "editAction": "Bewerken",
     "deleteAction": "Verwijderen",
-    "aaDependsTitle": "{{featureName}} afhankelijk van virtuele operator",
+    "aaDependsTitle": "Afhankelijk van virtuele operator",
+    "aaDependsContext": "Hier volgt een lijst met alle virtuele operators die {{featureName} noemen:",
     "aaDeleteBlocked": "Bewerking kan niet worden voltooid omdat deze virtuele operator wordt genoemd door {{aaNames}}",
     "deleteFeature": "{{ featureType }} verwijderen",
     "deleteConfirmText": "Weet u zeker dat u de {{ featureType }} {{ featureName }} wilt verwijderen?",
@@ -3142,7 +3415,7 @@
     "noFeatures": "Functies zijn niet beschikbaar voor de huidige aanmelding",
     "noFeature": "Deze functie is niet ingeschakeld voor de huidige aanmelding",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Er is hier nog niets te zien.",
+      "nothingToSee": "Er zijn nog geen functies.",
       "letsCustomize": "Laten we de belbeleving aanpassen"
     },
     "hgMethods": {
@@ -3156,7 +3429,7 @@
       },
       "circular": {
         "name": "Circulair",
-        "desc": "Het systeem houdt bij naar welk lid de vorige oproep is gestuurd Circulair stuurt die oproep eerst naar het volgende sequentiële inactieve (of beschikbare) lid."
+        "desc": " Circulair stuurt de oproep eerst naar het volgende sequentiële inactieve (of beschikbare) lid. Het systeem houdt bij naar welk lid de vorige oproep is gestuurd."
       },
       "topDown": {
         "name": "Top-down",
@@ -3261,7 +3534,7 @@
       "hybrid": {
         "title": "Hybride services",
         "notEnabledText": "Met Hybride services kunt u systemen op locatie integreren met het Cisco Collaboration Platform.",
-        "notEnabledActionText": "Meer informatie.",
+        "notEnabledActionText": "Meer info",
         "serviceHeader": "Status op locatie",
         "services": {
           "squared-fusion-cal": "Agenda",
@@ -3304,12 +3577,13 @@
     "PARTNER_READ_ONLY_ADMIN": "Alleen-lezenpartnerbeheerder"
   },
   "helpdesk": {
+    "browserTabHeaderTitle": "Helpdesk-ondersteuning",
     "navHeaderTitle": "Cloud Collaboration-helpdesk",
     "helpdesk": "Helpdesk",
     "searchHeading": "Helpdesk-ondersteuning",
     "users": "Gebruikers",
     "customers": "Klanten",
-    "badUserSearchInput": "Voer minimaal drie tekens in. Voer twee woorden in als u op naam of e-mail wilt zoeken: bijvoorbeeld, Jan Jansen of jan.jansen.",
+    "badUserSearchInput": "Voer minimaal drie tekens per woord in. Voer twee woorden in als u op naam of e-mail wilt zoeken: bijvoorbeeld, Jan Jansen of jan.jansen.",
     "unexpectedError": "Er is een onverwachte fout opgetreden",
     "cancelled": "Zoekopdracht is geannuleerd",
     "searchingPleaseWait": "Bezig met zoeken. Even geduld a.u.b.",
@@ -3332,6 +3606,9 @@
     "customerPortalLaunch": "Klantportal weergeven",
     "contact": "Contact",
     "managedBy": "Beheerd door",
+    "supportedBy": "Ondersteund door",
+    "ts": "TS(TAC)",
+    "trials": "Proefperioden",
     "administratorUsers": "Beheerdersgebruikers",
     "message": "Bericht",
     "meeting": "Vergadering",
@@ -3406,12 +3683,13 @@
       "navigation-title": "Navigeren met toetsenbord",
       "navigation-info": "Druk op <strong>Tabblad</strong> of de toetsen ↑ ↓ ← → om door de resultaten te navigeren, op ↵ om te selecteren en op <strong>Esc</strong> om terug te gaan naar de resultaten of om de zoektermen te wissen. Druk op <strong>s</strong> nadat u een klant hebt geselecteerd (of uit de klantweergavepagina) om uw zoekopdracht alleen voor die klant te filteren. ",
       "search-criterias-title": "Zoekcriteria",
-      "search-criterias-users": "<strong>Gebruikers</strong>: e-mail, (voor- en achter)naam, telefoonnummer en weergavenaam (twee woorden vereist)",
-      "search-criterias-customers": "<strong>Klanten</strong>: weergavenaam",
+      "search-criterias-users": "<strong>Gebruikers</strong>: e-mail, (voor- en achter)naam, telefoonnummer en weergavenaam (twee woorden met elk minimaal drie tekens vereist)",
+      "search-criterias-customers": "<strong>Klanten</strong>: weergavenaam (minimaal drie tekens vereist)",
       "search-criterias-devices": "<strong>Apparaten</strong>: voor Spark-gespreksapparaten: SEP-nummer en telefoonnummer. Voor Spark-ruimtesystemen: weergavenaam, serienummer of MAC-adres.",
       "search-criterias-note": "Opmerking: als u naar een Spark-systeem of -apparaat wilt zoeken, moet u eerst een klant selecteren.",
       "narrow-title": "Een klant selecteren",
-      "narrow-info": "Als u een zoekopdracht wilt filteren op één klant, begint u op de hoofdpagina van het zoekprogramma en zoekt u de klant op weergavenaam. Vervolgens klikt u op <i class='icon icon-search'></i> in zoekresultaten van de klant."
+      "narrow-info": "Als u een zoekopdracht wilt filteren op één klant, begint u op de hoofdpagina van het zoekprogramma en zoekt u de klant op weergavenaam. Vervolgens klikt u op <i class='icon icon-search'></i> in zoekresultaten van de klant.",
+      "referTo": "Verwijzen naar"
     },
     "history": {
       "clear": "Zoekgeschiedenis wissen",
@@ -3425,8 +3703,6 @@
     "more": "meer",
     "less": "Minder",
     "usage": "{{usage}} van {{volume}} in gebruik",
-    "launchHelpdesk": "Helpdesk",
-    "launchHelpdeskDesc": "Open de portal Helpdesk in een nieuw tabblad",
     "numbers": "Nummers",
     "noDeviceEntitlements": "Zoekopdracht op apparaat niet van toepassing. De klant heeft geen toegang tot Cloudberry of Spark Call.",
     "applyOrgFilterPleaseWait": "Filter toepassen, een ogenblik geduld...",
@@ -3438,7 +3714,9 @@
     "sparkStatus": "Spark-status",
     "searchHelp": "In Help zoeken",
     "deviceNotFound": "Dit apparaat bestaat niet meer. Is het misschien verwijderd?",
-    "viewPortal": "Klant weergeven"
+    "customerPortalViewHeading": "Klantportalweergave",
+    "customerPortalViewDetails": "U kunt de gehele portal van de klant weergeven, maar geen wijzigingen aanbrengen.",
+    "view": "Weergeven"
   },
   "activation": {
     "verificationComplete": "Verificatie voltooid",
@@ -3453,7 +3731,7 @@
   },
   "domainManagement": {
     "title": "Domeinen",
-    "description": "Voeg de domeinen in uw organisatie toe en verifieer deze zodat uw gebruikers kunnen profiteren van de gespreksservice Connect. Verifieer al uw domeinen tegelijk om blokkering van de gebruikerstoegang te voorkomen. Verifieer eerst uw eigen domein om uitsluiting van de beheerder te voorkomen.",
+    "description": "Voeg de domeinen in uw organisatie toe en verifieer deze, zodat uw gebruikers gebruik kunnen maken van gespreksservice.",
     "addDomain": "Domein toevoegen",
     "verifyDomain": "Verifiëren",
     "claimDomain": "Claimen",
@@ -3463,29 +3741,25 @@
       "actionsHeader": "Acties"
     },
     "add": {
-      "header": "Domeinen toevoegen",
-      "description": "Voeg te verifiëren domeinen in uw organisatie toe. Als u gebruikers hebt in meerdere domeinen, herhaalt u deze stap tot u alle domeinen hebt toegevoegd. U moet eerst uw eigen domein verifiëren voordat u andere domeinen verifieert.",
+      "header": "Domein toevoegen",
+      "description": "Voeg het domein van uw organisatie toe. Als u meerdere domeinen hebt, herhaalt u deze stap.",
       "exampleDomain": "voorbeeld.com",
       "invalidDomain": "Dit is geen geldige domeinnaam.",
       "encodedIDN": "Dit is een IDN en deze wordt gecodeerd in: {{domain}}.",
-      "invalidDomainAdded": "Deze domeinnaam is al toegevoegd."
-
+      "invalidDomainAdded": "Dit domein is al toegevoegd."
     },
     "delete": {
       "header": "Domein verwijderen",
+      "remove": "Verwijderen",
       "description": "U staat op het punt het volgende domein te verwijderen:",
       "preventLockoutError": "Als u uw eigen domein verwijdert, kunt u zich niet meer aanmelden.",
       "warning": "Gebruikers die tot dit domein behoren, worden uitgesloten. Zij kunnen zich niet meer aanmelden en geen Spark-services meer gebruiken. U kunt ook geen nieuwe gebruikers meer toevoegen die tot dit domein behoren."
     },
-    "email": {
-      "header": "E-mail verzenden",
-      "description": "Voer e-mailadressen in om een e-mail te ontvangen met de DNS-verificatietoken en instructies voor {{name}}.",
-      "exampleEmail": "Voer door komma's gescheiden e-mailadressen in.",
-      "invalidEmail": "Dit is geen geldig e-mailadres.",
-      "instructions": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
-      "beforeVerify": "Voordat u verifieert",
-      "sendEmail": "Instructies verzenden"
+    "unclaim": {
+      "header": "Domein vrijgeven",
+      "unclaim": "Vrijgeven",
+      "description": "U staat op het punt het volgende domein vrij te geven:",
+      "warning": "Dit domein is nu te verifiëren en te claimen door andere organisaties."
     },
     "verify": {
       "header": "Domein verifiëren",
@@ -3493,29 +3767,35 @@
       "beforeVerify": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
       "warning": "Het is belangrijk om alle domeinen te verifiëren. Gebruikers die niet tot een geverifieerd domein behoren, worden meteen uitgesloten. Zij kunnen zich niet meer aanmelden en geen Spark-services meer gebruiken. U kunt ook geen nieuwe gebruikers meer toevoegen die tot ongeverifieerde domeinen behoren.",
       "verify": "Verifiëren",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
-      "preventLockoutError": "Uw domein '{{domain}}' moet eerst worden geverifieerd om uitsluiting van uw account te voorkomen."
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert."
     },
     "claim": {
-      "header": "Geclaimd domein",
+      "header": "Domein claimen",
       "claimThis": "U staat op het punt het volgende domein te claimen:",
       "warning": "Gebruikers met e-mailadressen in dit domein die tot andere organisaties behoren, moeten nieuwe e-mailadressen opgeven.",
       "claim": "Claimen"
     },
     "actions": {
-      "instructions": "Token en instructies weergeven",
-      "mail": "Token en instructies mailen",
+      "instructions": "Verificatietoken ophalen",
       "unverify": "Domein verwijderen",
       "unclaim": "Domein vrijgeven",
-      "delete": "Verwijderen"
+      "delete": "Domein verwijderen"
     },
     "instructions": {
       "title": "Token en instructies",
-      "done": "Gereed",
+      "close": "Sluiten",
       "instructions": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
-      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
-      "beforeVerify": "Voordat u verifieert",
-      "sendEmail": "Instructies verzenden"
+      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert.",
+      "beforeVerify": "Voordat u verifieert"
     }
+  },
+  "csvDownload": {
+    "csvDownloadConfirmTitle": "Weet u het zeker?",
+    "confirmCsvDownloadMsg": "Het kan enige tijd duren om uw te exporteren gegevens op te halen. In die tijd kunt u zich niet afmelden of uw browser vernieuwen, want dan wordt het exporteren niet voltooid.",
+    "confirmCsvDownload": "Wilt u doorgaan?",
+    "confirmCsvCancelMsg": "Hiermee annuleert u de huidige gegevensexport. Deze handeling kan niet worden teruggedraaid.",
+    "csvDownloadIsRunning": "Er wordt al een exporttaak uitgevoerd. Probeer het later opnieuw.",
+    "csvDownloadInProgress": "Achtergrondtaak '{{type}}lijst exporteren' wordt uitgevoerd.",
+    "csvDownloadSuccess": "Uw {{type}}lijst is gecompileerd en het downloaden is gestart."
   }
 }

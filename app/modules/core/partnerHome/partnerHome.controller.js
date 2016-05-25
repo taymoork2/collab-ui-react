@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, PartnerService, Notification, Log, Authinfo) {
+  function PartnerHomeCtrl($scope, $timeout, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -13,9 +13,12 @@
     $scope.expiredRows = 3;
     $scope.showTrialsRefresh = true;
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isTestOrg = false;
+
     $scope.launchCustomerPortal = launchCustomerPortal;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
+    $scope.getDaysAgo = getDaysAgo;
 
     init();
 
@@ -28,9 +31,22 @@
       if ($scope.activeList) {
         $scope.activeCount = $scope.activeList.length;
       }
+
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          $scope.isTestOrg = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      });
     }
 
     function openAddTrialModal() {
+      if ($scope.isTestOrg) {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
+          from: $state.current.name
+        });
+      }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
       });
@@ -46,9 +62,13 @@
       }
     }
 
+    function getDaysAgo(daysLeft) {
+      return Math.abs(daysLeft);
+    }
+
     function getTrialsList() {
       $scope.showTrialsRefresh = true;
-      PartnerService.getTrialsList()
+      TrialService.getTrialsList()
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -71,6 +91,7 @@
         })
         .finally(function () {
           $scope.showTrialsRefresh = false;
+          resizeCards();
         });
     }
 
@@ -79,6 +100,18 @@
         customerOrgId: trial.customerOrgId,
         customerOrgName: trial.customerName
       }));
+    }
+
+    function resizeCards() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
   }
 })();

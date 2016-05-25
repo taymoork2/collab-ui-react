@@ -20,7 +20,9 @@
       migrateUsers: migrateUsers,
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
-      deactivateUser: deactivateUser
+      deactivateUser: deactivateUser,
+      resendInvitation: resendInvitation,
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail
     };
 
     return service;
@@ -107,6 +109,7 @@
         $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users', userData)
           .success(function (data, status) {
             data = data || {};
+            $rootScope.$broadcast('Userservice::updateUsers');
             data.success = true;
             callback(data, status);
           })
@@ -432,6 +435,37 @@
         }
 
         return entitlementOrLicense;
+      });
+    }
+
+    function isHuronUser(allEntitlements) {
+      return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
+    }
+
+    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      if (userStatus === 'pending' && !isHuronUser(entitlements)) {
+        return sendSparkWelcomeEmail(userEmail, userName);
+      } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+      }
+      return $q.reject('invitation not sent');
+    }
+
+    function sendSparkWelcomeEmail(userEmail, userName) {
+      var userData = [{
+        'address': userEmail,
+        'name': userName
+      }];
+
+      return $q(function (resolve, reject) {
+        inviteUsers(userData, null, true, function (data, status) {
+          if (data.success) {
+            resolve();
+          } else {
+            Log.debug('Resending failed. Status: ' + status);
+            reject(status);
+          }
+        });
       });
     }
 

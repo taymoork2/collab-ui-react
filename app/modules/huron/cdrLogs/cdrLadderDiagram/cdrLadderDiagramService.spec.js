@@ -43,8 +43,11 @@ describe('Controller: CdrLadderDiagramService', function () {
     '</g>' +
     '</svg>';
 
+  var cdrEvents = getJSONFixture('huron/json/cdrDiagram/cdrEvents.json');
   var messageSquence = getJSONFixture('huron/json/cdrDiagram/messageSquence.json');
+  var activitiesResponse = getJSONFixture('huron/json/cdrDiagram/activities.json');
   var diagnosticsServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/ladderdiagram';
+  var activitiesServiceUrl = 'https://atlas-integration.wbx2.com/admin/api/v1/callflow/activities?id=lid.f2aa2076-77eb-329f-b5c1-a2f21fdfdc89&start=2016-05-05T21:14:16.000Z&end=2016-05-05T21:14:16.999Z';
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _CdrLadderDiagramService_, _Notification_, _Authinfo_) {
     CdrLadderDiagramService = _CdrLadderDiagramService_;
@@ -79,10 +82,23 @@ describe('Controller: CdrLadderDiagramService', function () {
   });
 
   it('should return a Ladder Diagram from the Diagnostics Service', function () {
-    $httpBackend.whenPOST(diagnosticsServiceUrl).respond(diagnosticsResponse);
+    $httpBackend.expectPOST(diagnosticsServiceUrl, messageSquence).respond(diagnosticsResponse);
 
-    CdrLadderDiagramService.createLadderDiagram(messageSquence).then(function (response) {
+    CdrLadderDiagramService.createLadderDiagram(cdrEvents).then(function (response) {
       expect(response).toEqual(diagnosticsResponse);
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should return the Spark activies data from the Diagnostics Service', function () {
+    var locusid = 'f2aa2076-77eb-329f-b5c1-a2f21fdfdc89';
+    var start = '2016-05-05T21:14:16.000Z';
+    var end = '2016-05-05T21:14:16.999Z';
+    $httpBackend.whenGET(activitiesServiceUrl).respond(activitiesResponse);
+
+    CdrLadderDiagramService.getActivities(locusid, start, end).then(function (response) {
+      expect(response).toEqual(activitiesResponse);
     });
 
     $httpBackend.flush();

@@ -5,17 +5,37 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, $translate, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
+    //Providers
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
-    var PSTN = "PSTN";
-    var TYPE_PORT = "PORT";
-    var PENDING = "PENDING";
+    //e911 order operations
+    var UPDATE = 'UPDATE';
+    var DELETE = 'DELETE';
+    var ADD = 'ADD';
+    //did order status
+    var PENDING = 'PENDING';
+    var PROVISIONED = 'PROVISIONED';
     var QUEUED = "QUEUED";
+    //did order types
+    var NUMBER_ORDER = 'NUMBER_ORDER';
+    var PORT_ORDER = 'PORT_ORDER';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
+    //translated order status
+    var SUCCESSFUL = $translate.instant('pstnOrderOverview.successful');
+    var IN_PROGRESS = $translate.instant('pstnOrderOverview.inProgress');
+    //translated order type
+    var ADVANCE_ORDER = $translate.instant('pstnOrderOverview.advanceOrder');
+    var NEW_NUMBER_ORDER = $translate.instant('pstnOrderOverview.newNumberOrder');
+    var PORT_NUMBER_ORDER = $translate.instant('pstnOrderOverview.portNumberOrder');
+    //$resource constants
     var BLOCK = 'block';
     var ORDER = 'order';
     var PORT = 'port';
+    //misc
+    var PSTN = "PSTN";
+    var TYPE_PORT = "PORT";
 
     var service = {
       createCustomer: createCustomer,
@@ -34,6 +54,7 @@
       portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
+      getFormattedNumberOrders: getFormattedNumberOrders,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
@@ -44,12 +65,14 @@
       QUEUED: QUEUED,
       BLOCK: BLOCK,
       ORDER: ORDER,
-      PORT: PORT
+      PORT_ORDER: PORT_ORDER,
+      BLOCK_ORDER: BLOCK_ORDER,
+      NUMBER_ORDER: NUMBER_ORDER
     };
 
     return service;
 
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
+    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
       var payload = {
         uuid: uuid,
         name: name,
@@ -58,7 +81,7 @@
         email: email,
         pstnCarrierId: pstnCarrierId,
         numbers: numbers,
-        trial: true
+        trial: trial
       };
 
       if (PstnSetup.isResellerExists()) {
@@ -187,10 +210,11 @@
       });
     }
 
-    function orderBlock(customerId, carrierId, npa, quantity) {
+    function orderBlock(customerId, carrierId, npa, quantity, isSequential) {
       var payload = {
         npa: npa,
-        quantity: quantity
+        quantity: quantity,
+        sequential: isSequential
       };
 
       return TerminusCustomerCarrierDidService.save({
@@ -251,22 +275,79 @@
       }).$promise;
     }
 
+    function getFormattedNumberOrders(customerId) {
+      return TerminusOrderService.query({
+        customerId: customerId
+      }).$promise.then(function (response) {
+        return _.chain(response)
+          .map(function (order) {
+            if (order.operation != UPDATE && order.operation != DELETE && order.operation != ADD) {
+              var newOrder = {
+                carrierOrderId: _.get(order, 'carrierOrderId'),
+                response: _.get(order, 'response'),
+                operation: _.get(order, 'operation')
+              };
+              //translate order status
+              if (order.status === PROVISIONED) {
+                newOrder.status = SUCCESSFUL;
+              } else if (order.status === PENDING) {
+                newOrder.status = IN_PROGRESS;
+              }
+              //translate order type
+              if (order.operation === BLOCK_ORDER) {
+                newOrder.type = ADVANCE_ORDER;
+              } else if (order.operation === NUMBER_ORDER) {
+                newOrder.type = NEW_NUMBER_ORDER;
+              } else if (order.operation === PORT_ORDER) {
+                newOrder.type = PORT_NUMBER_ORDER;
+              }
+              //create sort date and translate creation date
+              var orderDate = new Date(order.created);
+              newOrder.sortDate = orderDate.getTime();
+              newOrder.created = (orderDate.getMonth() + 1) + '/' + orderDate.getDate() + '/' + orderDate.getFullYear();
+
+              return newOrder;
+            }
+          })
+          .compact()
+          .value();
+      });
+    }
+
     function listPendingNumbers(customerId) {
       var pendingNumbers = [];
 
       return listPendingOrders(customerId).then(function (orders) {
         var promises = [];
         _.forEach(orders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
-            _.forEach(orderNumbers, function (orderNumber) {
-              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
-                pendingNumbers.push({
-                  pattern: orderNumber.number
-                });
-              }
+          if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
+            var areaCode = getAreaCode(carrierOrder);
+            try {
+              var json = JSON.parse(carrierOrder.response);
+            } catch (error) {
+              //if parsing fails, give order number to reference possible malformed order
+              pendingNumbers.push({
+                orderNumber: carrierOrder.carrierOrderId
+              });
+              return;
+            }
+            var orderQuantity = json[carrierOrder.carrierOrderId].length;
+            pendingNumbers.push({
+              pattern: '(' + areaCode + ') XXX-XXXX',
+              quantity: orderQuantity
             });
-          });
-          promises.push(promise);
+          } else {
+            var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+              _.forEach(orderNumbers, function (orderNumber) {
+                if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
+                  pendingNumbers.push({
+                    pattern: orderNumber.number
+                  });
+                }
+              });
+            });
+            promises.push(promise);
+          }
         });
 
         return $q.all(promises).then(function () {
@@ -280,6 +361,10 @@
         customerId: customerId,
         did: number
       }).$promise;
+    }
+
+    function getAreaCode(order) {
+      return _.chain(order).get('description').slice(-3).join('').value();
     }
 
   }

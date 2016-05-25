@@ -152,6 +152,48 @@
   .search-button {
     margin-top: calc(#{$form-label-line-height}em + 10px - (50px - #{$input-height-base}) / 2);
   }
+  
+  .tooltip {
+    top: rem(-44px);
+    .tooltip-inner {
+        min-width: rem(150px);
+    }
+  }
+  .no-pad {
+    padding-bottom: 0;
+  }
+  .pad-top {
+      padding-top: rem(20px);
+  }
+  .pad-bottom {
+      padding-bottom: 1rem;
+  }
+  .order-inline {
+      display: inline-block;
+  }
+  .input-width {
+      max-width: rem(60px);
+  }
+  .right-margin {
+      margin-right:rem(10px);
+  }
+  .form {
+    .row {
+      > div {
+        display: inline-block;
+      }
+      .cs-input-group {
+        margin-left: 1rem;
+      }
+      .icon-info {
+        bottom: rem(3px);
+        margin-left: 1rem;
+      }
+      .check-space {
+        margin-left: 2rem;
+      }
+    }
+  }
 }
 
 .pstn-review {

@@ -9,9 +9,8 @@
     $stateParams,
     $translate,
     $log,
-    Storage,
-    WebExApiGatewayService,
-    WebExRestApiFact
+    WebExUtilsFact,
+    WebExApiGatewayService
   ) {
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
@@ -20,198 +19,105 @@
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
-    $log.log(logMsg);
+    // $log.log(logMsg);
 
     vm.viewReady = false;
     vm.siteRow = $stateParams.siteRow;
     vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
+    vm.siteUrl = $stateParams.siteRow.license.siteUrl;
+    vm.siteName = WebExUtilsFact.getSiteName(vm.siteUrl);
     vm.gridRows = [];
+
+    vm.downloadFileUrl = null;
+    vm.downloadFileName = null;
 
     if (
       ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
       ("exportCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
-      vm.modalTitle = "Export Results";
-
-      /*
-      vm.gridRows.push({
-        id: 'import-request',
-        title: 'Request:',
-        value: 'Export finished',
-        fileDownloadUrl: null
-      });
-      */
-
-      vm.gridRows.push({
-        id: 'export-started-time',
-        title: 'Export started:',
-        value: vm.csvStatusObj.details.created,
-        fileDownloadUrl: null
-      });
+      vm.modalId = "csvExport";
+      vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
       vm.gridRows.push({
         id: 'export-finished-time',
-        title: 'Export finished:',
+        title: $translate.instant("webexCSVResultsModal.csvFinished"),
         value: vm.csvStatusObj.details.finished,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-total',
-        title: 'Total records available:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsRequested"),
         value: vm.csvStatusObj.details.totalRecords,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-successful',
-        title: 'Records successfully exported:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsReturned"),
         value: vm.csvStatusObj.details.successRecords,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-failed',
-        title: 'Records failed:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsFailed"),
         value: vm.csvStatusObj.details.failedRecords,
-        fileDownloadUrl: null
       });
 
-      vm.gridRows.push({
-        id: 'export-download-csv-file',
-        title: 'Download:',
-        value: 'Exported CSV file',
-        fileDownloadUrl: vm.csvStatusObj.details.exportFileLink
-      });
+      vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.exportFileLink;
+      vm.downloadFileName = "WebEx-" + vm.siteName + "-SiteUsers.csv";
+
+      logMsg = funcName + "\n" +
+        "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+        "vm.downloadFileName=" + vm.downloadFileName;
+      // $log.log(logMsg);
 
     } else if (
       ("importCompletedNoErr" === vm.csvStatusObj.status) ||
       ("importCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
-      vm.modalTitle = "Import Results";
-
-      /*
-      vm.gridRows.push({
-        id: 'export-request',
-        title: 'Request:',
-        value: 'Import finished',
-        fileDownloadUrl: null
-      });
-      */
-
-      vm.gridRows.push({
-        id: 'import-file-name',
-        title: 'File name:',
-        value: vm.csvStatusObj.details.importFileName,
-        fileDownloadUrl: null
-      });
-
-      vm.gridRows.push({
-        id: 'import-started-time',
-        title: 'Import started:',
-        value: vm.csvStatusObj.details.created,
-        fileDownloadUrl: null
-      });
+      vm.modalId = "csvImport";
+      vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");
 
       vm.gridRows.push({
         id: 'import-finished-time',
-        title: 'Import finished:',
+        title: $translate.instant("webexCSVResultsModal.csvFinished"),
         value: vm.csvStatusObj.details.finished,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-total',
-        title: 'Total records requested:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsRequested"),
         value: vm.csvStatusObj.details.totalRecords,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-updated',
-        title: 'Records successfully updated:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsUpdated"),
         value: vm.csvStatusObj.details.successRecords,
-        fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-failed',
-        title: 'Records failed:',
+        title: $translate.instant("webexCSVResultsModal.csvRecordsFailed"),
         value: vm.csvStatusObj.details.failedRecords,
-        fileDownloadUrl: null
       });
 
       if (0 < vm.csvStatusObj.details.failedRecords) {
-        vm.gridRows.push({
-          id: 'import-download-err-file',
-          title: 'Download:',
-          value: 'Error log',
-          fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
-        });
+        vm.downloadFileUrl = "https://" + vm.siteUrl + "/meetingsapi/v1/files/" + vm.csvStatusObj.details.errorLogLink;
+        vm.downloadFileName = "WebEx-" + vm.siteName + "-ImportErr.csv";
+
+        logMsg = funcName + "\n" +
+          "vm.downloadFileUrl=" + vm.downloadFileUrl + "\n" +
+          "vm.downloadFileName=" + vm.downloadFileName;
+        // $log.log(logMsg);
       }
-    }
+    } // export/import results
 
     logMsg = funcName + "\n" +
       "vm.gridRows=" + JSON.stringify(vm.gridRows);
-    $log.log(logMsg);
-
-    /*
-    vm.gridOptions = {
-      data: 'gridRows',
-      multiSelect: false,
-      enableRowSelection: false,
-      enableColumnMenus: false,
-      rowHeight: 44,
-      columnDefs: [],
-    };
-
-    vm.gridOptions.columnDefs.push({
-      field: 'title',
-      displayName: '',
-      sortable: false
-    });
-
-    vm.gridOptions.columnDefs.push({
-      field: 'value',
-      displayName: '',
-      sortable: false
-    });
-    */
+    // $log.log(logMsg);
 
     vm.viewReady = true;
-
-    vm.csvFileDownload = function (downloadUrl) {
-      var funcName = "csvFileDownload()";
-      var logMsg = "";
-
-      downloadUrl = downloadUrl.replace("http:", "https:");
-
-      logMsg = funcName + "\n" +
-        "downloadUrl=" + downloadUrl;
-      $log.log(logMsg);
-
-      WebExApiGatewayService.csvFileDownload(
-        vm.siteRow.license.siteUrl,
-        downloadUrl,
-        vm.siteRow.csvMock.mockFileDownload
-      ).then(
-
-        function success(response) {
-          var funcName = "WebExApiGatewayService.csvFileDownload.success()";
-          var logMsg = "";
-
-          $log.log(funcName);
-        },
-
-        function error(response) {
-          var funcName = "WebExApiGatewayService.csvFileDownload.error()";
-          var logMsg = "";
-
-          $log.log(funcName);
-        }
-      ); // WebExRestApiFact.csvFileDownload().then()
-    }; // csvFileDownload()
   } // SiteCSVResultsCtrl()
 })(); // top level function

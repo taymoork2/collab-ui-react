@@ -8,7 +8,7 @@ $features-header-height : 83px;
 
 .huron-features{
   @extend %content-subheader;
-  @extend %card-container;
+  @extend %card-container-padding !optional;
 }
 
 .features-reload {

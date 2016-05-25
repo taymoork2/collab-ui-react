@@ -11,6 +11,7 @@
     var service = {
       getData: getData,
       reset: reset,
+      getLimitsPromise: getLimitsPromise,
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
@@ -40,12 +41,16 @@
           unit: '',
           city: '',
           state: '',
-          postalCode: ''
-        }
+          postalCode: '',
+          dealId: ''
+        },
       };
-
       _trialData = angular.copy(defaults);
       return _trialData;
+    }
+
+    function getLimitsPromise() {
+      return _trialData.limitsPromise;
     }
 
     function getCountries() {
@@ -79,6 +84,9 @@
       }, {
         state: 'Delaware',
         abbr: 'DE'
+      }, {
+        state: 'District of Columbia',
+        abbr: 'DC'
       }, {
         state: 'Florida',
         abbr: 'FL'

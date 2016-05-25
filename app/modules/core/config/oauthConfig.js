@@ -5,9 +5,21 @@
     .module('Core')
     .factory('OAuthConfig', OAuthConfig);
 
-  function OAuthConfig(Utils, Config, UrlConfig) {
+  function OAuthConfig(Utils, Config) {
 
-    var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
+    var scopes = [
+      'webexsquare:admin',
+      'webexsquare:billing',
+      'ciscouc:admin',
+      'Identity:SCIM',
+      'Identity:Config',
+      'Identity:Organization',
+      'cloudMeetings:login',
+      'webex-messenger:get_webextoken',
+      'ccc_config:admin'
+    ];
+
+    var oauth2Scope = encodeURIComponent(scopes.join(' '));
 
     var config = {
       oauthClientRegistration: {
@@ -24,7 +36,7 @@
         ciRedirectUrl: 'redirect_uri=%s',
         oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
         oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s&email=%s',
+        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
@@ -46,7 +58,7 @@
     // public
 
     function getLogoutUrl() {
-      var acu = UrlConfig.getAdminPortalUrl();
+      var acu = getAdminPortalUrl();
       return config.logoutUrl + encodeURIComponent(acu);
     }
 
@@ -63,17 +75,23 @@
     }
 
     function getOauthLoginUrl(email, oauthState) {
-      var redirectUrl = UrlConfig.getAdminPortalUrl();
+      var redirectUrl = getAdminPortalUrl();
+      var pattern = config.oauthUrl.oauth2LoginUrlPattern;
       var params = [
         getOauth2Url(),
         getClientId(),
         oauth2Scope,
         encodeURIComponent(redirectUrl),
         oauthState,
-        getOauthServiceType(),
-        encodeURIComponent(email)
+        getOauthServiceType()
       ];
-      return Utils.sprintf(config.oauthUrl.oauth2LoginUrlPattern, params);
+
+      if (email) {
+        params.push(encodeURIComponent(email));
+        pattern = pattern + '&email=%s';
+      }
+
+      return Utils.sprintf(pattern, params);
     }
 
     function getOauthAccessCodeUrl(refresh_token) {
@@ -96,9 +114,20 @@
     // private
 
     function getRedirectUrl() {
-      var acu = UrlConfig.getAdminPortalUrl();
+      var acu = getAdminPortalUrl();
       var params = [encodeURIComponent(acu)];
       return Utils.sprintf(config.oauthUrl.ciRedirectUrl, params);
+    }
+
+    function getAdminPortalUrl() {
+      var adminPortalUrl = {
+        dev: 'http://127.0.0.1:8000',
+        cfe: 'https://cfe-admin.ciscospark.com',
+        integration: 'https://int-admin.ciscospark.com/',
+        prod: 'https://admin.ciscospark.com/'
+      };
+      var env = Config.isE2E() ? 'dev' : Config.getEnv();
+      return adminPortalUrl[env];
     }
 
     function getClientSecret() {

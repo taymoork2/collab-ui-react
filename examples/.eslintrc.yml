@@ -1,0 +1,19 @@
+---
+  extends:
+    - "airbnb-base/legacy"
+    - "angular"
+  rules:
+    func-names: 0
+    no-param-reassign: 0
+    one-var-declaration-per-line: 0
+    one-var: 0
+    wrap-iife: ["error", "any"]
+  globals:
+    afterEach: true
+    beforeEach: true
+    describe: true
+    expect: true
+    inject: true
+    it: true
+    jasmine: true
+    spyOn: true

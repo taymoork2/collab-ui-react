@@ -20,6 +20,8 @@
 
       consumerOrgId: 'consumer',
 
+      consumerMockOrgId: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
+
       feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
 
       scimSchemas: [
@@ -38,11 +40,6 @@
       meetingsPerPage: 50,
       alarmsPerPage: 50,
       eventsPerPage: 50,
-
-      logConfig: {
-        linesToAttach: 100,
-        keepOnNavigate: false
-      },
 
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
@@ -98,7 +95,9 @@
         application: 'atlas-portal.application',
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
-        helpdesk: 'atlas-portal.partner.helpdesk'
+        helpdesk: 'atlas-portal.partner.helpdesk',
+        spark_synckms: 'spark.synckms',
+        readonly_admin: 'id_readonly_admin'
       },
 
       roles: {
@@ -109,7 +108,9 @@
         application: 'Application',
         reports: 'Reports',
         sales: 'Sales_Admin',
-        helpdesk: 'Help_Desk'
+        helpdesk: 'Help_Desk',
+        spark_synckms: 'Spark_SyncKms',
+        readonly_admin: 'Readonly_Admin'
       },
 
       roleState: {
@@ -144,7 +145,7 @@
       licenseTypes: {
         MESSAGING: 'MESSAGING',
         CONFERENCING: 'CONFERENCING',
-        COMMUNICATIONS: 'COMMUNICATIONS',
+        COMMUNICATION: 'COMMUNICATION',
         STORAGE: 'STORAGE',
         SHARED_DEVICES: 'SHARED_DEVICES',
         CMR: 'CMR'
@@ -156,19 +157,19 @@
 
       isDev: function () {
         var currentHostname = getCurrentHostname();
-        return !config.isE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+        return !config.forceProdForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
       },
 
       isIntegration: function () {
-        return !config.isE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
       },
 
       isProd: function () {
-        return getCurrentHostname() === 'admin.ciscospark.com';
+        return config.forceProdForE2E() || getCurrentHostname() === 'admin.ciscospark.com';
       },
 
       isCfe: function () {
-        return !config.isE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
       },
 
       getEnv: function () {
@@ -196,6 +197,10 @@
     };
 
     config.isE2E = function () {
+      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
+    };
+
+    config.forceProdForE2E = function () {
       return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 
@@ -220,7 +225,9 @@
         'cdrsupport',
         'cdr-overview',
         'cdrladderdiagram',
-        'activateProduct'
+        'activateProduct',
+        'settings',
+        'userRedirect'
       ],
       Readonly_Admin: [
         'overview',
@@ -236,20 +243,23 @@
         'support',
         'editService',
         'trialExtInterest',
-        'activateProduct'
+        'activateProduct',
+        'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
-      User: [],
+      //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
+        'site-csv',
         'site-csv-results',
         'site-settings',
         'site-setting',
@@ -281,11 +291,14 @@
         'huntgroupedit',
         'devices',
         'device-overview',
-        'devices-redux'
+        'devices-redux',
+        'services-overview'
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
-        'management-service'
+        'management-service',
+        'services-overview',
+        'my-company'
       ],
       'spark-room-system': [
         'devices',
@@ -293,29 +306,32 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
-        'call-service'
+        'cluster-list',
+        'call-service',
+        'cluster-settings-page'
       ],
       'squared-fusion-cal': [
-        'calendar-service'
+        'calendar-service',
+        'services-overview',
+        'cluster-list',
+        'cluster-settings-page'
       ],
       'squared-team-member': [
         'organization'
       ],
       'squared-fusion-media': [
-        'meetings',
-        'vts',
-        'utilization',
-        'metrics',
-        'threshold',
-        'fault',
-        'alarms',
-        'events',
         //'mediafusionconnector',
+        'metrics',
         'media-service',
         'connector-details'
       ],
       'webex-messenger': [
         'messenger'
+      ],
+      'contact-center-context': [
+        //TODO: Remove these states when sunlight trial stories are implemented and
+        // add back them to 'ccc_config' serviceState
+        'care'
       ]
     };
 
@@ -335,6 +351,8 @@
         'media-service',
         'hurondetails',
         'huronsettings',
+        'cluster-list',
+        'cluster-settings-page',
         'calendar-service',
         'call-service',
         'management-service'

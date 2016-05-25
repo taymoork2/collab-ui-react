@@ -32,7 +32,7 @@ fi
 echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
 
-echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
+echo "Checking dependency dirs ('node_modules') still exist..."
 dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
 
 echo "Checking if it is time to refresh..."
@@ -69,7 +69,6 @@ else
             $last_refreshed_file \
             $manifest_checksums_file \
             .cache/npm-deps-for-*.tar.gz \
-            .cache/bower-deps-for-*.tar.gz \
             .cache/npm-shrinkwrap-for-*.tar.gz
 
     # setup failed
@@ -92,10 +91,6 @@ else
     fi
 fi
 
-# list our current bower_components for build reference
-echo "Currently installed bower_components:"
-./bin/helpers/list-bower-components.js | sort
-
 
 # -----
 # Phase 3: Build
@@ -106,14 +101,12 @@ gulp jsb:verify || exit $?
 # - build - build without default 'karma-all' codepath enabled (see below)
 gulp build --nolint --nounit
 
-# - unit tests - run unit tests in parallel with GNU parallel
-cat > ./.cache/_gulp-karma-all <<_EOF
-for i in \`ls app/modules\`; do echo karma-\$i; done | parallel -k gulp
-_EOF
-time nice sh ./.cache/_gulp-karma-all || exit 1
+# - unit tests - run in parallel
+time gulp karma-parallel || exit $?
+gulp karma-combine-coverage || exit $?
 
 # - e2e tests
-gulp e2e --sauce --production-backend --nounit | tee ./.cache/e2e-sauce-logs
+gulp e2e --sauce --production-backend --nobuild | tee ./.cache/e2e-sauce-logs
 e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
@@ -138,3 +131,6 @@ rm -f wx2-admin-web-client.*.tar.gz
 # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
 tar -zcvf ${APP_ARCHIVE} dist/*
 tar -zcvf ${COVERAGE_ARCHIVE} ./coverage/unit/* || :
+
+# archive e2e test results
+tar -cf ${E2E_TEST_RESULTS_ARCHIVE} ./test/e2e-protractor/reports/${BUILD_TAG}

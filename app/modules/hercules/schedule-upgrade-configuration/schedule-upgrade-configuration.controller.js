@@ -22,7 +22,7 @@
 
     ////////
 
-    ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
+    ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.connectorType)
       .then(function (data) {
         vm.data = convertDataForUI(data);
         vm.isAdminAcknowledged = data.isAdminAcknowledged;
@@ -135,7 +135,7 @@
 
     function patch(data) {
       vm.state = 'syncing';
-      return ScheduleUpgradeService.patch(Authinfo.getOrgId(), vm.serviceType, {
+      return ScheduleUpgradeService.patch(Authinfo.getOrgId(), vm.connectorType, {
           scheduleTime: data.scheduleTime.value,
           scheduleTimeZone: data.scheduleTimeZone.value,
           scheduleDay: data.scheduleDay.value
@@ -165,8 +165,8 @@
           nextUpdate: function () {
             return vm.nextUpdate;
           },
-          serviceType: function () {
-            return vm.serviceType;
+          connectorType: function () {
+            return vm.connectorType;
           }
         }
       }).result.then(function (data) {

@@ -6,11 +6,11 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
+  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig, Notification) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
-
+    vm.isCSB = false;
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
@@ -19,6 +19,17 @@
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+        vm.isCSB = Authinfo.isCSB() && result;
+      })
+      .then(function () {
+        if (vm.isCSB) {
+          _.remove(vm.cards, {
+            name: 'overview.cards.users.title'
+          });
+        }
+      });
 
     function forwardEvent(handlerName) {
       var eventArgs = [].slice.call(arguments, 1);
@@ -43,7 +54,7 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -55,7 +66,6 @@
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
     vm.isCloudSipUriSet = false;
-    vm.isSipToggleEnabled = false;
     vm.isSipUriAcknowledged = false;
     init();
     vm.setSipUriNotification = setSipUriNotification;
@@ -77,20 +87,12 @@
     });
 
     function setSipUriNotification() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
-        result = true;
-        if (result) {
-          vm.isSipToggleEnabled = true;
-          Orgservice.getOrg(function (data, status) {
-            if (status === 200) {
-              if (data.orgSettings.sipCloudDomain) {
-                vm.isCloudSipUriSet = true;
-              }
-            } else {
-              Log.debug('Get existing org failed. Status: ' + status);
-              Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-            }
-          });
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          vm.isCloudSipUriSet = !!data.orgSettings.sipCloudDomain;
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       });
     }
@@ -110,6 +112,12 @@
       vm.isSipUriAcknowledged = true;
     };
 
+    $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
+
+    $rootScope.$watch('ssoEnabled', function () {
+      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    });
+
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {
         $state.go('calendar-service.list');
@@ -127,12 +135,23 @@
       });
     };
 
+    vm.showSSOSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init'
+      });
+    };
+
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
 
     vm.openFirstTimeSetupWiz = function () {
       $state.go('firsttimewizard');
+    };
+
+    vm.displayNotifications = function () {
+      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)));
     };
   }
 })();

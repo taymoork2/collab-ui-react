@@ -16,7 +16,6 @@ describe('UrlConfigSpec', function () {
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
 
-  var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
   var orgId = 'abc123efg456';
   var siteURL = 'webex.com';
 
@@ -47,15 +46,6 @@ describe('UrlConfigSpec', function () {
       }
     };
   };
-
-  it('should return correct admin client url', function () {
-    whenCalling('getAdminPortalUrl', orgId).expectUrlToBe({
-      dev: 'http://127.0.0.1:8000',
-      cfe: 'https://cfe-admin.ciscospark.com',
-      integration: 'https://int-admin.ciscospark.com/',
-      prod: 'https://admin.ciscospark.com/'
-    });
-  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({
@@ -111,15 +101,6 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should always return metrics service url', function () {
-    whenCalling('getMetricsServiceUrl').expectUrlToBe({
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-    });
-  });
-
   it('should return correct feature toggle service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
@@ -129,21 +110,12 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct alarm service url', function () {
-    whenCalling('getAlarmServiceUrl').expectUrlToBe({
-      dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
-    });
-  });
-
-  it('should return correct fault service url', function () {
-    whenCalling('getFaultServiceUrl').expectUrlToBe({
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
+  it('should return correct athena service url', function () {
+    whenCalling('getAthenaServiceUrl').expectUrlToBe({
+      dev: 'https://athena-integration.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-integration.wbx2.com/athena/api/v1',
+      integration: 'https://athena-integration.wbx2.com/athena/api/v1',
+      prod: 'https://athena-integration.wbx2.com/athena/api/v1',
     });
   });
 
@@ -180,24 +152,6 @@ describe('UrlConfigSpec', function () {
       cfe: '.wbx2.com',
       integration: '.wbx2.com',
       prod: '.ciscospark.com'
-    });
-  });
-
-  it('should return correct meeting service url', function () {
-    whenCalling('getMeetingServiceUrl').expectUrlToBe({
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
-    });
-  });
-
-  it('should return correct meeting service url', function () {
-    whenCalling('getMeetingInfoServiceUrl').expectUrlToBe({
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 

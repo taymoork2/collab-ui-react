@@ -2,12 +2,6 @@
   'use strict';
 
   var serviceUrlMapping = {
-    AdminPortalUrl: {
-      dev: 'http://127.0.0.1:8000',
-      cfe: 'https://cfe-admin.ciscospark.com',
-      integration: 'https://int-admin.ciscospark.com/',
-      prod: 'https://admin.ciscospark.com/'
-    },
     AdminServiceUrl: {
       dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
@@ -32,35 +26,11 @@
       integration: 'https://locus-integration.wbx2.com/locus/api/v1',
       prod: 'https://locus-a.wbx2.com/locus/api/v1'
     },
-    MeetingServiceUrl: {
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
-    },
-    MetricsServiceUrl: {
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-    },
-    AlarmServiceUrl: {
-      dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
-    },
-    FaultServiceUrl: {
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-    },
-    MeetingInfoServiceUrl: {
-      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+    AthenaServiceUrl: {
+      dev: 'https://athena-integration.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-integration.wbx2.com/athena/api/v1',
+      integration: 'https://athena-integration.wbx2.com/athena/api/v1',
+      prod: 'https://athena-integration.wbx2.com/athena/api/v1'
     },
     CsdmServiceUrl: {
       dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',

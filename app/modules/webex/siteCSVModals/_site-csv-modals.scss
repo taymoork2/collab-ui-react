@@ -1,0 +1,186 @@
+
+.wx-csv-results-table {
+  width: auto;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.wx-csv-results-tr {
+  border-top: 0;
+  valign: bottom;
+}
+
+.wx-csv-results-td-lt {
+  padding-bottom: 0;
+  padding-left: 0;
+  text-align: right;
+  width: 50%;
+}
+
+.wx-csv-results-td-rt {
+  padding-bottom: 0;
+  padding-left: 0;
+  text-align: left;
+  width: 50%;
+}
+
+
+/* grace's code */
+#siteCSVImportModal{
+  width: 630px;
+  height: 408px;
+  border-radius: 2px;
+  background-color: #ffffff;
+  position:relative;
+ }
+ 
+/*.modal-header {
+  width: 566px;
+  height: 32px;
+  position:absolute;
+  left:32px;
+  top: 32px;
+  color: #aeaeaf;
+ }
+.modal-title {
+  width: 318px;
+  height: 32px;
+  font-family: CiscoSans-ExtraLight, sans-serif;
+  font-size: 26px;
+  line-height: 1.2;
+  font-color: #aeaeaf;
+  position:absolute;
+  left:0px;
+  top: 0px;
+ }
+ 
+.modal-delete {
+  position:absolute;
+  right:-5%;
+  top:0%;
+ }*/
+ 
+.modal-main-container {
+  width: 566px;
+  height: 280px;
+  background-color: #f5f5f6;
+  margin:auto;
+  position:absolute;
+  left:32px;
+  top: 96px;
+ }
+ 
+.Export-user {
+  width: 477px;
+  height: 24px;
+ // font-family: CiscoSansLight, sans-serif;
+ font-size: 16px; 
+  line-height: 1.5;
+  color: #6a6b6c;
+  position:absolute;
+  left:32px;
+  top: 24px;
+ 
+}
+
+.Export-window {
+  width: 243px;
+  height: 176px;
+  background-color: #ffffff;
+  left:32px;
+  bottom: 32px;
+  position:absolute;
+}
+
+.Export, .Import {
+  width: 162px;
+  height: 24px;
+  font-family: CiscoSansLight, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #6a6b6c;
+  text-align:center;
+  position:absolute;
+  left:41px;
+  top: 88px;
+ }
+ 
+.Export-user-attribut, .Drag-and-Drop-CSV-fi  {
+  width: 162px;
+  height: 32px;
+ // font-family: CiscoSansLight, sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #6a6b6c;
+  position:absolute;
+  left:41px;
+  top: 120px;
+  text-align:center;
+}
+
+.icon-import2, .icon-export2 {
+  width: 44px;
+  height: 44px;
+  background-color: #049fd9;
+  color:white;
+}
+ 
+.icon-import2{
+  position:absolute;
+  left:100px;
+  top: 41px;
+}
+
+.icon-export2{
+  position:absolute;
+  left:100px;
+  top: 41px;
+}
+.Import-window {
+  width: 243px;
+  height: 176px;
+  background-color: #ffffff;
+  right:32px;
+  bottom: 32px;
+  position:absolute;
+}
+
+.users-upload-csv {
+  border:none;
+  outline:none;
+ }
+
+.file-drop {
+  border: none !important;
+}
+
+#file-drop-content {
+  width:100%;height:45%;
+  border:1px solid blue;
+}
+
+.file-drop-content {
+  position:absolute;
+  top:0px;
+  left:0px;
+  padding:0px;
+  margin:5px;
+}
+
+#file-drop-content2 {
+   width:70%;height:25%;
+   padding:5px;
+ }
+ 
+.import-button{
+  position:absolute;
+  left:36%;
+  top:65%;
+  background-color:#049fd9;
+}
+
+.import-delete{
+  position:absolute;
+  right:2%;
+  top:15%;
+  }

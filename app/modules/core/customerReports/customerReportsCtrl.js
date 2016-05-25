@@ -204,9 +204,22 @@
     }
 
     function resizeCards() {
-      setTimeout(function () {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
+
+    function delayedResize() {
+      // delayed resize necessary to fix any overlapping cards on smaller screens
+      $timeout(function () {
         $('.cs-card-layout').masonry('layout');
-      }, 300);
+      }, 500);
     }
 
     function resetCards(filter) {
@@ -220,8 +233,7 @@
           vm.displayQuality = true;
         }
         resizeCards();
-        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
-        $timeout(resizeCards, 1000);
+        delayedResize();
         currentFilter = filter;
       }
     }
@@ -324,10 +336,8 @@
         vm.activeButton = [1, 2, 3];
         vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
         previousSearch = vm.searchField;
-      }
-      $timeout(function () {
         resizeCards();
-      }, 10);
+      }
       return returnArray;
     }
 

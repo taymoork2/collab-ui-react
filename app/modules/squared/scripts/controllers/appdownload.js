@@ -1,22 +1,30 @@
-'use strict';
+(function () {
+  'use strict';
 
-/**
- * @ngdoc function
- * @name wx2AdminWebClientApp.controller:AppdownloadCtrl
- * @description
- * # AppdownloadCtrl
- * Controller of the wx2AdminWebClientApp
- */
-angular.module('Squared')
-  .controller('AppdownloadCtrl', ['$window', '$http', 'Log', 'UrlConfig', 'Utils',
-    function ($window, $http, Log, UrlConfig, Utils) {
+  angular
+    .module('Squared')
+    .controller('AppdownloadCtrl', AppdownloadCtrl);
 
-      if (Utils.isIPhone()) {
-        $window.location.href = UrlConfig.getItunesStoreUrl();
-      } else if (Utils.isAndroid()) {
-        $window.location.href = UrlConfig.getAndroidStoreUrl();
-      } else {
-        $window.location.href = UrlConfig.getWebClientUrl();
-      }
+  /* @ngInject */
+  function AppdownloadCtrl($document, $timeout, UrlConfig, Utils, WindowLocation, Localytics) {
+    // Note: only keep $timeout and Localytics until we gathered enough data usage
+    Localytics.tagEvent('Display /appdownload', {
+      from: $document[0].referrer,
+      platform: Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web')
+    });
+
+    var redirectUrl;
+
+    if (Utils.isIPhone()) {
+      redirectUrl = UrlConfig.getItunesStoreUrl();
+    } else if (Utils.isAndroid()) {
+      redirectUrl = UrlConfig.getAndroidStoreUrl();
+    } else {
+      redirectUrl = UrlConfig.getWebClientUrl();
     }
-  ]);
+
+    $timeout(function () {
+      WindowLocation.set(redirectUrl);
+    }, 2000);
+  }
+})();

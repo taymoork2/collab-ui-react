@@ -1,15 +1,15 @@
-/* globals $controller, $q, $rootScope, TrialDeviceController, TrialCallService, TrialRoomSystemService*/
+/* globals $controller, $q, $rootScope, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
-  var controller, $scope, $translate;
+  var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialCallService', 'TrialRoomSystemService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
 
     controller = $controller('TrialDeviceController');
     $rootScope.$apply();
@@ -27,9 +27,13 @@ describe('Controller: TrialDeviceController', function () {
       var phones = _.filter(controller.details.phones, {
         enabled: true
       });
+      var shippingInfo = _.find(controller.details.shippingInfo, {
+        enabled: true
+      });
 
       expect(roomSystems).toBeUndefined();
       expect(phones.length).toBe(0);
+      expect(shippingInfo).toBeUndefined();
     });
 
     // the back end expects this as an enum and enums cant start with numbers
@@ -56,32 +60,37 @@ describe('Controller: TrialDeviceController', function () {
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
       var devices2 = [{
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 5,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
       var devices3 = [{
         model: 'CISCO_SX10',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
 
@@ -119,6 +128,65 @@ describe('Controller: TrialDeviceController', function () {
       expect(deviceModel.quantity).toBe(2);
       expect(deviceModel.enabled).toBe(true);
       expect(deviceModel.readonly).toBe(true);
+    });
+
+    it('should set device trial limits', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(17);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(false);
+    });
+
+    it('should set limitReached', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 20,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(20);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should set limitsError', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.reject()
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.limitsError).toBe(true);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should notify limit approaching', function () {
+      spyOn(Notification, 'warning');
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(Notification.warning).toHaveBeenCalled();
     });
   });
 
@@ -265,6 +333,93 @@ describe('Controller: TrialDeviceController', function () {
         }
       });
       expect(valid).toBe(true);
+    });
+  });
+
+  describe('checkbox validation', function () {
+    it('should validate when model valid is true', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          valid: true
+        }
+      });
+      expect(valid).toBe(true);
+    });
+
+    it('should validate when one or more checkboxes are enabled true', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          enabled: true,
+          valid: true
+        }
+      });
+      expect(valid).toBe(true);
+    });
+
+    it('should not validate when all checkboxes are enabled false', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          enabled: false,
+          valid: false
+        }
+      });
+      expect(valid).toBe(false);
+    });
+  });
+
+  describe('shipping address fields', function () {
+    it('should be readonly when quantity is greater than 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeTruthy();
+      });
+    });
+
+    it('should be readonly when quantity is less than 2', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 1);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeTruthy();
+      });
+    });
+
+    it('should be readonly when device quantity is greater than 5', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(6, 6);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeTruthy();
+      });
+    });
+
+    it('should be readonly when device quantity is less than 2', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(1, 1);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeTruthy();
+      });
+    });
+
+    it('should be enabled when quantity is 2 or greater', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 2);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeFalsy();
+      });
+    });
+
+    it('should be enabled when device quantity does not exceed 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 7);
+      controller.toggleShipFields();
+
+      _.forEach(controller.shippingFields, function (field) {
+        expect(field.templateOptions.disabled).toBeFalsy();
+      });
     });
   });
 });

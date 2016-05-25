@@ -1,30 +1,36 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules')
-  .service('UriVerificationService', ['DomainManagementService',
-    function UriVerificationService(DomainManagementService) {
+  angular
+    .module('Hercules')
+    .service('UriVerificationService', UriVerificationService);
 
-      DomainManagementService.getVerifiedDomains();
+  /* @ngInject */
+  function UriVerificationService(DomainManagementService) {
 
-      return {
-        isDomainVerified: function (uri) {
+    return {
 
-          if (!uri)
-            return false;
+      isDomainVerified: function (domainList, uri) {
 
-          var uriDomain = uri.slice(uri.lastIndexOf('@') + 1);
+        if (!domainList)
+          return false;
 
-          if (!uriDomain)
-            return false;
-          //we always normalize to lowercase.
-          uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
+        if (!uri)
+          return false;
 
-          return _.some(DomainManagementService.domainList, function (domain) {
-            return domain.status && domain.text &&
-              (domain.status === DomainManagementService.states.verified || domain.status === DomainManagementService.states.claimed) &&
-              (uriDomain === domain.text || uriDomain.indexOf('.' + domain.text, uriDomain.length - domain.text.length - 1) !== -1);
-          });
-        }
-      };
-    }
-  ]);
+        var uriDomain = uri.slice(uri.lastIndexOf('@') + 1);
+
+        if (!uriDomain)
+          return false;
+        //we always normalize to lowercase.
+        uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
+
+        return _.some(domainList, function (domain) {
+          return domain.status && domain.text &&
+            (domain.status === DomainManagementService.states.verified || domain.status === DomainManagementService.states.claimed) &&
+            (uriDomain === domain.text || uriDomain.indexOf('.' + domain.text, uriDomain.length - domain.text.length - 1) !== -1);
+        });
+      }
+    };
+  }
+}());

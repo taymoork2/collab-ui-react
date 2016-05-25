@@ -1,18 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').service('SiteListService', [
-  '$log',
-  '$translate',
-  '$interval',
-  'Authinfo',
-  'UrlConfig',
-  'FeatureToggleService',
-  'WebExApiGatewayService',
-  'WebExApiGatewayConstsService',
-  'WebExUtilsFact',
-  'WebExUtilsService',
+  angular.module('Core').service('SiteListService', SiteListService);
 
-  function (
+  /* @ngInject */
+  function SiteListService(
     $log,
     $translate,
     $interval,
@@ -21,8 +13,7 @@ angular.module('Core').service('SiteListService', [
     FeatureToggleService,
     WebExApiGatewayService,
     WebExApiGatewayConstsService,
-    WebExUtilsFact,
-    WebExUtilsService
+    WebExUtilsFact
   ) {
 
     var _this = this;
@@ -299,7 +290,7 @@ angular.module('Core').service('SiteListService', [
             return;
           }
 
-          _this.updateCSVColumnInRow(siteRow);
+          _this.updateCSVStatusInRow(siteRow);
 
           // start CSV status poll
           // var pollInterval = 3600000; // 1hr
@@ -307,7 +298,7 @@ angular.module('Core').service('SiteListService', [
           // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              _this.updateCSVColumnInRow(siteRow);
+              _this.updateCSVStatusInRow(siteRow);
             },
 
             pollInterval
@@ -335,8 +326,85 @@ angular.module('Core').service('SiteListService', [
       ); // WebExApiGatewayService.isSiteSupportsIframe().then
     }; // updateWebExColumnsInRow()
 
-    this.updateCSVColumnInRow = function (siteRow) {
-      var funcName = "updateCSVColumnInRow()";
+    this.updateDisplayControlFlagsInRow = function (siteRow) {
+
+      var funcName = "updateDisplayControlFlagsInRow()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // $log.log(logMsg);
+
+      //initialize display control flags
+      siteRow.showCSVInfo = true;
+
+      siteRow.showExportLink = false;
+      siteRow.showExportInProgressLink = false;
+      siteRow.grayedExportLink = false;
+      siteRow.showExportResultsLink = false;
+      siteRow.exportFinishedWithErrors = false;
+
+      siteRow.showImportLink = false;
+      siteRow.showImportInProgressLink = false;
+      siteRow.grayedImportLink = false;
+      siteRow.showImportResultsLink = false;
+      siteRow.importFinishedWithErrors = false;
+
+      if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
+
+        siteRow.showExportLink = true;
+
+        siteRow.showImportLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
+
+        siteRow.showExportInProgressLink = true;
+
+        siteRow.grayedImportLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
+
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
+
+        siteRow.showImportLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
+
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
+        siteRow.exportFinishedWithErrors = true;
+
+        siteRow.showImportLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
+
+        siteRow.showImportInProgressLink = true;
+
+        siteRow.grayedExportLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
+
+        siteRow.showExportLink = true;
+
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
+
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
+
+        siteRow.showExportLink = true;
+
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
+        siteRow.importFinishedWithErrors = true;
+
+      }
+
+      siteRow.showCSVInfo = true;
+    }; //updateDisplayControlFlagsInRow()
+
+    this.updateCSVStatusInRow = function (siteRow) {
+      var funcName = "updateCSVStatusInRow()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
@@ -386,76 +454,14 @@ angular.module('Core').service('SiteListService', [
           logMsg = funcName + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           // save the response obj into the siteRow obj... when get result (for completed job) is clicked,
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
+          siteRow.asyncErr = false;
 
-          // initialize display control flags
-          siteRow.showExportLink = false;
-          siteRow.showExportInProgressLink = false;
-          siteRow.grayedExportLink = false;
-          siteRow.showExportResultsLink = false;
-          siteRow.exportFinishedWithErrors = false;
-
-          siteRow.showImportLink = false;
-          siteRow.showImportInProgressLink = false;
-          siteRow.grayedImportLink = false;
-          siteRow.showImportResultsLink = false;
-          siteRow.importFinishedWithErrors = false;
-
-          if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
-
-            siteRow.showExportInProgressLink = true;
-
-            siteRow.grayedImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
-
-            siteRow.showExportLink = true;
-            siteRow.showExportResultsLink = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
-
-            siteRow.showExportLink = true;
-            siteRow.showExportResultsLink = true;
-            siteRow.exportFinishedWithErrors = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
-
-            siteRow.grayedExportLink = true;
-
-            siteRow.showImportInProgressLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-            siteRow.showImportResultsLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-            siteRow.showImportResultsLink = true;
-            siteRow.importFinishedWithErrors = true;
-
-          }
-
-          siteRow.showCSVInfo = true;
+          _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -467,31 +473,55 @@ angular.module('Core').service('SiteListService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
-          // siteRow.showCSVInfo = true;
+          siteRow.csvStatusObj = response;
+          siteRow.asyncErr = true;
+
+          _this.updateDisplayControlFlagsInRow(siteRow);
+
+          siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
-    }; // updateCSVColumnInRow()
+    }; // updateCSVStatusInRow()
 
     this.updateGrid = function (vm) {
       var funcName = "updateGrid()";
       var logMsg = "";
 
-      // $log.log(funcName);
+      logMsg = funcName + "\n" +
+        "vm=" + JSON.stringify(vm);
+      // $log.log(logMsg);
 
       // remove grid column(s) based on feature toggles
-      WebExUtilsService.checkWebExFeaturToggle(FeatureToggleService.features.webexCSV).then(
+      FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
         function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
           var funcName = "checkWebExFeaturToggleSuccess()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
             "adminUserSupportCSV=" + adminUserSupportCSV;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
-          // don't show the CSV column if admin user does not have feature toggle
+          // Start of hide CSV info if admin user does not have feature toggle
+          vm.gridData.forEach(
+            function processSiteRow(siteRow) {
+              var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
+              var logMsg = "";
+
+              siteRow.showCSVIconAndResults = adminUserSupportCSV;
+            } // processSiteRow()
+          ); // gridData.forEach()
+
+          if (!adminUserSupportCSV) {
+            vm.gridOptions.columnDefs.splice(3, 1);
+          }
+          // End of hiding CSV info if admin user does not have feature toggle
+
+          /*
+          // delete the Actions column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(2, 1);
           }
+          */
 
           updateGridColumns();
         }, // checkWebExFeaturToggleSuccess()
@@ -507,7 +537,7 @@ angular.module('Core').service('SiteListService', [
 
           updateGridColumns();
         } // checkWebExFeaturToggleError()
-      ); // WebExUtilsService.checkWebExFeaturToggle().then()
+      ); // FeatureToggleService.supports().then()
 
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
@@ -521,4 +551,4 @@ angular.module('Core').service('SiteListService', [
       } // updateGridColumns()
     }; // updateGrid()
   } // end top level function
-]);
+})();

@@ -20,15 +20,28 @@ describe('Onboard users with Message Service', function () {
     utils.click(users.closeSidePanel);
   }
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users')
       .then(function (bearerToken) {
         token = bearerToken;
       });
+  });
+
+  describe('Test manage dialog functionality', function () {
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
+      navigation.clickUsers();
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
+    });
+
+    it('should clear user input field and error message', function () {
+      utils.sendKeys(users.addUsersField, 'abcdefg' + protractor.Key.ENTER);
+      utils.click(users.clearButton);
+      utils.expectTextToBeSet(users.addUsersField, '');
+      utils.expectIsDisabled(users.nextButton);
+      utils.click(users.close);
+      utils.expectIsNotDisplayed(users.manageDialog);
+    });
   });
 
   describe('Onboard user', function () {

@@ -5,12 +5,12 @@
     <i class="icon icon-spinner loading-spinner"></i> 
   </div>
 
-  <div ng-if="!aaBuilderMain.ui.ceInfo.name">
+  <div ng-if="aaBuilderMain.isAANameDefined === false">
     <span ng-include="'modules/huron/features/autoAttendant/name/aaName.tpl.html'" onload="aaBuilderMain.setLoadingDone()"></span>
   </div>
 
-  <div ng-if="aaBuilderMain.ui.ceInfo.getName()" class="aa-builder-frame">
-    <div class="aa-builder-container" id="builderScrollContainer">
+  <div ng-if="aaBuilderMain.isAANameDefined" class="aa-builder-frame">
+    <div class="aa-builder-container" id="builderScrollContainer" cs-scroll>
       <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder" onload="aaBuilderMain.setLoadingDone()"></span>
     </div>
   </div>

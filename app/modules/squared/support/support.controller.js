@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig) {
+  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -28,14 +28,17 @@
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
 
+    var vm = this;
+    vm.masonryRefreshed = false;
+
     function gotoHelpdesk() {
       var url = $state.href('helpdesk.search');
-      window.open(url, '_blank');
+      $window.open(url, '_blank');
     }
 
     function gotoCdrSupport() {
       var url = $state.href('cdrsupport');
-      window.open(url, '_self');
+      $window.open(url, '_self');
     }
 
     function initializeShowCdrCallFlowLink() {
@@ -43,14 +46,25 @@
         if (user.success) {
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
-            setTimeout(function () {
-              $('.cs-card-layout').masonry('layout');
-            }, 200);
+            reInstantiateMasonry();
           }
         } else {
           Log.debug('Get current user failed. Status: ' + status);
         }
       });
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+      vm.masonryRefreshed = true;
     }
 
     function isCiscoDevRole(roleArray) {
@@ -75,9 +89,8 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 200);
+      if (!vm.masonryRefreshed)
+        reInstantiateMasonry();
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
     };
 
@@ -461,13 +474,11 @@
             }
           } else {
             $scope.getPending = false;
-            angular.element('#logInfoPendingBtn').button('reset');
             Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
           }
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          angular.element('#logInfoPendingBtn').button('reset');
           Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
             status: status
           })], 'error');
@@ -478,7 +489,7 @@
     $scope.downloadLog = function (filename) {
       LogService.downloadLog(filename, function (data, status) {
         if (data.success) {
-          window.location.assign(data.tempURL);
+          WindowLocation.set(data.tempURL);
         } else {
           Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant(
@@ -490,7 +501,7 @@
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
       CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
         if (data.success) {
-          window.location.assign(data.resultsUrl);
+          WindowLocation.set(data.resultsUrl);
         } else {
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
@@ -521,7 +532,7 @@
     $scope.showCallSummary = function (locusId, startTime) {
       ReportsService.getCallSummary(locusId, startTime, function (data, status) {
         if (data.success) {
-          var myWindow = window.open("", "Call Summary", "width=800, height=400");
+          var myWindow = $window.open("", "Call Summary", "width=800, height=400");
           setTimeout(function () {
             myWindow.document.title = 'Call Summary';
           }, 1000);

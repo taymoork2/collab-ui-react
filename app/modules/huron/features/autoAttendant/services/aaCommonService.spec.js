@@ -2,12 +2,16 @@
 
   describe('Service:AACommonService', function () {
 
-    var AACommonService;
+    var AACommonService, AutoAttendantCeMenuModelService;
+
+    var ui = {};
+    var aaRecord = {};
+
     beforeEach(module('uc.autoattendant'));
     beforeEach(module('Huron'));
-
-    beforeEach(inject(function (_AACommonService_) {
+    beforeEach(inject(function (_AACommonService_, _AutoAttendantCeMenuModelService_) {
       AACommonService = _AACommonService_;
+      AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     }));
 
     afterEach(function () {
@@ -53,6 +57,14 @@
         expect(AACommonService.isValid()).toBeTruthy();
       });
 
+      it('is making properly formatted key', function () {
+
+        var k = AACommonService.makeKey('openHours', '0', 'someTag');
+
+        expect(k).toEqual('openHours' + '-' + '0' + '-' + 'someTag');
+
+      });
+
       it('is valid or invalid as set for multiple items', function () {
         AACommonService.setIsValid("1", false);
         expect(AACommonService.isValid()).toBeFalsy();
@@ -71,7 +83,44 @@
         expect(AACommonService.isValid()).toBeTruthy();
 
       });
+    });
 
+    describe('saveUiModel', function () {
+
+      beforeEach(function () {
+        spyOn(AutoAttendantCeMenuModelService, 'updateCombinedMenu');
+        spyOn(AutoAttendantCeMenuModelService, 'deleteCombinedMenu');
+        spyOn(AutoAttendantCeMenuModelService, 'newCeMenu').and.callThrough();
+        spyOn(AutoAttendantCeMenuModelService, 'getCombinedMenu').and.callThrough();
+      });
+
+      it('should write openHours menu into model', function () {
+        ui.isOpenHours = true;
+        ui.isClosedHours = false;
+        ui.isHolidays = false;
+
+        AACommonService.saveUiModel(ui, aaRecord);
+        expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalled();
+      });
+
+      it('should write closedHours menu into model', function () {
+        ui.isOpenHours = false;
+        ui.isClosedHours = true;
+        ui.isHolidays = false;
+
+        AACommonService.saveUiModel(ui, aaRecord);
+        expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalled();
+      });
+
+      it('should write holidays menu into model', function () {
+        ui.isOpenHours = true;
+        ui.isClosedHours = true;
+        ui.isHolidays = true;
+        ui.holidaysValue = 'closedHours';
+
+        AACommonService.saveUiModel(ui, aaRecord);
+        expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalled();
+      });
     });
 
   });

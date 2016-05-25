@@ -1,18 +1,17 @@
 <form class="add-user-container" role="form">
   <div class="form-group">
-    <div ng-if="!isMsgrSyncEnabled" class="title-desc" translate="firstTimeWizard.addUsersDescription"></div>
-    <div ng-if="isMsgrSyncEnabled" class="msgrsync-desc" translate="firstTimeWizard.msgrSyncDesc"></div>
+    <div class="title-desc" translate="firstTimeWizard.addUsersDescription"></div>
   </div>
   <div class="form-group" cr-feature-toggle feature-hide="atlas-dir-sync">
-    <cs-radio label="syncSimple.label" value="syncSimple.value" name="syncOptions" id="syncSimple.id" ng-model="options.addUsers" isdisabled="isMsgrSyncEnabled"></cs-radio>
+    <cs-radio label="syncSimple.label" value="syncSimple.value" name="syncOptions" id="syncSimple.id" ng-model="options.addUsers"></cs-radio>
     <p class="cs-radio-help" translate="firstTimeWizard.simpleSub"></p>
   </div>
   <div class="form-group">
-    <cs-radio label="syncUpload.label" value="syncUpload.value" name="syncOptions" id="syncUpload.id" ng-model="options.addUsers" isdisabled="isMsgrSyncEnabled"></cs-radio>
+    <cs-radio label="syncUpload.label" value="syncUpload.value" name="syncOptions" id="syncUpload.id" ng-model="options.addUsers"></cs-radio>
     <p class="cs-radio-help wizard-inline-block" translate="firstTimeWizard.uploadSub" translate-values="{maxUsers: maxUsers}"></p>
   </div>
   <div class="form-group">
-    <cs-radio label="syncAdvanced.label" value="syncAdvanced.value" name="syncOptions" id="syncAdvanced.id" ng-model="options.addUsers" isdisabled="isMsgrSyncEnabled"></cs-radio>
+    <cs-radio label="syncAdvanced.label" value="syncAdvanced.value" name="syncOptions" id="syncAdvanced.id" ng-model="options.addUsers"></cs-radio>
     <p  class="cs-radio-help" translate="firstTimeWizard.advancedSub"></p>
   </div>
 </form>

@@ -1,5 +1,7 @@
 'use strict';
 
+/*global deleteTrialUtils*/
+
 describe('Remove partner trials from partner org page', function () {
 
   var accessToken;
@@ -22,7 +24,7 @@ describe('Remove partner trials from partner org page', function () {
         elem.getText().then(function (text) {
           var id = text.split('\n');
           if ((id[0] !== undefined) && (id[0].length > 0) && (id[0] !== 'Atlas Test Partner Organization My Organization')) {
-            var a = element(by.css("li[id='" + id[0] + "LaunchCustomerButton" + "']"));
+            var a = element(by.css("li[id='" + id[0] + "LaunchCustomerButton']"));
             a.getInnerHtml().then(function (inner) {
               var patt = /href="#\/login\/\s*(.*?)\s*\//;
               var result = patt.exec(inner);

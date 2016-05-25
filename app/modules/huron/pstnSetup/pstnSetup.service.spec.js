@@ -15,6 +15,9 @@ describe('Service: PstnSetupService', function () {
   var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
+  var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
+  var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
+
   var numbers = ['123', '456'];
 
   var customerPayload = {
@@ -71,7 +74,8 @@ describe('Service: PstnSetupService', function () {
       customerPayload.lastName,
       customerPayload.email,
       customerPayload.pstnCarrierId,
-      customerPayload.numbers
+      customerPayload.numbers,
+      customerPayload.trial
     );
     $httpBackend.flush();
   }
@@ -177,6 +181,23 @@ describe('Service: PstnSetupService', function () {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450'
       }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        pattern: '(123) XXX-XXXX',
+        quantity: 1
+      }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        orderNumber: 654987
+      }));
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get orders and filter to formatted number orders', function () {
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders').respond(orders);
+    var promise = PstnSetupService.getFormattedNumberOrders(customerId);
+    promise.then(function (numbers) {
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[0]));
+      expect(numbers).toContain(jasmine.objectContaining(acceptedOrder[1]));
     });
     $httpBackend.flush();
   });

@@ -1,9 +1,10 @@
 'use strict';
 
+/*global webEx*/
+
 var request = require('request');
 
 function post(url, body) {
-  console.log("post");
   var defer = protractor.promise.defer();
 
   var options = {
@@ -16,7 +17,6 @@ function post(url, body) {
   };
 
   function callback(error, response, body) {
-    console.log("callback");
     var ticket;
     if (!error && response.statusCode == 200) {
       var start = response.body.indexOf('<use:sessionTicket>') + '<use:sessionTicket>'.length;
@@ -24,16 +24,13 @@ function post(url, body) {
       if (start >= 0 & end >= 0) {
         ticket = response.body.slice(start, end);
       }
-      console.log('fulfill');
       defer.fulfill(ticket);
     } else {
-      console.log('reject');
       defer.reject();
     }
 
   }
   request(options, callback);
-  console.log("return");
   return defer.promise;
 }
 
@@ -54,26 +51,26 @@ var WebExPage = function () {
     var wbxSiteName = siteUrl.slice(0, dotIndex);
 
     sessionTicketRequest = "" +
-      "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
-      "    <header>" + "\n" +
-      "        <securityContext>" + "\n" +
-      "            <siteName>" + wbxSiteName + "</siteName> " + "\n" +
-      "            <webExID>" + webexAdminID + "</webExID>" + "\n" +
-      "        </securityContext>" + "\n" +
-      "    </header>" + "\n" +
-      "    <body>" + "\n" +
-      "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">" + "\n" +
-      "            <accessToken>" + accessToken + "</accessToken>" + "\n" +
-      "        </bodyContent>" + "\n" +
-      "    </body>" + "\n" +
-      "</serv:message>" + "\n";
+      "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+      "    <header>\n" +
+      "        <securityContext>\n" +
+      "            <siteName>" + wbxSiteName + "</siteName> \n" +
+      "            <webExID>" + webexAdminID + "</webExID>\n" +
+      "        </securityContext>\n" +
+      "    </header>\n" +
+      "    <body>\n" +
+      "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">\n" +
+      "            <accessToken>" + accessToken + "</accessToken>\n" +
+      "        </bodyContent>\n" +
+      "    </body>\n" +
+      "</serv:message>\n";
 
     var flow = protractor.promise.controlFlow();
     return flow.execute(this.initPost);
   };
 
   this.setup = function (username, password, testSiteUrl) {
-    login.loginThroughGui(username, password);
+    login.loginThroughGuiUsingIntegrationBackend(username, password);
     var defer = protractor.promise.defer();
     browser.executeScript("return window.localStorage.getItem('accessToken');").then(function (accessToken) {
       var promise = webEx.getTicket(username, accessToken, testSiteUrl);

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService) {
 
     function getMessageCardForOrg(org, licenses) {
@@ -16,7 +16,7 @@
 
     function getCallCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'ciscouc');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.COMMUNICATIONS);
+      return new OrgCard(entitled, licenses, Config.licenseTypes.COMMUNICATION);
     }
 
     function getRoomSystemsCardForOrg(org, licenses) {

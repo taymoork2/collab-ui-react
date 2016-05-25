@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
+  /* global Uint8Array:false */
+
   angular
     .module('Core')
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako, $resource, UrlConfig) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako, $resource, UrlConfig, $window) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
@@ -47,19 +49,19 @@
       if (!getAdmins) {
         if (typeof entitlement !== 'undefined' && entitlement !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
           //It seems CI does not support 'ANDing' filters in this situation.
-          filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
+          filter = searchFilter + '%20and%20entitlements%20eq%20%22' + $window.encodeURIComponent(entitlement) + '%22';
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
-          encodedSearchStr = window.encodeURIComponent(searchStr);
+          encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
           searchStr = searchStr;
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
-          encodedSearchStr = window.encodeURIComponent(searchStr);
+          encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
 
         } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
-          filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
+          filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + $window.encodeURIComponent(entitlement);
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           listUrl = scimSearchUrl;
         }
@@ -105,10 +107,9 @@
     function generateUserReports(sortBy, callback) {
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
-        "sortedBy": [sortBy],
-        "attributes": ["name", "userName", "entitlements", "roles", "active"]
+        sortedBy: [sortBy],
+        attributes: ["name", "displayName", "userName", "entitlements", "active"]
       };
-
       $http({
           method: 'POST',
           url: generateUserReportsUrl,
@@ -168,7 +169,7 @@
       userReportData = userReportData.replace(/\s/g, '');
 
       // Decode base64 (convert ascii phbinary)
-      var binData = atob(userReportData);
+      var binData = $window.atob(userReportData);
 
       // Convert binary string to character-number array
       var charData = binData.split('').map(function (x) {
@@ -222,20 +223,19 @@
               } else {
                 // header line for CSV file
                 var header = {};
-                header.name = $translate.instant('usersPage.csvHeaderName');
-                header.email = $translate.instant('usersPage.csvHeaderEmailAddress');
-                header.entitlements = $translate.instant('usersPage.csvHeaderEntitlements');
+                header.firstName = "First Name";
+                header.lastName = "Last Name";
+                header.displayName = "Display Name";
+                header.email = "User ID/Email (Required)";
+                header.entitlements = "Entitlements";
                 exportedUsers.push(header);
 
                 //formatting the data for export
                 for (var i = 0; i < users.length; i++) {
                   var exportedUser = {};
-                  var entitlements = '';
-                  if (users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '') {
-                    exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
-                  } else {
-                    exportedUser.name = 'N/A';
-                  }
+                  exportedUser.firstName = (users[i].name && users[i].name.givenName) ? users[i].name.givenName : '';
+                  exportedUser.lastName = (users[i].name && users[i].name.familyName) ? users[i].name.familyName : '';
+                  exportedUser.displayName = users[i].displayName || '';
                   exportedUser.email = users[i].userName;
                   exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);

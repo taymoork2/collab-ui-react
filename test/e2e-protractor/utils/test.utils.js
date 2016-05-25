@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
@@ -541,16 +543,6 @@ exports.expectRowIsNotDisplayed = function (text) {
   this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
 };
 
-exports.dumpConsoleErrors = function () {
-  browser.manage().logs().get('browser').then(function (browserLogs) {
-    browserLogs.forEach(function (log) {
-      if (log.level.value > 900) {
-        console.log('CONSOLE - ' + log.message);
-      }
-    });
-  });
-};
-
 exports.formatPhoneNumbers = function (value) {
   if (typeof value !== 'string') {
     value = value.toString();
@@ -698,4 +690,9 @@ exports.quickDeleteUser = function (bFirst, name) {
 
 exports.waitForModal = function () {
   return this.wait(element(by.css('.modal-dialog')));
+};
+
+exports.selectDropdown = function (dropdown, option) {
+  this.click(element(by.css(dropdown + ' a.select-toggle')));
+  this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
 };

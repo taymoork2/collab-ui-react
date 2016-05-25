@@ -5,9 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -34,7 +32,7 @@ gulp.task('ts:build-test', function () {
   var files = config.typeScript.testFiles;
 
   messageLogger('Transpiling TypeScript test files', files);
-  return typeScriptUtil.compile(files, config.app);
+  return typeScriptUtil.compile(files, config.app, config.tsTestManifest);
 });
 
 gulp.task('ts:build-app', function () {
@@ -44,5 +42,5 @@ gulp.task('ts:build-app', function () {
   );
 
   messageLogger('Transpiling TypeScript files', files);
-  return typeScriptUtil.compile(files, config.build);
+  return typeScriptUtil.compile(files, config.build, config.tsManifest);
 });
