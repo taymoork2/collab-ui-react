@@ -8,7 +8,7 @@
     /* @ngInject */
     function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
       var msgIntFlag = false;
-      var CurrentDataRetentionPeriod = null;
+      var currentDataRetentionPeriod = null;
       var orgId = Authinfo.getOrgId();
       var vm = this;
       vm.showMessengerInterop = false;
@@ -17,9 +17,6 @@
       vm.showAppSecurity = true;
       vm.appSecurity = false;
       vm.currentAppSecurity = false;
-      vm.setAppSecurityChange = function () {
-        vm.currentAppSecurity = !(vm.currentAppSecurity);
-      };
 
       vm.placeholder = 'Select retention time';
       vm.selected = {
@@ -59,7 +56,7 @@
         AccountOrgService.getServices(orgId, null)
           .success(function (data, status) {
             var interopIndex = _.findIndex(data.entitlements, function (obj) {
-              return obj.serviceId == 'messengerInterop';
+              return obj.serviceId === 'messengerInterop';
             });
             if (interopIndex > -1) {
               vm.msgIntegration = true;
@@ -72,14 +69,14 @@
         AccountOrgService.getOrgSettings(orgId)
           .success(function (data, status) {
             var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
-              return obj.key == 'dataRetentionPeriodDays';
+              return obj.key === 'dataRetentionPeriodDays';
             });
             if (dataRetentionIndex > -1) {
               var selectedIndex = _.findIndex(vm.options, function (obj) {
-                return obj.value == data.settings[dataRetentionIndex].value;
+                return obj.value === data.settings[dataRetentionIndex].value;
               });
               vm.selected = vm.options[selectedIndex];
-              CurrentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
+              currentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
             }
           });
       }
@@ -90,59 +87,63 @@
           .then(function (response) {
             _.set(vm, 'appSecurity', response.data.enforceClientSecurity);
             vm.currentAppSecurity = vm.appSecurity;
-          })
-          .catch(function (response) {
-            Notification.error('firstTimeWizard.messengerAppSecurityError');
           });
       }
 
       $scope.$on('wizard-messenger-setup-event', function () {
 
-        if (!_.isEmpty(vm.selected.value) && !CurrentDataRetentionPeriod) {
+        if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
           AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-            .success(function (data, status) {
+            .then(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionSuccess')], 'success');
             })
-            .error(function (data, status) {
+            .catch(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionError')], 'error');
             });
         }
 
-        if (!_.isEmpty(vm.selected.value) && CurrentDataRetentionPeriod && CurrentDataRetentionPeriod !== vm.selected.value) {
+        if (!_.isEmpty(vm.selected.value) && currentDataRetentionPeriod && currentDataRetentionPeriod !== vm.selected.value) {
           AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-            .success(function (data, status) {
+            .then(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditSuccess')], 'success');
             })
-            .error(function (data, status) {
+            .catch(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditError')], 'error');
             });
         }
 
-        // Calls AppSecuritySetting service to update device security enforcement
-        if (vm.currentAppSecurity !== vm.appSecurity) {
-          AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
-            .success(function (data, status) {
-              Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
-            })
-            .error(function (data, status) {
-              Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
-            });
-        }
+        FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
+          vm.showAppSecurity = result;
 
-        if (vm.msgIntegration === true && msgIntFlag === false) {
+          if (result) {
+            // Calls AppSecuritySetting service to update device security enforcement
+            if (vm.currentAppSecurity !== vm.appSecurity) {
+              AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
+                .then(function (response) {
+                  Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
+                })
+                .catch(function (response) {
+                  Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
+                });
+            }
+          }
+        });
+
+        if (vm.msgIntegration && !msgIntFlag) {
           AccountOrgService.addMessengerInterop(orgId)
-            .success(function (data, status) {
+            .then(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexSuccess')], 'success');
             })
-            .error(function (data, status) {
+            .catch(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexError')], 'error');
             });
-        } else if (vm.msgIntegration === false && msgIntFlag === true) {
+
+        } else if (!vm.msgIntegration && msgIntFlag) {
           AccountOrgService.deleteMessengerInterop(orgId)
-            .success(function (data, status) {
+            .then(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
             })
-            .error(function (data, status) {
+            .catch(function (response) {
               Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
             });
         }

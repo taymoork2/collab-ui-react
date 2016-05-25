@@ -26,7 +26,7 @@
     return service;
 
     //Url returns
-    function getDeviceSettingUrl(org) {
+    function getDeviceSettingsUrl(org) {
       var url = accountUrl + 'organizations/' + org + '/settings';
 
       return url;
@@ -38,7 +38,7 @@
       return url;
     }
 
-    function getAccountSettingUrl(org) {
+    function getAccountSettingsUrl(org) {
       var url = accountUrl + 'organization/' + org + '/settings';
 
       return url;
@@ -73,7 +73,7 @@
     }
 
     function addOrgCloudSipUri(org, cloudSipUri) {
-      var url = getAccountSettingUrl(org);
+      var url = getAccountSettingsUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -86,7 +86,7 @@
     }
 
     function addOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = getAccountSettingUrl(org);
+      var url = getAccountSettingsUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -99,7 +99,7 @@
     }
 
     function modifyOrgDataRetentionPeriodDays(org, dataRetentionPeriodDays) {
-      var url = getAccountSettingUrl(org);
+      var url = getAccountSettingsUrl(org);
       var request = {
         'id': org,
         'settings': [{
@@ -112,13 +112,13 @@
     }
 
     function deleteOrgSettings(org) {
-      var url = getAccountSettingUrl(org) + '/' + org;
+      var url = getAccountSettingsUrl(org) + '/' + org;
 
       return $http.delete(url);
     }
 
     function getOrgSettings(org) {
-      var url = getAccountSettingUrl(org) + '/' + org;
+      var url = getAccountSettingsUrl(org) + '/' + org;
 
       return $http.get(url);
     }
@@ -127,31 +127,25 @@
     function getAppSecurity(org) {
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
-      } else {
-        var url = getDeviceSettingUrl(org) + '/enforceClientSecurity';
-
-        return $http({
-          method: 'GET',
-          url: url
-        });
       }
+      var url = getDeviceSettingsUrl(org) + '/enforceClientSecurity';
+
+      return $http.get(url);
+
     }
 
     // Sets the updated App Security Status to enforceClientSecurity API on Save button event
     function setAppSecurity(org, appSecurityStatus) {
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
-      } else {
-        var url = getDeviceSettingUrl(org) + '/enforceClientSecurity';
-
-        return $http({
-          method: 'PUT',
-          url: url,
-          data: {
-            enforceClientSecurity: appSecurityStatus
-          }
-        });
       }
+
+      var url = getDeviceSettingsUrl(org) + '/enforceClientSecurity';
+
+      return $http.put(url, {
+        enforceClientSecurity: appSecurityStatus
+      });
+
     }
   }
 })();

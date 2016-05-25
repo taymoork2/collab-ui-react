@@ -30,7 +30,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'notify');
   }));
 
   function initController() {
@@ -71,17 +71,4 @@ describe('Controller: messagingSetupCtrl', function () {
       expect(controller.appSecurity).toEqual(true);
     });
   });
-
-  describe('test getAppSecurity error condition: ', function () {
-    beforeEach(function () {
-      AccountOrgService.getAppSecurity = jasmine.createSpy().and.returnValue($q.reject());
-      initController();
-    });
-
-    it('getAppSecurity call should gracefully error', function () {
-      controller.currentAppSecurity = false;
-      expect(Notification.error).toHaveBeenCalled();
-    });
-  });
-
 });
