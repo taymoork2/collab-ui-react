@@ -113,7 +113,7 @@ describe('Service: AANumberAssignmentService', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType("externalNumber");
-      resource.setId("+14084749999");
+      resource.setId("14084749999");
       var resources = [];
       resources.push(resource);
 
@@ -133,7 +133,7 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
-      expect(angular.equals(formattedResources[0].id, '+14084749999')).toEqual(true);
+      expect(angular.equals(formattedResources[0].id, '14084749999')).toEqual(true);
       expect(angular.equals(formattedResources[0].number, '+14084749999')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });

@@ -4,8 +4,8 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   var $controller;
   var controller;
 
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };
@@ -15,24 +15,17 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-
     $controller = _$controller_;
-
     AAUiModelService = _AAUiModelService_;
-
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-
     $scope.schedule = schedule;
-
     $scope.index = index;
 
     aaUiModel['openHours'].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());

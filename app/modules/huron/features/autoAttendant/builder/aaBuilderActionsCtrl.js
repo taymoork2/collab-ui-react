@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService, Config, AACommonService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService, Config, AACommonService, FeatureToggleService) {
 
     var vm = this;
 
@@ -51,7 +51,7 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
+    vm.allowStepAddsDeletes = false;
 
     /////////////////////
 
@@ -108,10 +108,22 @@
       }
     }
 
+    function setFeatureToggle() {
+      // toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.allowStepAddsDeletes = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.allowStepAddsDeletes = result;
+        });
+      }
+    }
+
     function activate() {
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();
       setOption();
+      setFeatureToggle();
     }
 
     activate();

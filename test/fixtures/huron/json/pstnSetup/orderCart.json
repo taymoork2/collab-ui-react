@@ -5,7 +5,7 @@
       "+12145557001"
     ]
   },
-  "type": "newOrders"
+  "type": "NUMBER_ORDER"
 }, {
   "data": {
     "numbers": [
@@ -13,12 +13,12 @@
       "+12145557001"
     ]
   },
-  "type": "portOrders"
+  "type": "PORT_ORDER"
 }, {
   "data": {
     "areaCode": 123,
     "length": 4,
     "consecutive": false
   },
-  "type": "advancedOrders"
+  "type": "BLOCK_ORDER"
 }]

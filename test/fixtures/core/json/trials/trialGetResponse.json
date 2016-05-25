@@ -2,6 +2,7 @@
   "customerOrgId": "5632f806-ad09-4a26-a0c0-a49a13f38873",
   "startDate": "2015-03-10T00:00:00.000Z",
   "trialPeriod": 180,
+  "dealId": "deal42",
   "offers": [{
     "id": "CALL",
     "licenseCount": 100,

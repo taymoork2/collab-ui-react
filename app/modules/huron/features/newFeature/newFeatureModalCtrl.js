@@ -6,7 +6,7 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService, $modal, Config) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $state, $modal) {
     var vm = $scope;
 
     vm.features = [{

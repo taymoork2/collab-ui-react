@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -21,8 +21,10 @@
     vm.isSquaredUC = isSquaredUC();
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
+    vm.getUserAuthInfo = getUserAuthInfo;
     vm.deleteTestOrg = deleteTestOrg;
 
+    vm.uuid = '';
     vm.logoOverride = false;
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
@@ -32,6 +34,7 @@
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
+    vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
     var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
@@ -195,6 +198,10 @@
 
     function isOwnOrg() {
       return vm.customerName === Authinfo.getOrgName();
+    }
+
+    function getUserAuthInfo() {
+      PartnerService.getUserAuthInfo(vm.customerOrgId);
     }
 
     function getIsTestOrg() {

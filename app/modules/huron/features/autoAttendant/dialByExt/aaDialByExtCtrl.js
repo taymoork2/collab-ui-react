@@ -72,7 +72,7 @@
       if (vm.isTextOnly) {
         return;
       }
-      vm.languageOptions = AALanguageService.getLanguageOptions();
+      vm.languageOptions = _.sortBy(AALanguageService.getLanguageOptions(), 'label');
 
       vm.voiceOption = AALanguageService.getVoiceOption(vm.menuEntry.getVoice());
       vm.languageOption = AALanguageService.getLanguageOption(vm.menuEntry.getVoice());
