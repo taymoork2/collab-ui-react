@@ -36,6 +36,7 @@
     vm.disabledChecks = disabledChecks;
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
+    vm.getQuantityInputDefault = _getQuantityInputDefault;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -101,24 +102,27 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 2,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
 
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.sx10.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.sx10.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.sx10.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.sx10.enabled || vm.sx10.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.sx10, 2);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
@@ -153,22 +157,24 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
       },
+      validation: {
+        show: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8865.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8865.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8865.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8865.enabled || vm.phone8865.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8865, 1);
         }
       },
       watcher: _addWatcher(),
@@ -202,23 +208,26 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
       },
+      validation: {
+        show: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8845.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8845.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8845.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8845.enabled || vm.phone8845.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8845, 1);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addPhonesValidators()
@@ -251,22 +260,24 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
       },
+      validation: {
+        show: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8841.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8841.enabled || vm.phone8841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -300,22 +311,24 @@
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
       },
+      validation: {
+        show: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone7841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone7841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone7841.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone7841.enabled || vm.phone7841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone7841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -426,6 +439,7 @@
       key: 'postalCode',
       type: 'input',
       className: 'columns medium-6',
+      validators: _checkValidators(),
       templateOptions: {
         labelClass: 'columns medium-2 medium-offset-1 text-right',
         inputClass: 'columns medium-5',
@@ -503,23 +517,12 @@
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems);
+
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialCallData.details.phones);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialCallData.details.phones);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -555,6 +558,28 @@
         .reduce(_.add) || 0;
     }
 
+    function _getQuantityInputDefault(device, defaultValue) {
+
+      var disabled = !device.enabled;
+      if (disabled) {
+        return 0;
+      } else if (device.quantity === 0) {
+        return defaultValue;
+      } else {
+        return device.quantity;
+      }
+    }
+
+    function _validateTypeQuantity(scope, deviceType) {
+      var quantity = vm.calcQuantity(deviceType);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity < 2 || quantity > 5);
+      }
+    }
+
     function _addWatcher() {
       return {
         expression: function () {
@@ -562,7 +587,6 @@
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            // trigger validation when quantity has changed
             field.formControl.$validate();
           }
         }
@@ -643,7 +667,11 @@
       var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
 
       _.forEach(vm.shippingFields, function (field) {
+
         field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
+        if (field.templateOptions.disabled && field.formControl) {
+          field.formControl.$setViewValue('');
+        }
       });
     }
 
@@ -654,7 +682,7 @@
         .filter({
           enabled: true
         })
-        .isEmpty();
+        .isEmpty().value();
     }
 
     function validateChecks($viewValue, $modelValue, scope) {
