@@ -6,7 +6,9 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($http, $q, $translate, Authinfo, Config, Log, UserLineAssociationService, UserLineAssociationCountService) {
+  function LineListService($http, $q, $translate, Authinfo, CeService, Config, FeatureToggleService, HuntGroupServiceV2, Log, PstnSetupService, UserLineAssociationService, UserLineAssociationCountService) {
+
+    var customerId = Authinfo.getOrgId();
 
     // define functions available in this factory
     var service = {
@@ -20,7 +22,7 @@
       var wildcard = "%";
 
       var queryString = {
-        'customerId': Authinfo.getOrgId()
+        'customerId': customerId
       };
 
       if (searchStr.length > 0) {
@@ -46,7 +48,7 @@
       var wildcard = "%";
 
       var queryString = {
-        'customerId': Authinfo.getOrgId()
+        'customerId': customerId
       };
 
       if (searchStr.length > 0) {
@@ -70,8 +72,56 @@
       queryString.limit = count;
       queryString.order = sortBy + sortOrder;
 
-      return UserLineAssociationService.query(queryString)
-        .$promise;
+      var linesPromise = UserLineAssociationService.query(queryString).$promise;
+      var orderPromise = PstnSetupService.listPendingOrders(customerId);
+      var featurePromise = FeatureToggleService.supports('huron-order-management');
+
+      return $q.all([linesPromise, orderPromise, featurePromise])
+        .then(function (results) {
+          var lines = results[0];
+          var orders = results[1];
+
+          var pendingLines = [];
+          var nonProvisionedPendingLines = [];
+
+          if (!results[2]) {
+            return lines;
+          }
+
+          _.forEach(orders, function (order) {
+            try {
+              var parsedResponse = JSON.parse(order.response);
+              var response = parsedResponse[order.carrierOrderId];
+            } catch (error) {
+              return;
+            }
+            _.forEach(response, function (number) {
+              var lineNotFound = true;
+              _.forEach(lines, function (line) {
+                if (number.e164 && number.e164 === line.externalNumber) {
+                  line.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                  pendingLines.push(line);
+                  lineNotFound = false;
+                }
+              });
+              if (lineNotFound) {
+                nonProvisionedPendingLines.push({
+                  externalNumber: number.e164,
+                  userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                });
+              }
+            });
+          });
+
+          if (filterType === 'pending') {
+            return pendingLines.concat(nonProvisionedPendingLines);
+          } else if (filterType === 'all') {
+            return lines.concat(nonProvisionedPendingLines);
+          } else {
+            return lines;
+          }
+        });
+
     } // end of function getLineList
 
     function exportCSV(scope) {

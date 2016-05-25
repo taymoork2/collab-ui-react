@@ -3485,6 +3485,7 @@
     "allLines": "All",
     "unassignedLines": "Unassigned",
     "assignedLines": "Assigned",
+    "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
@@ -3492,7 +3493,10 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
-    "getCountError": "Failed to fetch record counts."
+    "getCountError": "Failed to fetch record counts.",
+    "phoneNumbers": "Phone Numbers",
+    "assignedTo": "Assigned to",
+    "inProgress": "In Progress"
   },
 
   "messengerCiSync": {

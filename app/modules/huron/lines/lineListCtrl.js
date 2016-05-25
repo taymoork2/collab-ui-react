@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $timeout, $translate, $q, FeatureToggleService, LineListService, Log, Config, Notification) {
 
     var vm = this;
 
@@ -21,6 +21,8 @@
     vm.load = false;
     $scope.gridData = [];
 
+    var featurePromise = FeatureToggleService.supports('huron-order-management');
+
     vm.sort = {
       by: 'userid',
       order: '-asc'
@@ -29,19 +31,16 @@
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
-      filterValue: 'all',
-      count: 0
+      filterValue: 'all'
     };
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
-      filterValue: 'unassignedLines',
-      count: 0
+      filterValue: 'unassignedLines'
     }, {
       name: $translate.instant('linesPage.assignedLines'),
-      filterValue: 'assignedLines',
-      count: 0
+      filterValue: 'assignedLines'
     }];
 
     // Set data filter
@@ -71,6 +70,15 @@
       }, vm.timeoutVal);
     };
 
+    $q.when(featurePromise).then(function (response) {
+      if (response) {
+        vm.filters.push({
+          name: $translate.instant('linesPage.pending'),
+          filterValue: 'pending'
+        });
+      }
+    });
+
     // Get count of line association data;
     // total, unassigned, assigned lines
     function getCount() {
@@ -91,7 +99,11 @@
       vm.gridRefresh = true;
 
       // Update counts when line association data needs to be refreshed
-      getCount();
+      $q.when(featurePromise).then(function (response) {
+        if (!response) {
+          getCount();
+        }
+      });
 
       // Clear currentLine if a new search begins
       var startIndex = startAt || 0;
@@ -147,16 +159,18 @@
       columnDefs: [{
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '30%',
+        width: '20%',
         cellClass: 'internalNumberColumn',
         sortable: true
       }, {
         field: 'externalNumber',
-        displayName: $translate.instant('linesPage.externalNumberHeader'),
-        sortable: true
+        displayName: $translate.instant('linesPage.phoneNumbers'),
+        sortable: true,
+        cellClass: 'externalNumberColumn',
+        width: '20%'
       }, {
         field: 'userId',
-        displayName: $translate.instant('linesPage.userEmailHeader'),
+        displayName: $translate.instant('linesPage.assignedTo'),
         sortable: true,
         sort: {
           direction: 'asc',
