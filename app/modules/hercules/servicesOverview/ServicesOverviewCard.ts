@@ -121,7 +121,6 @@ namespace servicesOverview {
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
       let callServiceStatus = this.filterAndGetStatus(services,serviceIds);
-      // console.log('status',callServiceStatus,services,serviceIds);
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
       }
