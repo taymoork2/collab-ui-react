@@ -7,7 +7,8 @@
     var vm = this;
     // console.log("EdiscoverySearchController...")
     vm.createReport = createReport;
-    vm.showSearchHelp = showSearchHelp;
+    vm.createReportDoIt = createReportDoIt;
+    //vm.showSearchHelp = showSearchHelp;
 
     vm.searchCriteria = {
       "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
@@ -65,6 +66,10 @@
       }
     }
 
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(avalonPoller);
+    });
+
     $scope.$watch(getStartDate, function (startDate) {
       //validateDate();
     });
@@ -78,27 +83,64 @@
       return _.sample(possible, 5).join('');
     }
 
+    function findReportById(reports, id) {
+      return _.find(reports, function (report) {
+        return report.id === id;
+      });
+    }
+
+    // Should eventually be a search API
     function createReport() {
       if (!validateDate()) {
         return;
       }
-      vm.searchResult = {};
-      EdiscoveryService.createReport("whatever_" + randomString(), vm.searchCriteria.searchString).then(function (res) {
-        vm.searchResult = res;
+      vm.report = {
+        "state": "Searching..."
+      };
+      // Expect this API to be changed when Avalon updates their API
+      EdiscoveryService.createReport("whatever_" + randomString(), vm.searchCriteria.searchString)
+        .then(function (res) {
+          vm.searchResult = res;
+          createReportDoIt();
+        }).catch(function (err) {
+          //  TODO: Implement proper handling of error when final API is in place
+        });
+    }
+
+    var avalonPoller;
+
+    function enableAvalonPolling() {
+      $timeout.cancel(avalonPoller);
+      pollAvalonReport();
+    }
+
+    function disableAvalonPolling() {
+      $timeout.cancel(avalonPoller);
+    }
+
+    function pollAvalonReport() {
+      //  TODO: Implement proper handling of error when final API is in place
+      EdiscoveryService.getReport().then(function (reports) {
+        vm.report = findReportById(reports, vm.searchResult.data.id);
+      }).finally(function (res) {
+        disableAvalonPolling();
+        avalonPoller = $timeout(pollAvalonReport, 2000);
       });
     }
 
-    function setSearchFieldFocus() {
-      angular.element('#searchInput').focus();
-    }
-
-    function showSearchHelp() {
-      var searchHelpUrl = "modules/ediscovery/search-help-dialog.html";
-      $modal.open({
-        templateUrl: searchHelpUrl
-      }).result.finally(function () {
-        setSearchFieldFocus();
-      });
+    function createReportDoIt() {
+      // Expect this API to be changed when Avalon updates their API
+      EdiscoveryService.createReportDoIt(vm.searchResult.data.runUrl, vm.searchCriteria.searchString)
+        .then(function (res) {
+          enableAvalonPolling();
+        })
+        .catch(function (err) {
+          //  TODO: Implement proper handling of error when final API is in place
+          vm.report = {
+            "state": "NOT FOUND"
+          };
+          disableAvalonPolling();
+        });
     }
 
   }
