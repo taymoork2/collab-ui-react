@@ -60,8 +60,6 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-8',
         type: 'text',
         required: true,
         maxlength: 50,
@@ -70,85 +68,60 @@
       model: vm.details,
       key: 'customerEmail',
       type: 'input',
-      className: 'last-field',
+      className: '',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-8',
         type: 'email',
         required: true,
       },
     }];
 
-    vm.individualServices = [{
-      model: vm.details,
-      key: 'licenseCount',
-      type: 'input',
-      className: 'columns medium-12 license-count',
-      templateOptions: {
-        label: $translate.instant('trials.licenseQuantity'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-4',
-        type: 'number',
-        required: true,
-        secondaryLabel: $translate.instant('trials.users'),
-      },
-      validators: {
-        count: {
-          expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialLicenseCount($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          },
-        },
-      },
-    }, {
+    vm.messageFields = [{
       // Message Trial
       model: vm.messageTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.message'),
         id: messageTemplateOptionId,
-        class: 'columns medium-12 checkbox-group',
+        label: $translate.instant('trials.message')
       },
-    }, {
+    }];
+
+    vm.meetingFields = [{
       // Meeting Trial
       model: vm.meetingTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.meeting'),
         id: meetingTemplateOptionId,
-        class: 'columns medium-12 checkbox-group',
+        label: $translate.instant('trials.meeting')
       },
     }, {
       // Webex Trial
       model: vm.webexTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.webex'),
         id: webexTemplateOptionId,
-        class: 'columns medium-12',
+        label: $translate.instant('trials.webex')
       },
       hideExpression: function () {
         return !vm.showWebex;
       },
-    }, {
+    }];
+
+    vm.callFields = [{
       // Call Trial
       model: vm.callTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.callUsOnly'),
         id: callTemplateOptionId,
-        class: 'columns medium-12',
+        label: $translate.instant('trials.callUsOnly')
       },
       hideExpression: function () {
         return !vm.hasCallEntitlement;
@@ -160,11 +133,10 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-12 pad-top",
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.roomSysUsOnly'),
         id: roomSystemsTemplateOptionId,
-        class: 'columns medium-12',
+        label: $translate.instant('trials.roomSysUsOnly')
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -177,10 +149,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-12 small-offset-1",
+      className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-4',
+        inputClass: 'medium-4 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -204,6 +176,30 @@
       }
     }];
 
+    vm.licenseCountFields = [{
+      model: vm.details,
+      key: 'licenseCount',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.licenseQuantity'),
+        inputClass: 'medium-4',
+        type: 'number',
+        required: true,
+        secondaryLabel: $translate.instant('trials.users'),
+      },
+      validators: {
+        count: {
+          expression: function ($viewValue, $modelValue) {
+            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
+          },
+        },
+      },
+    }];
+
     vm.trialTermsFields = [{
       model: vm.details,
       key: 'licenseDuration',
@@ -214,8 +210,7 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-4',
+        inputClass: 'medium-4',
         options: [30, 60, 90],
       },
     }];

@@ -1,3 +1,4 @@
+// TODO: rip this out once confirmed no longer needed
 .trial-modal.form-horizontal {
   color: $gray-dark-2;
   .modal-header {
@@ -129,6 +130,36 @@
   }
   .city-width input {
     min-width: rem(258px);
+  }
+}
+
+// -----
+// toolkit overrides as required by UX
+// see: https://app.zeplin.io/project.html#pid=566240ac4cc082c97dccdfb1&dashboard
+.reveal-modal.full .modal-body.trials {
+  padding: 0;
+}
+
+.trials {
+  // TODO: rip this out once we can rip out 'label' definition in '_temp.scss'
+  label {
+    margin-bottom: 0.25rem;
+  }
+
+  .formly-field {
+    padding-bottom: 6px;
+  }
+
+  .cs-form__section {
+    padding-bottom: 2rem;
+
+    &:last-child {
+      padding-bottom: 1rem;
+    }
+
+    .section__content .sub-section {
+      margin-bottom: 0.7rem;
+    }
   }
 }
 

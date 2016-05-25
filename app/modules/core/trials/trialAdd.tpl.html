@@ -9,35 +9,66 @@
 </div>
 
 <!-- body -->
-<div class="modal-body">
-  <form id="addTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-    <section class="collapse-fields row modal-body-gray">
-      <h5 translate="partnerHomePage.customerInformation"></h5>
-      <formly-form model="trial.details" fields="trial.custInfoFields"
-        class="small-12 columns indent">
-      </formly-form>
-    </section>
-    <section class="collapse-fields row modal-body-gray">
-      <h5 translate="partnerHomePage.trialServices"></h5>
-      <section class="row indent">
-        <h6 class="small-12 columns" translate="partnerHomePage.individualUserServices"></h6>
-        <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show"
-          class="small-12 columns indent">
-        </formly-form>
-      </section>
-      <section class="row indent modal-body-gray" ng-if="trial.showRoomSystems">
-        <h6 class="small-12 columns" translate="partnerHomePage.deviceBasedServices"></h6>
-        <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show"
-          class="small-12 columns indent">
-        </formly-form>
-      </section>
-    </section>
-    <section class="row modal-body-gray">
-      <h5 translate="partnerHomePage.termsOfTrial"></h5>
-      <formly-form model="trial.details" fields="trial.trialTermsFields"
-        class="small-12 columns indent">
-      </formly-form>
-    </section>
+<div class="modal-body trials">
+  <form id="addTrialForm" class="cs-form trial-modal" name="trialForm" novalidate>
+
+    <!-- customer information -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="partnerHomePage.customerInformation"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
+      </div>
+    </div>
+
+    <!-- trial services -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="partnerHomePage.trialServices"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.message"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.messageFields"></formly-form>
+        </div>
+
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.meeting"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.meetingFields"></formly-form>
+        </div>
+
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.call"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.callFields"></formly-form>
+        </div>
+
+        <div class="sub-section" ng-if="trial.showRoomSystems">
+          <h5 class="sub-section__label" translate="subscriptions.room"></h5>
+          <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields"></formly-form>
+        </div>
+      </div>
+    </div>
+
+    <!-- license quantity -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trials.licenseQuantity"></h5>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.trialData.trials" fields="trial.licenseCountFields"></formly-form>
+      </div>
+    </div>
+
+    <!-- trial duration -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trials.trialDuration"></h5>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.details" fields="trial.trialTermsFields"></formly-form>
+      </div>
+    </div>
   </form>
 </div>
 
