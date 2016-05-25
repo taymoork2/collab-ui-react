@@ -12,6 +12,9 @@ var messageLogger = require('../utils/messageLogger.gulp')();
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var compression = require('compression');
+var contentSecurityPolicy = require('helmet-csp');
+var notifier = require('node-notifier');
+var openBrowser = require('open');
 var testFiles;
 var changedFiles;
 
@@ -63,12 +66,59 @@ gulp.task('browser-sync', function () {
     }
   }
 
+  var imagePreloadScriptSHA1 = '\'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=\'';
+  var browserSyncScriptSHA1 = '\'sha256-X3L99Fr8H4ZuITyUqIoiId5vHqXaiAp/3oicgoII6sc=\'';
   var options = {
     host: '127.0.0.1',
     port: 8000,
     server: {
       baseDir: baseDir,
-      middleware: [compression()]
+      middleware: [
+        compression(),
+        {
+          route: '/report-violation',
+          handle: function (req, res, next) {
+            if (req.method === 'POST') {
+              var chunks = '';
+              req.on('data', function(chunk) {
+                chunks = chunks + chunk;
+              });
+              req.on('end', function() {
+                var report = JSON.parse(chunks)['csp-report'];
+                notifier.notify({
+                  title: 'CSP violation',
+                  subtitle: 'You violated ' + report['effective-directive'],
+                  message: 'Blocked URI:' + report['blocked-uri'],
+                  icon: 'http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/01/01f7232ab1dd5845a83b18ae92552a188ec0530d_full.jpg',
+                  contentImage: 'http://memesvault.com/wp-content/uploads/Nooo-Meme-04.jpg',
+                  wait: true
+                });
+                notifier.on('click', function (notifierObject, options) {
+                  openBrowser('http://www.google.com');
+                });
+                res.writeHead(200, 'OK', {
+                  'Content-Type': 'text/html'
+                });
+                res.end();
+              });
+            } else {
+              next();
+            }
+          }
+        },
+        contentSecurityPolicy({
+          reportOnly: false,
+          browserSniff: false,
+          directives: {
+            defaultSrc: ['\'self\'', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.localytics.com', '*.webexconnect.com'],
+            connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000'],
+            imgSrc: ['\'self\'', 'data:', '*.localytics.com', '*.rackcdn.com', '*.clouddrive.com'],
+            scriptSrc: ['\'self\'', imagePreloadScriptSHA1, browserSyncScriptSHA1, '\'unsafe-eval\'', '*.webex.com', '*.localytics.com', 'cdn.mxpnl.com', 'api.mixpanel.com'],
+            styleSrc: ['\'self\'', '\'unsafe-inline\''],
+            reportUri: '/report-violation',
+          }
+        })
+      ]
     },
     ghostMode: args.browserall ? ghostMode : false,
     injectChanges: true,
