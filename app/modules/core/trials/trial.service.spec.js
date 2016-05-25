@@ -136,8 +136,9 @@ describe('Service: Trial Service:', function () {
             model: 'CISCO_8865',
             quantity: 3
           }];
-          var devices = angular.fromJson(data).details.devices;
-          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]);
+          var dataJson = angular.fromJson(data);
+          var devices = dataJson.details.devices;
+          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == "Enabled deal");
         }).respond(200);
 
         TrialService.startTrial();
@@ -182,7 +183,7 @@ describe('Service: Trial Service:', function () {
     describe('start call trial with skipped devices', function () {
       beforeEach(function () {
         bard.mockService(TrialCallService, {
-          getData: trialData.enabled.trials.skipCallTrial
+          getData: trialData.enabled.trials.skipDeviceTrial
         });
         TrialService.getData();
       });

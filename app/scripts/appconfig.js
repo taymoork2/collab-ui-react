@@ -1079,7 +1079,7 @@
               }
             },
             params: {
-              csvImportObj: null
+              siteRow: null
             }
           })
           .state('site-csv-results', {
@@ -1974,6 +1974,25 @@
             controllerAs: 'servicesOverviewCtrl',
             parent: 'main'
           })
+          .state('cluster-list', {
+            url: '/services/resource',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
+            controller: 'FusionResourceListController',
+            controllerAs: 'resourceList',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('cluster-settings-page', {
+            url: '/services/resource/settings/:clusterid',
+            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+            controller: 'FusionResourceSettingsController',
+            controllerAs: 'resourceSetting',
+            parent: 'main'
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
             controller: 'ExpresswayServiceController',
@@ -2222,8 +2241,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryController',
-              controllerAs: 'ediscoveryCtrl',
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2234,16 +2253,18 @@
         .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
-            controller: 'EdiscoveryController',
-            controllerAs: 'ediscoveryCtrl',
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
             url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html'
           })
           .state('ediscovery.reports', {
             url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
       }

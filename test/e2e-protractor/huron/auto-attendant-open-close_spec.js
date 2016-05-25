@@ -76,7 +76,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
-      autoattendant.scrollIntoView(autoattendant.addAANumbers);
+      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.wait(autoattendant.addAANumbers, 12000);
       utils.click(autoattendant.numberDropDownArrow);
 
@@ -121,6 +121,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
+      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.click(autoattendant.numberDropDownArrow);
 
       // we are going to arbitrarily select the last one

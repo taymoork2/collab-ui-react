@@ -1,18 +1,8 @@
-
 <span ng-if="grid.appScope.downloadable(row.entity.id)">
-  <button type="button" class="btn--primary fit btn btn--circle btn--small">
-    <span class="icon icon-download" ng-click="grid.appScope.downloadReport(row.entity.id)"></span>
-  </button>
+    <span tooltip-placement="top" cs-tooltip="Download" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-download" ng-click="grid.appScope.downloadReport(row.entity.id)"></span>
 </span>
 
 <span ng-if="grid.appScope.cancable(row.entity.id)">
-  <button type="button" class="btn--attention fit btn btn--circle btn--small">
-    <span class="icon icon-exit" ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
-  </button>
+    <span tooltip-placement="top" cs-tooltip="Cancel" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-exit" ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
 </span>
 
-<span ng-if="grid.appScope.deletable(row.entity.id)">
-    <button type="button" class="btn--negative fit btn btn--circle btn--small">
-    <span class="icon icon-delete" ng-click="grid.appScope.deleteReport(row.entity.id)"></span>
-  </button>
-</span>
