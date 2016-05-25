@@ -1,0 +1,11 @@
+<div class="setting">
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="vm.requireProtectedDevices"
+    id="requireProtectedDevices"
+    name="requireProtectedDevices"
+    cs-input-label="{{'globalSettings.security.requireProtectedDevices'|translate}}"
+    ng-change="vm.requireProtectedDevicesUpdate()"
+    ng-disabled="vm.requireProtectedDevices===undefined">
+</div>

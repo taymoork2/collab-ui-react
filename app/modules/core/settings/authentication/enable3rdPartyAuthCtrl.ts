@@ -6,7 +6,7 @@ namespace globalsettings {
     private _loadTime;
 
     /* @ngInject */
-    constructor(private AuthModeService:AuthModeService, private $previousState) {
+    constructor(private AuthenticationSettingController:AuthenticationSettingController, private $previousState) {
       this._loadTime = moment();
     }
 
@@ -24,7 +24,7 @@ namespace globalsettings {
 
     public enable() {
 
-      this.AuthModeService.enableSSO = 1;
+      this.AuthenticationSettingController.enableSSO = 1;
       this.$previousState.go();
 
      /* let start = moment();

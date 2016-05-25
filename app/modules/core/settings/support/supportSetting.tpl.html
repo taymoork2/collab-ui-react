@@ -2,37 +2,37 @@
   <input
     cs-input
     type="checkbox"
-    ng-model="setting.useCustomProblemUrl"
+    ng-model="vm.useCustomProblemUrl"
     id="useCustomProblemUrl"
     name="useCustomProblemUrl"
-    cs-input-label="{{setting.getSettingString('problemReportsToCustomUrl')}}"
-    ng-change="setting.useCustomProblemUrlChanged()"
-    ng-disabled="setting.useCustomProblemUrl===undefined">
+    cs-input-label="{{'globalSettings.support.problemReportsToCustomUrl'|translate}}"
+    ng-change="vm.useCustomProblemUrlChanged()"
+    ng-disabled="vm.useCustomProblemUrl===undefined">
   <input
     cs-input
     type="text"
-    ng-model="setting.customProblemUrl"
+    ng-model="vm.customProblemUrl"
     id="customProblemUrl"
     name="customProblemUrl"
-    ng-change="setting.useCustomProblemUrlChanged()"
-    ng-disabled="!setting.useCustomProblemUrl">
+    ng-change="vm.useCustomProblemUrlChanged()"
+    ng-disabled="!vm.useCustomProblemUrl">
 
-  <textarea ng-change="setting.useCustomProblemUrlChanged()"
+  <textarea ng-change="vm.useCustomProblemUrlChanged()"
             rows="7"
             id="customProblemText"
             class="form-control optional-row ng-pristine ng-valid ng-touched"
-            placeholder="{{setting.getSettingString('problemReportsTextPlaceholder')}}"
-            ng-model="setting.customProblemText"
-            ng-disabled="!setting.useCustomProblemUrl"
+            placeholder="{{'globalSettings.support.problemReportsTextPlaceholder'|translate}}"
+            ng-model="vm.customProblemText"
+            ng-disabled="!vm.useCustomProblemUrl"
             style="">
 
   </textarea>
   <div class="settingSaveButtonRow">
-    <button class="btn--primary" translate="common.save" ng-disabled="setting.disableSaveProblemReportSiteBtn"></button>
+    <button class="btn--primary" translate="common.save" ng-disabled="vm.disableSaveProblemReportSiteBtn"></button>
   </div>
 
   <div class="sub-section">
-    <h5 class="sub-section__label" >{{setting.getSettingString('helpSiteLabel')}}</h5>
+    <h5 class="sub-section__label" >{{'globalSettings.support.helpSiteLabel'|translate}}}</h5>
   </div>
 
   <input
@@ -40,22 +40,19 @@
     type="checkbox"
     ng-model="setting.useCustomHelpSiteUrl"
     id="useCustomHelpSiteUrl"
-    name="useCustomHelpSiteUrl"
-    cs-input-label="{{setting.getSettingString('useCustomHelpSite')}}"
-    ng-change="setting.useCustomHelpSiteUrlChanged()"
-    ng-disabled="setting.useCustomHelpSiteUrl===undefined">
+    cs-input-label="{{'globalSettings.support.useCustomHelpSite'|translate}}"
+    ng-change="vm.useCustomHelpSiteUrlChanged()"
+    ng-disabled="vm.useCustomHelpSiteUrl===undefined">
   <input
     cs-input
     type="text"
     ng-model="setting.customHelpSiteUrl"
     id="customHelpSiteUrl"
-    name="customHelpSiteUrl"
-    ng-change="setting.useCustomHelpSiteUrlChanged()"
-    ng-disabled="!setting.useCustomHelpSiteUrl">
+    ng-change="vm.useCustomHelpSiteUrlChanged()"
+    ng-disabled="!vm.useCustomHelpSiteUrl">
   <div class="settingSaveButtonRow">
-    <button class="btn--primary" translate="common.save" ng-disabled="setting.disableSaveHelpSiteBtn"></button>
+    <button class="btn--primary" translate="common.save" ng-disabled="vm.disableSaveHelpSiteBtn"></button>
   </div>
-
 </div>
 
   <!--<div class="setting" id="supportSettings2" ng-controller="PartnerProfileCtrl">-->

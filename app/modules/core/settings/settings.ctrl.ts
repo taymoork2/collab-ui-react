@@ -1,57 +1,45 @@
-/// <reference path="AuthSetting.ts"/>
-/// <reference path="BrandingSetting.ts"/>
-/// <reference path="DataPolicySetting.ts"/>
-/// <reference path="DomainsSetting.ts"/>
-/// <reference path="PrivacySetting.ts"/>
-/// <reference path="SecuritySetting.ts"/>
-/// <reference path="SipDomainSetting.ts"/>
-/// <reference path="SupportSetting.ts"/>
+/// <reference path="AuthenticationSetting.component.ts"/>
+/// <reference path="BrandingSetting.component.ts"/>
+/// <reference path="DataPolicySetting.component.ts"/>
+/// <reference path="domainsSetting.component.ts"/>
+/// <reference path="PrivacySetting.component.ts"/>
+/// <reference path="SecuritySetting.component.ts"/>
+/// <reference path="SipDomainSetting.component.ts"/>
+/// <reference path="SupportSetting.component.ts"/>
 namespace globalsettings {
 
-  export class SettingsCtrl implements SettingsController {
+  export class SettingsCtrl {
 
-    private settings:Array<Setting>;
-
-    public translate:any;
     public authinfo:any;
 
-    /* @ngInject */
-    constructor(Authinfo, $translate, AuthModeService, Orgservice) {
+    public security:SettingSection;
+    public privacy:SettingSection;
+    public domains:SettingSection;
+    public sipDomain:SettingSection;
+    public authentication:SettingSection;
+    public branding:SettingSection;
+    public support:SettingSection;
+    public dataPolicy:SettingSection;
 
-      this.translate = $translate;
+
+    /* @ngInject */
+    constructor(Authinfo) {
+
       this.authinfo = Authinfo;
 
       if (Authinfo.isPartner()) {
-        this.settings = [
-          new BrandingSetting(this),
-          new SupportSetting(this)
-        ];
+     //   this.branding = new BrandingSetting();
+        this.support = new DomainsSetting();
       } else {
-        this.settings = [
-          new SupportSetting(this),
-          new SecuritySetting(this),
-          new PrivacySetting(this),
-          new DomainsSetting(this),
-          new SipDomainSetting(this),
-          new AuthSetting(this, AuthModeService),
-          new BrandingSetting(this),
-          new SupportSetting(this),
-          new DataPolicySetting(this)
-        ];
+        this.security = new SecuritySetting();
+        this.privacy = new PrivacySetting();
+        this.domains = new DomainsSetting();
+        this.sipDomain = new SipDomainSetting();
+        this.authentication = new AuthenticationSetting();
+     //   this.branding = new BrandingSetting();
+        this.support = new SupportSetting();
+        this.dataPolicy = new DataPolicySetting();
       }
-      Orgservice.getOrg(_.partial(this.forwardEvent.bind(this), 'orgEventHandler'));
-    }
-
-    private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-    _.each(this.settings, function (setting) {
-      if (typeof (setting[handlerName]) === 'function') {
-        setting[handlerName].apply(setting, eventArgs);
-      }
-    });
-  }
-
-    public getSettings():Array<Setting> {
-      return this.settings;
     }
   }
   angular

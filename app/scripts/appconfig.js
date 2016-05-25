@@ -421,8 +421,6 @@
           })
           .state('domainmanagement', {
             templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
-            controller: 'DomainManagementCtrl',
-            controllerAs: 'dv',
             parent: 'main'
           })
           .state('domainmanagement.add', {
@@ -515,7 +513,7 @@
             controllerAs: 'settingsCtrl',
             parent: 'main'
           })
-          .state('settings.enable3rdPartyAuth', {
+          .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
               'modal@': {

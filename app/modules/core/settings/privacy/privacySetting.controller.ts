@@ -1,18 +1,16 @@
-/// <reference path="Setting.ts"/>
 namespace globalsettings {
-
-  export class PrivacySetting extends Setting {
+  export class PrivacySettingController {
 
     allowReadOnlyOrgAccess:boolean = undefined;
     sendUsageData:boolean = undefined;
     showAllowReadOnlyAccessCheckbox:boolean = false;
-
-    constructor(ctrl:SettingsController) {
-      super('privacy', ctrl);
-      this.subsectionLabel = '';
-      this.subsectionDescription = '';
-
+    
+    /* @ngInject */
+    constructor(Orgservice) {
+      //get the current setting:
       setTimeout( this.sendUsageDataLoaded.bind(this), 1200, false);
+      
+      Orgservice.getOrg(this.orgDataLoaded.bind(this));
     }
 
     orgDataLoaded(data){
@@ -50,4 +48,6 @@ namespace globalsettings {
       alert('sendUsageData changed to' + this.sendUsageData);
     }
   }
+  angular.module('Core')
+    .controller('PrivacySettingController', PrivacySettingController);
 }

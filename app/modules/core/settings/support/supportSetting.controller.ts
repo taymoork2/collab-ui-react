@@ -1,7 +1,5 @@
-/// <reference path="Setting.ts"/>
 namespace globalsettings {
-
-  export class SupportSetting extends Setting {
+  export class SupportSettingController {
 
     useCustomProblemUrl:boolean = undefined;
     customProblemUrl:string = undefined;
@@ -12,12 +10,12 @@ namespace globalsettings {
     customHelpSiteUrl:string = undefined;
     disableSaveHelpSiteBtn:boolean = true;
 
-    constructor(ctrl:SettingsController) {
-      super('support', ctrl);
+    /* @ngInject */
+    constructor(Orgservice) {
+      Orgservice.getOrg(this.orgEventHandler.bind(this));
     }
 
     orgEventHandler(data){
-      console.log("SUPPORT LOADED:", data);
 
       if (data.success) {
         var settings = data.orgSettings;
@@ -40,35 +38,35 @@ namespace globalsettings {
           this.useCustomHelpSiteUrl = false;
         }
 
-      /*  if (!_.isUndefined(settings.isCiscoSupport)) {
-          $scope.isCiscoSupport = settings.isCiscoSupport;
-        }
+        /*  if (!_.isUndefined(settings.isCiscoSupport)) {
+         $scope.isCiscoSupport = settings.isCiscoSupport;
+         }
 
-        if (!_.isUndefined(settings.isCiscoHelp)) {
-          $scope.isCiscoHelp = settings.isCiscoHelp;
-        }
+         if (!_.isUndefined(settings.isCiscoHelp)) {
+         $scope.isCiscoHelp = settings.isCiscoHelp;
+         }
 
-        if (!_.isUndefined(settings.usePartnerLogo)) {
-          $scope.usePartnerLogo = settings.usePartnerLogo;
-        }
+         if (!_.isUndefined(settings.usePartnerLogo)) {
+         $scope.usePartnerLogo = settings.usePartnerLogo;
+         }
 
-        if (!_.isUndefined(settings.allowCustomerLogos)) {
-          $scope.allowCustomerLogos = settings.allowCustomerLogos;
-        }
+         if (!_.isUndefined(settings.allowCustomerLogos)) {
+         $scope.allowCustomerLogos = settings.allowCustomerLogos;
+         }
 
-        if (!_.isUndefined(settings.allowCrashLogUpload)) {
-          $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
-        } else {
-          $scope.allowCrashLogUpload = false;
-        }
+         if (!_.isUndefined(settings.allowCrashLogUpload)) {
+         $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
+         } else {
+         $scope.allowCrashLogUpload = false;
+         }
 
-        if (!_.isUndefined(settings.allowReadOnlyAccess)) {
-          $scope.allowReadOnlyAccess = settings.allowReadOnlyAccess;
-        }
+         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
+         $scope.allowReadOnlyAccess = settings.allowReadOnlyAccess;
+         }
 
-        if (!_.isUndefined(settings.logoUrl)) {
-          $scope.logoUrl = settings.logoUrl;
-        }*/
+         if (!_.isUndefined(settings.logoUrl)) {
+         $scope.logoUrl = settings.logoUrl;
+         }*/
       }
     }
 
@@ -80,4 +78,6 @@ namespace globalsettings {
       this.disableSaveHelpSiteBtn = false;
     }
   }
+  angular.module('Core')
+    .controller('SupportSettingController', SupportSettingController);
 }
