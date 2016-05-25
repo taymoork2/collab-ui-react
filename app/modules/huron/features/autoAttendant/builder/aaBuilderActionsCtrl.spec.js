@@ -3,7 +3,9 @@
 describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
-  var $rootScope, $scope;
+  var $rootScope, $scope, $q;
+  var FeatureToggleService;
+
   var aaUiModel = {
     openHours: {}
   };
@@ -20,16 +22,21 @@ describe('Controller: AABuilderActionsCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
+    $q = _$q_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
 
+    FeatureToggleService = _FeatureToggleService_;
+
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
       $scope: $scope
