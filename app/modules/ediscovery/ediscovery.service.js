@@ -28,18 +28,25 @@
 
     function createReport(displayName, roomId) {
       var orgId = Authinfo.getOrgId();
+      //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
-        }).then(function (res) {
-          //console.log("created, post to runUrl", res)
-          return $http.post(res.data.runUrl, {
-            "roomId": roomId
-          });
         })
+        // .then(function(res) {
+        //   createReportDoIt(res, roomId);
+        // })
         .catch(function (data) {
           //console.log("error createReport: " + data)
         });
+    }
+
+    //  TODO: Implement proper handling of error when final API is in place
+    function createReportDoIt(runUrl, roomId) {
+      //console.log("created, post to runUrl", runUrl)
+      return $http.post(runUrl, {
+        "roomId": roomId
+      });
     }
 
     function patchReport(id, patchData) {
@@ -79,6 +86,7 @@
       getReport: getReport,
       deleteReports: deleteReports,
       createReport: createReport,
+      createReportDoIt: createReportDoIt,
       patchReport: patchReport,
       deleteReport: deleteReport
     };
