@@ -1,163 +1,14 @@
 <p class="ui-grid-cell-contents">
-  <!-- Start of Reports icon -->
-  <span id="{{row.entity.license.siteUrl}}_reportsIcon"
-        name="{{row.entity.license.siteUrl}}_reportsIcon">
-        
-    <!-- display disabled reports icon -->
-    <i ng-if="!row.entity.showSiteLinks || 
-              row.entity.isError"
-       id="{{row.entity.license.siteUrl}}_reportsUnavailable"
-       name="{{row.entity.license.siteUrl}}_reportsUnavailable"
-       class="icon icon-report grid-vcenter"
-       tooltip-append-to-body="true" 
-       tooltip="{{::'siteList.siteReports' | translate}}"></i>
-      
-    <span ng-if="row.entity.showSiteLinks && 
-                 !row.entity.isError"
-          id="{{row.entity.license.siteUrl}}_reportsAvailable"
-          name="{{row.entity.license.siteUrl}}_reportsAvailable">
-      
-      <!-- display disabled reports icon and reports turned off tooltip -->
-      <i ng-if="!row.entity.isAdminReportEnabled"
-         id="{{row.entity.license.siteUrl}}_reportsDisabled"
-         name="{{row.entity.license.siteUrl}}_reportsDisabled"
-         class="icon icon-report grid-vcenter"
-         tooltip-append-to-body="true" 
-         tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"></i>
-      
-      <!-- display enabled reports icon and error tooltip -->
-      <i ng-if="row.entity.isAdminReportEnabled"
-         id="{{row.entity.license.siteUrl}}_webex-site-reports"
-         name="{{row.entity.license.siteUrl}}_webex-site-reports"
-         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"
-         class="icon icon-report iconEnabled grid-vcenter"
-         tooltip-append-to-body="true" 
-         tooltip="{{::'siteList.siteReports' | translate}}"></i>
-    </span>
-  </span>
-  <!-- End of Reports icon -->
+  <!-- Reports icon -->
+  <span ng-include="'modules/core/siteList/siteActionsReportsIcon.tpl.html'"></span>
 
-  <!-- Start of Config icon -->
-  <span id="{{row.entity.license.siteUrl}}_configIcon"
-        name="{{row.entity.license.siteUrl}}_configIcon">
-        
-    <span>
-      &nbsp;
-    </span>
-
-    <!-- display disabled config icon -->
-    <i ng-if="!row.entity.showSiteLinks || 
-              row.entity.isError"
-       id="{{row.entity.license.siteUrl}}_configUnavailable"
-       name="{{row.entity.license.siteUrl}}_configUnavailable"
-       class="icon icon-settings grid-vcenter"
-       tooltip-append-to-body="true" 
-       tooltip="{{::'siteList.siteSettings' | translate}}"></i>
-    
-    <!-- display enabled config icon and tooltip -->
-    <i ng-if="row.entity.showSiteLinks &&
-              !row.entity.isError"
-       id="{{row.entity.license.siteUrl}}_webex-site-settings"
-       name="{{row.entity.license.siteUrl}}_webex-site-settings"
-       class="icon icon-settings iconEnabled grid-vcenter"
-       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})"
-       tooltip-append-to-body="true" 
-       tooltip="{{::'siteList.siteSettings' | translate}}"></i>
-  </span>
-  <!-- End of Config icon -->
+  <!-- Config icon -->
+  <span ng-include="'modules/core/siteList/siteActionsConfigIcon.tpl.html'"></span>
   
-  <!-- Start of CSV icon and results link -->
-  <span ng-if="row.entity.showCSVIconAndResults"
-        id="{{row.entity.license.siteUrl}}_csvIcon"
-        name="{{row.entity.license.siteUrl}}_csvIcon">
-
-    <span>
-      &nbsp;
-    </span>
-    
-    <!-- display disabled CSV icon -->
-    <i ng-if="!row.entity.showSiteLinks || 
-              !row.entity.showCSVInfo || 
-              row.entity.isError"
-       id="{{row.entity.license.siteUrl}}_csvUnavailable"
-       name="{{row.entity.license.siteUrl}}_csvUnavailable"
-       class="icon icon-admin grid-vcenter"
-       tooltip-append-to-body="true" 
-       tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
-    
-    <!-- display disabled CSV icon and unsupported tooltip -->
-    <i ng-if="row.entity.showSiteLinks && 
-              row.entity.showCSVInfo && 
-              !row.entity.isError && 
-              !row.entity.isCSVSupported"
-       id="{{row.entity.license.siteUrl}}_csvNotSupported"
-       name="{{row.entity.license.siteUrl}}_csvNotSupported"
-       class="icon icon-admin grid-vcenter"
-       tooltip-append-to-body="true" 
-       tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"></i>
-       
-    <span ng-if="row.entity.showSiteLinks && 
-                 row.entity.showCSVInfo && 
-                 row.entity.isCSVSupported">
-                 
-      <!-- display disabled CSV icon and in progress spinner -->
-      <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || 
-                   (row.entity.csvStatusObj.status == 'importInProgress')">
-                   
-        <i class="icon icon-admin grid-vcenter"
-           tooltip-append-to-body="true" 
-           tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
-        
-        &nbsp;&nbsp;&nbsp;
-        
-        <i class="icon icon-spinner grid-vcenter"></i>
-        
-        <span ng-if="row.entity.csvStatusObj.status == 'exportInProgress'"
-              translate="siteList.siteCsvExportInProgressLinkLabel"
-              class="grid-vcenter"></span>
-        
-        <span ng-if="row.entity.csvStatusObj.status == 'importInProgress'"
-              translate="siteList.siteCsvImportInProgressLinkLabel"></span>
-      </span>
-            
-      <!-- display enabled CSV icon -->
-      <span ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && 
-                   (row.entity.csvStatusObj.status != 'exportInProgress')">
-                
-        <i class="icon icon-admin iconEnabled grid-vcenter"
-           ui-sref="site-csv({siteRow:row.entity})"
-           tooltip-append-to-body="true" 
-           tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
-           
-        <!-- display export/import results link -->
-        <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') || 
-                     (row.entity.csvStatusObj.status == 'exportCompletedWithErr') || 
-                     (row.entity.csvStatusObj.status == 'importCompletedNoErr') || 
-                     (row.entity.csvStatusObj.status == 'importCompletedWithErr')">
-                     
-          &nbsp;&nbsp;&nbsp;
-          
-          <a id="{{row.entity.license.siteUrl}}_exportResult"
-             name="{{row.entity.license.siteUrl}}_exportResult"
-             ui-sref="site-csv-results({siteRow:row.entity})">
-            
-            <!-- display export results link -->
-            <span ng-if="(row.entity.csvStatusObj.status == 'exportCompletedNoErr') || 
-                         (row.entity.csvStatusObj.status == 'exportCompletedWithErr')"
-                  translate="siteList.siteCsvExportResultsLinkLabel"></span>
-            
-            <!-- display import results link -->
-            <span ng-if="(row.entity.csvStatusObj.status == 'importCompletedNoErr') || 
-                         (row.entity.csvStatusObj.status == 'importCompletedWithErr')"
-                  translate="siteList.siteCsvImportResultsLinkLabel"></span>
-          </a>
-        </span>
-      </span>
-    </span>
-  </span>
-  <!-- End of CSV icon and results link -->
+  <!-- CSV icon and results link -->
+  <span ng-include="'modules/core/siteList/siteActionsCsvIcon.tpl.html'"></span>
   
-  <!-- Start of Loading icon -->
+  <!-- Start of Loading indication -->
   <span ng-if="(!row.entity.showCSVIconAndResults && !row.entity.showSiteLinks) || 
                (row.entity.showCSVIconAndResults && (!row.entity.showSiteLinks || !row.entity.showCSVInfo))"
         id="{{row.entity.license.siteUrl}}_loading"
@@ -172,9 +23,9 @@
     <span class="grid-vcenter"
           translate="siteList.checkingServices"></span>
   </span>
-  <!-- End of Loading icon -->
+  <!-- End of Loading indication -->
   
-  <!-- Start of Error/warning msg -->
+  <!-- Start of Error/warning indication -->
   <span ng-if="row.entity.showSiteLinks && row.entity.isError"
         id="{{row.entity.license.siteUrl}}_error"
         name="{{row.entity.license.siteUrl}}_error">
@@ -201,6 +52,5 @@
       <span translate="siteList.systemError" class="webex-alert-text"></span>
     </span>
   </span>
-  <!-- End of Error/warning msg -->
-  
+  <!-- End of Error/warning indication -->
 </p>
