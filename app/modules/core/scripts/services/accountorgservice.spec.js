@@ -28,44 +28,45 @@ describe('Service : AccountOrgService', function () {
   });
 
   // Organization validity checks
-  it('should verify that a valid OrgID is passed to getAppSecurity and setAppSecurity', function () {
-    AccountOrgService.getAppSecurity().catch(function (response) {
-      expect(response).toBe('A Valid organization ID must be Entered');
-    });
 
-    AccountOrgService.setAppSecurity().catch(function (response) {
-      expect(response).toBe('A Valid organization ID must be Entered');
+  describe('it should catch illegal parameter passes and', function () {
+    it('should verify that a valid OrgID is passed to getAppSecurity and setAppSecurity', function () {
+      AccountOrgService.getAppSecurity().catch(function (response) {
+        expect(response).toBe('A Valid organization ID must be Entered');
+      });
+
+      AccountOrgService.setAppSecurity().catch(function (response) {
+        expect(response).toBe('A Valid organization ID must be Entered');
+      });
     });
   });
 
-  //App Security Setter check
-  it('should set Appsecurity setting to enforceClientSecurity', function () {
-    $httpBackend.whenPUT(appSecurityRegex).respond([200, {}]);
+  describe('App Security ', function () {
+    //App Security Setter check
+    it('should set Appsecurity setting to enforceClientSecurity', function () {
+      $httpBackend.whenPUT(appSecurityRegex).respond([200, {}]);
 
-    AccountOrgService.setAppSecurity(authInfo.getOrgId(), true).then(function (response) {
-      expect(response.status).toEqual(200);
+      AccountOrgService.setAppSecurity(authInfo.getOrgId(), true).then(function (response) {
+        expect(response.status).toEqual(200);
+      });
+      $httpBackend.flush();
     });
 
-    $httpBackend.flush();
+    //App Security Getter check
+    it('should get Appsecurity setting from enforceClientSecurity', function () {
 
-  });
+      $httpBackend.whenGET(appSecurityRegex).respond(function () {
+        var data = {
+          enforceClientSecurity: true
+        };
+        return [200, data];
+      });
 
-  //App Security Getter check
-  it('should get Appsecurity setting from enforceClientSecurity', function () {
-
-    $httpBackend.whenGET(appSecurityRegex).respond(function () {
-      var data = {
-        enforceClientSecurity: true
-      };
-      return [200, data];
+      AccountOrgService.getAppSecurity(authInfo.getOrgId()).then(function (response) {
+        expect(response.data.enforceClientSecurity).toBe(true);
+      });
+      $httpBackend.flush();
     });
-
-    AccountOrgService.getAppSecurity(authInfo.getOrgId()).then(function (response) {
-      expect(response.data.enforceClientSecurity).toBe(true);
-    });
-
-    $httpBackend.flush();
-
   });
 
 });
