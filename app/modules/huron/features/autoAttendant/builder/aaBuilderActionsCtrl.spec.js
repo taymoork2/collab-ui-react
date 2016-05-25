@@ -4,6 +4,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
+
   var aaUiModel = {
     openHours: {}
   };
@@ -30,6 +31,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
       $scope: $scope

@@ -1,7 +1,9 @@
 'use strict';
 
 describe('Controller: AABuilderContainerCtrl', function () {
-  var $scope, controller, $modal, AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService;
+  var $scope, controller, $modal, $q;
+  var AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService;
+  var FeatureToggleService;
 
   var uiModel = {
     isClosedHours: false,
@@ -31,18 +33,23 @@ describe('Controller: AABuilderContainerCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _$q_, _AAModelService_, _AAUiModelService_, _AAValidationService_, _FeatureToggleService_) {
     $scope = _$rootScope_;
     $modal = _$modal_;
+    $q = _$q_;
 
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AAValidationService = _AAValidationService_;
 
+    FeatureToggleService = _FeatureToggleService_;
+
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(uiModel);
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
     spyOn($modal, 'open').and.returnValue(fakeModal);
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('AABuilderContainerCtrl', {
       $scope: $scope
@@ -53,7 +60,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   describe('openScheduleModal', function () {
 
     it('should not open the Modal on Validation error', function () {
-      spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(false);
+      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(false);
 
       controller.openScheduleModal();
 
@@ -61,7 +68,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
     });
     it('should open the Modal on Validation success', function () {
-      spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
+      spyOn(AAValidationService, 'isRouteToValidationSuccess').and.returnValue(true);
 
       controller.openScheduleModal();
       fakeModal.close({

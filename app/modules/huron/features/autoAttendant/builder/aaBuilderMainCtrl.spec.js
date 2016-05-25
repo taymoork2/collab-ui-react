@@ -6,6 +6,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
+  var FeatureToggleService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -52,7 +53,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -77,6 +78,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AACalendarService = _AACalendarService_;
     AATrackChangeService = _AATrackChangeService_;
     AADependencyService = _AADependencyService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -84,6 +86,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
@@ -222,7 +225,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
-    var phoneMenuValidationSpy;
     var aaNameChangedSpy;
 
     beforeEach(function () {
@@ -239,7 +241,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AATrackChangeService, 'track');
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
-      phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
@@ -475,7 +476,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should set up a say PhoneMenu open hours template using real template1', function () {
 
-      $scope.vm.templateName = 'template1';
+      $scope.vm.templateName = 'Basic';
       controller.setupTemplate();
 
       expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
@@ -881,7 +882,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui = {};
       $scope.vm.ui.ceInfo = {};
       $scope.vm.ui.builder = {};
-      $scope.vm.ui.aaTemplate = 'OpenClosedHoursTemplate';
+      $scope.vm.ui.aaTemplate = 'BusinessHours';
       $scope.vm.ui.builder.ceInfo_name = 'AA';
       $scope.vm.isAANameDefined = false;
 
@@ -896,7 +897,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(controller, 'delete8To5Schedule');
     });
 
-    it('should save a 8to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
+    it('should save a 8to5 schedule and save current CE definition for BusinessHours creation.', function () {
       $rootScope.$broadcast('AANameCreated');
       save8To5ScheduleDefer.resolve();
       saveCeDefinitionDefer.resolve();
@@ -909,7 +910,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should invoke saveAARecords for Basic template creation', function () {
-      $scope.vm.ui.aaTemplate = 'template1';
+      $scope.vm.ui.aaTemplate = 'Basic';
       $rootScope.$broadcast('AANameCreated');
       saveAARecordDefer.resolve();
 

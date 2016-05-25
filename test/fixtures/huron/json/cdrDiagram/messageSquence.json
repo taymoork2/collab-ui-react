@@ -1,3 +1,3 @@
 {
-  "data": "@startuml\n\"Start Point\"->\"Line Hedge\": [1] INVITE SIP/2.0\"\n\"Line Hedge\"->\"Start Point\": \"[2] SIP/2.0 100\"\n\"Line Hedge\"->\"Start Point\": \"[3] INVITE SIP/2.0\"\n@enduml"
+  "data": "@startuml \n autonumber \"<b>[0]\"\nskinparam backgroundColor #EEEBDC \n  skinparam sequence { \n  ArrowColor DeepSkyBlue  \n  ActorBorderColor DeepSkyBlue \n  LifeLineBorderColor blue \n  LifeLineBackgroundColor #A9DCDF \n  ParticipantBorderColor DeepSkyBlue \n  ParticipantBackgroundColor DodgerBlue \n  ParticipantFontName Impact \n  ParticipantFontSize 17 \n  ParticipantFontColor #A9DCDF \n  ActorBackgroundColor aqua \n  ActorFontColor DeepSkyBlue \n  ActorFontSize 17 \n  ActorFontName Aapex \n} \nactor \"Start Point\" \n\"Start Point\"->\"Line Hedge\": \" SIP/2.0 180  Ringing\"\n\"Line Hedge\"->\"Start Point\": \" SIP/2.0 180  Ringing\"\n@enduml"
 }

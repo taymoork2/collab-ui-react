@@ -22,6 +22,8 @@
         this.tags = getTags(obj.description);
         this.tagString = getTagString(obj.description);
         this.displayName = obj.displayName;
+        this.accountType = obj.accountType || 'MACHINE';
+        this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
         this.upgradeChannel = getUpgradeChannel(obj);
@@ -31,38 +33,31 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.hasRemoteSupport = true;
-        this.canEditDisplayName = true;
+        this.canEditDisplayName = this.accountType === 'MACHINE';
         this.supportsCustomTags = true;
         this.update = function (updated) {
           this.displayName = updated.displayName;
         };
-        this.image = (function () {
-          switch (obj.product) {
-          case "Cisco TelePresence DX80":
-            return "images/devices-hi/dx80.png";
-          case "Cisco TelePresence DX70":
-            return "images/devices-hi/dx70.png";
-          case "Cisco TelePresence SX10":
-            return "images/devices-hi/sx10.png";
-          case "Cisco TelePresence SX20":
-            return "images/devices-hi/sx20.png";
-          case "Cisco TelePresence SX80":
-            return "images/devices-hi/sx80.png";
-          case "Cisco TelePresence MX200 G2":
-            return "images/devices-hi/mx200g2.png";
-          case "Cisco TelePresence MX300 G2":
-            return "images/devices-hi/mx300g2.png";
-          case "Cisco TelePresence MX700":
-            return "images/devices-hi/mx700d.png";
-          case "Cisco TelePresence MX800":
-            return "images/devices-hi/mx800d.png";
-          case "Project Swedish Island":
-            return "images/devices-hi/swedish_island.png";
-          default:
-            return "images/devices-hi/unknown.png";
-          }
-        }());
+        this.image = obj.product in cloudberry_model_map ? cloudberry_model_map[obj.product] : "images/devices-hi/unknown.png";
       }
+
+      var cloudberry_model_map = {
+        "Cisco TelePresence DX80": "images/devices-hi/dx80.png",
+        "Cisco TelePresence DX70": "images/devices-hi/dx70.png",
+        "Cisco TelePresence SX10": "images/devices-hi/sx10.png",
+        "Cisco TelePresence SX20": "images/devices-hi/sx20.png",
+        "Cisco TelePresence SX80": "images/devices-hi/sx80.png",
+        "Cisco TelePresence MX200 G2": "images/devices-hi/mx200g2.png",
+        "Cisco TelePresence MX300 G2": "images/devices-hi/mx300g2.png",
+        "Cisco TelePresence MX700": "images/devices-hi/mx700d.png", // incorrect, should be "images/devices-hi/mx700.png" but missing
+        "Cisco TelePresence MX700 SpeakerTrack": "images/devices-hi/mx700dspeakertrack.png", // incorrect, should be "images/devices-hi/mx700speakertrack.png" but missing
+        "Cisco TelePresence MX700 Dual": "images/devices-hi/mx700d.png", // pic exist, but not endpoint?
+        "Cisco TelePresence MX700 Dual Speakertrack": "images/devices-hi/mx700dspeakertrack.png", // pic exist, but not endpoint?
+        "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
+        "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
+        "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
+        "Project Swedish Island": "images/devices-hi/swedish_island.png"
+      };
 
       function HuronDevice(obj) {
         this.url = obj.url;
@@ -74,12 +69,13 @@
         this.canDelete = true;
         this.canReportProblem = true;
         this.supportsCustomTags = true;
+        this.accountType = obj.accountType || 'PERSON';
         this.displayName = obj.displayName;
         this.tags = getTags(decodeHuronTags(obj.description));
         this.tagString = getTagString(decodeHuronTags(obj.description));
         this.cssColorClass = getCssColorClass(obj);
         this.state = getState(obj);
-        this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
+        this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
         this.isHuronDevice = true;
         this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
         this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
@@ -151,6 +147,7 @@
         this.isUnused = true;
         this.canDelete = true;
         this.hasIssues = true;
+        this.accountType = obj.accountType || 'MACHINE';
         this.image = "images/devices-hi/unknown.png";
         this.diagnosticsEvents = [{
           type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
@@ -178,6 +175,7 @@
         this.canDelete = true;
         this.canEditDisplayName = true;
         this.image = "images/devices-hi/unknown.png";
+        this.accountType = obj.accountType || 'MACHINE';
         this.supportsCustomTags = true;
         this.updateName = function (newName) {
           this.displayName = newName;

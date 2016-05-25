@@ -29,6 +29,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
+          $log.log(logMsg);
 
           var allSitesWebexLicensesArray = allSitesLicenseInfo;
 
@@ -44,7 +45,7 @@
               //MC
               var siteMC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasMCLicense: true
+                offerCode: "MC"
               });
 
               if (siteMC != null && siteMC.length > 0) {
@@ -68,10 +69,64 @@
                 siteRow.MCLicensed = false;
               }
 
+              //EE
+              var siteEE = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                offerCode: "EE"
+              });
+
+              if (siteEE != null && siteEE.length > 0) {
+                siteRow.EELicensed = true;
+
+                siteEE.forEach(
+                  function processDisplayText(ee) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    count++;
+                  }
+                ); //siteEE.forEach
+
+              } else {
+                siteRow.EELicensed = false;
+              }
+
+              //CMR
+              var siteCMR = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                offerCode: "CMR"
+              });
+
+              if (siteCMR != null && siteCMR.length > 0) {
+                siteRow.CMRLicensed = true;
+
+                siteCMR.forEach(
+                  function processDisplayText(cmr) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                      capacity: cmr.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                      capacity: cmr.capacity
+                    });
+                    count++;
+                  }
+                ); //siteCMR.forEach
+
+              } else {
+                siteRow.CMRLicensed = false;
+              }
+
               //EC
               var siteEC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasECLicense: true
+                offerCode: "EC"
               });
 
               if (siteEC != null && siteEC.length > 0) {
@@ -98,7 +153,7 @@
               //SC
               var siteSC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasSCLicense: true
+                offerCode: "SC"
               });
 
               if (siteSC != null && siteSC.length > 0) {
@@ -125,7 +180,7 @@
               //TC
               var siteTC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasTCLicense: true
+                offerCode: "TC"
               });
 
               if (siteTC != null && siteTC.length > 0) {
@@ -149,60 +204,6 @@
                 siteRow.TCLicensed = false;
               }
 
-              //CMR
-              var siteCMR = _.where(allSitesWebexLicensesArray, {
-                webexSite: siteUrl,
-                siteHasCMRLicense: true
-              });
-
-              if (siteCMR != null && siteCMR.length > 0) {
-                siteRow.CMRLicensed = true;
-
-                siteCMR.forEach(
-                  function processDisplayText(cmr) {
-                    //Grid content display
-                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
-                    });
-                    //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
-                    });
-                    count++;
-                  }
-                ); //siteCMR.forEach
-
-              } else {
-                siteRow.CMRLicensed = false;
-              }
-
-              //EE
-              var siteEE = _.where(allSitesWebexLicensesArray, {
-                webexSite: siteUrl,
-                siteHasEELicense: true
-              });
-
-              if (siteEE != null && siteEE.length > 0) {
-                siteRow.EELicensed = true;
-
-                siteEE.forEach(
-                  function processDisplayText(ee) {
-                    //Grid content display
-                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
-                    });
-                    //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
-                    });
-                    count++;
-                  }
-                ); //siteEE.forEach
-
-              } else {
-                siteRow.EELicensed = false;
-              }
-
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
@@ -212,6 +213,10 @@
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
               }
+
+              logMsg = funcName + ": " + "\n" +
+                "siteRow=" + JSON.stringify(siteRow);
+              $log.log(logMsg);
 
               siteRow.showLicenseTypes = true;
             } // processGridForLicense()
@@ -285,7 +290,7 @@
             return;
           }
 
-          _this.updateCSVColumnInRow(siteRow);
+          _this.updateCSVStatusInRow(siteRow);
 
           // start CSV status poll
           // var pollInterval = 3600000; // 1hr
@@ -293,7 +298,7 @@
           // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              _this.updateCSVColumnInRow(siteRow);
+              _this.updateCSVStatusInRow(siteRow);
             },
 
             pollInterval
@@ -327,12 +332,11 @@
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteRow=" + "\n" + JSON.stringify(siteRow);
-      //$log.log(logMsg);
+        "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
+      // $log.log(logMsg);
 
       //initialize display control flags
       siteRow.showCSVInfo = true;
-      siteRow.showAsyncErr = false;
 
       siteRow.showExportLink = false;
       siteRow.showExportInProgressLink = false;
@@ -346,69 +350,61 @@
       siteRow.showImportResultsLink = false;
       siteRow.importFinishedWithErrors = false;
 
-      if (siteRow.asyncErr) {
-        siteRow.showAsyncErr = true;
+      if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
 
-      } else {
+        siteRow.showExportLink = true;
 
-        if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
 
-          siteRow.showImportLink = true;
+        siteRow.showExportInProgressLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
+        siteRow.grayedImportLink = true;
 
-          siteRow.showExportInProgressLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
 
-          siteRow.grayedImportLink = true;
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
-          siteRow.showExportResultsLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
 
-          siteRow.showImportLink = true;
+        siteRow.showExportLink = true;
+        siteRow.showExportResultsLink = true;
+        siteRow.exportFinishedWithErrors = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
+        siteRow.showImportLink = true;
 
-          siteRow.showExportLink = true;
-          siteRow.showExportResultsLink = true;
-          siteRow.exportFinishedWithErrors = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
-          siteRow.showImportLink = true;
+        siteRow.showImportInProgressLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
+        siteRow.grayedExportLink = true;
 
-          siteRow.grayedExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
-          siteRow.showImportInProgressLink = true;
+        siteRow.showExportLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
 
-          siteRow.showExportLink = true;
+      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
 
-          siteRow.showImportLink = true;
-          siteRow.showImportResultsLink = true;
+        siteRow.showExportLink = true;
 
-        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
-
-          siteRow.showExportLink = true;
-
-          siteRow.showImportLink = true;
-          siteRow.showImportResultsLink = true;
-          siteRow.importFinishedWithErrors = true;
-
-        }
-
-        siteRow.showCSVInfo = true;
+        siteRow.showImportLink = true;
+        siteRow.showImportResultsLink = true;
+        siteRow.importFinishedWithErrors = true;
 
       }
 
+      siteRow.showCSVInfo = true;
     }; //updateDisplayControlFlagsInRow()
 
-    this.updateCSVColumnInRow = function (siteRow) {
-      var funcName = "updateCSVColumnInRow()";
+    this.updateCSVStatusInRow = function (siteRow) {
+      var funcName = "updateCSVStatusInRow()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
@@ -464,8 +460,8 @@
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
-          _this.updateDisplayControlFlagsInRow(siteRow);
 
+          _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -479,12 +475,13 @@
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
+
           _this.updateDisplayControlFlagsInRow(siteRow);
 
-          // siteRow.showCSVInfo = true;
+          siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
-    }; // updateCSVColumnInRow()
+    }; // updateCSVStatusInRow()
 
     this.updateGrid = function (vm) {
       var funcName = "updateGrid()";

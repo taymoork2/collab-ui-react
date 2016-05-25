@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics) {
+  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics, addressparser) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -569,24 +569,6 @@
       getAccountServices();
     }
 
-    GroupService.getGroupList(function (data, status) {
-      if (data.success) {
-        $scope.groups = data.groups || [];
-        if ($scope.groups && $scope.groups.length === 0) {
-          var defaultGroup = {
-            displayName: 'Default License Group'
-          };
-          $scope.groups.push(defaultGroup);
-        }
-        $scope.selectedGroup = $scope.groups[0];
-      } else {
-        Log.debug('Failed to retrieve group list. Status: ' + status);
-        Notification.notify([$translate.instant('onboardModal.apiError', {
-          status: status
-        })], 'error');
-      }
-    });
-
     $scope.collabRadio1 = {
       label: $translate.instant('onboardModal.enableCollab'),
       value: 1,
@@ -656,7 +638,7 @@
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.usrlist = $window.addressparser.parse($scope.model.userList);
+        $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
 
@@ -1048,7 +1030,7 @@
     }
 
     var getUsersList = function () {
-      return $window.addressparser.parse($scope.model.userList);
+      return addressparser.parse($scope.model.userList);
     };
 
     $scope.validateTokensBtn = function () {
@@ -1360,10 +1342,9 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length === usersList.length) {
+          if (successes.length + errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
         } else {
@@ -1730,9 +1711,11 @@
     }
 
     var getUnlicensedUsers = function () {
+      $scope.showSearch = false;
       Orgservice.getUnlicensedUsers(function (data) {
         $scope.unlicensed = 0;
         $scope.unlicensedUsersList = null;
+        $scope.showSearch = true;
         if (data.success) {
           if (data.totalResults) {
             $scope.unlicensed = data.totalResults;

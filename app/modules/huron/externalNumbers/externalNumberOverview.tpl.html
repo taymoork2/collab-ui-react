@@ -3,7 +3,27 @@
     <span class="section-name" translate="customerPage.call"></span>
   </div>
   <div class="feature-list">
-    <ul>
+    <ul cr-feature-toggle feature-show="huron-order-management">
+      <li class="feature">
+        <a ui-sref="customer-overview.pstnOrderOverview({currentCustomer: externalNumberOverview.currentCustomer})">
+          <span class="feature-name" translate="customerPage.pstnOrders"></span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+      <li class="feature">
+        <a ui-sref="customer-overview.externalNumbers">
+          <span class="feature-name" translate="customerPage.phoneNumbers"></span>
+          <span class="feature-status"><span ng-if="!externalNumberOverview.loading">{{externalNumberOverview.allNumbersCount}}</span><i class="icon icon-spinner" ng-if="externalNumberOverview.loading"></i></span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+      <li class="feature">
+        <a ng-click="externalNumberOverview.isTerminusCustomer()">
+          <span class="feature-name add-number-link" translate="customerPage.addNumbers"></span>
+        </a>
+      </li>
+    </ul>
+    <ul cr-feature-toggle feature-hide="huron-order-management">
       <li class="feature">
         <a ui-sref="customer-overview.externalNumbers">
           <span class="feature-name" translate="customerPage.phoneNumbers"></span>

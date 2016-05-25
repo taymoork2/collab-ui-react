@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService, FeatureToggleService, TrialService, Orgservice;
+  var controller, $scope, $stateParams, $state, $window, $q, Authinfo, BrandService, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
   var testOrg;
 
   function LicenseFeature(name, state) {
@@ -16,7 +16,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _Orgservice_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -47,6 +47,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getOrgName: function () {
         return "xyz123";
+      },
+      isPartnerAdmin: function () {
+        return true;
       }
     };
     BrandService = {
@@ -54,6 +57,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     };
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
+    PartnerService = _PartnerService_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -76,6 +80,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
 
     controller = $controller('CustomerOverviewCtrl', {
@@ -133,6 +138,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('should call getUserAuthInfo correctly', function () {
+    it('should expect PartnerService.getUserAuthInfo to be called', function () {
+      expect(controller.customerOrgId).toBe('123-456');
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
+      controller.getUserAuthInfo();
+      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
   });
 

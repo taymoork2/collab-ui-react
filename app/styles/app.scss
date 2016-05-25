@@ -1,12 +1,11 @@
-@import '../../bower_components/cisco-ui/scss/cisco-ui';
+@import '../../node_modules/collab-ui/scss/collab-ui';
 
 $fa-font-path: "../fonts";
 
-@import "../../bower_components/font-awesome/scss/font-awesome";
+@import "../../node_modules/font-awesome/scss/font-awesome";
 
 // ******** Variables **********
-// @brand-font-folder: '../bower_components/bootstrap-cisco/fonts';
-// @icon-font-path: '../bower_components/bootstrap-cisco/fonts/';
+
 
 // ******* Variables & Mixins **************
 @import 'partials/variables';
@@ -28,6 +27,7 @@ $fa-font-path: "../fonts";
 @import '../modules/core/styles/core';
 @import '../modules/huron/styles/huron';
 @import '../modules/hercules/styles/hercules';
+@import '../modules/ediscovery/styles/ediscovery';
 @import '../modules/squared/styles/squared';
 @import '../modules/mediafusion/styles/mediafusion';
 @import '../modules/webex/styles/webex';

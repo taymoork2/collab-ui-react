@@ -68,6 +68,13 @@ describe('Directive: csvDownload', function () {
       $timeout.flush(300);
       expect(isolated.downloading).toBeFalsy();
     });
+
+    it('should contain tooltip for download type=user', function () {
+      var element = $compile('<csv-download type="user" filename="exported_users.csv"></csv-download>')($scope);
+      $scope.$digest();
+
+      expect(element.html()).toContain("usersPage.csvBtnTitle");
+    });
   });
 
   describe('Browser: IE only behavior', function () {

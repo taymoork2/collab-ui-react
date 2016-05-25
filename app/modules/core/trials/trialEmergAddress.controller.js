@@ -48,19 +48,25 @@
         }]
       }
     }, {
-      model: vm.trial.details.emergAddr,
-      key: 'city',
-      type: 'input',
-      className: 'medium-9 columns no-flex no-pad',
+      type: 'inline',
+      className: 'medium-12 columns no-pad',
       templateOptions: {
-        labelfield: 'label',
-        label: $translate.instant('trialModal.pstn.city'),
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-9 city-width',
+        fields: [{
+          model: vm.trial.details.emergAddr,
+          key: 'city',
+          type: 'input',
+          className: 'medium-9 columns no-flex',
+          templateOptions: {
+            labelfield: 'label',
+            label: $translate.instant('trialModal.pstn.city'),
+            labelClass: 'columns medium-2 text-right',
+            inputClass: 'columns medium-9',
+          }
+        }]
       }
     }, {
       type: 'inline',
-      className: 'medium-9 columns no-pad',
+      className: 'medium-9 columns state-zip-wrapper no-pad',
       templateOptions: {
         fields: [{
           model: vm.trial.details.emergAddr,

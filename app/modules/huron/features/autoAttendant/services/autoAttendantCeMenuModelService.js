@@ -453,6 +453,10 @@
         }
 
         menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToQueue)) {
+        action = new Action('routeToQueue', inAction.routeToQueue.id);
+        setDescription(action, inAction.routeToQueue);
+        menuEntry.addAction(action);
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -862,6 +866,8 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToQueue') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'runActionsOnInput') {
               if (menuEntry.actions[0].inputType === 2) {
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
@@ -918,6 +924,8 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
+        } else if (actionName === 'routeToQueue') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;

@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService, Config, AACommonService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService) {
 
     var vm = this;
 

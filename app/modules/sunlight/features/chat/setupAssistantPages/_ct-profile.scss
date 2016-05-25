@@ -1,0 +1,226 @@
+.ct-profile {
+  .ct-profile-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .card-info {
+      text-align: center;
+      @include vr-spacing(pb, 0.5)
+    }
+  }
+
+  .cs-card {
+    width: rem-calc(400);
+    height: rem-calc(480);
+    @include vr-spacing(ml, 2.5);
+  }
+
+  .cs-card article header {
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(pl, 0.5);
+    @include vr-spacing(pl, 0.75);
+  }
+
+  .ct-profile-preview {
+     > header {
+       background-color: $gray-light-4;
+      .img-details {
+        float: left;
+        width: rem-calc(65);
+        height: rem-calc(57);
+        .org-img {
+          width: rem-calc(50);
+          height: rem-calc(50);
+          border-radius: 50%;
+          border: 1px solid $gray-light-1;
+          background: $white;
+          text-align: center;
+        }
+        .agent-img {
+          width: rem-calc(50);
+          height: rem-calc(50);
+          border-radius: 50%;
+          border: 1px solid $gray-light-1;
+          background: $white;
+          text-align: center;
+          >i {
+            top: 0.5rem;
+            color: $gray-light-1;
+          }
+        }
+      }
+      .name-details {
+        float: left;
+        .orgName {
+          height: 0.5rem;
+          width: rem-calc(200);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          @include vr-spacing(pt, 0.75);
+          @include vr-spacing(pb, 1.5);
+        }
+        .agentName {
+          height: 0.5rem;
+          width: rem-calc(200);
+          @include vr-spacing(pb, 1.5);
+        }
+        .desc {
+          opacity: 0.5;
+        }
+      }
+      .action-details {
+        float: right;
+        @include vr-spacing(pt, 0.75);
+        .icon {
+          @include vr-spacing(ml, 1)
+        }
+      }
+    }
+    > section {
+      .agent-chat {
+        float: right;
+        @include vr-spacing(mt, 1);
+        @include vr-spacing(mr, 1.25);
+        @include vr-spacing(ml, 2);
+        .agent-msg {
+          color: $white;
+          @include vr-spacing(p, 0.75);
+          border-radius: 2px 2px 0px 2px;
+          background-color: $color-people-base;
+        }
+        .speech-bubble {
+          top: 0.9375rem;
+          right: 0.3125rem;
+          width: 1.875rem;
+          height: 1.875rem;
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+          background-color: $color-people-base;
+          > span {
+            position: absolute;
+            width: 4.375rem;
+            height: 4.125rem;
+            border-radius: 100%;
+            background-color: $white;
+          }
+          .top { top: -30px; }
+          .right { right: -30px; }
+        }
+        .timer {
+          @include vr-spacing(mt, 0.5);
+          @include vr-spacing(ml, 11.75);
+        }
+      }
+      .customer-chat {
+        float: left;
+        .customer-msg {
+          @include vr-spacing(p, 0.75);
+          border-radius: 2px 2px 2px 0px;
+          background-color: $gray-light-3;
+        }
+        .speech-bubble {
+          top: 0.9375rem;
+          left: 0.3125rem;
+          width: 1.875rem;
+          height: 1.875rem;
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+          background-color: $gray-light-3;
+          > span {
+            position: absolute;
+            width: 4.375rem;
+            height: 4.125rem;
+            border-radius: 100%;
+            background-color: $white;
+          }
+          .top { top: -30px; }
+          .left { left: -30px; }
+        }
+        .timer {
+          @include vr-spacing(mt, 0.5);
+          @include vr-spacing(ml, 2);
+          margin-bottom: rem-calc(154);
+        }
+      }
+    }
+    .agent-status {
+      color: $gray-light-1;
+      @include vr-spacing(pl, 0.5);
+
+    }
+    > footer {
+      color: $gray-light-1;
+      border-top: 1px solid $gray-light-3;
+      @include vr-spacing(pv, 0.75);
+      @include vr-spacing(pl, 0.5);
+    }
+  }
+
+  .ct-profile-attributes {
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(ph, 1);
+    @include vr-spacing(pb, 1.25);
+
+    .subheader-text{
+      @include vr-spacing(pt, 0);
+      @include vr-spacing(pb, 0.5);
+    }
+
+    .agent-name-options {
+      @include vr-spacing(mb, 0.5, 0px, true);
+    }
+  }
+
+  .ct-profile-section {
+    @include vr-spacing(pb, 1);
+  }
+
+  .ct-profile-img {
+    text-align: center;
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    position: relative;
+    @include vr-spacing(ml, 6.5);
+    .preview-img {
+      font-size:9rem;
+    }
+    .uploaded-img {
+      border-radius: 70%;
+      border: 1px solid $gray-light-1;
+      width: 9.5rem;
+      height: 9rem;
+    }
+    .upload-icon {
+      font-size: 3rem;
+      bottom: 6rem;
+      color: $white;
+    }
+  }
+
+  .ct-profile-agent-img {
+    text-align: center;
+    background: $white;
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    border: 1px solid $gray-light-1;
+    position: relative;
+    @include vr-spacing(ml, 6.5);
+
+    .agent-img {
+      font-size: 6rem;
+      top: 1rem;
+      color: $gray-light-1;
+    }
+  }
+
+  .ct-display-txt {
+    @include vr-spacing(pb, 0.5);
+  }
+}

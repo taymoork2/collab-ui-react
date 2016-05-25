@@ -46,6 +46,9 @@
       }
     }
     vm.shippingInfo = _trialDeviceData.shippingInfo;
+    if (_.has($stateParams, 'currentTrial.dealId')) {
+      vm.shippingInfo.dealId = $stateParams.currentTrial.dealId;
+    }
 
     vm.sx10 = _.find(_trialRoomSystemData.details.roomSystems, {
       model: 'CISCO_SX10'
@@ -434,6 +437,19 @@
         required: true,
         disabled: true
       }
+    }, {
+      model: vm.shippingInfo,
+      key: 'dealId',
+      type: 'input',
+      className: 'columns medium-12',
+      templateOptions: {
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
+        label: $translate.instant('trialModal.call.dealId'),
+        type: 'text',
+        required: false,
+        disabled: true
+      },
     }];
 
     init();
