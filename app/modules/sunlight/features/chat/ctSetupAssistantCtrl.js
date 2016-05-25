@@ -14,6 +14,7 @@
 
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
+    vm.evalKeyPressOnInputText = evalKeyPressOnInputText;
 
     // Setup assistant controller functions
     vm.nextPage = nextPage;
@@ -119,6 +120,19 @@
         break;
       default:
         break;
+      }
+    }
+
+    function evalKeyPressOnInputText(event) {
+      switch (event.keyCode) {
+        case vm.rightArrow:
+          event.stopPropagation();
+          break;
+        case vm.leftArrow:
+          event.stopPropagation();
+          break;
+        default:
+          break;
       }
     }
 

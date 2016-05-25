@@ -5,7 +5,7 @@
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.customerInfoDesc"></div>
 
-  <div class="ct-customer">
+  <div class="ct-customer ct-sa-content">
     <cs-card-layout block-view="true" class="cardScroll">
       <cs-card>
         <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
@@ -113,7 +113,8 @@
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
-                ng-model="attribute.value"/>
+                ng-model="attribute.value"
+                ng-keyup="careChatSA.evalKeyPressOnInputText($event)"/>
 
               <div ng-if="attribute.type == 'radio'" class="h6 cs-radio-group ct-attribute-field-radio">
                 <input
