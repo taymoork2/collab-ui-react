@@ -128,7 +128,7 @@
       readonlyAdmin: 'atlas-read-only-admin',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
-      mediaServiceMetrics: 'media-service-metrics'
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
     };
 
     var toggles = {};
