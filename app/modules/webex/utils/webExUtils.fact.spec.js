@@ -270,9 +270,14 @@ describe('WebExUtilsFact', function () {
     $rootScope.$apply();
 
     expect(response).not.toBe(null);
-    expect(response.$$state.value[0].siteHasMCLicense).toBe(true);
-    expect(response.$$state.value[1].siteHasMCLicense).toBe(true);
-    expect(response.$$state.value[4].siteHasCMRLicense).toBe(true);
+
+    // expect(response.$$state.value[0].siteHasMCLicense).toBe(true);
+    // expect(response.$$state.value[1].siteHasMCLicense).toBe(true);
+    // expect(response.$$state.value[4].siteHasCMRLicense).toBe(true);
+
+    expect(response.$$state.value[0].offerCode).toBe("MC");
+    expect(response.$$state.value[1].offerCode).toBe("MC");
+    expect(response.$$state.value[4].offerCode).toBe("CMR");
 
     /** This is what response looks like, given the fake input data:
      * 'response = {"$$state":{"status":1,"value":[

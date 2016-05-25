@@ -21,7 +21,7 @@
     }
 
     function openScheduleModal(sectionToToggle) {
-      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
+      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         return;
       }
 

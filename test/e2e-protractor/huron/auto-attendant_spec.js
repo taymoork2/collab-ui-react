@@ -59,11 +59,14 @@ describe('Huron Auto Attendant', function () {
 
       // we should see the AA edit page now
       utils.expectIsDisplayed(autoattendant.addAANumbers);
+      autoattendant.scrollIntoView(autoattendant.sayMessage);
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
     }, 60000);
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.wait(autoattendant.addAANumbers, 12000);
 
       utils.click(autoattendant.numberDropDownArrow);
@@ -107,6 +110,8 @@ describe('Huron Auto Attendant', function () {
 
     it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
+      autoattendant.scrollIntoView(autoattendant.sayMessage);
+
       // say message
       utils.click(autoattendant.sayMessageInput);
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
@@ -130,6 +135,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
+      autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
@@ -138,6 +144,7 @@ describe('Huron Auto Attendant', function () {
 
       // language and voice
       utils.click(autoattendant.phonesayMessageLanguage);
+      autoattendant.scrollIntoView(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
@@ -148,6 +155,7 @@ describe('Huron Auto Attendant', function () {
 
       //Add first Phone repeat Menu
       utils.click(autoattendant.phoneMenuKeys.first());
+      autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
       utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
@@ -164,6 +172,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
@@ -226,6 +235,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should add a 2nd Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
+      autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
       // Bit of a kludge. We currently have 2 Say messages & will add a third.
       // If anybody adds more before this test case then things get dicey.
       // Adding code to verify we start with 1 & end with 2. If another test adds more this test fails immediately
@@ -238,7 +248,6 @@ describe('Huron Auto Attendant', function () {
       utils.expectCount(autoattendant.sayMessageAll, 2);
 
       // OK, now add another via Add New Step
-      autoattendant.scrollIntoView(autoattendant.addStep(1));
       utils.click(autoattendant.addStep(1));
 
       utils.expectIsDisplayed(autoattendant.newStep);

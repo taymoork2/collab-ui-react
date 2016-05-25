@@ -41,10 +41,10 @@
           unit: '',
           city: '',
           state: '',
-          postalCode: ''
-        }
+          postalCode: '',
+          dealId: ''
+        },
       };
-
       _trialData = angular.copy(defaults);
       return _trialData;
     }

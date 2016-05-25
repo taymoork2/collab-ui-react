@@ -1079,7 +1079,7 @@
               }
             },
             params: {
-              csvImportObj: null
+              siteRow: null
             }
           })
           .state('site-csv-results', {

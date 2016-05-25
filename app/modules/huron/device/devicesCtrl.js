@@ -26,6 +26,10 @@
       }
     }
 
+    $scope.$watch(function () {
+      return vm.csdmHuronUserDeviceService.dataLoaded();
+    }, addLinkOrButtonForActivationCode);
+
     vm.showDeviceDetails = function (device) {
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
@@ -34,12 +38,8 @@
     };
 
     function activate() {
-
       vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
       vm.devices = vm.csdmHuronUserDeviceService.getDeviceList();
-      $scope.$watchCollection(function () {
-        return vm.devices;
-      }, addLinkOrButtonForActivationCode);
       OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
         vm.otps = otpList;
       });

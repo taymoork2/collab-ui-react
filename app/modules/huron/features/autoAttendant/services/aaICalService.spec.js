@@ -129,8 +129,24 @@ describe('Service: AACalendarService', function () {
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).hours;
       expect(rangeFromCalendar.length).toEqual(1);
       expect(rangeFromCalendar[0].days).toEqual(range.days);
-      expect(rangeFromCalendar[0].starttime.toString()).toEqual(starttime.toString());
-      expect(rangeFromCalendar[0].endtime.toString()).toEqual(endtime.toString());
+      expect(rangeFromCalendar[0].starttime).toEqual(starttime);
+      expect(rangeFromCalendar[0].endtime).toEqual(endtime);
+    });
+
+    it('add valid hours range to the calendar and should get the same range with endtime set to 12:00 AM', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = AAICalService.getDefaultRange();
+      range.days[0].active = true;
+      range.starttime = starttime;
+      range.endtime = '12:00 AM';
+      AAICalService.addHoursRange('open', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).hours;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0].days).toEqual(range.days);
+      expect(rangeFromCalendar[0].starttime).toEqual(range.starttime);
+      expect(rangeFromCalendar[0].endtime).toEqual(range.endtime);
     });
 
     it('add hours range without days to the calendar and should add nothing to the calendar', function () {
@@ -235,6 +251,31 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].date).toEqual(range.date);
       expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
       expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toBeUndefined();
+    });
+
+    it('add an exact date holiday and get back holiday range with all day unselected (endtime set to 12:00 AM)', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Christmas',
+        date: '2016-12-25',
+        starttime: starttime,
+        endtime: '12:00 AM',
+        exactDate: true
+      };
+
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].date).toEqual(range.date);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].starttime).toEqual(range.starttime);
+      expect(rangeFromCalendar[0].endtime).toEqual(range.endtime);
       expect(rangeFromCalendar[0].recurAnnually).toBeUndefined();
     });
 
