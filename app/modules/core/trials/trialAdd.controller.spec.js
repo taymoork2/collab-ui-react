@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
-
+  var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
+  var addContextSpy;
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -15,6 +15,7 @@ describe('Controller: TrialAddCtrl', function () {
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     TrialService = _TrialService_;
+    TrialContextService = _TrialContextService_;
     HuronCustomer = _HuronCustomer_;
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
@@ -27,6 +28,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
       if (input === 'atlasTrialsShipDevices') {
         return ($q.when(false));
@@ -44,6 +46,7 @@ describe('Controller: TrialAddCtrl', function () {
       $translate: $translate,
       $state: $state,
       TrialService: TrialService,
+      TrialContextService: TrialContextService,
       HuronCustomer: HuronCustomer,
       Notification: Notification,
       EmailService: EmailService,
@@ -64,6 +67,7 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
     expect(controller.callTrial.enabled).toBeTruthy();
     expect(controller.pstnTrial.enabled).toBeTruthy();
+    expect(controller.contextTrial.enabled).toBeFalsy();
   });
 
   it('should start in trialAdd.info state', function () {
@@ -254,6 +258,41 @@ describe('Controller: TrialAddCtrl', function () {
         $scope.$apply();
         expect(Notification.errorResponse).toHaveBeenCalled();
         expect(Notification.errorResponse.calls.count()).toEqual(1);
+      });
+    });
+
+    describe('with context service checked', function () {
+
+      it('should enable context service', function () {
+        controller.contextTrial.enabled = true;
+        controller.callTrial.enabled = false;
+        controller.startTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).toHaveBeenCalled();
+        expect(Notification.errorResponse).not.toHaveBeenCalled();
+      });
+
+      it('should display error notification if call to enable context service fails', function () {
+        addContextSpy.and.returnValue($q.reject('rejected'));
+        controller.contextTrial.enabled = true;
+        controller.callTrial.enabled = false;
+        controller.startTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).toHaveBeenCalled();
+        expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
+      });
+    });
+
+    describe('without context service checked', function () {
+      beforeEach(function () {
+        controller.contextTrial.enabled = false;
+        controller.callTrial.enabled = false;
+        controller.startTrial();
+        $scope.$apply();
+      });
+
+      it('should not enable context service', function () {
+        expect(TrialContextService.addService).not.toHaveBeenCalled();
       });
     });
   });

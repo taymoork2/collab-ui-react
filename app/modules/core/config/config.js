@@ -70,7 +70,8 @@
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         pstn: 'PSTN',
-        care: 'CARE'
+        care: 'CARE',
+        context: 'CONTEXT'
       },
 
       //WARNING: Deprecated, use offerTypes

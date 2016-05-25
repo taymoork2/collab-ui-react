@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -30,6 +30,7 @@
     vm.careTrial = vm.trialData.trials.careTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -77,6 +78,17 @@
         type: 'email',
         required: true,
       },
+    }];
+
+    vm.nonTrialServices = [{
+      // Context Service Trial
+      model: vm.contextTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      templateOptions: {
+        label: $translate.instant('trials.context'),
+        id: 'contextTrial'
+      }
     }];
 
     vm.messageFields = [{
@@ -293,7 +305,8 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -305,6 +318,8 @@
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
+        vm.showContextServiceTrial = results[4];
+
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
@@ -533,6 +548,16 @@
                 if (vm.pstnTrial.enabled) {
                   return TrialPstnService.createPstnEntity(vm.customerOrgId);
                 }
+              });
+          }
+        })
+        .then(function (response) {
+          if (vm.contextTrial.enabled) {
+            return TrialContextService.addService(vm.customerOrgId)
+              .catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.startTrialContextServiceError');
+                return $q.reject(response);
               });
           }
         })

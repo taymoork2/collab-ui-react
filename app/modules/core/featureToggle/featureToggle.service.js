@@ -14,6 +14,7 @@
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
