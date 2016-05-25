@@ -14,7 +14,6 @@
 
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
-    vm.evalKeyPressOnInputText = evalKeyPressOnInputText;
 
     // Setup assistant controller functions
     vm.nextPage = nextPage;
@@ -39,8 +38,6 @@
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
-    vm.leftArrow = 37;
-    vm.rightArrow = 39;
 
     // Template branding page related constants
     vm.orgName = Authinfo.getOrgName();
@@ -108,31 +105,8 @@
       case vm.escapeKey:
         cancelModal();
         break;
-      case vm.rightArrow:
-        if (nextButton(vm.currentState) === true) {
-          nextPage();
-        }
-        break;
-      case vm.leftArrow:
-        if (previousButton(vm.currentState) === true) {
-          previousPage();
-        }
-        break;
       default:
         break;
-      }
-    }
-
-    function evalKeyPressOnInputText(event) {
-      switch (event.keyCode) {
-        case vm.rightArrow:
-          event.stopPropagation();
-          break;
-        case vm.leftArrow:
-          event.stopPropagation();
-          break;
-        default:
-          break;
       }
     }
 
