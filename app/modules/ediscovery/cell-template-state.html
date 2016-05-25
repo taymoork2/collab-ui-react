@@ -4,7 +4,10 @@
       <i class="icon icon-spinner"></i>
     </span>
     <span ng-if="row.entity.progress > 0">
-      {{row.entity.progress}}%
+      {{row.entity.progress}}
     </span>
+  </span>
+  <span ng-show="row.entity.state !== 'RUNNING'">
+     {{row.entity.state}}
   </span>
 </div>
