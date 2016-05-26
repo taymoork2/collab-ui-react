@@ -295,14 +295,14 @@
 
     // Update offer and label for Meetings/WebEx trial.
     function updateTrialService(templateOptionsId) {
-      var index = _.findIndex(vm.individualServices, function (individualService) {
+      var index = _.findIndex(vm.messageFields, function (individualService) {
         return individualService.templateOptions.id === templateOptionsId;
       });
       if (index) {
         switch (templateOptionsId) {
         case messageTemplateOptionId:
-          vm.individualServices[index].model.type = Config.offerTypes.message;
-          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
+          vm.messageFields[index].model.type = Config.offerTypes.message;
+          vm.messageFields[index].templateOptions.label = $translate.instant('trials.message');
           break;
         }
       }
