@@ -23,11 +23,30 @@
     &:hover {
       background-color: $gray-light;
     }
-    &.aatype-button {
-      max-width: 266px;
-      flex: 1 1 auto;
+  }
+}
+
+@mixin flex-wrap-fix($flex-basis, $max-viewport-width: 532px) {
+  flex-grow: 1;
+  flex-basis: $flex-basis;
+  max-width: 100%;
+
+  $multiplier: 1;
+  $current-width: 266px;
+
+  @while $current-width < ($max-viewport-width) {
+    $current-width: $current-width + $flex-basis;
+    $multiplier: $multiplier + 1;
+    $temp-max-width-percent: percentage(1/$multiplier);
+
+    @media only screen and (min-width: $flex-basis * $multiplier) {
+        max-width: calc(#{$temp-max-width-percent} - .725rem);
     }
   }
+}
+
+.aa-type-button {
+  @include flex-wrap-fix(266px);
 }
 
 .feature-modal-loading {
