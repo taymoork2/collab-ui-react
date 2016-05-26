@@ -1,5 +1,5 @@
 'use strict';
-fdescribe('Controller: HelpdeskController', function () {
+describe('Controller: HelpdeskController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config, Authinfo;
