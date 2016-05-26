@@ -21,10 +21,12 @@
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
+      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
+      mergeRunningState: mergeRunningState,
       getReleaseNotes: getReleaseNotes
     };
 
@@ -63,6 +65,7 @@
       case 'not_configured':
       case 'uninstalling':
       case 'registered':
+      case 'initializing':
         label = 'warning';
         value = 2;
         break;
@@ -111,7 +114,7 @@
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        .get('state')
+        // .get('state')
         .value();
     }
 
@@ -127,7 +130,7 @@
         .value();
       return {
         alarms: mergeAllAlarms(connectors),
-        state: mergeRunningState(connectors),
+        state: mergeRunningState(connectors).state,
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
@@ -206,6 +209,16 @@
         });
     }
 
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          // only keep fused clusters
+          return _.filter(data.clusters, 'state', 'fused');
+        });
+    }
+
     function getCluster(type, id) {
       return clusterCache[type][id];
     }
@@ -214,8 +227,8 @@
       return _.values(clusterCache[type]);
     }
 
-    function upgradeSoftware(clusterId, serviceType) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+    function upgradeSoftware(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + connectorType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function (data) {

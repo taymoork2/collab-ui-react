@@ -41,21 +41,28 @@
             return PstnSetupService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
-                clearNumbers();
+                var tempOrders = [];
+                var tempNumbers = [];
                 _.forEach(numbers, function (number) {
                   if (_.has(number, 'orderNumber') || _.has(number, 'quantity')) {
-                    pendingOrders.push(number);
+                    tempOrders.push(number);
                   } else {
-                    pendingNumbers.push(number);
+                    tempNumbers.push(number);
                   }
                 });
+                pendingOrders = tempOrders;
+                pendingNumbers = tempNumbers;
               })
               .catch(function (response) {
                 pendingNumbers = [];
+                pendingOrders = [];
                 if (!response || response.status !== 404) {
                   return $q.reject(response);
                 }
               });
+          } else {
+            pendingNumbers = [];
+            pendingOrders = [];
           }
         })
         .then(function () {

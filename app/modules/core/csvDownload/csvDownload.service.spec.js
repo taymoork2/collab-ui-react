@@ -1,9 +1,10 @@
 'use strict';
 
 describe('Service: CsvDownloadService', function () {
-  var CsvDownloadService, $httpBackend, UrlConfig, $window;
+  var CsvDownloadService, $httpBackend, UrlConfig, $window, UserCsvService;
   var typeTemplate = 'template';
   var typeUser = 'user';
+  var typeError = 'error';
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -15,11 +16,12 @@ describe('Service: CsvDownloadService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_, _$window_) {
+  beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_, _$window_, _UserCsvService_) {
     CsvDownloadService = _CsvDownloadService_;
     $httpBackend = _$httpBackend_;
     UrlConfig = _UrlConfig_;
     $window = _$window_;
+    UserCsvService = _UserCsvService_;
   }));
 
   describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
@@ -61,6 +63,29 @@ describe('Service: CsvDownloadService', function () {
           expect(data).toContain('blob');
         });
         $httpBackend.flush();
+      });
+    });
+
+    describe('getCsv(error)', function () {
+      var errorArray = [{
+        row: '1',
+        email: 'a@cisco.com',
+        error: 'Some error 1'
+      }, {
+        row: '100',
+        email: 'b@cisco.com',
+        error: 'Some error 100'
+      }];
+      beforeEach(function () {
+        spyOn(UserCsvService, 'getCsvStat').and.returnValue({
+          userErrorArray: errorArray
+        });
+      });
+
+      it('should get error export file', function () {
+        CsvDownloadService.getCsv(typeError).then(function (data) {
+          expect(data).toContain('blob');
+        });
       });
     });
 

@@ -1,0 +1,14 @@
+{
+  "partners": [{
+    "id": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
+    "userName": "atlaspartneradmin@atlas.test.com",
+    "name": {
+      "givenName": "Jackson",
+      "familyName": "Smith"
+    },
+    "displayName": "Partner Administrator",
+    "entitlements": ["squared-call-initiation", "spark", "squared-syncup", "squared-room-moderation", "webex-squared"],
+    "roles": ["id_full_admin"],
+    "orgId": "c054027f-c5bd-4598-8cd8-07c08163e8cd"
+  }]
+}

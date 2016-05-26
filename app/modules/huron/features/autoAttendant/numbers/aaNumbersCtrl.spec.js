@@ -5,7 +5,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var controller, AANotificationService, AutoAttendantCeService, ExternalNumberPoolService;
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
-  var $httpBackend, HuronConfig, Config;
+  var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -80,7 +80,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Config_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
     _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _AANotificationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
@@ -89,7 +89,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     ExternalNumberPoolService = _ExternalNumberPoolService_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
-    Config = _Config_;
 
     AAUiModelService = _AAUiModelService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
@@ -548,7 +547,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
       errorSpy = jasmine.createSpy('error');
-      AANotificationService.errorResponse = errorSpy;
+      AANotificationService.error = errorSpy;
 
     });
 

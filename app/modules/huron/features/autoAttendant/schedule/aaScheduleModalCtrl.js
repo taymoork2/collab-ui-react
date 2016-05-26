@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -16,6 +16,7 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceOpenBeforeCloseCheck = forceOpenBeforeCloseCheck;
     vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
@@ -30,13 +31,16 @@
     vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
-    vm.toggleHours = false;
+    vm.toggleHours = true;
     vm.holidays = [];
     vm.holidayBehavior = false;
     vm.oneAtATime = true;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
+    };
+    vm.messageHours = {
+      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
     vm.monthOptions = [];
     vm.dayOptions = [];
@@ -140,18 +144,23 @@
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
       if (startTime && endTime) {
-        var startTime = moment(startTime);
-        var endTime = moment(endTime);
-        var start = moment({
-          hour: startTime.hour(),
-          minute: startTime.minute()
-        });
-        var end = moment({
-          hour: endTime.hour(),
-          minute: endTime.minute()
-        });
+        if (endTime === '12:00 AM') {
+          return false;
+        }
+        var start = moment(startTime, "hh:mm A");
+        var end = moment(endTime, "hh:mm A");
         return start.isSame(end) || start.isAfter(end);
       }
+    }
+
+    function forceOpenBeforeCloseCheck(index) {
+      if (vm.isOpenHoursAfterCloseHours(vm.openhours[index].starttime, vm.openhours[index].endtime)) {
+        vm.hoursForm['endtime' + index].$error.compareTo = true;
+      } else {
+        delete vm.hoursForm['endtime' + index].$error.compareTo;
+      }
+      vm.hoursForm['endtime' + index].$setDirty();
+      vm.hoursForm['endtime' + index].$validate();
     }
 
     function forceStartBeforeEndCheck() {
@@ -160,8 +169,13 @@
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
-        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        if (vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime)) {
+          vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = true;
+        } else {
+          delete vm.holidaysForm[indexForm].holidayEnd.$error.compareTo;
+        }
         vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+        vm.holidaysForm[indexForm].holidayEnd.$validate();
       }
     }
 
@@ -182,21 +196,21 @@
       var flag = false;
       _.each(vm.holidays, function (holiday) {
         flag = false;
-        if (holiday.name === undefined || holiday.name == '') {
+        if (_.isEmpty(holiday.name)) {
           return flag;
         }
         if (holiday.exactDate) {
-          if (holiday.date === undefined || holiday.date == '') {
+          if (_.isEmpty(holiday.date)) {
             return flag;
           }
         } else {
-          if (holiday.month === undefined || holiday.month == '') {
+          if (_.isEmpty(holiday.month)) {
             return flag;
           }
-          if (holiday.rank === undefined || holiday.rank == '') {
+          if (_.isEmpty(holiday.rank)) {
             return flag;
           }
-          if (holiday.day === undefined || holiday.day == '') {
+          if (_.isEmpty(holiday.day)) {
             return flag;
           }
         }
@@ -381,7 +395,9 @@
     function deleteSchedule() {
       var id = vm.aaModel.aaRecord.scheduleId;
       var ceName = vm.aaModel.aaRecord.callExperienceName;
-      vm.aaModel.aaRecord.scheduleId = undefined;
+
+      delete vm.aaModel.aaRecord.scheduleId;
+
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
       var ceUrl;
       if (vm.aaModel.aaRecordUUID.length > 0) {
@@ -395,7 +411,9 @@
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
           // success removing ScheduleId from CE, delete the calendar 
-          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
+            delete vm.ui.ceInfo.scheduleId;
+          });
         });
     }
 
@@ -450,6 +468,10 @@
       });
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
+
+      if (!_.isEmpty(sectionToToggle)) {
+        toggleSection(sectionToToggle);
+      }
     }
 
     function openImportModal() {
@@ -490,6 +512,7 @@
       populateUiModel();
       vm.isDeleted = false;
     }
+
     activate();
   }
 })();

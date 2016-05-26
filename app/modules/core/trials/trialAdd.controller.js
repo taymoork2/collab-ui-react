@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
@@ -27,6 +27,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.isTestOrg = false;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -49,6 +50,10 @@
     vm.navStates = ['trialAdd.info'];
     vm.showWebex = false;
     vm.startTrial = startTrial;
+    vm.setDeviceModal = setDeviceModal;
+    vm.devicesModal = _.find(vm.trialStates, {
+      name: 'trialAdd.call'
+    });
 
     vm.custInfoFields = [{
       model: vm.details,
@@ -142,7 +147,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: callTemplateOptionId,
         class: 'columns medium-12',
       },
@@ -156,9 +161,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-5 pad-top",
+      className: "columns medium-12 pad-top",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: roomSystemsTemplateOptionId,
         class: 'columns medium-12',
       },
@@ -173,10 +178,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: "columns medium-12 small-offset-1",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-9',
+        inputClass: 'columns medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -216,7 +221,7 @@
       },
     }];
 
-    vm.hasCallEntitlement = Authinfo.isSquaredUC();
+    vm.hasCallEntitlement = true; // US12171 - always entitle call (previously Authinfo.isSquaredUC())
     vm.hasTrial = hasTrial;
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
@@ -237,8 +242,11 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
-        vm.showRoomSystems = results[0];
-        vm.roomSystemTrial.enabled = results[0];
+        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
+        //vm.showRoomSystems = results[0];
+        //vm.roomSystemTrial.enabled = results[0];
+        vm.showRoomSystems = true;
+        vm.roomSystemTrial.enabled = true;
         vm.webexTrial.enabled = results[1];
         vm.callTrial.enabled = vm.hasCallEntitlement;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
@@ -249,9 +257,10 @@
           updateTrialService(messageTemplateOptionId);
         }
 
-        var devicesModal = _.find(vm.trialStates, {
-          name: 'trialAdd.call'
-        });
+        // TODO: US12063 overrides using this var but requests code to be left in for now
+        //var devicesModal = _.find(vm.trialStates, {
+        //  name: 'trialAdd.call'
+        // });
         var meetingModal = _.find(vm.trialStates, {
           name: 'trialAdd.webex'
         });
@@ -264,9 +273,11 @@
 
         pstnModal.enabled = vm.pstnTrial.enabled;
         emergAddressModal.enabled = vm.pstnTrial.enabled;
-        devicesModal.enabled = results[2];
         meetingModal.enabled = results[1];
-
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and only test orgs that have feature toggle enabled (US12063)
+        //devicesModal.enabled = results[2];
+        setDeviceModal();
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;
@@ -477,6 +488,26 @@
 
     function showDefaultFinish() {
       return !vm.webexTrial.enabled;
+    }
+
+    function setDeviceModal() {
+      var devicesModal = _.find(vm.trialStates, {
+        name: 'trialAdd.call'
+      });
+      Orgservice.getAdminOrg(_.noop)
+        .then(function (response) {
+          if (response.data.success) {
+            vm.isTestOrg = response.data.isTestOrg;
+            // If the test org has the atlasTrialsShipDevices toggle on then negate that it is a test org
+            if (response.data.isTestOrg) {
+              FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices, function (result) {
+                vm.isTestOrg = !result;
+              });
+            }
+          }
+        }).finally(function (response) {
+          vm.devicesModal.enabled = !vm.isTestOrg;
+        });
     }
   }
 })();

@@ -63,7 +63,9 @@ describe('Partner flow', function () {
       utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
-      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
+      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
+      utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -75,6 +77,7 @@ describe('Partner flow', function () {
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
       utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
@@ -83,7 +86,7 @@ describe('Partner flow', function () {
       });
     }, LONG_TIMEOUT);
 
-    it('should edit an exisiting trial', function () {
+    xit('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -167,6 +170,7 @@ describe('Partner flow', function () {
     it('Should close customer portal', function () {
       browser.close();
       browser.switchTo().window(appWindow);
+      browser.refresh();
     });
 
   }, LONG_TIMEOUT);

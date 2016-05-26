@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -27,6 +27,8 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.isTestOrg = false;
+    vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -145,7 +147,7 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.call'),
+        label: $translate.instant('trials.callUsOnly'),
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
@@ -180,9 +182,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-12",
       templateOptions: {
-        label: $translate.instant('trials.roomSystem'),
+        label: $translate.instant('trials.roomSysUsOnly'),
         id: 'trialRoomSystem',
         class: 'columns medium-12',
       },
@@ -202,10 +204,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: "columns medium-12 small-offset-1",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -260,16 +262,21 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
-        vm.showRoomSystems = results[0];
-        vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
+        //vm.showRoomSystems = results[0];
+        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        vm.showRoomSystems = true;
+        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
         vm.webexTrial.enabled = results[1] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
         vm.showWebex = results[1];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-
-        vm.canSeeDevicePage = results[2];
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and do not show to test orgs (US12063)
+        //vm.canSeeDevicePage = results[2];
+        setDeviceModal();
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
@@ -564,6 +571,23 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
+    }
+
+    function setDeviceModal() {
+      Orgservice.getAdminOrg(_.noop)
+        .then(function (response) {
+          if (response.data.success) {
+            vm.isTestOrg = response.data.isTestOrg;
+            // If the test org has the atlasTrialsShipDevices toggle on then negate that it is a test org
+            if (response.data.isTestOrg) {
+              FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices, function (result) {
+                vm.isTestOrg = !result;
+              });
+            }
+          }
+        }).finally(function (response) {
+          vm.canSeeDevicePage = !vm.isTestOrg;
+        });
     }
   }
 })();

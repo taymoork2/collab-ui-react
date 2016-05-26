@@ -32,7 +32,7 @@ fi
 echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
 
-echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
+echo "Checking dependency dirs ('node_modules') still exist..."
 dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
 
 echo "Checking if it is time to refresh..."
@@ -69,7 +69,6 @@ else
             $last_refreshed_file \
             $manifest_checksums_file \
             .cache/npm-deps-for-*.tar.gz \
-            .cache/bower-deps-for-*.tar.gz \
             .cache/npm-shrinkwrap-for-*.tar.gz
 
     # setup failed
@@ -91,10 +90,6 @@ else
         fi
     fi
 fi
-
-# list our current bower_components for build reference
-echo "Currently installed bower_components:"
-./bin/helpers/list-bower-components.js | sort
 
 
 # -----

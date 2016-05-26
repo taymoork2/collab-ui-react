@@ -21,6 +21,10 @@ describe('Template: partnerProfile', function () {
   var SAVE_BUTTON = '#orgProfileSaveBtn';
   var INVISIBLE = 'invisible';
 
+  var USE_CISCO_EXAMPLE_LINK = 'useCiscoLogoExampleLink';
+  var USE_CUSTOM_EXAMPLE_LINK = 'useCustomLogoExampleLink';
+  var ALLOW_CUSTOM_EXAMPLE_LINK = "allowCustomLogExampleLink";
+
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
@@ -165,6 +169,13 @@ describe('Template: partnerProfile', function () {
       var radio = view.find('#' + id);
 
       expect(radio).not.toExist();
+    };
+  }
+
+  function expectExampleLinkExist(id) {
+    return function () {
+      var link = view.find('#' + id);
+      expect(link).toExist();
     };
   }
 

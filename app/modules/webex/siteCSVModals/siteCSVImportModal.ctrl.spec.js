@@ -76,7 +76,7 @@ describe('SiteCSVImportModalCtrl test', function () {
     $scope.$apply();
 
     //Create spies
-    spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCSVImport.promise);
+    spyOn(WebExApiGatewayService, 'csvImportOld').and.returnValue(deferredCSVImport.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
 
@@ -98,7 +98,7 @@ describe('SiteCSVImportModalCtrl test', function () {
     SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
     SiteCSVImportModalCtrl.startImport();
 
-    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
+    expect(WebExApiGatewayService.csvImportOld).toHaveBeenCalled();
 
     deferredCSVImport.resolve({});
     $rootScope.$apply();
@@ -118,4 +118,26 @@ describe('SiteCSVImportModalCtrl test', function () {
     expect(Notification.error).toHaveBeenCalled();
     expect($scope.$close).not.toHaveBeenCalled();
   });
+
+  it('can process reject from WebExApiGatewayService.csvExport() ', function () {
+    $rootScope.$apply();
+
+    expect(fakeSiteRow).not.toBe(null);
+
+    SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
+    SiteCSVImportModalCtrl.startImport();
+
+    expect(WebExApiGatewayService.csvImportOld).toHaveBeenCalled();
+
+    deferredCSVImport.reject({
+      "errorCode": "060100",
+      "errorMessage": "Your request has been prevented because a task is now running. Try again later."
+    });
+
+    $rootScope.$apply();
+
+    expect(Notification.error).toHaveBeenCalledWith('siteList.csvRejectedToast-060100');
+    expect($scope.$close).toHaveBeenCalled();
+  });
+
 }); // describe()

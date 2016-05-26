@@ -51,7 +51,7 @@ describe('Directive: csvDownload', function () {
 
       var isolated = element.isolateScope();
       expect(isolated.downloading).toBeTruthy();
-      expect(isolated.downloadingMessage).toContain('csvDownload.csvDownloadInProgress');
+      expect(isolated.downloadingMessage).toContain('csvDownload.inProgress');
 
       // start download
       $timeout.flush(300);
@@ -67,6 +67,13 @@ describe('Directive: csvDownload', function () {
       // finish download - click
       $timeout.flush(300);
       expect(isolated.downloading).toBeFalsy();
+    });
+
+    it('should contain tooltip for download type=user', function () {
+      var element = $compile('<csv-download type="user" filename="exported_users.csv"></csv-download>')($scope);
+      $scope.$digest();
+
+      expect(element.html()).toContain("usersPage.csvBtnTitle");
     });
   });
 
@@ -92,7 +99,7 @@ describe('Directive: csvDownload', function () {
       downloadAnchor[0].click();
       var isolated = element.isolateScope();
       expect(isolated.downloading).toBeTruthy();
-      expect(isolated.downloadingMessage).toContain('csvDownload.csvDownloadInProgress');
+      expect(isolated.downloadingMessage).toContain('csvDownload.inProgress');
 
       // start download
       $timeout.flush(300);

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskSearchHistoryService(Storage) {
     var self = this;
     self.limit = 10;

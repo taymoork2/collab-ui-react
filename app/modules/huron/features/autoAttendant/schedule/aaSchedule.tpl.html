@@ -1,11 +1,11 @@
 <div class="aa-panel">
-  <div class="aa-panel-body aa-flex-container aa-schedule-container">
+  <div class="aa-panel-body aa-flex-container ng-class:{'aa-schedule-container':aaBuilder.isScheduleAvailable()}" ng-click="aaBuilder.isScheduleAvailable() && aaBuilder.openScheduleModal('hours')">
     <div class="aa-flex-item schedule">
-      <span class="aa-schedule-icon" aria-label="autoAttendant.Schedule"></span>
+      <i class="aa-schedule-icon" aria-label="autoAttendant.Schedule"></i>
     </div>
     <div class="aa-flex-item schedule">
       <h3 class="text-info" translate="{{ aaBuilder.getScheduleTitle() }}"></h3>
-      <span class="aa-edit-icon" aria-label="common.edit"  ng-if="aaBuilder.isScheduleAvailable()" ng-click="aaBuilder.openScheduleModal()"></span>
+      <i class="aa-edit-icon" aria-label="common.edit" ng-if="aaBuilder.isScheduleAvailable()"></i>
     </div>
   </div>
 </div>

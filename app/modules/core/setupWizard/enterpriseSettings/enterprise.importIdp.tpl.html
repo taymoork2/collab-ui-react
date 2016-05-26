@@ -1,26 +1,31 @@
 <div class="enterprise-settings">
-  <div
-    ng-if="!idpFile.fileName"
-    class="file-drop"
-    cr-file-drop
-    file="idpFile.file"
-    file-name="idpFile.fileName"
-    file-type="text/xml"
-    file-suffix="xml">
-    <div class="sso-container copy-spacing">
-      <i class="icon icon-circle-upload"></i>
-      <h3 translate="ssoModal.importMetadataTitle"></h3>
-      <p translate="ssoModal.importMetadataDesc"></p>
-      <input
-        id="fileToUploadBtnHolder" 
-        cr-file-read
-        type="file"
-        accept="text/xml"
-        file="idpFile.file"
-        file-name="idpFile.fileName"
-        file-type="text/xml"
-        file-suffix="xml">
-      <p><span translate="firstTimeWizard.uploadPrompt"></span> <label for="fileToUploadBtnHolder" translate="firstTimeWizard.fileBrowser"></label></p>
+  <div ng-if="!idpFile.fileName">
+    <div
+      class="file-drop"
+      cr-file-drop
+      file="idpFile.file"
+      file-name="idpFile.fileName"
+      file-type="text/xml"
+      file-suffix="xml">
+      <div class="sso-container copy-spacing">
+        <i class="icon icon-circle-upload"></i>
+        <h3 translate="ssoModal.importMetadataTitle"></h3>
+        <p translate="ssoModal.importMetadataDesc"></p>
+        <input
+          id="fileToUploadBtnHolder" 
+          cr-file-read
+          type="file"
+          accept="text/xml"
+          file="idpFile.file"
+          file-name="idpFile.fileName"
+          file-type="text/xml"
+          file-suffix="xml">
+        <p><span translate="firstTimeWizard.uploadPrompt"></span> <label for="fileToUploadBtnHolder" translate="firstTimeWizard.fileBrowser"></label></p>
+      </div>
+    </div>
+    <div id="signingMetaDiv" class="signingMetaDiv copy-spacing">
+      <h4 translate='ssoModal.signingMetadataTitle'></h4> 
+      <cs-radiolist class="SSOSelfSigned" ng-model="options.SSOSelfSigned" options="SSOSelfSignedOptions"></cs-radiolist>
     </div>
   </div>
   <div ng-if="idpFile.file && idpFile.success">

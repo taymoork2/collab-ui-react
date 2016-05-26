@@ -21,16 +21,20 @@ describe('Directive: setupAssistantPages', function () {
     $rootScope = _$rootScope_;
   }));
 
-  function validateAppropriateContent(directiveName) {
+  function validateAppropriateContent(directiveName, expectedContent) {
     var element = $compile("<" + directiveName + "/>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("ct-title");
+    expect(element.html()).toContain(expectedContent);
   }
 
   it('replaces the elements with the appropriate content', function () {
     pageDirectives.forEach(function (directiveName) {
-      validateAppropriateContent(directiveName);
+      validateAppropriateContent(directiveName, 'ct-title');
     });
+  });
+
+  it('replaces the elements of ct-name with the appropriate content', function () {
+    validateAppropriateContent('ct-name', 'ct-input');
   });
 });

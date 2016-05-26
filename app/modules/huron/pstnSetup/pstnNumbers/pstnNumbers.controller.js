@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, PstnServiceAddressService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -30,9 +30,9 @@
     vm.orderNumbersTotal = 0;
     vm.showAdvancedOrder = false;
     vm.showPortNumbers = !PstnSetup.getIsTrial();
-    var ADVANCED_ORDERS = PstnSetupService.ADVANCED_ORDERS;
-    var PORT_ORDERS = PstnSetupService.PORT_ORDERS;
-    var NEW_ORDERS = PstnSetupService.NEW_ORDERS;
+    var BLOCK_ORDER = PstnSetupService.BLOCK_ORDER;
+    var PORT_ORDER = PstnSetupService.PORT_ORDER;
+    var NUMBER_ORDER = PstnSetupService.NUMBER_ORDER;
 
     vm.addToCart = addToCart;
     vm.addAdvancedOrder = addAdvancedOrder;
@@ -83,13 +83,21 @@
           labelfield: 'name',
           valuefield: 'abbreviation',
           onChangeFn: getStateInventory,
-          placeholder: $translate.instant('pstnSetup.selectState'),
-          inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
+          placeholder: $translate.instant('pstnSetup.searchStates'),
           filter: true
         },
         controller: /* @ngInject */ function ($scope) {
           TerminusStateService.query().$promise.then(function (states) {
             $scope.to.options = states;
+            if (_.get(PstnSetup.getServiceAddress(), 'state')) {
+              vm.model.state = {
+                abbreviation: PstnSetup.getServiceAddress().state,
+                name: _.result(_.find(states, {
+                  'abbreviation': PstnSetup.getServiceAddress().state
+                }), 'name')
+              };
+              getStateInventory();
+            }
           });
         }
       }, {
@@ -252,13 +260,13 @@
 
     function addToCart(type) {
       switch (type) {
-      case NEW_ORDERS:
+      case NUMBER_ORDER:
         addToOrder();
         break;
-      case PORT_ORDERS:
+      case PORT_ORDER:
         addPortNumbersToOrder();
         break;
-      case ADVANCED_ORDERS:
+      case BLOCK_ORDER:
         addAdvancedOrder();
         break;
       }
@@ -280,7 +288,7 @@
                   data: {
                     numbers: numbers
                   },
-                  type: NEW_ORDERS
+                  type: NUMBER_ORDER
                 };
                 vm.orderCart.push(order);
                 // return the index to be used in the promise callback
@@ -321,7 +329,7 @@
           length: parseInt(vm.model.quantity),
           consecutive: vm.model.consecutive
         },
-        type: ADVANCED_ORDERS
+        type: BLOCK_ORDER
       };
       vm.orderCart.push(advancedOrder);
       vm.showAdvancedOrder = false;
@@ -342,11 +350,11 @@
 
     function formatTelephoneNumber(telephoneNumber) {
       switch (_.get(telephoneNumber, 'type')) {
-      case NEW_ORDERS:
+      case NUMBER_ORDER:
         return getCommonPattern(telephoneNumber.data.numbers);
-      case PORT_ORDERS:
+      case PORT_ORDER:
         return PORTING_NUMBERS;
-      case ADVANCED_ORDERS:
+      case BLOCK_ORDER:
         return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
       case undefined:
         return getCommonPattern(telephoneNumber);
@@ -439,19 +447,19 @@
     }
 
     function isPortOrder(order) {
-      return _.get(order, 'type') === PORT_ORDERS;
+      return _.get(order, 'type') === PORT_ORDER;
     }
 
     function addPortNumbersToOrder() {
       var portOrder = {
         data: {},
-        type: PORT_ORDERS
+        type: PORT_ORDER
       };
       var portNumbersPartition = _.partition(getTokens(), 'invalid');
       var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
       portOrder.data.numbers = _.map(portNumbersPartition[1], 'value');
       var existingPortOrder = _.find(vm.orderCart, {
-        type: PORT_ORDERS
+        type: PORT_ORDER
       });
       if (existingPortOrder) {
         var newPortNumbers = _.difference(portOrder.data.numbers, existingPortOrder.data.numbers);
@@ -512,11 +520,11 @@
 
     function getOrderQuantity(order) {
       switch (_.get(order, 'type')) {
-      case NEW_ORDERS:
+      case NUMBER_ORDER:
         return order.data.numbers.length;
-      case PORT_ORDERS:
+      case PORT_ORDER:
         return order.data.numbers.length;
-      case ADVANCED_ORDERS:
+      case BLOCK_ORDER:
         return order.data.length;
       case undefined:
         return;
@@ -540,7 +548,7 @@
     }
 
     function isAdvancedOrder(order) {
-      return _.get(order, 'type') === ADVANCED_ORDERS;
+      return _.get(order, 'type') === BLOCK_ORDER;
     }
 
     $scope.$watchCollection(function () {

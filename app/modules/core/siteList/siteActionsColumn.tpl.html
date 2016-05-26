@@ -1,90 +1,56 @@
 <p class="ui-grid-cell-contents">
-  <!-- start of column loading -->
-  <span ng-if="!row.entity.showSiteLinks">
-    <i class="icon icon-report iconDisabled"></i>
-    
-    <span>
-      &nbsp;
-    </span>
-    
-    <i class="icon icon-settings iconDisabled"></i>
-    
-    <span>
-      &nbsp;&nbsp;&nbsp;
-    </span>
-    
-    <i class="icon icon-spinner ui-grid-vcenter"></i>
-    
-    <span translate="siteList.checkingServices"></span>
-  </span>
-  <!-- end of column loading -->
+  <!-- Reports icon -->
+  <span ng-include="'modules/core/siteList/siteActionsReportsIcon.tpl.html'"></span>
 
-  <!-- start of error handling -->
-  <span ng-if="row.entity.showSiteLinks && row.entity.isError">
-    <i id="id-siteReportsDisabledIcon"
-       class="icon icon-report iconDisabled">
-    </i>
-        
-    <span>
-      &nbsp; 
-    </span>
-        
-    <i id="id-siteConfigDisabledIcon"
-       class="icon icon-settings iconDisabled">
-    </i>
+  <!-- Config icon -->
+  <span ng-include="'modules/core/siteList/siteActionsConfigIcon.tpl.html'"></span>
+  
+  <!-- CSV icon and results link -->
+  <span ng-include="'modules/core/siteList/siteActionsCsvIcon.tpl.html'"></span>
+  
+  <!-- Start of Loading indication -->
+  <span ng-if="(!row.entity.showCSVIconAndResults && !row.entity.showSiteLinks) || 
+               (row.entity.showCSVIconAndResults && (!row.entity.showSiteLinks || !row.entity.showCSVInfo))"
+        id="{{row.entity.license.siteUrl}}_loading"
+        name="{{row.entity.license.siteUrl}}_loading">
         
     <span>
       &nbsp;&nbsp;&nbsp;
     </span>
+    
+    <i class="icon icon-spinner grid-vcenter"></i>
+    
+    <span class="grid-vcenter"
+          translate="siteList.checkingServices"></span>
+  </span>
+  <!-- End of Loading indication -->
+  
+  <!-- Start of Error/warning indication -->
+  <span ng-if="row.entity.showSiteLinks && row.entity.isError"
+        id="{{row.entity.license.siteUrl}}_error"
+        name="{{row.entity.license.siteUrl}}_error">
         
-    <span ng-if="!row.entity.isWarn"
-          id="{{row.entity.license.siteUrl}}_errorIcon">
-                
-      <i class="icon icon-error ui-grid-vcenter err webex-alert-text"></i>
-              
-      <span translate="siteList.systemError" class="webex-alert-text"></span>
+    <span>
+      &nbsp;&nbsp;&nbsp;
     </span>
-          
+    
     <span ng-if="row.entity.isWarn"
-          id="{{row.entity.license.siteUrl}}_warningIcon">
-                
-      <i class="icon icon-warning ui-grid-vcenter webex-attention-text"></i>
-              
+          id="{{row.entity.license.siteUrl}}_warningIcon"
+          name="{{row.entity.license.siteUrl}}_warningIcon">
+
+      <i class="icon icon-warning webex-attention-text grid-text-top"></i>
+
       <span translate="siteList.authError"></span>
     </span>
-  </span>
-  <!-- end of error handling -->
 
-  <!-- start of service enabling -->
-  <span ng-if="row.entity.showSiteLinks && !row.entity.isError">
-    <i ng-if="!row.entity.isAdminReportEnabled"
-       class="icon icon-report iconDisabled"
-       tooltip-append-to-body="true" 
-       tooltip-animation="false"
-       tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
-       tooltip-placement="top">
-    </i>
-          
-    <i ng-if="row.entity.isAdminReportEnabled"
-       id="id-IframeWebexSiteReportsLink"
-       class="icon icon-report iconEnabled"
-       tooltip-append-to-body="true" 
-       tooltip-animation="false"
-       tooltip="{{::'siteList.siteReports' | translate}}"
-       tooltip-placement="top">
-    </i>
-          
-    <span>
-      &nbsp;
+    <span ng-if="!row.entity.isWarn"
+          id="{{row.entity.license.siteUrl}}_errorIcon"
+          name="{{row.entity.license.siteUrl}}_errorIcon">
+
+      <i class="icon icon-error err webex-alert-text grid-text-top"></i>
+
+      <span translate="siteList.systemError" class="webex-alert-text"></span>
     </span>
-          
-    <i id="id-IframeWebexSiteConfigLink"
-       class="icon icon-settings iconEnabled"
-       tooltip-append-to-body="true" 
-       tooltip-animation="false"
-       tooltip="{{::'siteList.siteSettings' | translate}}"
-       tooltip-placement="top">
-    </i>
   </span>
-  <!-- end of service enabling -->
+  <!-- End of Error/warning indication -->
 </p>

@@ -6,13 +6,13 @@
     .controller('AABuilderLaneCtrl', AABuilderLaneCtrl);
 
   /* @ngInject */
-  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, Config, AACommonService, $timeout) {
+  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, Config, AACommonService, FeatureToggleService, $timeout) {
 
     var vm = this;
     vm.schedule = "";
     vm.entries = [];
     vm.templateName = $stateParams.aaTemplate;
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
+    vm.allowStepAddsDeletes = false;
     vm.addAction = addAction;
 
     /////////////////////
@@ -28,24 +28,40 @@
       // scroll to the added new step/action form
       $timeout(function () {
         var $target = $("#newStepForm" + vm.schedule + (index + 1));
-        var targetPosition = angular.isDefined($target.position()) ? $target.position().top : 0;
-        var targetHeight = $target.outerHeight(true);
+        var targetHeight = angular.isDefined($target.outerHeight(true)) ? $target.outerHeight(true) : 0;
+        var targetEnd = angular.isDefined($target.offset()) ? $target.offset().top + targetHeight : targetHeight;
 
         var $container = $("#builderScrollContainer");
-        var containerPosition = angular.isDefined($container.position()) ? $container.position().top : 0;
+        var containerEnd = angular.isDefined($container.offset()) && angular.isDefined($container.outerHeight(true)) ? $container.offset().top + $container.outerHeight(true) : 0;
 
-        var offset = targetPosition + containerPosition + targetHeight - 40;
-        $container.animate({
-          scrollTop: offset
-        }, 800);
+        if (targetEnd > containerEnd) {
+          var scrollPosition = $container.scrollTop();
+          var offset = scrollPosition + targetHeight + 60; //60 is the space for the vertical lane and the +
+          $container.animate({
+            scrollTop: offset
+          }, 800);
+
+        }
         // todo: focus cs-select nested href
       });
+    }
+
+    function setFeatureToggle() {
+      // toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.allowStepAddsDeletes = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.allowStepAddsDeletes = result;
+        });
+      }
     }
 
     function activate() {
       vm.schedule = $scope.schedule;
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      setFeatureToggle();
     }
 
     activate();

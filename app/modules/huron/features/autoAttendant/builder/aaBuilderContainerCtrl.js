@@ -6,27 +6,36 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $stateParams, $modal, AutoAttendantCeInfoModelService,
-    AutoAttendantCeMenuModelService, AutoAttendantCeService, AAUiModelService, AAModelService, Config) {
+  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService, Config, FeatureToggleService) {
 
     var vm = this;
     vm.aaModel = {};
     vm.ui = {};
+    vm.scheduleAvailable = false;
 
     vm.getScheduleTitle = getScheduleTitle;
     vm.openScheduleModal = openScheduleModal;
     vm.isScheduleAvailable = isScheduleAvailable;
 
     function isScheduleAvailable() {
-      return (Config.isDev() || Config.isIntegration());
+      return vm.scheduleAvailable;
     }
 
-    function openScheduleModal() {
+    function openScheduleModal(sectionToToggle) {
+      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
+        return;
+      }
+
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
-        size: 'lg'
+        size: 'lg',
+        resolve: {
+          sectionToToggle: function () {
+            return sectionToToggle;
+          }
+        }
       });
 
       modalInstance.result.then(function (result) {
@@ -34,8 +43,10 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.ui = AAUiModelService.getUiModel();
         $scope.$broadcast('ScheduleChanged');
+        setUpStyle();
       });
     }
+
     /////////////////////
 
     function getScheduleTitle() {
@@ -46,9 +57,46 @@
       return "autoAttendant.schedule";
     }
 
+    function setUpStyle() {
+      if (vm.ui.isClosedHours && vm.ui.isHolidays && vm.ui.holidaysValue !== 'closedHours') {
+        vm.generalStyle = '';
+        vm.holidaysLane = true;
+        vm.closedLane = true;
+        vm.threeLanes = true;
+      } else if (vm.ui.isClosedHours) {
+        vm.generalStyle = 'aa-general-2-lanes';
+        vm.holidaysLane = false;
+        vm.closedLane = true;
+        vm.threeLanes = false;
+      } else if (vm.ui.isHolidays) {
+        vm.generalStyle = 'aa-general-2-lanes';
+        vm.holidaysLane = true;
+        vm.closedLane = false;
+        vm.threeLanes = false;
+      } else {
+        vm.generalStyle = '';
+        vm.holidaysLane = false;
+        vm.closedLane = false;
+        vm.threeLanes = false;
+      }
+    }
+
+    function setFeatureToggle() {
+      //toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.scheduleAvailable = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.scheduleAvailable = result;
+        });
+      }
+    }
+
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      setUpStyle();
+      setFeatureToggle();
     }
 
     activate();

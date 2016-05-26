@@ -9,7 +9,7 @@ describe('Huron Auto Attendant', function () {
 
     initialIgnoreSync = browser.ignoreSynchronization;
 
-    login.login('huron-int1');
+    login.login('aa-admin');
 
   }, 120000);
 
@@ -58,10 +58,12 @@ describe('Huron Auto Attendant', function () {
 
     it('should create an open hours and a closed hours lanes', function () {
 
+      autoattendant.scrollIntoView(autoattendant.schedule);
+
       // expect to see an open hours lane
       utils.expectIsDisplayed(autoattendant.openHoursLane);
-      utils.expectIsDisplayed(autoattendant.openHoursSayMessage);
-      utils.expectIsDisplayed(autoattendant.openHoursPhoneMenu);
+      utils.expectIsNotPresent(autoattendant.openHoursSayMessage);
+      utils.expectIsNotPresent(autoattendant.openHoursPhoneMenu);
       utils.expectIsDisplayed(autoattendant.openHoursEndCall);
 
       // expect to see closed hours lane
@@ -72,24 +74,9 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should create a 8am to 5pm, Monday to Friday open hours schedule', function () {
-
-      utils.click(autoattendant.schedule);
-      utils.expectCheckbox(autoattendant.day1, true);
-      utils.expectCheckbox(autoattendant.day2, true);
-      utils.expectCheckbox(autoattendant.day3, true);
-      utils.expectCheckbox(autoattendant.day4, true);
-      utils.expectCheckbox(autoattendant.day5, true);
-      utils.expectCheckbox(autoattendant.day6, false);
-      utils.expectCheckbox(autoattendant.day7, false);
-      utils.expectValueToContain(autoattendant.starttime, '08:00 AM');
-      utils.expectValueToContain(autoattendant.endtime, '05:00 PM');
-      utils.wait(autoattendant.modalcancel, 12000);
-      utils.click(autoattendant.modalcancel);
-
-    }, 60000);
-
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.wait(autoattendant.addAANumbers, 12000);
       utils.click(autoattendant.numberDropDownArrow);
 
@@ -114,8 +101,27 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('should create a 8am to 5pm, Monday to Friday open hours schedule', function () {
+
+      autoattendant.scrollIntoView(autoattendant.schedule);
+      utils.click(autoattendant.schedule);
+      utils.expectCheckbox(autoattendant.day1, true);
+      utils.expectCheckbox(autoattendant.day2, true);
+      utils.expectCheckbox(autoattendant.day3, true);
+      utils.expectCheckbox(autoattendant.day4, true);
+      utils.expectCheckbox(autoattendant.day5, true);
+      utils.expectCheckbox(autoattendant.day6, false);
+      utils.expectCheckbox(autoattendant.day7, false);
+      utils.expectValueToContain(autoattendant.starttime, '08:00 AM');
+      utils.expectValueToContain(autoattendant.endtime, '05:00 PM');
+      utils.wait(autoattendant.modalcancel, 12000);
+      utils.click(autoattendant.modalcancel);
+
+    }, 60000);
+
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
+      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
       utils.click(autoattendant.numberDropDownArrow);
 
       // we are going to arbitrarily select the last one

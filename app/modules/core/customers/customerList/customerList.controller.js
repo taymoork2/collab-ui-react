@@ -7,28 +7,33 @@
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
 
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
+    $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.filterAction = filterAction;
+    $scope.getUserAuthInfo = getUserAuthInfo;
+    $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
-    $scope.getTrialsList = getTrialsList;
-    $scope.partnerClicked = partnerClicked;
-    $scope.isPartnerOrg = isPartnerOrg;
+    $scope.actionEvents = actionEvents;
+    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
-    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    $scope.closeActionsDropdown = closeActionsDropdown;
+    $scope.partnerClicked = partnerClicked;
+    $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
+    $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.addNumbers = addNumbers;
-    $scope.isOrgSetup = isOrgSetup;
-    $scope.isOwnOrg = isOwnOrg;
+
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
@@ -150,6 +155,10 @@
       return _.every(customer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
+    }
+
+    function isPartnerAdminWithCall(customer) {
+      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
     }
 
     function isOwnOrg(customer) {
@@ -309,6 +318,10 @@
         });
     }
 
+    function getUserAuthInfo(customerOrgId) {
+      PartnerService.getUserAuthInfo(customerOrgId);
+    }
+
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
@@ -328,7 +341,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Localytics.tagEvent('Start Trial Button Click', {
+        Localytics.tagEvent(Localytics.events.startTrialButton, {
           from: $state.current.name
         });
       }
@@ -359,6 +372,21 @@
         customerOrgId: customer.customerOrgId,
         customerOrgName: customer.customerName
       }));
+    }
+
+    function actionEvents($event, action, org) {
+      $event.stopPropagation();
+      if (action === 'myOrg') {
+        closeActionsDropdown();
+      } else if (action === 'customer') {
+        closeActionsDropdown();
+        getUserAuthInfo(org.customerOrgId);
+      } else if (action === 'pstn') {
+        closeActionsDropdown();
+        addNumbers(org);
+        getUserAuthInfo(org.customerOrgId);
+      }
+      return;
     }
 
     function isLicenseInfoAvailable(licenses) {

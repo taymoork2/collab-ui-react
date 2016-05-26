@@ -58,8 +58,8 @@
             <div id="brandingLogoPanel" class="small-12 columns optional-row">
               <h4 translate="partnerProfile.brandingTitle"></h4>
               <div class="form-spacing form-group">
-                <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
-                <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
+                <span ng-if="!isPartner"  translate="customerProfile.brandingInfo"></span>
+                <span ng-if="isPartner"  translate="partnerProfile.brandingInfo"></span>
               </div>
             </div>
             <div class="row form-spacing collapse-both">
@@ -73,7 +73,7 @@
                     </label>
                   </div>
 
-                  <div class="cs-input-group cs-input-radio">
+                  <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
                     <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
                     <label for="customLogoRadio" class="radio-input-spacing">
                       <div class="radio-input-flex">
@@ -82,8 +82,7 @@
                           <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
                           <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
                         </div>
-
-                        <button class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                        <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
                           <span translate="partnerProfile.chooseFile"></span>
                         </button>
                       </div>
@@ -94,14 +93,13 @@
             </div>
             <div class="row form-spacing" ng-if="isPartner">
               <div class="small-12 columns cs-checkbox-group">
-                <input
-                  cs-input
+                <input 
                   type="checkbox"
                   id="allowCustomerLogo"
                   name="allowCustomerLogo"
                   ng-model="allowCustomerLogos"
-                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)"
-                  cs-input-label="{{::'partnerProfile.allowCustomerLogo' | translate}}">
+                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+                  <label for="allowCustomerLogo" translate="partnerProfile.allowCustomerLogo"></label>
               </div>
             </div>
           </div>

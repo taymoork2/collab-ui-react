@@ -39,7 +39,7 @@
       function downloadCsv(csvType, tooManyUsers) {
         csvType = csvType || scope.type;
 
-        if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser) {
+        if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser || csvType === CsvDownloadService.typeError) {
           startDownload(csvType);
           CsvDownloadService.getCsv(csvType, tooManyUsers, FILENAME).then(function (url) {
             finishDownload(csvType, url);
@@ -56,7 +56,7 @@
       function startDownload(csvType) {
         // disable the button when download starts
         flagDownloading(true);
-        scope.downloadingMessage = $translate.instant('csvDownload.csvDownloadInProgress', {
+        scope.downloadingMessage = $translate.instant('csvDownload.inProgress', {
           type: csvType
         });
         $timeout(function () {
@@ -83,7 +83,7 @@
               // in IE this causes the page to refresh
               downloadAnchor[0].click();
             }
-            Notification.success('csvDownload.csvDownloadSuccess', {
+            Notification.success('csvDownload.success', {
               type: csvType
             });
             flagDownloading(false);
@@ -100,7 +100,7 @@
 
       function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+          if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
                 href: url,
@@ -163,7 +163,7 @@
         $rootScope.$on('csv-download-request', function (event, csvType, tooManyUsers) {
           tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
           if (tooManyUsers && CsvDownloadService.downloadInProgress) {
-            Notification.error('csvDownload.csvDownloadIsRunning');
+            Notification.error('csvDownload.isRunning');
           } else {
             $modal.open({
               templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
@@ -187,6 +187,12 @@
         downloadIcon.removeClass('icon-circle-download').addClass(attrs.icon);
       } else if (angular.isDefined(attrs.noIcon)) {
         downloadIcon.removeClass('icon-circle-download');
+      }
+      if (attrs.anchorText) {
+        downloadAnchor.html(attrs.anchorText);
+      }
+      if (scope.type === CsvDownloadService.typeUser) {
+        scope.tooltipMessage = $translate.instant('usersPage.csvBtnTitle');
       }
 
       // if the template Object URL is already loaded, change the anchor's attributes to download from blob

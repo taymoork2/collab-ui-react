@@ -12,7 +12,7 @@
       controller: 'ScheduleUpgradeConfigurationCtrl',
       controllerAs: 'scheduleUpgrade',
       bindToController: {
-        serviceType: '='
+        connectorType: '='
       },
       templateUrl: 'modules/hercules/schedule-upgrade-configuration/schedule-upgrade-configuration.directive.html'
     };

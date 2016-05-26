@@ -9,6 +9,11 @@
 
   /* @ngInject */
   function Localytics(Config) {
+    var events = {
+      convertUserSearch: 'Convert User Search Filter',
+      startTrialButton: 'Start Trial Button Click'
+    };
+
     var SET_CUSTOM_DIMENSION = 'setCustomDimension';
     var ORG_CUSTOM_DIMENSION = 1;
     var SET_CUSTOMER_ID = 'setCustomerId';
@@ -19,11 +24,11 @@
       setOrgId: setOrgId,
       setUserId: setUserId,
       tagEvent: tagEvent,
-      tagScreen: tagScreen
+      tagScreen: tagScreen,
+      events: events
     };
 
     return service;
-
     /**
      * Only save localytics data in production environment
      */

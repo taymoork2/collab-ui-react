@@ -38,8 +38,8 @@ describe('Service: PstnServiceAddressService', function () {
       serviceName: 'Test Customer Site',
       serviceStreetNumber: '123',
       serviceStreetDirection: '',
-      serviceStreetName: 'My Street',
-      serviceStreetSuffix: 'Drive',
+      serviceStreetName: 'My Street Drive',
+      serviceStreetSuffix: '',
       serviceAddressSub: 'Apt 100',
       serviceCity: 'Richardson',
       serviceState: 'TX',
@@ -103,6 +103,35 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.flush();
   });
 
+  it('should enter an irregular address and correctly parse', function () {
+    var irregularAddress = {
+      streetAddress: 'N95W18000 Appleton Ave',
+      unit: '',
+      city: 'Menomonee Falls',
+      state: 'WI',
+      zip: '53051'
+    };
+
+    var irregularServiceAddress = {
+      serviceName: 'Irregular Test Customer Site',
+      serviceStreetNumber: 'N95W18000',
+      serviceStreetDirection: '',
+      serviceStreetName: 'Appleton Ave',
+      serviceStreetSuffix: '',
+      serviceAddressSub: '',
+      serviceCity: 'Menomonee Falls',
+      serviceState: 'WI',
+      serviceZip: '53051'
+    };
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
+      name: 'Irregular Test Customer Site',
+      serviceAddress: irregularServiceAddress
+    }).respond(201);
+    PstnServiceAddressService.createCustomerSite(customerId, 'Irregular Test Customer Site', irregularAddress);
+    $httpBackend.flush();
+  });
+
   describe('update street address', function () {
     beforeEach(function () {
       $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);
@@ -122,7 +151,6 @@ describe('Service: PstnServiceAddressService', function () {
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
       serviceAddress.serviceStreetName = 'Lexi Petal';
-      serviceAddress.serviceStreetSuffix = '';
     });
 
     it('should update address with a street address containing possible suffix', function () {
@@ -130,8 +158,7 @@ describe('Service: PstnServiceAddressService', function () {
 
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
-      serviceAddress.serviceStreetName = 'My';
-      serviceAddress.serviceStreetSuffix = 'Street';
+      serviceAddress.serviceStreetName = 'My Street';
     });
 
     it('should update address with a suffix', function () {
@@ -139,8 +166,7 @@ describe('Service: PstnServiceAddressService', function () {
 
       // Expected values
       serviceAddress.serviceStreetNumber = '123';
-      serviceAddress.serviceStreetName = 'My Street';
-      serviceAddress.serviceStreetSuffix = 'Drive';
+      serviceAddress.serviceStreetName = 'My Street Drive';
     });
   });
 

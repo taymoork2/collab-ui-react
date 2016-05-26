@@ -1,8 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular
-  .module('uc.autoattendant')
-  .directive("aaPopoverHtmlPopup", function () {
+  angular
+    .module('uc.autoattendant')
+    .directive("aaPopoverHtmlPopup", aaPopoverHtmlPopup)
+    .directive("aaPopoverHtml", aaPopoverHtml);
+
+  /* @ngInject */
+  function aaPopoverHtmlPopup() {
     return {
       restrict: "EA",
       replace: true,
@@ -15,8 +20,10 @@ angular
       },
       templateUrl: 'modules/huron/features/autoAttendant/builder/aaPopoverHtmlPopup.tpl.html'
     };
-  })
+  }
 
-.directive("aaPopoverHtml", ["$tooltip", function ($tooltip) {
-  return $tooltip("aaPopoverHtml", "popover", 'click');
-}]);
+  /* @ngInject */
+  function aaPopoverHtml($tooltip) {
+    return $tooltip("aaPopoverHtml", "popover", 'click');
+  }
+})();

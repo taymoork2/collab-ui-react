@@ -3,6 +3,32 @@
  */
 'use strict';
 
+describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
+  beforeEach(module('WebExApp'));
+
+  var WebExUtilsFact;
+
+  var utf8Data = '' +
+    'UserID\tActive\n';
+
+  var utf16leDataExpected = [255, 254, 85, 0, 115, 0, 101, 0, 114, 0, 73, 0, 68, 0, 9, 0, 65, 0, 99, 0, 116, 0, 105, 0, 118, 0, 101, 0, 10, 0];
+
+  var utf16leDataConverted;
+
+  beforeEach(inject(function (
+    _WebExUtilsFact_
+  ) {
+
+    WebExUtilsFact = _WebExUtilsFact_;
+  })); // beforeEach(inject())
+
+  it('can convert utf-8 string to utf-16le', function () {
+    utf16leDataConverted = WebExUtilsFact.utf8ToUtf16le(utf8Data);
+
+    expect(utf16leDataConverted).toEqual(utf16leDataExpected);
+  });
+}); // describe()
+
 describe('WebExUtilsFact: getSiteName() test', function () {
   beforeEach(module('WebExApp'));
 
@@ -244,9 +270,14 @@ describe('WebExUtilsFact', function () {
     $rootScope.$apply();
 
     expect(response).not.toBe(null);
-    expect(response.$$state.value[0].siteHasMCLicense).toBe(true);
-    expect(response.$$state.value[1].siteHasMCLicense).toBe(true);
-    expect(response.$$state.value[4].siteHasCMRLicense).toBe(true);
+
+    // expect(response.$$state.value[0].siteHasMCLicense).toBe(true);
+    // expect(response.$$state.value[1].siteHasMCLicense).toBe(true);
+    // expect(response.$$state.value[4].siteHasCMRLicense).toBe(true);
+
+    expect(response.$$state.value[0].offerCode).toBe("MC");
+    expect(response.$$state.value[1].offerCode).toBe("MC");
+    expect(response.$$state.value[4].offerCode).toBe("CMR");
 
     /** This is what response looks like, given the fake input data:
      * 'response = {"$$state":{"status":1,"value":[

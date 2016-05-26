@@ -36,17 +36,17 @@
       </div>
     </div>
     <div ng-if="sc.shouldShowList()">
-      <div ng-show="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
+      <div ng-if="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
         <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
       </div>
-      <div ng-show="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
+      <div ng-if="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-comp-negative" />
           <span class="h5" translate="spacesPage.tryAgain"></span>
           <span class="h1" translate="spacesPage.noneFound"></span>
         </div>
       </div>
-      <div ng-show="!sc.existsDevices()">
+      <div ng-if="!sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-telepresence" />
           <span class="h5" translate="spacesPage.nothingHere"></span>

@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($state, $stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
+  function ExternalNumberDetail($interval, $q, $scope, $state, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, PstnSetupService, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -30,6 +30,7 @@
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
+    //TODO: remove when removing toggle 'huron-order-management'
     var numberPromise = ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
       .then(function (response) {
         vm.showPstnSetup = response;
@@ -103,11 +104,13 @@
       vm.refresh = false;
     }
 
+    //TODO: remove when removing toggle 'huron-order-management'
     function getIsTrial(org) {
       if (!!org.isPartner) return false;
       return _.get(org, 'communications.isTrial', true);
     }
 
+    //TODO: remove when removing toggle 'huron-order-management'
     function addNumbers(org) {
       numberPromise.then(function () {
         if (vm.showPstnSetup) {

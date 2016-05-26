@@ -10,13 +10,13 @@
     var vm = $scope;
 
     vm.features = [{
-      cssClass: 'HG',
+      id: 'HG',
       code: 'huronHuntGroup.code',
       label: 'huronHuntGroup.modalTitle',
       description: 'huronHuntGroup.modalDescription',
       toggle: 'huronHuntGroup'
     }, {
-      cssClass: 'AA',
+      id: 'AA',
       code: 'autoAttendant.code',
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
@@ -26,19 +26,32 @@
     vm.ok = ok;
     vm.cancel = cancel;
     vm.loading = true;
+    vm.aaSchedulesEnabled = false;
 
     init();
 
     function init() {
       vm.loading = false;
+      setFeatureToggle();
     }
 
-    function ok(featureCode) {
-      if (featureCode === 'HG') {
-        $state.go('huronHuntGroup');
-      } else if (featureCode === 'AA') {
+    function setFeatureToggle() {
+      /// toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.aaSchedulesEnabled = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.aaSchedulesEnabled = result;
+        });
+      }
+    }
 
-        if (Config.isDev() || Config.isIntegration()) {
+    function ok(featureId) {
+      if (featureId === 'HG') {
+        $state.go('huronHuntGroup');
+      } else if (featureId === 'AA') {
+
+        if (vm.aaSchedulesEnabled) {
           $modal.open({
             templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
             controller: 'AATypeSelectCtrl',
@@ -47,12 +60,12 @@
         } else {
           $state.go('huronfeatures.aabuilder', {
             aaName: '',
-            aaTemplate: 'template1'
+            aaTemplate: 'Basic'
           });
         }
 
       }
-      $modalInstance.close(featureCode);
+      $modalInstance.close(featureId);
     }
 
     function cancel() {

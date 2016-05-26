@@ -1,12 +1,18 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular
-  .module('Squared')
-  .controller('InviteCtrl', InviteCtrl);
+  angular
+    .module('Squared')
+    .controller('InviteCtrl', InviteCtrl);
 
-function InviteCtrl($location, ipCookie, Utils, Inviteservice, Config, Log, UrlConfig, WindowLocation) {
-  var redirect = function () {
-    var redirectUrl = null;
+  /* @ngInject */
+  function InviteCtrl($timeout, Localytics, Log, UrlConfig, Utils, WindowLocation) {
+    // Note: only keep $timeout and Localytics until we gathered enough data usage
+    Localytics.tagEvent('Display /invite', {
+      platform: Utils.isIPhone() ? 'iphone' : (Utils.isAndroid() ? 'android' : 'web')
+    });
+
+    var redirectUrl;
 
     if (Utils.isIPhone()) {
       redirectUrl = UrlConfig.getItunesStoreUrl();
@@ -15,52 +21,11 @@ function InviteCtrl($location, ipCookie, Utils, Inviteservice, Config, Log, UrlC
     } else {
       redirectUrl = UrlConfig.getWebClientUrl();
     }
+
     Log.info('Redirect to: ' + redirectUrl);
 
-    WindowLocation.set(redirectUrl);
-  };
-
-  // extracts param from url
-  var encryptedUser = $location.search().user;
-
-  if (encryptedUser === undefined) {
-    redirect();
+    $timeout(function () {
+      WindowLocation.set(redirectUrl);
+    }, 2000);
   }
-
-  // check if cookie already exists.  Only call backend if not.
-  var cookieName = 'invdata';
-  var inviteCookie = ipCookie(cookieName);
-
-  if (inviteCookie === undefined) {
-
-    inviteCookie = {
-      userEmail: null,
-      displayName: null,
-      orgId: null,
-      entitlements: null
-    };
-    var cookieOptions = {
-      domain: Config.isDev() ? null : '.wbx2.com',
-      expires: 1 // 1 day
-    };
-
-    // call backend to decrypt param
-    Inviteservice.resolveInvitedUser(encryptedUser)
-      .then(function (res) {
-        Log.debug('param decrypted');
-        var data = res.data;
-
-        inviteCookie.userEmail = data.email;
-        inviteCookie.displayName = data.displayName;
-        inviteCookie.entitlements = data.entitlements;
-        inviteCookie.orgId = data.orgId;
-
-        ipCookie(cookieName, inviteCookie, cookieOptions);
-
-        redirect();
-      });
-
-  } else {
-    redirect();
-  }
-}
+})();

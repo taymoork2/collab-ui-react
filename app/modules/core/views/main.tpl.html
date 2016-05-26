@@ -1,18 +1,24 @@
 <div class="app-container">
-  <div ng-controller="HeaderCtrl">
+  <div ng-controller="HeaderCtrl as headerCtrl">
     <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" show-read-only>
       <cs-header-left>
-        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()">
+        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
         </div>
       </cs-header-left>
       <cs-header-right>
         <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>
-        <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
+        <div ng-show="buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="headerCtrl.showLicenseUsageDropDown()">
           <cs-header-push-trigger icon="icon" state="state" label="label" ng-if="isCustomer"></cs-header-push-trigger>
         </div>
-        <cr-setup-dropdown ng-if="Utils.isAdminPage()"></cr-setup-dropdown>
-        <cr-user-info ng-if="Utils.isAdminPage()"></cr-user-info>
+        <cr-setup-dropdown ng-if="headerCtrl.showFirstTimeSetupDropDown()"></cr-setup-dropdown>
+        <button ui-sref="my-company.info" ng-controller="UserInfoController" ng-if="headerCtrl.showMyCompany()" class="btn btn--header btn--myCompany">
+          <div>
+            <span class="header-label">{{orgname}}</span>
+            <i class="icon-settings icon"></i>
+          </div>
+        </button>
+        <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
       </cs-header-right>
     </cs-header>
   </div>

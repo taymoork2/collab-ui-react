@@ -33,13 +33,13 @@
     // Get the assigned numbers for an AA
     function getAANumberAssignments(customerId, cesId) {
 
-      return AssignAutoAttendantService.query({
+      return AssignAutoAttendantService.get({
         customerId: customerId,
         cesId: cesId
       }).$promise.then(
         function (response) {
           // success
-          return response[0].numbers;
+          return response.numbers;
         },
         function (response) {
           // failure
@@ -111,13 +111,11 @@
           fmtRes.number = extNum.pattern;
           fmtRes.id = extNum.pattern.replace(/\D/g, '');
         } else {
-          // We didn't find in CMI - shouldn't happen - but let's try to fixup any empty fields
-          if (!fmtRes.number) {
-            fmtRes.number = fmtRes.id;
-          }
-          if (!fmtRes.id) {
-            fmtRes.id = fmtRes.number;
-          }
+          // We didn't find in CMI - shouldn't happen - but let's try to format fields
+          // Note we are returning a copy (see above), not altering input parms, so this leaves CE structures alone
+          // We should try to format as best as possible for CMI assignment
+          fmtRes.number = phoneUtils.formatE164(fmtRes.id, phoneUtils.getRegionCodeForNumber(fmtRes.id));
+          fmtRes.id = fmtRes.number.replace(/\D/g, '');
         }
         return fmtRes;
       } else {

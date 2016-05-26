@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 

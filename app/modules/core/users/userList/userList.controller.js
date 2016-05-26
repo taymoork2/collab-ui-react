@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($dialogs, $location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
+  function UserListCtrl($location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -68,11 +68,16 @@
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.showUserDetails = showUserDetails;
+    $scope.getUserLicenses = getUserLicenses;
+    $scope.canShowUserDelete = canShowUserDelete;
+    $scope.handleDeleteUser = handleDeleteUser;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = isValidThumbnail;
     $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
+
+    $scope.getUserList = getUserList;
 
     $q.all([FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement),
         FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)
@@ -148,7 +153,7 @@
 
       getAdmins(startIndex);
       getUsers(startIndex);
-      getPartners(startIndex);
+      getPartners();
       getOrg();
     }
 
@@ -160,11 +165,12 @@
             $scope.load = true;
           });
           Log.debug('Returned data.', data.Resources);
-          $scope.filters[0].count = data.totalResults;
+          var adminUsers = _.get(data, 'Resources', []);
+          $scope.filters[0].count = _.get(data, 'totalResults', 0);
           if (startIndex === 0) {
-            $scope.userList.adminUsers = data.Resources;
+            $scope.userList.adminUsers = adminUsers;
           } else {
-            $scope.userList.adminUsers = $scope.userList.adminUsers.concat(data.Resources);
+            $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
           }
           $scope.setFilter($scope.activeFilter);
         } else {
@@ -186,17 +192,18 @@
             if ($scope.searchStr === searchStr) {
               Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
               Log.debug('Returned data.', data.Resources);
-              // data.resources = getUserStatus(data.Resources);
 
-              $scope.placeholder.count = data.totalResults;
+              var allUsers = _.get(data, 'Resources', []);
+              var allUsersCount = _.get(data, 'totalResults', 0);
+              $scope.placeholder.count = allUsersCount;
               if ($scope.searchStr === '') {
-                $scope.totalUsers = data.totalResults;
+                $scope.totalUsers = allUsersCount;
                 $scope.obtainedTotalUserCount = true;
               }
               if (startIndex === 0) {
-                $scope.userList.allUsers = data.Resources;
+                $scope.userList.allUsers = allUsers;
               } else {
-                $scope.userList.allUsers = $scope.userList.allUsers.concat(data.Resources);
+                $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
               }
 
               $scope.setFilter($scope.activeFilter);
@@ -238,7 +245,7 @@
               $scope.obtainedTotalUserCount = true;
             } else {
               UserListService.getUserCount().then(function (count) {
-                if (count === -1) {
+                if (_.isNull(count) || _.isNaN(count) || count === -1) {
                   count = $scope.USER_EXPORT_THRESHOLD + 1;
                 }
                 $scope.totalUsers = count;
@@ -249,19 +256,17 @@
         }, $scope.searchStr);
     }
 
-    function getPartners(startIndex) {
+    function getPartners() {
       UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
         if (data.success) {
           $timeout(function () {
             $scope.load = true;
           });
-          Log.debug('Returned data.', data.Resources);
-          $scope.filters[1].count = data.partners.length;
-          if (startIndex === 0) {
-            $scope.userList.partnerUsers = data.partners;
-          } else {
-            $scope.userList.partnerUsers = $scope.userList.partnerUsers.concat(data.Resources);
-          }
+          Log.debug('Returned data.', data.partners);
+          var partnerUsers = _.get(data, 'partners', []);
+          $scope.filters[1].count = partnerUsers.length;
+          // partner list does not have pagination or startIndex
+          $scope.userList.partnerUsers = partnerUsers;
           $scope.setFilter($scope.activeFilter);
         } else {
           Log.debug('Query existing users failed. Status: ' + status);
@@ -280,11 +285,36 @@
       });
     }
 
+    function getUserLicenses(user) {
+      if ($scope.isCSB && _.isUndefined(user.licenseID)) {
+        return true;
+      } else if ($scope.isCSB && user.licenseID) {
+        return false;
+      }
+      return true;
+    }
+
+    function canShowUserDelete(user) {
+      if (!$scope.getUserLicenses(user)) {
+        return false;
+      }
+
+      return !$scope.isOnlyAdmin(user);
+    }
+
+    function handleDeleteUser($event, user, isSelf) {
+      $event.stopPropagation();
+      if (isSelf) {
+        setDeactivateSelf(user.meta.organizationID, user.id, user.userName);
+      } else {
+        setDeactivateUser(user.meta.organizationID, user.id, user.userName);
+      }
+    }
+
     function setFilter(filter) {
       $scope.activeFilter = filter || 'all';
       if (filter === 'administrators') {
         $scope.gridData = $scope.userList.adminUsers;
-        $scope.searchStr = 'administrators';
       } else if (filter === 'partners') {
         $scope.gridData = $scope.userList.partnerUsers;
       } else {
@@ -375,9 +405,8 @@
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="(row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)) && !grid.appScope.isCSB" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity) && !userOverview.hasNoLicenseId" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity) && !userOverview.hasNoLicenseId" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
 

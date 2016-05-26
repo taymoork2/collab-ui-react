@@ -79,7 +79,6 @@
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
-            Storage.put('refreshToken', token);
             $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
           }, function () {
             Auth.redirectToLogin();
@@ -148,13 +147,17 @@
 
     function getMinLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMinLength', {
-        min: scope.options.templateOptions.minlength
+        min: function () {
+          return scope.options.templateOptions.minlength;
+        }
       });
     }
 
     function getMaxLengthMessage($viewValue, $modelValue, scope) {
       return $translate.instant('common.invalidMaxLength', {
-        max: scope.options.templateOptions.maxlength
+        max: function () {
+          return scope.options.templateOptions.maxlength;
+        }
       });
     }
 
@@ -191,5 +194,4 @@
       return result;
     }
   }
-
 }());

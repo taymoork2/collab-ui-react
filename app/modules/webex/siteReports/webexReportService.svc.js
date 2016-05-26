@@ -1,16 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('WebExApp').service('WebexReportService', [
-  '$q',
-  '$log',
-  '$translate',
-  '$filter',
-  'Authinfo',
-  'WebExUtilsFact',
-  'WebExXmlApiFact',
-  'WebExXmlApiInfoSvc',
-  'Notification',
-  function (
+  angular.module('WebExApp').service('WebexReportService', WebexReportService);
+
+  /* @ngInject */
+  function WebexReportService(
     $q,
     $log,
     $translate,
@@ -18,7 +12,7 @@ angular.module('WebExApp').service('WebexReportService', [
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj,
+    WebExXmlApiInfoSvc,
     Notification
   ) {
     var self = this;
@@ -28,9 +22,11 @@ angular.module('WebExApp').service('WebexReportService', [
 
     //var loc = $translate.use().replace("_", "-");
 
-    var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
+    var common_reports_pageids = ["meeting_in_progess",
+      "meeting_usage",
       "recording_usage",
-      "storage_utilization"
+      "storage_utilization",
+      "inactive_user",
     ];
 
     var event_center_pageids = ["event_center_overview",
@@ -66,6 +62,7 @@ angular.module('WebExApp').service('WebexReportService', [
       "meeting_usage": "meeting_usage",
       "recording_usage": "recording_storage_usage",
       "storage_utilization": "storage_utilization_by_user",
+      "inactive_user": "inactive_user",
       "event_center_overview": "ec_report_summary",
       "event_center_scheduled_events": "ec_scheduled_events",
       "event_center_held_events": "ec_held_events",
@@ -385,10 +382,10 @@ angular.module('WebExApp').service('WebexReportService', [
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";
 
-          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = siteName;
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+          WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+          WebExXmlApiInfoSvc.webexSiteName = siteName;
+          WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
+          WebExXmlApiInfoSvc.webexAdminSessionTicket = sessionTicket;
 
           var navInfoDef = self.getNaviationInfo();
 
@@ -458,7 +455,7 @@ angular.module('WebExApp').service('WebexReportService', [
     }; //end initReportsObject
 
     this.getNaviationInfo = function () {
-      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(webExXmlApiInfoObj);
+      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(WebExXmlApiInfoSvc);
 
       return $q.all({
         // siteInfoXml: siteInfoXml,
@@ -468,4 +465,4 @@ angular.module('WebExApp').service('WebexReportService', [
     };
 
   } //end top level service function
-]);
+})();

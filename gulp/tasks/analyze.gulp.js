@@ -59,8 +59,7 @@ gulp.task('eslint:tooling', function () {
 
 gulp.task('eslint:app', function () {
   var files = [].concat(
-    config.appFiles.js,
-    config.unsupportedDir + '/' + config.unsupported.file
+    config.appFiles.js
   );
   messageLogger('Running ESLint on the app files', files);
   return createESLintTask(files);

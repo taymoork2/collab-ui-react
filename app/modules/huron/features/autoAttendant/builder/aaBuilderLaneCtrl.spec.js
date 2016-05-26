@@ -3,7 +3,9 @@
 describe('Controller: AABuilderLaneCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $timeout;
+  var $rootScope, $scope, $timeout, $q;
+  var FeatureToggleService;
+
   var aaUiModel = {
     openHours: {}
   };
@@ -11,14 +13,19 @@ describe('Controller: AABuilderLaneCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $timeout = _$timeout_;
+    $q = _$q_;
+
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderLaneCtrl', {
       $scope: $scope
