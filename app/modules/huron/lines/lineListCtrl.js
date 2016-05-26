@@ -104,7 +104,6 @@
           getCount();
         }
       });
-
       // Clear currentLine if a new search begins
       var startIndex = startAt || 0;
       vm.currentLine = null;

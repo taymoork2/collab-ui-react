@@ -84,27 +84,25 @@
           var pendingLines = [];
           var nonProvisionedPendingLines = [];
 
-          if (!results[2]) {
+          if (!results[2] || lines.length === 0) {
             return lines;
           }
 
           _.forEach(orders, function (order) {
             try {
               var parsedResponse = JSON.parse(order.response);
-              var response = parsedResponse[order.carrierOrderId];
+              var numbers = parsedResponse[order.carrierOrderId];
             } catch (error) {
               return;
             }
-            _.forEach(response, function (number) {
-              var lineNotFound = true;
-              _.forEach(lines, function (line) {
-                if (number.e164 && number.e164 === line.externalNumber) {
-                  line.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
-                  pendingLines.push(line);
-                  lineNotFound = false;
-                }
+            _.forEach(numbers, function (number) {
+              var lineFound = _.find(lines, function (line) {
+                return (number.e164 && number.e164 === line.externalNumber);
               });
-              if (lineNotFound) {
+              if (lineFound) {
+                lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                pendingLines.push(lineFound);
+              } else {
                 nonProvisionedPendingLines.push({
                   externalNumber: number.e164,
                   userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
