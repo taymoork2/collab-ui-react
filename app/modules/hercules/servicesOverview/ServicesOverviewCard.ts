@@ -12,7 +12,7 @@ namespace servicesOverview {
     link:String,
   }
 
-  export enum CardType{
+  export enum CardType {
     cloud,
     hybrid
   }
