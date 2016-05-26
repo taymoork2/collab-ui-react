@@ -15,7 +15,7 @@
     });
 
     vm.searchCriteria = {
-      "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+      "roomId": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
       "startDate": moment(moment()).add(-7, 'days'), // week
       "endDate": moment()
     };
@@ -99,8 +99,7 @@
         "state": "Searching..."
       };
 
-      // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.searchString)
+      EdiscoveryService.createReport(vm.searchCriteria.displayName)
         .then(function (res) {
           vm.searchResult = res;
           runReport();
@@ -135,7 +134,7 @@
 
     function runReport() {
       // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.searchString, vm.searchResult.url)
+      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.roomId, vm.searchResult.url)
         .then(function (res) {
           enableAvalonPolling();
         })
