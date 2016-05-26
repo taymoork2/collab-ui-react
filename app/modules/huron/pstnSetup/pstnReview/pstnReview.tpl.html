@@ -1,28 +1,32 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
-  <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
-</div>
-<div class="modal-body">
-  <div class="review-container">
-    <i class="icon icon-circle-call"></i>
-    <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
-    <div class="review-details">
-      <div class="logo">
-        <img ng-src="{{::pstnReview.provider.logoSrc}}" alt="{{::pstnReview.provider.logoAlt}}">
-      </div>
-      <div class="package-detail-label">
-        <div translate="pstnSetup.package"></div>
-        <div translate="pstnSetup.numbersTitle"></div>
-      </div>
-      <div class="package-detail-text">
-        <div>{{::pstnReview.provider.title}}</div>
-        <div class="detail-text" ng-if="pstnReview.totalNewAdvancedOrder" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnReview.totalNewAdvancedOrder}}"></div>
-        <div class="detail-text" ng-if="pstnReview.totalPortNumbers" translate="pstnSetup.portNumbers" translate-value-count="{{::pstnReview.totalPortNumbers}}"></div>
+<div class="pstn-review">  
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only" translate="common.close"></span></button>
+    <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="review-container">
+      <i class="icon icon-circle-call"></i>
+      <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
+      <div class="review-details">
+        <div class="logo">
+          <img class="right" ng-src="{{::pstnReview.provider.logoSrc}}" alt="{{::pstnReview.provider.logoAlt}}">
+        </div>
+        <div class="package-details">
+          <div class="package-detail-label">
+            <div translate="pstnSetup.package"></div>
+            <div translate="pstnSetup.numbersTitle"></div>
+          </div>
+          <div class="package-detail-text">
+            <div>{{::pstnReview.provider.title}}</div>
+            <div class="detail-text" ng-if="pstnReview.totalNewAdvancedOrder" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnReview.totalNewAdvancedOrder}}"></div>
+            <div class="detail-text" ng-if="pstnReview.totalPortNumbers" translate="pstnSetup.portNumbers" translate-value-count="{{::pstnReview.totalPortNumbers}}"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button class="btn" ng-click="pstnReview.goToNumbers()"><span translate="common.back"></span></button>
-  <button class="btn btn--primary" id="placeOrder" cs-btn loading="pstnReview.placeOrderLoad" ng-click="pstnReview.placeOrder()"><span translate="pstnSetup.placeOrder"></span></button>
+  <div class="modal-footer">
+    <button class="btn" ng-click="pstnReview.goToNumbers()"><span translate="common.back"></span></button>
+    <button class="btn btn--primary" id="placeOrder" cs-btn loading="pstnReview.placeOrderLoad" ng-click="pstnReview.placeOrder()"><span translate="pstnSetup.placeOrder"></span></button>
+  </div>
 </div>
