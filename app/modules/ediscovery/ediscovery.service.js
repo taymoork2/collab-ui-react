@@ -15,7 +15,7 @@
       return res.data.reports;
     }
 
-    function extractReport(res) {
+    function extractData(res) {
       return res.data;
     }
 
@@ -23,7 +23,7 @@
       var orgId = Authinfo.getOrgId();
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractReport)
+        .then(extractData)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
           //console.log("error getReports: " + data)
@@ -41,17 +41,14 @@
         });
     }
 
-    function createReport(displayName, roomId) {
+    function createReport(displayName) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
         })
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error createReport: " + data)
-        });
+        .then(extractData);
     }
 
     function reportsApiUrl(orgId) {
@@ -59,10 +56,10 @@
     }
 
     // TODO: Implement proper handling of error when final API is in place
-    function createReportDoIt(runUrl, roomId, orgId) {
+    function runReport(runUrl, roomId, responseUrl) {
       return $http.post(runUrl, {
         "roomId": roomId,
-        "responseUrl": reportsApiUrl(orgId)
+        "responseUrl": responseUrl
       });
     }
 
@@ -108,7 +105,7 @@
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
-      createReportDoIt: createReportDoIt,
+      runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport
     };

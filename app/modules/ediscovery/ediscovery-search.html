@@ -59,7 +59,9 @@
 
   </div>
 
-
+  <div ng-repeat="error in ediscoverySearchCtrl.errors">
+    {{error.description}}
+  </div>
 
   <div ng-if="ediscoverySearchCtrl.report.state">
     State: {{ediscoverySearchCtrl.report.state}}

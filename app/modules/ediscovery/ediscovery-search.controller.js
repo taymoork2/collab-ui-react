@@ -2,11 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoverySearchController($timeout, $scope, $modal, EdiscoveryService) {
 
     var vm = this;
     vm.createReport = createReport;
-    vm.createReportDoIt = createReportDoIt;
+
+    vm.runReport = runReport;
     //vm.showSearchHelp = showSearchHelp;
 
     $scope.$on('$destroy', function () {
@@ -89,19 +90,24 @@
 
     // Should eventually be a search API
     function createReport() {
+      disableAvalonPolling();
+      vm.errors = [];
       if (!validateDate()) {
         return;
       }
       vm.report = {
         "state": "Searching..."
       };
+
       // Expect this API to be changed when Avalon updates their API
       EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.searchString)
         .then(function (res) {
           vm.searchResult = res;
-          createReportDoIt();
-        }).catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
+          runReport();
+        })
+        .catch(function (err) {
+          vm.errors = err.data.errors;
+          vm.report = {};
         });
     }
 
@@ -118,7 +124,7 @@
 
     function pollAvalonReport() {
       // TODO: Implement proper handling of error when final API is in place
-      EdiscoveryService.getReport(vm.searchResult.data.id).then(function (report) {
+      EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
         vm.report = report;
         avalonPoller = $timeout(pollAvalonReport, 2000);
       }).catch(function (err) {
@@ -127,14 +133,13 @@
       });
     }
 
-    function createReportDoIt() {
+    function runReport() {
       // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.createReportDoIt(vm.searchResult.data.runUrl, vm.searchCriteria.searchString, vm.searchResult.data.orgId)
+      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.searchString, vm.searchResult.url)
         .then(function (res) {
           enableAvalonPolling();
         })
         .catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
           vm.report = {
             "state": "NOT FOUND"
           };
