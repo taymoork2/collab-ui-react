@@ -4173,6 +4173,16 @@
           "settings": "Settings"
         }
       },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
       "calendar": {
         "title": "Hybrid Calendar",
         "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",

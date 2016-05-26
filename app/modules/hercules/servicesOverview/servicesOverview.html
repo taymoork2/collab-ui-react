@@ -1,9 +1,8 @@
 <div class="servicesOverview" ng-if="servicesOverviewCtrl.featureEnabled">
   <cs-page-header title="servicesOverview.title"></cs-page-header>
 
-
   <div class="servicesBlock">
-    <h5><span translate="servicesOverview.cloudServices"></span></h5>
+    <h5 translate="servicesOverview.cloudServices"></h5>
     <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
                ng-repeat="card in servicesOverviewCtrl.cloudCards">
@@ -11,13 +10,10 @@
       </cs-card>
     </cs-card-layout>
 
-    <h5><span translate="servicesOverview.hybridServices"></span>
-
-    </h5>
-    <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
+    <h5 translate="servicesOverview.hybridServices"></h5>
+    <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar gray-light" ng-class="card.cardClass"
                ng-repeat="card in servicesOverviewCtrl.hybridCards">
-        <!--ng-if="showLayout=='active'">-->
         <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
