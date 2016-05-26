@@ -19,8 +19,13 @@ namespace servicesOverview {
     }
 
     public constructor(Authinfo) {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.meeting.title', 'servicesOverview.cards.meeting.description', 'icon-circle-group', Authinfo.isAllowedState('site-list'), 'meetings');
+      super({
+        name: 'servicesOverview.cards.meeting.title',
+        description: 'servicesOverview.cards.meeting.description',
+        icon: 'icon-circle-group',
+        active: Authinfo.isAllowedState('site-list'),
+        cardClass: 'meetings'
+      });
     }
 
     public updateWebexSiteList(data:Array<{license:{siteUrl:string}}>) {

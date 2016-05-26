@@ -58,8 +58,6 @@ namespace servicesOverview {
           });
 
 
-
-
           if (cardService.card.name !== 'servicesOverview.cards.hybridManagement.title') {
             //not applicable to mgmt card
             it('should set disable if one of expected service(s) are disabled', ()=> {
