@@ -3,8 +3,6 @@ namespace globalsettings {
 
   export class DomainsSetting extends SettingSection {
 
-    template = 'modules/core/domainManagement/domainManagement.tpl.html';
-
     /* @ngInject */
     constructor() {
       super('domains');

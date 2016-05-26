@@ -18,10 +18,6 @@ namespace globalsettings {
       this.subsectionDescription = 'globalSettings.' + settingKey + '.subsectionDescription';
       this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
     }
-
-    getSettingString(key:string):string {
-      return 'globalSettings.' + this.key + '.' + key;
-    }
   }
 
   angular.module('Core').component('settingSection', {

@@ -10,8 +10,6 @@ namespace globalsettings {
 
   export class SettingsCtrl {
 
-    public authinfo:any;
-
     public security:SettingSection;
     public privacy:SettingSection;
     public domains:SettingSection;
@@ -21,11 +19,8 @@ namespace globalsettings {
     public support:SettingSection;
     public dataPolicy:SettingSection;
 
-
     /* @ngInject */
     constructor(Authinfo) {
-
-      this.authinfo = Authinfo;
 
       if (Authinfo.isPartner()) {
      //   this.branding = new BrandingSetting();
