@@ -78,6 +78,16 @@ while (1 >= sitereports.testInfo.describeCount) {
       utils.wait(sitereports.webexSiteReportsPanel);
     });
 
+    it('click on common reports inactive users link', function () {
+      utils.click(sitereports.webexCommonInactiveUserLink);
+      utils.wait(sitereports.webexCommonInactiveUserId);
+    });
+
+    it('click on reports index breadcrumb and should navigate to site reports index', function () {
+      utils.click(sitereports.webexReportCrumb2);
+      utils.wait(sitereports.webexSiteReportsPanel);
+    });
+
     it('click on common reports meeting usage link', function () {
       utils.click(sitereports.webexCommonMeetingUsageLink);
       utils.wait(sitereports.webexCommonMeetingUsageId);
