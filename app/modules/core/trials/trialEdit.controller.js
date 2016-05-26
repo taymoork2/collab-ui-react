@@ -27,7 +27,6 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
-    vm.isTestOrg = false;
     vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
@@ -574,20 +573,21 @@
     }
 
     function setDeviceModal() {
-      Orgservice.getAdminOrg(_.noop)
-        .then(function (response) {
-          if (response.data.success) {
-            vm.isTestOrg = response.data.isTestOrg;
-            // If the test org has the atlasTrialsShipDevices toggle on then negate that it is a test org
-            if (response.data.isTestOrg) {
-              FeatureToggleService.supports(FeatureToggleService.features.atlasTrialsShipDevices, function (result) {
-                vm.isTestOrg = !result;
-              });
-            }
-          }
-        }).finally(function (response) {
-          vm.canSeeDevicePage = !vm.isTestOrg;
-        });
+      var testToggle = false;
+      var isTestOrg = false;
+
+      $q.all([
+        FeatureToggleService.supports('atlasTrialsShipDevices'),
+        Orgservice.getAdminOrg(_.noop)
+      ]).then(function (results) {
+        testToggle = results[0];
+        if (results[1].data.success) {
+          isTestOrg = results[1].data.isTestOrg;
+        }
+      }).finally(function () {
+        // Display devices modal if not a test org or if toggle is set
+        vm.canSeeDevicePage = !isTestOrg || testToggle;
+      });
     }
   }
 })();

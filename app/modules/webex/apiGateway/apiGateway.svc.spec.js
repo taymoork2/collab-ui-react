@@ -136,7 +136,7 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
 
   var fakeViewModel = {
     'siteUrl': 'test.site.com',
-    'csvImportObj': {
+    'siteRow': {
       'csvMock': {
         'mockImport': true
       }

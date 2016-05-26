@@ -1,19 +1,25 @@
 'use strict';
 
 describe('Directive: aaBuilderLane', function () {
-  var $compile, $rootScope;
-  var AAUiModelService;
-  var AutoAttendantCeMenuModelService;
+  var $compile, $rootScope, $q;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var FeatureToggleService;
+
   var aaUiModel = {};
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $q = _$q_;
+
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
+
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }));
 
   it('should NOT contain aa-builder-actions when aaUiModel[openHours] is empty', function () {

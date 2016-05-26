@@ -249,6 +249,55 @@
       return blob;
     }; // webexCreateImportBlob()
 
+    this.csvImportOld = function (
+      vm
+    ) {
+
+      var funcName = 'csvImportOld()';
+      var logMsg = '';
+
+      var siteUrl = vm.siteUrl;
+      var mockFlag = vm.csvImportObj.csvMock.mockImport;
+      var csvFile = vm.modal.file;
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
+        'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
+      //$log.log(logMsg);
+
+      var csvHttpsObj = _this.csvConstructHttpsObj(
+        siteUrl,
+        WebExApiGatewayConstsService.csvRequests.csvImport
+      );
+
+      var fd = new $window.FormData();
+      fd.append("importCsvFile", _this.webexCreateImportBlob(csvFile));
+
+      csvHttpsObj.data = fd;
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      //$log.log(logMsg);
+
+      var deferredResponse = $q.defer();
+
+      WebExRestApiFact.csvApiRequest(
+        mockFlag,
+        null,
+        csvHttpsObj
+      ).then(
+
+        function success(response) {
+          deferredResponse.resolve(response);
+        },
+
+        function error(response) {
+          deferredResponse.reject(response);
+        }
+      ); // WebExRestApiFact.csvExportReq()
+
+      return deferredResponse.promise;
+    }; // csvImportOld()
+
     this.csvImport = function (
       vm
     ) {
@@ -257,7 +306,7 @@
       var logMsg = '';
 
       var siteUrl = vm.siteUrl;
-      var mockFlag = vm.csvImportObj.csvMock.mockImport;
+      var mockFlag = vm.siteRow.csvMock.mockImport;
       var csvFile = vm.modal.file;
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +

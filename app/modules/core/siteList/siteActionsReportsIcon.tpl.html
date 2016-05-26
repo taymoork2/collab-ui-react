@@ -1,0 +1,36 @@
+
+  <span id="{{row.entity.license.siteUrl}}_reportsIcon"
+        name="{{row.entity.license.siteUrl}}_reportsIcon">
+        
+    <!-- display disabled reports icon -->
+    <i ng-if="!row.entity.showSiteLinks || 
+              row.entity.isError"
+       id="{{row.entity.license.siteUrl}}_reportsUnavailable"
+       name="{{row.entity.license.siteUrl}}_reportsUnavailable"
+       class="icon icon-report grid-vcenter"
+       tooltip-append-to-body="true" 
+       tooltip="{{::'siteList.siteReports' | translate}}"></i>
+      
+    <span ng-if="row.entity.showSiteLinks && 
+                 !row.entity.isError"
+          id="{{row.entity.license.siteUrl}}_reportsAvailable"
+          name="{{row.entity.license.siteUrl}}_reportsAvailable">
+      
+      <!-- display disabled reports icon and reports turned off tooltip -->
+      <i ng-if="!row.entity.isAdminReportEnabled"
+         id="{{row.entity.license.siteUrl}}_reportsDisabled"
+         name="{{row.entity.license.siteUrl}}_reportsDisabled"
+         class="icon icon-report grid-vcenter"
+         tooltip-append-to-body="true" 
+         tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"></i>
+      
+      <!-- display enabled reports icon and error tooltip -->
+      <i ng-if="row.entity.isAdminReportEnabled"
+         id="{{row.entity.license.siteUrl}}_webex-site-reports"
+         name="{{row.entity.license.siteUrl}}_webex-site-reports"
+         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"
+         class="icon icon-report iconEnabled grid-vcenter"
+         tooltip-append-to-body="true" 
+         tooltip="{{::'siteList.siteReports' | translate}}"></i>
+    </span>
+  </span>

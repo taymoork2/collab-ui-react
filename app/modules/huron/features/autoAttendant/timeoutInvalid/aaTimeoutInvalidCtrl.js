@@ -6,7 +6,7 @@
     .controller('AATimeoutInvalidCtrl', AATimeoutInvalidCtrl);
 
   /* @ngInject */
-  function AATimeoutInvalidCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
+  function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, Localytics) {
 
     var vm = this;
 
@@ -20,23 +20,23 @@
     vm.menuEntry = {};
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
-      name: 'phoneMenuRepeatOnce',
+      name: 'repeatOnce',
       value: 2
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatTwice'),
-      name: 'phoneMenuRepeatTwice',
+      name: 'repeatTwice',
       value: 3
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatThree'),
-      name: 'phoneMenuRepeatThree',
+      name: 'repeatThree',
       value: 4
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFour'),
-      name: 'phoneMenuRepeatFour',
+      name: 'repeatFour',
       value: 5
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRepeatFive'),
-      name: 'phoneMenuRepeatFive',
+      name: 'repeatFive',
       value: 6
     }];
 
@@ -46,7 +46,7 @@
 
     vm.timeoutActions = [{
       label: $translate.instant('autoAttendant.phoneMenuContinue'),
-      name: 'phoneMenuContinue',
+      name: 'continue',
       action: 'repeatActionsOnInput',
       value: 1
     }, {
@@ -63,14 +63,26 @@
 
     function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
+      var type = '';
       setPhonemenuFormDirty();
       // this is number of times to repeat the timeout/invalid menu
       if (vm.selectedTimeout.value === 1) {
         entry.attempts = vm.selectedTimeout.value;
+        type = vm.selectedTimeout.name;
       } else if (vm.selectedTimeout.value === 2) {
         if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
           entry.attempts = vm.selectedTimeout.selectedChild.value;
+          type = vm.selectedTimeout.selectedChild.name;
         }
+      }
+      if (_.has(entry, 'type') && entry.type === 'MENU_OPTION') {
+        Localytics.tagEvent(AAMetricNameService.TIMEOUT_PHONE_MENU, {
+          type: type
+        });
+      } else if (_.has(entry, 'actions[0].name') && entry.actions[0].name === runActionsOnInput && _.has(entry, 'actions[0].inputType') && entry.actions[0].inputType === 2) {
+        Localytics.tagEvent(AAMetricNameService.TIMEOUT_DIAL_BY_EXT, {
+          type: type
+        });
       }
     }
 

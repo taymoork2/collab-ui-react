@@ -108,7 +108,7 @@
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
-    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -655,7 +655,8 @@
     "cdrSave": "Save Call",
     "element": "Element",
     "value": "Value",
-    "sparkCall": "(Spark Call)"
+    "sparkCall": "(Spark Call)",
+    "callingCustomer": "Calling Customer"
   },
   "cdrLadderDiagram": {
     "title": "Call Flow Ladder Diagram",
@@ -1358,6 +1359,19 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    },
+    "fusion": {
+      "list": {
+        "title": "Clusters",
+        "empty": "No clusters to display.",
+        "users": "Users:",
+        "releaseChannel": "Release Channels:",
+        "upgradeTime": "Upgrade Time:",
+        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "settings": "Settings",
+        "expressway": "Expressway",
+        "non-expressway": "Non-Expressway"
+      }
     }
   },
   "ediscovery": {
@@ -1513,6 +1527,8 @@
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
     "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
+    "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -1525,7 +1541,7 @@
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
-    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
+    "appSecurityLabel": "Users can launch the Cisco Spark app only on protected devices",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1545,6 +1561,11 @@
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
     "messagingSetupPlaceholder": "Select retention time",
+    "messagingSetupDataRetentionOption1": "Delete Immediately",
+    "messagingSetupDataRetentionOption2": "30 days",
+    "messagingSetupDataRetentionOption3": "60 days",
+    "messagingSetupDataRetentionOption4": "90 days",
+    "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
@@ -1602,7 +1623,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1629,7 +1650,6 @@
     "actionEndCall": "Disconnect",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1665,19 +1685,17 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
-    "phoneMenuErrorRouteToQueueTargetMissing": "Key {{key}} is missing a Route To Queue target.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target for {{schedule}} schedule at Phone Menu {{at}}.",
+    "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
+    "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
+    "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
+    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
+    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
+    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
+    "routeCallErrorRouteToAATargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To AutoAttendant is missing target.",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Phone Number has a missing or invalid target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1699,7 +1717,7 @@
     "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Copy Schedule",
-    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
+    "importDesc": "Select an existing Auto Attendant to copy the Open Hours and Holidays schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -2168,7 +2186,8 @@
       "unit": "Unit",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "dealId": "Deal ID"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -3260,8 +3279,9 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
-    "siteCsvModalText": "Export user attributes, edit csv file and import the edited version",
-    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>",
+    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
+    "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
+    "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3768,7 +3788,7 @@
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "visitCsb": "Visit",
-    "telstraMarketplace": "Telstra App Marketplace",
+    "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3857,6 +3877,28 @@
     "subscription": "Subscriptions",
     "info": "Info",
     "order": "Order History"
+  },
+  "subscriptions": {
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "room": "Room Systems",
+    "hybrid": "Hybrid Services",
+    "subscription": "Subscription: ",
+    "usage": "Usage: ",
+    "licenseTypes": {
+      "MS": "Standard Team Rooms",
+      "CF": "Meeting 25 Party",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "WebEx Collaboration Meeting Rooms",
+      "CO": "Call",
+      "ST": "Storage",
+      "SD": "Spark Room Systems"
+    }
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
@@ -4158,6 +4200,16 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        }
+      },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
         }
       },
       "calendar": {

@@ -76,7 +76,7 @@ describe('SiteCSVImportModalCtrl test', function () {
     $scope.$apply();
 
     //Create spies
-    spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCSVImport.promise);
+    spyOn(WebExApiGatewayService, 'csvImportOld').and.returnValue(deferredCSVImport.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
 
@@ -98,7 +98,7 @@ describe('SiteCSVImportModalCtrl test', function () {
     SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
     SiteCSVImportModalCtrl.startImport();
 
-    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
+    expect(WebExApiGatewayService.csvImportOld).toHaveBeenCalled();
 
     deferredCSVImport.resolve({});
     $rootScope.$apply();
@@ -127,7 +127,7 @@ describe('SiteCSVImportModalCtrl test', function () {
     SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
     SiteCSVImportModalCtrl.startImport();
 
-    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
+    expect(WebExApiGatewayService.csvImportOld).toHaveBeenCalled();
 
     deferredCSVImport.reject({
       "errorCode": "060100",

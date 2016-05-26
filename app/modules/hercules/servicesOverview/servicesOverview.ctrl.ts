@@ -34,6 +34,10 @@ namespace servicesOverview {
       FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
         this._feature = !!supports;
       });
+
+      FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
+        this.forwardEvent('f410FeatureEventHandler', supports);
+      });
     }
 
     get hybridCards() {
