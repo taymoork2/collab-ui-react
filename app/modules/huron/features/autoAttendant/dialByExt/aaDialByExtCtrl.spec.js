@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: AADialByExtCtrl', function () {
-  var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
+  var $controller, $q;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, FeatureToggleService;
   var $rootScope, $scope, $translate;
 
   var aaModel = {
@@ -36,44 +36,57 @@ describe('Controller: AADialByExtCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
     $translate = _$translate_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
 
-    spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-
-    spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
-    aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
   }));
 
   describe('AADialByExt', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller, _$rootScope_) {
+      $scope = $rootScope;
+      $scope.keyIndex = '0';
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
 
     describe('activate', function () {
+
       it('should be able to create new AA entry', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
+
         expect(controller).toBeDefined();
         expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
         expect(controller.menuEntry.actions[0].value).toEqual('');
       });
 
       it('should initialize the message attribute', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
+
         expect(controller.messageInput).toEqual('');
         controller.saveUiModel(); // GW test
       });
@@ -81,6 +94,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
     describe('activate', function () {
       it('should read an existing entry', function () {
+
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
@@ -100,9 +114,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
     describe('saveUiModel', function () {
       it('should write UI entry back into UI model', function () {
-        var controller = $controller('AADialByExtCtrl', {
-          $scope: $scope
-        });
+
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
@@ -123,7 +135,13 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
 
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
@@ -154,8 +172,23 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.saveUiModel();
       $scope.$apply();
 
+      
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+
       expect(controller.menuEntry.actions[0].voice.value).toEqual(voiceOption.value);
       expect(controller.menuEntry.actions[0].language.value).toEqual(languageOption.value);
+    });
+
+    it('should set min and max number of characters to zero', function () {
+
+      expect(controller).toBeDefined();
+
+      $scope.$apply();
+      
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
+      expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
+
     });
 
     it('should fetch message label', function () {
@@ -177,8 +210,12 @@ describe('Controller: AADialByExtCtrl', function () {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
-      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
       var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('Dummy', '');
 
       aaUiModel[schedule].entries[0].setVoice('Claire');
@@ -197,6 +234,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
       expect(controller).toBeDefined();
 
+      expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.menuEntry.getVoice()).toEqual('Claire');
 
