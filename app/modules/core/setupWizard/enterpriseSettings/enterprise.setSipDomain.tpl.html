@@ -8,7 +8,7 @@
 	    	<div class="row">
 				<p translate="firstTimeWizard.setSipDomainMsg"></p>
 	    		<div class="cs-input-group medium-3 columns" ng-class="{'error': validateSipDomain()}">
-	        		<input class="sip-domain-input col-lg-5" name="sipDomainInput" type="text" placeholder="{{'firstTimeWizard.setSipDomainPlaceholder' | translate}}" ng-model="cloudSipDomainField.inputValue" ng-disabled="cloudSipDomainField.isButtonDisabled">
+	        		<input class="sip-domain-input col-lg-5" name="sipDomainInput" type="text" placeholder="{{'firstTimeWizard.setSipDomainPlaceholder' | translate}}" ng-model="cloudSipDomainField.inputValue" ng-disabled="cloudSipDomainField.isDisabled">
 	        		<div class="cs-input__messages error-msg-spacing" role="alert" ng-if="validateSipDomain()">
 	          			<div class="message">{{cloudSipDomainField.errorMsg}}</div>
 	        		</div>
