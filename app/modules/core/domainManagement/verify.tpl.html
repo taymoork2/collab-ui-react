@@ -2,14 +2,14 @@
   <button type="button" class="close" ng-click="dmpopup.cancel()"><span class="sr-only">Close</span></button>
   <h4 class="modal-title" translate="domainManagement.verify.header"></h4>
 </div>
-<div class="modal-body">
+<div class="modal-body domainModal">
   <section>
     <p translate="domainManagement.verify.verifyThis"></p>
     <p class="domainInput">{{dmpopup.domainName}}</p>
     <p translate="domainManagement.verify.beforeVerify"/>
     <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
     <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-compile></p>
-  </section>  
+  </section>
 
   <div ng-if="!dmpopup.error && dmpopup.showWarning" class="modal-body domWarning">
     <section>
@@ -18,7 +18,7 @@
     </section>
   </div>
 
-  <div ng-if="dmpopup.error" class="modal-body domWarning domError">
+  <div ng-if="dmpopup.error" class="domWarning domError">
     <section>
       <i class="icon icon-error"></i>
       <p>{{dmpopup.error}}</p>

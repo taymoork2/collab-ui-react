@@ -434,7 +434,12 @@
               'modal@': {
                 controller: 'DomainManageAddCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/add.tpl.html'
+                templateUrl: 'modules/core/domainManagement/add.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -447,7 +452,12 @@
               'modal@': {
                 controller: 'DomainManageInstructionsCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+                templateUrl: 'modules/core/domainManagement/instructions.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -461,7 +471,12 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/delete.tpl.html'
+                templateUrl: 'modules/core/domainManagement/delete.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -475,7 +490,12 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
+                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -489,7 +509,12 @@
               'modal@': {
                 controller: 'DomainManageClaimCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+                templateUrl: 'modules/core/domainManagement/claim.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -503,7 +528,12 @@
               'modal@': {
                 controller: 'DomainManageVerifyCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/verify.tpl.html'
+                templateUrl: 'modules/core/domainManagement/verify.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {

@@ -2,7 +2,7 @@
   <button type="button" class="close" ng-click="dmpopup.cancel()"><span class="sr-only">Close</span></button>
   <h4 class="modal-title" translate="domainManagement.add.header"></h4>
 </div>
-<div class="modal-body">
+<div class="modal-body domainModal" id="domainModalAdd">
   <p translate="domainManagement.add.description"/>
 
   <span ng-if="dmpopup.intDomain.show">{{dmpopup.intDomain.text}}</span>
@@ -16,7 +16,7 @@
     <span>{{dmpopup.validate().error ? dmpopup.validate().error:  'domainManagement.add.invalidDomain' | translate}}</span>
   </p>
 
-  <p ng-if="dmpopup.error" class="error">
+  <p ng-if="dmpopup.error" class="domWarning domError">
     <i class="icon icon-error"></i>
     <span>{{dmpopup.error}}</span>
   </p>
