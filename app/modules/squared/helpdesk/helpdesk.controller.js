@@ -75,7 +75,10 @@
       userSearchFailure: null,
       orgSearchFailure: null,
       deviceSearchFailure: null,
-      orgFilter: vm.isCustomerHelpDesk ? { id: Authinfo.getOrgId(), displayName: Authinfo.getOrgName() } : null,
+      orgFilter: vm.isCustomerHelpDesk ? {
+        id: Authinfo.getOrgId(),
+        displayName: Authinfo.getOrgName()
+      } : null,
       orgLimit: vm.searchResultsPageSize,
       userLimit: vm.searchResultsPageSize,
       deviceLimit: vm.searchResultsPageSize,

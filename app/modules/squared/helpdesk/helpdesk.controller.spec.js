@@ -1,8 +1,8 @@
 'use strict';
-describe('Controller: HelpdeskController', function () {
+fdescribe('Controller: HelpdeskController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config;
+  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config, Authinfo;
 
   var createUserMockData = function (name, orgId) {
     return {
@@ -34,7 +34,7 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_, _Authinfo_) {
     HelpdeskService = _HelpdeskService_;
     HelpdeskSearchHistoryService = _HelpdeskSearchHistoryService_;
     q = _$q_;
@@ -45,6 +45,7 @@ describe('Controller: HelpdeskController', function () {
     HelpdeskHuronService = _HelpdeskHuronService_;
     LicenseService = _LicenseService_;
     Config = _Config_;
+    Authinfo = _Authinfo_;
 
     httpBackend
       .when('GET', 'l10n/en_US.json')
@@ -147,6 +148,9 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       sinon.stub(HelpdeskHuronService, 'searchDevices');
       sinon.stub(HelpdeskHuronService, 'findDevicesMatchingNumber');
+      sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
+      sinon.stub(Authinfo, 'getOrgId');
+      sinon.stub(Authinfo, 'getOrgName');
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -174,6 +178,10 @@ describe('Controller: HelpdeskController', function () {
       deferredOrgLookupResult.resolve(orgLookupResult);
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
+      Authinfo.isInDelegatedAdministrationOrg.returns(true);
+      Authinfo.getOrgId.returns('foo');
+      Authinfo.getOrgName.returns('bar');
+
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
@@ -181,7 +189,8 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
-        Config: Config
+        Config: Config,
+        Authinfo: Authinfo
       });
 
       controller.initSearchWithoutOrgFilter();
@@ -306,13 +315,44 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.currentSearch.userSearchResults.length).toEqual(5);
       expect(controller.currentSearch.orgSearchResults.length).toEqual(4);
     });
+
+    it('customer help desk gets the orgFiltered search set', function () {
+      Authinfo.isInDelegatedAdministrationOrg.returns(false);
+
+      controller = $controller('HelpdeskController', {
+        HelpdeskService: HelpdeskService,
+        $translate: $translate,
+        $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
+        HelpdeskHuronService: HelpdeskHuronService,
+        LicenseService: LicenseService,
+        Config: Config,
+        Authinfo: Authinfo
+      });
+
+      expect(controller.isCustomerHelpDesk).toBeTruthy();
+      expect(controller.currentSearch.orgFilter.id).toEqual("foo");
+      expect(controller.currentSearch.orgFilter.displayName).toEqual("bar");
+
+      controller.searchString = "Whatever";
+      controller.search();
+      expect(controller.searchingForUsers).toBeTruthy();
+      expect(controller.searchingForOrgs).toBeFalsy();
+    });
   });
 
   describe("backend http error", function () {
 
-    it('400 gives badUserSearchInput message', function () {
+    beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(Authinfo, 'isInDelegatedAdministrationOrg');
+
+      Authinfo.isInDelegatedAdministrationOrg.returns(true);
+
+    });
+
+    it('400 gives badUserSearchInput message', function () {
       var deferred = q.defer();
       deferred.reject({
         "status": 400
@@ -342,9 +382,6 @@ describe('Controller: HelpdeskController', function () {
     });
 
     it('error codes other that 400 gives unexpectedError message', function () {
-      sinon.stub(HelpdeskService, 'searchUsers');
-      sinon.stub(HelpdeskService, 'searchOrgs');
-
       var deferred = q.defer();
       deferred.reject({
         "status": 401
