@@ -3551,7 +3551,6 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3616,7 +3615,10 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

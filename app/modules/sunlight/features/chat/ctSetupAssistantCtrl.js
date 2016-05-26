@@ -33,7 +33,7 @@
       'agentUnavailable',
       'offHours',
       'chatStrings',
-      'embedCode'
+      'summary'
     ];
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
@@ -135,7 +135,7 @@
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
-      case 'embedCode':
+      case 'summary':
         return 'hidden';
       default:
         return true;
