@@ -108,7 +108,7 @@
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
-    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -655,7 +655,8 @@
     "cdrSave": "Save Call",
     "element": "Element",
     "value": "Value",
-    "sparkCall": "(Spark Call)"
+    "sparkCall": "(Spark Call)",
+    "callingCustomer": "Calling Customer"
   },
   "cdrLadderDiagram": {
     "title": "Call Flow Ladder Diagram",
@@ -1526,6 +1527,8 @@
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
     "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
+    "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -1538,7 +1541,7 @@
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
-    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
+    "appSecurityLabel": "Users can launch the Cisco Spark app only on protected devices",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1558,6 +1561,11 @@
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
     "messagingSetupPlaceholder": "Select retention time",
+    "messagingSetupDataRetentionOption1": "Delete Immediately",
+    "messagingSetupDataRetentionOption2": "30 days",
+    "messagingSetupDataRetentionOption3": "60 days",
+    "messagingSetupDataRetentionOption4": "90 days",
+    "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
@@ -3780,7 +3788,7 @@
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "visitCsb": "Visit",
-    "telstraMarketplace": "Telstra App Marketplace",
+    "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3869,6 +3877,28 @@
     "subscription": "Subscriptions",
     "info": "Info",
     "order": "Order History"
+  },
+  "subscriptions": {
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "room": "Room Systems",
+    "hybrid": "Hybrid Services",
+    "subscription": "Subscription: ",
+    "usage": "Usage: ",
+    "licenseTypes": {
+      "MS": "Standard Team Rooms",
+      "CF": "Meeting 25 Party",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "WebEx Collaboration Meeting Rooms",
+      "CO": "Call",
+      "ST": "Storage",
+      "SD": "Spark Room Systems"
+    }
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
@@ -4166,15 +4196,25 @@
       },
       "hybridManagement": {
         "title": "Hybrid Management",
-        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "description": "Connector management for Hybrid Call and Calendar Services.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
       "calendar": {
         "title": "Hybrid Calendar",
-        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4182,7 +4222,7 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"

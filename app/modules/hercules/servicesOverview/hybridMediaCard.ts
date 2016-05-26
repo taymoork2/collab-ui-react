@@ -20,7 +20,6 @@ namespace servicesOverview {
         buttonClass: 'btn-link'
       }];
 
-
     getButtons():Array<servicesOverview.CardButton> {
       if (this.active)
         return _.take(this._buttons, 3);
@@ -28,18 +27,16 @@ namespace servicesOverview {
     }
 
     public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridMedia.title', 'servicesOverview.cards.hybridMedia.description', '', false, 'media', CardType.hybrid);
-    }
-
-    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = {
-        status: this.filterAndGetCssStatus(services, ['squared-fusion-media']),
-        text: this.filterAndGetTxtStatus(services, ['squared-fusion-media']),
-        link: 'mediaservice'
-      };
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-media']);
-      this._loading = false;
+      super({
+        name: 'servicesOverview.cards.hybridMedia.title',
+        description: 'servicesOverview.cards.hybridMedia.description',
+        activeServices: ['squared-fusion-media'],
+        statusServices: ['squared-fusion-media'],
+        statusLink: 'mediaservice',
+        active: false,
+        cardClass: 'media',
+        cardType: CardType.hybrid
+      });
     }
   }
 }

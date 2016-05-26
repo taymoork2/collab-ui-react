@@ -20,7 +20,7 @@
 		
 		<div class="Export-window">
 			<label for='download'> 
-				<span class="icon-export"
+				<span class="icon icon-download icon-3x icon-export2"
 				      ng-click="siteCSVModalCtrl.startExport()"></span>
 			</label>
 
@@ -43,23 +43,19 @@
 					 file-type-error="siteCSVModalCtrl.onFileTypeError()">
 
 					<div class="file-drop-active">
-						<div class="file-drop-content" 
-						     id="file-drop-content">
-
-							<input id="upload" 
-							       name="upload" 
-							       type="file" 
-							       cr-file-read
-								   file="siteCSVModalCtrl.modal.file"
-								   file-name="siteCSVModalCtrl.modal.fileName"
-								   file-type="text/csv, application/csv, application/vnd.ms-excel"
-								   file-suffix="csv"
-								   file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
+						<input id="upload" 
+						       name="upload" 
+						       type="file" 
+						       cr-file-read
+							   file="siteCSVModalCtrl.modal.file"
+							   file-name="siteCSVModalCtrl.modal.fileName"
+							   file-type="text/csv, application/csv, application/vnd.ms-excel"
+							   file-suffix="csv"
+							   file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
 								   
-							<label for='upload'> 
-								<span class="icon-import"></span>
-							</label>
-						</div>
+						<label for='upload'> 
+							<span class="icon icon-upload icon-3x icon-import2 "></span>
+						</label>
 					</div>
 
 					<div class="Import"
@@ -90,7 +86,7 @@
 
 					<p align="center">
 						<button type="button" 
-						        class="btn btn--people import-button"
+						        class="btn btn--primary import-button"
 							    ng-click="siteCSVModalCtrl.startImport()"
 							    translate="siteList.importButton"></button>
 					</p>
