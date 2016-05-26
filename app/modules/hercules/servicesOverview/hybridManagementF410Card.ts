@@ -35,8 +35,12 @@ namespace servicesOverview {
     }
 
     public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.clusterList.title', 'servicesOverview.cards.clusterList.description', '', true, 'context', CardType.hybrid);
+      super({
+        name: 'servicesOverview.cards.clusterList.title',
+        description: 'servicesOverview.cards.clusterList.description',
+        cardClass: 'context',
+        cardType: CardType.hybrid
+      });
       this._loading = false;
     }
   }
