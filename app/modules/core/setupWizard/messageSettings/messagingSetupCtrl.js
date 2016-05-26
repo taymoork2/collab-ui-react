@@ -18,25 +18,25 @@
       vm.appSecurity = false;
       vm.currentAppSecurity = false;
 
-      vm.placeholder = 'Select retention time';
+      vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
       vm.selected = {
         label: '',
         value: ''
       };
       vm.options = [{
-        label: 'Delete immediately',
+        label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption1'),
         value: 'immediate'
       }, {
-        label: '30 days',
+        label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption2'),
         value: '30'
       }, {
-        label: '60 days',
+        label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption3'),
         value: '60'
       }, {
-        label: '90 days',
+        label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption4'),
         value: '90'
       }, {
-        label: 'Keep forever',
+        label: $translate.instant('firstTimeWizard.messagingSetupDataRetentionOption5'),
         value: 'indefinite'
       }];
 
@@ -54,8 +54,8 @@
 
       function getServices() {
         AccountOrgService.getServices(orgId, null)
-          .success(function (data, status) {
-            var interopIndex = _.findIndex(data.entitlements, function (obj) {
+          .then(function (response) {
+            var interopIndex = _.findIndex(response.data.entitlements, function (obj) {
               return obj.serviceId === 'messengerInterop';
             });
             if (interopIndex > -1) {
@@ -67,16 +67,16 @@
 
       function getOrgSettings() {
         AccountOrgService.getOrgSettings(orgId)
-          .success(function (data, status) {
-            var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
+          .then(function (response) {
+            var dataRetentionIndex = _.findIndex(response.data.settings, function (obj) {
               return obj.key === 'dataRetentionPeriodDays';
             });
             if (dataRetentionIndex > -1) {
               var selectedIndex = _.findIndex(vm.options, function (obj) {
-                return obj.value === data.settings[dataRetentionIndex].value;
+                return obj.value === response.data.settings[dataRetentionIndex].value;
               });
               vm.selected = vm.options[selectedIndex];
-              currentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
+              currentDataRetentionPeriod = response.data.settings[dataRetentionIndex].value;
             }
           });
       }

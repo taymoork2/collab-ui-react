@@ -32,7 +32,7 @@
       return url;
     }
 
-    function getServiceUrl(org) {
+    function getServicesUrl(org) {
       var url = accountUrl + 'organizations/' + org + '/services';
 
       return url;
@@ -51,7 +51,7 @@
     }
 
     function getServices(org, filter) {
-      var url = getServiceUrl(org);
+      var url = getServicesUrl(org);
       if (!_.isUndefined(filter) && !_.isNull(filter)) {
         url += '?filter=' + filter;
       }
@@ -60,14 +60,14 @@
     }
 
     function addMessengerInterop(org) {
-      var url = getServiceUrl(org) + '/messengerInterop';
+      var url = getServicesUrl(org) + '/messengerInterop';
       var request = {};
 
       return $http.post(url, request);
     }
 
     function deleteMessengerInterop(org) {
-      var url = getServiceUrl(org) + '/messengerInterop';
+      var url = getServicesUrl(org) + '/messengerInterop';
 
       return $http.delete(url);
     }

@@ -15,12 +15,16 @@ describe('Controller: messagingSetupCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
 
-    spyOn(AccountOrgService, 'getOrgSettings').and.returnValue({
-      success: _.noop
-    });
-    spyOn(AccountOrgService, 'getServices').and.returnValue({
-      success: _.noop
-    });
+    spyOn(AccountOrgService, 'getOrgSettings').and.returnValue($q.when({
+      data: {
+        settings: []
+      }
+    }));
+    spyOn(AccountOrgService, 'getServices').and.returnValue($q.when({
+      data: {
+        entitlements: []
+      }
+    }));
 
     spyOn(AccountOrgService, 'getAppSecurity').and.returnValue($q.when({
       data: {
