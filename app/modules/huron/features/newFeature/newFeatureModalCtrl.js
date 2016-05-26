@@ -26,11 +26,24 @@
     vm.ok = ok;
     vm.cancel = cancel;
     vm.loading = true;
+    vm.aaSchedulesEnabled = false;
 
     init();
 
     function init() {
       vm.loading = false;
+      setFeatureToggle();
+    }
+
+    function setFeatureToggle() {
+      /// toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.aaSchedulesEnabled = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.aaSchedulesEnabled = result;
+        });
+      }
     }
 
     function ok(featureId) {
@@ -38,7 +51,7 @@
         $state.go('huronHuntGroup');
       } else if (featureId === 'AA') {
 
-        if (Config.isDev() || Config.isIntegration()) {
+        if (vm.aaSchedulesEnabled) {
           $modal.open({
             templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
             controller: 'AATypeSelectCtrl',

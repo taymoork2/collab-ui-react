@@ -258,70 +258,21 @@
 
           licenses.forEach(
             function checkLicense(license) {
-              logMsg = funcName + ": " + "\n" +
-                "license=" + JSON.stringify(license);
-              // $log.log(logMsg);
-
               if (
-                ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
+                ("CONFERENCING" == license.licenseType) ||
+                ("CMR" == license.licenseType)
+              ) {
 
-                var licenseFields = license.licenseId.split("_");
-                var siteUrl = licenseFields[licenseFields.length - 1];
-                var serviceType = licenseFields[0];
                 var capacity = license.capacity;
+                var licenseFields = license.licenseId.split("_");
+                var webexSite = licenseFields[licenseFields.length - 1];
+                var offerCode = licenseFields[0];
 
-                var licenseInfo = null;
-
-                var siteHasMCLicense = false;
-                var siteHasECLicense = false;
-                var siteHasSCLicense = false;
-                var siteHasTCLicense = false;
-                var siteHasCMRLicense = false;
-                var siteHasEELicense = false;
-
-                if ("MC" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasMCLicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                } else if ("EC" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasECLicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                } else if ("SC" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasSCLicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                } else if ("TC" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasTCLicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                } else if ("CMR" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasCMRLicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                } else if ("EE" == serviceType) {
-                  licenseInfo = {
-                    webexSite: siteUrl,
-                    siteHasEELicense: true,
-                    offerCode: serviceType,
-                    capacity: capacity
-                  };
-                }
+                var licenseInfo = {
+                  'webexSite': webexSite,
+                  'offerCode': offerCode,
+                  'capacity': capacity
+                };
 
                 allSitesLicenseInfo.push(licenseInfo);
               }
