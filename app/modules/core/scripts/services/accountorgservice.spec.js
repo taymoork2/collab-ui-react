@@ -4,11 +4,10 @@ describe('Service : AccountOrgService', function () {
   beforeEach(module('Core'));
 
   var AccountOrgService, $httpBackend, Config, Auth, UrlConfig, Authinfo;
-  var appSecurityRegex = /.*\/settings\/enforceClientSecurity\.*/;
-
   var authInfo = {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
+  var appSecurityRegex = /.*\/settings\/enforceClientSecurity\.*/;
 
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
