@@ -161,9 +161,13 @@
                   placeholder="attribute.defaultValue">
                 </cs-select>
                 <label
-                  ng-if="careChatSA.isDefined(attribute.value, 'helpText')"
                   class="cs-input__label ct-attribute-field-helptext large-11">
-                  <em>{{attribute.value.helpText}}</em>
+                  <em ng-if="attribute.value.id == 'customerInfo'"
+                          translate="careChatTpl.ciHelpText">
+                  </em>
+                  <em ng-if="attribute.value.id == 'requestInfo'"
+                      translate="careChatTpl.riHelpText">
+                  </em>
                 </label>
               </div>
 

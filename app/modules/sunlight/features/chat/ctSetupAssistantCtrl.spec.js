@@ -204,23 +204,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          type: 'text',
-          value: 'careChatTpl.defaultWelcomeText',
-          label: 'careChatTpl.windowTitleLabel'
+          value: 'careChatTpl.defaultWelcomeText'
         }, {
           name: 'organization',
-          type: 'text',
-          value: 'careChatTpl.defaultOrgText',
-          label: 'careChatTpl.defaultOrgLabel'
+          value: 'careChatTpl.defaultOrgText'
         }]
       };
       controller.setActiveItem("welcomeHeader");
       expect(controller.activeItem).toEqual(returnObj);
-    });
-
-    it("should get the attribute param", function () {
-      var attrParam = controller.getAttributeParam("label", "organization", "welcomeHeader");
-      expect(attrParam).toEqual("careChatTpl.defaultOrgLabel");
     });
 
     it("should not get the attribute param for incorrect param", function () {

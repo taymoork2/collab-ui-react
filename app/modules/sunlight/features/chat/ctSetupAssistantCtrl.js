@@ -35,7 +35,7 @@
       'chatStrings',
       'embedCode'
     ];
-    vm.currentState = vm.states[3];
+    vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
     vm.leftArrow = 37;
@@ -70,35 +70,30 @@
 
     var TYPE_OPTIONS = [{
       text: "email",
-      htmlType: "email",
       dictionaryType: {
         fieldSet: "ccc_core",
         fieldName: "ccc_email"
       }
     }, {
       text: "name",
-      htmlType: "text",
       dictionaryType: {
         fieldSet: "ccc_core",
         fieldName: "ccc_name"
       }
     }, {
       text: "category",
-      htmlType: "select",
       dictionaryType: {
         fieldSet: "ccc_core",
         fieldName: "ccc_category"
       }
     }, {
       text: "phone",
-      htmlType: "tel",
       dictionaryType: {
         fieldSet: "ccc_core",
         fieldName: "ccc_phone"
       }
     }, {
       text: "id",
-      htmlType: "id",
       dictionaryType: {
         fieldSet: "ccc_core",
         fieldName: "ccc_email"
@@ -109,15 +104,17 @@
 
     var CATEGORY_TYPE_OPTIONS = [{
       text: $translate.instant('careChatTpl.categoryTextCustomer'),
-      id: 'customerInfo',
-      helpText: $translate.instant('careChatTpl.ciHelpText')
+      id: 'customerInfo'
+
     }, {
       text: $translate.instant('careChatTpl.categoryTextRequest'),
       id: 'requestInfo',
-      helpText: $translate.instant('careChatTpl.riHelpText')
     }];
 
     vm.categoryTypeOptions = CATEGORY_TYPE_OPTIONS;
+
+    vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
+    vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
 
     var REQUIRED_OPTIONS = [{
       text: $translate.instant('careChatTpl.requiredField'),
@@ -210,7 +207,7 @@
                   value: 'optional'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('requestInfo'),
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultQuestionText')
@@ -319,8 +316,6 @@
       $timeout(function () {
         vm.currentState = vm.states[getPageIndex() + 1];
       }, vm.animationTimeout);
-
-      //var x1 = vm.customerInfoFieldsFromModel(vm.template.configuration.pages.customerInformation);
     }
 
     function previousPage() {
@@ -337,6 +332,7 @@
      */
 
     vm.getFieldByName = function (fieldName) {
+      var x = vm.template.configuration.pages.customerInformation.fields[fieldName];
       return vm.template.configuration.pages.customerInformation.fields[fieldName];
     };
 
@@ -404,12 +400,5 @@
         vm.logoUploaded = true;
       });
     }
-
-    vm.customerInfoFieldsFromModel = function (model) {
-      var ciFields = {};
-      ciFields.header = {};
-      ciFields.header.type = model.welcomeHeader.attributes[0].name;
-      return (JSON.stringify(model));
-    };
   }
 })();
