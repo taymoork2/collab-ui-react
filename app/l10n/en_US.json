@@ -2892,7 +2892,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
-    "indexPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2946,7 +2946,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
-    "settingPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
