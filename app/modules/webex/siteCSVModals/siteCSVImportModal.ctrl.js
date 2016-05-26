@@ -59,7 +59,7 @@
       } else {
 
         //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
-        WebExApiGatewayService.csvImport(vm).then(
+        WebExApiGatewayService.csvImportOld(vm).then(
           function success(response) {
             displayResultAndCloseModal(
               true,
@@ -80,7 +80,7 @@
               'siteList.importRejectedToast'
             );
           }
-        ); // WebExApiGatewayService.csvImport()
+        ); // WebExApiGatewayService.csvImportOld()
       }
 
       function displayResultAndCloseModal(
@@ -91,7 +91,7 @@
         var funcName = "displayResultAndCloseModal()";
         var logMsg = "";
 
-        SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+        SiteListService.updateCSVStatusInRow(vm.csvImportObj);
 
         if (isSuccess) {
           Notification.success($translate.instant(resultMsg));

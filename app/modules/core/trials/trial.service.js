@@ -65,6 +65,7 @@
       var trialData = {
         customerOrgId: custId,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         details: _getDetails(data),
         offers: _getOffers(data)
       };
@@ -86,6 +87,7 @@
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
         offers: _getOffers(data)
@@ -210,6 +212,7 @@
         customerName: '',
         customerEmail: '',
         licenseDuration: 90,
+        dealId: '',
         licenseCount: 100
       };
 

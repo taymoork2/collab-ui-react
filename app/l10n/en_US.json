@@ -108,7 +108,7 @@
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
-    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -219,6 +219,7 @@
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
+    "settingsTab": "Settings",
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
@@ -654,7 +655,8 @@
     "cdrSave": "Save Call",
     "element": "Element",
     "value": "Value",
-    "sparkCall": "(Spark Call)"
+    "sparkCall": "(Spark Call)",
+    "callingCustomer": "Calling Customer"
   },
   "cdrLadderDiagram": {
     "title": "Call Flow Ladder Diagram",
@@ -1357,13 +1359,25 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    },
+    "fusion": {
+      "list": {
+        "title": "Clusters",
+        "empty": "No clusters to display.",
+        "users": "Users:",
+        "releaseChannel": "Release Channels:",
+        "upgradeTime": "Upgrade Time:",
+        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "settings": "Settings",
+        "expressway": "Expressway",
+        "non-expressway": "Non-Expressway"
+      }
     }
   },
   "ediscovery": {
     "browserTabHeaderTitle": "eDiscovery",
     "ediscovery": "eDiscovery",
-    "searchHeading": "eDiscovery search",
-    "navHeaderTitle": "eDiscovery Dashboard",
+    "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
@@ -1513,6 +1527,8 @@
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
     "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
+    "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -1525,7 +1541,7 @@
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
-    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
+    "appSecurityLabel": "Users can launch the Cisco Spark app only on protected devices",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1545,6 +1561,11 @@
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
     "messagingSetupPlaceholder": "Select retention time",
+    "messagingSetupDataRetentionOption1": "Delete Immediately",
+    "messagingSetupDataRetentionOption2": "30 days",
+    "messagingSetupDataRetentionOption3": "60 days",
+    "messagingSetupDataRetentionOption4": "90 days",
+    "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
@@ -1602,7 +1623,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1629,7 +1650,6 @@
     "actionEndCall": "Disconnect",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1665,19 +1685,17 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
-    "phoneMenuErrorRouteToQueueTargetMissing": "Key {{key}} is missing a Route To Queue target.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target for {{schedule}} schedule at Phone Menu {{at}}.",
+    "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
+    "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
+    "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
+    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
+    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
+    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
+    "routeCallErrorRouteToAATargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To AutoAttendant is missing target.",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Phone Number has a missing or invalid target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1699,7 +1717,7 @@
     "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Copy Schedule",
-    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
+    "importDesc": "Select an existing Auto Attendant to copy the Open Hours and Holidays schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -2168,7 +2186,8 @@
       "unit": "Unit",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "dealId": "Deal ID"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2881,6 +2900,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2934,6 +2954,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -2981,6 +3002,7 @@
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
+    "inactive_user": "Inactive Users",
 
     "training_usage": "Training Usage",
     "registration": "Registration",
@@ -3036,6 +3058,7 @@
     "meeting_usage": "Meeting Usage",
     "recording_usage": "Recording Usage",
     "storage_utilization": "Storage Usage",
+    "inactive_user": "Inactive Users",
     "event_center_overview": "Event Overview",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
@@ -3256,6 +3279,9 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
+    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
+    "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
+    "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3530,6 +3556,32 @@
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "screenCard": "Screen",
+    "attributesCard": "Attributes",
+    "windowTitleLabel": "Window Title",
+    "defaultOrgLabel": "Organization",
+    "defaultWelcomeText": "Welcome to",
+    "defaultOrgText": "Cumulus Customer Care",
+    "defaultNameText": "Name",
+    "defaultNameHint": "",
+    "defaultEmailText": "Your email or customer ID",
+    "defaultEmail": "e.g. abc@xyz.com",
+    "defaultQuestionText": "How may I assist you?",
+    "optionalText": "(Optional)",
+    "field3HintText": "Select from the list or type",
+    "defaultTypeMessageText": "Type your message and press enter",
+    "selectFieldText": "Select a field on the left to change it's attribute.",
+    "ciHelpText": "Help directs customers to the right agent",
+    "riHelpText": "",
+    "requiredField": "Required Field",
+    "optionalField": "Optional Field",
+    "categoryLabel": "Category",
+    "categoryTextCustomer": "Customer Information",
+    "categoryTextRequest": "Request Information",
+    "label": "Label",
+    "hintText": "Hint Text",
+    "type": "Type",
+    "defaultRightCardText": "Select a field on the left to change it's attribute.",
     "profileSelector": "Profile",
     "screen": "Screen",
     "attributes": "Attributes",
@@ -3736,7 +3788,7 @@
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "visitCsb": "Visit",
-    "telstraMarketplace": "Telstra App Marketplace",
+    "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3779,6 +3831,73 @@
 
         }
       }
+    }
+  },
+  "globalSettings": {
+    "pageTitle": "Settings",
+    "branding": {
+      "title": "Branding",
+      "subsectionLabel": "Branding"
+    },
+    "sipDomain": {
+      "title": "SIP Domain",
+      "subsectionLabel": "SIP Domain Prefix",
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
+    },
+    "domains": {
+      "title": "Domains"
+    },
+    "authentication": {
+      "title": "Authentication",
+      "subsectionLabel": "Single Sign-On"
+    },
+    "dataPolicy": {
+      "title": "Data Policy",
+      "subsectionLabel": "Data Retention (after deletion of org)",
+      "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
+      "retentionOption1": "Delete immediately",
+      "retentionOption2": "Keep for 1 year",
+      "retentionOption3": "Keep forever"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "subsectionLabel": "Support Access"
+    },
+    "security": {
+      "title": "Security",
+      "subsectionLabel": "Spark Client Security",
+      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+    },
+    "support": {
+      "title": "Support"
+    }
+  },
+  "my-company": {
+    "pageTitle": "My Company",
+    "subscription": "Subscriptions",
+    "info": "Info",
+    "order": "Order History"
+  },
+  "subscriptions": {
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "room": "Room Systems",
+    "hybrid": "Hybrid Services",
+    "subscription": "Subscription: ",
+    "usage": "Usage: ",
+    "licenseTypes": {
+      "MS": "Standard Team Rooms",
+      "CF": "Meeting 25 Party",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "WebEx Collaboration Meeting Rooms",
+      "CO": "Call",
+      "ST": "Storage",
+      "SD": "Spark Room Systems"
     }
   },
   "ciRoles": {
@@ -4047,6 +4166,84 @@
     "isRunning": "An export task is already running. Please try again later.",
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started."
+  },
+  "servicesOverview": {
+    "title": "Services",
+    "cloudServices": "Cloud services",
+    "hybridServices": "Hybrid services",
+    "showAllCards": "Show all cards",
+    "showActiveCards": "Show active cards only",
+    "cards": {
+      "message": {
+        "title": "Message",
+        "description": "Cisco Spark configurations for your organization and individuals.",
+        "buttons": {
+          "webexMessenger": "Webex Messenger"
+        }
+      },
+      "meeting": {
+        "title": "Meeting",
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+      },
+      "call": {
+        "title": "Call",
+        "description": "Unified Communications and basic calling configurations for your organization.",
+        "buttons": {
+          "numbers": "Numbers",
+          "features": "Features",
+          "settings": "Settings"
+        }
+      },
+      "hybridManagement": {
+        "title": "Hybrid Management",
+        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "calendar": {
+        "title": "Hybrid Calendar",
+        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridCall": {
+        "title": "Hybrid Call",
+        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridMedia": {
+        "title": "Hybrid Media",
+        "description": "The Media Service enables you to host meetings in the cloud and on-premise.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridContext": {
+        "title": "Context",
+        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
+        "buttons": {
+          "settings": "Settings"
+        }
+      }
+    },
+    "showMore": "View all",
+    "genericButtons": {
+      "setup": "Setup"
+    },
+    "cardStatus": {
+      "running": "Operational",
+      "alarms": "Impaired Service",
+      "error": "Outage",
+      "disabled": "Disabled"
+    }
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode",

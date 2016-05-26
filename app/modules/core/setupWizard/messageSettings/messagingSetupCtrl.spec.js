@@ -15,16 +15,26 @@ describe('Controller: messagingSetupCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
 
-    spyOn(AccountOrgService, 'getOrgSettings').and.returnValue({
-      success: _.noop
-    });
-    spyOn(AccountOrgService, 'getServices').and.returnValue({
-      success: _.noop
-    });
+    spyOn(AccountOrgService, 'getOrgSettings').and.returnValue($q.when({
+      data: {
+        settings: []
+      }
+    }));
+    spyOn(AccountOrgService, 'getServices').and.returnValue($q.when({
+      data: {
+        entitlements: []
+      }
+    }));
+
+    spyOn(AccountOrgService, 'getAppSecurity').and.returnValue($q.when({
+      data: {
+        enforceClientSecurity: true
+      }
+    }));
+
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Notification, 'notify');
-
   }));
 
   function initController() {
@@ -55,6 +65,14 @@ describe('Controller: messagingSetupCtrl', function () {
 
     it('should set the showAppSecurity flag to be true', function () {
       expect(controller.showAppSecurity).toBe(true);
+    });
+  });
+
+  describe('test that getAppSecurity function and sets enforceClientSecurity: ', function () {
+    beforeEach(initController);
+
+    it('should check if getAppSecurity in return sets AppSecurity to true', function () {
+      expect(controller.appSecurity).toEqual(true);
     });
   });
 });

@@ -508,6 +508,23 @@
               loggedOnUser: null
             }
           })
+          .state('settings', {
+            url: '/settings',
+            templateUrl: 'modules/core/settings/settings.tpl.html',
+            controller: 'SettingsCtrl',
+            controllerAs: 'settingsCtrl',
+            parent: 'main'
+          })
+          .state('settings.enable3rdPartyAuth', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'Enable3rdPartyAuthCtrl',
+                controllerAs: 'enable3rdPartyAuth',
+                templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'
+              }
+            }
+          })
           .state('profile', {
             url: '/profile',
             templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
@@ -558,6 +575,44 @@
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
             parent: 'main'
+          })
+          .state('my-company', {
+            // url: '/my-company',
+            templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+            controller: 'MyCompanyPageCtrl',
+            controllerAs: 'mcp',
+            parent: 'main',
+            abstract: true
+          })
+          .state('my-company.subscriptions', {
+            url: '/my-company/subscriptions',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpSubscription',
+                controller: 'MyCompanyPageSubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+              }
+            }
+          })
+          .state('my-company.info', {
+            url: '/my-company',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpInfo',
+                controller: 'MyCompanyPageInfoCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html'
+              }
+            }
+          })
+          .state('my-company.orders', {
+            url: '/my-company/orders',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpOrder',
+                controller: 'MyCompanyPageOrderCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+              }
+            }
           })
           .state('users', {
             abstract: true,
@@ -1024,7 +1079,7 @@
               }
             },
             params: {
-              csvImportObj: null
+              siteRow: null
             }
           })
           .state('site-csv-results', {
@@ -1912,6 +1967,32 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
+          .state('services-overview', {
+            url: '/services/overview',
+            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            controller: 'ServicesOverviewCtrl',
+            controllerAs: 'servicesOverviewCtrl',
+            parent: 'main'
+          })
+          .state('cluster-list', {
+            url: '/services/resource',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
+            controller: 'FusionResourceListController',
+            controllerAs: 'resourceList',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('cluster-settings-page', {
+            url: '/services/resource/settings/:clusterid',
+            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+            controller: 'FusionResourceSettingsController',
+            controllerAs: 'resourceSetting',
+            parent: 'main'
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
             controller: 'ExpresswayServiceController',
@@ -2160,8 +2241,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHeaderController',
-              controllerAs: 'helpdeskHeaderCtrl',
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2172,15 +2253,20 @@
         .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
-            controller: 'EdiscoveryController',
-            controllerAs: 'ediscoveryCtrl',
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
-            url: '/',
-            templateUrl: 'modules/ediscovery/ediscovery.html'
+            url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+          })
+          .state('ediscovery.reports', {
+            url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-
       }
     ]);
 
