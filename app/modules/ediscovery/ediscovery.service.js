@@ -11,41 +11,55 @@
       return deferred.promise;
     }
 
-    function extractItems(res) {
-      //console.log("reports get, respons", res)
+    function extractReports(res) {
       return res.data.reports;
     }
 
-    function getReport() {
+    function extractData(res) {
+      return res.data;
+    }
+
+    function getReport(id) {
       var orgId = Authinfo.getOrgId();
       return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
-        .then(extractItems)
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
+        .then(extractData)
         .catch(function (data) {
-          //console.log("error getReport: " + data)
+          //  TODO: Implement proper handling of error when final API is in place
+          //console.log("error getReports: " + data)
         });
     }
 
-    function createReport(displayName, roomId) {
+    function getReports() {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+        .then(extractReports)
+        .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
+          //console.log("error getReports: " + data)
+        });
+    }
+
+    function createReport(displayName) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
         })
-        // .then(function(res) {
-        //   createReportDoIt(res, roomId);
-        // })
-        .catch(function (data) {
-          //console.log("error createReport: " + data)
-        });
+        .then(extractData);
     }
 
-    //  TODO: Implement proper handling of error when final API is in place
-    function createReportDoIt(runUrl, roomId) {
-      //console.log("created, post to runUrl", runUrl)
+    function reportsApiUrl(orgId) {
+      return urlBase + 'compliance/organizations/' + orgId + '/reports';
+    }
+
+    // TODO: Implement proper handling of error when final API is in place
+    function runReport(runUrl, roomId, responseUrl) {
       return $http.post(runUrl, {
-        "roomId": roomId
+        "roomId": roomId,
+        "responseUrl": responseUrl
       });
     }
 
@@ -54,6 +68,7 @@
       return $http
         .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
         .then(function (res) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("patching", res);
         })
         .catch(function (data) {
@@ -66,9 +81,11 @@
       return $http
         .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
         .then(function (res) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("deleted", res);
         })
         .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("error createReport: " + data)
         });
     }
@@ -78,15 +95,17 @@
       return $http
         .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/')
         .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("error deleteReport: " + data)
         });
     }
 
     return {
       getReport: getReport,
+      getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
-      createReportDoIt: createReportDoIt,
+      runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport
     };
