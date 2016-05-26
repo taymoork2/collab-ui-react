@@ -156,41 +156,6 @@ describe('Service: Trial Service:', function () {
         expect($httpBackend.flush).not.toThrow();
       });
 
-      xit('should get shipping details state and country correctly from state and country object', function () {
-        var trialData = getJSONFixture('core/json/trials/trialData.json');
-        trialData.enabled.trials.deviceTrial.shippingInfo.state = {
-          "state": "California",
-          "abbr": "CA"
-        };
-        trialData.enabled.trials.deviceTrial.shippingInfo.country = {
-          "country": "USA"
-        };
-
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).details.shippingInfo.state === "CA";
-        }).respond(200);
-
-        TrialService.startTrial();
-
-        expect($httpBackend.flush).not.toThrow();
-      });
-
-      xit('should get shipping details state and country correctly from state and country string', function () {
-        var trialData = getJSONFixture('core/json/trials/trialData.json');
-        trialData.enabled.trials.deviceTrial.shippingInfo.state = "OR";
-        trialData.enabled.trials.deviceTrial.shippingInfo.country = "DE";
-
-        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return angular.fromJson(data).details.shippingInfo.state === "OR";
-        }).respond(200);
-
-        TrialService.startTrial();
-
-        expect($httpBackend.flush).not.toThrow();
-      });
-
-    });
-
     describe('start call trial state and country check', function () {
       var testData = trialData.enabled.trials.deviceTrial;
       it('should get state correcty from string', function () {
