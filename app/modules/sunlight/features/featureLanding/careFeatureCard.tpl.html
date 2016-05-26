@@ -1,0 +1,23 @@
+<div class="cs-card-container">
+  <cs-card-layout>
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.listOfFeatures" class="small header-bar" ng-class="careFeaturesCtrl.cardColor[careFeature.featureType]">
+      <article>
+        <header>
+          <div class="header-with-right-icon">
+            <p class="h4 ellipsis" title="{{careFeature.cardName}}"> {{careFeature.name}} </p>
+            <div class="right">
+              <span class="card-icon card-icon-color-{{careFeature.featureType}}">{{:: careFeature.featureType | translate}}</span>
+            </div>
+          </div>
+        </header>
+        <footer class="card-footer">
+          <div class="embed-code-txt h6 left">Copy Embed code</div>
+          <div class="right">
+            <a class="icon icon-edit"><span class="sr-only" translate="careChatTpl.editAction"></span></a>
+            <a class="icon icon-trash" ng-click="careFeaturesCtrl.deleteCareFeature(careFeature)"><span class="sr-only" translate="careChatTpl.deleteAction"></span></a>
+          </div>
+        </footer>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

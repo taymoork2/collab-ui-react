@@ -3447,6 +3447,9 @@
     "title": "Care",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page",
+    "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
@@ -3533,6 +3536,15 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "deleteFeature": "Delete {{ featureText }}",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "messageError": "Message {{ message }}",
+    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "chatTemplate": "Chat Template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
