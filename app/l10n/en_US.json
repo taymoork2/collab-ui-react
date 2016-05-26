@@ -4196,15 +4196,25 @@
       },
       "hybridManagement": {
         "title": "Hybrid Management",
-        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "description": "Connector management for Hybrid Call and Calendar Services.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
       "calendar": {
         "title": "Hybrid Calendar",
-        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4212,7 +4222,7 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
