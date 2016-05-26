@@ -1,9 +1,9 @@
 /// <reference path="ServicesOverviewCard.ts"/>
 namespace servicesOverview {
   export interface HybridCardParams extends CardParams {
-    // template?:string,name:string,description:string,icon:string,
-    activeServices:Array<string>;statusServices:Array<string>;statusLink:string;
-    // active:boolean,cardClass:string,cardType:CardType
+    activeServices:Array<string>;
+    statusServices:Array<string>;
+    statusLink:string;
   }
   export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     private activeServices:Array<string>;
@@ -12,7 +12,6 @@ namespace servicesOverview {
 
     public constructor(params:HybridCardParams) {
       super(params);
-      // super(_template, _name, _description, _icon, _active, _cardClass, _cardType);
       this.activeServices = params.activeServices;
       this.statusServices = params.statusServices;
       this.statusLink = params.statusLink;
