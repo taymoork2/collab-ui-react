@@ -284,10 +284,11 @@
             "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
           // $log.log(logMsg);
 
-          if ( (!siteRow.isCSVSupported) ||
-               (!siteRow.showCSVIconAndResults)
+          if (
+            (!siteRow.isCSVSupported) ||
+            (!siteRow.showCSVIconAndResults)
           ) {
-        	  
+
             // no further data to get
             siteRow.showCSVInfo = true;
             return;
