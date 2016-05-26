@@ -121,16 +121,24 @@
       } else {
         cosType.blocked = false;
       }
+
+      vm.saveInProcess = true;
       return InternationalDialing.updateCosRestriction(vm.currentUser.id, vm.model.internationalDialingEnabled,
           vm.model.internationalDialingUuid, cosType).then(function () {
           initInternationalDialing();
 
           result.msg = $translate.instant('internationalDialingPanel.success');
           result.type = 'success';
+
           Notification.notify([result.msg], result.type);
+          resetForm();
         })
         .catch(function (response) {
           Notification.errorResponse(response, $translate.instant('internationalDialingPanel.error'));
+
+        })
+        .finally(function () {
+          vm.saveInProcess = false;
         });
     }
   }

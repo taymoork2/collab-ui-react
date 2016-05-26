@@ -2,8 +2,14 @@ namespace myCompanyPage {
   class MyCompanyPageCtrl {
 
     private _tabs;
+    private _title;
+    
     get tabs() {
       return this._tabs;
+    }
+
+    get title() {
+      return this._title;
     }
 
     /* @ngInject */
@@ -18,7 +24,10 @@ namespace myCompanyPage {
         title: $translate.instant('my-company.order'),
         state: 'my-company.orders'
       }];
+
+      this._title = $translate.instant('my-company.pageTitle');
     }
+
   }
 
   angular

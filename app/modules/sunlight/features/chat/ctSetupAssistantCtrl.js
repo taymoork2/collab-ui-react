@@ -38,8 +38,6 @@
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
-    vm.leftArrow = 37;
-    vm.rightArrow = 39;
 
     // Template branding page related constants
     vm.orgName = Authinfo.getOrgName();
@@ -106,16 +104,6 @@
       switch (keyCode) {
       case vm.escapeKey:
         cancelModal();
-        break;
-      case vm.rightArrow:
-        if (nextButton(vm.currentState) === true) {
-          nextPage();
-        }
-        break;
-      case vm.leftArrow:
-        if (previousButton(vm.currentState) === true) {
-          previousPage();
-        }
         break;
       default:
         break;

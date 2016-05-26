@@ -42,7 +42,6 @@
   top: 32px;
   color: #aeaeaf;
  }
-
 .modal-title {
   width: 318px;
   height: 32px;
@@ -119,19 +118,20 @@
   text-align:center;
 }
 
-.icon-import, .icon-export {
+.icon-import2, .icon-export2 {
   width: 44px;
   height: 44px;
   background-color: #049fd9;
- }
-
-.icon-import{
+  color:white;
+}
+ 
+.icon-import2{
   position:absolute;
   left:100px;
-  top: 36px;
+  top: 41px;
 }
 
-.icon-export{
+.icon-export2{
   position:absolute;
   left:100px;
   top: 41px;
@@ -156,6 +156,7 @@
 
 #file-drop-content {
   width:100%;height:45%;
+  border:1px solid blue;
 }
 
 .file-drop-content {
@@ -175,10 +176,11 @@
   position:absolute;
   left:36%;
   top:65%;
+  background-color:#049fd9;
 }
 
 .import-delete{
   position:absolute;
-  right:-7%;
+  right:2%;
   top:15%;
   }

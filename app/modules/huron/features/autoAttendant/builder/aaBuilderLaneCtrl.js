@@ -6,13 +6,13 @@
     .controller('AABuilderLaneCtrl', AABuilderLaneCtrl);
 
   /* @ngInject */
-  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, Config, AACommonService, $timeout) {
+  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, Config, AACommonService, FeatureToggleService, $timeout) {
 
     var vm = this;
     vm.schedule = "";
     vm.entries = [];
     vm.templateName = $stateParams.aaTemplate;
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
+    vm.allowStepAddsDeletes = false;
     vm.addAction = addAction;
 
     /////////////////////
@@ -46,10 +46,22 @@
       });
     }
 
+    function setFeatureToggle() {
+      // toggle for huronAASchedules
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.allowStepAddsDeletes = true;
+      } else {
+        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
+          vm.allowStepAddsDeletes = result;
+        });
+      }
+    }
+
     function activate() {
       vm.schedule = $scope.schedule;
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      setFeatureToggle();
     }
 
     activate();

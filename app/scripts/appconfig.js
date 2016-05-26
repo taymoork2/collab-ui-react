@@ -1079,7 +1079,7 @@
               }
             },
             params: {
-              csvImportObj: null
+              siteRow: null
             }
           })
           .state('site-csv-results', {
@@ -2241,8 +2241,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryController',
-              controllerAs: 'ediscoveryCtrl',
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2253,16 +2253,18 @@
         .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
-            controller: 'EdiscoveryController',
-            controllerAs: 'ediscoveryCtrl',
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
             url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html'
           })
           .state('ediscovery.reports', {
             url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
       }

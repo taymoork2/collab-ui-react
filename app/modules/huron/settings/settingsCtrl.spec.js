@@ -117,6 +117,35 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(CallerId.saveCompanyNumber).toHaveBeenCalled();
+    expect(CallerId.updateCompanyNumber).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should update the company caller ID', function () {
+    controller.allExternalNumbers = [{
+      pattern: '+19725551001',
+      label: '(972) 555-1001',
+      uuid: '123456'
+    }];
+    controller.model.callerId.callerIdEnabled = true;
+    controller.model.callerId.externalNumber.uuid = '123456';
+    controller.model.callerId.callerIdName = 'Cisco';
+    controller.existingCallerIdName = 'Cisco Updated';
+    controller.model.callerId.callerIdNumber = '(972) 555-1001';
+    controller.save();
+    $scope.$apply();
+
+    expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
+    expect(CallerId.updateCompanyNumber).toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should not save the company caller ID if off and no callerId exists', function () {
+    controller.model.callerId.callerIdEnabled = false;
+    controller.save();
+    $scope.$apply();
+
+    expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
@@ -139,6 +168,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(CallerId.saveCompanyNumber).toHaveBeenCalled();
+    expect(CallerId.updateCompanyNumber).not.toHaveBeenCalled();
     expect(Notification.processErrorResponse).toHaveBeenCalled();
   });
 
@@ -148,6 +178,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.save();
     $scope.$apply();
 
+    expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
+    expect(CallerId.updateCompanyNumber).not.toHaveBeenCalled();
     expect(CallerId.deleteCompanyNumber).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });

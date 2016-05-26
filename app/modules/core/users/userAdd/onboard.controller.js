@@ -1342,10 +1342,9 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length === usersList.length) {
+          if (successes.length + errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
         } else {

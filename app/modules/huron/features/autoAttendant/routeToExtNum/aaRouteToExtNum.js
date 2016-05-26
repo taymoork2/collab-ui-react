@@ -32,7 +32,8 @@
     };
     vm.menuKeyEntry = {};
 
-    vm.uniqueCtrlIdentifer = $scope.schedule + "-" + $scope.index + ($scope.keyIndex ? ("-" + $scope.keyIndex) : "");
+    /* Using the tag 'RouteCall' to differentiate btw Phone Menu and Route Call, useful in aaValidateSuccess.js */
+    vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, $scope.index, ($scope.keyIndex ? $scope.keyIndex : "RouteCall"));
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
