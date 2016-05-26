@@ -50,6 +50,7 @@ describe('SiteListService.updateWebExColumnsInRow() test', function () {
         mockStatus: false,
       },
 
+      showCSVIconAndResults: true,
       csvPollIntervalObj: null
     };
 
