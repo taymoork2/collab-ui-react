@@ -142,7 +142,6 @@ describe('Controller: AADialByExtCtrl', function () {
       aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
-
       // setup the options menu
       controller = $controller('AADialByExtCtrl', {
         $scope: $scope
@@ -172,7 +171,6 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.saveUiModel();
       $scope.$apply();
 
-      
       expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
       expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
 
@@ -185,7 +183,7 @@ describe('Controller: AADialByExtCtrl', function () {
       expect(controller).toBeDefined();
 
       $scope.$apply();
-      
+
       expect(controller.menuEntry.actions[0].minNumberOfCharacters).toEqual(0);
       expect(controller.menuEntry.actions[0].maxNumberOfCharacters).toEqual(0);
 

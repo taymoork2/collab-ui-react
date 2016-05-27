@@ -360,8 +360,8 @@
         "description": "",
         "inputType": 2,
         "voice": "",
-        "maxNumberOfCharacters":4, 
-        "minNumberOfCharacters":4
+        "maxNumberOfCharacters": 4,
+        "minNumberOfCharacters": 4
       }],
       "timeout": "",
       "username": "",
