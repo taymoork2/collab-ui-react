@@ -80,10 +80,11 @@
               <form>
                 <cs-select
                   id="field3"
-                  class="h5 inputField_select ct-selectable-element large-11"
-                  ng-model="careChatSA.selectFieldOptions">
-                  <option value="">{{careChatSA.getAttributeParam('value', 'hintText', 'field2')}}</option>
-                </cs-select>
+                  class="h5 inputField_select ct-selectable-cs-select large-11"
+                  ng-model="careChatSA.selectFieldSelected"
+                  placeholder="careChatSA.selectFieldPlaceholder"
+                  is-disabled="true"
+                  ></cs-select>
               </form>
             </div>
           </section>
@@ -134,7 +135,7 @@
                   ng-model="attribute.value"
                   options="attribute.options"
                   labelfield="text"
-                  valuefield="text"
+                  valuefield="id"
                   class="ct-attribute-field-textbox"
                   placeholder="attribute.defaultValue">
                 </cs-select>
