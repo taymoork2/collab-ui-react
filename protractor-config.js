@@ -30,6 +30,7 @@ var console_exclude_strings = function() {
   if (dateNow < dateExp) {
     a.push("TypeError: element.parent is not a function");
     a.push("was delivered via a <meta> element, which is disallowed. The policy has been ignored.");
+    a.push("was delivered in report-only mode, but does not specify a 'report-uri'");
   }
   return a;
 };
