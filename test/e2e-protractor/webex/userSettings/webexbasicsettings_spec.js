@@ -1,12 +1,34 @@
 'use strict';
 
-/*global webEx*/
+/* global usersettings */
+/* global webEx */
 
 describe('WebEx user settings', function () {
+  var setup = false;
 
   beforeAll(function () {
+    /*
     login.loginUsingIntegrationBackend('wbxUserSettingsTestAdmin');
-  });
+    setup = true;
+    */
+    var promise = webEx.setup(
+      1,
+      'wbxUserSettingsTestAdmin',
+      usersettings.testAdmin.username,
+      usersettings.testAdmin.password,
+      usersettings.testSiteUrl
+    );
+
+    promise.then(
+      function success(ticket) {
+        setup = (null !== ticket);
+      },
+
+      function error() {
+        setup = false;
+      }
+    );
+  }); // beforeAll()
 
   it('should login as ' + usersettings.testAdmin.username + ' and navigate to Users page', function () {
     navigation.clickUsers();
@@ -23,51 +45,67 @@ describe('WebEx user settings', function () {
   });
 
   it('should allow click on site name', function () {
-    utils.wait(usersettings.testSiteElement);
-    expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
-    utils.click(usersettings.testSiteElement);
+    if (setup) {
+      utils.wait(usersettings.testSiteElement);
+      expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
+      utils.click(usersettings.testSiteElement);
+    }
   });
 
   it('should display basic WebEx settigns page', function () {
-    utils.wait(usersettings.userSettingsPanel);
-    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
-    expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
+    if (setup) {
+      utils.wait(usersettings.userSettingsPanel);
+      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
+    }
   });
 
   it('should not display WebEx error page', function () {
-    expect(usersettings.errorPanel.isPresent()).toBeFalsy();
+    if (setup) {
+      expect(usersettings.errorPanel.isPresent()).toBeFalsy();
+    }
   });
 
   it('should allow navigation to the 4th panel', function () {
-    utils.click(usersettings.userPrivilegesLink);
-    utils.wait(usersettings.userPrivilegesPanel);
-    expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
-    expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
+    if (setup) {
+      utils.click(usersettings.userPrivilegesLink);
+      utils.wait(usersettings.userPrivilegesPanel);
+      expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+      expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
+    }
   });
 
   it('should allow navigation back to the 3rd panel', function () {
-    utils.clickLastBreadcrumb();
-    expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
-    expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
+    if (setup) {
+      utils.clickLastBreadcrumb();
+      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
+    }
   });
 
   it('should not show save button without any changes', function () {
-    expect(usersettings.saveButton.isPresent()).toBeFalsy();
+    if (setup) {
+      expect(usersettings.saveButton.isPresent()).toBeFalsy();
+    }
   });
 
   it('should allow edit in 3rd panel', function () {
-    expect(usersettings.mcAuoCheckbox.isPresent());
-    usersettings.mcAuo.click();
-    expect(usersettings.saveButton.isPresent()).toBeTruthy();
+    if (setup) {
+      expect(usersettings.mcAuoCheckbox.isPresent());
+      usersettings.mcAuo.click();
+      expect(usersettings.saveButton.isPresent()).toBeTruthy();
+    }
   });
 
   it('should allow save in 3rd panel', function () {
-    usersettings.save();
-    //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
+    if (setup) {
+      usersettings.save();
+      // expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
+    }
   });
 
-  /*
-    xit('should allow edit in 4th panel', function () {
+  xit('should allow edit in 4th panel', function () {
+    if (setup) {
       utils.click(usersettings.userPrivilegesLink);
       utils.wait(usersettings.userPrivilegesPanel);
       expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
@@ -75,10 +113,11 @@ describe('WebEx user settings', function () {
       if (usersettings.userPrivilegesPanel.telephonyPrivileges.isPresent()) {
         expect(usersettings.callInTeleconfCheckbox.isPresent());
       }
+    }
+  });
 
-    });
-
-    xit('should not allow save of mc AUO without mc PRO', function () {
+  xit('should not allow save of mc AUO without mc PRO', function () {
+    if (setup) {
       if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
         usersettings.unSelectAllMcSessionTypeByPrefix('PRO');
         usersettings.selectAllMcSessionTypeByPrefix('AUO');
@@ -87,9 +126,11 @@ describe('WebEx user settings', function () {
         expect(usersettings.alertError.isDisplayed()).toBeTruthy();
         usersettings.alertError.click();
       }
-    });
+    }
+  });
 
-    xit('should allow save of mc AUO with mc PRO', function () {
+  xit('should allow save of mc AUO with mc PRO', function () {
+    if (setup) {
       if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
         usersettings.selectAllMcSessionTypeByPrefix('PRO');
         usersettings.selectAllMcSessionTypeByPrefix('AUO');
@@ -98,14 +139,14 @@ describe('WebEx user settings', function () {
         expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
         usersettings.alertSuccess.click();
       }
-    });
-  */
+    }
+  });
 
   // it('should pause', function () {
   //   browser.pause();
   // });
 
-  afterAll(function () {
+  it('should allow log out', function () {
     navigation.logout();
   });
 });
