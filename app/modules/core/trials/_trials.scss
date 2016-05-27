@@ -165,6 +165,20 @@
   .section__description {
     color: $gray-base;
   }
+
+  .with-slim-offset {
+    &.medium-8 {
+      width: 60%;
+    }
+
+    &.medium-4 {
+      width: 35%;
+    }
+
+    &.offset-l {
+      margin-left: 16px;
+    }
+  }
 }
 
 .trial-modal--complete {

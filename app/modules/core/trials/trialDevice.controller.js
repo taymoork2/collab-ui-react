@@ -77,11 +77,11 @@
       model: vm.sx10,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.sx10'),
         id: 'cameraSX10',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -94,12 +94,12 @@
       model: vm.sx10,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
         min: 2,
@@ -132,11 +132,11 @@
       model: vm.phone8865,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8865'),
         id: 'phone8865',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -149,12 +149,12 @@
       model: vm.phone8865,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
         min: 1,
@@ -183,11 +183,11 @@
       model: vm.phone8845,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8845'),
         id: 'phone8845',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -200,12 +200,12 @@
       model: vm.phone8845,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
         min: 1,
@@ -235,11 +235,11 @@
       model: vm.phone8841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8841'),
         id: 'phone8841',
-        class: 'columns medium-offset-1'
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -252,12 +252,12 @@
       model: vm.phone8841,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
         min: 1,
@@ -286,11 +286,11 @@
       model: vm.phone7841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone7841'),
         id: 'phone7841',
-        class: 'columns medium-offset-1'
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -303,12 +303,12 @@
       model: vm.phone7841,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
         min: 1,
@@ -339,10 +339,10 @@
       model: vm.shippingInfo,
       key: 'name',
       type: 'input',
-      className: 'columns medium-12',
+      className: 'pull-left medium-8 with-slim-offset',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
         required: true,
@@ -352,10 +352,10 @@
       model: vm.shippingInfo,
       key: 'phoneNumber',
       type: 'input',
-      className: 'columns medium-12',
+      className: 'pull-left medium-4 with-slim-offset offset-l',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.phone'),
         type: 'text',
         required: true,
@@ -368,10 +368,10 @@
       defaultValue: _.find(TrialDeviceService.getCountries(), {
         country: vm.shippingInfo.country
       }),
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
@@ -389,10 +389,10 @@
       model: vm.shippingInfo,
       key: 'addressLine1',
       type: 'input',
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.address'),
         type: 'text',
         required: true,
@@ -402,10 +402,10 @@
       model: vm.shippingInfo,
       key: 'city',
       type: 'input',
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.city'),
         type: 'text',
         required: true,
@@ -418,10 +418,10 @@
       defaultValue: _.find(TrialDeviceService.getStates(), {
         country: vm.shippingInfo.state
       }),
-      className: 'columns medium-5',
+      className: 'pull-left medium-8 with-slim-offset',
       templateOptions: {
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-6',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.state'),
         required: true,
         labelfield: 'abbr',
@@ -438,11 +438,11 @@
       model: vm.shippingInfo,
       key: 'postalCode',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-4 with-slim-offset offset-l',
       validators: _checkValidators(),
       templateOptions: {
-        labelClass: 'columns medium-2 medium-offset-1 text-right',
-        inputClass: 'columns medium-5',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.zip'),
         type: 'text',
         max: 99999,
@@ -455,10 +455,10 @@
       model: vm.shippingInfo,
       key: 'dealId',
       type: 'input',
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.dealId'),
         type: 'text',
         required: false,

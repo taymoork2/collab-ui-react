@@ -9,52 +9,62 @@
 </div>
 
 <!-- body -->
-<section class="modal-body">
-  <form id="callTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-  <section class="modal-body-gray row" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
-    <h5 translate="trialModal.call.deviceTrialCapacityHeader"></h5>
-    <div ng-if="callTrial.limitsError">
-      <div class="medium-12 columns" translate="trialModal.call.deviceTrialUnavailable"></div>
-    </div>
-    <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
-    <div ng-if="!callTrial.limitsError">
-      <div class="medium-12 columns"
-        translate="trialModal.call.deviceTrialLimitReached"
-        translate-values="{number: callTrial.maxTrials}">
-      </div>
-      <div class="pad-top"></div>
-      <div class="medium-12 columns pad-top" translate="trialModal.call.deviceTrialLimitHelp"></div>
-    </div>
-  </section>
+<div class="modal-body trials">
+  <form id="callTrialForm" class="cs-form trial-modal" name="trialForm">
 
-  <section class="modal-body-gray" ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
-    <section class="collapse-fields">
-      <h5 translate="trialModal.call.selectDevicesHeader"></h5>
-      <section class="row">
-        <div class="small-12 columns" translate="trialModal.call.deviceLimitDescription"></div>
-        <h6 class="small-12 columns" translate="trialModal.call.meetingRoomCamera"></h6>
-        <formly-form class="small-12 columns" model="callTrial.details.roomSystems"
-          fields="callTrial.roomSystemFields" hide-directive="ng-show">
-        </formly-form>
-      </section>
-      <section class="row">
-        <h6 class="small-12 columns" translate="trialModal.call.deskPhones"></h6>
-        <formly-form class="small-12 columns" model="callTrial.details.phones"
-          fields="callTrial.deskPhoneFields" hide-directive="ng-show">
-        </formly-form>
-      </section>
-    </section>
-    <section class="collapse-fields">
-      <h5 translate="trialModal.call.shippingInfo"></h5>
-      <section class="row">
-        <formly-form class="small-12 columns" model="callTrial.details.shippingInfo"
-          fields="callTrial.shippingFields" hide-directive="ng-show">
-        </formly-form>
-      </section>
-    </section>
-  </section>
+    <!-- tbd: unable to add devices error msg (device trial limit reached) -->
+    <div class="cs-form__section" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.call.deviceTrialCapacityHeader"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section__description">
+          <div ng-if="callTrial.limitsError">
+            <p translate="trialModal.call.deviceTrialUnavailable"></p>
+          </div>
+          <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
+          <div ng-if="!callTrial.limitsError">
+            <p translate="trialModal.call.deviceTrialLimitReached"
+              translate-values="{number: callTrial.maxTrials}">
+            </p>
+            <!-- todo: rm 'br' and layout with CSS after UX provides updated layout for this error msg -->
+            <br />
+            <p translate="trialModal.call.deviceTrialLimitHelp"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- select devices -->
+    <div class="cs-form__section" ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+      <div class="section__info">
+        <h4 translate="trialModal.call.selectDevicesHeader"></h4>
+        <p class="section__description" translate="trialModal.call.deviceLimitDescription"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="trialModal.call.meetingRoomCamera"></h5>
+          <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields"></formly-form>
+        </div>
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="trialModal.call.deskPhones"></h5>
+          <formly-form model="callTrial.details.phones" fields="callTrial.deskPhoneFields"></formly-form>
+        </div>
+      </div>
+    </div>
+
+    <!-- shipping information -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trialModal.call.shippingInfo"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="callTrial.details.shippingInfo" fields="callTrial.shippingFields"></formly-form>
+      </div>
+    </div>
   </form>
-</section>
+</div>
+
 <!-- footer -->
 <div class="modal-footer">
   <a class="pad-top pull-left" ng-if="callTrial.canAddDevice || !callTrial.limitReached"
