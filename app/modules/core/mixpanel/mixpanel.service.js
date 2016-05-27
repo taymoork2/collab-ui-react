@@ -11,8 +11,7 @@
   function Mixpanel(Config, Orgservice) {
 
     var service = {
-      invokeProdOrg: invokeProdOrg,
-      invokeTestOrg: invokeTestOrg
+      trackEvent: trackEvent
     };
 
     return service;
@@ -20,19 +19,13 @@
     /**
      *	Saves mixpanel data in production
      */
-    function invokeProdOrg(eventName, attributes) {
+    function trackEvent(eventName, attributes) {
       if (Config.isProd()) {
-        mixpanel.track(eventName, _.toArray(attributes));
-      }
-    }
-
-    /**
-     * Saves mixpanel data in test orgs
-     */
-    function invokeTestOrg(eventName, attributes) {
-      Orgservice.getOrg(function (data, status) {
-        if (status === 200 && data.isTestOrg) {
-          mixpanel.track(eventName, _.toArray(attributes));
+        mixpanel.track('Prod Org: ' + eventName, _.toArray(attributes));
+      } 
+      Orgservice.getOrg(function (response) {
+        if (response.isTestOrg) {
+          mixpanel.track('Test Org: ' + eventName, _.toArray(attributes));
         }
       });
     }

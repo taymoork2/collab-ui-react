@@ -78,7 +78,7 @@
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
             });
-            Mixpanel.invokeTestOrg('patch user call', {
+            Mixpanel.trackEvent('patch user call', {
               by: response.data.orgId
             });
           }
