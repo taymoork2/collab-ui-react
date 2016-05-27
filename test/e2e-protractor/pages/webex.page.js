@@ -30,9 +30,11 @@ function post(url, body) {
     }
 
   }
+  
   request(options, callback);
+  
   return defer.promise;
-}
+} // post()
 
 var WebExPage = function () {
   var ticket;
@@ -44,7 +46,12 @@ var WebExPage = function () {
     return promise;
   }
 
-  this.getTicket = function (webexAdminID, accessToken, siteUrl) {
+  this.getTicket = function (
+    webexAdminID,
+    accessToken,
+    siteUrl
+  ) {
+
     xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
 
     var dotIndex = siteUrl.indexOf(".");
@@ -67,23 +74,48 @@ var WebExPage = function () {
 
     var flow = protractor.promise.controlFlow();
     return flow.execute(this.initPost);
-  };
+  }; // getTicket()
 
-  this.setup = function (username, password, testSiteUrl) {
-    login.loginThroughGuiUsingIntegrationBackend(username, password);
+  this.setup = function (
+    loginType,
+    adminId,
+    adminUserName,
+    adminPassword,
+    testSiteUrl
+  ) {
+
+    switch (loginType) {
+    case 1:
+      login.loginUsingIntegrationBackend(adminId);
+      break;
+
+    default:
+      login.loginThroughGuiUsingIntegrationBackend(adminUserName, adminPassword);
+      break;
+    }
+
     var defer = protractor.promise.defer();
+
     browser.executeScript("return window.localStorage.getItem('accessToken');").then(function (accessToken) {
-      var promise = webEx.getTicket(username, accessToken, testSiteUrl);
+      var promise = webEx.getTicket(
+        adminUserName,
+        accessToken,
+        testSiteUrl
+      );
+
       promise.then(
-        function (ticket) {
+        function success(ticket) {
           defer.fulfill(ticket);
+          // defer.fulfill(null);
         },
-        function () {
+
+        function error() {
           defer.reject();
         });
     });
+
     return defer.promise;
-  };
+  }; // setup()
 };
 
 module.exports = WebExPage;
