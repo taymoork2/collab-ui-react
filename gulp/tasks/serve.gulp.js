@@ -13,8 +13,6 @@ var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var compression = require('compression');
 var contentSecurityPolicy = require('helmet-csp');
-var notifier = require('node-notifier');
-var openBrowser = require('open');
 var testFiles;
 var changedFiles;
 
@@ -75,37 +73,6 @@ gulp.task('browser-sync', function () {
       baseDir: baseDir,
       middleware: [
         compression(),
-        {
-          route: '/report-violation',
-          handle: function (req, res, next) {
-            if (req.method === 'POST') {
-              var chunks = '';
-              req.on('data', function(chunk) {
-                chunks = chunks + chunk;
-              });
-              req.on('end', function() {
-                var report = JSON.parse(chunks)['csp-report'];
-                notifier.notify({
-                  title: 'CSP violation',
-                  subtitle: 'You violated ' + report['effective-directive'],
-                  message: 'Blocked URI: ' + report['blocked-uri'],
-                  icon: 'http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/01/01f7232ab1dd5845a83b18ae92552a188ec0530d_full.jpg',
-                  contentImage: 'http://memesvault.com/wp-content/uploads/Nooo-Meme-04.jpg',
-                  wait: true
-                });
-                notifier.on('click', function (notifierObject, options) {
-                  openBrowser('http://www.google.com');
-                });
-                res.writeHead(200, 'OK', {
-                  'Content-Type': 'text/html'
-                });
-                res.end();
-              });
-            } else {
-              next();
-            }
-          }
-        },
         contentSecurityPolicy({
           reportOnly: false,
           browserSniff: false,
