@@ -28,3 +28,16 @@
   padding-bottom: 0;
   padding-left: 0;
 }
+
+.popout-link {
+  color: $link-color;
+  cursor: pointer;
+  border-radius: 0;
+
+  &:hover,
+  &:focus {
+    color: $link-hover-color;
+    text-decoration: none;
+    background-color: transparent;
+  }
+}
