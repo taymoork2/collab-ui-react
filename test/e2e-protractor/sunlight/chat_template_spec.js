@@ -30,7 +30,7 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfChatStringsPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfEmbedCodePage();
+    validateContentsOfSummaryPage();
   });
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
@@ -158,8 +158,8 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
   }
 
-  function validateContentsOfEmbedCodePage() {
-    validateTitleAndDesc('Embed Code', 'Use the embed code to add this chat template to your site');
+  function validateContentsOfSummaryPage() {
+    validateTitleAndDesc('Summary', 'Configuration Summary');
   }
 
 });
