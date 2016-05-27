@@ -30,17 +30,17 @@
 
           <div class="section__content">
             <div class="sub-section">
-              <h5 class="sub-section__label large">Room Name</h5>
-              <span class="section__description">{{ediscoverySearchCtrl.searchCriteria.roomId}}</span>
+              <h5 class="sub-section__label large">{{ediscoverySearchCtrl.roomInfo.displayName}}</h5>
+              <span class="section__description">{{ediscoverySearchCtrl.roomInfo.id}}</span>
             </div>
             <div class="sub-section">
-              <input size="40" id="displayName" class="cs-input" placeholder="Enter display name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+              <input size="40" id="displayName" class="cs-input" placeholder="Enter display name" ng-model="ediscoverySearchCtrl.roomInfo.id">
             </div>
             <div class="sub-section">
-              <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="Choose a start Day" view-format="YYYY-MM-DD"></cs-datepicker>
+              <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.roomInfo.published" placeholder="Choose a start Day" view-format="YYYY-MM-DD"></cs-datepicker>
             </div>
             <div class="sub-section">
-              <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="Choose an end Day" view-format="YYYY-MM-DD"></cs-datepicker>
+              <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.roomInfo.lastReadableActivityDate" placeholder="Choose an end Day" view-format="YYYY-MM-DD"></cs-datepicker>
             </div>
             <div class="sub-section">
               <button type="button" class="button btn--primary align" ng-click="ediscoverySearchCtrl.createReport()">Create Report</button>
