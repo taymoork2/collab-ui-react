@@ -2,11 +2,11 @@
 
 var csp = require('helmet-csp');
 
-// During development we have only 2 inline scripts: the one preloading the background image
-// and the one injected by Browser Sync. We could add whilte-list the SHA1 of those 2 scripts
-// but the one for browser sync changes too often (it contains the version number).
-// Instead we use 'unsafe-inline' but this should never make it to production ! Production should use
-// 'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=' instead, the SHA1 for the image preload script
+// During development we only have 2 inline scripts: the one preloading the background image
+// and the one injected by Browser Sync. We could whitelist the SHA1 of those 2 scripts
+// but the one for Browser Sync changes too often (it contains the version number).
+// We use 'unsafe-inline' instead, but it should never make it to production! Production should only
+// use 'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=', the SHA1 for the image preload script
 var onlyForDev = '\'unsafe-inline\'';
 module.exports = csp({
   reportOnly: false,
