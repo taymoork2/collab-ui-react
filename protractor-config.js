@@ -9,6 +9,7 @@ var fs = require('fs');
 var gulpConfig = require('./gulp/gulp.config')();
 var processEnvUtil = require('./gulp/utils/processEnvUtil.gulp')();
 
+
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
 // - and at the end of each spec run, a connection back to sauce is made to report results
@@ -19,6 +20,19 @@ var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = gulpConfig.e2eFailRetry;
 var NEWLINE = '\n';
+
+var console_exclude_strings = function() {
+  var a = [/executionContextId/, /object Object/, /favicon/];
+
+  // NOTE -- These messages are only exluded until dateExp...
+  var dateNow = new Date();
+  var dateExp = new Date(2016, 8, 1, 0, 0, 0);
+  if (dateNow < dateExp) {
+    a.push("TypeError: element.parent is not a function");
+    a.push("was delivered via a <meta> element, which is disallowed. The policy has been ignored.");
+  }
+  return a;
+};
 
 exports.config = {
   framework: "jasmine2",
@@ -49,11 +63,7 @@ exports.config = {
     failOnWarning: false, // (Default - false),
     failOnError: false,   // (Default - true),
     logWarnings: true,    // (Default - true),
-    exclude: [            // Array of strings and regex (Default - [])
-      /executionContextId/,
-      /object Object/,
-      /favicon/
-    ]
+    exclude: console_exclude_strings()  // Array of strings and regex (Default - [])
   }],
 
   // A base URL for your application under test. Calls to protractor.get()

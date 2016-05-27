@@ -5,8 +5,8 @@
   function EdiscoverySearchController($timeout, $scope, $modal, EdiscoveryService) {
 
     var vm = this;
+    vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
-
     vm.runReport = runReport;
     //vm.showSearchHelp = showSearchHelp;
 
@@ -81,6 +81,16 @@
     $scope.$watch(getEndDate, function (endDate) {
       //validateDate();
     });
+
+    function searchForRoom(roomId) {
+      // TODO: Implement proper handling of error when final API is in place
+      EdiscoveryService.getAvalonServiceUrl(vm.searchCriteria.roomId)
+        .then(function (result) {
+          EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + vm.searchCriteria.roomId).then(function (result) {
+            vm.roomInfo = result;
+          });
+        });
+    }
 
     function findReportById(reports, id) {
       return _.find(reports, function (report) {
