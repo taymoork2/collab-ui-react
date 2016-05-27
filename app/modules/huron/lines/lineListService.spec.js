@@ -97,6 +97,16 @@ describe('Service: LineListService', function () {
         expect(angular.equals(response, lines.concat(formattedPendingLines))).toBe(true);
       });
     });
+
+    it('should set seach criteria to pending and and return nothing if lines is empty', function () {
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond([]);
+      $scope.$apply();
+      LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
+        expect(angular.equals(response, [])).toBe(true);
+      });
+    });
   });
 
   describe('getCount', function () {
