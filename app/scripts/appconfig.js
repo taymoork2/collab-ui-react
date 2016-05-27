@@ -1124,6 +1124,17 @@
               siteUrl: null
             }
           })
+          .state('reports-metrics', {
+            url: '/reports/metrics',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
+              siteUrl: null
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
