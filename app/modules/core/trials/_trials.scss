@@ -179,6 +179,32 @@
       margin-left: 16px;
     }
   }
+
+  &.modal-body .messagebox-backdrop {
+    background-image: none;
+    max-width: 60.25rem;
+
+    .message-box {
+      margin-top: -16rem;
+      width: 35rem;
+      padding-top: 0;
+
+      .icon-check-mark-success {
+        color: $color-cta-base;
+        font-size: 6rem;
+      }
+
+      .finish-msg__title {
+        margin-top: 3rem;
+      }
+
+      .finish-msg__description {
+        margin-top: 2rem;
+        font-size: 1rem;
+        text-align: left;
+      }
+    }
+  }
 }
 
 .trial-modal--complete {

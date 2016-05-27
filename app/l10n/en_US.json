@@ -2230,6 +2230,9 @@
         "siteFail": "Site was not created"
       }
     },
+    "finish": {
+      "title": "Congratulations!"
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
