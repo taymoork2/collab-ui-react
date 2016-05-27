@@ -441,7 +441,6 @@
               action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
               action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
               menuEntry.voice = inAction.runActionsOnInput.voice;
-              menuEntry.voice = inAction.runActionsOnInput.voice;
               menuEntry.language = inAction.runActionsOnInput.language;
               menuEntry.attempts = inAction.runActionsOnInput.attempts;
               menuEntry.addAction(action);

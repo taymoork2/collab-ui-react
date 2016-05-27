@@ -93,14 +93,15 @@
       AACommonService.setDialByExtensionStatus(true);
 
     }
-    function getFeatureToggle(action) {
 
-      FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function(result){
+    function setActionMinMax(action) {
+
+      FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
 
         if (result) {
           action.minNumberOfCharacters = 0;
           action.maxNumberOfCharacters = 0;
-        } else { 
+        } else {
           action.minNumberOfCharacters = 4;
           action.maxNumberOfCharacters = 4;
         }
@@ -110,7 +111,7 @@
     function setPhoneMenuMinMaxEntry() {
       var action = vm.menuEntry.actions[0];
       if (angular.isUndefined(action.minNumberOfCharacters)) {
-        getFeatureToggle(action);
+        setActionMinMax(action);
       }
     }
 
@@ -120,7 +121,7 @@
         var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
         action.inputType = 2;
 
-        getFeatureToggle(action);
+        setActionMinMax(action);
 
         vm.menuEntry.addAction(action);
 
@@ -130,7 +131,7 @@
           vm.menuEntry.actions[0].setName(runActionName);
           vm.menuEntry.actions[0].setValue('');
           vm.menuEntry.actions[0].inputType = 2;
-          getFeatureToggle(vm.menuEntry.actions[0]);
+          setActionMinMax(vm.menuEntry.actions[0]);
         } // else let saved value be used
       }
     }
