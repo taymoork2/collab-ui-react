@@ -28,18 +28,17 @@ describe('Controller: EdiscoverySearchController', function () {
 
     it('with happy-clappy legal input parameters', function () {
 
-      var runReportSpy = sinon.stub(EdiscoveryService, 'runReport');
+      sinon.stub(EdiscoveryService, 'runReport');
       var deferedRunReportResult = $q.defer();
       EdiscoveryService.runReport.returns(deferedRunReportResult.promise);
 
       sinon.stub(EdiscoveryService, 'createReport');
-      var deferedResult = $q.defer();
-      deferedResult.resolve({
+      var promise = $q.resolve({
         "displayName": "test",
         "url": "whatever",
         "id": "12345678"
       });
-      EdiscoveryService.createReport.returns(deferedResult.promise);
+      EdiscoveryService.createReport.returns(promise);
 
       ediscoverySearchController.createReport();
       httpBackend.flush();
@@ -50,14 +49,14 @@ describe('Controller: EdiscoverySearchController', function () {
         "id": "12345678"
       });
 
-      expect(runReportSpy.callCount).toBe(1);
+      expect(EdiscoveryService.runReport.callCount).toBe(1);
 
     });
 
-    it('get error from backend', function () {
+    it('recieves error from backend', function () {
+
       sinon.stub(EdiscoveryService, 'createReport');
-      var deferedResult = $q.defer();
-      deferedResult.reject({
+      var promise = $q.reject({
         data: {
           "errorCode": 420000,
           "message": "Invalid Input",
@@ -67,8 +66,7 @@ describe('Controller: EdiscoverySearchController', function () {
           }]
         }
       });
-
-      EdiscoveryService.createReport.returns(deferedResult.promise);
+      EdiscoveryService.createReport.returns(promise);
 
       ediscoverySearchController.createReport();
       httpBackend.flush();

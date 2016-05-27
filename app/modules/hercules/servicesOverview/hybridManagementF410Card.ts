@@ -34,6 +34,10 @@ namespace servicesOverview {
       return this._buttons;
     }
 
+    public f410FeatureEventHandler(hasFeature:boolean) {
+      this._display = hasFeature;
+    }
+
     public constructor() {
       super({
         name: 'servicesOverview.cards.clusterList.title',

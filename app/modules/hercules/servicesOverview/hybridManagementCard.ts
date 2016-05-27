@@ -31,6 +31,10 @@ namespace servicesOverview {
       return [this._setupButton];
     }
 
+    public f410FeatureEventHandler(hasFeature:boolean) {
+      this._display = !hasFeature;
+    }
+
     public constructor() {
       super({
         name: 'servicesOverview.cards.hybridManagement.title',
