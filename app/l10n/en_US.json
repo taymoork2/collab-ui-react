@@ -2251,9 +2251,9 @@
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
-    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
-    "requestPurchaseBtn": "Request Purchase",
+    "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
