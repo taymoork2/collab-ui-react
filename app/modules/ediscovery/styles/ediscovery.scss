@@ -68,8 +68,6 @@
 
     .create-report {
       padding-left: 9rem;
-      //background-color: $gray-light-4;
-      //border: solid 1px $gray-light-4;
       box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
       border-radius: 2px;
       margin-top: 2rem;
@@ -84,8 +82,10 @@
     .cs-form__section .section__content .sub-section {
       margin-bottom: 0.5rem;
       h5.large {
-        font-size: 20px;
+        font-size: 2rem;
         margin-bottom: 0.25rem;
+        line-height: 2rem;
+        margin-top: 1rem;
       }
     }
 
