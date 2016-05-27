@@ -2,11 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoverySearchController($timeout, $scope, $modal, EdiscoveryService) {
 
     var vm = this;
     vm.createReport = createReport;
-    vm.createReportDoIt = createReportDoIt;
+
+    vm.runReport = runReport;
     //vm.showSearchHelp = showSearchHelp;
 
     $scope.$on('$destroy', function () {
@@ -14,7 +15,7 @@
     });
 
     vm.searchCriteria = {
-      "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+      "roomId": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
       "startDate": moment(moment()).add(-7, 'days'), // week
       "endDate": moment()
     };
@@ -89,19 +90,23 @@
 
     // Should eventually be a search API
     function createReport() {
+      disableAvalonPolling();
+      vm.errors = [];
       if (!validateDate()) {
         return;
       }
       vm.report = {
         "state": "Searching..."
       };
-      // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.searchString)
+
+      EdiscoveryService.createReport(vm.searchCriteria.displayName)
         .then(function (res) {
           vm.searchResult = res;
-          createReportDoIt();
-        }).catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
+          runReport();
+        })
+        .catch(function (err) {
+          vm.errors = err.data.errors;
+          vm.report = {};
         });
     }
 
@@ -118,7 +123,7 @@
 
     function pollAvalonReport() {
       // TODO: Implement proper handling of error when final API is in place
-      EdiscoveryService.getReport(vm.searchResult.data.id).then(function (report) {
+      EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
         vm.report = report;
         avalonPoller = $timeout(pollAvalonReport, 2000);
       }).catch(function (err) {
@@ -127,14 +132,13 @@
       });
     }
 
-    function createReportDoIt() {
+    function runReport() {
       // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.createReportDoIt(vm.searchResult.data.runUrl, vm.searchCriteria.searchString, vm.searchResult.data.orgId)
+      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.roomId, vm.searchResult.url)
         .then(function (res) {
           enableAvalonPolling();
         })
         .catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
           vm.report = {
             "state": "NOT FOUND"
           };

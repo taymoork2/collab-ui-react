@@ -845,7 +845,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -1127,7 +1127,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Domain"
+      "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1465,18 +1465,15 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipDomainDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
-    "setSipDomainDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
-    "setSipDomainDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
-    "setSipDomainMsg": "Enter a prefix for the SIP domain",
-    "setSipDomainTitle": "SIP Domain",
-    "setSipDomainCompNames": "Your organization's SIP Domains:",
+    "setSipDomainDescription": "Select a subdomain that will be used to create Spark SIP addresses.",
+    "setSipDomainMsg": "Enter a subdomain",
+    "setSipDomainTitle": "Spark SIP Address",
+    "setSipDomainCompNames": "Your organization's Spark SIP Addresses:",
     "setSipDomainCheckAvailability": "Check Availability",
-    "setSipDomainPlaceholder": "input a unique domain",
+    "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
-    "setSipDomainSuccessMessage": "The SIP Domain has been successfully saved",
+    "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -1521,8 +1518,8 @@
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
-    "cloudSipSuccess": "Successfully added Cloud SIP Domain.",
-    "cloudSipError": "Failed to add Cloud SIP Domain.",
+    "cloudSipSuccess": "Successfully added Cloud Spark SIP Address.",
+    "cloudSipError": "Failed to add Cloud Spark SIP Address.",
     "messengerRetentionSuccess": "Successfully added retention period setting.",
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
@@ -2254,9 +2251,9 @@
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
-    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
-    "requestPurchaseBtn": "Request Purchase",
+    "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
@@ -2900,7 +2897,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
-    "indexPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2954,7 +2951,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
-    "settingPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -4200,15 +4197,25 @@
       },
       "hybridManagement": {
         "title": "Hybrid Management",
-        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "description": "Connector management for Hybrid Call and Calendar Services.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
       "calendar": {
         "title": "Hybrid Calendar",
-        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4216,7 +4223,7 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
