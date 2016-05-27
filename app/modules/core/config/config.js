@@ -267,7 +267,8 @@
         'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
     config.serviceStates = {

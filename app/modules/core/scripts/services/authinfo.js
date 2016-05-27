@@ -460,6 +460,9 @@
           .value();
 
         return isTrial;
+      },
+      isComplianceUser: function () {
+        return this.hasRole('Compliance_User');
       }
     };
   }
