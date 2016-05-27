@@ -15,7 +15,8 @@
         max: '=',
         unlimited: '=',
         ssize: '=',
-        tsize: '='
+        tsize: '=',
+        name: '='
       },
 
       controller: ['$scope', function controller($scope) {
@@ -170,6 +171,11 @@
             return scope.property ? model[scope.property] : model;
           });
           arc = d3.svg.arc().innerRadius(radius).outerRadius(radius - scope.getRadius());
+
+          if (scope.name) {
+            scope.donutId = scope.name;
+          }
+
           svg = d3.select(element[0]).append('svg')
             .attr('class', 'cs-donut-svg')
             .attr('width', scope.getWidth())
@@ -242,12 +248,8 @@
               return scope.getColour(i);
             });
           });
-
         }, true);
-
       }
-
     };
   }
-
 })();

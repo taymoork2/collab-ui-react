@@ -12,8 +12,6 @@ namespace servicesOverview {
       Config = _Config_;
       $q = _$q_;
       $rootScope = _$rootScope_;
-      // $controller = _$controller_;
-
     }));
 
     let ctrl:ServicesOverviewCtrl;

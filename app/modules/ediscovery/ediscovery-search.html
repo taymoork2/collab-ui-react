@@ -24,31 +24,53 @@
     </div>
 
     <div class="cs-input-group columns large-6">
-       <label class="cs-input__label fit" for="roomId">Room Id</label>
+      <label class="cs-input__label fit" for="roomId">Room Id</label>
       <input id="roomId"
              class="cs-input"
              size="50"
              placeholder="Enter room id"
-             ng-model="ediscoverySearchCtrl.searchCriteria.searchString">
+             ng-model="ediscoverySearchCtrl.searchCriteria.roomId">
     </div>
 
     <div class="cs-input-group columns large-2">
       <button type="button" class="button btn--primary align" ng-click="ediscoverySearchCtrl.createReport()">Create Report</button>
     </div>
 
+    <div class="row">
+
+      <div class="cs-input-group columns large-4">
+      </div>
+
+      <div class="cs-input-group columns large-6">
+        <label class="cs-input__label fit" for="displayName">Display Name</label>
+        <input id="displayName"
+               class="cs-input"
+               size="50"
+               placeholder="Enter display name"
+               ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+      </div>
+
+      <div class="cs-input-group columns large-2">
+      </div>
+
+    </div>
 
 
 
   </div>
 
-  <div>
-    Search Result
+  <div ng-repeat="error in ediscoverySearchCtrl.errors">
+    {{error.description}}
   </div>
-  <div>
-    Status: {{ediscoverySearchCtrl.searchResult.status}}
+
+  <div ng-if="ediscoverySearchCtrl.report.state">
+    State: {{ediscoverySearchCtrl.report.state}}
   </div>
-  <div>
-    Data: {{ediscoverySearchCtrl.searchResult.data}}
+  <div ng-if="ediscoverySearchCtrl.report.progress">
+    <div class="spinner-example--small">
+      <i class="icon icon-spinner"></i>
+    </div>
+    {{ediscoverySearchCtrl.report.progress}}%
   </div>
 
 </div>

@@ -155,12 +155,13 @@
                   <colgroup>
                     <col class="medium-3">
                     <col class="medium-3">
-                    <col class="medium-3">
-                    <col class="medium-2">
-                    <col class="medium-3">
-                    <col class="medium-3">
                     <col class="medium-2">
                     <col class="medium-2">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-2">
+                    <col class="medium-3">
                   </colgroup>
                   <thead>
                     <tr>
@@ -172,6 +173,7 @@
                       <th translate='cdrLogs.calledPartyNumber'></th>
                       <th class="center" translate='cdrLogs.calledCause'></th>
                       <th class="center" translate='cdrLogs.duration'></th>
+                      <th class="center" translate='cdrLogs.callingCustomer'></th>
                     </tr>
                   </thead>
                 </table>
@@ -181,12 +183,13 @@
                   <colgroup>
                     <col class="medium-3">
                     <col class="medium-3">
-                    <col class="medium-3">
-                    <col class="medium-2">
-                    <col class="medium-3">
-                    <col class="medium-3">
                     <col class="medium-2">
                     <col class="medium-2">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-2">
+                    <col class="medium-3">
                   </colgroup>
                   <tbody ng-repeat="callSegment in call">
                     <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, callSegment)' ng-class="{'selectedCDR':  data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
@@ -198,6 +201,7 @@
                       <td>{{::data.dataParam.called_partyNumber}}</td>
                       <td class="center">{{::data.dataParam.called_cause_Value}}</td>
                       <td class="center">{{::data.dataParam.duration}}</td>
+                      <td class="center">{{::data.dataParam.calling_customerUUID}}</td>
                     </tr>
                   </tbody>
                 </table>
