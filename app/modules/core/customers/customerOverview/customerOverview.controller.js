@@ -139,6 +139,9 @@
         'address': partnerEmail
       };
       if (licIds.length > 0) {
+        if (vm.isPartnerAdmin) {
+          PartnerService.getUserAuthInfo(vm.customerOrgId);
+        }
         Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
       } else {
         AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
@@ -149,6 +152,9 @@
             var account = d.accounts[i];
             var lics = account.licenses;
             var licIds = collectLicenseIdsForWebexSites(lics);
+            if (vm.isPartnerAdmin) {
+              PartnerService.getUserAuthInfo(vm.customerOrgId);
+            }
             Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
           }
         });

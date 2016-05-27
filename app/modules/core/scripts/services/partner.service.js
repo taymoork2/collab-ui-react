@@ -73,7 +73,7 @@
       Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200) {
           var uuid = response.data.uuid;
-          if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
+          if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             addToManagedOrgsList(uuid, customerOrgId);
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
