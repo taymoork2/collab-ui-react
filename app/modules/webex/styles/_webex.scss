@@ -2,32 +2,8 @@
 @import '../siteSettings/sitesettings';
 @import '../siteCSVModals/site-csv-modals';
 
-.site-list {
-  background-color: $white;
-}
-.popout-link {
-  color: $link-color;
-  cursor: pointer;
-  border-radius: 0;
-
-  &:hover,
-  &:focus {
-    color: $link-hover-color;
-    text-decoration: none;
-    background-color: transparent;
-  }
-}
-
 .webex-reports {
   @extend %content-header;
-}
-
-.webex-alert-text {
-  color: $color-alerts-base;
-}
-
-.webex-attention-text {
-  color: $color-attention-base;
 }
 
 #webexSiteReports {
