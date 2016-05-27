@@ -9,6 +9,7 @@ var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var messageLogger = require('../utils/messageLogger.gulp')();
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var compression = require('compression');
@@ -64,8 +65,6 @@ gulp.task('browser-sync', function () {
     }
   }
 
-  var imagePreloadScriptSHA1 = '\'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=\'';
-  var browserSyncScriptSHA1 = '\'sha256-X3L99Fr8H4ZuITyUqIoiId5vHqXaiAp/3oicgoII6sc=\'';
   var options = {
     host: '127.0.0.1',
     port: 8000,
@@ -73,18 +72,7 @@ gulp.task('browser-sync', function () {
       baseDir: baseDir,
       middleware: [
         compression(),
-        contentSecurityPolicy({
-          reportOnly: false,
-          browserSniff: false,
-          directives: {
-            defaultSrc: ['\'self\'', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.localytics.com', '*.webexconnect.com'],
-            connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000'],
-            imgSrc: ['\'self\'', 'data:', '*.localytics.com', '*.rackcdn.com', '*.clouddrive.com'],
-            scriptSrc: ['\'self\'', imagePreloadScriptSHA1, browserSyncScriptSHA1, '\'unsafe-eval\'', '*.webex.com', '*.localytics.com', 'cdn.mxpnl.com', 'api.mixpanel.com'],
-            styleSrc: ['\'self\'', '\'unsafe-inline\''],
-            reportUri: '/report-violation',
-          }
-        })
+        customCSPmiddleware
       ]
     },
     ghostMode: args.browserall ? ghostMode : false,
