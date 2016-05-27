@@ -6,9 +6,9 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification) {
+  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification) {
     var vm = this;
-    vm.init = initCtrl;
+    vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -25,44 +25,115 @@
     vm.placeholder = {
       name: 'Search'
     };
-    vm.init();
+    /* LIST OF FEATURES
+     *
+     *  To add a New Feature (like Voice Templates)
+     *  1. Define the service to get the list of feature
+     *  2. Inject the features Service into the Controller
+     *  3. Add the Object for the feature in the format of the Features Array Object (features)
+     *  4. Define the formatter
+     * */
+    vm.features = [{
+      name: 'CT',
+      getFeature: CareFeatureList.getChatTemplates,
+      formatter: CareFeatureList.formatChatTemplates,
+      i18n: 'careChatTpl.chatTemplate',
+      isEmpty: false,
+      color: 'attention'
+    }];
+    init();
 
-    function initCtrl() {
+    function init() {
       vm.pageState = pageStates.loading;
-      vm.loading = false;
-      CareFeatureList.getChatTemplates().then(function (data) {
-        handleTemplates(data);
-      }, function (response) {
-        handleTemplateFailure(response);
+
+      _.forEach(vm.features, function (feature) {
+        vm.cardColor[feature.name] = feature.color;
+      });
+
+      var featuresPromises = getListOfFeatures();
+
+      handleFeaturePromises(featuresPromises);
+
+      $q.all(featuresPromises).then(function (responses) {
+        showNewFeaturePageIfNeeded();
       });
     }
 
-    function handleTemplates(data) {
-      if (data.length == 0) {
-        vm.pageState = pageStates.newFeature;
-        return;
+    function handleFeaturePromises(promises) {
+      _.forEach(vm.features, function (feature, index) {
+        promises[index].then(function (data) {
+          handleFeatureData(data, feature);
+        }, function (response) {
+          handleFailures(response, feature);
+        });
+      });
+    }
+
+    function handleFeatureData(data, feature) {
+
+      var list = feature.formatter(data);
+      if (list.length > 0) {
+
+        vm.pageState = pageStates.showFeatures;
+        feature.isEmpty = false;
+        vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        listOfAllFeatures = listOfAllFeatures.concat(list);
+      } else if (list.length === 0) {
+
+        feature.isEmpty = true;
+        showReloadPageIfNeeded();
       }
-      var templates = _.map(data, function (tpl) {
-        tpl.featureType = 'CT';
-        tpl.color = 'attention';
-        return tpl;
-      });
-
-      _.forEach(templates, function (template) {
-        vm.cardColor[template.featureType] = template.color;
-      });
-
-      listOfAllFeatures = listOfAllFeatures.concat(CareFeatureList.orderByCardName(templates));
-      vm.pageState = pageStates.showFeatures;
-      vm.listOfFeatures = listOfAllFeatures;
     }
 
-    function handleTemplateFailure(response) {
+    function getListOfFeatures() {
+      var promises = [];
+      vm.features.forEach(function (value) {
+        promises.push(value.getFeature());
+      });
+      return promises;
+    }
+
+    function handleFailures(response, feature) {
       vm.pageState = pageStates.error;
       Log.warn('Could not fetch features for customer with Id:', Authinfo.getOrgId());
       Notification.errorResponse(response, 'careChatTpl.failedToLoad', {
-        featureText: $filter('translate')('careChatTpl.chatTemplate')
+        featureText: $filter('translate')(feature.i18n)
       });
+    }
+
+    function areFeaturesEmpty() {
+      var isEmpty = true;
+      _.forEach(vm.features, function (feature) {
+        isEmpty = isEmpty && feature.isEmpty;
+      });
+      return isEmpty;
+    }
+
+    function showNewFeaturePageIfNeeded() {
+
+      if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+        vm.pageState = pageStates.newFeature;
+      } else {
+        reInstantiateMasonry();
+      }
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
+
+    function showReloadPageIfNeeded() {
+      if (vm.pageState === pageStates.loading && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+        vm.pageState = pageStates.error;
+      }
     }
 
     /* This function does an in-page search for the string typed in search box*/
@@ -86,11 +157,13 @@
 
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
-      $state.go('care.Features.DeleteFeature', {
-        deleteFeatureName: feature.name,
-        deleteFeatureId: feature.templateId,
-        deleteFeatureType: feature.featureType
-      });
+      if (feature.featureType == 'CT') {
+        $state.go('care.Features.DeleteFeature', {
+          deleteFeatureName: feature.name,
+          deleteFeatureId: feature.templateId,
+          deleteFeatureType: feature.featureType
+        });
+      }
     }
 
     //list is updated by deleting a feature

@@ -10,9 +10,9 @@
 
     var service = {
       getChatTemplates: getChatTemplates,
+      formatChatTemplates: formatChatTemplates,
       deleteChatTemplate: deleteChatTemplate,
-      filterCards: filterCards,
-      orderByCardName: orderByCardName
+      filterCards: filterCards
     };
 
     return service;
@@ -44,6 +44,15 @@
       });
 
       return orderByCardName(filteredList);
+    }
+
+    function formatChatTemplates(list) {
+      var formattedList = _.map(list, function (tpl) {
+        tpl.featureType = 'CT';
+        tpl.color = 'attention';
+        return tpl;
+      });
+      return orderByCardName(formattedList);
     }
 
   }
