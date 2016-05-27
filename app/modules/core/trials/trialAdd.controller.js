@@ -152,7 +152,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-4 small-offset-1',
+        inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
