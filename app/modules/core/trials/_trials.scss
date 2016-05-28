@@ -186,7 +186,8 @@
 
     .message-box {
       margin-top: -16rem;
-      width: 35rem;
+      width: 38rem;
+      min-height: 10rem;
       padding-top: 0;
 
       .icon-check-mark-success {
@@ -194,14 +195,31 @@
         font-size: 6rem;
       }
 
-      .finish-msg__title {
+      .splash-msg__title {
         margin-top: 3rem;
       }
 
-      .finish-msg__description {
-        margin-top: 2rem;
-        font-size: 1rem;
+      p.splash-msg__description {
         text-align: left;
+        font-size: 1rem;
+      }
+
+      .splash-msg__description {
+        margin-top: 3rem;
+
+        p {
+          text-align: left;
+          font-size: 1rem;
+
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &.short-msg {
+            text-align: center;
+            margin-top: -1rem;
+          }
+        }
       }
     }
   }

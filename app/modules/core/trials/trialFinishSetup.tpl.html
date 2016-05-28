@@ -9,23 +9,23 @@
 <!-- body -->
 <div class="modal-body trials">
   <div class="messagebox-backdrop">
-    <div class="message-box finish-msg">
+    <div class="message-box splash-msg">
       <!-- default finish msg -->
       <div ng-show="trial.showDefaultFinish()">
         <i class="icon icon-check-mark-success"></i>
-        <div class="finish-msg__title">
-          <h2 translate="trialModal.trialSuccess"></h3>
+        <div class="splash-msg__title">
+          <h2 translate="trialModal.trialSuccess"></h2>
         </div>
-        <p class="finish-msg__description text-center" translate="trialModal.nextStepPrompt"></p>
+        <p class="splash-msg__description text-center" translate="trialModal.nextStepPrompt"></p>
       </div>
 
       <!-- webex finish msg -->
       <div ng-show="!trial.showDefaultFinish()">
         <i class="icon icon-check-mark-success"></i>
-        <div class="finish-msg__title">
+        <div class="splash-msg__title">
           <h2 translate="trialModal.finishTrialAdded"></h3>
         </div>
-        <p class="finish-msg__description" translate="trialModal.finishMeetingDescription"></p>
+        <p class="splash-msg__description" translate="trialModal.finishMeetingDescription"></p>
       </div>
     </div>
   </div>

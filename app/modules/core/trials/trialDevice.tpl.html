@@ -10,33 +10,32 @@
 
 <!-- body -->
 <div class="modal-body trials">
-  <form id="callTrialForm" class="cs-form trial-modal" name="trialForm">
-
-    <!-- tbd: unable to add devices error msg (device trial limit reached) -->
-    <div class="cs-form__section" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
-      <div class="section__info">
-        <h4 class="section__title" translate="trialModal.call.deviceTrialCapacityHeader"></h4>
+  <!-- error state - cannot add more devices -->
+  <div ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
+  <div class="messagebox-backdrop">
+    <div class="message-box splash-msg">
+      <div class="splash-msg__title">
+        <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
       </div>
-      <div class="section__content">
-        <div class="sub-section__description">
-          <div ng-if="callTrial.limitsError">
-            <p translate="trialModal.call.deviceTrialUnavailable"></p>
-          </div>
-          <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
-          <div ng-if="!callTrial.limitsError">
-            <p translate="trialModal.call.deviceTrialLimitReached"
-              translate-values="{number: callTrial.maxTrials}">
-            </p>
-            <!-- todo: rm 'br' and layout with CSS after UX provides updated layout for this error msg -->
-            <br />
-            <p translate="trialModal.call.deviceTrialLimitHelp"></p>
-          </div>
+      <div class="splash-msg__description">
+        <div ng-if="callTrial.limitsError">
+          <p class="splash-msg__description short-msg" translate="trialModal.call.deviceTrialUnavailable"></p>
+        </div>
+        <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
+        <div ng-if="!callTrial.limitsError">
+          <p translate="trialModal.call.deviceTrialLimitReached" translate-values="{number: callTrial.maxTrials}"></p>
+          <p translate="trialModal.call.deviceTrialLimitHelp"></p>
         </div>
       </div>
     </div>
+  </div>
+  </div>
 
+  <!-- normal state -->
+  <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+  <form id="callTrialForm" class="cs-form trial-modal" name="trialForm">
     <!-- select devices -->
-    <div class="cs-form__section" ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+    <div class="cs-form__section">
       <div class="section__info">
         <h4 translate="trialModal.call.selectDevicesHeader"></h4>
         <p class="section__description" translate="trialModal.call.deviceLimitDescription"></p>
@@ -63,7 +62,9 @@
       </div>
     </div>
   </form>
+  </div>
 </div>
+
 
 <!-- footer -->
 <div class="modal-footer">
