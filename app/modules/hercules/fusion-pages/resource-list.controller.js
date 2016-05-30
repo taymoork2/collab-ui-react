@@ -28,8 +28,8 @@
       filterValue: 'expressway',
       count: 0,
     }, {
-      name: $translate.instant('hercules.fusion.list.non-expressway'),
-      filterValue: 'non-expressway',
+      name: $translate.instant('hercules.fusion.list.mediafusion'),
+      filterValue: 'mediafusion',
       count: 0,
     }];
     vm.countHosts = countHosts;
@@ -60,24 +60,18 @@
     }
 
     function updateFilters() {
-      var expressWayClusters = _.filter(clustersCache, isExpresswayCluster);
+      var expressWayClusters = _.filter(clustersCache, 'type', 'expressway');
       vm.placeholder.count = clustersCache.length;
       vm.filters[0].count = expressWayClusters.length;
       vm.filters[1].count = clustersCache.length - expressWayClusters.length;
     }
 
-    function isExpresswayCluster(cluster) {
-      return _.some(cluster.connectors, {
-        connectorType: 'c_mgmt'
-      });
-    }
-
     function setFilter(filter) {
       vm.activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
-        vm.displayedClusters = _.filter(clustersCache, isExpresswayCluster);
-      } else if (filter.filterValue === 'non-expressway') {
-        vm.displayedClusters = _.filter(clustersCache, !isExpresswayCluster);
+        vm.displayedClusters = _.filter(clustersCache, 'type', 'expressway');
+      } else if (filter.filterValue === 'mediafusion') {
+        vm.displayedClusters = _.filter(clustersCache, 'type', 'mediafusion');
       } else {
         vm.displayedClusters = clustersCache;
       }
@@ -99,6 +93,8 @@
         $state.go('call-service.list');
       } else if (serviceId === 'squared-fusion-cal') {
         $state.go('calendar-service.list');
+      } else if (serviceId === 'squared-fusion-media') {
+        $state.go('media-service.list');
       }
     }
   }

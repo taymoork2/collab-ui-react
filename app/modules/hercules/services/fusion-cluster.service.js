@@ -25,7 +25,8 @@
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
         .then(onlyKeepFusedClusters)
-        .then(addServicesStatuses);
+        .then(addServicesStatuses)
+        .then(sort);
     }
 
     function extractClustersFromResponse(response) {
@@ -67,6 +68,11 @@
         }
         return cluster;
       });
+    }
+
+    function sort(clusters) {
+      // Could be anything but at least make it consistent between 2 page refresh
+      return _.sortBy(clusters, 'type');
     }
   }
 })();

@@ -11,7 +11,7 @@
         <i class="icon icon-spinner"></i>
       </span>
     </div>
-    <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="'hercules.fusion.list.title'"></div>
+    <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
       <cs-card class="small header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>

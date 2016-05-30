@@ -1373,7 +1373,7 @@
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "expressway": "Expressway",
-        "non-expressway": "Non-Expressway"
+        "mediafusion": "Mediafusion"
       }
     }
   },
