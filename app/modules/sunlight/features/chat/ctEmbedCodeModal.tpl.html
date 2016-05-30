@@ -3,7 +3,7 @@
   <span class="h3 modal-title">{{:: 'careChatTpl.embedCode' | translate }}</span>
 </div>
 <div class="modal-body ct-embed-code-area">
-  <textarea class="embed-code-textarea" rows=15 disabled></textarea>
+  <textarea class="embed-code-textarea" rows=15 disabled ng-bind="embedCodeCtrl.embedCodeSnippet"></textarea>
 </div>
 <div class="modal-footer">
   <button class="btn btn--primary" id="generateScriptBtn" ng-click="$dismiss()" focus-on>{{:: 'careChatTpl.copyEmbedCode' | translate }}</button>
