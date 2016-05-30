@@ -113,8 +113,6 @@
 
       if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
-      } else {
-        reInstantiateMasonry();
       }
     }
 
