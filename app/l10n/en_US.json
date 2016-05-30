@@ -3877,15 +3877,25 @@
     },
     "privacy": {
       "title": "Privacy",
-      "subsectionLabel": "Support Access"
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "usageDataHeader": "Usage Data Sent to Cisco Partner",
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
     },
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
-      "title": "Support"
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
     }
   },
   "my-company": {
