@@ -105,22 +105,45 @@
             <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
 
               <label
-                ng-if="attribute.type != 'radio'"
-                class="cs-input__label ct-attribute-field-label  h4 large-11">{{attribute.label}}
+                      ng-if="attribute.name == 'header'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.windowTitleLabel">
+              </label>
+              <label
+                      ng-if="attribute.name == 'organization'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.defaultOrgLabel">
+              </label>
+              <label
+                      ng-if="attribute.name == 'category'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.categoryLabel">
+              </label>
+              <label
+                      ng-if="attribute.name == 'label'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.label">
+              </label>
+              <label
+                      ng-if="attribute.name == 'hintText'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.hintText">
+              </label>
+              <label
+                      ng-if="attribute.name == 'type'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.type">
               </label>
 
               <input
-                ng-if="attribute.type == 'text'"
+                ng-if="attribute.name == 'header' ||
+                attribute.name == 'organization'  ||
+                attribute.name == 'label' ||
+                attribute.name == 'hintText'"
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
                 ng-model="attribute.value"
               />
 
-              <div ng-if="attribute.type == 'radio'" class="h6 cs-radio-group ct-attribute-field-radio">
+              <div ng-if="attribute.name == 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
                 <input
                   cs-input
-                  ng-repeat="option in attribute.options"
+                  ng-repeat="option in careChatSA.requiredOptions"
                   type="radio"
                   ng-model="attribute.value"
                   id="{{option.id}}"
@@ -130,22 +153,41 @@
                 />
               </div>
 
-              <div ng-if="attribute.type == 'select'">
+              <div ng-if="attribute.name == 'category'">
                 <cs-select
                   ng-model="attribute.value"
-                  options="attribute.options"
+                  options="careChatSA.categoryTypeOptions"
                   labelfield="text"
                   valuefield="id"
                   class="ct-attribute-field-textbox"
                   placeholder="attribute.defaultValue">
                 </cs-select>
                 <label
-                  ng-if="careChatSA.isDefined(attribute.value, 'helpText')"
                   class="cs-input__label ct-attribute-field-helptext large-11">
-                  <em>{{attribute.value.helpText}}</em>
+                  <em ng-if="attribute.value.id == 'customerInfo'"
+                          translate="careChatTpl.ciHelpText">
+                  </em>
+                  <em ng-if="attribute.value.id == 'requestInfo'"
+                      translate="careChatTpl.riHelpText">
+                  </em>
                 </label>
               </div>
 
+              <div ng-if="attribute.name == 'type'">
+                <cs-select
+                        ng-model="attribute.value"
+                        options="careChatSA.typeOptions"
+                        labelfield="text"
+                        valuefield="text"
+                        class="ct-attribute-field-textbox"
+                        placeholder="attribute.defaultValue">
+                </cs-select>
+                <label
+                        ng-if="careChatSA.isDefined(attribute.value, 'helpText')"
+                        class="cs-input__label ct-attribute-field-helptext large-11">
+                  <em>{{attribute.value.helpText}}</em>
+                </label>
+              </div>
             </div>
           </section>
         </article>
