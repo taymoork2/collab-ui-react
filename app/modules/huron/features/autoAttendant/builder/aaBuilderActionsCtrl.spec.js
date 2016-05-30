@@ -17,13 +17,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
     hint: 'testHint',
     help: 'testHelp',
     actions: ['testAction']
-  }, {
-    title: 'atestOption',
-    controller: 'AABuilderActionsCtrl as aaTest',
-    url: 'testUrl',
-    hint: 'testHint',
-    help: 'testHelp',
-    actions: ['testAction']
   }];
 
   beforeEach(module('uc.autoattendant'));
