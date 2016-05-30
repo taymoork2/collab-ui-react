@@ -1,20 +1,20 @@
-(function () {
-  'use strict';
+'use strict';
 
-  describe('Chat Template Service', function () {
+describe('Chat Template Service', function () {
 
     var $httpBackend, $q, BrandService, CTService, logoUrlDeferred;
     var orgId = 'a-b-c-d';
     var logoUrl = 'logoUrl';
     var logoResponse = 'logo';
     var appName = 'testApp.ciscoservice.com';
+    var templateId = 'abcd';
+    
     var spiedUrlConfig = {
       getSunlightBubbleUrl: jasmine.createSpy('getSunlightBubbleUrl').and.returnValue(appName)
     };
     var spiedAuthinfo = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
     };
-    var templateId = 'abcd';
 
     beforeEach(module('Sunlight'));
     beforeEach(module(function ($provide) {
@@ -47,7 +47,5 @@
       expect(result).toContainText(templateId);
       expect(result).toContainText(orgId);
       expect(result).toContainText(appName);
-    });
   });
-
-})();
+});

@@ -1,7 +1,8 @@
 /// <reference path="ServicesOverviewCard.ts"/>
+/// <reference path="ServicesOverviewHybridCard.ts"/>
 namespace servicesOverview {
 
-  export class ServicesOverviewCalendarCard extends ServicesOverviewCard {
+  export class ServicesOverviewCalendarCard extends ServicesOverviewHybridCard {
     getShowMoreButton():servicesOverview.CardButton {
       return undefined;
     }
@@ -28,18 +29,15 @@ namespace servicesOverview {
     }
 
     public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.calendar.title', 'servicesOverview.cards.calendar.description', '', true, 'calendar', CardType.hybrid);
-    }
-
-    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = {
-        status: this.filterAndGetCssStatus(services, ['squared-fusion-cal']),
-        text: this.filterAndGetTxtStatus(services, ['squared-fusion-cal']),
-        link: 'services/calendar'
-      };
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal']);
-      this._loading = false;
+      super({
+        name: 'servicesOverview.cards.calendar.title',
+        description: 'servicesOverview.cards.calendar.description',
+        activeServices: ['squared-fusion-cal'],
+        statusServices: ['squared-fusion-cal'],
+        statusLink: 'services/calendar/',
+        cardClass: 'calendar',
+        cardType: CardType.hybrid
+      });
     }
   }
 }

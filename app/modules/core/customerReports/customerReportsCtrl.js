@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage, FeatureToggleService) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -81,10 +81,23 @@
     vm.metricStatus = REFRESH;
     vm.metrics = {};
 
-    vm.headerTabs = [{
-      title: $translate.instant('reportsPage.sparkReports'),
-      state: 'reports'
-    }];
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMetrics).then(function (result) {
+      if (result) {
+        vm.headerTabs = [{
+          title: $translate.instant('mediaFusion.page_title'),
+          state: 'reports-metrics',
+        }, {
+          title: $translate.instant('reportsPage.sparkReports'),
+          state: 'reports'
+        }];
+      } else {
+        vm.headerTabs = [{
+          title: $translate.instant('reportsPage.sparkReports'),
+          state: 'reports'
+        }];
+      }
+
+    });
 
     vm.timeOptions = [{
       value: 0,
@@ -483,9 +496,15 @@
     if ($stateParams.tab === 'webex') {
       vm.showEngagement = false;
       vm.showWebexReports = true;
+      vm.showMFMetrics = false;
+    } else if ($stateParams.tab === 'metrics') {
+      vm.showEngagement = false;
+      vm.showWebexReports = false;
+      vm.showMFMetrics = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;
+      vm.showMFMetrics = false;
     }
 
     function onlyUnique(value, index, self) {

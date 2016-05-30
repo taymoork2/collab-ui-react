@@ -1124,6 +1124,17 @@
               siteUrl: null
             }
           })
+          .state('reports-metrics', {
+            url: '/reports/metrics',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
+              siteUrl: null
+            }
+          })
           .state('webex-reports', {
             url: '/reports/webex',
             templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
@@ -2320,7 +2331,9 @@
           .state('care.Features', {
             url: '/features',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/features.tpl.html'
+            templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
+            controller: 'CareFeaturesCtrl',
+            controllerAs: 'careFeaturesCtrl'
           })
           .state('care.ChatSA', {
             url: '/careChat',
@@ -2328,6 +2341,21 @@
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
             controllerAs: 'careChatSA'
+          })
+          .state('care.Features.DeleteFeature', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'CareFeaturesDeleteCtrl',
+                controllerAs: 'careFeaturesDeleteCtrl',
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
+              }
+            },
+            params: {
+              deleteFeatureName: null,
+              deleteFeatureId: null,
+              deleteFeatureType: null
+            }
           });
       }
     ]);

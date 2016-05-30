@@ -13,8 +13,12 @@ namespace servicesOverview {
     }
 
     public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridContext.title', 'servicesOverview.cards.hybridContext.description', '', true, 'context', CardType.hybrid);
+      super({
+        name: 'servicesOverview.cards.hybridContext.title',
+        description: 'servicesOverview.cards.hybridContext.description',
+        cardClass: 'context',
+        cardType: CardType.hybrid
+      });
 
       this._loading = false;
     }

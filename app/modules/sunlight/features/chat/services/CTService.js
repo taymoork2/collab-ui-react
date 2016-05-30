@@ -7,6 +7,7 @@
     .module('Sunlight')
     .service('CTService', CTService);
 
+  /* @ngInject */
   function CTService($http, Authinfo, BrandService, UrlConfig) {
     var service = {
       getLogo: getLogo,
