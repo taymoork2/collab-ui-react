@@ -7,8 +7,6 @@ describe('Care admin should be able to', function () {
   });
 
   it('see the landing page and able to click on new btn', function () {
-    utils.expectIsDisplayed(careLandingPage.careLandingPgae);
-    utils.expectIsDisplayed(careLandingPage.cccIcon);
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
   });

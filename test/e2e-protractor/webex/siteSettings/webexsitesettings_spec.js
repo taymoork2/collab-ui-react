@@ -287,6 +287,22 @@ while (1 >= sitesettings.testInfo.describeCount) {
       }
     });
 
+    it('should click on common settings partner delegated authentication link', function () {
+      if (setup) {
+        utils.click(sitesettings.configureCommonPartnerAuthLink);
+        utils.wait(sitesettings.siteSettingPanel);
+        utils.wait(sitesettings.commonPartnerAuthId);
+        utils.wait(sitesettings.iFramePage);
+      }
+    });
+
+    it('should click on settings index breadcrumb and navigate to site settings index', function () {
+      if (setup) {
+        utils.click(sitesettings.siteSettingsCrumb);
+        utils.wait(sitesettings.siteSettingsPanel);
+      }
+    });
+
     it('should click on common settings site options link', function () {
       if (setup) {
         utils.click(sitesettings.configureCommonSiteOptionsLink);

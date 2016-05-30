@@ -16,8 +16,9 @@
 
     vm.searchCriteria = {
       "roomId": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": moment(moment()).add(-7, 'days'), // week
-      "endDate": moment()
+      "startDate": null, //moment(moment()).add(-7, 'days'), // week
+      "endDate": null, //moment(),
+      "displayName": "TBD"
     };
     vm.reports = [];
 
@@ -88,6 +89,10 @@
         .then(function (result) {
           EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + vm.searchCriteria.roomId).then(function (result) {
             vm.roomInfo = result;
+            vm.searchCriteria.id = result.id;
+            vm.searchCriteria.startDate = result.published;
+            vm.searchCriteria.endDate = result.lastReadableActivityDate;
+            vm.searchCriteria.displayName = result.displayName;
           });
         });
     }
