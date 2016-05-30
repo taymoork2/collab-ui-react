@@ -61,9 +61,10 @@
 
     function activate() {
       var ui = AAUiModelService.getUiModel();
-
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
-
+      vm.options.sort(function (arg1, arg2) {
+        return arg1.label.toUpperCase().localeCompare(arg2.label.toUpperCase());
+      });
       setSelects();
 
     }

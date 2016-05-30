@@ -61,4 +61,15 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
   });
 
+  /**
+   * Lable value is not read from properties file. it will treat the key provided into vm.options for label
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      expect(controller.options[0].label).toEqual("autoAttendant.phoneMenuRouteAA");
+      expect(controller.options[1].label).toEqual("autoAttendant.phoneMenuRouteHunt");
+    });
+  });
+
 });

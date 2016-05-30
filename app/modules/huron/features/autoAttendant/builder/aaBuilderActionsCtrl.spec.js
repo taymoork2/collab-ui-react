@@ -17,6 +17,13 @@ describe('Controller: AABuilderActionsCtrl', function () {
     hint: 'testHint',
     help: 'testHelp',
     actions: ['testAction']
+  }, {
+    title: 'atestOption',
+    controller: 'AABuilderActionsCtrl as aaTest',
+    url: 'testUrl',
+    hint: 'testHint',
+    help: 'testHelp',
+    actions: ['testAction']
   }];
 
   beforeEach(module('uc.autoattendant'));
@@ -124,6 +131,17 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
       expect(aaUiModel['openHours']['entries'][0].getKey()).toEqual('0');
       expect(aaUiModel['openHours']['entries'][1].getKey()).toEqual('1');
+    });
+  });
+
+  /**
+   * title value is not read from properties file. So it will treat the key provided into vm.options for title
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      expect(controller.options[0].title).toEqual("autoAttendant.actionPhoneMenu");
+      expect(controller.options[1].title).toEqual("autoAttendant.actionRouteCall");
     });
   });
 
