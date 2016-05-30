@@ -13,10 +13,10 @@ namespace globalsettings {
     constructor(settingKey:string) {
       this.key = settingKey;
 
-      this.title = 'globalSettings.' + settingKey + '.title';
-      this.subsectionLabel = 'globalSettings.' + settingKey + '.subsectionLabel';
-      this.subsectionDescription = 'globalSettings.' + settingKey + '.subsectionDescription';
-      this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
+      this.title = `globalSettings.${settingKey}.title`;
+      this.subsectionLabel = `globalSettings.${settingKey}.subsectionLabel`
+      this.subsectionDescription = `globalSettings.${settingKey}.subsectionDescription`;
+      this.template = `modules/core/settings/setting-.${settingKey}.tpl.html`;
     }
   }
 
