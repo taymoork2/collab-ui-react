@@ -110,7 +110,8 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         spark_synckms: 'Spark_SyncKms',
-        readonly_admin: 'Readonly_Admin'
+        readonly_admin: 'Readonly_Admin',
+        compliance_user: 'Compliance_User'
       },
 
       roleState: {

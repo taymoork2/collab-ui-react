@@ -499,7 +499,8 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
-    "rolesError": "Error updating user's roles."
+    "rolesError": "Error updating user's roles.",
+    "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
     "title": "Support",
@@ -2475,7 +2476,8 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "compliance": "Compliance"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -3935,7 +3937,8 @@
     "id_readonly_admin": "Read-only Admin",
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
-    "ciscouc.devsupport": "Spark Call Dev Support"
+    "ciscouc.devsupport": "Spark Call Dev Support",
+    "compliance": "Compliance"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
