@@ -583,7 +583,10 @@
         "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
-        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+        "viewCdrCallFlowDesc": "Open the tool in a new tab",
+        "ediscovery": "Activity Reports",
+        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "viewEdiscovery": "View Activity Reports"
       }
     }
   },
@@ -3952,7 +3955,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
-    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
+    "Compliance_User": "Compliance"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

@@ -16,7 +16,8 @@
       'Identity:Organization',
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
-      'ccc_config:admin'
+      'ccc_config:admin',
+      'compliance:spark_conversations_read'
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));

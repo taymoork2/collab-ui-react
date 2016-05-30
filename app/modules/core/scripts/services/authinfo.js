@@ -147,7 +147,7 @@
         authData.managedOrgs = data.managedOrgs;
         authData.entitlements = data.entitlements;
         authData.services = data.services;
-        authData.roles = data.roles; // ["Helpdesk"];
+        authData.roles = data.roles;
         //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
         if (authData.managedOrgs && authData.managedOrgs.length > 0) {
           for (var i = 0; i < authData.roles.length; i++) {
@@ -241,10 +241,9 @@
 
               switch (license.licenseType) {
               case 'CONFERENCING':
-                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl) {
+                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl && !_.includes(authData.roles, 'Site_Admin')) {
                   authData.roles.push('Site_Admin');
                 }
-
                 service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
                   capacity: license.capacity
                 }), x + 1, 'confRadio', license);
@@ -460,6 +459,9 @@
           .value();
 
         return isTrial;
+      },
+      isComplianceUser: function () {
+        return this.hasRole('Compliance_User');
       }
     };
   }
