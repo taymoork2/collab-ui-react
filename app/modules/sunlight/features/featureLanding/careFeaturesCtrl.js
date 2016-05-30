@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification) {
+  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -19,6 +19,7 @@
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
+    vm.generateChatCodeSnippet = generateChatCodeSnippet;
     vm.listOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
@@ -113,8 +114,6 @@
 
       if (vm.pageState !== pageStates.showFeatures && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
-      } else {
-        reInstantiateMasonry();
       }
     }
 
@@ -143,18 +142,6 @@
       reInstantiateMasonry();
     }
 
-    function reInstantiateMasonry() {
-      $timeout(function () {
-        $('.cs-card-layout').masonry('destroy');
-        $('.cs-card-layout').masonry({
-          itemSelector: '.cs-card',
-          columnWidth: '.cs-card',
-          isResizable: true,
-          percentPosition: true
-        });
-      }, 0);
-    }
-
     function deleteCareFeature(feature) {
       featureToBeDeleted = feature;
       if (feature.featureType == 'CT') {
@@ -164,6 +151,10 @@
           deleteFeatureType: feature.featureType
         });
       }
+    }
+
+    function generateChatCodeSnippet(feature) {
+      return CTService.generateCodeSnippet(feature.templateId);
     }
 
     //list is updated by deleting a feature
