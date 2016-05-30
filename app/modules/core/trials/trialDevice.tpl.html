@@ -11,15 +11,14 @@
 <!-- body -->
 <div class="modal-body trials">
   <!-- error state - cannot add more devices -->
-  <div ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
-  <div class="messagebox-backdrop">
+  <div class="messagebox-backdrop" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
     <div class="message-box splash-msg">
       <div class="splash-msg__title">
         <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
       </div>
       <div class="splash-msg__description">
         <div ng-if="callTrial.limitsError">
-          <p class="splash-msg__description short-msg" translate="trialModal.call.deviceTrialUnavailable"></p>
+          <p class="splash-msg__description text-center" translate="trialModal.call.deviceTrialUnavailable"></p>
         </div>
         <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
         <div ng-if="!callTrial.limitsError">
@@ -28,7 +27,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 
   <!-- normal state -->
@@ -64,7 +62,6 @@
   </form>
   </div>
 </div>
-
 
 <!-- footer -->
 <div class="modal-footer">

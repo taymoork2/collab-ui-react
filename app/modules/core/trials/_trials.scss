@@ -183,12 +183,14 @@
   &.modal-body .messagebox-backdrop {
     background-image: none;
     max-width: 60.25rem;
+    position: inherit;
+    flex: 1;
 
     .message-box {
-      margin-top: -16rem;
       width: 38rem;
       min-height: 10rem;
       padding-top: 0;
+      height: 45vh;
 
       .icon-check-mark-success {
         color: $color-cta-base;
@@ -196,16 +198,12 @@
       }
 
       .splash-msg__title {
-        margin-top: 3rem;
-      }
-
-      p.splash-msg__description {
-        text-align: left;
-        font-size: 1rem;
+        margin-top: 1.5rem;
       }
 
       .splash-msg__description {
-        margin-top: 3rem;
+        margin-top: 1.5rem;
+        flex-grow: 2;
 
         p {
           text-align: left;
@@ -214,27 +212,9 @@
           &:first-child {
             margin-top: 0;
           }
-
-          &.short-msg {
-            text-align: center;
-            margin-top: -1rem;
-          }
         }
       }
     }
-  }
-}
-
-.trial-modal--complete {
-  .row {
-    margin-bottom: 14px;
-  }
-  .icon {
-    margin-bottom: 1rem;
-    display: block;
-  }
-  h3 {
-    margin-bottom: 30px;
   }
 }
 
