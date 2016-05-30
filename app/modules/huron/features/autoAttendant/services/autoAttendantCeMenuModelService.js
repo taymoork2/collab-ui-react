@@ -438,6 +438,8 @@
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
+              action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
+              action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
               menuEntry.voice = inAction.runActionsOnInput.voice;
               menuEntry.language = inAction.runActionsOnInput.language;
               menuEntry.attempts = inAction.runActionsOnInput.attempts;
@@ -534,6 +536,7 @@
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
+
       if (angular.isUndefined(actionSet)) {
         return undefined;
       }
@@ -962,8 +965,8 @@
           rawInputAction.routeToExtension = routeToExtension;
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
-          newAction.minNumberOfCharacters = 4;
-          newAction.maxNumberOfCharacters = 4;
+          newAction.minNumberOfCharacters = action.minNumberOfCharacters;
+          newAction.maxNumberOfCharacters = action.maxNumberOfCharacters;
           newAction.attempts = 3;
           newAction.repeats = 2;
         }

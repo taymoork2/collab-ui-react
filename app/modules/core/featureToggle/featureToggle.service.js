@@ -24,6 +24,7 @@
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
+      huronAASchedules: 'huronAASchedules',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
@@ -125,7 +126,10 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      readonlyAdmin: 'atlas-read-only-admin'
+      readonlyAdmin: 'atlas-read-only-admin',
+      hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
+      atlasCareTrials: 'atlas-care-trials',
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
     };
 
     var toggles = {};

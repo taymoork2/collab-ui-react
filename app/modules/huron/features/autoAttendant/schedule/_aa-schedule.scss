@@ -1,4 +1,13 @@
 // Schedule Panel
+.aa-schedule-container {
+   &:hover {
+    cursor: pointer;
+    i {
+      color: $aa-builder-icon-click-color;
+    }
+  }
+ }
+
 .aa-flex-item.schedule {
   @include vr-spacing(pv, .25);
   @include vr-spacing(ph, 2);

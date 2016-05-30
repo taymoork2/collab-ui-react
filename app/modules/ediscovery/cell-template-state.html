@@ -1,15 +1,13 @@
 <div class="ui-grid-cell-contents">
-  <div ng-show="row.entity.state === 'RUNNING' && row.entity.progress > 0">
+  <span ng-show="row.entity.state === 'RUNNING'">
     <span class="spinner-example--small">
       <i class="icon icon-spinner"></i>
     </span>
-    <span>
-          {{row.entity.progress}}%
+    <span ng-if="row.entity.progress > 0">
+      {{row.entity.progress}}
     </span>
-  </div>
-  <div ng-show="row.entity.state === 'RUNNING' && !(row.entity.progress > 0)">
-    <span class="spinner-example--small">
-      <i class="icon icon-spinner"></i>
-    </span>
-  </div>
+  </span>
+  <span ng-show="row.entity.state !== 'RUNNING'">
+     {{row.entity.state}}
+  </span>
 </div>

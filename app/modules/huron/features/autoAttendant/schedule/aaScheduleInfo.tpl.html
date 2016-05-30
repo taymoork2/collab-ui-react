@@ -8,7 +8,7 @@
         <div>
           <div class="aa-schedule-info-day" label="day">{{day.label}}</div>
           <div ng-repeat="hour in day.hours">
-            <div class="aa-schedule-info-hours"> {{hour.starttime}} - {{hour.endtime}}</div>
+            <div class="aa-schedule-info-hours" ng-if="!(hour.starttime === '12:00 AM'&& hour.endtime === '12:00 AM')"> {{hour.starttime}} - {{hour.endtime}}</div>
           </div>
         </div>
       </div>

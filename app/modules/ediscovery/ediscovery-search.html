@@ -1,39 +1,53 @@
 <div class="ediscovery-search">
-
-
-  <div class="row">
-    <div class="cs-input-group columns large-2">
-      <label class="cs-input__label fit" for="startDate">Start Date</label>
-      <cs-datepicker
-        id="startDate"
-        ng-model="ediscoveryCtrl.searchCriteria.startDate"
-        placeholder="Choose a start Day"
-        view-format="YYYY-MM-DD">
-      </cs-datepicker>
-
+  <div class="ediscovery-search-bar">
+    <div class="main-heading">
+      <h1>Search Activities</h1>
+      <span class="help" ng-click="ediscoverySearchCtrl.showSearchHelp()">
+        Find all relevant data for a room
+        <i class="icon icon-help"></i>
+      </span>
     </div>
 
-    <div class="cs-input-group columns large-2">
-      <label class="cs-input__label fit" for="endDate">End Date</label>
-      <cs-datepicker
-        id="endDate"
-        ng-model="ediscoveryCtrl.searchCriteria.endDate"
-        placeholder="Choose an end Day"
-        view-format="YYYY-MM-DD">
-      </cs-datepicker>
-    </div>
+    <div class="typeahead-large" style="text-align: left;">
+      <form class="searchInputForm">
+        <input class="fit" id="searchInput" type="search" tabindex="1" placeholder="" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true"/>
 
-    <div class="cs-input-group columns large-6">
-       <label class="cs-input__label fit" for="roomId">Room Id</label>
-      <input id="roomId"
-             class="cs-input"
-             size="50"
-             placeholder="Enter room id"
-             ng-model="ediscoveryCtrl.searchCriteria.searchString">
-    </div>
+        <button type="submit" tabindex="-1" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+      </form>
 
-    <div class="cs-input-group columns large-2">
-      <button type="button" class="button btn--primary align" ng-click="ediscoveryCtrl.createReport()">Create Report</button>
+      <div class="input-description"></div>
+    </div>
+  </div>
+
+  <div ng-if="ediscoverySearchCtrl.roomInfo" class="row">
+    <div class="columns large-12 medium-12 small-12 small-centered">
+      <form name="createForm" class="cs-form create-report">
+
+        <div class="cs-form__section">
+          <div class="section__info">
+            <i class="room-icon icon icon-meeting-room icon-lg"></i>
+          </div>
+
+          <div class="section__content">
+            <div class="sub-section">
+              <h5 class="sub-section__label large ellipsis">{{ediscoverySearchCtrl.roomInfo.displayName}}</h5>
+              <span class="section__description">{{ediscoverySearchCtrl.roomInfo.id}}</span>
+            </div>
+            <div class="sub-section">
+              <input size="40" id="displayName" class="cs-input" placeholder="Enter display name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+            </div>
+            <div class="sub-section">
+              <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="Choose a start Day" view-format="YYYY-MM-DD"></cs-datepicker>
+            </div>
+            <div class="sub-section">
+              <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="Choose an end Day" view-format="YYYY-MM-DD"></cs-datepicker>
+            </div>
+            <div class="sub-section">
+              <button type="button" class="button btn--primary align" ng-click="ediscoverySearchCtrl.createReport()">Create Report</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
   </div>

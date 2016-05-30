@@ -5,7 +5,7 @@
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.customerInfoDesc"></div>
 
-  <div class="ct-customer">
+  <div class="ct-customer ct-sa-content">
     <cs-card-layout block-view="true" class="cardScroll">
       <cs-card>
         <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
@@ -80,9 +80,10 @@
               <form>
                 <cs-select
                   id="field3"
-                  class="h5 inputField_select ct-selectable-element large-11"
-                  ng-model="careChatSA.selectFieldOptions">
-                  <option value="">{{careChatSA.getAttributeParam('value', 'hintText', 'field2')}}</option>
+                  class="h5 inputField_select ct-selectable-cs-select large-11"
+                  ng-model="careChatSA.selectFieldSelected"
+                  placeholder="careChatSA.selectFieldPlaceholder"
+                  is-disabled="true">
                 </cs-select>
               </form>
             </div>
@@ -136,7 +137,8 @@
                 id="attribute.fieldName"
                 class="h5 inputField ct-attribute-field-textbox large-11"
                 type="text"
-                ng-model="attribute.value"/>
+                ng-model="attribute.value"
+              />
 
               <div ng-if="attribute.name == 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
                 <input
@@ -156,7 +158,7 @@
                   ng-model="attribute.value"
                   options="careChatSA.categoryTypeOptions"
                   labelfield="text"
-                  valuefield="text"
+                  valuefield="id"
                   class="ct-attribute-field-textbox"
                   placeholder="attribute.defaultValue">
                 </cs-select>

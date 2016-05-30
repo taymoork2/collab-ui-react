@@ -1,0 +1,19 @@
+.add-resource {
+  button {
+    margin-left: .5rem;
+    transition: initial;
+  }
+
+  .modal-footer .btn + .btn {
+    transition: initial;
+  }
+
+  .form {
+    margin:0;
+  }
+
+}
+
+.inputbox {
+  margin-left: 5px;
+}

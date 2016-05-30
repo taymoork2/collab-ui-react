@@ -31,22 +31,19 @@ namespace servicesOverview {
       return [this._setupButton];
     }
 
-    public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridManagement.title', 'servicesOverview.cards.hybridManagement.description', '', true, '', CardType.hybrid);
+    public f410FeatureEventHandler(hasFeature:boolean) {
+      this._display = !hasFeature;
     }
 
-    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = {
-        status: this.filterAndGetCssStatus(services, ['squared-fusion-mgmt']),
-        text: this.filterAndGetTxtStatus(services, ['squared-fusion-mgmt']),
-        link: 'services/expressway-management'
-      };
-
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-cal'])
-        || this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc'])
-        || this.filterAndGetEnabledService(services, ['squared-fusion-media']);
-      this._loading = false;
+    public constructor() {
+      super({
+        name: 'servicesOverview.cards.hybridManagement.title',
+        description: 'servicesOverview.cards.hybridManagement.description',
+        activeServices: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
+        statusServices: ['squared-fusion-mgmt'],
+        statusLink: 'services/expressway-management',
+        cardClass: '', cardType: CardType.hybrid
+      });
     }
   }
 }

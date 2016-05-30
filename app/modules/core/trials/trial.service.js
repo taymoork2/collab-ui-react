@@ -65,6 +65,7 @@
       var trialData = {
         customerOrgId: custId,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         details: _getDetails(data),
         offers: _getOffers(data)
       };
@@ -86,6 +87,7 @@
         customerName: data.details.customerName,
         customerEmail: data.details.customerEmail,
         trialPeriod: data.details.licenseDuration,
+        dealId: data.trials.deviceTrial.shippingInfo.dealId,
         startDate: new Date(),
         details: _getDetails(data),
         offers: _getOffers(data)
@@ -154,7 +156,11 @@
         delete details.shippingInfo;
         details.devices = [];
       } else {
-        details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+        var nestedState = _.get(details, 'shippingInfo.state.abbr');
+        // this will not be necessary after formly issue is fixed.
+        if (nestedState) {
+          details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
+        }
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service
@@ -210,6 +216,7 @@
         customerName: '',
         customerEmail: '',
         licenseDuration: 90,
+        dealId: '',
         licenseCount: 100
       };
 

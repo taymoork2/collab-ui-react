@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Directive: aaDialByExt', function () {
-  var $compile, $rootScope, $scope;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $compile, $rootScope, $scope, $q;
+  var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService;
 
   var aaUiModel = {
     openHours: {},
@@ -15,10 +15,11 @@ describe('Directive: aaDialByExt', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
+    $q = _$q_;
 
     $scope.schedule = 'OpenHours';
     $scope.index = '0';
@@ -26,6 +27,9 @@ describe('Directive: aaDialByExt', function () {
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();

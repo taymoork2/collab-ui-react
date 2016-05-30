@@ -14,17 +14,15 @@ namespace servicesOverview {
       let cards:Array<{card:ServicesOverviewHybridCard,services:Array<string>}>;
 
       cards = [
+        //hybrid call will be enabled either if one of the dependent services are enabled.
         {
           card: new ServicesOverviewHybridCallCard(),
-          services: ['squared-fusion-ec', 'squared-fusion-uc']
+          services: ['squared-fusion-uc']
         },
         // management card depends on state on multiple services:
         {
           card: new ServicesOverviewHybridManagementCard(),
           services: ['squared-fusion-mgmt', 'squared-fusion-cal']
-        }, {
-          card: new ServicesOverviewHybridManagementCard(),
-          services: ['squared-fusion-mgmt', 'squared-fusion-ec']
         }, {
           card: new ServicesOverviewHybridManagementCard(),
           services: ['squared-fusion-mgmt', 'squared-fusion-uc']
@@ -39,12 +37,13 @@ namespace servicesOverview {
           services: ['squared-fusion-media']
         }
       ];
+      let allServices:Array<string> = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-media', 'squared-fusion-mgmt'];
 
       cards.forEach((cardService)=> {
         describe('' + cardService.card.name, ()=> {
           it('should set enable if expected service(s) are enabled', ()=> {
             let statuses = _.map(cardService.services, (service)=> {
-              return {id: service, status: '', enabled: true}
+              return {id: service, status: '', enabled: true};
             });
             cardService.card.hybridStatusEventHandler(statuses);
             expect(cardService.card.active).toBeTruthy();
@@ -52,11 +51,12 @@ namespace servicesOverview {
 
           it('should set disable if expected service(s) are disabled', ()=> {
             let statuses = _.map(cardService.services, (service)=> {
-              return {id: service, status: '', enabled: false}
+              return {id: service, status: '', enabled: false};
             });
             cardService.card.hybridStatusEventHandler(statuses);
             expect(cardService.card.active).toBeFalsy();
           });
+
 
           if (cardService.card.name !== 'servicesOverview.cards.hybridManagement.title') {
             //not applicable to mgmt card
@@ -66,6 +66,24 @@ namespace servicesOverview {
                 enabledFlag = !enabledFlag;
                 return {id: service, status: '', enabled: enabledFlag}
               });
+              cardService.card.hybridStatusEventHandler(statuses);
+              expect(cardService.card.active).toBeFalsy();
+            });
+
+            it('should set disable if no status from expected services and unexpected services are enabled', ()=> {
+              let statuses = _.chain(allServices).difference(cardService.services).map((service)=> {
+                return {id: service, status: '', enabled: true};
+              }).value();
+              cardService.card.hybridStatusEventHandler(statuses);
+              expect(cardService.card.active).toBeFalsy();
+            });
+
+            it('should set disable if expected service are disabled and unexpected services are enabled', ()=> {
+              let statuses = _.chain(allServices).difference(cardService.services).map((service)=> {
+                return {id: service, status: '', enabled: true}
+              }).concat(_.map(cardService.services, (service)=> {
+                return {id: service, status: '', enabled: false};
+              })).value();
               cardService.card.hybridStatusEventHandler(statuses);
               expect(cardService.card.active).toBeFalsy();
             });

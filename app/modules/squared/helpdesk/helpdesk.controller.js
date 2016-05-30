@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $window, Authinfo) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -25,6 +25,7 @@
     vm.showOrgsResultPane = showOrgsResultPane;
     vm.setCurrentSearch = setCurrentSearch;
     vm.showSearchHelp = showSearchHelp;
+    vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
 
     function scrollToTopOfPage() {
       $scope.$on('$stateChangeSuccess', function (state) {
@@ -44,7 +45,12 @@
       var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
       var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
       $modal.open({
-        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl
+        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
+        controller: function () {
+          var vm = this;
+          vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
+        },
+        controllerAs: 'searchHelpModalCtrl'
       });
       HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HELP);
     }
@@ -69,7 +75,10 @@
       userSearchFailure: null,
       orgSearchFailure: null,
       deviceSearchFailure: null,
-      orgFilter: null,
+      orgFilter: vm.isCustomerHelpDesk ? {
+        id: Authinfo.getOrgId(),
+        displayName: Authinfo.getOrgName()
+      } : null,
       orgLimit: vm.searchResultsPageSize,
       userLimit: vm.searchResultsPageSize,
       deviceLimit: vm.searchResultsPageSize,
@@ -88,9 +97,15 @@
       },
       clear: function () {
         this.initSearch('');
-        this.orgFilter = null;
+        if (!vm.isCustomerHelpDesk) {
+          this.orgFilter = null;
+        }
       }
     };
+
+    if (vm.isCustomerHelpDesk) {
+      initSearchWithOrgFilter(vm.currentSearch.orgFilter);
+    }
 
     function search() {
       if (!vm.searchString) return;
@@ -191,7 +206,7 @@
       var orgIsEntitledToHuron = LicenseService.orgIsEntitledTo(org, Config.entitlements.huron);
       vm.searchingForDevices = orgIsEntitledToCloudBerry || orgIsEntitledToHuron;
       if (!(orgIsEntitledToCloudBerry || orgIsEntitledToHuron)) {
-        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.noDeviceEntitlements');
+        vm.currentSearch.deviceSearchFailure = $translate.instant(vm.isCustomerHelpDesk ? 'helpdesk.noDeviceEntitlementsCustomerOrg' : 'helpdesk.noDeviceEntitlements');
       }
       if (orgIsEntitledToCloudBerry) {
         promises.push(searchForCloudberryDevices(searchString, org));
