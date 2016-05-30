@@ -382,7 +382,7 @@
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getCountries();
+          return _.map(TrialDeviceService.getCountries(), 'country');
         }
       }
     }, {
@@ -424,14 +424,16 @@
         inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.state'),
         required: true,
+        disabled: true,
         labelfield: 'abbr',
+        valuefield: 'abbr',
         labelProp: 'abbr',
-        valueProp: 'state',
-        disabled: true
+        valueProp: 'state'
+
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getStates();
+          return _.map(TrialDeviceService.getStates(), 'abbr');
         }
       }
     }, {

@@ -1,6 +1,9 @@
 <!-- dont show if there is only one option, aka if webex does not show -->
 <div class="customer-reports">
   <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
+  <div ng-if='nav.showMFMetrics'>
+    <div ng-controller="AnalyticsUtilizationGraphController as GraphUtilCtrl" ng-include="'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'"></div>
+  </div>
   <cs-page-sub-header ng-if="nav.showEngagement">
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">

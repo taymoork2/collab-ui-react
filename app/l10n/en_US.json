@@ -3447,6 +3447,9 @@
     "title": "Care",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page",
+    "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
@@ -3533,6 +3536,15 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "deleteFeature": "Delete {{ featureText }}",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "messageError": "Message {{ message }}",
+    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "chatTemplate": "Chat Template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
@@ -3551,7 +3563,6 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3616,7 +3627,10 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
