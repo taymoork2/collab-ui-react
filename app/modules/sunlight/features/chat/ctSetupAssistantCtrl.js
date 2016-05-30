@@ -158,7 +158,7 @@
                   value: $translate.instant('careChatTpl.defaultWelcomeText')
                 }, {
                   name: 'organization',
-                  value: $translate.instant('careChatTpl.defaultOrgText')
+                  value: vm.orgName
                 }]
               },
               'field1': {
@@ -239,10 +239,7 @@
       feedback: 'circle-star'
     };
 
-    //Model for ctSetupAssistance data
-    vm.selectFieldOptions = [];
-    vm.selectFieldSelected = '';
-    vm.selectFieldPlaceholder = 'Select from the list or type';
+    vm.chatTemplateSaveFailed = false;
 
     function cancelModal() {
       $modal.open({
@@ -320,7 +317,6 @@
      */
 
     vm.getFieldByName = function (fieldName) {
-      var x = vm.template.configuration.pages.customerInformation.fields[fieldName];
       return vm.template.configuration.pages.customerInformation.fields[fieldName];
     };
 
@@ -381,6 +377,10 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }
+
+    vm.isUserProfileSelected = function () {
+      return vm.template.configuration.mediaSpecificConfiguration.useOrgProfile;
+    };
 
     function init() {
       CTService.getLogo().then(function (data) {
