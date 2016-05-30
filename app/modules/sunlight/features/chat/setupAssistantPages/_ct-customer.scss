@@ -16,16 +16,12 @@
   }
 
   .cs-card {
-    width: rem-calc(400px);
-    height: rem-calc(490px);
+    width: rem-calc(414px);
     display: flex;
     flex-flow: column;
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;
-    }
-    .articleHeight {
-      height: 100%;
     }
     .customeHeader {
       background-color:$gray-light-4;
@@ -34,6 +30,14 @@
         cursor: pointer;
       }
     }
+  }
+
+  .customer-preview-article {
+    height: rem-calc(500);
+  }
+
+  .customer-attributes-article {
+    min-height: rem-calc(500);
   }
 
   .cardScroll {
@@ -223,5 +227,57 @@
 
   .ct-attribute-row {
     width: 100%;
+    .ct-customer-info-category-input {
+      margin-top: 6px;
+    }
   }
+
+  .right-inner-addon {
+    position: relative;
+  }
+
+  .right-inner-addon input {
+    padding-right: 5rem;
+  }
+
+  .right-inner-addon i {
+    position: absolute;
+    right: 0rem;
+    padding: 0.6rem 2rem;
+  }
+
+  .category-tokens {
+    .tokenfield.form-control,
+    .tokenfield.form-control-static {
+      @include vr-spacing(mt, 1);
+      @include vr-spacing(mb, 3);
+      @include vr-spacing(ml, 1);
+      @include vr-spacing(mr, 1);
+      height:rem-calc(96px);
+      overflow-y:auto;
+      overflow-x: hidden;
+      input.token-input {
+        border-color: transparent;
+        outline: 0;
+        background-color: transparent;
+        box-shadow: none;
+      }
+      .token {
+        height: rem-calc(39px);
+        pointer-events: none;
+        .token-label {
+          padding-top: rem-calc(3px);
+          @include vr-spacing(mr, 0.5);
+        }
+        .close {
+          float: right;
+          font-size: 1.2em;
+          padding-top: rem-calc(0px);
+          line-height: 0.9em;
+          pointer-events: all;
+        }
+      }
+    }
+  }
+
 }

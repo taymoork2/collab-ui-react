@@ -54,6 +54,8 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.categoryTokensId = 'categoryTokensElement';
+    vm.categoryOptionTag = '';
 
     /**
      * Type enumerations
@@ -177,7 +179,8 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name')
-                }]
+                }],
+                categoryOptions: []
               },
 
               'field2': {
@@ -196,7 +199,8 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email')
-                }]
+                }],
+                categoryOptions: []
               },
 
               'field3': {
@@ -215,7 +219,8 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category')
-                }]
+                }],
+                categoryOptions: []
               }
             }
           },
@@ -357,6 +362,17 @@
     vm.isDefined = function (object, field) {
       var value = object[field];
       return typeof value !== 'undefined' && value.trim() !== '';
+    };
+
+    vm.onEnterKey = function (keyEvent) {
+      if (keyEvent.which === 13) {
+        vm.addCategoryOption();
+      }
+    };
+
+    vm.addCategoryOption = function () {
+      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+      vm.categoryOptionTag = '';
     };
 
     function setTemplateProfile() {
