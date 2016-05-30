@@ -129,10 +129,10 @@
       prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com/config/v1',
-      prod: 'https://bubble.rciad.ciscoccservice.com/config/v1'
+      dev: 'https://bubble.nva1-de.ciscoccservice.com',
+      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
+      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
+      prod: 'https://bubble.rciad.ciscoccservice.com'
     },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',

@@ -346,10 +346,10 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
-      dev: 'https://bubble.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com/config/v1',
-      prod: 'https://bubble.rciad.ciscoccservice.com/config/v1'
+      dev: 'https://bubble.nva1-de.ciscoccservice.com',
+      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
+      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
+      prod: 'https://bubble.rciad.ciscoccservice.com'
     });
   });
 

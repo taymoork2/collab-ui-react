@@ -26,7 +26,11 @@
       var appName = UrlConfig.getSunlightBubbleUrl();
       var orgId = Authinfo.getOrgId();
 
-      return "<script>" + "(function(document, script) {" + "var bubbleScript = document.createElement(script);" + "e = document.getElementsByTagName(script)[0];" + "bubbleScript.async = true;" + "bubbleScript.CiscoAppId = " + appName + ";" + "bubbleScript.templateId = " + templateId + ";" + "bubbleScript.orgId = " + orgId + ";" + "bubbleScript.type = 'text/javascript';" + "bubbleScript.setAttribute('charset', 'utf-8');" + "bubbleScript.src = 'bundle.js';" + "e.parentNode.insertBefore(bubbleScript, e);" + "})(document, 'script');" + "</script>";
+      return "<script>(function(document, script) {" + "var bubbleScript = document.createElement(script);" +
+        "e = document.getElementsByTagName(script)[0];" + "bubbleScript.async = true;" + "bubbleScript.CiscoAppId = " + appName +
+        ";" + "bubbleScript.templateId = " + templateId + ";" + "bubbleScript.orgId = " + orgId + ";" +
+        "bubbleScript.type = 'text/javascript';" + "bubbleScript.setAttribute('charset', 'utf-8');" +
+        "bubbleScript.src = 'bundle.js';" + "e.parentNode.insertBefore(bubbleScript, e);" + "})(document, 'script');" + "</script>";
     }
   }
 })();
