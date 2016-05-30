@@ -3841,8 +3841,8 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Management"
-
+          "squared-fusion-mgmt": "Management",
+          "squared-fusion-media": "Mediafusion"
         }
       }
     }

@@ -38,22 +38,33 @@
 
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
+        var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
         var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
         var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
         var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
-        cluster.servicesStatuses = [{
-          serviceId: 'squared-fusion-mgmt',
-          state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
-          total: mgmtConnectors.length
-        }, {
-          serviceId: 'squared-fusion-uc',
-          state: FusionClusterStatesService.getMergedStateSeverity(ucmcConnectors),
-          total: ucmcConnectors.length
-        }, {
-          serviceId: 'squared-fusion-cal',
-          state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
-          total: calConnectors.length
-        }];
+        if (mgmtConnectors.length > 0) {
+          cluster.type = 'expressway';
+          cluster.servicesStatuses = [{
+            serviceId: 'squared-fusion-mgmt',
+            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            total: mgmtConnectors.length
+          }, {
+            serviceId: 'squared-fusion-uc',
+            state: FusionClusterStatesService.getMergedStateSeverity(ucmcConnectors),
+            total: ucmcConnectors.length
+          }, {
+            serviceId: 'squared-fusion-cal',
+            state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
+            total: calConnectors.length
+          }];
+        } else if (mediaConnectors.length > 0) {
+          cluster.type = 'mediafusion';
+          cluster.servicesStatuses = [{
+            serviceId: 'squared-fusion-media',
+            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            total: mediaConnectors.length
+          }];
+        }
         return cluster;
       });
     }

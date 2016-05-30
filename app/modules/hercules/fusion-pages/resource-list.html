@@ -13,11 +13,14 @@
     </div>
     <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="'hercules.fusion.list.title'"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="small header-bar" ng-repeat="cluster in resourceList.displayedClusters">
+      <cs-card class="small header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
-            <div class="cluster-type-orb">EW</div>
+            <div class="cluster-type-orb">
+              <span ng-if="cluster.type === 'expressway'">EW</span>
+              <span ng-if="cluster.type === 'mediafusion'">MS</span>
+            </div>
           </header>
           <section>
             <ul class="service-list">
@@ -30,7 +33,7 @@
           </section>
           <footer>
               <div translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-              <a href="#" ui-sref="cluster-settings-page({clusterid: cluster.id})"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
+              <a href="#" ui-sref="cluster-settings-page({type: cluster.type, id: cluster.id})"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
             </div>
           </footer>
         </article>
