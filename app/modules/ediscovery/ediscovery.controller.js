@@ -8,7 +8,6 @@
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
-    //console.log("EdiscoveryController...")
 
     vm.deleteReports = deleteReports;
     $scope.downloadable = downloadable;
@@ -121,7 +120,7 @@
     }
 
     function pollAvalonReport() {
-      EdiscoveryService.getReport().then(function (res) {
+      EdiscoveryService.getReports().then(function (res) {
         vm.reports = res;
         //notifyOnEvent(vm.reports);
       }).finally(function (res) {
