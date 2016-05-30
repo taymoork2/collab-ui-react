@@ -405,6 +405,15 @@
         }
         return false;
       },
+      isComplianceUserOnly: function () {
+        var roles = this.getRoles();
+        if (roles && this.isComplianceUser()) {
+          return _.all(roles, function (role) {
+            return role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
+          });
+        }
+        return false;
+      },
       isServiceAllowed: function (service) {
         if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
           return false;
@@ -461,7 +470,7 @@
         return isTrial;
       },
       isComplianceUser: function () {
-        return this.hasRole('Compliance_User');
+        return this.hasRole(Config.roles.compliance_user);
       }
     };
   }

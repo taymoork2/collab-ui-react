@@ -109,6 +109,20 @@
                  class="icon icon-information role-information"></i>
             </div>
           </div>
+
+          <div class="admin-roles-panel" ng-if="showComplianceRole">
+            <p><span class="edit-title" translate="rolesPanel.compliance"></span></p>
+
+            <div class="admin-options">
+              <cs-checkbox ckid="complianceCkbx" class="indent-checkbox"
+                           label="{{'ciRoles.compliance' | translate}}"
+                           ng-model="rolesObj.complianceValue"
+                           isdisabled="isEditingSelf"></cs-checkbox>
+              <i tooltip-html-unsafe="Access to Activity Reports" tooltip-placement="right" tooltip-trigger="mouseenter"
+                 class="icon icon-information role-information"></i>
+            </div>
+          </div>
+
         </form>
       </div>
     </div>

@@ -114,6 +114,10 @@
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {entitledForCompliance: entitled});
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -123,7 +127,8 @@
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance
     };
   }
 
