@@ -6,7 +6,7 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList($filter, Authinfo, ConfigTemplateService, CTService) {
+  function CareFeatureList($filter, Authinfo, ConfigTemplateService) {
 
     var service = {
       getChatTemplates: getChatTemplates,
@@ -50,7 +50,6 @@
       var formattedList = _.map(list, function (tpl) {
         tpl.featureType = 'CT';
         tpl.color = 'attention';
-        tpl.codeSnippet = CTService.generateCodeSnippet(tpl.templateId);
         return tpl;
       });
       return orderByCardName(formattedList);

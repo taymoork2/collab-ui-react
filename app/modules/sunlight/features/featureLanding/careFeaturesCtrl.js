@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, Log, Notification) {
+  function CareFeaturesCtrl($filter, $q, $state, $scope, $timeout, Authinfo, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
     vm.init = init;
     var pageStates = {
@@ -19,6 +19,7 @@
     var featureToBeDeleted = {};
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
+    vm.generateChatCodeSnippet = generateChatCodeSnippet;
     vm.listOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
@@ -150,6 +151,10 @@
           deleteFeatureType: feature.featureType
         });
       }
+    }
+
+    function generateChatCodeSnippet(feature) {
+      return CTService.generateCodeSnippet(feature.templateId);
     }
 
     //list is updated by deleting a feature
