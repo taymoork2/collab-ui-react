@@ -66,7 +66,7 @@
       }
     };
 
-    var TYPE_OPTIONS = [{
+    vm.typeOptions = [{
       text: "email",
       dictionaryType: {
         fieldSet: "ccc_core",
@@ -98,9 +98,7 @@
       }
     }];
 
-    vm.typeOptions = TYPE_OPTIONS;
-
-    var CATEGORY_TYPE_OPTIONS = [{
+    vm.categoryTypeOptions = [{
       text: $translate.instant('careChatTpl.categoryTextCustomer'),
       id: 'customerInfo'
 
@@ -109,12 +107,10 @@
       id: 'requestInfo',
     }];
 
-    vm.categoryTypeOptions = CATEGORY_TYPE_OPTIONS;
-
     vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
     vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
 
-    var REQUIRED_OPTIONS = [{
+    vm.requiredOptions = [{
       text: $translate.instant('careChatTpl.requiredField'),
       id: 'required'
     }, {
@@ -122,16 +118,15 @@
       id: 'optional'
     }];
 
-    vm.requiredOptions = REQUIRED_OPTIONS;
 
     vm.getCategoryTypeObject = function (typeId) {
-      return _.find(CATEGORY_TYPE_OPTIONS, {
+      return _.find(vm.categoryTypeOptions, {
         id: typeId
       });
     };
 
     vm.getTypeObject = function (typeText) {
-      return _.find(TYPE_OPTIONS, {
+      return _.find(vm.typeOptions, {
         text: typeText
       });
     };
