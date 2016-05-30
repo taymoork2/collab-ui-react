@@ -140,9 +140,10 @@
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue != isEntitledToCompliance()) {
         EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue).then(
-          function(res) {
+          function (res) {
             patchUserRoles();
-          }, function (err) {
+          },
+          function (err) {
             var errorMessage = [];
             errorMessage.push($translate.instant('profilePage.complianceError'));
             Notification.notify(errorMessage, 'error');
@@ -159,7 +160,7 @@
       switch ($scope.rolesObj.adminRadioValue) {
       case 0: // No admin
         for (var roleName in Config.roles) {
-          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms) {
+          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
             roles.push({
               'roleName': Config.roles[roleName],
               'roleState': Config.roleState.inactive
@@ -353,7 +354,7 @@
     }
 
     function isEntitledToCompliance() {
-      return  $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+      return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
     }
   }
 })();

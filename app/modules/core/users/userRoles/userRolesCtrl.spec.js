@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: UserRolesCtrl', function () {
+fdescribe('Controller: UserRolesCtrl', function () {
   var controller, $scope, $stateParams, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, $q;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
@@ -9,6 +9,7 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Squared'));
+  beforeEach(module('Ediscovery'));
 
   beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_, _Userservice_, _FeatureToggleService_, _$q_) {
     $scope = $rootScope.$new();
@@ -52,7 +53,10 @@ describe('Controller: UserRolesCtrl', function () {
     it('should verify the radio button value is populated when controller loads with a currentUser', function () {
       expect($scope.rolesObj.adminRadioValue).toBeDefined();
       expect($scope.rolesObj.adminRadioValue).toEqual(1);
+      expect($scope.rolesObj.complianceValue).toBeDefined();
+      expect($scope.rolesObj.complianceValue).toBeFalsy();
     });
+
   });
 
   describe('Verify Admin Roles Radio input setting: ', function () {

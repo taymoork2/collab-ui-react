@@ -115,7 +115,9 @@
     }
 
     function setEntitledForCompliance(orgId, userId, entitled) {
-      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {entitledForCompliance: entitled});
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
     }
 
     return {
