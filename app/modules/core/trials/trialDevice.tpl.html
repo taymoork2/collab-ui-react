@@ -73,7 +73,7 @@
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid">
+    ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid || !callTrial.getTotalQuantity()>0">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>

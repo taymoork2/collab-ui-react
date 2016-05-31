@@ -26,6 +26,7 @@
     vm.validateRoomSystemsQuantity = validateRoomSystemsQuantity;
     vm.validatePhonesQuantity = validatePhonesQuantity;
     vm.validateTotalQuantity = validateTotalQuantity;
+    vm.getTotalQuantity = getTotalQuantity;
     vm.calcQuantity = calcQuantity;
     vm.calcRelativeQuantity = calcRelativeQuantity;
     vm.skip = skip;
@@ -493,6 +494,11 @@
 
     function skip(skipped) {
       _trialDeviceData.skipDevices = skipped;
+    }
+
+    function getTotalQuantity() {
+      var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
+      return quantity;
     }
 
     function validateInputQuantity($viewValue, $modelValue, scope) {
