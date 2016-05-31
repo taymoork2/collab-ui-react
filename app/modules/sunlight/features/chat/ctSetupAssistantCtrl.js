@@ -33,7 +33,7 @@
       'agentUnavailable',
       'offHours',
       'chatStrings',
-      'embedCode'
+      'summary'
     ];
     vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
@@ -66,7 +66,7 @@
       }
     };
 
-    var TYPE_OPTIONS = [{
+    vm.typeOptions = [{
       text: "email",
       dictionaryType: {
         fieldSet: "ccc_core",
@@ -98,9 +98,7 @@
       }
     }];
 
-    vm.typeOptions = TYPE_OPTIONS;
-
-    var CATEGORY_TYPE_OPTIONS = [{
+    vm.categoryTypeOptions = [{
       text: $translate.instant('careChatTpl.categoryTextCustomer'),
       id: 'customerInfo'
 
@@ -109,12 +107,10 @@
       id: 'requestInfo'
     }];
 
-    vm.categoryTypeOptions = CATEGORY_TYPE_OPTIONS;
-
     vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
     vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
 
-    var REQUIRED_OPTIONS = [{
+    vm.requiredOptions = [{
       text: $translate.instant('careChatTpl.requiredField'),
       id: 'required'
     }, {
@@ -122,16 +118,14 @@
       id: 'optional'
     }];
 
-    vm.requiredOptions = REQUIRED_OPTIONS;
-
     vm.getCategoryTypeObject = function (typeId) {
-      return _.find(CATEGORY_TYPE_OPTIONS, {
+      return _.find(vm.categoryTypeOptions, {
         id: typeId
       });
     };
 
     vm.getTypeObject = function (typeText) {
-      return _.find(TYPE_OPTIONS, {
+      return _.find(vm.typeOptions, {
         text: typeText
       });
     };
@@ -158,7 +152,7 @@
                   value: $translate.instant('careChatTpl.defaultWelcomeText')
                 }, {
                   name: 'organization',
-                  value: $translate.instant('careChatTpl.defaultOrgText')
+                  value: vm.orgName
                 }]
               },
               'field1': {
@@ -239,11 +233,6 @@
       feedback: 'circle-star'
     };
 
-    //Model for ctSetupAssistance data
-    vm.selectFieldOptions = [];
-    vm.selectFieldSelected = '';
-    vm.selectFieldPlaceholder = 'Select from the list or type';
-
     function cancelModal() {
       $modal.open({
         templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
@@ -285,7 +274,7 @@
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
-      case 'embedCode':
+      case 'summary':
         return 'hidden';
       default:
         return true;
@@ -320,7 +309,6 @@
      */
 
     vm.getFieldByName = function (fieldName) {
-      var x = vm.template.configuration.pages.customerInformation.fields[fieldName];
       return vm.template.configuration.pages.customerInformation.fields[fieldName];
     };
 
@@ -381,6 +369,10 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }
+
+    vm.isUserProfileSelected = function () {
+      return vm.template.configuration.mediaSpecificConfiguration.useOrgProfile;
+    };
 
     function init() {
       CTService.getLogo().then(function (data) {

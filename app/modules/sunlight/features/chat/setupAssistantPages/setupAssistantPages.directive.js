@@ -10,7 +10,7 @@
     'ctAgentUnavailable',
     'ctOffHours',
     'ctChatStrings',
-    'ctEmbedCode'
+    'ctSummary'
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {
