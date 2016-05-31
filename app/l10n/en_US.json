@@ -1379,13 +1379,26 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
+    "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
     }
   },
   "firstTimeWizard": {
