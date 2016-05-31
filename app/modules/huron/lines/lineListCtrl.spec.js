@@ -1,18 +1,19 @@
 'use strict';
 
 describe('Controller: LineListCtrl', function () {
-  var controller, $controller, $q, $scope, $timeout, LineListService, Notification;
+  var controller, $controller, $q, $scope, $timeout, FeatureToggleService, LineListService, Notification;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var count = getJSONFixture('huron/json/lines/count.json');
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _LineListService_, _Notification_) {
+  beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _FeatureToggleService_, _LineListService_, _Notification_) {
     $q = _$q_;
     $timeout = _$timeout_;
     $controller = _$controller_;
     $scope = $rootScope.$new();
+    FeatureToggleService = _FeatureToggleService_;
     LineListService = _LineListService_;
     Notification = _Notification_;
 
@@ -21,6 +22,7 @@ describe('Controller: LineListCtrl', function () {
 
     spyOn(LineListService, 'getLineList').and.returnValue($q.when(lines));
     spyOn(LineListService, 'getCount').and.returnValue($q.when(count));
+    spyOn(FeatureToggleService, 'supports');
 
     controller = $controller('LinesListCtrl', {
       $scope: $scope
@@ -69,7 +71,10 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter assignedLines', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+
       controller.setFilter('assignedLines');
+      $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
       expect(LineListService.getCount.calls.count()).toEqual(1);
@@ -79,7 +84,10 @@ describe('Controller: LineListCtrl', function () {
     });
 
     it('should call getLineList with filter unassignedLines', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+
       controller.setFilter('unassignedLines');
+      $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
       expect(LineListService.getCount.calls.count()).toEqual(1);
