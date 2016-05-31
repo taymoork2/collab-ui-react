@@ -110,7 +110,7 @@ time_start=$(date +"%s")
 
 # Install dependecies
 echo "Install all dependencies..."
-npm install || exit $?
+npm update || exit $?
 npm prune || exit $?
 
 # npm install succeeded

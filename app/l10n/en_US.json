@@ -499,7 +499,8 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
-    "rolesError": "Error updating user's roles."
+    "rolesError": "Error updating user's roles.",
+    "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
     "title": "Support",
@@ -583,7 +584,10 @@
         "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
-        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+        "viewCdrCallFlowDesc": "Open the tool in a new tab",
+        "ediscovery": "Activity Reports",
+        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "viewEdiscovery": "View Activity Reports"
       }
     }
   },
@@ -1375,13 +1379,26 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
+    "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
     }
   },
   "firstTimeWizard": {
@@ -2472,7 +2489,8 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "compliance": "Compliance"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -3444,6 +3462,9 @@
     "title": "Care",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page",
+    "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
@@ -3534,6 +3555,15 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "deleteFeature": "Delete {{ featureText }}",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "messageError": "Message {{ message }}",
+    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "chatTemplate": "Chat Template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
@@ -3552,7 +3582,6 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3617,7 +3646,10 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3862,15 +3894,25 @@
     },
     "privacy": {
       "title": "Privacy",
-      "subsectionLabel": "Support Access"
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "usageDataHeader": "Usage Data Sent to Cisco Partner",
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
     },
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
-      "title": "Support"
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
     }
   },
   "my-company": {
@@ -3912,7 +3954,8 @@
     "id_readonly_admin": "Read-only Admin",
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
-    "ciscouc.devsupport": "Spark Call Dev Support"
+    "ciscouc.devsupport": "Spark Call Dev Support",
+    "compliance": "Compliance"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -3932,7 +3975,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
-    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
+    "Compliance_User": "Compliance"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

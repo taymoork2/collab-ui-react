@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
@@ -39,6 +39,9 @@ describe('Controller: Customer Reports Ctrl', function () {
   };
 
   var headerTabs = [{
+    title: 'mediaFusion.page_title',
+    state: 'reports-metrics',
+  }, {
     title: 'reportsPage.sparkReports',
     state: 'reports'
   }];
@@ -58,8 +61,10 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   beforeEach(module('Core'));
 
+  beforeEach(module('Huron'));
+
   describe('CustomerReportsCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_) {
       $scope = $rootScope.$new();
       $stateParams = _$stateParams_;
       $q = _$q_;
@@ -70,6 +75,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       CustomerReportService = _CustomerReportService_;
       DummyCustomerReportService = _DummyCustomerReportService_;
       CustomerGraphService = _CustomerGraphService_;
+      FeatureToggleService = _FeatureToggleService_;
+
+      FeatureToggleService.features = {
+        atlasMediaServiceMetrics: 'atlas-media-service-metrics'
+      };
 
       // Service Spies
       spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
@@ -105,6 +115,8 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
       spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
       spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(deviceResponse));
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
       // Webex Requirements
       WebexReportService = {
@@ -166,7 +178,8 @@ describe('Controller: Customer Reports Ctrl', function () {
         CustomerGraphService: CustomerGraphService,
         WebexReportService: WebexReportService,
         WebExApiGatewayService: WebExApiGatewayService,
-        Userservice: Userservice
+        Userservice: Userservice,
+        FeatureToggleService: FeatureToggleService
       });
       $scope.$apply();
     }));

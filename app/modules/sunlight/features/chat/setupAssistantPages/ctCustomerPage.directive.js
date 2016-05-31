@@ -25,6 +25,10 @@
             element.addClass('active');
           }
 
+          //Hack to effect 'active' changes for tags inside a directive
+          element
+            .find('.ct-selectable-cs-select')
+            .addClass('active');
         });
       }
     };
