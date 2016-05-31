@@ -36,7 +36,16 @@
 	</div>
 	<div class="row-fluid">
 		<div class="confirm-box">
-			<cs-checkbox ckid="confirmSaveCheckBox" ng-if="cloudSipDomainField.isUrlAvailable" ng-model="cloudSipDomainField.isConfirmed" label="By checking this box and clicking next, you acknowledge that this domain will be registered."></cs-checkbox>
+			<cs-checkbox ckid="confirmSaveCheckBox" ng-if="cloudSipDomainField.isUrlAvailable" ng-model="cloudSipDomainField.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainAcknowledge' | translate}}"></cs-checkbox>
 		</div>
-	</div>
+  </div>
+  <div class="row-fluid">
+    <div class="save-box">
+      <button id="save"
+              ng-if="$ctrl.showSaveButton && cloudSipDomainField.isUrlAvailable && cloudSipDomainField.isConfirmed"
+              class="space btn--primary"
+              ng-click="_saveDomain()"
+              translate="common.save"></button>
+    </div>
+  </div>
 </div>

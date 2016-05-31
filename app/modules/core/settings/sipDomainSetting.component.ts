@@ -9,6 +9,9 @@ namespace globalsettings {
     }
   }
   angular.module('Core').component('sipdomainSetting', {
+    bindings: {
+      showSaveButton: '<'
+    },
     controller: 'EnterpriseSettingsCtrl',
     templateUrl:'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
   });
