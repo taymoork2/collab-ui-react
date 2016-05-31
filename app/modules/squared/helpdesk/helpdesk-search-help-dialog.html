@@ -9,19 +9,19 @@
 
 <div class="modal-body helpdesk-help">
 
-
   <h4 translate="helpdesk.help.search-criterias-title"></h4>
   <p translate="helpdesk.help.search-criterias-users"></p>
-  <p translate="helpdesk.help.search-criterias-customers"></p>
+  <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.search-criterias-customers"></p>
   <p translate="helpdesk.help.search-criterias-devices"></p>
   <p translate="helpdesk.help.search-criterias-note"></p>
 
-  <h4 translate="helpdesk.help.narrow-title"></h4>
-  <p translate="helpdesk.help.narrow-info"></p>
+  <h4 ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.narrow-title"></h4>
+  <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.narrow-info"></p>
 
   <h4 translate="helpdesk.help.navigation-title"></h4>
+  <p translate="helpdesk.help.navigation-info1"></p>
+  <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.navigation-info2"></p>
 
-  <p translate="helpdesk.help.navigation-info"></p>
 </div>
 
 <div class="modal-footer">

@@ -108,7 +108,7 @@
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
-    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -499,7 +499,8 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
-    "rolesError": "Error updating user's roles."
+    "rolesError": "Error updating user's roles.",
+    "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
     "title": "Support",
@@ -583,7 +584,10 @@
         "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
-        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+        "viewCdrCallFlowDesc": "Open the tool in a new tab",
+        "ediscovery": "Activity Reports",
+        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "viewEdiscovery": "View Activity Reports"
       }
     }
   },
@@ -655,7 +659,8 @@
     "cdrSave": "Save Call",
     "element": "Element",
     "value": "Value",
-    "sparkCall": "(Spark Call)"
+    "sparkCall": "(Spark Call)",
+    "callingCustomer": "Calling Customer"
   },
   "cdrLadderDiagram": {
     "title": "Call Flow Ladder Diagram",
@@ -844,7 +849,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -1126,7 +1131,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Domain"
+      "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1374,13 +1379,26 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
+    "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
     }
   },
   "firstTimeWizard": {
@@ -1464,18 +1482,15 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipDomainDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
-    "setSipDomainDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
-    "setSipDomainDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
-    "setSipDomainMsg": "Enter a prefix for the SIP domain",
-    "setSipDomainTitle": "SIP Domain",
-    "setSipDomainCompNames": "Your organization's SIP Domains:",
+    "setSipDomainDescription": "Select a subdomain that will be used to create Spark SIP addresses.",
+    "setSipDomainMsg": "Enter a subdomain",
+    "setSipDomainTitle": "Spark SIP Address",
+    "setSipDomainCompNames": "Your organization's Spark SIP Addresses:",
     "setSipDomainCheckAvailability": "Check Availability",
-    "setSipDomainPlaceholder": "input a unique domain",
+    "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
-    "setSipDomainSuccessMessage": "The SIP Domain has been successfully saved",
+    "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -1520,12 +1535,14 @@
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
-    "cloudSipSuccess": "Successfully added Cloud SIP Domain.",
-    "cloudSipError": "Failed to add Cloud SIP Domain.",
+    "cloudSipSuccess": "Successfully added Cloud Spark SIP Address.",
+    "cloudSipError": "Failed to add Cloud Spark SIP Address.",
     "messengerRetentionSuccess": "Successfully added retention period setting.",
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
     "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
+    "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -1538,7 +1555,7 @@
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
-    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
+    "appSecurityLabel": "Users can launch the Cisco Spark app only on protected devices",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1558,6 +1575,11 @@
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
     "messagingSetupPlaceholder": "Select retention time",
+    "messagingSetupDataRetentionOption1": "Delete Immediately",
+    "messagingSetupDataRetentionOption2": "30 days",
+    "messagingSetupDataRetentionOption3": "60 days",
+    "messagingSetupDataRetentionOption4": "90 days",
+    "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
@@ -2246,9 +2268,9 @@
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
-    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
-    "requestPurchaseBtn": "Request Purchase",
+    "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
@@ -2467,7 +2489,8 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "compliance": "Compliance"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -2892,7 +2915,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
-    "indexPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2946,7 +2969,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
-    "settingPageLabel_CommonSettings_pda_settings": "Partner SAML Authentication Access",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -3439,6 +3462,9 @@
     "title": "Care",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page",
+    "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
@@ -3525,6 +3551,15 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "deleteFeature": "Delete {{ featureText }}",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "messageError": "Message {{ message }}",
+    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "chatTemplate": "Chat Template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
@@ -3543,7 +3578,6 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3608,7 +3642,10 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3780,7 +3817,7 @@
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "visitCsb": "Visit",
-    "telstraMarketplace": "Telstra App Marketplace",
+    "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3853,15 +3890,25 @@
     },
     "privacy": {
       "title": "Privacy",
-      "subsectionLabel": "Support Access"
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "usageDataHeader": "Usage Data Sent to Cisco Partner",
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
     },
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
-      "title": "Support"
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
     }
   },
   "my-company": {
@@ -3901,7 +3948,10 @@
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
     "id_readonly_admin": "Read-only Admin",
-    "user": "User"
+    "user": "User",
+    "ciscouc.devops": "Spark Call Devops",
+    "ciscouc.devsupport": "Spark Call Dev Support",
+    "compliance": "Compliance"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -3921,7 +3971,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
-    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
+    "Compliance_User": "Compliance"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
@@ -4028,7 +4079,8 @@
     "help": {
       "title": "Help",
       "navigation-title": "Navigating by Keyboard",
-      "navigation-info": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms. Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only. ",
+      "navigation-info1": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms.",
+      "navigation-info2": "Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only.",
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (requires two words with at least three characters each)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name (requires at least three characters)",
@@ -4052,6 +4104,7 @@
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
+    "noDeviceEntitlementsCustomerOrg": "Device search not applicable.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
@@ -4188,15 +4241,25 @@
       },
       "hybridManagement": {
         "title": "Hybrid Management",
-        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "description": "Connector management for Hybrid Call and Calendar Services.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         }
       },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
       "calendar": {
         "title": "Hybrid Calendar",
-        "description": "Calendar integrates with Microsoft Exchange and inserts connection information when @webex or @spark are added to the invite location field.",
+        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4204,7 +4267,7 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Hybrid Call brings cloud capabilities to your desk phone such as using Cisco Spark to answer and place calls.",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4239,9 +4302,9 @@
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode",
-    "title": "Read Only",
+    "title": "Read-only",
     "okButton": "OK",
-    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a read-only user. Your limited access allows viewing of the entire portal, but will not accept changes."
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."

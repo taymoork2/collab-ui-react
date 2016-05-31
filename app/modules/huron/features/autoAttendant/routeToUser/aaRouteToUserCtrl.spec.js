@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, Config, HuronConfig, Userservice, UserListService, UserServiceVoice;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, HuronConfig, Userservice, UserListService, UserServiceVoice;
   var $rootScope, $scope, $translate, UrlConfig;
 
   var aaModel = {
@@ -297,7 +297,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _Config_, _HuronConfig_, _Userservice_, _UserListService_, _UserServiceVoice_, _UrlConfig_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _Userservice_, _UserListService_, _UserServiceVoice_, _UrlConfig_) {
     $translate = _$translate_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -311,7 +311,6 @@ describe('Controller: AARouteToUserCtrl', function () {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     Authinfo = _Authinfo_;
-    Config = _Config_;
     UrlConfig = _UrlConfig_;
     HuronConfig = _HuronConfig_;
     Userservice = _Userservice_;

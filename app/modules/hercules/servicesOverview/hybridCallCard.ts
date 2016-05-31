@@ -19,8 +19,7 @@ namespace servicesOverview {
         link: 'services/call/settings',
         buttonClass: 'btn-link'
       }];
-
-
+    
     getButtons():Array<servicesOverview.CardButton> {
       if (this.active)
         return _.take(this._buttons, 3);
@@ -28,18 +27,14 @@ namespace servicesOverview {
     }
 
     public constructor() {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.hybridCall.title', 'servicesOverview.cards.hybridCall.description', '', false, 'call', CardType.hybrid);
-    }
-
-    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
-      this._status = {
-        status: this.filterAndGetCssStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
-        text: this.filterAndGetTxtStatus(services, ['squared-fusion-ec', 'squared-fusion-uc']),
-        link: ''
-      };
-      this._active = this.filterAndGetEnabledService(services, ['squared-fusion-ec', 'squared-fusion-uc']);
-      this._loading = false;
+      super({
+        name: 'servicesOverview.cards.hybridCall.title',
+        description: 'servicesOverview.cards.hybridCall.description',
+        activeServices: ['squared-fusion-uc'],
+        statusServices: ['squared-fusion-ec', 'squared-fusion-uc'],
+        statusLink: 'services/call',
+        active: false, cardClass: 'call', cardType: CardType.hybrid
+      });
     }
   }
 }

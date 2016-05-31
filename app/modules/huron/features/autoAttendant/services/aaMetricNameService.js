@@ -8,7 +8,7 @@
   function AAMetricNameService() {
     var prefix = 'aa.';
     var service = {
-      CREATE_AA: prefix + 'create',
+      CREATE_AA: prefix + 'createAA',
       TIMEOUT_PHONE_MENU: prefix + 'timeout.phoneMenu',
       TIMEOUT_DIAL_BY_EXT: prefix + 'timeout.dialByExt'
     };
