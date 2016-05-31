@@ -1372,6 +1372,7 @@
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
+        "all": "All",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }

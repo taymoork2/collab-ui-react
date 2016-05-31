@@ -19,18 +19,18 @@
     vm.activeFilter = 'all';
     vm.displayedClusters = [];
     vm.placeholder = {
-      name: 'All',
+      name: $translate.instant('hercules.fusion.list.all'),
       filterValue: 'all',
       count: 0
     };
     vm.filters = [{
       name: $translate.instant('hercules.fusion.list.expressway'),
       filterValue: 'expressway',
-      count: 0,
+      count: 0
     }, {
       name: $translate.instant('hercules.fusion.list.mediafusion'),
       filterValue: 'mediafusion',
-      count: 0,
+      count: 0
     }];
     vm.countHosts = countHosts;
     vm.setFilter = setFilter;
@@ -60,10 +60,11 @@
     }
 
     function updateFilters() {
-      var expressWayClusters = _.filter(clustersCache, 'type', 'expressway');
+      var expresswayClusters = _.filter(clustersCache, 'type', 'expressway');
+      var mediafusionClusters = _.filter(clustersCache, 'type', 'mediafusion');
       vm.placeholder.count = clustersCache.length;
-      vm.filters[0].count = expressWayClusters.length;
-      vm.filters[1].count = clustersCache.length - expressWayClusters.length;
+      vm.filters[0].count = expresswayClusters.length;
+      vm.filters[1].count = mediafusionClusters.length;
     }
 
     function setFilter(filter) {
