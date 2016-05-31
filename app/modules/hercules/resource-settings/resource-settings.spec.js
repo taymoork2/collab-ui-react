@@ -19,7 +19,7 @@ describe('ResourceSettings', function () {
     $scope.$digest();
   }));
 
-  fit('should remove a deactivate service button once a service is deactivated', function () {
+  it('should remove a deactivate service button once a service is deactivated', function () {
 
     // First verify that the "Deactivate Calendar" button is there when 'c_cal' is provisioned …
     view.find('#deactivateCalendar').click();

@@ -545,6 +545,31 @@ describe('ClusterService', function () {
     });
   });
 
+  describe('deprovision cluster', function() {
+    it('should call FMS to deprovision a cluster', function () {
+      $httpBackend
+        .expectPOST('http://elg.no/organizations/orgId/clusters/clusterId/provisioning/actions/remove/invoke?connectorType=c_cal')
+        .respond('');
+      ClusterService.deprovisionConnector("clusterId", "c_cal");
+      $httpBackend.flush();
+    });
+  });
+
+  describe('parse connectors', function() {
+    fit('should parse a connector list from a cluster object', function() {
+
+      var response = '{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd","id":"e33defcf-2702-11e6-9998-005056bf13dd","name":"boler.eu","connectors":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_ucmc@03C36F68","id":"c_ucmc@03C36F68","connectorType":"c_ucmc","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_mgmt@03C36F68","id":"c_mgmt@03C36F68","connectorType":"c_mgmt","upgradeState":"upgraded","state":"running","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_cal@03C36F68","id":"c_cal@03C36F68","connectorType":"c_cal","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"}],"releaseChannel":"GA","provisioning":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_cal","connectorType":"c_cal","provisionedVersion":"8.7-1.0.2909","availableVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_mgmt","connectorType":"c_mgmt","provisionedVersion":"8.7-1.0.321154","availableVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_ucmc","connectorType":"c_ucmc","provisionedVersion":"8.7-1.0.2094","availableVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"}],"state":"fused"}';
+      $httpBackend
+        .expectGET('http://elg.no/organizations/orgId/clusters/clusterId?fields=@wide')
+        .respond(200, response);
+      var connectorListPromise = ClusterService.getAllConnectorsForCluster("clusterId");
+      $httpBackend.flush();
+      connectorListPromise.then(function (allConnectors) {
+        expect(allConnectors.length).toBe(3);
+      });
+    });
+  });
+
   function org(clusters) {
     return {
       id: _.uniqueId('org_'),
