@@ -44,7 +44,7 @@
 
           <div ng-repeat="service in resourceSetting.enabledServices">
             <div ng-if="service === 'c_cal'">
-              <button type="button" class="btn btn--alert" ng-click="resourceSetting.deactivateService('c_cal', resourceSetting.cluster);">Deactivate Calendar</button>
+              <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="resourceSetting.deactivateService('c_cal', resourceSetting.cluster);">Deactivate Calendar</button>
             </div>
             <div ng-if="service === 'c_ucmc'">
               <button type="button" class="btn btn--alert" ng-click="resourceSetting.deactivateService('c_ucmc', resourceSetting.cluster);">Deactivate Call</button>

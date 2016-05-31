@@ -37,6 +37,7 @@
       });
 
     vm.deactivateService = deactivateService;
+
     function deactivateService(serviceId, cluster) {
       $modal.open({
         templateUrl: 'modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html',
@@ -64,20 +65,21 @@
     }
 
     vm.deregisterCluster = deregisterCluster;
+
     function deregisterCluster(cluster) {
       $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          }
-        },
-        controller: 'ClusterDeregisterController',
-        controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
-      })
-      .result.then(function (data) {
-        $state.go('cluster-list');
-      });
+          resolve: {
+            cluster: function () {
+              return vm.cluster;
+            }
+          },
+          controller: 'ClusterDeregisterController',
+          controllerAs: 'clusterDeregister',
+          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+        })
+        .result.then(function (data) {
+          $state.go('cluster-list');
+        });
     }
 
   }
