@@ -6,6 +6,7 @@
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var processEnvUtil = require('../utils/processEnvUtil.gulp')();
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var del = require('del');
@@ -260,7 +261,8 @@ gulp.task('connect', function () {
     port: 8000,
     middleware: function () {
       return [
-        compression()
+        compression(),
+        customCSPmiddleware
       ];
     },
     livereload: false

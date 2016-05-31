@@ -6,7 +6,7 @@
     .controller('AADialByExtCtrl', AADialByExtCtrl);
 
   /* @ngInject */
-  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService) {
+  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService, FeatureToggleService) {
     var vm = this;
 
     var runActionName = 'runActionsOnInput';
@@ -94,18 +94,44 @@
 
     }
 
+    function setActionMinMax(action) {
+
+      FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
+
+        if (result) {
+          action.minNumberOfCharacters = 0;
+          action.maxNumberOfCharacters = 0;
+        } else {
+          action.minNumberOfCharacters = 4;
+          action.maxNumberOfCharacters = 4;
+        }
+      });
+    }
+
+    function setPhoneMenuMinMaxEntry() {
+      var action = vm.menuEntry.actions[0];
+      if (angular.isUndefined(action.minNumberOfCharacters)) {
+        setActionMinMax(action);
+      }
+    }
+
     function setActionEntry() {
 
       if (vm.menuEntry.actions.length === 0) {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
         action.inputType = 2;
+
+        setActionMinMax(action);
+
         vm.menuEntry.addAction(action);
+
       } else {
         // Should not happen, but make sure action is runActionsOnInput not AA, User, extNum, etc
         if (!(vm.menuEntry.actions[0].getName() === runActionName)) {
           vm.menuEntry.actions[0].setName(runActionName);
           vm.menuEntry.actions[0].setValue('');
           vm.menuEntry.actions[0].inputType = 2;
+          setActionMinMax(vm.menuEntry.actions[0]);
         } // else let saved value be used
       }
     }
@@ -130,6 +156,9 @@
           action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
           vm.menuEntry.addAction(action);
         }
+
+        setPhoneMenuMinMaxEntry();
+
       } else {
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
 

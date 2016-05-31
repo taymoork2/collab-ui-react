@@ -19,6 +19,7 @@ namespace servicesOverview {
 
   export interface CardParams {
     active?:boolean;
+    display?:boolean;
     cardClass?:string;
     cardType?:CardType;
     description:string;
@@ -32,6 +33,7 @@ namespace servicesOverview {
     protected _status:CardStatus;
     protected _loading = true;
     protected _active:boolean;
+    protected _display:boolean;
     private _cardClass:string;
     private _cardType:CardType;
     private _description:string;
@@ -57,6 +59,10 @@ namespace servicesOverview {
 
     get description() {
       return this._description;
+    }
+
+    get display() {
+      return this._display;
     }
 
     get icon() {
@@ -89,10 +95,12 @@ namespace servicesOverview {
       description:_description,
       icon:_icon='',
       active:_active=true,
+      display:_display=true,
       cardClass:_cardClass='cs-card',
       cardType:_cardType = CardType.cloud
     }:CardParams) {
       this._active = _active;
+      this._display = _display;
       this._cardClass = _cardClass;
       this._cardType = _cardType;
       this._description = _description;

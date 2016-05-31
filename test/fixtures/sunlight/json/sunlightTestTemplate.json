@@ -1,0 +1,26 @@
+{
+  "name": "",
+  "mediaType": "chat",
+  "configuration": {
+    "mediaSpecificConfiguration": {
+      "useOrgProfile": true,
+      "displayText": "vm.orgName",
+      "image": "",
+      "useAgentRealName": false
+    },
+    "pages": {
+      "customerInformation": {
+        "enabled": true
+      },
+      "agentUnavailable": {
+        "enabled": true
+      },
+      "offHours": {
+        "enabled": true
+      },
+      "feedback": {
+        "enabled": true
+      }
+    }
+  }
+}

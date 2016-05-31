@@ -9,11 +9,13 @@
     .service('SunlightConfigService', sunlightConfigService);
 
   /* @ngInject */
-  function sunlightConfigService($http, $rootScope, $q, Log, UrlConfig) {
+  function sunlightConfigService($http, $rootScope, $q, Log, UrlConfig, Authinfo) {
     var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/user/";
+    var sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/organization/" + Authinfo.getOrgId() + "/template";
     var service = {
       getUserInfo: getUserInfo,
-      updateUserInfo: updateUserInfo
+      updateUserInfo: updateUserInfo,
+      createChatTemplate: createChatTemplate
     };
 
     return service;
@@ -24,6 +26,10 @@
 
     function updateUserInfo(userData, userId) {
       return $http.put(sunlightUserConfigUrl + userId, userData);
+    }
+
+    function createChatTemplate(chatTemplate) {
+      return $http.post(sunlightChatConfigUrl, chatTemplate);
     }
 
   }
