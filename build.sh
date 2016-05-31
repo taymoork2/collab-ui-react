@@ -106,7 +106,7 @@ time gulp karma-parallel || exit $?
 gulp karma-combine-coverage || exit $?
 
 # - e2e tests
-gulp e2e --sauce --production-backend --nobuild | tee ./.cache/e2e-sauce-logs
+gulp e2e --sauce --production-backend --nobuild --verbose | tee ./.cache/e2e-sauce-logs
 e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
