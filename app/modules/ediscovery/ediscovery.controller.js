@@ -151,10 +151,14 @@
 
     function prettyPrintBytes(bytes, precision) {
       if (bytes === 0) {
-        return '0 bytes'
+        return '0 bytes';
       }
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-      if (typeof precision === 'undefined') precision = 1;
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+        return '-';
+      }
+      if (typeof precision === 'undefined') {
+        precision = 1;
+      }
 
       var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
         number = Math.floor(Math.log(bytes) / Math.log(1024)),
@@ -173,5 +177,5 @@
   angular
     .module('Ediscovery')
     .controller('EdiscoveryController', EdiscoveryController)
-    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl)
+    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
 }());
