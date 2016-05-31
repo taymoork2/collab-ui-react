@@ -32,7 +32,6 @@
     vm.getQuantity = getQuantity;
     vm.setQuantity = setQuantity;
     vm.validateChecks = validateChecks;
-    vm.toggleShipFields = toggleShipFields;
     vm.disabledChecks = disabledChecks;
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
@@ -88,7 +87,6 @@
           return !vm.canAddRoomSystemDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.sx10,
@@ -143,7 +141,6 @@
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8865,
@@ -194,7 +191,6 @@
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8845,
@@ -246,7 +242,6 @@
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8841,
@@ -297,7 +292,6 @@
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone7841,
@@ -345,8 +339,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       },
     }, {
       model: vm.shippingInfo,
@@ -359,7 +352,6 @@
         label: $translate.instant('trialModal.call.phone'),
         type: 'text',
         required: true,
-        disabled: true
       }
     }, {
       model: vm.shippingInfo,
@@ -378,7 +370,7 @@
         labelfield: 'country',
         labelProp: 'country',
         valueProp: 'country',
-        disabled: true
+
       },
       expressionProperties: {
         'templateOptions.options': function () {
@@ -395,8 +387,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.address'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       }
     }, {
       model: vm.shippingInfo,
@@ -408,8 +399,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.city'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       },
     }, {
       model: vm.shippingInfo,
@@ -424,7 +414,6 @@
         inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.state'),
         required: true,
-        disabled: true,
         labelfield: 'abbr',
         valuefield: 'abbr',
         labelProp: 'abbr',
@@ -450,8 +439,7 @@
         max: 99999,
         min: 0,
         pattern: '\\d{5}',
-        required: true,
-        disabled: true
+        required: true
       }
     }, {
       model: vm.shippingInfo,
@@ -463,8 +451,7 @@
         inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.dealId'),
         type: 'text',
-        required: false,
-        disabled: true
+        required: false
       },
     }];
 
@@ -657,26 +644,6 @@
       }), 'quantity', 0);
     }
 
-    function toggleShipFields() {
-      var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
-      var invalidDeviceQuantity = quantity < 2 || quantity > 7;
-      var invalidPhoneQuantity = _(_trialCallData.details.phones)
-        .flatten()
-        .pluck('quantity')
-        .some(function (quantity) {
-          return quantity > 5;
-        });
-      var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
-
-      _.forEach(vm.shippingFields, function (field) {
-
-        field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
-        if (field.templateOptions.disabled && field.formControl) {
-          field.formControl.$setViewValue('');
-        }
-      });
-    }
-
     function disabledChecks() {
       return !_.chain(_trialCallData.details.phones)
         .concat(_trialRoomSystemData.details.roomSystems)
@@ -695,15 +662,6 @@
       return {
         checkbox: {
           expression: vm.validateChecks
-        }
-      };
-    }
-
-    function _checkWatcher() {
-      return {
-        expression: vm.toggleShipFields,
-        listener: function () {
-          return disabledChecks();
         }
       };
     }
