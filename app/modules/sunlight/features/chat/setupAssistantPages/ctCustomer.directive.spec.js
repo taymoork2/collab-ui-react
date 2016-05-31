@@ -58,6 +58,7 @@ describe('Directive: ct-customer Customer Information Page', function () {
     expect(ctCustomer.find('.ct-customer-info-category-input > input.ct-attribute-field-textbox').attr('ng-model')).toBe('careChatSA.categoryOptionTag');
     expect(ctCustomer.find('.ct-customer-info-category-input > input.ct-attribute-field-textbox').attr('maxlength')).toBe('25');
     expect(ctCustomer.html()).toContainElement('.ct-customer-info-category-input > div.category-tokens > input.token-input');
-    //expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokenfieldid')).toBe('careChatSA.categoryTokensId');
+    expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokenfieldid')).toBe('careChatSA.categoryTokensId');
+    expect(ctCustomer.find('.ct-customer-info-category-input > div.category-tokens > input.token-input').attr('tokens')).toBe('careChatSA.activeItem.categoryOptions');
   });
 });
