@@ -68,10 +68,9 @@ namespace myCompanyPage {
                 };
 
                 if (license.offerName === 'MS') {
-                  this._usageCategory[0].subscriptions.push(subscription);
+                  this._usageCategory[0].subscriptions = addSubscription(this._usageCategory[0].subscriptions, subscription);
                 } else if ((license.offerName === 'CF') || (license.offerName === 'MC') || (license.offerName === 'TC') || (license.offerName === 'EC') || (license.offerName === 'EE') || (license.offerName === 'CMR')) {
                   let existingSite = checkForSite(subscription.siteUrl, this._usageCategory[1].subscriptions);
-
                   if (existingSite) {
                     this._usageCategory[1].subscriptions[existingSite].offers.push(subscription);
                   } else if (subscription.siteUrl) {
@@ -86,9 +85,9 @@ namespace myCompanyPage {
                     });
                   }
                 } else if (license.offerName === 'CO') {
-                  this._usageCategory[2].subscriptions.push(subscription);
+                  this._usageCategory[2].subscriptions = addSubscription(this._usageCategory[2].subscriptions, subscription);
                 } else if (license.offerName === 'SD') {
-                  this._usageCategory[3].subscriptions.push(subscription);
+                  this._usageCategory[3].subscriptions = addSubscription(this._usageCategory[3].subscriptions, subscription);
                 }
               });
             });
@@ -144,6 +143,17 @@ namespace myCompanyPage {
       });
     }
     return found;
+  }
+
+  function addSubscription(subscriptions, item) {
+    if (subscriptions.length < 1) {
+      subscriptions.push(item);
+    } else {
+      subscriptions[0].usage += item.usage;
+      subscriptions[0].volume += item.volume;
+    }
+
+    return subscriptions;
   }
 
   angular

@@ -11,8 +11,6 @@
               <div class="subscription-description" ng-if="!usageCategory.borders" ng-if="!usageCategory.borders">
                 <div class="description-line">
                   <span class="name" translate="subscriptions.licenseTypes.{{::subscription.offerName}}"></span>
-                </div><div class="description-line" ng-if="subscription.subscription">
-                  <span translate="subscriptions.subscription"></span><span>{{::subscription.subscription}}</span>
                 </div><div class="description-line">
                   <span translate="subscriptions.usage"></span>
                   <span ng-class="{'warning': subscription.usage > subscription.volume}">{{::subscription.usage}}/{{::subscription.volume}}</span>
