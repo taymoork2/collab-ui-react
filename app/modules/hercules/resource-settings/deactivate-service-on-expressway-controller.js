@@ -16,9 +16,8 @@
 
     function deactivateService() {
       ClusterService.deprovisionConnector(vm.clusterId, vm.serviceId)
-        .then(function (response) {
-          $modalInstance.close();
-        }, XhrNotificationService.notify);
+        .then($modalInstance.close)
+        .catch(XhrNotificationService.notify);
     }
 
   }
