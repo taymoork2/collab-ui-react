@@ -13,13 +13,7 @@ namespace servicesOverview {
       return this._feature;
     }
 
-    public hybridCardFilters = {
-      all: {cardType: servicesOverview.CardType.hybrid},
-      active: {cardType: servicesOverview.CardType.hybrid, active: true}
-    };
-    private activeHybridCardFilter = this.hybridCardFilters.all;
     public showFilterDropDown:boolean = false;
-
 
     /* @ngInject */
     constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
@@ -34,19 +28,24 @@ namespace servicesOverview {
       FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
         this._feature = !!supports;
       });
+
+      FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
+        this.forwardEvent('f410FeatureEventHandler', supports);
+      });
     }
 
     get hybridCards() {
-      return _.filter(this.cards, this.activeHybridCardFilter);
+      return _.filter(this.cards, {
+        cardType: servicesOverview.CardType.hybrid,
+        display: true
+      });
     }
 
     get cloudCards() {
-      return _.filter(this.cards, {cardType: servicesOverview.CardType.cloud});
-    }
-
-    public filterHybridCard(filter:string) {
-      this.toggleDropdown();
-      this.activeHybridCardFilter = this.hybridCardFilters[filter];
+      return _.filter(this.cards, {
+        cardType: servicesOverview.CardType.cloud,
+        display: true
+      });
     }
 
     public toggleDropdown() {

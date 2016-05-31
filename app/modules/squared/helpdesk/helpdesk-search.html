@@ -24,13 +24,13 @@
     <div class="input-description"></div>
   </div>
 
-  <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-searching-org">
+  <div ng-if="helpdeskCtrl.currentSearch.orgFilter && !helpdeskCtrl.isCustomerHelpDesk" class="helpdesk-searching-org">
         <span translate="helpdesk.searchingOrg"
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
     <i class="icon icon-close pointer" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
   </div>
 
-  <div ng-if="helpdeskCtrl.lookingUpOrgFilter" class="helpdesk-please-wait">
+  <div ng-if="helpdeskCtrl.lookingUpOrgFilter && !helpdeskCtrl.isCustomerHelpDesk" class="helpdesk-please-wait">
     <span><i class="icon icon-spinner icon-2x"></i></span>
     <p translate="helpdesk.applyOrgFilterPleaseWait"></p>
   </div>
@@ -77,9 +77,6 @@
                   <div ng-repeat="number in user.phoneNumbers">
                     <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
                   </div>
-                  <!--<div ng-if="user.organization.displayName" class="right">
-                    <span class="belongs-to-org">{{user.organization.displayName}}</span>
-                  </div>-->
                 </section>
               </div>
             </article>
