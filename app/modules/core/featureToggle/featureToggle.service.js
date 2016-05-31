@@ -20,7 +20,7 @@
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
-      atlasPartnerAdminPrivlages: 'atlas-partner-admin-features',
+      atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasTrialConversion: 'atlas-trial-conversion',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
