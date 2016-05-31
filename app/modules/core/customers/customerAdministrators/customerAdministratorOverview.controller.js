@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorOverviewCtrl', CustomerAdministratorOverview);
 
   /* @ngInject */
-  function CustomerAdministratorOverview($scope, $state, $stateParams, ExternalNumberService, Notification) {
+  function CustomerAdministratorOverview($scope, $state, $stateParams) {
     var vm = this;
     vm.count = 0;
     vm.loading = true;
