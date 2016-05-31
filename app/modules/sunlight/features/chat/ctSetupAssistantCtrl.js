@@ -118,7 +118,6 @@
       id: 'optional'
     }];
 
-
     vm.getCategoryTypeObject = function (typeId) {
       return _.find(vm.categoryTypeOptions, {
         id: typeId
@@ -233,8 +232,6 @@
       offHours: 'circle-clock-hands',
       feedback: 'circle-star'
     };
-
-    vm.chatTemplateSaveFailed = false;
 
     function cancelModal() {
       $modal.open({
