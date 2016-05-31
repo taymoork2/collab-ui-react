@@ -26,6 +26,7 @@
     }
     .file-drop-content {
       @extend .center;
+      position: relative;
       align-self: center;
       width: rem(400);
       padding-top: 2rem;
