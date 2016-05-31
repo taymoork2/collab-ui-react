@@ -41,17 +41,13 @@
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
     $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials), FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)])
-      .then(function(result) {
-        if (result[0]) {
-          if (_.find(vm.currentCustomer.offers, {
-              id: Config.offerTypes.roomSystems
-            })) {
-            vm.showRoomSystems = result[0];
-          }
+      .then(function (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = result[0];
         }
-        if (result[1]) {
-          vm.atlasPartnerAdminFeatureToggle = true;
-        }  
+        vm.atlasPartnerAdminFeatureToggle = result[1];
       });
 
     init();

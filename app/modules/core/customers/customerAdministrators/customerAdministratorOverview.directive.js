@@ -7,7 +7,7 @@
 
   function ucCustomerAdministratorOverview() {
     var directive = {
-      restrict: 'EA',
+      restrict: 'E',
       templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorOverview.tpl.html',
       controller: 'CustomerAdministratorOverviewCtrl',
       controllerAs: 'customerAdminOverview'

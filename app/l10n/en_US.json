@@ -2287,7 +2287,7 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
-    "adminmanagement": "Administrator Management",
+    "adminManagement": "Administrator Management",
     "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
@@ -2363,8 +2363,8 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addadministrators": "Add Adminsitrators",
-    "assignedadministrators": "Assigned Administrators"
+    "addAdministrators": "Add Adminsitrators",
+    "assignedAdministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
