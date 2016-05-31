@@ -1,4 +1,5 @@
 .ct-feedback {
+  align-items: center;
 
   @mixin placeholder {
     ::-webkit-input-placeholder {
@@ -16,6 +17,7 @@
   }
 
   .cs-card {
+    @include vr-spacing(ml, 2);
     width: rem-calc(366px);
     height: rem-calc(458px);
     display: flex;
@@ -30,7 +32,10 @@
   }
 
   .cardScroll {
-    padding: rem-calc(15px) rem-calc(60px) rem-calc(50px) rem-calc(120px);
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pr, 3.75);
+    @include vr-spacing(pb, 3.125);
+    @include vr-spacing(pl, 2);
   }
 
   .ct-feedback-rating {
@@ -44,7 +49,7 @@
   }
 
   .labelText {
-    padding-top: .75rem;
+    @include vr-spacing(pt, 0.75);
   }
 
   .textOverflow{
@@ -56,7 +61,6 @@
   .inputField {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.1);
-    font-family: "CiscoSansTT Light";
     color: $gray-dark-2;
   }
 
@@ -67,8 +71,6 @@
     cursor: default;
     color: $gray-dark-1;
     pointer-events: none;
-    font-family: "CiscoSansTT Light";
-    font-size: rem-calc(16px);
     width: 90%
   }
 
@@ -92,7 +94,6 @@
     .ct-default-msg {
       text-align: center;
       flex: 0;
-      font-family: "CiscoSansTT Light";
       color: $gray-dark-1;
     }
   }
@@ -131,26 +132,29 @@
   }
 
   .feedback-question-text {
+    @include vr-spacing(mt, 5.5);
     font-size: 14px;
     font-family: CiscoSansTT Light;
-    color: #555555;
+    color: $gray-dark-2;
     align-self: center;
-    margin-top: 5.5rem;
   }
 
   .feedback-radio-list {
+    @include vr-spacing(mt, 1.5);
+    @include vr-spacing(mr, 1.8);
+    @include vr-spacing(mb, 3.5);
+    @include vr-spacing(ml, 1.8);
     display: flex;
     align-self: stretch;
     justify-content: space-between;
     position: relative;
-    margin: 1.5rem 1.8rem 3.5rem 1.8rem;
     outline: none;
     z-index: 20;
   }
 
   .feedback-radio-outer {
+    @include vr-spacing(mb, 0);
     display: inline-block;
-    margin-bottom: 0rem;
   }
 
   .feedback-radio {
@@ -163,45 +167,47 @@
     border-radius:50%;
     outline:#999999;
     position: relative;
-    background-color: #FFFFFF;
+    background-color: $white;
   }
 
   .feedback-radio-inner {
-    background-color: #FFFFFF;
+    @include vr-spacing(m, 0.25);
+    background-color: $white;
     display:block;
     width:0.85rem;
     height:0.85rem;
     border-radius:50%;
-    margin: 0.25rem;
   }
   .feedback-radio-green {
     background-color:#7CC153;
   }
 
   .feedback-radio-line {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(ml, 2);
     height: 1px;
     width: 80%;
     background-color: #979797;
     position: relative;
     top: -5.4rem;
     z-index: 1;
-    margin: 1rem auto;
   }
 
   .radio-text-div {
+    @include vr-spacing(pb, 1.25);
+    @include vr-spacing(mt, -5.4);
     align-self: stretch;
-    margin-top: -5.4rem;
     display: flex;
-    padding-bottom: 1.25rem;
   }
 
   .radio-text {
+    @include vr-spacing(mt, 0.625);
     font-size: 10px;
-    font-family: "CiscoSansTT Light";
-    color: #555555;
+    font-family: Arial;
+    color: $gray-dark-2;
     text-align: center;
     width: 100%;
-    margin-top: .625rem;
   }
 
   .radio-text-left {
@@ -209,27 +215,30 @@
   }
 
   .radio-text-middle {
+    @include vr-spacing(pl, 2.5);
     width: 50%;
-    padding-left: 2.5rem;
   }
 
   .radio-text-right {
+    @include vr-spacing(pl, 3.125);
     width: 50%;
-    padding-left: 3.125rem;
   }
 
   .feedback-comment-text {
+    @include vr-spacing(pt, 0.375);
+    @include vr-spacing(pr, 0.3125);
+    @include vr-spacing(pl, 0.625);
+    @include vr-spacing(m, 0);
     width: 18.75rem;
-    margin: 0rem;
     height: 8.75rem !important;
     position: relative;
     align-self: center;
+    font-family: CiscoSansTT Light;
     font-size: 14px;
     resize: none;
-    border: 1px solid #CCCCCC;
-    border-radius: rem-calc(3px);
-    background-color: #FFFFFF;
-    padding: rem-calc(6px) rem-calc(5px) 0rem rem-calc(10px);
+    border: 1px solid $gray-light-2;
+    border-radius: 3px;
+    background-color: $white;
   }
 
   .feedback-buttons {
@@ -237,15 +246,18 @@
   }
 
   .feedback-btn {
+    @include vr-spacing(p, 0.3125);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mr, 0.3125);
+    @include vr-spacing(mb, 0.625);
+    @include vr-spacing(ml, 0.5);
     border: medium none;
     border-radius: 0.25rem;
-    color: white;
+    color: $white;
     font-size: 15px;
     height: rem-calc(35px);
     position: relative;
     text-align: center;
     width: rem-calc(141px);
-    margin: rem-calc(15px) rem-calc(5px) rem-calc(10px) rem-calc(8px);
-    padding: rem-calc(5px);
   }
 }

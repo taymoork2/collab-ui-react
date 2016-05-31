@@ -5,7 +5,7 @@
     </div>
     <div class="h4 ct-title-desc" translate="careChatTpl.feedbackDesc"></div>
 
-    <div class="ct-feedback">
+    <div class="ct-feedback ct-sa-content">
         <cs-card-layout block-view="true" class="cardScroll">
             <cs-card>
                 <header class="cardHeader1 h4" translate="careChatTpl.screen"></header>
@@ -65,7 +65,7 @@
                             <label class="cs-input__label ct-attribute-field-label  h4 large-11"
                                    translate="careChatTpl.label">
                             </label>
-                            <input id="label_id"
+                            <input id="label"
                                    class="h5 inputField ct-attribute-field-textbox large-11"
                                    type="text" maxlength="50" ng-minlength="1"
                                    ng-model="careChatSA.template.configuration.pages.feedback.fields.feedbackQuery.displayText"/>
@@ -79,9 +79,7 @@
                                         translate="careChatTpl.rating" translate-values="{ index: $index+1 }">
                                 </label>
 
-                                <input
-                                        id="rating.label"
-                                        class="h5 inputField ct-attribute-field-textbox large-11"
+                                <input class="h5 inputField ct-attribute-field-textbox large-11"
                                         type="text" maxlength="15" ng-minlength="1"
                                         ng-model="rating.displayText"/>
                             </div>
@@ -91,7 +89,7 @@
                             <label class="cs-input__label ct-attribute-field-label  h4 large-11"
                                    translate="careChatTpl.ratingHintText">
                             </label>
-                            <input id="label_id2"
+                            <input id="hintText"
                                    class="h5 inputField ct-attribute-field-textbox large-11"
                                    type="text" maxlength="100" ng-minlength="1"
                                    ng-model="careChatSA.template.configuration.pages.feedback.fields.comment.displayText"/>

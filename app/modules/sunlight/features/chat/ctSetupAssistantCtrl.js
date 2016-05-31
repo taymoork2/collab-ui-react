@@ -226,14 +226,30 @@
                 "displayText": $translate.instant('careChatTpl.feedbackQuery')
               },
               "ratings": [{
-                "displayText": $translate.instant('careChatTpl.rating1Text')
+                "displayText": $translate.instant('careChatTpl.rating1Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating2Text')
+                "displayText": $translate.instant('careChatTpl.rating2Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating3Text')
+                "displayText": $translate.instant('careChatTpl.rating3Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
               }],
               "comment": {
-                "displayText": $translate.instant('careChatTpl.ratingComment')
+                "displayText": $translate.instant('careChatTpl.ratingComment'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingComments"
+                }
               }
             }
           }
