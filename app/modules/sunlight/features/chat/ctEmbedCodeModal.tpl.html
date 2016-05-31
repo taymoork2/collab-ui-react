@@ -7,6 +7,7 @@
 	  <textarea class="embed-code-textarea" rows=15 disabled ng-bind="embedCodeCtrl.embedCodeSnippet"></textarea>
 	</div>
 	<div class="modal-footer">
-	  <button class="btn btn--primary" id="generateScriptBtn" ng-click="$dismiss()" focus-on>{{:: 'careChatTpl.copyEmbedCode' | translate }}</button>
+	  <button class="btn btn--primary" id="generateScriptBtn" ngclipboard data-clipboard-text="{{ embedCodeCtrl.embedCodeSnippet }}"
+	          ng-click="$dismiss()" focus-on>{{:: 'careChatTpl.copyEmbedCode' | translate }}</button>
 	</div>
 </div>

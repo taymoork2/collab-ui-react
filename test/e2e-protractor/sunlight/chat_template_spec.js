@@ -31,27 +31,27 @@ describe('Care admin should be able to', function () {
     validateContentsOfChatStringsPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
-    
+
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     validateDismissOfCTSetupWizard();
-    
+
     utils.waitForModal().then(function () {
-    	validateDisplayEmbedCodeModal();
-    	utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
-    	validateDismissOfEmbedCodeModal();
+      validateDisplayEmbedCodeModal();
+      utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
+      validateDismissOfEmbedCodeModal();
     });
   });
 
   function validateDismissOfCTSetupWizard() {
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.careChatSetupWizard)
   }
-  
+
   function validateDisplayEmbedCodeModal() {
-	  utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal)
+    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal)
   }
-  
+
   function validateDismissOfEmbedCodeModal() {
-	  utils.expectIsNotDisplayed(careChatTemplateSetupPage.embedCodeModal)
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.embedCodeModal)
   }
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {

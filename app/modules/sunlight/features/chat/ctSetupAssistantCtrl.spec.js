@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred;
+  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -27,12 +27,34 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     };
   };
 
+  var failedData = {
+    success: false,
+    status: 403,
+    Errors: [{
+      errorCode: '100106'
+    }]
+  };
+
+  var successData = {
+    success: true,
+    status: 201
+  };
+
   beforeEach(module('Sunlight'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
+    $provide.value("SunlightConfigService", {
+      createChatTemplate: function (data) {
+        return {
+          then: function (callback) {
+            return callback(successData);
+          }
+        };
+      }
+    });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$window_, _Authinfo_, _CTService_) {
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$window_, _Authinfo_, _CTService_, _SunlightConfigService_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -40,6 +62,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $window = _$window_;
     Authinfo = _Authinfo_;
     CTService = _CTService_;
+    SunlightConfigService = _SunlightConfigService_;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
@@ -283,6 +306,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(isDefinedRes).toBe(false);
       isDefinedRes = controller.isDefined(testObj, "trees-16");
       expect(isDefinedRes).toBe(false);
+    });
+  });
+
+  describe('Summary Page', function () {
+    beforeEach(inject(intializeCtrl));
+
+    it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+
+      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.reject(failedData);
+        return deferred.promise;
+      });
+
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect(controller.saveCTErrorOccurred).toBeTruthy();
     });
   });
 });
