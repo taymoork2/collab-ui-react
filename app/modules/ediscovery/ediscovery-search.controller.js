@@ -2,19 +2,28 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoverySearchController($timeout, $scope, $modal, EdiscoveryService) {
 
     var vm = this;
-    // console.log("EdiscoverySearchController...")
+    vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
-    vm.showSearchHelp = showSearchHelp;
+    vm.runReport = runReport;
+    vm.progressType = progressType;
+    vm.downloadReport = downloadReport;
+    //vm.showSearchHelp = showSearchHelp;
+
+    $scope.$on('$destroy', function () {
+      disableAvalonPolling();
+    });
 
     vm.searchCriteria = {
-      "searchString": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": moment(),
-      "endDate": moment(moment()).add(1, 'days')
+      "roomId": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+      "startDate": null, //moment(moment()).add(-7, 'days'), // week
+      "endDate": null, //moment(),
+      "displayName": "TBD"
     };
     vm.reports = [];
+    vm.report = null;
 
     function getStartDate() {
       return vm.searchCriteria.startDate;
@@ -65,6 +74,10 @@
       }
     }
 
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(avalonPoller);
+    });
+
     $scope.$watch(getStartDate, function (startDate) {
       //validateDate();
     });
@@ -73,33 +86,100 @@
       //validateDate();
     });
 
-    function randomString() {
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-      return _.sample(possible, 5).join('');
+    function searchForRoom(roomId) {
+      vm.report = null;
+      // TODO: Implement proper handling of error when final API is in place
+      EdiscoveryService.getAvalonServiceUrl(vm.searchCriteria.roomId)
+        .then(function (result) {
+          EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + vm.searchCriteria.roomId).then(function (result) {
+            vm.roomInfo = result;
+            vm.searchCriteria.id = result.id;
+            vm.searchCriteria.startDate = result.published;
+            vm.searchCriteria.endDate = result.lastReadableActivityDate;
+            vm.searchCriteria.displayName = result.displayName;
+          });
+        });
     }
 
+    function findReportById(reports, id) {
+      return _.find(reports, function (report) {
+        return report.id === id;
+      });
+    }
+
+    // Should eventually be a search API
     function createReport() {
+      disableAvalonPolling();
+      vm.errors = [];
       if (!validateDate()) {
         return;
       }
-      vm.searchResult = {};
-      EdiscoveryService.createReport("whatever_" + randomString(), vm.searchCriteria.searchString).then(function (res) {
-        vm.searchResult = res;
+      vm.report = {
+        "state": "Searching..."
+      };
+
+      EdiscoveryService.createReport(vm.searchCriteria.displayName)
+        .then(function (res) {
+          vm.searchResult = res;
+          runReport();
+        })
+        .catch(function (err) {
+          vm.errors = err.data.errors;
+          vm.report = {};
+        });
+    }
+
+    var avalonPoller;
+
+    function enableAvalonPolling() {
+      $timeout.cancel(avalonPoller);
+      pollAvalonReport();
+    }
+
+    function disableAvalonPolling() {
+      $timeout.cancel(avalonPoller);
+    }
+
+    function pollAvalonReport() {
+      // TODO: Implement proper handling of error when final API is in place
+      EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
+        vm.report = report;
+        if (report.state != 'COMPLETED' && report.state != 'FAILED') {
+          avalonPoller = $timeout(pollAvalonReport, 2000);
+        } else {
+          disableAvalonPolling();
+        }
+      }).catch(function (err) {
+        // TODO: Proper error handling when final API is ready
+        disableAvalonPolling();
       });
     }
 
-    function setSearchFieldFocus() {
-      angular.element('#searchInput').focus();
+    function runReport() {
+      // Expect this API to be changed when Avalon updates their API
+      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.roomId, vm.searchResult.url)
+        .then(function (res) {
+          enableAvalonPolling();
+        })
+        .catch(function (err) {
+          vm.report = {
+            "state": "NOT FOUND"
+          };
+          disableAvalonPolling();
+        });
     }
 
-    function showSearchHelp() {
-      var searchHelpUrl = "modules/ediscovery/search-help-dialog.html";
-      $modal.open({
-        templateUrl: searchHelpUrl
-      }).result.finally(function () {
-        setSearchFieldFocus();
-      });
+    function progressType() {
+      if (vm.report) {
+        if (vm.report.state === 'FAILED') {
+          return 'danger';
+        } else {
+          return 'success';
+        }
+      }
     }
+
+    function downloadReport() {}
 
   }
 

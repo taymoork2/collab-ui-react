@@ -5,8 +5,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred;
 
   var escapeKey = 27;
-  var leftArrow = 37;
-  var rightArrow = 39;
   var templateName = 'Atlas UT Chat Template';
   var NAME_PAGE_INDEX = 0;
   var PROFILE_PAGE_INDEX = 1;
@@ -95,9 +93,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
 
     it("keyboard functionality", function () {
-      validateKeyPressEvent(leftArrow, PROFILE_PAGE_INDEX, NAME_PAGE_INDEX, true);
-      validateKeyPressEvent(leftArrow, NAME_PAGE_INDEX, NAME_PAGE_INDEX, false);
-      validateKeyPressEvent(rightArrow, EMBED_CODE_PAGE_INDEX, EMBED_CODE_PAGE_INDEX, false);
       controller.evalKeyPress(escapeKey);
       expect($modal.open).toHaveBeenCalled();
     });
@@ -181,8 +176,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
     it("should have previous and next button enabled", function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
-      validateKeyPressEvent(rightArrow, OVERVIEW_PAGE_INDEX, CUSTOMER_PAGE_INDEX, true);
-      validateKeyPressEvent(leftArrow, OVERVIEW_PAGE_INDEX, PROFILE_PAGE_INDEX, true);
     });
 
     it("should initialize all cards as enabled ", function () {
@@ -204,23 +197,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          type: 'text',
-          value: 'careChatTpl.defaultWelcomeText',
-          label: 'careChatTpl.windowTitleLabel'
+          value: 'careChatTpl.defaultWelcomeText'
         }, {
           name: 'organization',
-          type: 'text',
-          value: 'careChatTpl.defaultOrgText',
-          label: 'careChatTpl.defaultOrgLabel'
+          value: OrgName
         }]
       };
       controller.setActiveItem("welcomeHeader");
       expect(controller.activeItem).toEqual(returnObj);
-    });
-
-    it("should get the attribute param", function () {
-      var attrParam = controller.getAttributeParam("label", "organization", "welcomeHeader");
-      expect(attrParam).toEqual("careChatTpl.defaultOrgLabel");
     });
 
     it("should not get the attribute param for incorrect param", function () {

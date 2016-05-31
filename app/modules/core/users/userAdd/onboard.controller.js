@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics, addressparser) {
+  function OnboardCtrl($http, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, $window, addressparser, Authinfo, chartColors, CsvDownloadService, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, TelephoneNumberService, TrackingId, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -1342,10 +1342,9 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length === usersList.length) {
+          if (successes.length + errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
         } else {
