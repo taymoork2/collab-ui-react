@@ -158,7 +158,6 @@
           vm.ui.closedHours.setType('MENU_WELCOME');
         }
       }
-
     }
 
     function saveUiModel() {
@@ -185,6 +184,8 @@
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.holidays.setType('MENU_WELCOME');
       }
+
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(vm.aaModel.aaRecord, vm.ui.hasClosedHours);
     }
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)

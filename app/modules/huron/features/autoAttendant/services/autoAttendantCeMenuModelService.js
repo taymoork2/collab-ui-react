@@ -275,6 +275,7 @@
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
       updateScheduleActionSetMap: updateScheduleActionSetMap,
+      updateDefaultActionSet: updateDefaultActionSet,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
@@ -697,17 +698,21 @@
       }
       if (actionSetName === 'openHours') {
         ceRecord.scheduleEventTypeMap['open'] = actionSetName;
-        if (!ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'openHours';
-        }
       } else if (actionSetName === 'closedHours') {
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
-        ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
         ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
-        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'holidays';
-        }
+      }
+    }
+
+    function updateDefaultActionSet(ceRecord, hasClosedHours) {
+      if (angular.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
+        return;
+      }
+      if (hasClosedHours) {
+        ceRecord.defaultActionSet = 'closedHours';
+      } else {
+        ceRecord.defaultActionSet = 'openHours';
       }
     }
 

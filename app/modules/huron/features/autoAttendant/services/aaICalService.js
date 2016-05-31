@@ -192,7 +192,6 @@
           calendar.addSubcomponent(vevent);
         }
       }
-      console.log(calendar.toString());
     }
 
     function getNextOpenDate(days) {

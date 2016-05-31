@@ -287,6 +287,7 @@
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
         vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
+        vm.ui.hasClosedHours = (vm.openhours.length) ? true : false;
         if (vm.holidayBehavior && vm.holidays.length > 0) {
           vm.ui.holidaysValue = 'closedHours';
         } else {
