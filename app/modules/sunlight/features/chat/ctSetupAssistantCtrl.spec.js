@@ -38,16 +38,17 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var successData = {
     success: true,
     status: 201
-
   };
+
   beforeEach(module('Sunlight'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
-
-    $provide.value("SunlightConfigService",{
-      createChatTemplate : function(data){
+    $provide.value("SunlightConfigService", {
+      createChatTemplate: function (data) {
         return {
-          then: function(callback) {return callback(successData) }
+          then: function (callback) {
+            return callback(successData);
+          }
         };
       }
     });
@@ -308,18 +309,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   });
 
-
   describe('Summary Page', function () {
     beforeEach(inject(intializeCtrl));
-    beforeEach(function () {
-      resolveLogoPromise();
-    });
 
     it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
-      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function(){
+      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function () {
         var deferred = $q.defer();
         deferred.reject(failedData);
         return deferred.promise;
