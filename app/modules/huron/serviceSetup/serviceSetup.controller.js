@@ -288,7 +288,7 @@
         warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
         isWarn: false,
         options: vm.availableExtensions,
-        onChange: function () {
+        onChange: function (options, scope) {
           if (vm.model.site.extensionLength !== vm.model.previousLength) {
             return ModalService.open({
                 title: $translate.instant('common.warning'),
@@ -298,10 +298,10 @@
                 type: 'negative'
               })
               .result.then(function () {
+                vm.model.previousLength = vm.model.site.extensionLength;
                 for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
                   vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
                   vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
-                  vm.model.previousLength = vm.model.site.extensionLength;
                 }
               })
               .catch(function () {
@@ -311,12 +311,14 @@
           }
         }
       },
-      hideExpression: function () {
-        return vm.model.hideExtensionLength;
-      },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+        },
+        // hide function added to expressionPropertties because hideExpression does not dependably hide
+        // the element on load, and will evaluate only after the model updates after first load
+        'hide': function () {
+          return vm.model.hideExtensionLength;
         }
       }
     }, {
@@ -362,8 +364,6 @@
             },
             templateOptions: {
               required: true,
-              maxlength: vm.model.site.extensionLength,
-              minlength: vm.model.site.extensionLength,
               warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
                 steeringDigitInTranslation: vm.model.site.steeringDigit
               })
@@ -373,10 +373,10 @@
                 return angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-              'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
+              'templateOptions.minlength': function() {
                 return vm.model.site.extensionLength;
               },
-              'templateOptions.maxlength': function () {
+              'templateOptions.maxlength': function() {
                 return vm.model.site.extensionLength;
               }
             }
@@ -424,8 +424,6 @@
               }
             },
             templateOptions: {
-              maxlength: vm.model.site.extensionLength,
-              minlength: vm.model.site.extensionLength,
               warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
                 steeringDigitInTranslation: vm.model.site.steeringDigit
               }),
@@ -447,10 +445,10 @@
                 } else return false;
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-              'templateOptions.minlength': function () {
+              'templateOptions.minlength': function() {
                 return vm.model.site.extensionLength;
               },
-              'templateOptions.maxlength': function () {
+              'templateOptions.maxlength': function() {
                 return vm.model.site.extensionLength;
               }
             }
