@@ -106,8 +106,6 @@
       });
     };
 
-    $scope.dummy = '';
-
     var getAttribute = function (field, attributeName) {
       var attr = _.find(field.attributes, {
         name: attributeName
