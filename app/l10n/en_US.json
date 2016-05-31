@@ -2272,6 +2272,8 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "adminmanagement": "Administrator Management",
+    "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2344,6 +2346,10 @@
     "deleteOrgError": "{{orgName}} was not deleted",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
+  },
+  "customerAdminPanel": {
+    "addadministrators": "Add Adminsitrators",
+    "assignedadministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

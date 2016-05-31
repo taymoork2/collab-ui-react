@@ -93,6 +93,7 @@
         </ul>
       </div>
     </cs-sp-section>
+    <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin"></uc-customer-administrator-overview>
     <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
     ng-click="customerOverview.deleteTestOrg()"
     translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}">
