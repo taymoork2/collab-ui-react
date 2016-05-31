@@ -200,7 +200,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
           value: 'careChatTpl.defaultWelcomeText'
         }, {
           name: 'organization',
-          value: 'careChatTpl.defaultOrgText'
+          value: OrgName
         }]
       };
       controller.setActiveItem("welcomeHeader");
