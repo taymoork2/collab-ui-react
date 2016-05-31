@@ -169,7 +169,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultNameText')
@@ -178,9 +178,9 @@
                   value: $translate.instant('careChatTpl.defaultNameHint')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('name')
-                }],
-                categoryOptions: []
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: []
+                }]
               },
 
               'field2': {
@@ -189,7 +189,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultEmailText')
@@ -198,9 +198,9 @@
                   value: $translate.instant('careChatTpl.defaultEmail')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('email')
-                }],
-                categoryOptions: []
+                  value: vm.getTypeObject('email'),
+                  categoryOptions: []
+                }]
               },
 
               'field3': {
@@ -209,7 +209,7 @@
                   value: 'optional'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('requestInfo'),
+                  value: vm.getCategoryTypeObject('requestInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultQuestionText')
@@ -218,9 +218,9 @@
                   value: $translate.instant('careChatTpl.field3HintText')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('category')
-                }],
-                categoryOptions: []
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: []
+                }]
               }
             }
           },

@@ -196,11 +196,11 @@
                         type="text"
                         ng-keypress="careChatSA.onEnterKey($event)"
                         ng-model="careChatSA.categoryOptionTag"
-                        maxlength="25"/>
+                        ng-maxlength="25"/>
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careChatSA.categoryTokensId"
-                          tokens="careChatSA.activeItem.categoryOptions"
+                          tokens="attribute.categoryOptions"
                           static="true"></cs-token-field>
                 </div>
               </div>

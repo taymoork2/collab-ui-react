@@ -228,7 +228,7 @@
   .ct-attribute-row {
     width: 100%;
     .ct-customer-info-category-input {
-      margin-top: 6px;
+      @include vr-spacing(mt, 0.375);
     }
   }
 
@@ -237,13 +237,16 @@
   }
 
   .right-inner-addon input {
-    padding-right: 5rem;
+    @include vr-spacing(pr, 0.3125);
   }
 
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
-    padding: 0.6rem 2rem;
+    @include vr-spacing(pt, 0.6);
+    @include vr-spacing(pb, 0.6);
+    @include vr-spacing(pl, 2);
+    @include vr-spacing(pr, 2);
   }
 
   .category-tokens {
