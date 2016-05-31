@@ -1,7 +1,10 @@
 .wizard {
+  display: flex;
+  align-content: stretch;
+  justify-content: center;
+
   margin: 3vh 4vw;
-  width: 92vw;
-  min-width: 1180px;
+
   .btn {
     margin: 0;
   }
@@ -112,9 +115,12 @@
   cursor: default;
 }
 
+cr-wizard-main, .wizard-main {
+  width: 100%;
+}
+
 .wizard-main {
   background-color: $brand-white;
-  width: calc(100% - 370px);
   height: 94vh;
   color: $gray-darker;
   padding: 2rem;

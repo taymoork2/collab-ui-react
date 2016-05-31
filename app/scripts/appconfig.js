@@ -1486,7 +1486,8 @@
             },
             params: {
               currentTab: {},
-              currentStep: ''
+              currentStep: '',
+              onlyShowSingleTab: false
             },
             data: {
               firstTimeSetup: false
