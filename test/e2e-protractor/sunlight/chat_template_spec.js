@@ -7,8 +7,6 @@ describe('Care admin should be able to', function () {
   });
 
   it('see the landing page and able to click on new btn', function () {
-    utils.expectIsDisplayed(careLandingPage.careLandingPgae);
-    utils.expectIsDisplayed(careLandingPage.cccIcon);
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
   });
@@ -31,7 +29,28 @@ describe('Care admin should be able to', function () {
     validateContentsOfChatStringsPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
+
+    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    validateDismissOfCTSetupWizard();
+
+    utils.waitForModal().then(function () {
+      validateDisplayEmbedCodeModal();
+      utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
+      validateDismissOfEmbedCodeModal();
+    });
   });
+
+  function validateDismissOfCTSetupWizard() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.careChatSetupWizard)
+  }
+
+  function validateDisplayEmbedCodeModal() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal)
+  }
+
+  function validateDismissOfEmbedCodeModal() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.embedCodeModal)
+  }
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);

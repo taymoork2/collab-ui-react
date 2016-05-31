@@ -56,6 +56,83 @@
     vm.logoFile = '';
     vm.logoUploaded = false;
 
+    /**
+     * Type enumerations
+     */
+
+    vm.STATIC_FIELD_TYPES = {
+      "welcome": {
+        text: "welcome",
+        htmlType: "label"
+      }
+    };
+
+    vm.typeOptions = [{
+      text: "email",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_email"
+      }
+    }, {
+      text: "name",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_name"
+      }
+    }, {
+      text: "category",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_category"
+      }
+    }, {
+      text: "phone",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_phone"
+      }
+    }, {
+      text: "id",
+      dictionaryType: {
+        fieldSet: "ccc_core",
+        fieldName: "ccc_email"
+      }
+    }];
+
+    vm.categoryTypeOptions = [{
+      text: $translate.instant('careChatTpl.categoryTextCustomer'),
+      id: 'customerInfo'
+
+    }, {
+      text: $translate.instant('careChatTpl.categoryTextRequest'),
+      id: 'requestInfo',
+    }];
+
+    vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
+    vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
+
+    vm.requiredOptions = [{
+      text: $translate.instant('careChatTpl.requiredField'),
+      id: 'required'
+    }, {
+      text: $translate.instant('careChatTpl.optionalField'),
+      id: 'optional'
+    }];
+
+    vm.getCategoryTypeObject = function (typeId) {
+      return _.find(vm.categoryTypeOptions, {
+        id: typeId
+      });
+    };
+
+    vm.getTypeObject = function (typeText) {
+      return _.find(vm.typeOptions, {
+        text: typeText
+      });
+    };
+
+    /* Template */
+
     vm.template = {
       name: '',
       mediaType: 'chat',
@@ -68,7 +145,74 @@
         },
         pages: {
           customerInformation: {
-            enabled: true
+            enabled: true,
+            fields: {
+              'welcomeHeader': {
+                attributes: [{
+                  name: 'header',
+                  value: $translate.instant('careChatTpl.defaultWelcomeText')
+                }, {
+                  name: 'organization',
+                  value: vm.orgName
+                }]
+              },
+              'field1': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo'),
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultNameText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultNameHint')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('name')
+                }]
+              },
+
+              'field2': {
+                attributes: [{
+                  name: 'required',
+                  value: 'required'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('customerInfo'),
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultEmailText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.defaultEmail')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('email')
+                }]
+              },
+
+              'field3': {
+                attributes: [{
+                  name: 'required',
+                  value: 'optional'
+                }, {
+                  name: 'category',
+                  value: vm.getCategoryTypeObject('requestInfo'),
+                }, {
+                  name: 'label',
+                  value: $translate.instant('careChatTpl.defaultQuestionText')
+                }, {
+                  name: 'hintText',
+                  value: $translate.instant('careChatTpl.field3HintText')
+                }, {
+                  name: 'type',
+                  value: vm.getTypeObject('category')
+                }]
+              }
+            }
           },
           agentUnavailable: {
             enabled: true
@@ -89,11 +233,6 @@
       offHours: 'circle-clock-hands',
       feedback: 'circle-star'
     };
-
-    //Model for ctSetupAssistance data
-    vm.selectFieldOptions = [];
-    vm.selectFieldSelected = '';
-    vm.selectFieldPlaceholder = 'Select from the list or type';
 
     function cancelModal() {
       $modal.open({
@@ -164,212 +303,6 @@
       }, vm.animationTimeout);
     }
 
-    /**
-     * Type enumerations
-     */
-
-    vm.STATIC_FIELD_TYPES = {
-      "welcome": {
-        text: "welcome",
-        htmlType: "label"
-      }
-    };
-
-    var TYPE_OPTIONS = [{
-      text: "email",
-      htmlType: "email",
-      dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
-      }
-    }, {
-      text: "name",
-      htmlType: "text",
-      dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_name"
-      }
-    }, {
-      text: "category",
-      htmlType: "select",
-      dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_category"
-      }
-    }, {
-      text: "phone",
-      htmlType: "tel",
-      dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_phone"
-      }
-    }, {
-      text: "id",
-      htmlType: "id",
-      dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
-      }
-    }];
-
-    var CATEGORY_TYPE_OPTIONS = [{
-      text: $translate.instant('careChatTpl.categoryTextCustomer'),
-      id: 'customerInfo',
-      helpText: $translate.instant('careChatTpl.ciHelpText')
-    }, {
-      text: $translate.instant('careChatTpl.categoryTextRequest'),
-      id: 'requestInfo',
-      helpText: $translate.instant('careChatTpl.riHelpText')
-    }];
-
-    var REQUIRED_OPTIONS = [{
-      text: $translate.instant('careChatTpl.requiredField'),
-      id: 'required'
-    }, {
-      text: $translate.instant('careChatTpl.optionalField'),
-      id: 'optional'
-    }];
-
-    vm.getCategoryTypeObject = function (typeId) {
-      return _.find(CATEGORY_TYPE_OPTIONS, {
-        id: typeId
-      });
-    };
-
-    vm.getTypeObject = function (typeText) {
-      return _.find(TYPE_OPTIONS, {
-        text: typeText
-      });
-    };
-
-    /**
-     * Default model should be replaced with service
-     */
-
-    vm.model = {
-      customerInfo: {
-        fields: {
-          'welcomeHeader': {
-            attributes: [{
-              name: 'header',
-              type: 'text',
-              value: $translate.instant('careChatTpl.defaultWelcomeText'),
-              label: $translate.instant('careChatTpl.windowTitleLabel')
-            }, {
-              name: 'organization',
-              type: 'text',
-              value: $translate.instant('careChatTpl.defaultOrgText'),
-              label: $translate.instant('careChatTpl.defaultOrgLabel')
-            }]
-          },
-          'field1': {
-            attributes: [{
-              name: 'required',
-              type: 'radio',
-              value: 'required',
-              options: REQUIRED_OPTIONS
-            }, {
-              name: 'categoryText',
-              type: 'select',
-              label: $translate.instant('careChatTpl.categoryLabel'),
-              defaultValue: '',
-              value: vm.getCategoryTypeObject('customerInfo'),
-              options: CATEGORY_TYPE_OPTIONS
-            }, {
-              name: 'label',
-              type: 'text',
-              label: $translate.instant('careChatTpl.label'),
-              defaultValue: '',
-              value: $translate.instant('careChatTpl.defaultNameText')
-            }, {
-              name: 'hintText',
-              type: 'text',
-              label: $translate.instant('careChatTpl.hintText'),
-              defaultValue: '',
-              value: $translate.instant('careChatTpl.defaultNameHint')
-            }, {
-              name: 'type',
-              type: 'select',
-              label: $translate.instant('careChatTpl.type'),
-              value: vm.getTypeObject('name'),
-              defaultValue: '',
-              options: TYPE_OPTIONS
-            }]
-          },
-
-          'field2': {
-            attributes: [{
-              name: 'required',
-              type: 'radio',
-              value: 'required',
-              options: REQUIRED_OPTIONS
-            }, {
-              name: 'categoryText',
-              type: 'select',
-              label: $translate.instant('careChatTpl.categoryLabel'),
-              defaultValue: '',
-              value: vm.getCategoryTypeObject('customerInfo'),
-              options: CATEGORY_TYPE_OPTIONS
-            }, {
-              name: 'label',
-              type: 'text',
-              label: $translate.instant('careChatTpl.label'),
-              defaultValue: $translate.instant('careChatTpl.defaultEmailText'),
-              value: $translate.instant('careChatTpl.defaultEmailText')
-            }, {
-              name: 'hintText',
-              type: 'text',
-              label: $translate.instant('careChatTpl.hintText'),
-              defaultValue: '',
-              value: $translate.instant('careChatTpl.defaultEmail')
-            }, {
-              name: 'type',
-              type: 'select',
-              label: $translate.instant('careChatTpl.type'),
-              value: vm.getTypeObject('email'),
-              defaultValue: '',
-              options: TYPE_OPTIONS
-            }]
-          },
-
-          'field3': {
-            attributes: [{
-              name: 'required',
-              type: 'radio',
-              value: 'optional',
-              options: REQUIRED_OPTIONS
-            }, {
-              name: 'categoryText',
-              type: 'select',
-              label: 'Category',
-              defaultValue: '',
-              value: vm.getCategoryTypeObject('customerInfo'),
-              options: CATEGORY_TYPE_OPTIONS
-            }, {
-              name: 'label',
-              type: 'text',
-              label: $translate.instant('careChatTpl.label'),
-              defaultValue: $translate.instant('careChatTpl.defaultQuestionText'),
-              value: $translate.instant('careChatTpl.defaultQuestionText')
-            }, {
-              name: 'hintText',
-              type: 'text',
-              label: $translate.instant('careChatTpl.hintText'),
-              defaultValue: '',
-              value: $translate.instant('careChatTpl.field3HintText')
-            }, {
-              name: 'type',
-              type: 'select',
-              label: $translate.instant('careChatTpl.type'),
-              value: vm.getTypeObject('category'),
-              defaultValue: '',
-              options: TYPE_OPTIONS
-            }]
-          }
-        }
-      }
-    };
-
     vm.activeItem = undefined;
 
     /**
@@ -377,11 +310,11 @@
      */
 
     vm.getFieldByName = function (fieldName) {
-      return vm.model.customerInfo.fields[fieldName];
+      return vm.template.configuration.pages.customerInformation.fields[fieldName];
     };
 
     vm.getAttributeByName = function (attributeName, fieldName) {
-      var fields = vm.model.customerInfo.fields;
+      var fields = vm.template.configuration.pages.customerInformation.fields;
       var field = _.get(fields, fieldName);
       if (field) {
         return _.find(field.attributes, {
@@ -403,7 +336,7 @@
     };
 
     vm.isDynamicFieldType = function (val) {
-      return typeof val !== 'undefined' && vm.model.customerInfo.fields.hasOwnProperty(val.toString());
+      return typeof val !== 'undefined' && vm.template.configuration.pages.customerInformation.fields.hasOwnProperty(val.toString());
     };
 
     vm.isStaticFieldType = function (val) {
@@ -456,6 +389,10 @@
         vm.saveCTErrorOccurred = true;
       });
     }
+
+    vm.isUserProfileSelected = function () {
+      return vm.template.configuration.mediaSpecificConfiguration.useOrgProfile;
+    };
 
     function init() {
       CTService.getLogo().then(function (data) {

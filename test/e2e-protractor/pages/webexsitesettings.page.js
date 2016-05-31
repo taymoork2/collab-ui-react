@@ -1,6 +1,3 @@
-/**
- * 
- */
 'use strict';
 
 var SiteSettigsPage = function () {
@@ -46,6 +43,7 @@ var SiteSettigsPage = function () {
   this.configureCommonCompanyAddressesLink = element(by.id('CommonSettings_address'));
   this.configureCommonCMRLink = element(by.id('CommonSettings_cmr'));
   this.configureCommonSiteInformationLink = element(by.id('CommonSettings_site_info'));
+  this.configureCommonPartnerAuthLink = element(by.id('CommonSettings_pda_settings'));
 
   this.iFramePage = element(by.id('webexIframeContainer'));
   this.siteSettingsPanel = element(by.id('webexSiteSettings'));
@@ -63,6 +61,7 @@ var SiteSettigsPage = function () {
   this.commonNavigationId = element(by.id('CommonSettings_navigation'));
   this.commonMobileId = element(by.id('CommonSettings_mobile'));
   this.commonSiteInformationId = element(by.id('CommonSettings_site_info'));
+  this.commonPartnerAuthId = element(by.id('CommonSettings_pda_settings'));
   this.emaillTemplateId = element(by.id('CommonSettings_email_template'));
   this.disclaimersId = element(by.id('CommonSettings_disclaimer'));
   this.companyAddressesId = element(by.id('CommonSettings_address'));

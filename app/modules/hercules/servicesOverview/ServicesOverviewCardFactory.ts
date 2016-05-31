@@ -3,6 +3,7 @@
 /// <reference path="meetingCard.ts"/>
 /// <reference path="cloudCallCard.ts"/>
 /// <reference path="hybridManagementCard.ts"/>
+/// <reference path="hybridManagementF410Card.ts"/>
 /// <reference path="calendarCard.ts"/>
 /// <reference path="hybridCallCard.ts"/>
 /// <reference path="hybridMediaCard.ts"/>
@@ -20,6 +21,7 @@ namespace servicesOverview {
           new ServicesOverviewMeetingCard(Authinfo),
           new ServicesOverviewCallCard(Authinfo),
           new ServicesOverviewHybridManagementCard(),
+          new ServicesOverviewHybridManagementF410Card(),
           new ServicesOverviewCalendarCard(),
           new ServicesOverviewHybridCallCard(),
           new ServicesOverviewHybridMediaCard(),

@@ -59,6 +59,8 @@
               state = 'support.status';
             } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
               state = 'helpdesk.search';
+            } else if (!$stateParams.customerOrgId && Authinfo.isComplianceUserOnly()) {
+              state = 'ediscovery.search';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
             }
