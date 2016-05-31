@@ -106,7 +106,6 @@ module.exports = function () {
         node_modules + '/angular-mocks/angular-mocks.js',
         node_modules + '/jasmine-jquery/lib/jasmine-jquery.js',
         node_modules + '/sinon-ng/sinon-ng.js',
-        node_modules + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         node_modules + '/bardjs/dist/bard.js',
         node_modules + '/jasmine-sinon/lib/jasmine-sinon.js',
