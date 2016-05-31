@@ -52,20 +52,111 @@
     }
   }
 
-  .ediscovery-search-bar {
-    @extend .helpdesk-search;
-    input.fit {
-      font-size: 20px;
-      line-height: 2rem;
-    }
-  }
+
+
+
 
   .ediscovery-search {
     padding-top: 1rem;
-    .pointer {
-      cursor: pointer;
-    }
+    .ediscovery-search-bar {
+      padding-top: 1rem;
+      text-align: center;
+      .pointer {
+        cursor: pointer;
+      }
+      .main-heading {
+        h1 {
+          font-size: 3.5rem;
+          color: $color-primary-base;
+          @media only screen and (max-width: 640px) {
+            font-size: 3.0rem;
+          }
+          @media only screen and (max-width: 500px) {
+            font-size: 2.6rem;
+          }
+        }
+        display: inline-block;
+        text-align: right;
+        .help {
+          color: $gray-light-1;
+          position: relative;
+          top: -1rem;
+          padding-right: 2px;
+          font-size: 1.0rem;
+          cursor: pointer;
+          i {
+            top: 2px;
+            left: 3px;
+          }
+          @media only screen and (max-width: 640px) {
+            font-size: 0.8rem;
+          }
+          @media only screen and (max-width: 500px) {
+            font-size: 0.7rem;
+          }
+        }
 
+      }
+      .typeahead-large .input-description:before {
+        display: none;
+      }
+      .typeahead-large .input-description {
+        padding: 0;
+      }
+      .typeahead-large {
+        position: relative;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        .searchInputForm {
+          margin-bottom: 0px;
+        }
+        input {
+          font-size:28px;
+          width: 32rem;
+          @media only screen and (max-width: 640px) {
+            font-size: 24px;
+            width:25rem;
+          };
+          @media only screen and (max-width: 500px) {
+            font-size: 20px;
+            width:22rem;
+          };
+        }
+        form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
+          max-width: 100%;
+          display: block;
+          height: auto;
+          position: relative;
+          z-index: 1;
+          border: 0px;
+        }
+        .icon-search {
+          position: absolute;
+          right: 0rem;
+          bottom: 0.65rem;
+          font-size: 1rem;
+          width: 2.4rem;
+          height: 2.4rem;
+          z-index: 3;
+          @media screen and (-moz-images-in-menus:0) {
+            top: 0 !important;
+          };
+          @media only screen and (max-width: 640px) {
+            font-size: 0.7rem;
+            bottom: 0.75rem;
+            width: 2.0rem;
+            height: 2.0rem;
+          }
+          @media only screen and (max-width: 500px) {
+            font-size: 0.6rem;
+            bottom: 0.70rem;
+            width: 1.8rem;
+            height: 1.8rem;
+          }
+        }
+      }
+    }
     .create-report {
       padding-left: 9rem;
       box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
