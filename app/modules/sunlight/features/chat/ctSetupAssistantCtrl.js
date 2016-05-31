@@ -36,7 +36,7 @@
       'chatStrings',
       'summary'
     ];
-    vm.currentState = vm.states[0];
+    vm.currentState = vm.states[8];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
 
@@ -438,6 +438,8 @@
       }
     }
 
+    vm.saveCTErrorOccurred = false;
+
     function submitChatTemplate() {
       SunlightConfigService.createChatTemplate(vm.template).then(function (response) {
         var responseTemplateId = response.headers('Location').split('/').pop();
@@ -451,7 +453,7 @@
           }
         });
       }, function (error) {
-
+        vm.saveCTErrorOccurred = true;
       });
     }
 
