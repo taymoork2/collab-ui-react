@@ -17,7 +17,6 @@ namespace servicesOverview {
 
       meetingCard.updateWebexSiteList([{license: {siteUrl: 'site-url'}}]);
       expect(_.any(meetingCard.getButtons(), {name: 'site-url'}));
-
     });
   });
 }

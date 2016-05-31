@@ -485,20 +485,20 @@
     }
 
     function setDeviceModal() {
-      var testToggle = false;
+      var overrideTestOrg = false;
       var isTestOrg = false;
 
       $q.all([
         FeatureToggleService.supports('atlasTrialsShipDevices'),
         Orgservice.getAdminOrg(_.noop)
       ]).then(function (results) {
-        testToggle = results[0];
+        overrideTestOrg = results[0];
         if (results[1].data.success) {
           isTestOrg = results[1].data.isTestOrg;
         }
       }).finally(function () {
         // Display devices modal if not a test org or if toggle is set
-        vm.devicesModal.enabled = !isTestOrg || testToggle;
+        vm.devicesModal.enabled = !isTestOrg || overrideTestOrg;
       });
     }
   }

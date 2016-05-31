@@ -110,7 +110,8 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         spark_synckms: 'Spark_SyncKms',
-        readonly_admin: 'Readonly_Admin'
+        readonly_admin: 'Readonly_Admin',
+        compliance_user: 'Compliance_User'
       },
 
       roleState: {
@@ -267,7 +268,8 @@
         'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
     config.serviceStates = {
@@ -322,6 +324,7 @@
       'squared-fusion-media': [
         //'mediafusionconnector',
         'metrics',
+        'reports-metrics',
         'media-service',
         'connector-details'
       ],

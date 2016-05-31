@@ -424,8 +424,6 @@
           })
           .state('domainmanagement', {
             templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
-            controller: 'DomainManagementCtrl',
-            controllerAs: 'dv',
             parent: 'main'
           })
           .state('domainmanagement.add', {
@@ -548,7 +546,7 @@
             controllerAs: 'settingsCtrl',
             parent: 'main'
           })
-          .state('settings.enable3rdPartyAuth', {
+          .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
             views: {
               'modal@': {
@@ -1186,6 +1184,17 @@
             parent: 'main',
             params: {
               tab: null,
+              siteUrl: null
+            }
+          })
+          .state('reports-metrics', {
+            url: '/reports/metrics',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
               siteUrl: null
             }
           })
@@ -2406,7 +2415,9 @@
           .state('care.Features', {
             url: '/features',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/features.tpl.html'
+            templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
+            controller: 'CareFeaturesCtrl',
+            controllerAs: 'careFeaturesCtrl'
           })
           .state('care.ChatSA', {
             url: '/careChat',
@@ -2414,6 +2425,21 @@
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
             controllerAs: 'careChatSA'
+          })
+          .state('care.Features.DeleteFeature', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'CareFeaturesDeleteCtrl',
+                controllerAs: 'careFeaturesDeleteCtrl',
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
+              }
+            },
+            params: {
+              deleteFeatureName: null,
+              deleteFeatureId: null,
+              deleteFeatureType: null
+            }
           });
       }
     ]);
