@@ -1,13 +1,14 @@
 'use strict';
 
 describe('Service: Mixpanel', function () {
-  var Config, Mixpanel, Orgservice, $window;
+  var Config, Mixpanel, Orgservice, $scope, $window;
 
   beforeEach(module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$window_, _Config_, _Mixpanel_, _Orgservice_) {
+  function dependencies($rootScope, _$window_, _Config_, _Mixpanel_, _Orgservice_) {
+    $scope = $rootScope.$new();
     $window = _$window_;
     Config = _Config_;
     Mixpanel = _Mixpanel_;
@@ -16,10 +17,11 @@ describe('Service: Mixpanel', function () {
 
   function initSpies() {
     spyOn(Config, 'isProd');
-    $window.mixpanel = jasmine.createSpy('mixpanel');
+    spyOn(Mixpanel, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
       callback({
-        success: true
+        success: true,
+        isTestOrg: true
       }, 200);
     });
   }
@@ -30,11 +32,23 @@ describe('Service: Mixpanel', function () {
     };
   }
 
-  describe('mixpanel events', function () {
+  describe('when Production is false', function () {
     beforeEach(setIsProd(false));
 
-    it('should call trackEvent ', function () {
-      Mixpanel.trackEvent('myState');
+    it('should call _track', function () {
+      Mixpanel.trackEvent('myState', {});
+      $scope.$apply();
+      expect(Mixpanel._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when Production is true', function () {
+    beforeEach(setIsProd(true));
+
+    it('should call _track', function () {
+      Mixpanel.trackEvent('myState', {});
+      $scope.$apply();
+      expect(Mixpanel._track).toHaveBeenCalled();
     });
   });
 
