@@ -11,7 +11,8 @@
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
       serviceId2ConnectorType: serviceId2ConnectorType,
-      serviceId2Icon: serviceId2Icon
+      serviceId2Icon: serviceId2Icon,
+      mapServiceIdToService: mapServiceIdToService
     };
 
     return service;
@@ -75,5 +76,15 @@
         return 'icon icon-circle-question';
       }
     }
+
+    function mapServiceIdToService(serviceId) {
+      if (serviceId === 'c_ucmc') {
+        return 'Call';
+      }
+      if (serviceId === 'c_cal') {
+        return 'Calendar';
+      }
+    }
+
   }
 }());

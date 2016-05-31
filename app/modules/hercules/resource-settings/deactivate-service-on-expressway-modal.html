@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <h5 class="modal-title">Deactivate {{deactivateServiceOnExpresswayModal.utils.mapServiceIdToService(deactivateServiceOnExpresswayModal.serviceId)}}
+    Service</h5>
+</div>
+
+<div class="modal-body">
+
+  <p>You are about to remove the following service:</p>
+
+  <p><strong>{{deactivateServiceOnExpresswayModal.utils.mapServiceIdToService(deactivateServiceOnExpresswayModal.serviceId)}}</strong></p>
+
+  <p>from the Expressway cluster:</p>
+
+  <p><strong>{{deactivateServiceOnExpresswayModal.clusterName}}</strong></p>
+</div>
+
+
+<div class="modal-footer">
+
+
+
+  <button class="btn" ng-click="$close('cancelled')">
+    Cancel
+  </button>
+  <button class="btn btn--alert" ng-click="deactivateServiceOnExpresswayModal.deactivateService()">
+    Confirm
+  </button>
+</div>

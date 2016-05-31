@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, $q) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -27,7 +27,9 @@
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
-      getReleaseNotes: getReleaseNotes
+      getReleaseNotes: getReleaseNotes,
+      deprovisionConnector: deprovisionConnector,
+      getAllConnectorsForCluster: getAllConnectorsForCluster
     };
 
     return service;
@@ -269,6 +271,21 @@
         .then(function (data) {
           return data.releaseNotes;
         });
+    }
+
+    function deprovisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function getAllConnectorsForCluster(clusterId) {
+      return $q(function (resolve) {
+        var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
+        $http.get(url).then(function (response) {
+          resolve(_.map(response.data.provisioning, 'connectorType'));
+        });
+      });
     }
 
   }
