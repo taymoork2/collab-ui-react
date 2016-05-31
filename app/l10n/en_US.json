@@ -1273,9 +1273,23 @@
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
-      "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+    },
+    "expresswayClusterSettings": {
+      "releasechannelHeader": "Users and Release Channel",
+      "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
+      "releasechannelUsers": "Users",
+      "releasechannelReleasechannel": "Release Channel",
+      "deactivateServicesHeader": "Deactivate Services",
+      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarButton": "Deactivate Calendar",
+      "deactivateServicesCallButton": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Deregister Cluster",
+      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
+      "deregisterClusterButton": "Deregister",
+      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",

@@ -5,14 +5,11 @@
   <div class="clusterid">
     <div class="row">
       <div class="columns medium-4">
-        <h5>Users and Release Channel</h5>
-        <p>
-          Assign a specific subset of your users to this cluster,
-          and select a release channel for it.
-        </p>
+        <h5 translate="hercules.expresswayClusterSettings.releasechannelHeader"></h5>
+        <p translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
       </div>
       <div class="columns medium-4">
-        <h6>Users</h6>
+        <h6 translate="hercules.expresswayClusterSettings.releasechannelUsers"></h6>
         <cs-select
           ng-model="resourceSetting.usersSelected"
           options="resourceSetting.usersOptions"
@@ -20,7 +17,7 @@
           is-disabled="true"
         >
         </cs-select>
-        <h6>Release Channel</h6>
+        <h6 translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></h6>
         <cs-select
           ng-model="resourceSetting.releasechannelsSelected"
           options="resourceSetting.releasechannelsOptions"
@@ -33,27 +30,25 @@
     <hr />
     <div class="row">
       <div class="columns medium-4">
-        <h5>Deactivate Services</h5>
+        <h5 translate="hercules.expresswayClusterSettings.deactivateServicesHeader"></h5>
 
       </div>
       <div class="columns medium-4">
 
         <div ng-if="resourceSetting.enabledServices.length > 1">
-          <p>Deactivating a service will remove any service related
-            functionality from this cluster.</p>
+          <p translate="hercules.expresswayClusterSettings.deactivateServicesParagraph"></p>
 
           <div ng-repeat="service in resourceSetting.enabledServices">
             <div ng-if="service === 'c_cal'">
-              <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="resourceSetting.deactivateService('c_cal', resourceSetting.cluster);">Deactivate Calendar</button>
+              <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="resourceSetting.deactivateService('c_cal', resourceSetting.cluster);" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarButton"></button>
             </div>
             <div ng-if="service === 'c_ucmc'">
-              <button type="button" class="btn btn--alert" ng-click="resourceSetting.deactivateService('c_ucmc', resourceSetting.cluster);">Deactivate Call</button>
+              <button type="button" class="btn btn--alert" ng-click="resourceSetting.deactivateService('c_ucmc', resourceSetting.cluster);" translate="hercules.expresswayClusterSettings.deactivateServicesCallButton"></button>
             </div>
           </div>
         </div>
         <div ng-if="resourceSetting.enabledServices.length < 2">
-          <p>No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service,
-          go to the relevant service page and click <strong>Add Resource</strong>.</p>
+          <p translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
         </div>
 
       </div>
@@ -63,22 +58,20 @@
     <hr />
     <div class="row">
       <div class="columns medium-4">
-        <h5>Deregister Cluster</h5>
+        <h5 translate="hercules.expresswayClusterSettings.deregisterClusterHeader"></h5>
       </div>
       <div class="columns medium-4">
 
         <div ng-if="resourceSetting.enabledServices.length > 1">
-        <p >Deactivate all services on this Expressway
-        cluster before deregistring it.</p>
+        <p translate="hercules.expresswayClusterSettings.deregisterClusterParagraph"></p>
 
-          <button type="button" class="btn btn--alert" disabled="disabled">Deregister</button>
+          <button type="button" class="btn btn--alert" disabled="disabled" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
 
         </div>
 
       <div ng-if="resourceSetting.enabledServices.length < 2">
-        <p>Disconnect this cluster from Cisco Collaboration Cloud
-          and remove all connectors and related configuration.</p>
-        <button type="button" class="btn btn--alert" ng-click="resourceSetting.deregisterCluster(resourceSetting.cluster)">Deregister</button>
+        <p translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
+        <button type="button" class="btn btn--alert" ng-click="resourceSetting.deregisterCluster(resourceSetting.cluster)" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
 
       </div>
 
