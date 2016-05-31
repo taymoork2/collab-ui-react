@@ -4,18 +4,18 @@
       <label
         title="{{getLabel(field)}}"
         class="cs-input__label h5 labelText ct-selectable-element strong textOverflow"
-        for="text{{getLabel(field)}}">{{getLabel(field)}}
+        for="text-{{fieldName}}">{{getLabel(field)}}
       </label>
       <label
         class="ct-input__label h6 labelText textOverflow"
         ng-show="isRequired(field) != 'required'">
-        <em id="opt{{getLabel(field)}}" translate="careChatTpl.optionalText"></em>
+        <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em>
       </label>
     </div>
 
     <div class="ct-flex-container">
       <input
-        id="text{{getLabel(field)}}"
+        id="text-{{fieldName}}"
         class="h5 ct-left-cs-input ct-selectable-element large-11"
         type="text"
         placeholder="{{getPlaceholder(field)}}">
