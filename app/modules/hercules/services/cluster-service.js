@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, $q) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -280,12 +280,11 @@
     }
 
     function getAllConnectorsForCluster(clusterId) {
-      return $q(function (resolve) {
-        var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
-        $http.get(url).then(function (response) {
-          resolve(_.map(response.data.provisioning, 'connectorType'));
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
+      return $http.get(url)
+        .then(function (response) {
+          return _.map(response.data.provisioning, 'connectorType');
         });
-      });
     }
 
   }
