@@ -106,7 +106,7 @@
 
     }, {
       text: $translate.instant('careChatTpl.categoryTextRequest'),
-      id: 'requestInfo',
+      id: 'requestInfo'
     }];
 
     vm.categoryTypeOptions = CATEGORY_TYPE_OPTIONS;
@@ -167,7 +167,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultNameText')
@@ -186,7 +186,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultEmailText')
@@ -205,7 +205,7 @@
                   value: 'optional'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('requestInfo'),
+                  value: vm.getCategoryTypeObject('requestInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultQuestionText')
