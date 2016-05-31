@@ -441,6 +441,7 @@
     vm.saveCTErrorOccurred = false;
 
     function submitChatTemplate() {
+
       SunlightConfigService.createChatTemplate(vm.template).then(function (response) {
         var responseTemplateId = response.headers('Location').split('/').pop();
         $state.go('care.Features');
