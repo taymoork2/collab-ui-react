@@ -10,14 +10,13 @@
     vm.runReport = runReport;
     vm.progressType = progressType;
     vm.downloadReport = downloadReport;
-    //vm.showSearchHelp = showSearchHelp;
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
     });
 
     vm.searchCriteria = {
-      "roomId": "36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+      "roomId": "", //36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
       "startDate": null, //moment(moment()).add(-7, 'days'), // week
       "endDate": null, //moment(),
       "displayName": "TBD"
