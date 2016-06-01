@@ -2155,6 +2155,7 @@
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
+      "customerTimezone": "Customer Time Zone",
       "default": "Set as default",
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
@@ -2243,6 +2244,9 @@
         "siteFail": "Site was not created"
       }
     },
+    "finish": {
+      "title": "Congratulations!"
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
@@ -2258,6 +2262,7 @@
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "licenseQuantity": "Licenses Quantity",
+    "licenseCount": "License Count",
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
@@ -2272,7 +2277,8 @@
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "trialDuration": "Trial Duration"
   },
 
   "status": {
@@ -2494,7 +2500,6 @@
   },
   "mohManagement": {
     "title": "Media On Hold",
-    "subtitle": "New copy to come from Ahmed.",
     "newPlaylistButton": "New Playlist",
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
@@ -3489,7 +3494,7 @@
     "aaDependsTitle": "Auto Attendant Dependents",
     "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
-    "deleteFeature": "Delete {{ featureType }}",
+    "deleteFeature": "Delete",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",

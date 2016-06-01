@@ -158,6 +158,7 @@
         templateUrl: 'modules/hercules/schedule-upgrade-configuration/postpone-modal.html',
         controller: 'PostponeModalController',
         controllerAs: 'postponeModal',
+        type: 'dialog',
         resolve: {
           data: function () {
             return vm.data;
