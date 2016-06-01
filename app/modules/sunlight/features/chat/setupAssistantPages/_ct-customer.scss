@@ -243,10 +243,8 @@
   .right-inner-addon i {
     position: absolute;
     right: 0rem;
-    @include vr-spacing(pt, 0.6);
-    @include vr-spacing(pb, 0.6);
-    @include vr-spacing(pl, 2);
-    @include vr-spacing(pr, 2);
+    @include vr-spacing(pv, 0.6);
+    @include vr-spacing(ph, 2);
   }
 
   .category-tokens {
@@ -254,8 +252,7 @@
     .tokenfield.form-control-static {
       @include vr-spacing(mt, 1);
       @include vr-spacing(mb, 3);
-      @include vr-spacing(ml, 1);
-      @include vr-spacing(mr, 1);
+      @include vr-spacing(mh, 1);
       height:rem-calc(96px);
       overflow-y:auto;
       overflow-x: hidden;
