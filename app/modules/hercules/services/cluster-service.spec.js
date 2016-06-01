@@ -562,7 +562,7 @@ describe('ClusterService', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/orgId/clusters/clusterId?fields=@wide')
         .respond(200, response);
-      var connectorListPromise = ClusterService.getAllConnectorsForCluster("clusterId");
+      var connectorListPromise = ClusterService.getAllConnectorTypesForCluster("clusterId");
       $httpBackend.flush();
       connectorListPromise.then(function (allConnectors) {
         expect(allConnectors.length).toBe(3);

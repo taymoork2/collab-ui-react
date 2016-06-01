@@ -31,9 +31,9 @@
     vm.usersOptions = ['Default'];
 
     vm.enabledServices = [];
-    ClusterService.getAllConnectorsForCluster($stateParams.clusterid)
-      .then(function (allConnectors) {
-        vm.enabledServices = allConnectors;
+    ClusterService.getAllConnectorTypesForCluster($stateParams.clusterid)
+      .then(function (allConnectorTypes) {
+        vm.enabledServices = allConnectorTypes;
       });
 
     vm.deactivateService = deactivateService;

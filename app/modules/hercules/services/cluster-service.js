@@ -29,7 +29,7 @@
       mergeRunningState: mergeRunningState,
       getReleaseNotes: getReleaseNotes,
       deprovisionConnector: deprovisionConnector,
-      getAllConnectorsForCluster: getAllConnectorsForCluster
+      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster
     };
 
     return service;
@@ -279,7 +279,7 @@
       return $http.post(url);
     }
 
-    function getAllConnectorsForCluster(clusterId) {
+    function getAllConnectorTypesForCluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
       return $http.get(url)
         .then(function (response) {
