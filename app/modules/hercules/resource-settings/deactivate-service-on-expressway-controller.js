@@ -12,16 +12,20 @@
     vm.clusterName = clusterName;
     vm.clusterId = clusterId;
     vm.deactivateService = deactivateService;
-    vm.utils = FusionUtils;
 
     function deactivateService() {
-      ClusterService.deprovisionConnector(vm.clusterId, vm.serviceId)
+      ClusterService.deprovisionConnector(vm.clusterId, vm.connectorId)
         .then($modalInstance.close)
         .catch(XhrNotificationService.notify);
     }
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorId);
     vm.localizedServiceName = $translate.instant('hercules.serviceNameFromConnectorType.' + vm.connectorId);
+
+    vm.getIconClassForService = getIconClassForService;
+    function getIconClassForService() {
+      return FusionUtils.serviceId2Icon(FusionUtils.connectorType2ServicesId(vm.connectorId)[0]);
+    };
 
   }
 }());

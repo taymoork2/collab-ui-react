@@ -6,10 +6,9 @@
     .controller('FusionResourceSettingsController', FusionResourceSettingsController);
 
   /* @ngInject */
-  function FusionResourceSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state) {
+  function FusionResourceSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
 
     var vm = this;
-    vm.title = 'Cluster Settings';
 
     loadCluster($stateParams.clusterid);
 
@@ -23,6 +22,7 @@
           vm.releasechannelsPlaceholder = vm.cluster.releaseChannel;
           vm.releasechannelsSelected = '';
           vm.releasechannelsOptions = [vm.cluster.releaseChannel];
+          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {"clusterName": cluster.name});
         }, XhrNotificationService.notify);
     }
 
