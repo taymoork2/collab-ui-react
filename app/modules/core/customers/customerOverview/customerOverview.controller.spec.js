@@ -74,7 +74,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
-    spyOn(Userservice, 'updateUsers');
+    spyOn(Userservice, 'updateUsers').and.callFake(function (usersDataArray, licenses, entitlements, method, callback) {
+      callback();
+    });
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
@@ -123,7 +125,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
       controller.launchCustomerPortal();
+      $scope.$apply();
     });
+
+    it('should call getUserAuthInfo', function () {
+      expect(controller.customerOrgId).toBe('123-456');
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
+      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
+    });
+
     it('should create proper url', function () {
       expect($state.href).toHaveBeenCalledWith('login_swap', {
         customerOrgId: controller.currentCustomer.customerOrgId,
@@ -141,15 +151,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
-    });
-  });
-
-  describe('should call getUserAuthInfo correctly', function () {
-    it('should expect PartnerService.getUserAuthInfo to be called', function () {
-      expect(controller.customerOrgId).toBe('123-456');
-      expect(Authinfo.isPartnerAdmin()).toBe(true);
-      controller.getUserAuthInfo();
-      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
   });
 

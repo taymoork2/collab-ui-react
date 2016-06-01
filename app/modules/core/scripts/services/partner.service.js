@@ -24,7 +24,7 @@
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      addToManagedOrgsList: addToManagedOrgsList,
+      patchManagedOrgsList: patchManagedOrgsList,
       getUserAuthInfo: getUserAuthInfo,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -48,7 +48,7 @@
       });
     }
 
-    function addToManagedOrgsList(uuid, orgId) {
+    function patchManagedOrgsList(uuid, orgId) {
       var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
 
       var payload = {
@@ -70,11 +70,11 @@
     }
 
     function getUserAuthInfo(customerOrgId) {
-      Auth.getAuthorizationUrlList().then(function (response) {
+      return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200) {
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
-            addToManagedOrgsList(uuid, customerOrgId);
+            patchManagedOrgsList(uuid, customerOrgId);
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
             });
