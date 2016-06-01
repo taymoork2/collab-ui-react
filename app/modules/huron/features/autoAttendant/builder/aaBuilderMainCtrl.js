@@ -510,6 +510,7 @@
       return AAUiScheduleService.create8To5Schedule(aaName).then(
         function (scheduleId) {
           vm.ui.ceInfo.scheduleId = scheduleId;
+          vm.ui.hasClosedHours = true;
         },
         function (error) {
           AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {

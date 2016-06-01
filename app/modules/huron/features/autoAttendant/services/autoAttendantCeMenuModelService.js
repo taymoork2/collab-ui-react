@@ -1139,17 +1139,6 @@
       }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
-        if (ceRecord.scheduleEventTypeMap) {
-          if (ceRecord.scheduleEventTypeMap.closed) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
-          } else if (ceRecord.scheduleEventTypeMap.open) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
-          } else if (ceRecord.scheduleEventTypeMap.holiday) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
-          } else {
-            delete ceRecord.defaultActionSet;
-          }
-        }
       }
     }
 
