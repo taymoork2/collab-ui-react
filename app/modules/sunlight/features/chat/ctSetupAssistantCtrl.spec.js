@@ -336,8 +336,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
         size: 'lg',
         controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
         resolve: {
-          templateId: 'abc123'
+          templateId: jasmine.any(Function)
         }
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
