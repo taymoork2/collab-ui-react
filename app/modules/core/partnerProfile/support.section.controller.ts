@@ -1,5 +1,4 @@
 namespace globalsettings {
-  // import set = Reflect.set;
   export class SupportSettings {
     private _useCustomSupportUrl = false;
 
@@ -8,7 +7,6 @@ namespace globalsettings {
     private oldUseCustomHelpSite = false;
     private supportUrl;
     private supportText;
-    // private showAllowReadOnlyAccessCheckbox;
     private oldSupportUrl;
     private oldSupportText;
     private helpUrl;
@@ -16,12 +14,6 @@ namespace globalsettings {
     private isCiscoSupport = false;
     private isCiscoHelp = false;
 
-
-    // private usePartnerLogo;
-    // private allowCustomerLogos;
-    // private allowCrashLogUpload;
-    // private allowReadOnlyAccess;
-    // private logoUrl;
     private orgId;
 
     private problemSiteInfo = {
@@ -102,29 +94,7 @@ namespace globalsettings {
     }
 
 
-    // public setProblemRadio(value) {
-    //
-    //   this._problemSiteRadioValue = value;
-    //   // touchForm();
-    // }
     private initOrgInfo() {
-
-      // this.rep = null; // cs admin rep
-      // this.partner = {};
-      //
-      // this.companyName = Authinfo.getOrgName();
-      // this.problemSiteRadioValue = 0;
-      //
-      //
-      // $scope.supportUrl = '';
-      // $scope.supportText = '';
-      // $scope.helpUrl = '';
-      // $scope.isManaged = false;
-      // $scope.isCiscoSupport = false;
-      // $scope.isCiscoHelp = false;
-      //
-      // $scope.logoError = null;
-      // $scope.logoUrl = '';
 
       this.UserListService.listPartners(this.orgId, function (data) {
         for (var partner in data.partners) {
@@ -173,44 +143,14 @@ namespace globalsettings {
             this.isCiscoHelp = settings.isCiscoHelp;
           }
 
-          // if (!_.isUndefined(settings.usePartnerLogo)) {
-          //   this.usePartnerLogo = settings.usePartnerLogo;
-          // }
-          //
-          // if (!_.isUndefined(settings.allowCustomerLogos)) {
-          //   this.allowCustomerLogos = settings.allowCustomerLogos;
-          // }
-          //
-          // if (!_.isUndefined(settings.allowCrashLogUpload)) {
-          //   this.allowCrashLogUpload = settings.allowCrashLogUpload;
-          // } else {
-          //   this.allowCrashLogUpload = false;
-          // }
 
-          // if (!_.isUndefined(settings.allowReadOnlyAccess)) {
-          //   this.allowReadOnlyAccess = settings.allowReadOnlyAccess;
-          // }
-
-          // if (!_.isUndefined(settings.logoUrl)) {
-          //   this.logoUrl = settings.logoUrl;
-          // }
           // this.resetForm();
         } else {
           // Log.debug('Get existing org failed. Status: ' + status);
         }
-        // this.readOnlyAccessCheckboxVisibility(data, this.orgId);
+
       }, this.orgId, true);
     }
-
-    // // Currently only allow Marvel related orgs to show read only access checkbox
-    // private readOnlyAccessCheckboxVisibility(org, orgId):void {
-    //   var marvelOrgId = "ce8d17f8-1734-4a54-8510-fae65acc505e";
-    //   var isMarvelOrg = (orgId == marvelOrgId);
-    //   var managedByMarvel = _.find(org.managedBy, function (managedBy) {
-    //     return managedBy.orgId == marvelOrgId;
-    //   });
-    //   this.showAllowReadOnlyAccessCheckbox = (isMarvelOrg || managedByMarvel);
-    // }
 
     public saveUseCustomSupportUrl() {
       if (this.customSupportUrlIsValid()) {
@@ -225,12 +165,13 @@ namespace globalsettings {
           // allowReadOnlyAccess: this.allowReadOnlyAccess,
           // allowCrashLogUpload: this.allowCrashLogUpload
         };
-        this.updateOrgSettings(this.orgId, settings, ()=>{this.resetCustomSupportUrlForm();});
+        this.updateOrgSettings(this.orgId, settings, ()=> {
+          this.resetCustomSupportUrlForm();
+        });
       }
       else {
         this.Notification.error('partnerProfile.orgSettingsError');
       }
-
     }
 
     private resetCustomSupportUrlForm() {
@@ -253,7 +194,9 @@ namespace globalsettings {
           // allowCrashLogUpload: this.allowCrashLogUpload
         };
 
-        this.updateOrgSettings(this.orgId, settings, ()=>{this.resetCustomHelpSiteForm();});
+        this.updateOrgSettings(this.orgId, settings, ()=> {
+          this.resetCustomHelpSiteForm();
+        });
       } else {
         this.Notification.error('partnerProfile.orgSettingsError');
       }
@@ -273,37 +216,6 @@ namespace globalsettings {
       // if user is attempting to use a blank help url
       return !(this.helpUrl === '' && this.useCustomHelpSite !== this.helpSiteInfo.cisco);
     }
-
-    /* validation() {
-     let error = false;
-
-     // if user is attempting to use a blank support url
-     if (this.supportUrl === '' && this.useCustomSupportUrl !== this.problemSiteInfo.cisco) {
-     error = true;
-     }
-     // if user is attempting to use a blank help url
-     if (this.helpUrl === '' && this.useCustomHelpSite !== this.helpSiteInfo.cisco) {
-     error = true;
-     }
-
-     if (!error) {
-     var isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite;
-     var isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl;
-     var settings = {
-     reportingSiteUrl: this.supportUrl || null,
-     reportingSiteDesc: this.supportText || null,
-     helpUrl: this.helpUrl || null,
-     isCiscoHelp: isCiscoHelp,
-     isCiscoSupport: isCiscoSupport,
-     allowReadOnlyAccess: this.allowReadOnlyAccess,
-     // allowCrashLogUpload: this.allowCrashLogUpload
-     };
-
-     this.updateOrgSettings(this.orgId, settings);
-     } else {
-     this.Notification.error('partnerProfile.orgSettingsError');
-     }
-     }*/
 
     private updateOrgSettings(orgId, settings, onSuccess) {
       this.orgProfileSaveLoad = true;
@@ -328,18 +240,6 @@ namespace globalsettings {
         status: response.status
       });
     }
-
-    // private touchForm():void {
-    //   //TODO avoid this
-    //   // if (this.partnerProfileForm) {
-    //   //   this.partnerProfileForm.$setDirty();
-    //   // }
-    // }
-
-    // resetForm() {
-    //
-    //   // this.oldHelpUrl
-    // }
 
   }
   angular
