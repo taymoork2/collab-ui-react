@@ -1155,6 +1155,13 @@
       },
       "label": "ACTIVATE AND BEGIN SETUP"
     },
+    "deactivateServiceSingleCluster": {
+      "intro": "You are about to remove the following Hybrid Service:",
+      "fromCluster": "from the Expressway cluster {{clusterName}}.",
+      "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
+      "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "confirmButton": "Confirm Deactivation"
+    },
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Cisco Expressway clusters registered",
@@ -1220,6 +1227,16 @@
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector"
+    },
+    "connectorNameFromConnectorType": {
+      "c_cal": "Calendar Connector",
+      "c_ucmc": "Call Connector",
+      "c_mgmt": "Management Connector"
+    },
+    "serviceNameFromConnectorType": {
+      "c_cal": "Calendar Service",
+      "c_ucmc": "Call Service",
+      "c_mgmt": "Management Service"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",

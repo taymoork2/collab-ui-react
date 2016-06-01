@@ -11,8 +11,7 @@
       connectorType2RouteName: connectorType2RouteName,
       connectorType2ServicesId: connectorType2ServicesId,
       serviceId2ConnectorType: serviceId2ConnectorType,
-      serviceId2Icon: serviceId2Icon,
-      mapServiceIdToService: mapServiceIdToService
+      serviceId2Icon: serviceId2Icon
     };
 
     return service;
@@ -41,7 +40,7 @@
       case 'c_mgmt':
         return ['squared-fusion-mgmt'];
       default:
-        return '';
+        return [];
       }
     }
 
@@ -74,15 +73,6 @@
         return 'icon icon-circle-world';
       default:
         return 'icon icon-circle-question';
-      }
-    }
-
-    function mapServiceIdToService(serviceId) {
-      if (serviceId === 'c_ucmc') {
-        return 'Call';
-      }
-      if (serviceId === 'c_cal') {
-        return 'Calendar';
       }
     }
 
