@@ -2389,7 +2389,7 @@
     "care": "Care",
     "webexCMR": "WebEx EE 200 with CMR",
     "adminManagement": "Administrator Management",
-    "administrators": "Administrators",
+    "administrators": "Partner Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2467,8 +2467,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addAdministrators": "Add Adminsitrators",
-    "assignedAdministrators": "Assigned Administrators"
+    "addSalesAdministrators": "Add Sales Administrators",
+    "Administrators": "Administrators",
+    "customerAdministratorServiceError": "Customer Organization ID needed",
+    "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
+    "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
+    "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
+    "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
+    "deleteAdministrator": "Unassign Administrator",
+    "deleteConfirmation": "Are you sure you want to unassign {{pattern}}?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
