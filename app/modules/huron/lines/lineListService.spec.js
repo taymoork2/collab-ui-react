@@ -1,11 +1,13 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-  var $httpBackend, HuronConfig, LineListService;
+  var $httpBackend, $q, $scope, FeatureToggleService, HuronConfig, LineListService, PstnSetupService;
 
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var count = getJSONFixture('huron/json/lines/count.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
+  var pendingLines = getJSONFixture('huron/json/lines/pendingNumbers.json');
+  var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -21,10 +23,17 @@ describe('Service: LineListService', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _LineListService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _FeatureToggleService_, _HuronConfig_, _LineListService_, _PstnSetupService_) {
+    $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     LineListService = _LineListService_;
+    PstnSetupService = _PstnSetupService_;
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'listPendingOrders').and.returnValue($q.when());
   }));
 
   afterEach(function () {
@@ -66,6 +75,36 @@ describe('Service: LineListService', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=true&limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'assignedLines').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
+      });
+    });
+
+    it('should set seach criteria pending and return pending orders', function () {
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
+      $scope.$apply();
+      LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
+        expect(response).toEqual(formattedPendingLines);
+      });
+    });
+
+    it('should set seach criteria all and include pending orders', function () {
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
+      $scope.$apply();
+      LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
+        expect(angular.equals(response, lines.concat(formattedPendingLines))).toBe(true);
+      });
+    });
+
+    it('should set seach criteria to pending and and return nothing if lines is empty', function () {
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond([]);
+      $scope.$apply();
+      LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
+        expect(angular.equals(response, [])).toBe(true);
       });
     });
   });

@@ -114,6 +114,7 @@
  * Domain Management New Popup
  */
 .domainModal {
+  position: relative;
   .error {
     color: $color-negative-base !important;
     span {
@@ -137,10 +138,15 @@
     word-break: break-all;
     width: 103%;
   }
-  .modal-body.domWarning {
-    background-color: $color-attention-base;
-    margin-top: -1rem;
+  .domWarning {
+  //  background-color: $color-attention-base;
+    color:$color-attention-base;
     overflow: hidden;
+    width:100% !important;
+    height:60px !important;
+    position: absolute;
+    bottom: 0rem;
+    padding-left: 2rem;
     p {
       width: 93%;
     }
@@ -154,8 +160,13 @@
       color: white;
     }
   }
-  .modal-body.domError {
-    background-color: $color-negative-base !important;
+  .domError {
+    //background-color: $color-negative-base !important;
+    background-color: transparent !important;
+
+    p,i{
+      color:$color-negative-base;
+    }
   }
   .tokenInfo {
     margin-bottom: 1rem;
@@ -163,7 +174,6 @@
 }
 
 #domainModalAdd {
-  .modal-body {
     padding-bottom: 3rem;
     p {
       margin-bottom: 2rem;
@@ -171,7 +181,6 @@
     input{
       width: 100% !important;
     }
-  }
 }
 
 @media screen and (max-width: 500px) {

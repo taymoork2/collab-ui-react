@@ -38,7 +38,8 @@
       $modal.open({
         templateUrl: 'modules/huron/callRouting/callPark/callParkDetail.tpl.html',
         controller: 'CallParkDetailCtrl',
-        controllerAs: 'cpd'
+        controllerAs: 'cpd',
+        modalClass: 'call-park-detail'
       }).result.finally(listCallParks);
     }
 
