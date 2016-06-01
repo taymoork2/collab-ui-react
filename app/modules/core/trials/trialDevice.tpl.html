@@ -10,6 +10,7 @@
 
 <!-- body -->
 <div class="modal-body trials">
+  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
   <!-- error state - cannot add more devices -->
   <div class="messagebox-backdrop" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
     <div class="message-box splash-msg">
@@ -28,10 +29,8 @@
       </div>
     </div>
   </div>
-
-  <!-- normal state -->
+    <!-- normal state -->
   <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
-  <form id="callTrialForm" class="cs-form trial-modal" name="trialForm">
     <!-- select devices -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -59,10 +58,9 @@
         <formly-form model="callTrial.details.shippingInfo" fields="callTrial.shippingFields"></formly-form>
       </div>
     </div>
+    </div>
   </form>
   </div>
-</div>
-
 <!-- footer -->
 <div class="modal-footer">
   <a class="pad-top pull-left" ng-if="callTrial.canAddDevice || !callTrial.limitReached"
