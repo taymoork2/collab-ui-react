@@ -1138,7 +1138,12 @@
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
-                controllerAs: 'siteCSVModalCtrl'
+                controllerAs: 'siteCSVModalCtrl',
+                resolve: {
+                    modalInfo: function ($state) {
+                      $state.params.modalType = 'small';
+                    }
+                  }
               }
             },
             params: {
@@ -1152,6 +1157,11 @@
                 controller: 'SiteCSVResultsCtrl',
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
                 controllerAs: 'siteCSVResult',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
