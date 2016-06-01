@@ -36,7 +36,7 @@
       'chatStrings',
       'summary'
     ];
-    vm.currentState = vm.states[8];
+    vm.currentState = vm.states[0];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
 
@@ -382,7 +382,9 @@
           size: 'lg',
           controller: 'EmbedCodeCtrl',
           resolve: {
-            templateId: responseTemplateId
+            templateId: function () {
+              return responseTemplateId;
+            }
           }
         });
       }, function (error) {
