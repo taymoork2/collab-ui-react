@@ -1,3 +1,6 @@
+/**
+ * Custom directives to support form rendering
+ */
 (function () {
   'use strict';
 
@@ -5,7 +8,11 @@
     .module('Sunlight')
     .directive('selectable', Selectable)
     .directive('ctCustomerForm', CustomerForm);
-
+  
+  /**
+   * Handles special rendering for selected element. It supports highlighting elements as well as container 
+   * with the ct-selectable-element and ct-selectable-container css classes resp
+   */
   function Selectable() {
     return {
       restrict: 'A',
@@ -25,11 +32,6 @@
           if (element.hasClass('ct-selectable-container')) {
             element.addClass('active');
           }
-
-          //Hack to effect 'active' changes for tags inside a directive
-          element
-            .find('.ct-selectable-cs-select')
-            .addClass('active');
         });
       }
     };

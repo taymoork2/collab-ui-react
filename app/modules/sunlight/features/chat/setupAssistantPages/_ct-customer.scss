@@ -144,12 +144,6 @@
     }
   }
 
-  .ct-selectable-cs-select {
-    &.active a:first-of-type {
-      border-color: $color-primary-darker;
-    }
-  }
-
   .ct-selectable-container {
     &.active {
       border-color: $color-primary-darker;
