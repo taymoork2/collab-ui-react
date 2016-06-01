@@ -4,22 +4,6 @@
   angular
     .module('Sunlight')
     .directive('selectable', Selectable)
-    /**
-     * Renders a form given the fields of the form.
-     * Can handle label, fieldType(category: rendered as an option and others: rendered as text box), placeHolder, isRequired
-     *
-     * Allowed attributes
-     *
-     * ctModel = ct-model* : Can pass the encapsulating scope or any container which can be used to interact with model of selected fields
-     * fields = fields* : List of field which needs to be rendered in the form
-     * ignoreFields = @ignore-fields : Fields to be ignored from the collection passed as fields, this can be passed as string
-     *  representation of json array
-     * typeParam = @type-param* : Param name for type of the field (email, id, name, phone, category)
-     * labelParam = @label-param* : Param name for field label
-     * placeholderParam = @placeholder-param* : Param name for Placeholder text
-     * requiredParam = @required-param* : Param name for isRequired field
-     * categoryParam = @category-param* : Param name for category field
-     */
     .directive('ctCustomerForm', CustomerForm);
 
   function Selectable() {
@@ -51,6 +35,39 @@
     };
   }
 
+  /**
+   * Renders a form given the fields of the form.
+   * Can handle label, fieldType(category: rendered as an option and others: rendered as text box), placeHolder, isRequired
+   *
+   * Allowed attributes
+   *
+   * ctModel = ct-model* : Can pass the encapsulating scope or any container which can be used to interact with model of selected fields
+   * fields = fields* : List of field which needs to be rendered in the form
+   * ignoreFields = @ignore-fields : Fields to be ignored from the collection passed as fields, this can be passed as string
+   *  representation of json array
+   * typeAttr = @type-attr : Param name for type of the field (email, id, name, phone, category)
+   * labelAttr = @label-attr : Param name for field label
+   * placeholderAttr = @placeholder-attr : Param name for Placeholder text
+   * requiredAttr = @required-attr : Param name for isRequired field
+   * categoryAttr = @category-attr : Param name for category field
+   *
+   * ex -
+   * <code>
+   * var fields = {
+   *        field1": {
+   *          attributes: [
+   *            {name: 'clabel', value: 'LABEL'},
+   *            {name: 'chintText',value: 'HINT_TEXT'},
+   *            {name: 'ccategory',value: 'CATEGORY'},
+   *            {name: 'ctype',value: 'name'},
+   *            {name: 'crequired',value: 'optional'}
+   *          ]
+   *        }
+   *       }
+   * element -
+   * <ct-customer-form ct-model="selected" fields="fields" label-attr="clabel" category-attr="ccategory" type-attr="ctype" required-attr="crequired" placeholder-attr="chintText"></ct-customer-form>
+   * </code>
+   */
   function CustomerForm() {
     return {
       restrict: 'AE',
@@ -60,34 +77,34 @@
         fields: '=',
         ignoreFields: '@',
         ctModel: '=',
-        typeParam: '@',
-        labelParam: '@',
-        placeholderParam: '@',
-        requiredParam: '@',
-        categoryParam: '@'
+        typeAttr: '@',
+        labelAttr: '@',
+        placeholderAttr: '@',
+        requiredAttr: '@',
+        categoryAttr: '@'
       }
     };
   }
 
   function CustomerFormController($scope) {
     $scope.getLabel = function (field) {
-      return getAttribute(field, $scope.labelParam || 'label');
+      return getAttribute(field, $scope.labelAttr || 'label');
     };
 
     $scope.isRequired = function (field) {
-      return getAttribute(field, $scope.requiredParam || 'required');
+      return getAttribute(field, $scope.requiredAttr || 'required');
     };
 
     $scope.getPlaceholder = function (field) {
-      return getAttribute(field, $scope.placeholderParam || 'hintText');
+      return getAttribute(field, $scope.placeholderAttr || 'hintText');
     };
 
     $scope.getCategory = function (field) {
-      return getAttribute(field, $scope.categoryParam || 'category');
+      return getAttribute(field, $scope.categoryAttr || 'category');
     };
 
     $scope.getType = function (field) {
-      return getAttribute(field, $scope.typeParam || 'type');
+      return getAttribute(field, $scope.typeAttr || 'type');
     };
 
     $scope.setActiveItem = function (field) {

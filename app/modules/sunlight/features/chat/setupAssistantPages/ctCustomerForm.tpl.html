@@ -3,14 +3,13 @@
     <div class="ct-flex-container">
       <label
         title="{{getLabel(field)}}"
+        id="label-{{fieldName}}"
         class="cs-input__label h5 labelText ct-selectable-element strong textOverflow"
-        for="text-{{fieldName}}">{{getLabel(field)}}
-      </label>
+        for="text-{{fieldName}}">{{getLabel(field)}}</label>
       <label
         class="ct-input__label h6 labelText textOverflow"
         ng-show="isRequired(field) != 'required'">
-        <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em>
-      </label>
+        <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em></label>
     </div>
 
     <div class="ct-flex-container">
@@ -19,7 +18,7 @@
         class="h5 ct-left-cs-input ct-selectable-element large-11"
         type="text"
         placeholder="{{getPlaceholder(field)}}">
-      <i class="icon icon-chevron-down" ng-if="getType(field).text === 'category'"></i>
+      <i id="img-{{fieldName}}" class="icon icon-chevron-down" ng-if="getType(field).text === 'category'"></i>
     </div>
   </div>
 </div>

@@ -1,5 +1,4 @@
 .ct-customer {
-  align-items: center;
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -14,6 +13,8 @@
       @content
     }
   }
+
+  align-items: center;
 
   .cs-card {
     width: rem-calc(400px);

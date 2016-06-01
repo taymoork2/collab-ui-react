@@ -6,7 +6,7 @@
   <div class="h4 ct-title-desc" translate="careChatTpl.customerInfoDesc"></div>
 
   <div class="ct-customer ct-sa-content">
-    <cs-card-layout block-view="true" class="cardScroll">
+    <cs-card-layout block-view="true">
       <cs-card class="ct-card">
         <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
 
@@ -25,10 +25,10 @@
               ct-model='careChatSA'
               fields='careChatSA.template.configuration.pages.customerInformation.fields'
               ignore-fields='["welcomeHeader"]'
-              type-param='type'
-              label-param='label'
-              placeholder-param='hintText'
-              required-param='required'>
+              type-attr='type'
+              label-attr='label'
+              placeholder-attr='hintText'
+              required-attr='required'>
             </ct-customer-form>
           </section>
 
