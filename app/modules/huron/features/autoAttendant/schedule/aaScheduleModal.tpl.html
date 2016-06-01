@@ -80,11 +80,11 @@
             <cs-accordion-heading>
               <div class="row" ng-click="aaScheduleModalCtrl.forceCheckHoliday()">
                 <div ng-bind="holiday.name" class="aa-schedule-holidays-name-collapse"></div>
-                <div ng-show="holiday.exactDate">
+                <div ng-if="holiday.exactDate">
                   {{holiday.date | date:'MMMM d'}}{{holiday.recurAnnually ? '' : holiday.date | date: ', yyyy'}}<span ng-if="!holiday.allDay">, {{holiday.starttime}} - {{holiday.endtime}}
                   </span>
                 </div>
-                <div ng-hide="holiday.exactDate">
+                <div ng-if="!holiday.exactDate">
                   {{holiday.rank.labelTranslate}} {{holiday.day.label}} in {{holiday.month.label}}{{holiday.recurAnnually ? '' : holiday.date | date: 'yyyy'}}<span ng-if="!holiday.allDay">, {{holiday.starttime}} - {{holiday.endtime}}
                   </span>
                 </div>
