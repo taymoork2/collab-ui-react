@@ -19,6 +19,24 @@
       return res.data;
     }
 
+    function getAvalonServiceUrl() {
+      //TODO: Cache pr org
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
+        .then(extractData);
+    }
+
+    function getAvalonRoomInfo(url) {
+      return $http
+        .get(url)
+        .then(extractData)
+        .catch(function (err) {
+          //  TODO: Implement proper handling of error when final API is in place
+          //console.log("error getReports: " + err)
+        });
+    }
+
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       return $http
@@ -49,10 +67,6 @@
           "displayName": displayName
         })
         .then(extractData);
-    }
-
-    function reportsApiUrl(orgId) {
-      return urlBase + 'compliance/organizations/' + orgId + '/reports';
     }
 
     // TODO: Implement proper handling of error when final API is in place
@@ -100,14 +114,23 @@
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
+    }
+
     return {
+      getAvalonServiceUrl: getAvalonServiceUrl,
+      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance
     };
   }
 

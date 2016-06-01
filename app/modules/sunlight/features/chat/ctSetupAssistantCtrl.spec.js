@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService;
+  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -38,8 +38,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var successData = {
     success: true,
     status: 201
-
   };
+
   beforeEach(module('Sunlight'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
@@ -55,7 +55,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$window_, _Authinfo_, _CTService_, _SunlightConfigService_) {
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -64,6 +65,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     Authinfo = _Authinfo_;
     CTService = _CTService_;
     SunlightConfigService = _SunlightConfigService_;
+    $state = _$state_;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
@@ -221,23 +223,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       var returnObj = {
         attributes: [{
           name: 'header',
-          type: 'text',
-          value: 'careChatTpl.defaultWelcomeText',
-          label: 'careChatTpl.windowTitleLabel'
+          value: 'careChatTpl.defaultWelcomeText'
         }, {
           name: 'organization',
-          type: 'text',
-          value: 'careChatTpl.defaultOrgText',
-          label: 'careChatTpl.defaultOrgLabel'
+          value: OrgName
         }]
       };
       controller.setActiveItem("welcomeHeader");
       expect(controller.activeItem).toEqual(returnObj);
-    });
-
-    it("should get the attribute param", function () {
-      var attrParam = controller.getAttributeParam("label", "organization", "welcomeHeader");
-      expect(attrParam).toEqual("careChatTpl.defaultOrgLabel");
     });
 
     it("should not get the attribute param for incorrect param", function () {
@@ -312,9 +305,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
   describe('Summary Page', function () {
     beforeEach(inject(intializeCtrl));
-    beforeEach(function () {
-      resolveLogoPromise();
-    });
 
     it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
       //by default, this flag is false
@@ -330,6 +320,38 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect(controller.saveCTErrorOccurred).toBeTruthy();
+    });
+
+    it("should submit chat template successfully", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+
+      spyOn($state, 'go');
+      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve({
+          success: true,
+          headers: function (header) {
+            return 'something/abc123';
+          },
+          status: 201
+        });
+        return deferred.promise;
+      });
+
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect($modal.open).toHaveBeenCalledWith({
+        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        size: 'lg',
+        controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
+        resolve: {
+          templateId: jasmine.any(Function)
+        }
+      });
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
     });
   });
 });

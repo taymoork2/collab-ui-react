@@ -7,7 +7,7 @@
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_reportsUnavailable"
        name="{{row.entity.license.siteUrl}}_reportsUnavailable"
-       class="icon icon-report grid-vcenter"
+       class="icon icon-report iconDisabled grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteReports' | translate}}"></i>
       
@@ -20,7 +20,7 @@
       <i ng-if="!row.entity.isAdminReportEnabled"
          id="{{row.entity.license.siteUrl}}_reportsDisabled"
          name="{{row.entity.license.siteUrl}}_reportsDisabled"
-         class="icon icon-report grid-vcenter"
+         class="icon icon-report iconDisabled grid-vcenter"
          tooltip-append-to-body="true" 
          tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"></i>
       
@@ -29,7 +29,7 @@
          id="{{row.entity.license.siteUrl}}_webex-site-reports"
          name="{{row.entity.license.siteUrl}}_webex-site-reports"
          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"
-         class="icon icon-report iconEnabled grid-vcenter"
+         class="icon icon-report iconEnabledWithHover grid-vcenter"
          tooltip-append-to-body="true" 
          tooltip="{{::'siteList.siteReports' | translate}}"></i>
     </span>

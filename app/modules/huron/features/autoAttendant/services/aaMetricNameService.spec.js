@@ -12,7 +12,7 @@ describe('Service: AAMetricNameService', function () {
 
   describe('CREATE_AA', function () {
     it('should return event name', function () {
-      expect(AAMetricNameService.CREATE_AA).toEqual('aa.create');
+      expect(AAMetricNameService.CREATE_AA).toEqual('aa.createAA');
     });
   });
 
