@@ -381,6 +381,7 @@
           templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
           size: 'lg',
           controller: 'EmbedCodeCtrl',
+          controllerAs: 'embedCodeCtrl',
           resolve: {
             templateId: function () {
               return responseTemplateId;
