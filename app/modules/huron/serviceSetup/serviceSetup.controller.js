@@ -315,7 +315,7 @@
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
         },
-        // hide function added to expressionPropertties because hideExpression does not dependably hide
+        // hide function added to expressionProperties because hideExpression does not dependably hide
         // the element on load, and will evaluate only after the model updates after first load
         'hide': function () {
           return vm.model.hideExtensionLength;
@@ -373,10 +373,10 @@
                 return angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-              'templateOptions.minlength': function() {
+              'templateOptions.minlength': function () {
                 return vm.model.site.extensionLength;
               },
-              'templateOptions.maxlength': function() {
+              'templateOptions.maxlength': function () {
                 return vm.model.site.extensionLength;
               }
             }
@@ -445,10 +445,10 @@
                 } else return false;
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-              'templateOptions.minlength': function() {
+              'templateOptions.minlength': function () {
                 return vm.model.site.extensionLength;
               },
-              'templateOptions.maxlength': function() {
+              'templateOptions.maxlength': function () {
                 return vm.model.site.extensionLength;
               }
             }
