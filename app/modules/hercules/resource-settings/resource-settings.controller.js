@@ -22,7 +22,9 @@
           vm.releasechannelsPlaceholder = vm.cluster.releaseChannel;
           vm.releasechannelsSelected = '';
           vm.releasechannelsOptions = [vm.cluster.releaseChannel];
-          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {"clusterName": cluster.name});
+          vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
+            "clusterName": cluster.name
+          });
         }, XhrNotificationService.notify);
     }
 

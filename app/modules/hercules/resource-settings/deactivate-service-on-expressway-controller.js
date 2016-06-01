@@ -23,6 +23,7 @@
     vm.localizedServiceName = $translate.instant('hercules.serviceNameFromConnectorType.' + vm.connectorId);
 
     vm.getIconClassForService = getIconClassForService;
+
     function getIconClassForService() {
       return FusionUtils.serviceId2Icon(FusionUtils.connectorType2ServicesId(vm.connectorId)[0]);
     };

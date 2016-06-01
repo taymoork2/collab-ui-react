@@ -1295,7 +1295,7 @@
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
     },
     "expresswayClusterSettings": {
-      "pageTitle":"{{clusterName}} settings",
+      "pageTitle": "{{clusterName}} settings",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
