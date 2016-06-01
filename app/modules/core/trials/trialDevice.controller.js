@@ -431,7 +431,6 @@
       key: 'postalCode',
       type: 'input',
       className: 'pull-left medium-4 with-slim-offset offset-l',
-      validators: _checkValidators(),
       templateOptions: {
         labelClass: '',
         inputClass: '',
