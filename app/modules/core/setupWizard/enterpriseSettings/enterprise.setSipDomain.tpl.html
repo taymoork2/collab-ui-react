@@ -34,15 +34,15 @@
 			<i ng-if="cloudSipDomainField.isLoading" class="space icon icon-spinner"></i>
 		</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row-fluid" ng-if="cloudSipDomainField.isUrlAvailable">
 		<div class="confirm-box">
-			<cs-checkbox ckid="confirmSaveCheckBox" ng-if="cloudSipDomainField.isUrlAvailable" ng-model="cloudSipDomainField.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainAcknowledge' | translate}}"></cs-checkbox>
+			<cs-checkbox ckid="confirmSaveCheckBox" ng-model="cloudSipDomainField.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainAcknowledge' | translate}}"></cs-checkbox>
 		</div>
   </div>
-  <div class="row-fluid">
+  <div class="row-fluid" ng-if="$ctrl.showSaveButton && cloudSipDomainField.isUrlAvailable">
     <div class="save-box">
       <button id="save"
-              ng-if="$ctrl.showSaveButton && cloudSipDomainField.isUrlAvailable && cloudSipDomainField.isConfirmed"
+              ng-disabled="!cloudSipDomainField.isConfirmed"
               class="space btn--primary"
               ng-click="_saveDomain()"
               translate="common.save"></button>
