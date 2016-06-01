@@ -247,15 +247,6 @@
       }
     };
 
-    $scope.setProblemRadio = function (value) {
-      if (value === $scope.problemSiteInfo.cisco) {
-        $scope.supportUrl = '';
-        $scope.supportText = '';
-      }
-      $scope.problemSiteRadioValue = value;
-      touchForm();
-    };
-
     $scope.setCrashReportCheckbox = function (value) {
       $scope.allowCrashLogUpload = value;
       touchForm();

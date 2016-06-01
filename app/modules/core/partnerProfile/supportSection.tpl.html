@@ -1,0 +1,89 @@
+<!-- support title / description -->
+<!--<div class="section__content">-->
+<div class="sub-section">
+  <h5 class="sub-section__label" translate="partnerProfile.supportTitle"></h5>
+  <p ng-if="!ctrl.isPartner" class="sub-section__description" translate="customerProfile.supportInfo"
+     translate-values="{app : ctrl.appType}"></p>
+  <p ng-if="ctrl.isPartner" class="sub-section__description" translate="partnerProfile.supportInfo"
+     translate-values="{app : ctrl.appType}"></p>
+</div>
+<!--<div class="fform-section" id="supportTitleAndDescPanel" >-->
+<!--&lt;!&ndash;<h4 translate="partnerProfile.supportTitle"></h4>&ndash;&gt;-->
+<!--<div class="form-spacing">-->
+<!--<span ng-if="!ctrl.isPartner" translate="customerProfile.supportInfo" translate-values="{app : ctrl.appType}"></span>-->
+<!--<span ng-if="ctrl.isPartner" translate="partnerProfile.supportInfo" translate-values="{app : ctrl.appType}"></span>-->
+<!--</div>-->
+<!--</div>-->
+<!-- trouble ticket reporting location form -->
+<div class="cs-radio-group" id="troubleReportingPanel">
+  <h5 translate="partnerProfile.supportSetup"></h5>
+  <!-- partner problem reporting site form -->
+  <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
+  <label for="customSupportUrlBox" translate="globalSettings.support.problemReportsToCustomUrl"/>
+  <!--<div class="cs-input-group cs-input-radio" id="troubleReportingCiscoPanel">&lt;!&ndash; ng-click="ctrl.setProblemRadio(0)">&ndash;&gt;
+    <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0"
+           ng-model="ctrl.problemSiteRadioValue">
+    <label for="problemSiteRadio0">
+      <a href="" ng-click="ctrl.sendFeedback()">
+        <span ng-if="!ctrl.isManaged" translate="partnerProfile.ciscoProblem"></span>
+        <span ng-if="ctrl.isCiscoSupport && ctrl.isManaged" translate="partnerProfile.ciscoProblem"></span>
+        <span ng-if="!ctrl.isCiscoSupport && ctrl.isManaged" translate="partnerProfile.partnerProblem"></span>
+      </a>
+    </label>
+  </div>-->
+  <!--<div class="cs-input-group cs-input-radio">
+    <input type="radio" id="problemSiteRadio1" width="30" name="problemSiteRadio" ng-value="1"
+           ng-model="ctrl.problemSiteRadioValue">
+    <label for="problemSiteRadio1" class="radio-input-spacing" id="troubleReportingPartnerPanelRadio">
+      &lt;!&ndash;ng-click="setProblemRadio(1)"&ndash;&gt;-->
+  <div class="radio-input-flex">
+    <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{ctrl.troubleUrl | translate}}"
+           ng-model="ctrl.supportUrl" ng-disabled="!ctrl.useCustomSupportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
+                          placeholder="{{ctrl.troubleText | translate}}" ng-model="ctrl.supportText" ng-disabled="!ctrl.useCustomSupportUrl">
+                </textarea>
+    <h6 translate="partnerProfile.matchingTix"></h6>
+    <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
+    <button ng-if="ctrl.useCustomSupportUrlDirty" translate="common.save" ng-click="ctrl.saveUseCustomSupportUrl()" loading="ctrl.orgProfileSaveLoad"></button>
+  </div>
+  <!--</label>-->
+</div>
+</div>
+
+<div class="cs-radio-group" id="helpPanel">
+  <h5 translate="partnerProfile.helpFaq"></h5>
+  <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
+    <input type="checkbox" id="customHelpSite" ng-model="ctrl.useCustomHelpSite">
+    <label for="customHelpSite" translate="globalSettings.support.useCustomHelpSite"></label>
+    <!--<input type="radio" id="helpSiteRadio0" name="helpSiteRadio" ng-value="0" ng-model="ctrl.helpSiteRadioValue">-->
+    <!--<label for="helpSiteRadio0">&lt;!&ndash; ng-click="setHelpRadio(0)">&ndash;&gt;-->
+    <!--<a ng-href="{{ctrl.profileHelpUrl}}" target="_blank">-->
+    <!--<span ng-if="!ctrl.isManaged" translate="partnerProfile.ciscoHelp"></span>-->
+    <!--<span ng-if="ctrl.isCiscoHelp && ctrl.isManaged" translate="partnerProfile.ciscoHelp"></span>-->
+    <!--<span ng-if="!ctrl.isCiscoHelp && ctrl.isManaged" translate="partnerProfile.partnerHelp"></span>-->
+    <!--</a>-->
+    <!--</label>-->
+  </div>
+  <div class="cs-input-group cs-input-radio" id="helpPartnerPanel"> <!--ng-click="setHelpRadio(1)"-->
+    <!--<input type="radio" id="helpSiteRadio1" name="helpSiteRadio" ng-value="1" ng-model="ctrl.helpSiteRadioValue">-->
+    <!--<label for="helpSiteRadio1" class="radio-input-spacing" id="helpPartnerPanelRadio">-->
+    <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
+           placeholder="{{ctrl.helpUrlText | translate}}" ng-model="ctrl.helpUrl" ng-disabled="!ctrl.useCustomHelpSite">
+    <!--</label>-->
+  </div>
+  <cs-btn ng-if="ctrl.useCustomHelpSiteDirty" translate="common.save" ng-click="ctrl.saveUseCustomHelpSite()" loading="ctrl.orgProfileSaveLoad">
+    <span translate="common.save"></span>
+  </cs-btn>
+</div>
+
+<!--<div ng-show="ctrl.showAllowReadOnlyAccessCheckbox">
+  <h5 translate="customerProfile.supportAccessTitle"></h5>
+  <div class="form-spacing">
+    <span translate="customerProfile.supportAccessInfo"></span>
+  </div>
+  <input id="profileSettingsAllowReadOnlyAccess" type="checkbox" ng-model="ctrl.allowReadOnlyAccess">
+  <label class="cs-checkbox" for="profileSettingsAllowReadOnlyAccess">
+    <span translate="customerProfile.supportAccessCheckbox"></span>
+  </label>
+  <button ng-if="ctrl.allowReadOnlyDirty" ng-click="ctrl.saveAllowReadOnlyAccess()" translate="common.save"></button>
+</div>-->

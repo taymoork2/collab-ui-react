@@ -1,4 +1,5 @@
 /// <reference path="domainsSetting.component.ts"/>
+/// <reference path="supportSetting.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
@@ -13,12 +14,13 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo) {
+    constructor(Authinfo, $translate) {
 
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
       } else {
         this.domains = new DomainsSetting();
+        this.support = new SupportSetting(Authinfo, $translate);
       }
     }
   }
