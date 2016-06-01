@@ -1140,10 +1140,10 @@
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
                 controllerAs: 'siteCSVModalCtrl',
                 resolve: {
-                    modalInfo: function ($state) {
-                      $state.params.modalType = 'small';
-                    }
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
                   }
+                }
               }
             },
             params: {
