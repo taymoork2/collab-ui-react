@@ -11,7 +11,9 @@
     var strEntityIdEnd = '"';
     var strSignOn = 'SingleSignOnService';
     var strLocation = 'Location';
-    var bindingString = 'Binding="urn:oasis:names:tc:SAML:2.0:bindings:';
+    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
+    var bindingStr = 'Binding="' + _BINDINGS;
+    var strBindingEnd = '" ';
     var oldSSOValue = 0;
     $scope.updateSSO = updateSSO;
 
@@ -459,9 +461,9 @@
 
     function checkReqBinding(data) {
       var start = $scope.idpFile.file.indexOf(strSignOn);
-      start = $scope.idpFile.file.indexOf(bindingString, start);
-      var end = $scope.idpFile.file.indexOf(strLocation, start) - 2;
-      var reqBinding = $scope.idpFile.file.substring(start + bindingString.length, end);
+      start = $scope.idpFile.file.indexOf(bindingStr, start);
+      var end = $scope.idpFile.file.indexOf(strLocation, start) - strBindingEnd.length;
+      var reqBinding = $scope.idpFile.file.substring(start + bindingStr.length, end);
       return reqBinding;
     }
 
@@ -475,7 +477,7 @@
             var reqBinding = checkReqBinding(data);
           }
           if (entityId !== null) {
-            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&reqBinding=urn:oasis:names:tc:SAML:2.0:bindings:' + reqBinding;
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);
