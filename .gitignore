@@ -19,6 +19,7 @@
 .e2e-fail-retry
 .oauth_token_metadata
 .vscode
+.project
 
 build
 coverage

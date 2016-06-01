@@ -9,9 +9,11 @@ var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var messageLogger = require('../utils/messageLogger.gulp')();
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var compression = require('compression');
+var contentSecurityPolicy = require('helmet-csp');
 var testFiles;
 var changedFiles;
 
@@ -68,7 +70,10 @@ gulp.task('browser-sync', function () {
     port: 8000,
     server: {
       baseDir: baseDir,
-      middleware: [compression()]
+      middleware: [
+        compression(),
+        customCSPmiddleware
+      ]
     },
     ghostMode: args.browserall ? ghostMode : false,
     injectChanges: true,

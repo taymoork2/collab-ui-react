@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -509,7 +509,9 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
-      populateUiModel();
+      $timeout(function () {
+        populateUiModel();
+      }, 250);
       vm.isDeleted = false;
     }
 

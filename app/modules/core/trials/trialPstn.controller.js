@@ -11,7 +11,7 @@
 
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
-    var pstnTokenLimit = 5;
+    var pstnTokenLimit = 10;
     vm.showOrdering = false;
 
     vm.getStateInventory = getStateInventory;

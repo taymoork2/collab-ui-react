@@ -499,7 +499,8 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
-    "rolesError": "Error updating user's roles."
+    "rolesError": "Error updating user's roles.",
+    "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
     "title": "Support",
@@ -583,7 +584,10 @@
         "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
-        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+        "viewCdrCallFlowDesc": "Open the tool in a new tab",
+        "ediscovery": "Activity Reports",
+        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "viewEdiscovery": "View Activity Reports"
       }
     }
   },
@@ -1375,13 +1379,26 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
+    "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
     }
   },
   "firstTimeWizard": {
@@ -2138,6 +2155,7 @@
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
+      "customerTimezone": "Customer Time Zone",
       "default": "Set as default",
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
@@ -2226,6 +2244,9 @@
         "siteFail": "Site was not created"
       }
     },
+    "finish": {
+      "title": "Congratulations!"
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
@@ -2241,6 +2262,7 @@
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "licenseQuantity": "Licenses Quantity",
+    "licenseCount": "License Count",
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
@@ -2255,7 +2277,8 @@
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "trialDuration": "Trial Duration"
   },
 
   "status": {
@@ -2472,11 +2495,11 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "compliance": "Compliance"
   },
   "mohManagement": {
     "title": "Media On Hold",
-    "subtitle": "New copy to come from Ahmed.",
     "newPlaylistButton": "New Playlist",
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
@@ -3471,7 +3494,7 @@
     "aaDependsTitle": "Auto Attendant Dependents",
     "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
-    "deleteFeature": "Delete {{ featureType }}",
+    "deleteFeature": "Delete",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",
@@ -3488,6 +3511,7 @@
     "allLines": "All",
     "unassignedLines": "Unassigned",
     "assignedLines": "Assigned",
+    "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
@@ -3495,7 +3519,10 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
-    "getCountError": "Failed to fetch record counts."
+    "getCountError": "Failed to fetch record counts.",
+    "phoneNumbers": "Phone Numbers",
+    "assignedTo": "Assigned to",
+    "inProgress": "In Progress"
   },
 
   "messengerCiSync": {
@@ -3560,7 +3587,6 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3625,7 +3651,10 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3870,15 +3899,25 @@
     },
     "privacy": {
       "title": "Privacy",
-      "subsectionLabel": "Support Access"
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "usageDataHeader": "Usage Data Sent to Cisco Partner",
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
     },
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "protectedDevicesOnly": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
-      "title": "Support"
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
     }
   },
   "my-company": {
@@ -3920,7 +3959,8 @@
     "id_readonly_admin": "Read-only Admin",
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
-    "ciscouc.devsupport": "Spark Call Dev Support"
+    "ciscouc.devsupport": "Spark Call Dev Support",
+    "compliance": "Compliance"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -3940,7 +3980,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
-    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
+    "Compliance_User": "Compliance"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

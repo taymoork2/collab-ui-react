@@ -6,6 +6,7 @@
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var processEnvUtil = require('../utils/processEnvUtil.gulp')();
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var del = require('del');
@@ -142,11 +143,30 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     messageLogger('Running End 2 End tests from all modules.');
   }
 
+  function stopSauceAndExit(exitCode) {
+    if (args.sauce) {
+      $.run('./sauce/stop.sh').exec('', function () {
+        process.nextTick(function () {
+          process.exit(exitCode);
+        });
+      });
+    } else {
+      process.nextTick(function () {
+        process.exit(exitCode);
+      });
+    }
+  }
+
   messageLogger('#### Starting E2E Run: ' + processEnvUtil.getE2eRunCounter());
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
-      this.emit('end'); // allows gulp process to continue instead of exiting
+      // unexpected process exit
+      if (/process exited unexpectedly with error code/.test(e)) {
+        stopSauceAndExit(1);
+      } else {
+        this.emit('end'); // allows gulp process to continue instead of exiting
+      }
     });
 });
 
@@ -260,7 +280,8 @@ gulp.task('connect', function () {
     port: 8000,
     middleware: function () {
       return [
-        compression()
+        compression(),
+        customCSPmiddleware
       ];
     },
     livereload: false

@@ -8,6 +8,8 @@
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
+    vm.progressType = progressType;
+    vm.downloadReport = downloadReport;
     //vm.showSearchHelp = showSearchHelp;
 
     $scope.$on('$destroy', function () {
@@ -21,6 +23,7 @@
       "displayName": "TBD"
     };
     vm.reports = [];
+    vm.report = null;
 
     function getStartDate() {
       return vm.searchCriteria.startDate;
@@ -84,6 +87,7 @@
     });
 
     function searchForRoom(roomId) {
+      vm.report = null;
       // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getAvalonServiceUrl(vm.searchCriteria.roomId)
         .then(function (result) {
@@ -140,7 +144,11 @@
       // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
         vm.report = report;
-        avalonPoller = $timeout(pollAvalonReport, 2000);
+        if (report.state != 'COMPLETED' && report.state != 'FAILED') {
+          avalonPoller = $timeout(pollAvalonReport, 2000);
+        } else {
+          disableAvalonPolling();
+        }
       }).catch(function (err) {
         // TODO: Proper error handling when final API is ready
         disableAvalonPolling();
@@ -160,6 +168,18 @@
           disableAvalonPolling();
         });
     }
+
+    function progressType() {
+      if (vm.report) {
+        if (vm.report.state === 'FAILED') {
+          return 'danger';
+        } else {
+          return 'success';
+        }
+      }
+    }
+
+    function downloadReport() {}
 
   }
 
