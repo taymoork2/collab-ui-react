@@ -8,7 +8,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $timeout, $translate, $window, Authinfo, CTService) {
+  function CareChatSetupAssistantCtrl($modal, $state, $timeout, $translate, $window, Authinfo, CTService, SunlightConfigService) {
     var vm = this;
     init();
 
@@ -23,6 +23,7 @@
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
     vm.animation = 'slide-left';
+    vm.submitChatTemplate = submitChatTemplate;
 
     // Setup Assistant pages with index
     vm.states = ['name',
@@ -54,6 +55,7 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.saveCTErrorOccurred = false;
 
     /**
      * Type enumerations
@@ -369,6 +371,27 @@
       } else if (vm.selectedAgentProfile === vm.agentNames.realName) {
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
+    }
+
+    function submitChatTemplate() {
+      SunlightConfigService.createChatTemplate(vm.template)
+        .then(function (response) {
+          var responseTemplateId = response.headers('Location').split('/').pop();
+          $state.go('care.Features');
+          $modal.open({
+            templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+            size: 'lg',
+            controller: 'EmbedCodeCtrl',
+            controllerAs: 'embedCodeCtrl',
+            resolve: {
+              templateId: function () {
+                return responseTemplateId;
+              }
+            }
+          });
+        }, function (error) {
+          vm.saveCTErrorOccurred = true;
+        });
     }
 
     vm.isUserProfileSelected = function () {

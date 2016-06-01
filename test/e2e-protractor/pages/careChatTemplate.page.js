@@ -39,6 +39,10 @@ var ChatTemplateCreation = function () {
   this.customerInfo_screen_optional2 = element(by.id('optionalField2'));
   this.customerInfo_screen_optional3 = element(by.id('optionalField3'));
   this.customerInfo_attCard_redioOptional = element.all(by.css('.cs-radio')).get(1);
+  this.chatSetupFinishBtn = element(by.id('chatSetupFinishBtn'));
+  this.careChatSetupWizard = element(by.css('careChatSetup'));
+  this.embedCodeModal = element(by.id('embedCodeModalDiv'));
+  this.copyEmbedScriptBtn = element(by.id('generateScriptBtn'));
 };
 
 module.exports = ChatTemplateCreation;
