@@ -7,12 +7,12 @@
 
   <div class="ct-customer ct-sa-content">
     <cs-card-layout block-view="true" class="cardScroll">
-      <cs-card>
+      <cs-card class="ct-card">
         <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
 
         <article class="ct-article header-border header-background articleHeight">
 
-          <header class="customeHeader ct-selectable-container"
+          <header class="customerHeader ct-selectable-container"
                   selectable ng-click="careChatSA.setActiveItem('welcomeHeader')">
             <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
                    class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
@@ -39,7 +39,7 @@
         </article>
       </cs-card>
 
-      <cs-card>
+      <cs-card class="ct-card">
         <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
         <article class="ct-article articleHeight">
           <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
