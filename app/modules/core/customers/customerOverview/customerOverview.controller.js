@@ -231,8 +231,7 @@
           // delete the customer
           vm.isDeleting = true;
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
-            vm.isDeleting = false;
-            // TODO: exit the overview and refresh the list of customers
+            $state.go('partnercustomers.list');
             Notification.success('customerPage.deleteOrgSuccess', {
               orgName: vm.customerName
             });
@@ -240,7 +239,7 @@
             vm.isDeleting = false;
             Notification.error('customerPage.deleteOrgError', {
               orgName: vm.customerName,
-              message: error.messageFormatted
+              message: error.data.message
             });
           });
         });
