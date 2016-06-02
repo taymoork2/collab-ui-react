@@ -1,4 +1,6 @@
-<div class="modal-header">
+<div ng-if="siteCSVModalCtrl.viewReady"
+     class="modal-header">
+     
   <button id="closeCSVImportModal" 
           type="button" 
           class="close"
@@ -77,9 +79,9 @@
 							<i class="icon icon-upload icon-3x icon-export-import"></i>
 						</label>
 						
-						<br><b>
+						<br>
 						
-						<span translate='siteList.siteCsvImportLinkLabel'></span></b>
+						<b><span translate='siteList.siteCsvImportLinkLabel'></span></b>
 						
 						<br><br>
 						

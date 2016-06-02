@@ -32,6 +32,7 @@
     vm.resetFile = resetFile;
     vm.startExport = startExport;
     vm.startImport = startImport;
+    vm.viewReady = true;
 
     function onFileTypeError() {
       displayResult(
