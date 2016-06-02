@@ -125,7 +125,7 @@
       sortable: false,
     });
 
-    vm.gridOptions.columnDefs.push({
+  /*  vm.gridOptions.columnDefs.push({
       field: 'siteCSV',
       displayName: $translate.instant('siteList.siteCsvColumnHeader'),
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
@@ -133,7 +133,7 @@
       sortable: false,
       width: '25%'
     });
-
+*/
     /*
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
