@@ -1482,15 +1482,16 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescription": "Select a subdomain that will be used to create Spark SIP addresses.",
+    "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
-    "setSipDomainCompNames": "Your organization's Spark SIP Addresses:",
+    "setSipDomainCompNames": "These subdomains can be reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
+    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -2293,6 +2294,8 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "adminManagement": "Administrator Management",
+    "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2365,6 +2368,10 @@
     "deleteOrgError": "{{orgName}} was not deleted",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
+  },
+  "customerAdminPanel": {
+    "addAdministrators": "Add Adminsitrators",
+    "assignedAdministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3634,6 +3641,16 @@
     "customerMsgTime": "10:11 AM",
     "agentEnteredStatus": "Agent has entered chat room",
     "typeNewMsg": "Type your message and press enter.",
+    "feedbackQuery": "Are you satisfied with your chat experience?",
+    "rating": "Rating {{index}}",
+    "rating1Text": "Not at all",
+    "rating2Text": "Moderately",
+    "rating3Text": "Absolutely",
+    "ratingHintText": "Hint Text",
+    "ratingComment": "Add comments",
+    "submitFeedbackBtn": "Submit Feedback",
+    "noThanksBtn": "No Thanks",
+
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
