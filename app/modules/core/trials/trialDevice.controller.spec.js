@@ -395,6 +395,35 @@ describe('Controller: TrialDeviceController', function () {
       });
       expect(valid).toBe(true);
     });
+
+  });
+
+  describe('total device quantity calculation', function () {
+
+    it('should calculate total quantity 0 when nothing is enabled', function () {
+
+      var total = controller.getTotalQuantity();
+      expect(total).toBe(0);
+    });
+
+    it('should calculate total quantity correcty when not 0', function () {
+
+      // default data has quality 3 of CISCO_8865 and 2 of CISCO_SX10
+      bard.mockService(TrialCallService, {
+        getData: trialData.enabled.trials.callTrial,
+      });
+
+      bard.mockService(TrialRoomSystemService, {
+        getData: trialData.enabled.trials.roomSystemTrial,
+      });
+
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      var total = controller.getTotalQuantity();
+      expect(total).toBe(5);
+
+    });
   });
 
   describe('checkbox validation', function () {
@@ -425,62 +454,6 @@ describe('Controller: TrialDeviceController', function () {
         }
       });
       expect(valid).toBe(false);
-    });
-  });
-
-  describe('shipping address fields', function () {
-    it('should be readonly when quantity is greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 8);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeTruthy();
-      });
-    });
-
-    it('should be readonly when quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 1);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeTruthy();
-      });
-    });
-
-    it('should be readonly when device quantity is greater than 5', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(6, 6);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeTruthy();
-      });
-    });
-
-    it('should be readonly when device quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(1, 1);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeTruthy();
-      });
-    });
-
-    it('should be enabled when quantity is 2 or greater', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 2);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeFalsy();
-      });
-    });
-
-    it('should be enabled when device quantity does not exceed 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 7);
-      controller.toggleShipFields();
-
-      _.forEach(controller.shippingFields, function (field) {
-        expect(field.templateOptions.disabled).toBeFalsy();
-      });
     });
   });
 });

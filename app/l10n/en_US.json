@@ -1379,13 +1379,26 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
+    "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
     }
   },
   "firstTimeWizard": {
@@ -1469,15 +1482,16 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescription": "Select a subdomain that will be used to create Spark SIP addresses.",
+    "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
-    "setSipDomainCompNames": "Your organization's Spark SIP Addresses:",
+    "setSipDomainCompNames": "These subdomains can be reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
+    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -2142,6 +2156,7 @@
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
+      "customerTimezone": "Customer Time Zone",
       "default": "Set as default",
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
@@ -2230,6 +2245,9 @@
         "siteFail": "Site was not created"
       }
     },
+    "finish": {
+      "title": "Congratulations!"
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
@@ -2245,6 +2263,7 @@
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "licenseQuantity": "Licenses Quantity",
+    "licenseCount": "License Count",
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
@@ -2259,7 +2278,8 @@
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "trialDuration": "Trial Duration"
   },
 
   "status": {
@@ -2274,6 +2294,8 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "adminManagement": "Administrator Management",
+    "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2346,6 +2368,10 @@
     "deleteOrgError": "{{orgName}} was not deleted",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
+  },
+  "customerAdminPanel": {
+    "addAdministrators": "Add Adminsitrators",
+    "assignedAdministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2481,7 +2507,6 @@
   },
   "mohManagement": {
     "title": "Media On Hold",
-    "subtitle": "New copy to come from Ahmed.",
     "newPlaylistButton": "New Playlist",
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
@@ -3476,7 +3501,7 @@
     "aaDependsTitle": "Auto Attendant Dependents",
     "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
-    "deleteFeature": "Delete {{ featureType }}",
+    "deleteFeature": "Delete",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",
@@ -3493,6 +3518,7 @@
     "allLines": "All",
     "unassignedLines": "Unassigned",
     "assignedLines": "Assigned",
+    "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
@@ -3500,7 +3526,10 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
-    "getCountError": "Failed to fetch record counts."
+    "getCountError": "Failed to fetch record counts.",
+    "phoneNumbers": "Phone Numbers",
+    "assignedTo": "Assigned to",
+    "inProgress": "In Progress"
   },
 
   "messengerCiSync": {

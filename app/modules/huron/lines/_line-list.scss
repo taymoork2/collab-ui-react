@@ -6,21 +6,23 @@
   @extend %grid-subheader;
 
   & .ui-grid {
-    & .internalNumberColumn {
+    & .internalNumberColumn, .externalNumberColumn {
       text-align: center;
     }
     .ui-grid-row  {
       &:hover {
         background-color: transparent;
       }
-  }
+    }
   }
 
   &.ui-grid-cell:first-child ,
-  .ui-grid-header-cell:first-child  {
+  .ui-grid-header-cell {
     text-align: center;
   }
-
+  .ui-grid-header-cell:last-child  {
+    text-align: left;
+  }
 }
 
 .line-list .page-sub-header .export-lines i {
