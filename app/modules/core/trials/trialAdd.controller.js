@@ -12,6 +12,7 @@
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
+    var careTemplateOptionId = 'careTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
     vm.trialData = TrialService.getData();
@@ -20,11 +21,13 @@
     vm.emailError = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
+    vm.showCare = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
+    vm.careTrial = vm.trialData.trials.careTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.trialStates = [{
@@ -176,6 +179,40 @@
       }
     }];
 
+    // Care Trial
+    vm.careFields = [{
+      model: vm.careTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        id: careTemplateOptionId,
+        label: $translate.instant('trials.care')
+      },
+      hideExpression: function () {
+        return !vm.showCare;
+      },
+    }, {
+      model: vm.careTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialCareLicenseCount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.careTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.careTrial.enabled;
+        }
+      }
+    }];
+
     vm.licenseCountFields = [{
       model: vm.details,
       key: 'licenseCount',
@@ -234,7 +271,8 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -249,6 +287,11 @@
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
+        }
+
+        vm.careTrial.enabled = results[3];
+        if (vm.careTrial.enabled === true) {
+          vm.showCare = true;
         }
 
         // TODO: US12063 overrides using this var but requests code to be left in for now

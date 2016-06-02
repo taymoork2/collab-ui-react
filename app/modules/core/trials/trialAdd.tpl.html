@@ -43,6 +43,11 @@
           <formly-form model="trial.trialData.trials" fields="trial.callFields"></formly-form>
         </div>
 
+        <div class="sub-section" ng-if="trial.showCare">
+          <h5 class="sub-section__label" translate="subscriptions.care"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.careFields"></formly-form>
+        </div>
+
         <div class="sub-section" ng-if="trial.showRoomSystems">
           <h5 class="sub-section__label" translate="subscriptions.room"></h5>
           <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields"></formly-form>

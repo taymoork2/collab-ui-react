@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -8,7 +8,7 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
+      'TrialCallService', 'TrialCareService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
   });
 
   beforeEach(function () {
@@ -90,6 +90,9 @@ describe('Service: Trial Service:', function () {
         });
         bard.mockService(TrialCallService, {
           getData: trialData.enabled.trials.callTrial
+        });
+        bard.mockService(TrialCareService, {
+          getData: trialData.enabled.trials.careTrial
         });
         bard.mockService(TrialRoomSystemService, {
           getData: trialData.enabled.trials.roomSystemTrial

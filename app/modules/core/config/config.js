@@ -69,7 +69,8 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
-        pstn: 'PSTN'
+        pstn: 'PSTN',
+        care: 'CARE'
       },
 
       //WARNING: Deprecated, use offerTypes
