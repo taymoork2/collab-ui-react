@@ -2090,7 +2090,7 @@
             }
           })
           .state('cluster-settings-page', {
-            url: '/services/resource/settings/:clusterid',
+            url: '/services/resource/settings/:id',
             templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
             controller: 'FusionResourceSettingsController',
             controllerAs: 'resourceSetting',
