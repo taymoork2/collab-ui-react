@@ -128,6 +128,7 @@
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
       readonlyAdmin: 'atlas-read-only-admin',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'

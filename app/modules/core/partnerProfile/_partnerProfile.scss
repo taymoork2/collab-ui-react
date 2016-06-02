@@ -46,18 +46,6 @@
     text-align: left;
   }
 
-  .radio-input-spacing {
-    align-items: flex-start;
-
-    &:before {
-      margin-top: calc((#{$input-height-base} / 2) - 10px)
-    }
-
-    > input, .radio-input-flex {
-      flex: 1;
-    }
-  }
-
   background: $white;
 
   & .form-section {
@@ -92,28 +80,6 @@
 
   .cisco-rep-panel {
     @include vr-spacing(mb, 1);
-  }
-
-  .drop-box {
-    display: inline-block;
-    width: calc(100% - 2rem);
-
-    @include vr-spacing(mb, 0.25);
-
-    @include vr-spacing(p, 0.25);
-    height: 150px;
-    background-color: $brand-white;
-    border: 1px solid $gray-light;
-    border-radius: 3px;
-    color: $gray-light;
-
-    &.dragover {
-      border-color: $brand-primary;
-    }
-
-    &.dragover-error {
-      border-color: $brand-danger;
-    }
   }
 
   .thumbnail {

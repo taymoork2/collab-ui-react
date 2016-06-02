@@ -1,0 +1,99 @@
+<ng-form name="brandingForm" isolate-form="partnerProfileForm" ng-controller="BrandingCtrl as bctrl" class="branding branding-wording">
+  <!-- branding logo upload -->
+  <div ng-if="isPartner || allowCustomerLogos">
+    <div id="brandingLogoPanel" class="small-12 columns optional-row">
+      <h4 translate="branding.customTitle"></h4>
+      <div class="form-spacing form-group">
+        <span ng-if="!isPartner"  translate="branding.customInfo"></span>
+        <span ng-if="isPartner"  translate="branding.partnerInfo"></span>
+      </div>
+    </div>
+    <div class="row form-spacing collapse-both">
+      <div class="small-12 columns form-group">
+        <div class="cs-radio-group">
+          <div class="cs-input-group cs-input-radio">
+            <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
+            <label for="partnerLogoRadio">
+              <span ng-if="isPartner" translate="branding.useCiscoLogo"></span>
+              <span ng-if="!isPartner" translate="branding.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+              <a ng-if="!isPartner" ng-click=showBrandingExample('Partner') translate="branding.exampleLink"></a>
+            </label>
+          </div>
+
+          <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
+            <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+            <label for="customLogoRadio">
+              <span translate="branding.useOwnLogo"></span>
+              <a ng-if="isPartner" ng-click=showBrandingExample('Partner') translate="branding.exampleLink"></a>
+              <a ng-if="!isPartner" ng-click=showBrandingExample('Tenant') translate="branding.exampleLink"></a>  
+            </label>
+            <label for="customLogoRadio" class="radio-input-spacing">
+              <div class="radio-input-flex">
+                <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
+                  <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
+                  <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
+                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+                </div>
+               <!--  <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                  <span translate="partnerProfile.chooseFile"></span>
+                </button> -->
+              </div>
+            </label>
+            <p translate="branding.logoUploadNote" class="body-small radio-input-spacing"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row form-spacing" ng-if="isPartner">
+      <h4 translate="branding.tenantTitle"></h4>
+      <div class="small-12 columns cs-checkbox-group">
+        <input 
+          type="checkbox"
+          id="allowCustomerLogo"
+          name="allowCustomerLogo"
+          ng-model="allowCustomerLogos"
+          ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+          <label for="allowCustomerLogo">
+            <span translate="partnerProfile.allowCustomerLogo"></span>
+            <a ng-click=showBrandingExample('Tenant') translate="branding.exampleLink"></a>
+          </label>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div ng-if="showClientVersions">
+      <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
+        <div class="small-12 columns">
+          <div class="row collapse" ng-if="isPartner">
+            <p>
+              <h4 translate="partnerProfile.webexClientVersion"></h4>
+              <span class="badge"></span>
+            </p>
+            <cs-select
+              id="webex_client_version_drop_down"
+              ng-model="wbxclientversionselected"
+              options="wbxclientversions"
+              placeholder="wbxclientversionplaceholder"
+              on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
+              is-disabled="useLatestWbxVersion">
+            </cs-select>
+          </div>
+        </div>
+      </div>
+      <div class="row form-spacing" ng-if="isPartner">
+        <div class="small-12 columns cs-checkbox-group">
+          <input
+            cs-input
+            type="checkbox"
+            id="useLatestWbxVersion"
+            name="useLatestWbxVersion"
+            ng-model="useLatestWbxVersion"
+            ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
+            cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}"
+            cs-input-help-text="{{::'partnerProfile.WbxClientVersionOnlyOnNewSites' | translate}}">
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-form>
