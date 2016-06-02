@@ -1373,8 +1373,11 @@
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
+        "all": "All",
+        "expressway-short": "EW",
+        "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "non-expressway": "Non-Expressway"
+        "mediafusion": "Mediafusion"
       }
     }
   },
@@ -3883,8 +3886,8 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Management"
-
+          "squared-fusion-mgmt": "Management",
+          "squared-fusion-media": "Mediafusion"
         }
       }
     }
