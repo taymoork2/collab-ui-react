@@ -69,32 +69,32 @@
     vm.typeOptions = [{
       text: "email",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Work_Email"
       }
     }, {
       text: "name",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_name"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_First_Name"
       }
     }, {
       text: "category",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_category"
+        fieldSet: "cisco.base.ccc.pod",
+        fieldName: "category"
       }
     }, {
       text: "phone",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_phone"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Mobile_Phone"
       }
     }, {
       text: "id",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Customer_External_ID"
       }
     }];
 
