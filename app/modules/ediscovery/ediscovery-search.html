@@ -3,17 +3,15 @@
     <div class="main-heading">
       <h1>Search Activities</h1>
       <span class="help" ng-click="ediscoverySearchCtrl.showSearchHelp()">
-        Find all relevant data for a room
-        <i class="icon icon-help"></i>
       </span>
     </div>
 
     <div class="typeahead-large" style="text-align: left;">
-      <form class="searchInputForm">
-        <input class="fit" id="searchInput" type="search" tabindex="1" placeholder="" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true"/>
+      <!--<form class="searchInputForm">-->
+        <input class="fit" id="searchInput" type="search" tabindex="1" placeholder="Type in a room id" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
 
-        <button type="submit" tabindex="-1" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
-      </form>
+        <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom()" ng-disabled="ediscoverySearchCtrl.searchCriteria.roomId == ''"></button>
+      <!--</form>-->
 
       <div class="input-description"></div>
     </div>
