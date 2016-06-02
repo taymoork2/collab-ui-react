@@ -89,6 +89,7 @@
     });
 
     function searchForRoom(roomId) {
+      vm.roomInfo = null;
       vm.report = null;
       vm.error = "";
       vm.searchInProgress = true;
