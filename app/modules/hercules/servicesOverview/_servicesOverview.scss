@@ -25,6 +25,10 @@
     width: 100%;
     width: calc(100% + 2rem);
 
+    .cluster-list.header-bar header:after {
+      border-top-color: transparent !important;
+    }
+
     h5 {
       margin-bottom: 0;
       margin-left: 0.5rem;

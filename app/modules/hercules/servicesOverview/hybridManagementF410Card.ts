@@ -11,21 +11,6 @@ namespace servicesOverview {
         name: 'servicesOverview.cards.clusterList.buttons.all',
         link: 'services/resource',
         buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.expressway',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.mediafusion',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.context',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
       }
     ];
 
@@ -42,7 +27,7 @@ namespace servicesOverview {
       super({
         name: 'servicesOverview.cards.clusterList.title',
         description: 'servicesOverview.cards.clusterList.description',
-        cardClass: 'context',
+        cardClass: 'cluster-list',
         cardType: CardType.hybrid
       });
       this._loading = false;

@@ -3,7 +3,20 @@
 		<span class="h2">{{:: 'careChatTpl.summary' | translate }}</span>
 	</div>
 	<div class="h4 ct-title-desc">{{:: 'careChatTpl.summaryDesc' | translate }}</div>
-	<div class="ct-finish-btn-div">
-		<button cs-btn class="btn btn--primary">{{:: 'common.finish' | translate }}</button>
+	<div class="h4 ct-status-div ">
+		<div ng-if="careChatSA.saveCTErrorOccurred" class="ct-error-desc">
+			<i class="icon icon-error icon-4x"></i>
+			<div>{{:: 'careChatTpl.errorCreateChatTemplate' | translate }}</div>
+			<div >
+				<a ng-click="careChatSA.submitChatTemplate()">{{:: 'common.tryAgain' | translate }}</a>
+			</div>
+		</div>
+	</div>
+	<div class="ct-finish-btn-div " >
+		<button ng-disabled="careChatSA.saveCTErrorOccurred"
+				cs-btn id="chatSetupFinishBtn"
+				id="chatSetupFinishBtn"
+				cs-btn class="btn btn--primary"
+				ng-click="careChatSA.submitChatTemplate()">{{:: 'common.finish' | translate }}</button>
 	</div>
 </div>

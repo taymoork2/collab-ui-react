@@ -153,6 +153,10 @@
       }
     });
 
+    $scope.openSipHelpWiki = function () {
+      $window.open('https://help.webex.com/docs/DOC-7763', '_blank');
+    };
+
     $scope.handleModify = function () {
       $scope.options.modifySSO = true;
     };

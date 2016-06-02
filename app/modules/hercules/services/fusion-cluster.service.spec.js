@@ -54,6 +54,39 @@ describe('Service: FusionClusterService', function () {
         });
     });
 
+    it('should add a type property to clusters', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'c_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
+          }, {
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'mf_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
+          }, {
+            state: 'fused',
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters[0].type).toBe('expressway');
+          expect(clusters[1].type).toBe('mediafusion');
+          expect(clusters[2].type).toBe(undefined);
+        });
+    });
+
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
@@ -71,6 +104,14 @@ describe('Service: FusionClusterService', function () {
               runningState: 'stopped',
               hostname: 'b.elg.no'
             }]
+          }, {
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'mf_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
           }]
         });
       FusionClusterService.getAll()
@@ -79,6 +120,7 @@ describe('Service: FusionClusterService', function () {
           expect(clusters[0].servicesStatuses[0].total).toBe(2);
           expect(clusters[0].servicesStatuses[1].total).toBe(0);
           expect(clusters[0].servicesStatuses[2].total).toBe(0);
+          expect(clusters[1].servicesStatuses[0].total).toBe(1);
         });
     });
   });
