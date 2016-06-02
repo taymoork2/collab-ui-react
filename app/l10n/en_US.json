@@ -3671,7 +3671,8 @@
     },
     "summary": "Summary",
     "summaryDesc": "Configuration Summary",
-    "copyEmbedCode": "Copy Embed Code"
+    "copyEmbedCode": "Copy Embed Code",
+    "errorCreateChatTemplate": "Error creating chat template."
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
