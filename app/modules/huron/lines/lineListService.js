@@ -13,36 +13,9 @@
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
-      getCount: getCount,
       exportCSV: exportCSV
     };
     return service;
-
-    function getCount(searchStr) {
-      var wildcard = "%";
-
-      var queryString = {
-        'customerId': customerId
-      };
-
-      if (searchStr.length > 0) {
-        queryString.userid = wildcard + searchStr + wildcard;
-        queryString.internalnumber = wildcard + searchStr + wildcard;
-        queryString.externalnumber = wildcard + searchStr + wildcard;
-
-        queryString.predicatejoinoperator = "or";
-      }
-
-      return UserLineAssociationCountService.query(queryString)
-        .$promise.then(function (response) {
-          if (response === undefined || response[0] === undefined) {
-            return $q.reject(response);
-          }
-          // there should only be one element in the response array; take the first one
-          // because it is the one we want
-          return response[0];
-        });
-    }
 
     function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
       var wildcard = "%";
@@ -74,9 +47,8 @@
 
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
       var orderPromise = PstnSetupService.listPendingOrders(customerId);
-      var featurePromise = FeatureToggleService.supports('huron-order-management');
 
-      return $q.all([linesPromise, orderPromise, featurePromise])
+      return $q.all([linesPromise, orderPromise])
         .then(function (results) {
           var lines = results[0];
           var orders = results[1];
@@ -84,7 +56,7 @@
           var pendingLines = [];
           var nonProvisionedPendingLines = [];
 
-          if (!results[2] || lines.length === 0) {
+          if (lines.length === 0) {
             return lines;
           }
 

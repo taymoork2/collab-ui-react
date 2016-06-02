@@ -109,22 +109,6 @@ describe('Service: LineListService', function () {
     });
   });
 
-  describe('getCount', function () {
-    it('should use default search criteria', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociationcounts').respond([count]);
-      LineListService.getCount('').then(function (response) {
-        expect(angular.equals(response, count)).toBe(true);
-      });
-    });
-
-    it('should set search filter, search criteria', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociationcounts?externalnumber=%25asuna%25&internalnumber=%25asuna%25&predicatejoinoperator=or&userid=%25asuna%25').respond([count]);
-      LineListService.getCount('asuna').then(function (response) {
-        expect(angular.equals(response, count)).toBe(true);
-      });
-    });
-  });
-
   it('should exportCSV', function () {
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=internalnumber-asc').respond(lines);
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=101&order=internalnumber-asc').respond([]);
