@@ -15,16 +15,20 @@
   <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
   <label for="customSupportUrlBox" translate="globalSettings.support.problemReportsToCustomUrl"/>
   <div class="radio-input-flex">
-    <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{ctrl.troubleUrl | translate}}"
-           ng-model="ctrl.supportUrl" ng-disabled="!ctrl.useCustomSupportUrl">
+    <input type="text" id="partnerSupportUrl" class="form-control"
+           placeholder="{{ctrl.placeHolder.troubleUrl | translate}}"
+           ng-model="ctrl.customSupport.url" ng-disabled="!ctrl.useCustomSupportUrl">
                 <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
-                          placeholder="{{ctrl.troubleText | translate}}" ng-model="ctrl.supportText"
+                          placeholder="{{ctrl.placeHolder.troubleText | translate}}" ng-model="ctrl.customSupport.text"
                           ng-disabled="!ctrl.useCustomSupportUrl">
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
     <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-    <button ng-if="ctrl.useCustomSupportUrlDirty" translate="common.save" ng-click="ctrl.saveUseCustomSupportUrl()"
-            loading="ctrl.orgProfileSaveLoad"></button>
+    <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomSupportUrlDirty"
+            ng-click="ctrl.saveUseCustomSupportUrl()"
+            loading="ctrl.orgProfileSaveLoad">{{"common.save" | translate}}
+    </button>
+
   </div>
 
 </div>
@@ -40,11 +44,11 @@
   <div class="cs-input-group cs-input-radio" id="helpPartnerPanel">
 
     <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
-           placeholder="{{ctrl.helpUrlText | translate}}" ng-model="ctrl.helpUrl" ng-disabled="!ctrl.useCustomHelpSite">
+           placeholder="{{ctrl.placeHolder.helpUrlText | translate}}" ng-model="ctrl.customHelpSite.url"
+           ng-disabled="!ctrl.useCustomHelpSite">
 
   </div>
-  <button ng-if="ctrl.useCustomHelpSiteDirty" translate="common.save" ng-click="ctrl.saveUseCustomHelpSite()"
-          loading="ctrl.orgProfileSaveLoad">
-    <span translate="common.save"></span>
+  <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomHelpSiteDirty" ng-click="ctrl.saveUseCustomHelpSite()"
+          loading="ctrl.savingProgress">{{"common.save" | translate}}
   </button>
 </div>

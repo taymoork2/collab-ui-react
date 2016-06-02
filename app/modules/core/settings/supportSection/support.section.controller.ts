@@ -1,16 +1,13 @@
 namespace globalsettings {
   export class SupportSettings {
-    private _useCustomSupportUrl = false;
 
-    private oldUseCustomSupportUrl = false;
-    private _useCustomHelpSite = false;
-    private oldUseCustomHelpSite = false;
-    private supportUrl;
-    private supportText;
-    private oldSupportUrl;
-    private oldSupportText;
-    private helpUrl;
-    private oldHelpUrl;
+    private customSupport = {enable: false, url: null, text: null};
+    private oldCustomSupport = {enable: false, url: null, text: null};
+
+    private customHelpSite = {enable: false, url: null};
+    private oldCustomHelpSite = {enable: false, url: null};
+
+    public placeHolder = {};
     private isCiscoSupport = false;
     private isCiscoHelp = false;
 
@@ -25,57 +22,59 @@ namespace globalsettings {
       cisco: false,
       ext: true
     };
-    private grant;
-    private troubleUrl;
-    private troubleText;
-    private helpUrlText;
-    private partnerProvidedText;
-    public orgProfileSaveLoad = false;
-    private isManaged = false;
 
+    public savingProgress = false;
+
+    private partners;
+    private representatives;
+
+    public get isManaged() {
+      return _.some(this.representatives) || _.some(this.partners);
+    }
 
     get useCustomHelpSite() {
-      return this._useCustomHelpSite;
+      return this.customHelpSite.enable;
     }
 
     set useCustomHelpSite(value) {
-      this._useCustomHelpSite = value;
+      this.customHelpSite.enable = value;
       if (value === this.helpSiteInfo.cisco) {
-        this.helpUrl = '';
+        this.customHelpSite.url = '';
       }
     }
 
     get useCustomHelpSiteDirty() {
-      return this._useCustomHelpSite != this.oldUseCustomHelpSite || (this._useCustomHelpSite && this.helpUrl != this.oldHelpUrl);
+      return this.customHelpSite.enable != this.oldCustomHelpSite.enable || (this.customHelpSite.enable && this.customHelpSite.url != this.oldCustomHelpSite.url);
     }
 
     get useCustomSupportUrl() {
-      return this._useCustomSupportUrl;
+      return this.customSupport.enable;
     }
 
     set useCustomSupportUrl(value) {
-      this._useCustomSupportUrl = value;
+      this.customSupport.enable = value;
       if (value === this.problemSiteInfo.cisco) {
-        this.supportUrl = '';
-        this.supportText = '';
+        this.customSupport.url = '';
+        this.customSupport.text = '';
       }
     }
 
     get useCustomSupportUrlDirty():boolean {
-      return this._useCustomSupportUrl != this.oldUseCustomSupportUrl || ( this._useCustomSupportUrl && (this.supportUrl != this.oldSupportUrl || this.oldSupportText != this.supportText));
+      return this.customSupport.enable != this.oldCustomSupport.enable
+        || ( this.customSupport.enable && (this.customSupport.url != this.oldCustomSupport.url || this.oldCustomSupport.text != this.customSupport.text));
     }
 
     get isPartner():boolean {
       return this.Authinfo.isPartner();
     }
 
-    static get appType():string {
+    public static get appType():string {
       return 'Squared';
     }
 
 
     /* @ngInject */
-    constructor(private Authinfo, private Orgservice, private Notification, $translate, private UserListService) {
+    constructor(private Authinfo, private Orgservice, private Notification, $translate, private UserListService, private Log) {
 
       this.orgId = Authinfo.getOrgId();
 
@@ -86,53 +85,68 @@ namespace globalsettings {
 
 
     private initTexts($translate) {
-      this.grant = $translate.instant('partnerProfile.grant');
-      this.troubleUrl = $translate.instant('partnerProfile.troubleUrl');
-      this.troubleText = $translate.instant('partnerProfile.troubleText');
-      this.helpUrlText = $translate.instant('partnerProfile.helpUrlText');
-      this.partnerProvidedText = $translate.instant('partnerProfile.partnerProvidedText');
+      this.placeHolder = {
+        // grant: $translate.instant('partnerProfile.grant'),
+        troubleUrl: $translate.instant('partnerProfile.troubleUrl'),
+        troubleText: $translate.instant('partnerProfile.troubleText'),
+        helpUrlText: $translate.instant('partnerProfile.helpUrlText')
+      };
     }
 
 
     private initOrgInfo() {
 
-      this.UserListService.listPartners(this.orgId, function (data) {
-        for (var partner in data.partners) {
-          var currentPartner = data.partners[partner];
-          if (!this.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
-            this.partner = currentPartner;
-            this.isManaged = true;
-          } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
-            this.rep = currentPartner;
-            this.isManaged = true;
-          }
+      this.UserListService.listPartners(this.orgId, (data:{partners:Array<Partner>})=> {
+        if (_.isEmpty(data.partners)) {
+          return;
         }
+        this.representatives = _.filter(data.partners, (rep)=> {
+          return _.endsWith(rep.userName, '@cisco.com');
+        });
+        this.partners = _.filter(data.partners, (rep)=> {
+          return !_.endsWith(rep.userName, '@cisco.com')
+        });
       });
+
+      // this.UserListService.listPartners(this.orgId, function (data) {
+      //   data.partners.forEach((partner)=> {
+      //     // for (let partner:string in data.partners) {
+      //     var currentPartner = partner;//data.partners[partner];
+      //     if (!this.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
+      //       // this.partner = currentPartner;
+      //       this.isManaged = true;
+      //     } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
+      //       // this.rep = currentPartner;
+      //       this.isManaged = true;
+      //     }
+      //     // }
+      //   });
+      // });
+
 
       this.Orgservice.getOrg((data, status) => {
         if (data.success) {
           let settings = data.orgSettings;
-          console.log(settings);
 
           if (!_.isEmpty(settings.reportingSiteUrl)) {
-            this._useCustomSupportUrl = true;
-            this.oldUseCustomSupportUrl = true;
-            this.supportUrl = settings.reportingSiteUrl;
-            this.oldSupportUrl = this.supportUrl;
+            this.customSupport.enable = true;
+            this.oldCustomSupport.enable = true;
+            this.customSupport.url = settings.reportingSiteUrl;
+            this.oldCustomSupport.url = this.customSupport.url;
           }
 
           if (!_.isEmpty(settings.reportingSiteDesc)) {
-            this._useCustomSupportUrl = true;
-            this.oldUseCustomSupportUrl = true;
-            this.supportText = settings.reportingSiteDesc;
-            this.oldSupportText = this.supportText;
+            this.customSupport.enable = true;
+            this.oldCustomSupport.enable = true;
+            this.customSupport.text = settings.reportingSiteDesc;
+            this.oldCustomSupport.text = this.customSupport.text;
           }
 
           if (!_.isEmpty(settings.helpUrl)) {
-            this._useCustomHelpSite = true;
-            this.oldUseCustomHelpSite = true;
-            this.helpUrl = settings.helpUrl;
-            this.oldHelpUrl = this.helpUrl;
+            this.customHelpSite.enable = true;
+            this.oldCustomHelpSite.enable = true;
+            this.customHelpSite.url = settings.helpUrl;
+            this.oldCustomHelpSite.url = this.customHelpSite.url;
           }
 
           if (!_.isUndefined(settings.isCiscoSupport)) {
@@ -143,10 +157,8 @@ namespace globalsettings {
             this.isCiscoHelp = settings.isCiscoHelp;
           }
 
-
-          // this.resetForm();
         } else {
-          // Log.debug('Get existing org failed. Status: ' + status);
+          this.Log.debug('Get existing org failed. Status: ' + status);
         }
 
       }, this.orgId, true);
@@ -154,11 +166,11 @@ namespace globalsettings {
 
     public saveUseCustomSupportUrl() {
       if (this.customSupportUrlIsValid()) {
-        let isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
+        // let isCiscoHelp = this.isManaged ? this.isCiscoHelp : this.useCustomHelpSite === false;
         let isCiscoSupport = this.isManaged ? this.isCiscoSupport : this.useCustomSupportUrl === false;
         var settings = {
-          reportingSiteUrl: this.supportUrl || null,
-          reportingSiteDesc: this.supportText || null,
+          reportingSiteUrl: this.customSupport.url || null,
+          reportingSiteDesc: this.customSupport.text || null,
           // helpUrl: this.helpUrl || null,
           // isCiscoHelp: isCiscoHelp,
           isCiscoSupport: isCiscoSupport,
@@ -175,9 +187,9 @@ namespace globalsettings {
     }
 
     private resetCustomSupportUrlForm() {
-      this.oldUseCustomSupportUrl = this.useCustomSupportUrl;
-      this.oldSupportUrl = this.supportUrl;
-      this.oldSupportText = this.supportText;
+      this.oldCustomSupport.enable = this.useCustomSupportUrl;
+      this.oldCustomSupport.url = this.customSupport.url;
+      this.oldCustomSupport.text = this.customSupport.text;
     }
 
     public saveUseCustomHelpSite() {
@@ -187,7 +199,7 @@ namespace globalsettings {
         let settings = {
           // reportingSiteUrl: this.supportUrl || null,
           // reportingSiteDesc: this.supportText || null,
-          helpUrl: this.helpUrl || null,
+          helpUrl: this.customHelpSite.url || null,
           isCiscoHelp: isCiscoHelp,
           // isCiscoSupport: isCiscoSupport,
           // allowReadOnlyAccess: this.allowReadOnlyAccess,
@@ -203,32 +215,31 @@ namespace globalsettings {
     }
 
     private resetCustomHelpSiteForm() {
-      this.oldHelpUrl = this.helpUrl;
-      this.oldUseCustomHelpSite = this.useCustomHelpSite;
+      this.oldCustomHelpSite.url = this.customHelpSite.url;
+      this.oldCustomHelpSite.enable = this.useCustomHelpSite;
     }
 
     private customSupportUrlIsValid() {
       // if user is attempting to use a blank support url
-      return !(this.supportUrl === '' && this.useCustomSupportUrl !== this.problemSiteInfo.cisco);
+      return !(this.customSupport.url === '' && this.customSupport.enable !== this.problemSiteInfo.cisco);
     }
 
     private customHelpSiteIsValid() {
       // if user is attempting to use a blank help url
-      return !(this.helpUrl === '' && this.useCustomHelpSite !== this.helpSiteInfo.cisco);
+      return !(this.customHelpSite.url === '' && this.useCustomHelpSite !== this.helpSiteInfo.cisco);
     }
 
     private updateOrgSettings(orgId, settings, onSuccess) {
-      this.orgProfileSaveLoad = true;
+      this.savingProgress = true;
       this.Orgservice.setOrgSettings(orgId, settings)
         .then(onSuccess)
         .then(this.notifySuccess.bind(this))
-        // .then(this.resetForm)
         .catch(this.notifyError.bind(this))
         .finally(this.stopLoading.bind(this));
     }
 
     stopLoading() {
-      this.orgProfileSaveLoad = false;
+      this.savingProgress = false;
     }
 
     private notifySuccess() {
@@ -241,6 +252,12 @@ namespace globalsettings {
       });
     }
 
+  }
+
+  class Partner {
+    userName:string;
+    displayName:string;
+    name:{givenName:string,familyName:string}
   }
   angular
     .module('Core')

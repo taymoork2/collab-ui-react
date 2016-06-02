@@ -1,6 +1,6 @@
 namespace globalsettings {
 
-  fdescribe('Controller: PartnerProfileCtrl', function () {
+  describe('Controller: PartnerProfileCtrl', ()=> {
     let $scope, $controller, controller, $q;
     let Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion;
 
@@ -44,19 +44,19 @@ namespace globalsettings {
       $scope.$apply();
     }
 
-    describe('validation()', function () {
+    describe('validation()', ()=> {
 
-      describe('saving org settings data', function () {
+      describe('saving org settings data', ()=> {
 
-        it('saves data via Orgservice', function () {
+        it('saves data via Orgservice', ()=> {
           controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
           controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
-          controller.supportUrl = 'supportUrl';
-          controller.supportText = 'this is support text';
+          controller.customSupport.url = 'supportUrl';
+          controller.customSupport.text = 'this is support text';
           controller.allowReadOnlyAccess = false;
           controller.useCustomHelpSite = controller.helpSiteInfo.ext;
-          controller.helpUrl = 'helpUrl';
+          controller.customHelpSite.url = 'helpUrl';
           controller.saveUseCustomHelpSite();
           controller.saveUseCustomSupportUrl();
           let expectedOrgSettingsPart1 = {
@@ -84,22 +84,22 @@ namespace globalsettings {
 
       });
 
-      describe('should save successfully', function () {
+      describe('should save successfully', ()=> {
         afterEach(()=> {
           saveAndNotifySuccess();
         });
 
-        it('with default cisco options', function () {
+        it('with default cisco options', ()=> {
           controller.useCustomSupportUrl = controller.problemSiteInfo.cisco;
           controller.useCustomHelpSite = controller.helpSiteInfo.cisco;
         });
 
-        it('with custom problem site', function () {
+        it('with custom problem site', ()=> {
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
           controller.supportUrl = 'supportUrl';
         });
 
-        it('with custom help site', function () {
+        it('with custom help site', ()=> {
           controller.useCustomHelpSite = controller.helpSiteInfo.ext;
           controller.helpUrl = 'helpUrl';
         });
@@ -107,14 +107,14 @@ namespace globalsettings {
         function saveAndNotifySuccess() {
           controller.saveUseCustomHelpSite();
           controller.saveUseCustomSupportUrl();
-          expect(controller.orgProfileSaveLoad).toEqual(true);
+          expect(controller.savingProgress).toEqual(true);
           $scope.$apply();
-          expect(controller.orgProfileSaveLoad).toEqual(false);
+          expect(controller.savingProgress).toEqual(false);
           expect(Notification.success).toHaveBeenCalledWith('partnerProfile.processing');
         }
       });
 
-      describe('should notify error response', function () {
+      describe('should notify error response', ()=> {
         beforeEach(initSpyFailure);
 
         it('when update fails', saveAndNotifyErrorResponse);
@@ -126,24 +126,24 @@ namespace globalsettings {
         function saveAndNotifyErrorResponse() {
           controller.saveUseCustomHelpSite();
           controller.saveUseCustomSupportUrl();
-          expect(controller.orgProfileSaveLoad).toEqual(true);
+          expect(controller.savingProgress).toEqual(true);
           $scope.$apply();
-          expect(controller.orgProfileSaveLoad).toEqual(false);
+          expect(controller.savingProgress).toEqual(false);
           expect(Notification.errorResponse).toHaveBeenCalled();
         }
       });
 
-      describe('should notify validation error', function () {
+      describe('should notify validation error', ()=> {
         afterEach(saveAndNotifyError);
 
-        it('when picking a custom problem site without a value', function () {
+        it('when picking a custom problem site without a value', ()=> {
           controller.useCustomSupportUrl = controller.problemSiteInfo.ext;
-          controller.supportUrl = '';
+          controller.customSupport.url = '';
         });
 
-        it('when picking a custom help site without a value', function () {
+        it('when picking a custom help site without a value', ()=> {
           controller.useCustomHelpSite = controller.helpSiteInfo.ext;
-          controller.helpUrl = '';
+          controller.customHelpSite.url = '';
         });
 
         function saveAndNotifyError() {
