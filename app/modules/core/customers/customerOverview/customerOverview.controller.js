@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -31,6 +31,7 @@
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.atlasPartnerAdminFeatureToggle = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -39,15 +40,15 @@
     var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-      if (result) {
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials), FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)])
+      .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
             id: Config.offerTypes.roomSystems
           })) {
-          vm.showRoomSystems = result;
+          vm.showRoomSystems = result[0];
         }
-      }
-    });
+        vm.atlasPartnerAdminFeatureToggle = result[1];
+      });
 
     init();
 

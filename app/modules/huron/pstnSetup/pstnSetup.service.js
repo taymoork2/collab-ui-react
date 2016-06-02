@@ -285,7 +285,8 @@
               var newOrder = {
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 response: _.get(order, 'response'),
-                operation: _.get(order, 'operation')
+                operation: _.get(order, 'operation'),
+                statusMessage: _.get(order, 'statusMessage')
               };
               //translate order status
               if (order.status === PROVISIONED) {

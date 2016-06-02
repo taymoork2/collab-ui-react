@@ -1,0 +1,27 @@
+<div class="modal-header deregister-expressway-modal">
+  <span class="modal-title" translate="hercules.deactivateServiceSingleCluster.title" translate-values="{serviceName: deactivateServiceOnExpresswayModal.localizedServiceName}"></span>
+</div>
+
+<div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
+
+  <p translate="hercules.deactivateServiceSingleCluster.intro"></p>
+
+  <p>
+    <i ng-class="deactivateServiceOnExpresswayModal.getIconClassForService() + ' icon-2x serviceicon'"></i>
+    <strong translate="{{deactivateServiceOnExpresswayModal.localizedServiceName}}" class="serviceicon"></strong>
+  </p>
+
+  <p translate="hercules.deactivateServiceSingleCluster.fromCluster" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName}"></p>
+
+  <p>
+    <strong translate="hercules.deactivateServiceSingleCluster.wipeSettingsWarning" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName, connectorName: deactivateServiceOnExpresswayModal.localizedConnectorName}"></strong>
+  </p>
+
+  <p translate="hercules.deactivateServiceSingleCluster.notDeregistered" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName }"></p>
+
+</div>
+
+<div class="modal-footer deregister-expressway-modal">
+  <button class="btn" ng-click="$close('cancelled')" translate="hercules.clusters.deregisterCancel"></button>
+  <button class="btn btn--alert" id="confirm" ng-click="deactivateServiceOnExpresswayModal.deactivateService()" translate="hercules.deactivateServiceSingleCluster.confirmButton"></button>
+</div>
