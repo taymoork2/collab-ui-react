@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Partner Service -', function () {
+fdescribe('Partner Service -', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $translate, $rootScope, PartnerService, TrialService, Authinfo, Config, UrlConfig;
+  var $httpBackend, $q, $rootScope, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,17 +20,20 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _TrialService_, _Config_, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$rootScope_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    $rootScope = _$rootScope_;
     $translate = _$translate_;
+    Auth = _Auth_;
+    Authinfo = _Authinfo_;
+    Config = _Config_;
     PartnerService = _PartnerService_;
     TrialService = _TrialService_;
-    Config = _Config_;
-    Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
   }));
 
   afterEach(function () {
@@ -235,6 +238,12 @@ describe('Partner Service -', function () {
     });
 
     $httpBackend.flush();
+  });
+
+  it('should successfully call getUserAuthInfo', function () {
+    PartnerService.getUserAuthInfo();
+
+    expect(Auth.getAuthorizationUrlList).toHaveBeenCalled();
   });
 
   describe('helper functions -', function () {

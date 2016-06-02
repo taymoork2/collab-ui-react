@@ -24,7 +24,7 @@
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      patchManagedOrgsList: patchManagedOrgsList,
+      patchedManagedOrgs: patchedManagedOrgs,
       getUserAuthInfo: getUserAuthInfo,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -48,7 +48,7 @@
       });
     }
 
-    function patchManagedOrgsList(uuid, orgId) {
+    function patchedManagedOrgs(uuid, customerOrgId) {
       var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
 
       var payload = {
@@ -57,7 +57,7 @@
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
         ],
         'managedOrgs': [{
-          'orgId': orgId,
+          'orgId': customerOrgId,
           'role': 'ID_Full_Admin'
         }]
       };
@@ -74,7 +74,7 @@
         if (response.status === 200) {
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
-            patchManagedOrgsList(uuid, customerOrgId);
+            patchedManagedOrgs(uuid, customerOrgId);
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
             });
