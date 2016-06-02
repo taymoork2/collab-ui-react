@@ -1156,6 +1156,14 @@
       },
       "label": "ACTIVATE AND BEGIN SETUP"
     },
+    "deactivateServiceSingleCluster": {
+      "title": "Deactivate {{serviceName}}",
+      "intro": "You are about to remove the following Hybrid Service:",
+      "fromCluster": "from the Expressway cluster {{clusterName}}.",
+      "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
+      "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "confirmButton": "Confirm Deactivation"
+    },
     "clusters": {
       "listing": {
         "no_clusters_heading": "No Cisco Expressway clusters registered",
@@ -1222,6 +1230,16 @@
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector"
     },
+    "connectorNameFromConnectorType": {
+      "c_cal": "Calendar Connector",
+      "c_ucmc": "Call Connector",
+      "c_mgmt": "Management Connector"
+    },
+    "serviceNameFromConnectorType": {
+      "c_cal": "Calendar Service",
+      "c_ucmc": "Call Service",
+      "c_mgmt": "Management Service"
+    },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -1277,6 +1295,22 @@
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+    },
+    "expresswayClusterSettings": {
+      "pageTitle": "{{clusterName}} settings",
+      "releasechannelHeader": "Users and Release Channel",
+      "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
+      "releasechannelUsers": "Users",
+      "releasechannelReleasechannel": "Release Channel",
+      "deactivateServicesHeader": "Deactivate Services",
+      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarButton": "Deactivate Calendar",
+      "deactivateServicesCallButton": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Deregister Cluster",
+      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
+      "deregisterClusterButton": "Deregister",
+      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1373,8 +1407,11 @@
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
+        "all": "All",
+        "expressway-short": "EW",
+        "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "non-expressway": "Non-Expressway"
+        "mediafusion": "Mediafusion"
       }
     }
   },
@@ -1382,6 +1419,11 @@
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
+    "searchError": "Your search for '{{roomId}}' returned 0 matches",
+    "dateError": {
+      "StartDateMustBeforeEndDate": "Start date must be before end date",
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+    },
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
       "title": "Activity Reports Help"
@@ -1399,7 +1441,8 @@
       "BUSY": "Busy",
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
-    }
+    },
+    "reportTimeout": "Timeout detected. Please cancel the report and try again."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
@@ -1482,15 +1525,16 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescription": "Select a subdomain that will be used to create Spark SIP addresses.",
+    "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
-    "setSipDomainCompNames": "Your organization's Spark SIP Addresses:",
+    "setSipDomainCompNames": "These subdomains can be reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
+    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -2150,7 +2194,7 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200",
+      "webexDetails": "WebEx Enterprise Edition 200 with CMR",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -2293,6 +2337,8 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "adminManagement": "Administrator Management",
+    "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2365,6 +2411,10 @@
     "deleteOrgError": "{{orgName}} was not deleted",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
+  },
+  "customerAdminPanel": {
+    "addAdministrators": "Add Adminsitrators",
+    "assignedAdministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3634,6 +3684,16 @@
     "customerMsgTime": "10:11 AM",
     "agentEnteredStatus": "Agent has entered chat room",
     "typeNewMsg": "Type your message and press enter.",
+    "feedbackQuery": "Are you satisfied with your chat experience?",
+    "rating": "Rating {{index}}",
+    "rating1Text": "Not at all",
+    "rating2Text": "Moderately",
+    "rating3Text": "Absolutely",
+    "ratingHintText": "Hint Text",
+    "ratingComment": "Add comments",
+    "submitFeedbackBtn": "Submit Feedback",
+    "noThanksBtn": "No Thanks",
+
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3654,7 +3714,8 @@
     },
     "summary": "Summary",
     "summaryDesc": "Configuration Summary",
-    "copyEmbedCode": "Copy Embed Code"
+    "copyEmbedCode": "Copy Embed Code",
+    "errorCreateChatTemplate": "Error creating chat template."
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3865,8 +3926,8 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Management"
-
+          "squared-fusion-mgmt": "Management",
+          "squared-fusion-media": "Mediafusion"
         }
       }
     }
@@ -3960,7 +4021,7 @@
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
-    "compliance": "Compliance"
+    "compliance": "Compliance Officer"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -3981,7 +4042,7 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance"
+    "Compliance_User": "Compliance Officer"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

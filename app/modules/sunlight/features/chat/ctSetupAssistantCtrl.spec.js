@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred;
+  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -27,12 +27,36 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     };
   };
 
+  var failedData = {
+    success: false,
+    status: 403,
+    Errors: [{
+      errorCode: '100106'
+    }]
+  };
+
+  var successData = {
+    success: true,
+    status: 201
+  };
+
   beforeEach(module('Sunlight'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
+
+    $provide.value("SunlightConfigService", {
+      createChatTemplate: function (data) {
+        return {
+          then: function (callback) {
+            return callback(successData);
+          }
+        };
+      }
+    });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$window_, _Authinfo_, _CTService_) {
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -40,6 +64,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $window = _$window_;
     Authinfo = _Authinfo_;
     CTService = _CTService_;
+    SunlightConfigService = _SunlightConfigService_;
+    $state = _$state_;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
@@ -111,6 +137,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     it("next button should be disabled when name is not present", function () {
       controller.template.name = '';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
+    });
+  });
+
+  describe('Feedback Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[4];
+    });
+
+    it('next and previous buttons should be enabled by default', function () {
+      controller.template.name = templateName;
+      controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
+      expect(controller.previousButton()).toEqual(true);
+      expect(controller.nextButton()).toEqual(true);
     });
   });
 
@@ -274,6 +314,70 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(isDefinedRes).toBe(false);
       isDefinedRes = controller.isDefined(testObj, "trees-16");
       expect(isDefinedRes).toBe(false);
+    });
+
+    it("should add a new category token and clear the input field when a new token is added", function () {
+      var ENTER_KEYPRESS_EVENT = {
+        which: 13
+      };
+      controller.categoryOptionTag = 'Mock Category Token';
+      var mockElementObject = jasmine.createSpyObj('element', ['tokenfield']);
+      spyOn(angular, 'element').and.returnValue(mockElementObject);
+      spyOn(controller, 'addCategoryOption').and.callThrough();
+
+      controller.onEnterKey(ENTER_KEYPRESS_EVENT);
+
+      expect(controller.addCategoryOption).toHaveBeenCalled();
+      expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
+      expect(controller.categoryOptionTag).toEqual('');
+    });
+  });
+
+  describe('Summary Page', function () {
+    var deferred;
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      deferred = $q.defer();
+      spyOn(SunlightConfigService, 'createChatTemplate').and.returnValue(deferred.promise);
+    });
+
+    it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+      deferred.reject(failedData);
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect(controller.saveCTErrorOccurred).toBeTruthy();
+    });
+
+    it("should submit chat template successfully", function () {
+      //by default, this flag is false
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+
+      spyOn($state, 'go');
+      deferred.resolve({
+        success: true,
+        headers: function (header) {
+          return 'something/abc123';
+        },
+        status: 201
+      });
+
+      controller.submitChatTemplate();
+      $scope.$apply();
+
+      expect($modal.open).toHaveBeenCalledWith({
+        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        size: 'lg',
+        controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
+        resolve: {
+          templateId: jasmine.any(Function)
+        }
+      });
+      expect(controller.saveCTErrorOccurred).toBeFalsy();
+      expect($state.go).toHaveBeenCalled();
     });
   });
 });

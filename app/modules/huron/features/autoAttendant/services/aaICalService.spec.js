@@ -301,7 +301,7 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with all day selected', function () {
+    it('add a not exact date holiday and get back holiday range with all day selected', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
@@ -332,7 +332,7 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with all day unselected', function () {
+    it('add a not exact date holiday and get back holiday range with all day unselected', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
@@ -364,7 +364,7 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with yearly recurrence', function () {
+    it('add a not exact date holiday and get back holiday range with yearly recurrence', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
@@ -396,7 +396,7 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with yearly recurrence (last Friday of Jan)', function () {
+    it('add a not exact date holiday and get back holiday range with yearly recurrence (last Friday of Jan)', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Last Friday of Jan',
@@ -428,7 +428,7 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with yearly recurrence (first Tuesday of Feb)', function () {
+    it('add a not exact date holiday and get back holiday range with yearly recurrence (first Tuesday of Feb)', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'First Friday of Feb',

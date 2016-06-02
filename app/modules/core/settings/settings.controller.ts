@@ -1,4 +1,5 @@
 /// <reference path="domainsSetting.component.ts"/>
+/// <reference path="sipDomainSetting.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
@@ -19,6 +20,7 @@ namespace globalsettings {
         //Add setting sections for partner admins here.
       } else {
         this.domains = new DomainsSetting();
+        this.sipDomain = new SipDomainSetting();
       }
     }
   }
