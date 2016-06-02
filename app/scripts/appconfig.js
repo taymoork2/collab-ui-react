@@ -2079,8 +2079,8 @@
           })
           .state('cluster-list', {
             url: '/services/resource',
-            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
-            controller: 'FusionResourceListController',
+            templateUrl: 'modules/hercules/fusion-pages/cluster-list.html',
+            controller: 'FusionClusterListController',
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {

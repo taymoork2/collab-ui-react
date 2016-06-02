@@ -3,10 +3,10 @@
 
   angular
     .module('Hercules')
-    .controller('FusionResourceListController', FusionResourceListController);
+    .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionResourceListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');

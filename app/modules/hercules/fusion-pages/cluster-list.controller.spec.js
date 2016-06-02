@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: FusionResourceListController', function () {
+describe('Controller: FusionClusterListController', function () {
   var controller, $controller, $q, $rootScope, FusionClusterService, XhrNotificationService;
 
   beforeEach(module('Hercules'));
@@ -21,7 +21,7 @@ describe('Controller: FusionResourceListController', function () {
   }
 
   function initController() {
-    controller = $controller('FusionResourceListController', {
+    controller = $controller('FusionClusterListController', {
       hasFeatureToggle: true
     });
   }
