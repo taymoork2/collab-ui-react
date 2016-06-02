@@ -33,6 +33,7 @@
 .ct-embed-code-area {
 	width: 100%;
 	margin: 0;
+	font-family: "CiscoSansTT Light";
 	.embed-code-textarea {
 		width: 100%;
 		resize: none;
@@ -43,5 +44,23 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	@include vr-spacing(pt, 25);
+	@include vr-spacing(pt, 5);
 }
+
+.ct-status-div{
+  height: rem-calc(250px);
+  @include vr-spacing(pt, 2);
+  @include vr-spacing(mt, 2);
+  @include vr-spacing(ml, 2);
+  @include vr-spacing(mr, 5);
+}
+.ct-error-desc{
+  text-align: center;
+  color: $color-negative-dark;
+  @include vr-spacing(pt, 1);
+  @include vr-spacing(pb, 1);
+  @include vr-spacing(mr, 5);
+  @include vr-spacing(ml, 5);
+  border: rem-calc(1) solid $gray-light-2;
+}
+

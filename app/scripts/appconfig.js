@@ -1447,6 +1447,14 @@
               displayName: 'Phone Numbers'
             }
           })
+          .state('customer-overview.customerAdministrators', {
+            controller: 'CustomerAdministratorDetailCtrl',
+            controllerAs: 'customerAdmins',
+            templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            data: {
+              displayName: 'Administrators'
+            }
+          })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
@@ -2082,7 +2090,7 @@
             }
           })
           .state('cluster-settings-page', {
-            url: '/services/resource/settings/:clusterid',
+            url: '/services/resource/settings/:id',
             templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
             controller: 'FusionResourceSettingsController',
             controllerAs: 'resourceSetting',

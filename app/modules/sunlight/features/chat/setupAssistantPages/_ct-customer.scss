@@ -1,5 +1,4 @@
 .ct-customer {
-
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -15,6 +14,8 @@
     }
   }
 
+  align-items: center;
+
   .cs-card {
     width: rem-calc(400px);
     height: rem-calc(490px);
@@ -27,8 +28,11 @@
     .articleHeight {
       height: 100%;
     }
-    .customeHeader {
+    .customerHeader {
       background-color:$gray-light-4;
+      border-color: $gray-light-3;
+      border-width: rem-calc(1px);
+      border-style: solid;
       &:hover {
         background-color:$color-primary-lighter;
         cursor: pointer;
@@ -97,7 +101,7 @@
 
   .inputField_select {
     @include vr-spacing(ml, 1);
-    @include vr-spacing(mb, 0.1);
+    @include vr-spacing(mb, 0.8);
     color: $gray-dark-2;
     width: 90%;
     .form-control{
@@ -115,7 +119,15 @@
     pointer-events: none;
     font-family: "CiscoSansTT Light";
     font-size: rem-calc(16px);
-    width: 90%
+    width: 90%;
+    ~ i {
+      @include vr-spacing(ml, -2.4);
+      font-size: rem-calc(24px);
+      color: $gray-base;
+      line-height: inherit;
+      pointer-events: none;
+      position: absolute;
+    }
   }
 
   .ct-footer {
@@ -128,12 +140,6 @@
   .ct-selectable-element {
     &.active {
       color: $color-primary-darker;
-      border-color: $color-primary-darker;
-    }
-  }
-
-  .ct-selectable-cs-select {
-    &.active a:first-of-type {
       border-color: $color-primary-darker;
     }
   }
@@ -207,6 +213,7 @@
   .ct-flex-container {
     display: flex;
     -webkit-flex-direction: row;
+    flex-flow: row;
   }
 
   .ct-attribute-section {
