@@ -79,7 +79,9 @@
             valuefield: 'abbreviation',
             labelClass: 'columns medium-5 text-right',
             inputClass: 'columns medium-7',
-            options: []
+            options: [],
+            filter: true
+
           },
           controller: /* @ngInject */ function ($scope) {
             TerminusStateService.query().$promise.then(function (states) {
