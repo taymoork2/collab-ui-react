@@ -446,13 +446,6 @@
             parent: 'main',
             authenticate: false
           })
-          .state('appdownload', {
-            url: '/appdownload',
-            templateUrl: 'modules/squared/views/appdownload.html',
-            controller: 'AppdownloadCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
