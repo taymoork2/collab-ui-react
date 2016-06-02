@@ -3641,6 +3641,16 @@
     "customerMsgTime": "10:11 AM",
     "agentEnteredStatus": "Agent has entered chat room",
     "typeNewMsg": "Type your message and press enter.",
+    "feedbackQuery": "Are you satisfied with your chat experience?",
+    "rating": "Rating {{index}}",
+    "rating1Text": "Not at all",
+    "rating2Text": "Moderately",
+    "rating3Text": "Absolutely",
+    "ratingHintText": "Hint Text",
+    "ratingComment": "Add comments",
+    "submitFeedbackBtn": "Submit Feedback",
+    "noThanksBtn": "No Thanks",
+
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
