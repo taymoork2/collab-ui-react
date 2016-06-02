@@ -83,7 +83,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
-    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
     spyOn(modal, 'open').and.callThrough();
 
@@ -128,10 +128,10 @@ describe('Controller: CustomerOverviewCtrl', function () {
       $scope.$apply();
     });
 
-    it('should call getUserAuthInfo', function () {
+    it('should call modifyManagedOrgs', function () {
       expect(controller.customerOrgId).toBe('123-456');
       expect(Authinfo.isPartnerAdmin()).toBe(true);
-      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
+      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });
 
     it('should create proper url', function () {

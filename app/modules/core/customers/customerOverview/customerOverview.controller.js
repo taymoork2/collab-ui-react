@@ -139,7 +139,7 @@
       };
       var promise = $q.when();
       if (vm.isPartnerAdmin) {
-        promise = PartnerService.getUserAuthInfo(vm.customerOrgId);
+        promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
       promise.then(function () {
         if (licIds.length > 0) {

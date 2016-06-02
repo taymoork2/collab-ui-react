@@ -25,7 +25,7 @@
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
       patchedManagedOrgs: patchedManagedOrgs,
-      getUserAuthInfo: getUserAuthInfo,
+      modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -69,7 +69,7 @@
       });
     }
 
-    function getUserAuthInfo(customerOrgId) {
+    function modifyManagedOrgs(customerOrgId) {
       return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200) {
           var uuid = response.data.uuid;

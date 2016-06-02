@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Partner Service -', function () {
+describe('Partner Service -', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
@@ -240,8 +240,8 @@ fdescribe('Partner Service -', function () {
     $httpBackend.flush();
   });
 
-  it('should successfully call getUserAuthInfo', function () {
-    PartnerService.getUserAuthInfo();
+  it('should successfully call modifyManagedOrgs', function () {
+    PartnerService.modifyManagedOrgs();
 
     expect(Auth.getAuthorizationUrlList).toHaveBeenCalled();
   });
