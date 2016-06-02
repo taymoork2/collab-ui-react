@@ -1,5 +1,5 @@
 /// <reference path="domainsSetting.component.ts"/>
-/// <reference path="supportSetting.component.ts"/>
+/// <reference path="supportSection/supportSetting.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
