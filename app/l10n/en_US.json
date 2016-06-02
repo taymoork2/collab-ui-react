@@ -1157,6 +1157,7 @@
       "label": "ACTIVATE AND BEGIN SETUP"
     },
     "deactivateServiceSingleCluster": {
+      "title": "Deactivate {{serviceName}}",
       "intro": "You are about to remove the following Hybrid Service:",
       "fromCluster": "from the Expressway cluster {{clusterName}}.",
       "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
@@ -1418,6 +1419,11 @@
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
+    "searchError": "Search for '{{roomId}}' returned 0 results.",
+    "dateError": {
+      "StartDateMustBeforeEndDate": "Start date must be before end date",
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+    },
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
       "title": "Activity Reports Help"

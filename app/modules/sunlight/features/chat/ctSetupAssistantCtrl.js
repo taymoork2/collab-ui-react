@@ -55,6 +55,8 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.categoryTokensId = 'categoryTokensElement';
+    vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
 
     /**
@@ -172,7 +174,8 @@
                   value: $translate.instant('careChatTpl.defaultNameHint')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('name')
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: []
                 }]
               },
 
@@ -191,7 +194,8 @@
                   value: $translate.instant('careChatTpl.defaultEmail')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('email')
+                  value: vm.getTypeObject('email'),
+                  categoryOptions: []
                 }]
               },
 
@@ -210,7 +214,8 @@
                   value: $translate.instant('careChatTpl.field3HintText')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('category')
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: []
                 }]
               }
             }
@@ -409,6 +414,17 @@
     vm.isDefined = function (object, field) {
       var value = object[field];
       return typeof value !== 'undefined' && value.trim() !== '';
+    };
+
+    vm.onEnterKey = function (keyEvent) {
+      if (keyEvent.which === 13) {
+        vm.addCategoryOption();
+      }
+    };
+
+    vm.addCategoryOption = function () {
+      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+      vm.categoryOptionTag = '';
     };
 
     function setTemplateProfile() {

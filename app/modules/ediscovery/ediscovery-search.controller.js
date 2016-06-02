@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($timeout, $scope, $modal, EdiscoveryService) {
+  function EdiscoverySearchController($translate, $timeout, $scope, $modal, EdiscoveryService, $window) {
 
     var vm = this;
     vm.searchForRoom = searchForRoom;
@@ -10,11 +10,14 @@
     vm.runReport = runReport;
     vm.progressType = progressType;
     vm.downloadReport = downloadReport;
+    vm.keyPressHandler = keyPressHandler;
+    vm.searchButtonDisabled = searchButtonDisabled;
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
     });
 
+    vm.searchInProgress = false;
     vm.searchCriteria = {
       "roomId": "", //36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
       "startDate": null, //moment(moment()).add(-7, 'days'), // week
@@ -39,10 +42,10 @@
     function dateErrors(start, end) {
       var errors = [];
       if (moment(start).isAfter(moment(end))) {
-        errors.push("Start date must be before end date");
+        errors.push($translate.instant("ediscovery.dateError.StartDateMustBeforeEndDate"));
       }
       if (moment(start).isAfter(moment())) {
-        errors.push("Start date cannot be in the future");
+        errors.push($translate.instant("ediscovery.dateError.StartDateCannotBeInTheFuture"));
       }
       return errors;
     }
@@ -87,16 +90,26 @@
 
     function searchForRoom(roomId) {
       vm.report = null;
-      // TODO: Implement proper handling of error when final API is in place
-      EdiscoveryService.getAvalonServiceUrl(vm.searchCriteria.roomId)
+      vm.error = "";
+      vm.searchInProgress = true;
+      EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
-          EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + vm.searchCriteria.roomId).then(function (result) {
-            vm.roomInfo = result;
-            vm.searchCriteria.id = result.id;
-            vm.searchCriteria.startDate = result.published;
-            vm.searchCriteria.endDate = result.lastReadableActivityDate;
-            vm.searchCriteria.displayName = result.displayName;
+          return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
+        })
+        .then(function (result) {
+          vm.roomInfo = result;
+          vm.searchCriteria.id = result.id;
+          vm.searchCriteria.startDate = result.published;
+          vm.searchCriteria.endDate = result.lastReadableActivityDate;
+          vm.searchCriteria.displayName = result.displayName;
+        })
+        .catch(function (err) {
+          vm.error = $translate.instant("ediscovery.searchError", {
+            roomId: roomId
           });
+        })
+        .finally(function () {
+          vm.searchInProgress = false;
         });
     }
 
@@ -106,7 +119,6 @@
       });
     }
 
-    // Should eventually be a search API
     function createReport() {
       disableAvalonPolling();
       vm.errors = [];
@@ -139,6 +151,10 @@
       $timeout.cancel(avalonPoller);
     }
 
+    function searchButtonDisabled() {
+      return (vm.searchCriteria.roomId === '' || vm.searchInProgress === true);
+    }
+
     function pollAvalonReport() {
       // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
@@ -161,9 +177,7 @@
           enableAvalonPolling();
         })
         .catch(function (err) {
-          vm.report = {
-            "state": "NOT FOUND"
-          };
+          // TODO: Proper error handling when final API is ready
           disableAvalonPolling();
         });
     }
@@ -179,6 +193,14 @@
     }
 
     function downloadReport() {}
+
+    function keyPressHandler(event) {
+      if (event.keyCode === 13) {
+        $timeout(function () {
+          angular.element("#ediscoverySearchButton").trigger('click');
+        });
+      }
+    }
 
   }
 

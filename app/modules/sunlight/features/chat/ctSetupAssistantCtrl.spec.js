@@ -315,6 +315,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       isDefinedRes = controller.isDefined(testObj, "trees-16");
       expect(isDefinedRes).toBe(false);
     });
+
+    it("should add a new category token and clear the input field when a new token is added", function () {
+      var ENTER_KEYPRESS_EVENT = {
+        which: 13
+      };
+      controller.categoryOptionTag = 'Mock Category Token';
+      var mockElementObject = jasmine.createSpyObj('element', ['tokenfield']);
+      spyOn(angular, 'element').and.returnValue(mockElementObject);
+      spyOn(controller, 'addCategoryOption').and.callThrough();
+
+      controller.onEnterKey(ENTER_KEYPRESS_EVENT);
+
+      expect(controller.addCategoryOption).toHaveBeenCalled();
+      expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
+      expect(controller.categoryOptionTag).toEqual('');
+    });
   });
 
   describe('Summary Page', function () {
