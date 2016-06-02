@@ -45,6 +45,7 @@
         templateUrl: 'modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html',
         controller: 'DeactivateServiceOnExpresswayModalController',
         controllerAs: 'deactivateServiceOnExpresswayModal',
+        type: 'small',
         resolve: {
           serviceId: function () {
             vm.serviceId = serviceId;
@@ -77,12 +78,15 @@
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',
-          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html',
+          type: 'small'
         })
         .result.then(function (data) {
           $state.go('cluster-list');
         });
     }
+
+
 
   }
 })();
