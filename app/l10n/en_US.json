@@ -2194,7 +2194,7 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200",
+      "webexDetails": "WebEx Enterprise Edition 200 with CMR",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
