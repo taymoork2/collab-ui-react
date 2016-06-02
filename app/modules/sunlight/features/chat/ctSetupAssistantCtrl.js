@@ -8,7 +8,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $timeout, $translate, $window, Authinfo, CTService) {
+  function CareChatSetupAssistantCtrl($modal, $state, $timeout, $translate, $window, Authinfo, CTService, SunlightConfigService) {
     var vm = this;
     init();
 
@@ -23,12 +23,13 @@
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
     vm.animation = 'slide-left';
+    vm.submitChatTemplate = submitChatTemplate;
 
     // Setup Assistant pages with index
     vm.states = ['name',
       'profile',
       'overview',
-      'customer',
+      'customerInformation',
       'feedback',
       'agentUnavailable',
       'offHours',
@@ -54,6 +55,9 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.categoryTokensId = 'categoryTokensElement';
+    vm.categoryOptionTag = '';
+    vm.saveCTErrorOccurred = false;
 
     /**
      * Type enumerations
@@ -66,55 +70,51 @@
       }
     };
 
-    var TYPE_OPTIONS = [{
+    vm.typeOptions = [{
       text: "email",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Work_Email"
       }
     }, {
       text: "name",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_name"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_First_Name"
       }
     }, {
       text: "category",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_category"
+        fieldSet: "cisco.base.ccc.pod",
+        fieldName: "category"
       }
     }, {
       text: "phone",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_phone"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Mobile_Phone"
       }
     }, {
       text: "id",
       dictionaryType: {
-        fieldSet: "ccc_core",
-        fieldName: "ccc_email"
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Customer_External_ID"
       }
     }];
 
-    vm.typeOptions = TYPE_OPTIONS;
-
-    var CATEGORY_TYPE_OPTIONS = [{
+    vm.categoryTypeOptions = [{
       text: $translate.instant('careChatTpl.categoryTextCustomer'),
       id: 'customerInfo'
 
     }, {
       text: $translate.instant('careChatTpl.categoryTextRequest'),
-      id: 'requestInfo',
+      id: 'requestInfo'
     }];
-
-    vm.categoryTypeOptions = CATEGORY_TYPE_OPTIONS;
 
     vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
     vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
 
-    var REQUIRED_OPTIONS = [{
+    vm.requiredOptions = [{
       text: $translate.instant('careChatTpl.requiredField'),
       id: 'required'
     }, {
@@ -122,16 +122,14 @@
       id: 'optional'
     }];
 
-    vm.requiredOptions = REQUIRED_OPTIONS;
-
     vm.getCategoryTypeObject = function (typeId) {
-      return _.find(CATEGORY_TYPE_OPTIONS, {
+      return _.find(vm.categoryTypeOptions, {
         id: typeId
       });
     };
 
     vm.getTypeObject = function (typeText) {
-      return _.find(TYPE_OPTIONS, {
+      return _.find(vm.typeOptions, {
         text: typeText
       });
     };
@@ -158,7 +156,7 @@
                   value: $translate.instant('careChatTpl.defaultWelcomeText')
                 }, {
                   name: 'organization',
-                  value: $translate.instant('careChatTpl.defaultOrgText')
+                  value: vm.orgName
                 }]
               },
               'field1': {
@@ -167,7 +165,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultNameText')
@@ -176,7 +174,8 @@
                   value: $translate.instant('careChatTpl.defaultNameHint')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('name')
+                  value: vm.getTypeObject('name'),
+                  categoryOptions: []
                 }]
               },
 
@@ -186,7 +185,7 @@
                   value: 'required'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('customerInfo'),
+                  value: vm.getCategoryTypeObject('customerInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultEmailText')
@@ -195,7 +194,8 @@
                   value: $translate.instant('careChatTpl.defaultEmail')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('email')
+                  value: vm.getTypeObject('email'),
+                  categoryOptions: []
                 }]
               },
 
@@ -205,7 +205,7 @@
                   value: 'optional'
                 }, {
                   name: 'category',
-                  value: vm.getCategoryTypeObject('requestInfo'),
+                  value: vm.getCategoryTypeObject('requestInfo')
                 }, {
                   name: 'label',
                   value: $translate.instant('careChatTpl.defaultQuestionText')
@@ -214,7 +214,8 @@
                   value: $translate.instant('careChatTpl.field3HintText')
                 }, {
                   name: 'type',
-                  value: vm.getTypeObject('category')
+                  value: vm.getTypeObject('category'),
+                  categoryOptions: []
                 }]
               }
             }
@@ -226,7 +227,38 @@
             enabled: true
           },
           feedback: {
-            enabled: true
+            enabled: true,
+            fields: {
+              "feedbackQuery": {
+                "displayText": $translate.instant('careChatTpl.feedbackQuery')
+              },
+              "ratings": [{
+                "displayText": $translate.instant('careChatTpl.rating1Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
+              }, {
+                "displayText": $translate.instant('careChatTpl.rating2Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
+              }, {
+                "displayText": $translate.instant('careChatTpl.rating3Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
+                }
+              }],
+              "comment": {
+                "displayText": $translate.instant('careChatTpl.ratingComment'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingComments"
+                }
+              }
+            }
           }
         }
       }
@@ -239,14 +271,10 @@
       feedback: 'circle-star'
     };
 
-    //Model for ctSetupAssistance data
-    vm.selectFieldOptions = [];
-    vm.selectFieldSelected = '';
-    vm.selectFieldPlaceholder = 'Select from the list or type';
-
     function cancelModal() {
       $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
+        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html',
+        type: 'dialog'
       });
     }
 
@@ -299,17 +327,27 @@
       return true;
     }
 
+    function getAdjacentEnabledState(current, jump) {
+      var next = current + jump;
+      var nextPage = vm.template.configuration.pages[vm.states[next]];
+      if (nextPage && !nextPage.enabled) {
+        return getAdjacentEnabledState(next, jump);
+      } else {
+        return vm.states[next];
+      }
+    }
+
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
-        vm.currentState = vm.states[getPageIndex() + 1];
+        vm.currentState = getAdjacentEnabledState(getPageIndex(), 1);
       }, vm.animationTimeout);
     }
 
     function previousPage() {
       vm.animation = 'slide-right';
       $timeout(function () {
-        vm.currentState = vm.states[getPageIndex() - 1];
+        vm.currentState = getAdjacentEnabledState(getPageIndex(), -1);
       }, vm.animationTimeout);
     }
 
@@ -320,7 +358,6 @@
      */
 
     vm.getFieldByName = function (fieldName) {
-      var x = vm.template.configuration.pages.customerInformation.fields[fieldName];
       return vm.template.configuration.pages.customerInformation.fields[fieldName];
     };
 
@@ -342,6 +379,26 @@
       }
     };
 
+    vm.getAttributeValue = function (attributeName, fieldName, modelName, i) {
+      var models = vm.template.configuration.pages;
+      var model = _.get(models, modelName);
+
+      return vm.getAttributeByModelName(attributeName, fieldName, model, i);
+    };
+
+    vm.getAttributeByModelName = function (attributeName, fieldName, model, i) {
+      var fields = model.fields;
+      var field = _.get(fields, fieldName);
+
+      if (field instanceof Array) {
+        field = field[i];
+      }
+      if (field) {
+        return _.get(field, attributeName);
+      }
+      return undefined;
+    };
+
     vm.setActiveItem = function (val) {
       vm.activeItem = vm.getFieldByName(val.toString());
     };
@@ -357,6 +414,17 @@
     vm.isDefined = function (object, field) {
       var value = object[field];
       return typeof value !== 'undefined' && value.trim() !== '';
+    };
+
+    vm.onEnterKey = function (keyEvent) {
+      if (keyEvent.which === 13) {
+        vm.addCategoryOption();
+      }
+    };
+
+    vm.addCategoryOption = function () {
+      angular.element('#categoryTokensElement').tokenfield('createToken', vm.categoryOptionTag);
+      vm.categoryOptionTag = '';
     };
 
     function setTemplateProfile() {
@@ -381,6 +449,31 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }
+
+    function submitChatTemplate() {
+      SunlightConfigService.createChatTemplate(vm.template)
+        .then(function (response) {
+          var responseTemplateId = response.headers('Location').split('/').pop();
+          $state.go('care.Features');
+          $modal.open({
+            templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+            size: 'lg',
+            controller: 'EmbedCodeCtrl',
+            controllerAs: 'embedCodeCtrl',
+            resolve: {
+              templateId: function () {
+                return responseTemplateId;
+              }
+            }
+          });
+        }, function (error) {
+          vm.saveCTErrorOccurred = true;
+        });
+    }
+
+    vm.isUserProfileSelected = function () {
+      return vm.template.configuration.mediaSpecificConfiguration.useOrgProfile;
+    };
 
     function init() {
       CTService.getLogo().then(function (data) {

@@ -35,7 +35,8 @@
           sectionToToggle: function () {
             return sectionToToggle;
           }
-        }
+        },
+        modalClass: 'aa-schedule'
       });
 
       modalInstance.result.then(function (result) {

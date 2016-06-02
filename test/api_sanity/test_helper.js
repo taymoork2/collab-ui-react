@@ -1,6 +1,9 @@
+'use strict';
+
+/* global Promise */
+
 var _ = require('lodash');
 var request = require('request');
-var Promise = require('promise');
 
 var auth = {
   'sqtest-admin': {

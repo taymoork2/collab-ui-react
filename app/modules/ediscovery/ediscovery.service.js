@@ -30,11 +30,7 @@
     function getAvalonRoomInfo(url) {
       return $http
         .get(url)
-        .then(extractData)
-        .catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + err)
-        });
+        .then(extractData);
     }
 
     function getReport(id) {
@@ -114,6 +110,12 @@
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -123,7 +125,8 @@
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance
     };
   }
 

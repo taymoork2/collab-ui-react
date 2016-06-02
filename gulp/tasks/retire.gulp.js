@@ -12,10 +12,9 @@ var args = require('yargs').argv;
 var exec = require('child_process').exec;
 
 var retire = '$(npm bin)/retire';
-var path = '--path bower_components';
 var output = '--outputpath $WX2_ADMIN_WEB_CLIENT_HOME/.cache/retirejs-results-for-$BUILD_TAG';
-var stdOut = [retire, path].join(' ');
-var fileOut = [retire, path, output].join(' ');
+var stdOut = retire;
+var fileOut = [retire, output].join(' ');
 
 gulp.task('retire', function () {
   // TODO: change this to use processEnvUtil.isJenkins() once available
