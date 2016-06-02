@@ -19,6 +19,16 @@ describe('Controller: AABuilderActionsCtrl', function () {
     actions: ['testAction']
   }];
 
+  var sortedOptions = [{
+    "title": 'autoAttendant.actionPhoneMenu',
+  }, {
+    "title": 'autoAttendant.actionRouteCall',
+  }, {
+    "title": 'autoAttendant.actionSayMessage',
+  }, {
+    "title": 'autoAttendant.phoneMenuDialExt',
+  }];
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -128,13 +138,14 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   /**
-   * title value is not read from properties file. So it will treat the key provided into vm.options for title
+   * title value is not read from properties file in unit test cases. So it will treat the key provided into vm.options for title
    * as text only. Sorting is based on the key itself and not on values of title.
    */
   describe('Activate ', function () {
     it('test for sorted options', function () {
-      expect(controller.options[0].title).toEqual("autoAttendant.actionPhoneMenu");
-      expect(controller.options[1].title).toEqual("autoAttendant.actionRouteCall");
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].title).toEqual(sortedOptions[i].title);
+      }
     });
   });
 

@@ -24,6 +24,26 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     return _menuEntry;
   }
 
+  var sortedOptions = [{
+    "name": 'phoneMenuDialExt',
+  }, {
+    "name": 'phoneMenuRepeatMenu',
+  }, {
+    "name": 'phoneMenuRouteAA',
+  }, {
+    "name": 'phoneMenuRouteHunt',
+  }, {
+    "name": 'phoneMenuRouteMailbox',
+  }, {
+    "name": 'phoneMenuRouteQueue',
+  }, {
+    "name": 'phoneMenuRouteToExtNum',
+  }, {
+    "name": 'phoneMenuRouteUser',
+  }, {
+    "name": 'phoneMenuSayMessage',
+  }];
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -208,12 +228,14 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   });
 
   /**
-   * name value is not read from properties file. It will treat the key provided into vm.keyActions for name
+   * name value is not read from properties file in unit test cases. It will treat the key provided into vm.keyActions for name
    * as text only. Sorting is based on the key itself and not on values of title.
    */
   describe('Activate ', function () {
     it('test for sorted options', function () {
-      expect(controller.keyActions[0].name).toEqual("phoneMenuDialExt");
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);
+      }
     });
   });
 
