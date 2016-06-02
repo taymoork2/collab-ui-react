@@ -72,27 +72,20 @@ namespace globalsettings {
       return 'Squared';
     }
 
-
     /* @ngInject */
     constructor(private Authinfo, private Orgservice, private Notification, $translate, private UserListService, private Log) {
-
       this.orgId = Authinfo.getOrgId();
-
-
       this.initTexts($translate);
       this.initOrgInfo();
     }
 
-
     private initTexts($translate) {
       this.placeHolder = {
-        // grant: $translate.instant('partnerProfile.grant'),
         troubleUrl: $translate.instant('partnerProfile.troubleUrl'),
         troubleText: $translate.instant('partnerProfile.troubleText'),
         helpUrlText: $translate.instant('partnerProfile.helpUrlText')
       };
     }
-
 
     private initOrgInfo() {
 
@@ -107,22 +100,6 @@ namespace globalsettings {
           return !_.endsWith(rep.userName, '@cisco.com')
         });
       });
-
-      // this.UserListService.listPartners(this.orgId, function (data) {
-      //   data.partners.forEach((partner)=> {
-      //     // for (let partner:string in data.partners) {
-      //     var currentPartner = partner;//data.partners[partner];
-      //     if (!this.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
-      //       // this.partner = currentPartner;
-      //       this.isManaged = true;
-      //     } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
-      //       // this.rep = currentPartner;
-      //       this.isManaged = true;
-      //     }
-      //     // }
-      //   });
-      // });
-
 
       this.Orgservice.getOrg((data, status) => {
         if (data.success) {
@@ -251,7 +228,6 @@ namespace globalsettings {
         status: response.status
       });
     }
-
   }
 
   class Partner {
