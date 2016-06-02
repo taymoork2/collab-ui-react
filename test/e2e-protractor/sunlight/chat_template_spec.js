@@ -30,14 +30,14 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
 
-    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
-    validateDismissOfCTSetupWizard();
+    //utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    //validateDismissOfCTSetupWizard();
 
-    utils.waitForModal().then(function () {
-      validateDisplayEmbedCodeModal();
-      utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
-      validateDismissOfEmbedCodeModal();
-    });
+    //utils.waitForModal().then(function () {
+    //validateDisplayEmbedCodeModal();
+    //utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
+    //validateDismissOfEmbedCodeModal();
+    //});
   });
 
   function validateDismissOfCTSetupWizard() {

@@ -6,7 +6,7 @@ describe('Chat template embed code control', function () {
 
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _CTService_) {
+  beforeEach(inject(function ($controller, $rootScope, _CTService_) {
     $scope = $rootScope.$new();
     CTService = _CTService_;
 
@@ -18,13 +18,6 @@ describe('Chat template embed code control', function () {
       });
     };
 
-    createControllerWithNoTemplateId = function () {
-      return $controller('EmbedCodeCtrl', {
-        $scope: $scope,
-        CTService: CTService,
-        templateId: undefined
-      });
-    };
   }));
 
   it('should get embed chat code snippet', function () {
@@ -35,7 +28,4 @@ describe('Chat template embed code control', function () {
     expect(result).toBe(fakeCodeSnippet);
   });
 
-  /*it('should get error if template id is not provided', function () {
-    expect(createControllerWithNoTemplateId).toThrow();
-  });*/
 });

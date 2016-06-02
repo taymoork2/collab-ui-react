@@ -304,18 +304,17 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   });
 
   describe('Summary Page', function () {
+    var deferred;
     beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      deferred = $q.defer();
+      spyOn(SunlightConfigService, 'createChatTemplate').and.returnValue(deferred.promise);
+    });
 
     it("When save chat template failed, the 'saveCTErrorOccurred' is set", function () {
       //by default, this flag is false
       expect(controller.saveCTErrorOccurred).toBeFalsy();
-
-      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.reject(failedData);
-        return deferred.promise;
-      });
-
+      deferred.reject(failedData);
       controller.submitChatTemplate();
       $scope.$apply();
 
@@ -327,16 +326,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
       spyOn($state, 'go');
-      spyOn(SunlightConfigService, 'createChatTemplate').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve({
-          success: true,
-          headers: function (header) {
-            return 'something/abc123';
-          },
-          status: 201
-        });
-        return deferred.promise;
+      deferred.resolve({
+        success: true,
+        headers: function (header) {
+          return 'something/abc123';
+        },
+        status: 201
       });
 
       controller.submitChatTemplate();
@@ -352,6 +347,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         }
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
+      expect($state.go).toHaveBeenCalled();
     });
   });
 });

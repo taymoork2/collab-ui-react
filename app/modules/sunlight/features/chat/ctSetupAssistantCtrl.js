@@ -8,7 +8,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $timeout, $translate, $window, Authinfo, CTService, SunlightConfigService, $state) {
+  function CareChatSetupAssistantCtrl($modal, $state, $timeout, $translate, $window, Authinfo, CTService, SunlightConfigService) {
     var vm = this;
     init();
 
@@ -55,6 +55,7 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.saveCTErrorOccurred = false;
 
     /**
      * Type enumerations
@@ -236,7 +237,8 @@
 
     function cancelModal() {
       $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
+        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html',
+        type: 'dialog'
       });
     }
 
@@ -371,27 +373,25 @@
       }
     }
 
-    vm.saveCTErrorOccurred = false;
-
     function submitChatTemplate() {
-
-      SunlightConfigService.createChatTemplate(vm.template).then(function (response) {
-        var responseTemplateId = response.headers('Location').split('/').pop();
-        $state.go('care.Features');
-        $modal.open({
-          templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-          size: 'lg',
-          controller: 'EmbedCodeCtrl',
-          controllerAs: 'embedCodeCtrl',
-          resolve: {
-            templateId: function () {
-              return responseTemplateId;
+      SunlightConfigService.createChatTemplate(vm.template)
+        .then(function (response) {
+          var responseTemplateId = response.headers('Location').split('/').pop();
+          $state.go('care.Features');
+          $modal.open({
+            templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+            size: 'lg',
+            controller: 'EmbedCodeCtrl',
+            controllerAs: 'embedCodeCtrl',
+            resolve: {
+              templateId: function () {
+                return responseTemplateId;
+              }
             }
-          }
+          });
+        }, function (error) {
+          vm.saveCTErrorOccurred = true;
         });
-      }, function (error) {
-        vm.saveCTErrorOccurred = true;
-      });
     }
 
     vm.isUserProfileSelected = function () {
