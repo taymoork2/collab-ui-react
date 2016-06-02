@@ -10,7 +10,7 @@
 
     var vm = this;
 
-    loadCluster($stateParams.clusterid);
+    loadCluster($stateParams.id);
 
     function loadCluster(clusterid) {
       FusionClusterService.getAll()
@@ -33,7 +33,7 @@
     vm.usersOptions = ['Default'];
 
     vm.enabledServices = [];
-    ClusterService.getAllConnectorTypesForCluster($stateParams.clusterid)
+    ClusterService.getAllConnectorTypesForCluster($stateParams.id)
       .then(function (allConnectorTypes) {
         vm.enabledServices = allConnectorTypes;
       });
