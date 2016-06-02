@@ -2194,7 +2194,6 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200 with CMR",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -2310,7 +2309,7 @@
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
-    "webex": "WebEx Enterprise Edition 200",
+    "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
