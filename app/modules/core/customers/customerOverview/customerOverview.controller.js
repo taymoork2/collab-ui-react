@@ -31,6 +31,7 @@
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.isDeleting = false;
     vm.atlasPartnerAdminFeatureToggle = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
@@ -228,13 +229,18 @@
           controllerAs: 'ctrl'
         }).result.then(function () {
           // delete the customer
+          vm.isDeleting = true;
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+            vm.isDeleting = false;
+            // TODO: exit the overview and refresh the list of customers
             Notification.success('customerPage.deleteOrgSuccess', {
               orgName: vm.customerName
             });
           }).catch(function (error) {
+            vm.isDeleting = false;
             Notification.error('customerPage.deleteOrgError', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
+              message: error.messageFormatted
             });
           });
         });
@@ -243,4 +249,3 @@
 
   }
 })();
-

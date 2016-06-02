@@ -2408,7 +2408,7 @@
     "SD": "Spark Room System",
     "deleteOrg": "Delete Org {{orgName}}",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted",
+    "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
   },
