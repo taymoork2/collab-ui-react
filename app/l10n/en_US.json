@@ -1419,6 +1419,11 @@
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
+    "searchError": "Search for '{{roomId}}' returned 0 results.",
+    "dateError": {
+      "StartDateMustBeforeEndDate": "Start date must be before end date",
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+    },
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
       "title": "Activity Reports Help"
