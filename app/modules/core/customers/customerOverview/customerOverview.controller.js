@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -217,7 +217,17 @@
 
     function deleteTestOrg() {
       if (vm.isTest) {
-        if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
+          controller: function () {
+            var ctrl = this;
+            ctrl.messageBody1 = 'Are you sure you wish to delete "' + vm.customerName + '"?';
+          },
+          controllerAs: 'ctrl'
+        }).result.then(function () {
+          // delete the customer
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
             Notification.success('customerPage.deleteOrgSuccess', {
               orgName: vm.customerName
@@ -227,9 +237,10 @@
               orgName: vm.customerName
             });
           });
-        }
+        });
       }
     }
 
   }
 })();
+
