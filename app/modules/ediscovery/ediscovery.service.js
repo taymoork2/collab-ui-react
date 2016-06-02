@@ -30,11 +30,7 @@
     function getAvalonRoomInfo(url) {
       return $http
         .get(url)
-        .then(extractData)
-        .catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + err)
-        });
+        .then(extractData);
     }
 
     function getReport(id) {
