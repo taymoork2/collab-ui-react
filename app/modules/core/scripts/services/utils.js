@@ -134,7 +134,7 @@
       },
 
       isAdminPage: function () {
-        var nonAdminRoutes = ['activate', 'downloads', 'invite', 'invitelauncher', 'applauncher', 'processorder'];
+        var nonAdminRoutes = ['activate', 'downloads', 'invite', 'invitelauncher', 'processorder'];
         for (var i = 0; i < nonAdminRoutes.length; i++) {
           if ($location.url().indexOf(nonAdminRoutes[i]) > -1) {
             return false;

@@ -439,13 +439,6 @@
             parent: 'main',
             authenticate: false
           })
-          .state('applauncher', {
-            url: '/applauncher',
-            templateUrl: 'modules/squared/views/applauncher.html',
-            controller: 'ApplauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
