@@ -1,0 +1,59 @@
+<div ng-if="ediscoverySearchCtrl.roomInfo">
+  <div class="row search-result">
+    <div class="columns small-12 medium-4 large-4">
+      <div class="left-side">
+        <div class="logo">
+          <i class="room-icon icon icon-meeting-room"></i>
+        </div>
+        <h6 class="content">
+          Participants
+          {{ediscoverySearchCtrl.roomInfo.participants.items.length}}
+        </h6>
+      </div>
+    </div>
+    <div class="columns small-12 medium-8 large-8">
+      <div class="create-form">
+        <h4 class="ellipsis">
+          {{ediscoverySearchCtrl.roomInfo.displayName}}
+        </h4>
+        <h5 class="ellipsis">{{ediscoverySearchCtrl.roomInfo.id}}</h5>
+
+        <div class="input-section">
+          <h5>Report Name</h5>
+          <input size="30" id="displayName" class="cs-input" placeholder="Enter report name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+        </div>
+        <div class="input-section">
+          <h5>Start Date</h5>
+          <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="Choose a start Day" view-format="YYYY-MM-DD"></cs-datepicker>
+        </div>
+        <div class="input-section">
+          <h5 class="sub-section__label">End Date</h5>
+          <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="Choose an end Day" view-format="YYYY-MM-DD"></cs-datepicker>
+        </div>
+
+        <div class="input-section-last">
+          <button ng-disabled="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED'" type="button" class="button btn--primary" ng-click="ediscoverySearchCtrl.createReport()">Generate Report</button>
+        </div>
+        <div ng-if="ediscoverySearchCtrl.report" class="progress-container" ng-hide="ediscoverySearchCtrl.report.state == 'FAILED'">
+          <div class="cancel-or-download">
+            <div class="progressbar-info">
+              <span class="progressbar-label">{{ediscoverySearchCtrl.report.state}}</span>
+              <span class="progressbar-progress">{{ediscoverySearchCtrl.report.progress}}%</span>
+            </div>
+            <progressbar class="progress-striped" value="ediscoverySearchCtrl.report.progress" type="{{ediscoverySearchCtrl.progressType()}}"></progressbar>
+            <div class="buttons">
+              <button ng-cloak type="button" class="btn btn--circle" ng-class="{'btn--primary': ediscoverySearchCtrl.report.state === 'COMPLETED', 'btn--attention': ediscoverySearchCtrl.report.state !== 'COMPLETED'}">
+                <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'" ng-click="ediscoverySearchCtrl.downloadReport()" tooltip-placement="top" cs-tooltip="Download Report" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-download"></span>
+                <span ng-if="ediscoverySearchCtrl.report.state !== 'COMPLETED'" ng-click="ediscoverySearchCtrl.cancelReport()" tooltip-placement="top" cs-tooltip="Cancel Report" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-close"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="failure">
+          <span ng-show="ediscoverySearchCtrl.report.state === 'FAILED'">Failure:
+            {{ediscoverySearchCtrl.report.failureReason}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
