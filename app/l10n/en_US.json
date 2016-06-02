@@ -1441,7 +1441,8 @@
       "BUSY": "Busy",
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
-    }
+    },
+    "reportTimeout": "Timeout detected. Please cancel the report and try again."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
@@ -4020,7 +4021,7 @@
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
-    "compliance": "Compliance"
+    "compliance": "Compliance Officer"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -4041,7 +4042,7 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance"
+    "Compliance_User": "Compliance Officer"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

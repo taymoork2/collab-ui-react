@@ -37,7 +37,7 @@
         <div ng-if="ediscoverySearchCtrl.report" class="progress-container" ng-hide="ediscoverySearchCtrl.report.state == 'FAILED'">
           <div class="cancel-or-download">
             <div class="progressbar-info">
-              <span class="progressbar-label">{{ediscoverySearchCtrl.report.state}}</span>
+              <span class="progressbar-label">{{'ediscovery.reportStates.' + ediscoverySearchCtrl.report.state | translate}}</span>
               <span class="progressbar-progress">{{ediscoverySearchCtrl.report.progress}}%</span>
             </div>
             <progressbar class="progress-striped" value="ediscoverySearchCtrl.report.progress" type="{{ediscoverySearchCtrl.progressType()}}"></progressbar>
@@ -52,6 +52,7 @@
         <div class="failure">
           <span ng-show="ediscoverySearchCtrl.report.state === 'FAILED'">Failure:
             {{ediscoverySearchCtrl.report.failureReason}}</span>
+          <span ng-show="ediscoverySearchCtrl.report.timeoutDetected" translate="ediscovery.reportTimeout"></span>
         </div>
       </div>
     </div>

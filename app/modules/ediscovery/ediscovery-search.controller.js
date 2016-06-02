@@ -126,7 +126,7 @@
         return;
       }
       vm.report = {
-        "state": "Searching..."
+        "state": "CREATED"
       };
 
       EdiscoveryService.createReport(vm.searchCriteria.displayName)
