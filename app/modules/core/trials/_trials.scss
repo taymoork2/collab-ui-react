@@ -216,12 +216,14 @@
       }
     }
   }
-  #webexTrialForm div[name="timeZone"] div.dropdown-menu
-  {max-height:13rem;}
 
-  #callTrialForm div[name="state"] div.dropdown-menu
-  {max-height:5.25rem;}
+  #webexTrialForm div[name="timeZone"] div.dropdown-menu {
+    max-height:13rem;
+  }
 
+  #callTrialForm div[name="state"] div.dropdown-menu {
+    max-height:5.25rem;
+  }
 }
 
 .modal-title-wrap {
