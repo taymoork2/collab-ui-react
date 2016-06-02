@@ -29,7 +29,8 @@
     <cs-card-layout block-view="true">
       <!-- csv export card -->
       <cs-card class="large">
-          <article>
+        <article>
+          <div class="export-import-container">
             <p align="center">
 			  <i class="icon icon-download icon-3x icon-export-import"
 				 ng-click="siteCSVModalCtrl.startExport()"></i>
@@ -43,7 +44,8 @@
 			  <span translate='siteList.siteCsvModalExportText'
 			        translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
 			</p>
-          </article>
+          </div>
+        </article>
       </cs-card>
       <!-- end of csv export card -->
       
@@ -85,15 +87,18 @@
                     </p>
 				</div>
 				
-				<div ng-if="siteCSVModalCtrl.modal.file">
-				  <div class="export-import-container">
-				    <p>&nbsp;</p>
+				<div ng-if="siteCSVModalCtrl.modal.file"
+				     class="export-import-container">
+
+                    <p>
+                        &nbsp;
+                    </p>
 				    
 					<p align="center">
-				      {{siteCSVModalCtrl.modal.fileName}}
-				    </p>
-				  
-				    <p align="center">
+				        {{siteCSVModalCtrl.modal.fileName}}
+				      
+				        <br><br>
+				      
 				        <button cs-btn
 				                type="button" 
 						        class="btn btn--primary"
@@ -103,7 +108,6 @@
 					      <span translate="siteList.importButton"></span>
 			            </button>
 				    </p>
-				  </div>
 				</div>
           </div>
         </article>

@@ -107,7 +107,7 @@
       //$log.log(logMsg);
 
       vm.importing = true;
-      
+
       if (
         (null == vm.modal.file) ||
         (0 == vm.modal.file.length)
@@ -174,7 +174,7 @@
         SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
       } else {
-    	  vm.importing = false;
+        vm.importing = false;
       }
     } // displayResult()
   } // SiteCSVModalCtrl()
