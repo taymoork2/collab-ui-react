@@ -92,22 +92,21 @@
       vm.report = null;
       vm.error = "";
       vm.searchInProgress = true;
-      // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
-          EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId)
-            .then(function (result) {
-              vm.roomInfo = result;
-              vm.searchCriteria.id = result.id;
-              vm.searchCriteria.startDate = result.published;
-              vm.searchCriteria.endDate = result.lastReadableActivityDate;
-              vm.searchCriteria.displayName = result.displayName;
-            })
-            .catch(function (err) {
-              vm.error = $translate.instant("ediscovery.searchError", {
-                roomId: roomId
-              });
-            });
+          return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
+        })
+        .then(function (result) {
+          vm.roomInfo = result;
+          vm.searchCriteria.id = result.id;
+          vm.searchCriteria.startDate = result.published;
+          vm.searchCriteria.endDate = result.lastReadableActivityDate;
+          vm.searchCriteria.displayName = result.displayName;
+        })
+        .catch(function (err) {
+          vm.error = $translate.instant("ediscovery.searchError", {
+            roomId: roomId
+          });
         })
         .finally(function () {
           vm.searchInProgress = false;
