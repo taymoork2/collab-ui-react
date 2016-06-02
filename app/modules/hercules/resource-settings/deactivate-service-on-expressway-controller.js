@@ -26,7 +26,7 @@
 
     function getIconClassForService() {
       return FusionUtils.serviceId2Icon(FusionUtils.connectorType2ServicesId(vm.connectorId)[0]);
-    };
+    }
 
   }
 }());
