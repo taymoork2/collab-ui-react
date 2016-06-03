@@ -1,23 +1,15 @@
 <div class="ui-grid-cell-contents align-center">
-<div ng-repeat="field in grid.appScope.getSubfields(col.field)" class="subcol">
-
-
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeActive(row.entity, field)"
-    class="badge"
-    ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-    translate="customerPage.active"></span>
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeATrial(row.entity, field)"
-    class="badge"
-    ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-    translate="customerPage.trial"></span>
-  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeFree(row.entity, field)"
-    ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-    translate="customerPage.free"></span>
-</div>
-
-
-
-
-
-
+  <div ng-repeat="field in grid.appScope.getSubfields(col.field)" class="subcol">
+    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeActive(row.entity, field)"
+      class="badge"
+      ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
+      translate="customerPage.active"></span>
+    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeATrial(row.entity, field)"
+      class="badge"
+      ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
+      translate="customerPage.trial"></span>
+    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeFree(row.entity, field)"
+      ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
+      translate="customerPage.free"></span>
+  </div>
 </div>
