@@ -223,7 +223,7 @@
           templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
           controller: function () {
             var ctrl = this;
-            ctrl.messageBody1 = 'Are you sure you wish to delete "' + vm.customerName + '"?';
+            ctrl.orgName = vm.customerName;
           },
           controllerAs: 'ctrl'
         }).result.then(function () {
