@@ -33,23 +33,30 @@
       <cs-card class="large">
         <article>
           <div class="export-import-container">
-            <p align="center">
-			  <i ng-if="!siteCSVModalCtrl.modal.file"
-			     class="icon icon-download-contain icon-4x icon-export-import"
-				 ng-click="siteCSVModalCtrl.startExport()"></i>
+            <div class="file-drop">
+              <p align="center">
+                <label for='download'> 
+			      <i ng-if="!siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import"
+				     ng-click="siteCSVModalCtrl.startExport()"></i>
 				 
-			  <i ng-if="siteCSVModalCtrl.modal.file"
-			     class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
-			</p>
-			
-            <p align="center">
-			  <b><span translate='siteList.siteCsvExportLinkLabel'></span></b>
+			      <i ng-if="siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
+                </label>
+
+                <br>
 			  
-			  <br><br>
+			    <b><span translate='siteList.siteCsvExportLinkLabel'></span></b>
 			  
-			  <span translate='siteList.siteCsvModalExportText'
-			        translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
-			</p>
+			    <br><br>
+			  
+			    <!-- 
+			    <span translate='siteList.siteCsvModalExportText'
+			          translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
+			    -->
+			    <span translate='siteList.siteCsvModalExportTextShort'></span>
+			  </p>
+            </div>
           </div>
         </article>
       </cs-card>

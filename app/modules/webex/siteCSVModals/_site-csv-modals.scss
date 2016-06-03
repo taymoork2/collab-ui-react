@@ -2,25 +2,26 @@
 .users-upload-csv {
   border:none;
   outline:none;
-  height: 276px;
+  height: 275px;
  }
  
 .icon-export-import {
-  top: 41px;
+  top: 40px;
   color: $color-primary-base;
 }
  
 .icon-export-import-disabled {
-  top: 41px;
+  top: 40px;
   color: $gray-light-3;
 }
  
 .file-drop {
   border: none !important;
+  height: 275px !important;
 }
 
 .export-import-container {
   border:none;
   outline:none;
-  height: 276px;
+  height: 275px;
 }
