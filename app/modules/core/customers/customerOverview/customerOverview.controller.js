@@ -143,12 +143,11 @@
       }
       promise.then(function () {
         if (licIds.length > 0) {
-          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', function () {
-            $window.open($state.href('login_swap', {
-              customerOrgId: vm.customerOrgId,
-              customerOrgName: vm.customerName
-            }));
-          });
+          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
+          $window.open($state.href('login_swap', {
+            customerOrgId: vm.customerOrgId,
+            customerOrgName: vm.customerName
+          }));
         } else {
           AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
             var len = data.accounts.length;
