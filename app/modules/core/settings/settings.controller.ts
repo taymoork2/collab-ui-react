@@ -15,14 +15,13 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, $translate) {
-
+    constructor(Authinfo) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
       } else {
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
-        this.support = new SupportSetting(Authinfo, $translate);
+        this.support = new SupportSetting();
       }
     }
   }

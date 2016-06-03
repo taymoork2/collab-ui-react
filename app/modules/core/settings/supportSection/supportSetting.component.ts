@@ -3,12 +3,8 @@ namespace globalsettings {
 
   export class SupportSetting extends SettingSection {
 
-    get appType():string {
-      return 'Squared';
-    }
-
     /* @ngInject */
-    constructor(Authinfo, $translate) {
+    constructor() {
       super('support');
       this.subsectionLabel = '';
       this.subsectionDescription = '';
