@@ -36,7 +36,7 @@ namespace globalsettings {
       return this.customHelpSite.enable;
     }
 
-    set useCustomHelpSite(value) {
+    set useCustomHelpSite(value:boolean) {
       this.customHelpSite.enable = value;
       if (value === this.helpSiteInfo.cisco) {
         this.customHelpSite.url = '';
@@ -51,7 +51,7 @@ namespace globalsettings {
       return this.customSupport.enable;
     }
 
-    set useCustomSupportUrl(value) {
+    set useCustomSupportUrl(value:boolean) {
       this.customSupport.enable = value;
       if (value === this.problemSiteInfo.cisco) {
         this.customSupport.url = '';
@@ -88,7 +88,6 @@ namespace globalsettings {
     }
 
     private initOrgInfo() {
-
       this.UserListService.listPartners(this.orgId, (data:{partners:Array<Partner>})=> {
         if (_.isEmpty(data.partners)) {
           return;
