@@ -1,10 +1,10 @@
 <div class="modal-header">
-  <h3 class="modal-title">Delete Customer</h3>
+  <h3 class="modal-title" translate="customerPage.deleteOrgTitle"></h3>
 </div>
 <div class="modal-body">
-  <span>{{ctrl.messageBody1}}</span>
+  <span translate="customerPage.deleteOrgConfirmMsg" translate-values="{orgName : ctrl.orgName}"></span>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-  <button class="btn btn-primary" ng-click="$close()" translate="common.ok"></button>
+  <button class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button class="btn btn--alert" ng-click="$close()" translate="customerPage.deleteOrgTitle"></button>
 </div>
