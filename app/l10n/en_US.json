@@ -3655,8 +3655,8 @@
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
     "selectFieldText": "Select a field on the left to change it's attribute.",
-    "ciHelpText": "Help directs customers to the right agent",
-    "riHelpText": "",
+    "ciHelpText": "Helps direct customers to the right agent",
+    "riHelpText": "Helps direct customers to the right agent",
     "requiredField": "Required Field",
     "optionalField": "Optional Field",
     "categoryLabel": "Category",
@@ -3692,6 +3692,11 @@
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
     "noThanksBtn": "No Thanks",
+    "typeCategory": "Category",
+    "typeName": "Name",
+    "typeEmail": "Email",
+    "typeId": "Id",
+    "typePhone": "Phone",
 
     "ctOverview": {
       "customerInformation": {

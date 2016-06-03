@@ -7,7 +7,7 @@
 
   <div class="ct-customer ct-sa-content">
     <cs-card-layout>
-      <cs-card class="ct-card">
+      <cs-card class="ct-customer-card">
         <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
 
         <article class="customer-preview-article ct-article header-border header-background articleHeight">
@@ -39,7 +39,7 @@
         </article>
       </cs-card>
 
-      <cs-card class="ct-card">
+      <cs-card class="ct-customer-card">
         <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
         <article class="customer-attributes-article ct-article articleHeight">
           <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
@@ -119,7 +119,7 @@
                         ng-model="attribute.value"
                         options="careChatSA.typeOptions"
                         labelfield="text"
-                        valuefield="text"
+                        valuefield="id"
                         class="ct-attribute-field-textbox"
                         placeholder="attribute.defaultValue">
                 </cs-select>
@@ -129,7 +129,7 @@
                   <em>{{attribute.value.helpText}}</em>
                 </label>
               </div>
-              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.text == 'category'">
+              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
                 <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
                 <input
                         id="categoryTextBox"
@@ -137,7 +137,7 @@
                         type="text"
                         ng-keypress="careChatSA.onEnterKey($event)"
                         ng-model="careChatSA.categoryOptionTag"
-                        ng-maxlength="25"/>
+                        maxlength="25"/>
                 <div class="category-tokens">
                   <cs-token-field
                           tokenfieldid="careChatSA.categoryTokensId"
