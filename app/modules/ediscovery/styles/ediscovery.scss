@@ -219,9 +219,16 @@
         }
         .input-section {
           padding-top: 0.5rem;
+          .report-name {
+            width: 100%;
+          }
         }
         .input-section-last {
-          padding-top: 1rem;
+          padding-top: 2.5rem;
+          padding-right: 2rem;
+        }
+        .buttons {
+          padding-top: 2rem;
         }
         .failure {
           color: $color-negative-base;
