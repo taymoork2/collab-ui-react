@@ -144,8 +144,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
     expect(userSettingsModel.supportCenter.isEntitledOnAtlas).toEqual(false);
   }));
 
-  // TODO: currently failing on PhantomJS, Chrome, and Firefox
-  xit('can update user settings base on webex service entitlement in the webex d/b', inject(function (WebExUserSettingsFact) {
+  it('can update user settings base on webex service entitlement in the webex d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
     WebExUserSettingsFact.getUserSettingsFromWebEx();
@@ -171,6 +170,44 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
     expect(userSettingsModel.supportCenter.isEntitledOnWebEx).toEqual(false);
   }));
 }); // describe()
+
+describe('WebExUserSettingsFact read-only admin tests', function () {
+  var $q;
+  var $rootScope;
+  var Notification;
+  var deferredWebExReadOnlyXML;
+  var fakeWebExReadOnlyXml = '<?xml version="1.0" encoding="UTF-8"?><serv:message xmlns:serv="http://www.webex.com/schemas/2002/06/service" xmlns:com="http://www.webex.com/schemas/2002/06/common" xmlns:use="http://www.webex.com/schemas/2002/06/service/user"><serv:header><serv:response><serv:result>FAILURE</serv:result><serv:reason>Access denied, additional privileges are required</serv:reason><serv:gsbStatus>PRIMARY</serv:gsbStatus><serv:exceptionID>000001</serv:exceptionID></serv:response></serv:header><serv:body><serv:bodyContent/></serv:body></serv:message>';
+
+  beforeEach(module('WebExApp'));
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExXmlApiFact_,
+    _Notification_,
+    _Authinfo_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    deferredWebExReadOnlyXML = _$q_.defer();
+    spyOn(_WebExXmlApiFact_, "updateUserSettings2").and.returnValue(deferredWebExReadOnlyXML.promise);
+
+    Notification = _Notification_;
+    spyOn(Notification, 'notifyReadOnly');
+
+    spyOn(_Authinfo_, "isReadOnlyAdmin").and.returnValue(true);
+  }));
+
+  it('Shows orange toast in read only mode', inject(function (WebExUserSettingsFact) {
+    WebExUserSettingsFact.updateUserSettings2();
+    deferredWebExReadOnlyXML.resolve(fakeWebExReadOnlyXml);
+    $rootScope.$apply();
+
+    expect(Notification.notifyReadOnly).toHaveBeenCalled();
+  }));
+}); // describe(read-only admin tests)
 
 describe('WebExUserSettingsFact pmr/cmr tests', function () {
   var Notification;

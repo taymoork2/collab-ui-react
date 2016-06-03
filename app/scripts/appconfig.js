@@ -1155,7 +1155,7 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+                templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
                 controllerAs: 'siteCSVResult',
                 resolve: {
                   modalInfo: function ($state) {

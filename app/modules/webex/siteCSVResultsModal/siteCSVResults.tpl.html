@@ -1,4 +1,6 @@
-  <div class="modal-header">
+  <div ng-if="siteCSVResult.viewReady"
+       class="modal-header">
+       
     <button type="button" 
             class="close" 
             ng-click="$dismiss()" 
@@ -36,13 +38,12 @@
     </p>
   </div>
     
-  <div class="modal-footer">
-    <span ng-if="( 'exportCompletedNoErr' == siteCSVResult.csvStatusObj.status ) || 
-                 ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
-                   
-      <webex-csv-download type='webexexport'
-                          siteurl={{siteCSVResult.siteUrl}}
-                          filedownloadurl={{siteCSVResult.downloadFileUrl}}
-                          filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
-    </span>
+  <div ng-if="( 'exportCompletedNoErr' == siteCSVResult.csvStatusObj.status ) || 
+              ( 'exportCompletedWithErr' == siteCSVResult.csvStatusObj.status )"
+       class="modal-footer">
+       
+    <webex-csv-download type='webexexport'
+                        siteurl={{siteCSVResult.siteUrl}}
+                        filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                        filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
   </div>

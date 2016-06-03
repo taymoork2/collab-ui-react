@@ -6,7 +6,6 @@
       "type": "directoryNumber",
       "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
     }],
-    "defaultActionSet": "openHours",
     "scheduleEventTypeMap": {
       "open": "openHours"
     },

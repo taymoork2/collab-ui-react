@@ -516,7 +516,7 @@
           ); // gridData.forEach()
 
           if (!adminUserSupportCSV) {
-            vm.gridOptions.columnDefs.splice(3, 1);
+            //  vm.gridOptions.columnDefs.splice(3, 1);
           }
           // End of hiding CSV info if admin user does not have feature toggle
 
@@ -537,7 +537,7 @@
           $log.log(funcName);
 
           // don't show the CSV column
-          vm.gridOptions.columnDefs.splice(2, 1);
+          //  vm.gridOptions.columnDefs.splice(2, 1);
 
           updateGridColumns();
         } // checkWebExFeaturToggleError()
