@@ -30,6 +30,7 @@ typings
 /ts/*manifest.txt
 .cache
 
+bower_components
 node_modules
 npm-debug.log
 npm-shrinkwrap.json
