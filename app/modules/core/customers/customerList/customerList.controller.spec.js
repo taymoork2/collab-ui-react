@@ -142,6 +142,18 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
   });
+  describe('getSubfields', function () {
+    beforeEach(initController);
+
+    it('should return a proper list of subfields given the field type', function () {
+      $scope.gridOptions.multiFields = {
+        meeting: ['conferencing', 'webexEEConferencing']
+      };
+      var result = $scope.getSubfields('meeting');
+      expect(result[0]).toBe('conferencing');
+      expect(result[1]).toBe('webexEEConferencing');
+    });
+  });
 
   describe('customerCommunicationLicenseIsTrial flag', function () {
     beforeEach(initController);

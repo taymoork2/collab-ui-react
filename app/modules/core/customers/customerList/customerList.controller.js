@@ -17,6 +17,7 @@
     $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
+    $scope.getSubfields = getSubfields;
     $scope.filterAction = filterAction;
     $scope.modifyManagedOrgs = modifyManagedOrgs;
     $scope.getTrialsList = getTrialsList;
@@ -57,6 +58,7 @@
     var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
+    var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
 
     $scope.gridOptions = {
@@ -82,58 +84,64 @@
           }
         });
       },
+      multiFields: {
+        meeting: ['conferencing', 'webexEEConferencing']
+      },
       columnDefs: [{
-        field: 'customerName',
-        displayName: $translate.instant('customerPage.customerNameHeader'),
-        width: '25%',
-        cellTemplate: nameTemplate,
-        cellClass: 'ui-grid-add-column-border',
-        sortingAlgorithm: partnerAtTopSort,
-        sort: {
-          direction: 'asc',
-          priority: 0,
+          field: 'customerName',
+          displayName: $translate.instant('customerPage.customerNameHeader'),
+          width: '25%',
+          cellTemplate: nameTemplate,
+          cellClass: 'ui-grid-add-column-border',
+          sortingAlgorithm: partnerAtTopSort,
+          sort: {
+            direction: 'asc',
+            priority: 0,
+          },
+        }, {
+          field: 'messaging',
+          displayName: $translate.instant('customerPage.message'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'meeting',
+          displayName: $translate.instant('customerPage.meeting'),
+          width: '30%',
+          cellTemplate: multiServiceTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: serviceSort
         },
-      }, {
-        field: 'messaging',
-        displayName: $translate.instant('customerPage.message'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'conferencing',
-        displayName: $translate.instant('customerPage.meeting'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'communications',
-        displayName: $translate.instant('customerPage.call'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'roomSystems',
-        displayName: $translate.instant('customerPage.roomSystems'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'notes',
-        displayName: $translate.instant('customerPage.notes'),
-        cellTemplate: noteTemplate,
-        sortingAlgorithm: notesSort
-      }, {
-        field: 'action',
-        displayName: $translate.instant('customerPage.actionHeader'),
-        sortable: false,
-        cellTemplate: actionTemplate,
-        width: '95',
-        cellClass: 'align-center'
-      }]
+
+        {
+          field: 'communications',
+          displayName: $translate.instant('customerPage.call'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'roomSystems',
+          displayName: $translate.instant('customerPage.roomSystems'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'notes',
+          displayName: $translate.instant('customerPage.notes'),
+          cellTemplate: noteTemplate,
+          sortingAlgorithm: notesSort
+        }, {
+          field: 'action',
+          displayName: $translate.instant('customerPage.actionHeader'),
+          sortable: false,
+          cellTemplate: actionTemplate,
+          width: '95',
+          cellClass: 'align-center'
+        }
+      ]
     };
 
     init();
@@ -150,6 +158,10 @@
           Log.error('Query org info failed. Status: ' + status);
         }
       });
+    }
+
+    function getSubfields(name) {
+      return $scope.gridOptions.multiFields[name];
     }
 
     function isOrgSetup(customer) {
