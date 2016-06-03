@@ -1,0 +1,51 @@
+<!-- support title / description -->
+
+<div class="sub-section">
+  <h5 class="sub-section__label" translate="partnerProfile.supportTitle"></h5>
+  <p ng-if="!ctrl.isPartner" class="sub-section__description" translate="customerProfile.supportInfo"
+     translate-values="{app : ctrl.appType}"></p>
+  <p ng-if="ctrl.isPartner" class="sub-section__description" translate="partnerProfile.supportInfo"
+     translate-values="{app : ctrl.appType}"></p>
+</div>
+
+<!-- trouble ticket reporting location form -->
+<div class="cs-radio-group" id="troubleReportingPanel">
+  <h5 translate="partnerProfile.supportSetup"></h5>
+  <!-- partner problem reporting site form -->
+  <input type="checkbox" id="customSupportUrlBox" ng-model="ctrl.useCustomSupportUrl">
+  <label for="customSupportUrlBox" translate="globalSettings.support.problemReportsToCustomUrl"/>
+  <div class="radio-input-flex">
+    <input type="text" id="partnerSupportUrl" class="form-control"
+           placeholder="{{ctrl.placeHolder.troubleUrl | translate}}"
+           ng-model="ctrl.customSupport.url" ng-disabled="!ctrl.useCustomSupportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
+                          placeholder="{{ctrl.placeHolder.troubleText | translate}}" ng-model="ctrl.customSupport.text"
+                          ng-disabled="!ctrl.useCustomSupportUrl">
+                </textarea>
+    <h6 translate="partnerProfile.matchingTix"></h6>
+    <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
+    <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomSupportUrlDirty"
+            ng-click="ctrl.saveUseCustomSupportUrl()"
+            loading="ctrl.savingProgress">{{"common.save" | translate}}
+    </button>
+  </div>
+</div>
+
+<div class="cs-radio-group" id="helpPanel">
+  <h5 translate="partnerProfile.helpFaq"></h5>
+  <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
+    <input type="checkbox" id="customHelpSite" ng-model="ctrl.useCustomHelpSite">
+    <label for="customHelpSite" translate="globalSettings.support.useCustomHelpSite"></label>
+
+  </div>
+  <div class="cs-input-group cs-input-radio" id="helpPartnerPanel">
+
+    <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
+           placeholder="{{ctrl.placeHolder.helpUrlText | translate}}" ng-model="ctrl.customHelpSite.url"
+           ng-disabled="!ctrl.useCustomHelpSite">
+
+  </div>
+  <button cs-btn class="btn btn--primary" ng-if="ctrl.useCustomHelpSiteDirty" ng-click="ctrl.saveUseCustomHelpSite()"
+          loading="ctrl.savingProgress">{{"common.save" | translate}}
+  </button>
+</div>

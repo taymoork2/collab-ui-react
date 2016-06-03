@@ -75,7 +75,7 @@ describe('SiteListCtrl(): grid update test', function () {
     expect(SiteListCtrl.gridData[0].showCSVIconAndResults).toEqual(false);
 
     expect(SiteListCtrl.gridOptions.columnDefs).toBeDefined();
-    expect(SiteListCtrl.gridOptions.columnDefs.length).toEqual(4);
+    expect(SiteListCtrl.gridOptions.columnDefs.length).toEqual(3);
   });
 
 }); // describe()

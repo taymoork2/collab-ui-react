@@ -1,0 +1,24 @@
+<div ng-repeat="(fieldName, field) in getFilteredFields(fields)">
+  <div class="row ct-left-row" selectable ng-click="setActiveItem(field)">
+    <div class="ct-flex-container">
+      <label
+        title="{{getLabel(field)}}"
+        id="label-{{fieldName}}"
+        class="cs-input__label h5 labelText ct-selectable-element strong textOverflow"
+        for="text-{{fieldName}}">{{getLabel(field)}}</label>
+      <label
+        class="ct-input__label h6 labelText textOverflow"
+        ng-show="isRequired(field) != 'required'">
+        <em id="opt-{{fieldName}}" translate="careChatTpl.optionalText"></em></label>
+    </div>
+
+    <div class="ct-flex-container">
+      <input
+        id="text-{{fieldName}}"
+        class="h5 ct-left-cs-input ct-selectable-element large-11"
+        type="text"
+        placeholder="{{getPlaceholder(field)}}">
+      <i id="img-{{fieldName}}" class="icon icon-chevron-down" ng-if="getType(field).id === 'category'"></i>
+    </div>
+  </div>
+</div>

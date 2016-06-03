@@ -29,8 +29,8 @@
     </div>
   </div>
   <div ng-if="idpFile.file && idpFile.success">
-    <div class="file-drop-inactive">
-      <div class="file-drop-content sso-container copy-spacing">
+    <div class="file-drop">
+      <div class="sso-container copy-spacing">
         <i class="icon icon-circle-check"></i>
         <h3 translate="ssoModal.importSuccess"></h3>
         <p class="file-name">{{idpFile.fileName}}</p>
@@ -45,7 +45,7 @@
     </div>
   </div>
   <div ng-if="idpFile.file && idpFile.error" class="file-drop-inactive">
-    <div class="file-drop-content sso-container copy-spacing">
+    <div class="sso-container copy-spacing">
       <i class="icon icon-circle-comp-negative"></i>
       <h3>{{idpFile.errorMsg}}</h3>
       <p class="file-name">{{idpFile.fileName}}</p>

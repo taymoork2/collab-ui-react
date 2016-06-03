@@ -21,8 +21,6 @@
     vm.load = false;
     $scope.gridData = [];
 
-    var featurePromise = FeatureToggleService.supports('huron-order-management');
-
     vm.sort = {
       by: 'userid',
       order: '-asc'
@@ -41,6 +39,9 @@
     }, {
       name: $translate.instant('linesPage.assignedLines'),
       filterValue: 'assignedLines'
+    }, {
+      name: $translate.instant('linesPage.pending'),
+      filterValue: 'pending'
     }];
 
     // Set data filter
@@ -70,40 +71,10 @@
       }, vm.timeoutVal);
     };
 
-    $q.when(featurePromise).then(function (response) {
-      if (response) {
-        vm.filters.push({
-          name: $translate.instant('linesPage.pending'),
-          filterValue: 'pending'
-        });
-      }
-    });
-
-    // Get count of line association data;
-    // total, unassigned, assigned lines
-    function getCount() {
-      LineListService.getCount(vm.searchStr)
-        .then(function (response) {
-          vm.placeholder.count = response.totalCount || 0;
-          vm.filters[0].count = response.unassignedCount || 0;
-          vm.filters[1].count = response.assignedCount || 0;
-        })
-        .catch(function (response) {
-          Log.debug('Query for line association record counts failed.');
-          Notification.errorResponse(response, 'linesPage.getCountError');
-        });
-    } // End of function getCount
-
     // Get line association data to populate the grid
     function getLineList(startAt) {
       vm.gridRefresh = true;
 
-      // Update counts when line association data needs to be refreshed
-      $q.when(featurePromise).then(function (response) {
-        if (!response) {
-          getCount();
-        }
-      });
       // Clear currentLine if a new search begins
       var startIndex = startAt || 0;
       vm.currentLine = null;

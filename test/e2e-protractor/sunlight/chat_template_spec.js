@@ -11,7 +11,7 @@ describe('Care admin should be able to', function () {
     utils.click(careLandingPage.creatCTButton);
   });
 
-  it('create a chat template', function () {
+  it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
@@ -29,15 +29,31 @@ describe('Care admin should be able to', function () {
     validateContentsOfChatStringsPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
+    validateDismissOfCTSetupWizard();
+    validateDisplayEmbedCodeModal();
+    validateDismissOfEmbedCodeModal();
+    validateFeaturesPage();
   });
+
+  function validateDismissOfCTSetupWizard() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.careChatSetupWizard)
+  }
+
+  function validateDisplayEmbedCodeModal() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedScriptBtn);
+    utils.click(careChatTemplateSetupPage.closeEmbedScriptModel);
+  }
+
+  function validateDismissOfEmbedCodeModal() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.embedCodeModal)
+  }
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
-  // Creating placeholder functions for testing multiple setUp assistant pages
-  // these placeholder functions will be implemented in coming stories
   function validateContentsOfNamePage() {
     utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
@@ -158,6 +174,23 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfSummaryPage() {
     validateTitleAndDesc('Summary', 'Configuration Summary');
+    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
+  }
+
+  function validateFeaturesPage() {
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedCodeOnCard);
+    utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
+    utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been deleted successfully');
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
   }
 
 });
