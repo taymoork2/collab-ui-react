@@ -66,7 +66,7 @@
       f.parentNode.insertBefore(a, f);
     }
   })(document, window.mixpanel || []);
-  mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
+  //mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 
