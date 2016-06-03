@@ -71,11 +71,11 @@
     });
 
     vm.fields = [{
-      className: 'row',
+      className: 'row collapse-both',
       fieldGroup: [{
         type: 'select',
         key: 'state',
-        className: 'medium-3 columns',
+        className: 'medium-4 columns',
         templateOptions: {
           required: true,
           label: $translate.instant('pstnSetup.state'),
@@ -104,7 +104,7 @@
         type: 'select',
         key: 'areaCode',
         id: 'areaCode',
-        className: 'medium-3 columns',
+        className: 'medium-4 columns',
         templateOptions: {
           required: true,
           label: $translate.instant('pstnSetup.areaCode'),
@@ -155,7 +155,7 @@
       }, {
         type: 'button',
         key: 'searchBtn',
-        className: 'search-button',
+        className: 'search-button right',
         templateOptions: {
           btnClass: 'btn btn--circle primary',
           spanClass: 'icon icon-search',
@@ -172,6 +172,7 @@
       fieldGroup: [{
         type: 'cs-input',
         key: 'block',
+        className: 'small-indent',
         templateOptions: {
           type: 'checkbox',
           id: 'blockChk',

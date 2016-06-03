@@ -1,19 +1,17 @@
-<div id="modalContent" class="edit-services">
-  <div class="modal-header">
-    <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()">
-      <span class="sr-only">Close</span>
-    </button>
-    <h3 class="modal-title"><span translate="usersPreview.editServiceTitle"></span>
-      {{currentUser.name.givenName}} {{currentUser.name.familyName}}</h3>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()">
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title"><span translate="usersPreview.editServiceTitle"></span>
+    {{currentUser.name.givenName}} {{currentUser.name.familyName}}</h3>
+</div>
 
-  <div class="modal-body">
-    <cr-services-panels ng-if="hasAccount" radioStates="radioStates"></cr-services-panels>
-  </div>
+<div class="modal-body">
+  <cr-services-panels ng-if="hasAccount" radioStates="radioStates"></cr-services-panels>
+</div>
 
-  <div class="modal-footer">
-    <button type="button" id="btnCancel" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span>
-    </button>
-    <button type="button" id="btnSaveEnt" cs-btn loading="btnSaveEntLoad" class="btn btn--primary" ng-click="editServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
-  </div>
+<div class="modal-footer">
+  <button type="button" id="btnCancel" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span>
+  </button>
+  <button type="button" id="btnSaveEnt" cs-btn loading="btnSaveEntLoad" class="btn btn--primary" ng-click="editServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
 </div>

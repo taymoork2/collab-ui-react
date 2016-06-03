@@ -23,9 +23,15 @@
         $scope.headerTitle = title;
       });
       $scope.navStyle = 'admin';
-      FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
-        vm.newTabDisplay = !!support;
-      });
+      initFeatureToggles();
+    }
+
+    function initFeatureToggles() {
+      if (Utils.isAdminPage()) {
+        FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
+          vm.newTabDisplay = !!support;
+        });
+      }
     }
 
     function originalTabDisplay() {

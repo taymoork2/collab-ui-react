@@ -1,9 +1,10 @@
 'use strict';
 
+/* global Promise */
+
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 var request = require('request');
-var Promise = require('promise');
 
 exports.deleteUser = function (email, token) {
   return new Promise(function (resolve, reject) {

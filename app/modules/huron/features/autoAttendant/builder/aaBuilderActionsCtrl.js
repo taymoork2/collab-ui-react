@@ -54,6 +54,13 @@
     /////////////////////
 
     function selectOption() {
+      // if we are selecting a phone menu, re-initialize uiMenu.entries[vm.index] with a CeMenu.
+      if (vm.option.actions[0] === 'runActionsOnInput' && !_.has(vm.option, 'type')) {
+        var menu = AutoAttendantCeMenuModelService.newCeMenu();
+        menu.type = 'MENU_OPTION';
+        var uiMenu = vm.ui[vm.schedule];
+        uiMenu.entries[vm.index] = menu;
+      }
       AACommonService.setActionStatus(true);
     }
 
@@ -107,6 +114,7 @@
     }
 
     function activate() {
+      vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();
       setOption();

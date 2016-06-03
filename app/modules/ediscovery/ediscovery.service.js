@@ -2,50 +2,83 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, $q, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
-    function deferredResolve(resolved) {
-      var deferred = $q.defer();
-      deferred.resolve(resolved);
-      return deferred.promise;
+    function extractReports(res) {
+      var reports = res.data.reports;
+      _.each(reports, function (report) {
+        detectAndSetReportTimeout(report);
+      });
+      return reports;
     }
 
-    function extractItems(res) {
-      //console.log("reports get, respons", res)
-      return res.data.reports;
+    function extractReport(res) {
+      return detectAndSetReportTimeout(res.data);
     }
 
-    function getReport() {
+    function detectAndSetReportTimeout(report) {
+      if (report) {
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime).getTime() > 300000;
+      }
+      return report;
+    }
+
+    function extractData(res) {
+      return res.data;
+    }
+
+    function getAvalonServiceUrl() {
+      //TODO: Cache pr org
       var orgId = Authinfo.getOrgId();
       return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
-        .then(extractItems)
+        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
+        .then(extractData);
+    }
+
+    function getAvalonRoomInfo(url) {
+      return $http
+        .get(url)
+        .then(extractData);
+    }
+
+    function getReport(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
+        .then(extractReport)
         .catch(function (data) {
-          //console.log("error getReport: " + data)
+          //  TODO: Implement proper handling of error when final API is in place
+          //console.log("error getReports: " + data)
         });
     }
 
-    function createReport(displayName, roomId) {
+    function getReports() {
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+        .then(extractReports)
+        .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
+          //console.log("error getReports: " + data)
+        });
+    }
+
+    function createReport(displayName) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName
         })
-        // .then(function(res) {
-        //   createReportDoIt(res, roomId);
-        // })
-        .catch(function (data) {
-          //console.log("error createReport: " + data)
-        });
+        .then(extractData);
     }
 
-    //  TODO: Implement proper handling of error when final API is in place
-    function createReportDoIt(runUrl, roomId) {
-      //console.log("created, post to runUrl", runUrl)
+    // TODO: Implement proper handling of error when final API is in place
+    function runReport(runUrl, roomId, responseUrl) {
       return $http.post(runUrl, {
-        "roomId": roomId
+        "roomId": roomId,
+        "responseUrl": responseUrl
       });
     }
 
@@ -54,6 +87,7 @@
       return $http
         .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
         .then(function (res) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("patching", res);
         })
         .catch(function (data) {
@@ -66,9 +100,11 @@
       return $http
         .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
         .then(function (res) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("deleted", res);
         })
         .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("error createReport: " + data)
         });
     }
@@ -78,17 +114,28 @@
       return $http
         .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/')
         .catch(function (data) {
+          //  TODO: Implement proper handling of error when final API is in place
           //console.log("error deleteReport: " + data)
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
+    }
+
     return {
+      getAvalonServiceUrl: getAvalonServiceUrl,
+      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
+      getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
-      createReportDoIt: createReportDoIt,
+      runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance
     };
   }
 

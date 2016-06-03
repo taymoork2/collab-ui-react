@@ -157,6 +157,79 @@ describe('Service: Trial Service:', function () {
       });
     });
 
+    describe('start call trial state and country check', function () {
+      var testData = trialData.enabled.trials.deviceTrial;
+      it('should get state correcty from string', function () {
+        testData.shippingInfo.state = "TX";
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var state = angular.fromJson(data).details.shippingInfo.state;
+          return state === 'TX';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get state correcty from object', function () {
+        testData.shippingInfo.state = {
+          "abbr": "IL",
+          "state": "Illinois"
+        };
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          return angular.fromJson(data).details.shippingInfo.state === 'IL';
+
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get country correcty from string', function () {
+        testData.shippingInfo.country = "Canada";
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+
+          return angular.fromJson(data).details.shippingInfo.country === 'Canada';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get country correcty from object', function () {
+        testData.shippingInfo.country = {
+          "country": "Germany"
+        };
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+
+          return angular.fromJson(data).details.shippingInfo.country === 'Germany';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+    });
+
     describe('start trial with disabled trials', function () {
       it('should have blank offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
