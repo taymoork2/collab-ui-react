@@ -149,7 +149,9 @@
             labelfield: 'name',
             valuefield: 'abbreviation',
             onChangeFn: getStateInventory,
-            options: []
+            options: [],
+            filter: true
+
           },
           controller: /* @ngInject */ function ($scope) {
             TerminusStateService.query().$promise.then(function (states) {

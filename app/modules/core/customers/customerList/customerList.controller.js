@@ -66,6 +66,7 @@
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
+      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {

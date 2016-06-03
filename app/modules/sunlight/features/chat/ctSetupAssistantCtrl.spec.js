@@ -3,6 +3,7 @@
 describe('Care Chat Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
+  var Notification;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -56,7 +57,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
-    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_) {
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -66,11 +67,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     CTService = _CTService_;
     SunlightConfigService = _SunlightConfigService_;
     $state = _$state_;
+    Notification = _Notification_;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
     spyOn($modal, 'open');
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(Notification, 'success');
 
     controller = $controller('CareChatSetupAssistantCtrl');
   };
@@ -375,6 +378,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         resolve: {
           templateId: jasmine.any(Function)
         }
+      });
+      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String)
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();

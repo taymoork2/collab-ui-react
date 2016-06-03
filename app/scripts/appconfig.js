@@ -1155,7 +1155,7 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+                templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
                 controllerAs: 'siteCSVResult',
                 resolve: {
                   modalInfo: function ($state) {
@@ -2451,7 +2451,12 @@
               'modal@': {
                 controller: 'CareFeaturesDeleteCtrl',
                 controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
