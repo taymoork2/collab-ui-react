@@ -47,16 +47,15 @@
     <div class="row form-spacing" ng-if="isPartner">
       <h4 translate="branding.tenantTitle"></h4>
       <div class="small-12 columns cs-checkbox-group">
-        <input 
+        <input
+          cs-input
           type="checkbox"
           id="allowCustomerLogo"
           name="allowCustomerLogo"
           ng-model="allowCustomerLogos"
-          ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
-          <label for="allowCustomerLogo">
-            <span translate="partnerProfile.allowCustomerLogo"></span>
-            <a ng-click=showBrandingExample('Tenant') translate="branding.exampleLink"></a>
-          </label>
+          ng-change="toggleAllowCustomerLogos(allowCustomerLogos)"
+          cs-input-label="{{::'partnerProfile.allowCustomerLogo' | translate}}">
+          <a ng-click=showBrandingExample('Tenant') translate="branding.exampleLink"></a>
       </div>
     </div>
   </div>

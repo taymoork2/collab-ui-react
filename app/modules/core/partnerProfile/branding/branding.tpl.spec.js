@@ -3,17 +3,13 @@
 describe('Template: branding', function () {
 
   var $scope, $controller, controller, $q, $templateCache, $compile, view;
-  var Notification, Orgservice, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
+  var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
 
   var PARTNER_LOGO_RADIO = 'partnerLogoRadio';
   var CUSTOM_LOGO_RADIO = 'customLogoRadio';
 
   var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
   var USE_LATEST_WEBEX_CHECKBOX = '#useLatestWbxVersion';
-
-  var USE_CISCO_EXAMPLE_LINK = 'useCiscoLogoExampleLink';
-  var USE_CUSTOM_EXAMPLE_LINK = 'useCustomLogoExampleLink';
-  var ALLOW_CUSTOM_EXAMPLE_LINK = "allowCustomLogExampleLink";
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -22,7 +18,7 @@ describe('Template: branding', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -30,6 +26,7 @@ describe('Template: branding', function () {
     $compile = _$compile_;
     Notification = _Notification_;
     Orgservice = _Orgservice_;
+    UserListService = _UserListService_;
     BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
     WebexClientVersion = _WebexClientVersion_;
@@ -37,7 +34,10 @@ describe('Template: branding', function () {
   }
 
   function initSpies() {
-
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
+    spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
@@ -56,7 +56,7 @@ describe('Template: branding', function () {
     controller = $controller('BrandingCtrl', {
       $scope: $scope
     });
-    var template = $templateCache.get('modules/core/partnerProfile/branding/branding.tpl.html');
+    var template = $templateCache.get('modules/core/partnerProfile/branding/brandingWordingChange.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }
@@ -79,20 +79,15 @@ describe('Template: branding', function () {
 
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
+    it('Allow logo checkbox should have an appropriate label', verifyCheckboxAndLabel(ALLOW_LOGO_CHECKBOX));
+    it('Use latest version checkbox should have an appropriate label', verifyCheckboxAndLabel(USE_LATEST_WEBEX_CHECKBOX));
 
-    describe('Save buttons should not be visible with autosave changes', function () {
+    describe('Save function should benn called', function () {
       it('by clicking allow logo checkbox', function () {
         spyOn($scope, 'toggleAllowCustomerLogos');
         view.find(ALLOW_LOGO_CHECKBOX).click();
 
-        expect($scope.toggleAllowCustomerLogos).toHaveBeenCalled();
-      });
-
-      it('by clicking latest webex checkbox', function () {
-        spyOn($scope, 'toggleWebexSelectLatestVersionAlways');
-        view.find(USE_LATEST_WEBEX_CHECKBOX).click();
-
-        expect($scope.toggleWebexSelectLatestVersionAlways).toHaveBeenCalled();
+        expect($scope.toggleAllowCustomerLogos).not.toHaveBeenCalled();
       });
     });
   });
@@ -106,6 +101,18 @@ describe('Template: branding', function () {
       expect(radio).toHaveAttr('type', 'radio');
       expect(label.is('label')).toBeTruthy();
       expect(label).toHaveAttr('for', id);
+    };
+  }
+
+  function verifyCheckboxAndLabel(id) {
+    return function () {
+      var checkbox = view.find(id);
+      var label = checkbox.next(); // Label should be next dom element for radio style rendering
+
+      expect(checkbox.is('input')).toBeTruthy();
+      expect(checkbox).toHaveAttr('type', 'checkbox');
+      expect(label.is('label')).toBeTruthy();
+      expect(label).toHaveAttr('for', id.substr(1));
     };
   }
 

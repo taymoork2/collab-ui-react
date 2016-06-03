@@ -48,7 +48,7 @@ describe('Template: partnerProfile', function () {
         orgSettings: {}
       });
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.reject());
     spyOn(Authinfo, 'isPartner');
   }
 

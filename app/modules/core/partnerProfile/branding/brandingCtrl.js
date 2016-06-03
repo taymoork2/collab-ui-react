@@ -5,6 +5,7 @@
     .controller('BrandingCtrl', BrandingCtrl);
 
   function BrandingCtrl($scope, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, WebexClientVersion, BrandService, Orgservice) {
+
     var orgId = Authinfo.getOrgId();
 
     $scope.isPartner = Authinfo.isPartner();
