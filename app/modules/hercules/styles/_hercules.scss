@@ -1,13 +1,10 @@
-/*************************************
- *      Hercules Style imports
- ************************************/
-@import '../hybridServices/hybrid-services';
 @import 'expressway-service';
-@import '../notifications/hercules-notifications';
-@import '../servicesOverview/servicesOverview';
-@import '../schedule-upgrade-configuration/schedule-upgrade-configuration';
-@import '../redirect-target/redirect-target';
 @import '../add-resource/add-resource';
 @import '../fusion-pages/fusion-cluster-list';
-@import '../resource-settings/fusion-resource-setting';
+@import '../fusion-pages/fusion-cluster-settings';
+@import '../hybridServices/hybrid-services';
+@import '../notifications/hercules-notifications';
+@import '../redirect-target/redirect-target';
+@import '../schedule-upgrade-configuration/schedule-upgrade-configuration';
+@import '../servicesOverview/servicesOverview';
 @import 'shared';

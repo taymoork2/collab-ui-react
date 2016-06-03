@@ -1,5 +1,5 @@
 <div class="fusion-cluster-list">
-  <cs-page-header title="{{::'hercules.fusion.list.title' | translate}}" back="true"></cs-page-header>
+  <cs-page-header title="{{::'hercules.fusion.list.title' | translate}}" back="true" back-url="resourceList.backState"></cs-page-header>
   <cs-page-sub-header >
     <cs-page-sub-header-left>
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
@@ -33,7 +33,7 @@
           </section>
           <footer>
               <div translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-              <a href="#" ui-sref="cluster-settings-page({type: cluster.type, id: cluster.id})"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
+              <a ng-click="resourceList.openSettings(cluster.type, cluster.id)"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
             </div>
           </footer>
         </article>
