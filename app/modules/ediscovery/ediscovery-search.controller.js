@@ -10,6 +10,8 @@
     vm.runReport = runReport;
     vm.progressType = progressType;
     vm.downloadReport = downloadReport;
+    vm.cancelReport = cancelReport;
+    vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
 
@@ -160,7 +162,7 @@
       // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
         vm.report = report;
-        if (report.state != 'COMPLETED' && report.state != 'FAILED') {
+        if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 2000);
         } else {
           disableAvalonPolling();
@@ -185,7 +187,7 @@
 
     function progressType() {
       if (vm.report) {
-        if (vm.report.state === 'FAILED') {
+        if (vm.report.state === 'FAILED' || vm.report.state === 'ABORTED') {
           return 'danger';
         } else {
           return 'success';
@@ -193,7 +195,23 @@
       }
     }
 
+    function reportProgress() {
+      if (vm.report && (vm.report.state === 'RUNNING' || vm.report.state === 'COMPLETED')) {
+        return vm.report.progress;
+      } else {
+        return 0;
+      }
+    }
+
     function downloadReport() {}
+
+    function cancelReport(id) {
+      EdiscoveryService.patchReport(id, {
+        state: "ABORTED"
+      }).then(function (res) {
+        pollAvalonReport();
+      });
+    }
 
     function keyPressHandler(event) {
       if (event.keyCode === 13) {

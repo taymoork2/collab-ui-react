@@ -42,7 +42,12 @@ var ChatTemplateCreation = function () {
   this.chatSetupFinishBtn = element(by.id('chatSetupFinishBtn'));
   this.careChatSetupWizard = element(by.css('careChatSetup'));
   this.embedCodeModal = element(by.id('embedCodeModalDiv'));
-  this.copyEmbedScriptBtn = element(by.id('generateScriptBtn'));
+  this.copyEmbedScriptBtn = element(by.id('copyEmbedCodeBtn'));
+  this.closeEmbedScriptModel = element(by.css('.close'));
+  this.chatTemplateName = element(by.css('.cs-card-container .cs-card-layout .small header p'));
+  this.copyEmbedCodeOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .left span'));
+  this.deleteEmbedCodeBtnOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .right .icon-trash'));
+  this.deleteChatTemplateonModal = element(by.css('.btn.btn--negative'));
 };
 
 module.exports = ChatTemplateCreation;
