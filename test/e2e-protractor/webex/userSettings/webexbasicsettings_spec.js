@@ -78,6 +78,7 @@ describe('WebEx user settings', function () {
   it('should allow navigation back to the 3rd panel', function () {
     if (setup) {
       utils.clickLastBreadcrumb();
+      utils.wait(usersettings.userSettingsPanel);
       expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
       expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
     }
@@ -91,6 +92,7 @@ describe('WebEx user settings', function () {
 
   it('should allow edit in 3rd panel', function () {
     if (setup) {
+      utils.wait(usersettings.userSettingsPanel);
       expect(usersettings.mcAuoCheckbox.isPresent());
       usersettings.mcAuo.click();
       expect(usersettings.saveButton.isPresent()).toBeTruthy();
