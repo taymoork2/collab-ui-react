@@ -19,6 +19,7 @@
         templateUrl: 'modules/core/modal/modal.tpl.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
+        type: 'dialog',
         resolve: {
           title: function () {
             return options.title || $translate.instant('common.modal');
@@ -32,7 +33,7 @@
           dismiss: function () {
             return options.dismiss || $translate.instant('common.cancel');
           },
-          type: function () {
+          btnType: function () {
             return 'btn--' + (options.type || 'primary');
           }
         }

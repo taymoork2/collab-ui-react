@@ -3,7 +3,7 @@
 describe('Controller: AAScheduleModalCtrl', function () {
   var AANotificationService, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $scope, $translate, $modalInstance, $controller, $modal;
+  var $scope, $translate, $modalInstance, $controller, $modal, $timeout;
   var ical;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
@@ -54,11 +54,12 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _AANotificationService_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
+  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AANotificationService_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
     $controller = _$controller_;
+    $timeout = _$timeout_;
     AAModelService = _AAModelService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
@@ -245,6 +246,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      $timeout.flush();
     });
 
     it('should have open hours and holidays', function () {
@@ -470,6 +472,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+      $timeout.flush();
       $scope.$apply();
       expect(controller.holidays.length).toEqual(2);
       controller.addHoliday();

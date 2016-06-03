@@ -18,7 +18,10 @@
           vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
         });
 
+        // Reset to defaults on pageload to wipe out any lingering settings from previous page visits
         vm.deviceFilter = DeviceFilter;
+        vm.deviceFilter.setCurrentSearch('');
+        vm.deviceFilter.setCurrentFilter('');
 
         vm.codesListSubscription = CsdmCodeService.on('data', angular.noop, {
           scope: $scope
@@ -59,7 +62,7 @@
             .extend(CsdmUnusedAccountsService.getAccountList())
             .values()
             .value();
-          return DeviceFilter.getFilteredList(filtered);
+          return vm.deviceFilter.getFilteredList(filtered);
         };
 
         vm.showDeviceDetails = function (device) {

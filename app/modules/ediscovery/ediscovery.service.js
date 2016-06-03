@@ -2,28 +2,51 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, $q, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
-    function deferredResolve(resolved) {
-      var deferred = $q.defer();
-      deferred.resolve(resolved);
-      return deferred.promise;
+    function extractReports(res) {
+      var reports = res.data.reports;
+      _.each(reports, function (report) {
+        detectAndSetReportTimeout(report);
+      });
+      return reports;
     }
 
-    function extractReports(res) {
-      return res.data.reports;
+    function extractReport(res) {
+      return detectAndSetReportTimeout(res.data);
+    }
+
+    function detectAndSetReportTimeout(report) {
+      if (report) {
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime).getTime() > 300000;
+      }
+      return report;
     }
 
     function extractData(res) {
       return res.data;
     }
 
+    function getAvalonServiceUrl() {
+      //TODO: Cache pr org
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
+        .then(extractData);
+    }
+
+    function getAvalonRoomInfo(url) {
+      return $http
+        .get(url)
+        .then(extractData);
+    }
+
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractData)
+        .then(extractReport)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
           //console.log("error getReports: " + data)
@@ -49,10 +72,6 @@
           "displayName": displayName
         })
         .then(extractData);
-    }
-
-    function reportsApiUrl(orgId) {
-      return urlBase + 'compliance/organizations/' + orgId + '/reports';
     }
 
     // TODO: Implement proper handling of error when final API is in place
@@ -100,14 +119,23 @@
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
+    }
+
     return {
+      getAvalonServiceUrl: getAvalonServiceUrl,
+      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance
     };
   }
 

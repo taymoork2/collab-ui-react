@@ -309,6 +309,19 @@ describe('SetupWizardCtrl', function () {
       expectSubStepOrder('messagingSetup', ['setup']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
-
   });
+
+  it('will filter tabs if onlyShowSingleTab is true', function () {
+    controller = $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        onlyShowSingleTab: true,
+        currentTab: 'messagingSetup'
+      }
+    });
+    $scope.$apply();
+
+    expectStepOrder(['messagingSetup']);
+  });
+
 });

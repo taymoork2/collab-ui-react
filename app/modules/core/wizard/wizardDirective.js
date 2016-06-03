@@ -50,8 +50,11 @@
   function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
+
     vm.currentTab = $stateParams.currentTab;
     vm.currentStep = $stateParams.currentStep;
+    vm.onlyShowSingleTab = $stateParams.onlyShowSingleTab;
+
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
