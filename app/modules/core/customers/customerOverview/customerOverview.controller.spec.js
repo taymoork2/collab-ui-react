@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, Authinfo, BrandService, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
+  var controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
   var testOrg;
 
   function LicenseFeature(name, state) {
@@ -16,7 +16,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -64,6 +64,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $state = _$state_;
     $window = _$window_;
     $q = _$q_;
+    modal = _$modal_;
 
     $state.modal = {
       result: $q.when()
@@ -82,6 +83,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
     spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
+    spyOn(modal, 'open').and.callThrough();
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
@@ -89,7 +91,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
       Userservice: Userservice,
       Authinfo: Authinfo,
       BrandService: BrandService,
-      FeatureToggleService: FeatureToggleService
+      FeatureToggleService: FeatureToggleService,
+      $modal: modal
     });
 
     $scope.$apply();
@@ -159,7 +162,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('should call deleteOrg successfully', function () {
     it('should call deleteTestOrg', function () {
       controller.deleteTestOrg();
-      expect($window.confirm).toHaveBeenCalled();
+      expect(modal.open).toHaveBeenCalled();
     });
   });
 
