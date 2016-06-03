@@ -129,7 +129,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
 
     it('should call modifyManagedOrgs', function () {
-      expect(controller.customerOrgId).toBe('123-456');
+      expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
       expect(Authinfo.isPartnerAdmin()).toBe(true);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });

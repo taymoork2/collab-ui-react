@@ -157,7 +157,7 @@
               var account = data.accounts[i];
               var lics = account.licenses;
               var licIds = collectLicenseIdsForWebexSites(lics);
-              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', function () {}));
+              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
             }
             $q.all(updateUsersList).then(function () {
               $window.open($state.href('login_swap', {
