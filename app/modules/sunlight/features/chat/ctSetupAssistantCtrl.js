@@ -71,31 +71,36 @@
     };
 
     vm.typeOptions = [{
-      text: "email",
+      id: "email",
+      text: $translate.instant('careChatTpl.typeEmail'),
       dictionaryType: {
         fieldSet: "cisco.base.customer",
         fieldName: "Context_Work_Email"
       }
     }, {
-      text: "name",
+      id: "name",
+      text: $translate.instant('careChatTpl.typeName'),
       dictionaryType: {
         fieldSet: "cisco.base.customer",
         fieldName: "Context_First_Name"
       }
     }, {
-      text: "category",
+      id: "category",
+      text: $translate.instant('careChatTpl.typeCategory'),
       dictionaryType: {
         fieldSet: "cisco.base.ccc.pod",
         fieldName: "category"
       }
     }, {
-      text: "phone",
+      id: "phone",
+      text: $translate.instant('careChatTpl.typePhone'),
       dictionaryType: {
         fieldSet: "cisco.base.customer",
         fieldName: "Context_Mobile_Phone"
       }
     }, {
-      text: "id",
+      id: "id",
+      text: $translate.instant('careChatTpl.typeId'),
       dictionaryType: {
         fieldSet: "cisco.base.customer",
         fieldName: "Context_Customer_External_ID"
@@ -111,9 +116,6 @@
       id: 'requestInfo'
     }];
 
-    vm.customerHelpText = $translate.instant('careChatTpl.ciHelpText');
-    vm.reHelpText = $translate.instant('careChatTpl.ciHelpText');
-
     vm.requiredOptions = [{
       text: $translate.instant('careChatTpl.requiredField'),
       id: 'required'
@@ -128,9 +130,9 @@
       });
     };
 
-    vm.getTypeObject = function (typeText) {
+    vm.getTypeObject = function (typeId) {
       return _.find(vm.typeOptions, {
-        text: typeText
+        id: typeId
       });
     };
 
