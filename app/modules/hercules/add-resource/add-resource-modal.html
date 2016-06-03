@@ -1,64 +1,84 @@
-<div class="add-resource">
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$close()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h5 class="modal-title"><span>Add Resource™</span></h5>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$close()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h5 class="modal-title" translate="hercules.addResourceDialog.title" translate-values="{ServiceName: addResource.localizedServiceName}"></h5>
+</div>
 
-  <div class="modal-body">
-    <form name="myRadioForm">
-      <div class="cs-radio-group">
-        <input
-          cs-input
-          type="radio"
-          ng-model="addResource.selected"
-          id="NewExpressway"
-          name="NewExpressway"
-          value="new"
-          cs-input-label="Register new Expressway cluster">
+<div class="modal-body add-resource">
+  <form name="selectNewOrExisting" ng-show="!addResource.PreregistrationCompleted">
+    <div class="cs-radio-group">
+      <input
+        cs-input
+        type="radio"
+        ng-model="addResource.selectedAction"
+        id="NewExpressway"
+        name="NewExpressway"
+        value="new"
+        cs-input-label="{{addResource.localizedAddNewExpressway}}">
 
-        <input
-          cs-input
-          type="radio"
-          ng-model="addResource.selected"
-          id="ExistingExpressway"
-          name="ExistingExpressway"
-          value="existing"
-          cs-input-label="Add service to existing Expressway cluster">
+      <input
+        cs-input
+        type="radio"
+        ng-model="addResource.selectedAction"
+        id="ExistingExpressway"
+        name="ExistingExpressway"
+        value="existing"
+        cs-input-label="{{addResource.localizedAddToExistingExpressway}}">
+    </div>
+  </form>
 
-      </div>
-    </form>
-
-    <form ng-show="addResource.selected === 'new'" class="inputbox">
-      <span>Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud</span>
+  <div ng-show="!addResource.PreregistrationCompleted">
+    <form ng-show="addResource.selectedAction === 'new'" class="inputbox">
+      <span translate="hercules.addResourceDialog.enterHostname"></span>
       <input type="text"
              ng-model="addResource.newHostname"
-             placeholder="Enter Expressway hostname">
+             placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}" class="normaltextinput">
     </form>
-
-    <form ng-show="addResource.selected === 'existing'" class="inputbox">
-      <span>Select one or more existing Expressway clusters.</span>
-      <cs-select
-        ng-model="addResource.selectedClusters"
-        options="addResource.expresswayOptions"
-        multi="true"
-        placeholder="addResource.placeholder"
-        singular="Expressway"
-        plural="Expressways"
-      >
-      </cs-select>
-    </form>
-
-
   </div>
 
-  <div class="modal-footer">
-    <button class="btn" ng-click="$close()">
-      <span translate="common.cancel"></span>
-    </button>
-    <button class="btn activate-button btn--primary" ng-click="addResource.goNext()">
-      <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
-    </button>
+  <div ng-show="addResource.PreregistrationCompleted" class="add-resource">
+    <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
+             translate-values="{hostname: addResource.newHostname || ''}"></span>
+    </p>
+
+    <p>{{addResource.localizedWillBeInstalledMessage}}</p>
+
+    <p><span translate="hercules.redirect-target-dialog.grant-success-information"></span>
+    </p>
   </div>
+
+  <form ng-show="addResource.selectedAction === 'existing'" class="inputbox">
+    <span translate="hercules.addResourceDialog.selectExisting"></span>
+    <cs-select
+      ng-model="addResource.selectedClusters"
+      options="addResource.expresswayOptions"
+      multi="true"
+      placeholder="addResource.localizedSelectClusterPlaceholder"
+      singular="Expressway"
+      plural="Expressways"
+    >
+    </cs-select>
+  </form>
+
+</div>
+
+<div class="modal-footer add-resource">
+  <button class="btn" ng-click="$close()" ng-hide="addResource.PreregistrationCompleted">
+    <span translate="common.cancel"></span>
+  </button>
+  <button class="btn btn--primary"
+          ng-click="addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
+          ng-disabled="addResource.selectedAction !== 'new' || !addResource.newHostname"
+          ng-hide="addResource.PreregistrationCompleted"
+  >
+    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+  </button>
+
+  <button class="btn btn--primary"
+          ng-show="addResource.PreregistrationCompleted"
+          ng-click="addResource.redirectToTargetAndCloseWindowClicked(addResource.newHostname)">
+    <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
+  </button>
+
 </div>

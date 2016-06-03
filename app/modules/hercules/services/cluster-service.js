@@ -28,8 +28,11 @@
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
       getReleaseNotes: getReleaseNotes,
+      provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
-      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster
+      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
+      preregisterCluster: preregisterCluster,
+      addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList
     };
 
     return service;
@@ -273,6 +276,32 @@
         });
     }
 
+    function preregisterCluster(name, releaseChannel) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      return $http.post(url, {
+          "name": name,
+          "releaseChannel": releaseChannel
+        }).then(extractDataFromResponse)
+        .then(function (data) {
+          return data.id;
+        });
+    }
+
+    function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      return $http.post(url, {
+        "hostname": hostname,
+        "ttlInSeconds": ttlInSeconds,
+        "clusterId": clusterId
+      });
+    }
+
+    function provisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
     function deprovisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
         "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
@@ -289,3 +318,4 @@
 
   }
 }());
+
