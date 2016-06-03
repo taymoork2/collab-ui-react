@@ -26,8 +26,9 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfChatStringsPage();
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
-    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
@@ -167,8 +168,14 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Off-Hours', 'This screen is shown during business off-hours');
   }
 
+  function validateContentsOfChatStringsPage() {
+    validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
+  }
+
   function validateContentsOfSummaryPage() {
     validateTitleAndDesc('Summary', 'Configuration Summary');
+    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
   }
 
   function validateFeaturesPage() {
@@ -179,7 +186,7 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedCodeOnCard);
     utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
     utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
-    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been deleted successfully')
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been deleted successfully');
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
