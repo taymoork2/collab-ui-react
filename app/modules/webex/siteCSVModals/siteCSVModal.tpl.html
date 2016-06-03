@@ -34,8 +34,12 @@
         <article>
           <div class="export-import-container">
             <p align="center">
-			  <i class="icon icon-download icon-3x icon-export-import"
+			  <i ng-if="!siteCSVModalCtrl.modal.file"
+			     class="icon icon-download icon-3x icon-export-import"
 				 ng-click="siteCSVModalCtrl.startExport()"></i>
+				 
+			  <i ng-if="siteCSVModalCtrl.modal.file"
+			     class="icon icon-download icon-3x icon-export-import-disabled"></i>
 			</p>
 			
             <p align="center">
