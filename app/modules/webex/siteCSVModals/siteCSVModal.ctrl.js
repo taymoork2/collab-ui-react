@@ -12,7 +12,8 @@
     $log,
     Notification,
     WebExApiGatewayService,
-    SiteListService
+    SiteListService,
+    WebExSiteRowService
   ) {
     var funcName = "SiteCSVModalCtrl()";
     var logMsg = '';
@@ -159,7 +160,8 @@
       var funcName = "displayResult()";
       var logMsg = "";
 
-      SiteListService.updateCSVStatusInRow(vm.siteRow);
+      WebExSiteRowService.updateCSVStatusInRow(vm.siteUrl);
+      //SiteListService.updateCSVStatusInRow(vm.siteRow);
 
       if (isSuccess) {
         Notification.success($translate.instant(resultMsg));
@@ -172,7 +174,7 @@
         (_.isFunction($scope.$close))
       ) {
 
-        SiteListService.updateCSVStatusInRow(vm.siteRow);
+        //SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
       } else {
         vm.importing = false;
