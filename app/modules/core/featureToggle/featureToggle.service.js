@@ -20,6 +20,7 @@
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
+      atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasTrialConversion: 'atlas-trial-conversion',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
@@ -128,7 +129,8 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       readonlyAdmin: 'atlas-read-only-admin',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
-      atlasCareTrials: 'atlas-care-trials'
+      atlasCareTrials: 'atlas-care-trials',
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
     };
 
     var toggles = {};

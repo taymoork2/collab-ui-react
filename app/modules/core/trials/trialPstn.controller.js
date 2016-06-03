@@ -11,7 +11,7 @@
 
     vm.trialData = TrialPstnService.getData();
     vm.customerId = Authinfo.getOrgId();
-    var pstnTokenLimit = 5;
+    var pstnTokenLimit = 10;
     vm.showOrdering = false;
 
     vm.getStateInventory = getStateInventory;
@@ -149,7 +149,9 @@
             labelfield: 'name',
             valuefield: 'abbreviation',
             onChangeFn: getStateInventory,
-            options: []
+            options: [],
+            filter: true
+
           },
           controller: /* @ngInject */ function ($scope) {
             TerminusStateService.query().$promise.then(function (states) {

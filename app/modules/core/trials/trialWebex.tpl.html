@@ -1,51 +1,49 @@
 <!-- Meeting Trial Modal -->
-<form id="webexTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
 
-  <!-- header -->
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$dismiss()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h3 class="modal-title" translate="trialModal.meeting.title"></h3>
-  </div>
+<!-- header -->
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="trialModal.meeting.title"></h3>
+</div>
 
-  <!-- body -->
-  <section class="modal-body row">
-    <h5 translate="trialModal.meeting.webexHeader"></h5>
-    <div class="medium-12 columns" translate="trialModal.meeting.webexDetails"></div>
-  </section>
-  <section class="modal-body collapse-fields row">
-    <h5 translate="trialModal.meeting.webexSiteUrl"></h5>
-    <section>
-      <formly-form model="webexTrial.details" fields="webexTrial.siteUrlFields" hide-directive="ng-show"
-        class="medium-12 columns">
-      </formly-form>
-    <div class="medium-12 columns">
-      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.siteUrlDescription"></em>
+<!-- body -->
+<div class="modal-body trials">
+  <form id="webexTrialForm" class="cs-form trial-modal">
+    <!-- webex site url -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.meeting.webexSiteUrl"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="webexTrial.details" fields="webexTrial.siteUrlFields"></formly-form>
+      </div>
     </div>
-    </section>
-  </section>
-  <section class="modal-body collapse-fields row">
-    <h5 translate="trialModal.meeting.webexTimezone"></h5>
-    <formly-form model="webexTrial.details" fields="webexTrial.timezoneFields"
-      class="medium-12 columns">
-    </formly-form>
-    <div class="medium-12 columns">
-      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.tzDescription"></em>
-    </div>
-  </section>
 
-  <!-- footer -->
-  <div class="modal-footer">
-    <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
-      translate="common.back">
-    </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-      loading="trial.loading || webexTrial.validatingUrl"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
-        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
-        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
-      </span>
-    </button>
-  </div>
-</form>
+    <!-- customer timezone -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.meeting.customerTimezone"></h4>
+        <p class="section__description" translate="trialModal.meeting.tzDescription"></p>
+      </div>
+      <div class="section__content">
+        <formly-form model="webexTrial.details" fields="webexTrial.timezoneFields"></formly-form>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- footer -->
+<div class="modal-footer">
+  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+    translate="common.back">
+  </button>
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
+    loading="trial.loading || webexTrial.validatingUrl"
+    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+    </span>
+  </button>
+</div>

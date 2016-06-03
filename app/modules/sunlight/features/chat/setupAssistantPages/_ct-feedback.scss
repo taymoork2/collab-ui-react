@@ -1,0 +1,263 @@
+.ct-feedback {
+  align-items: center;
+
+  @mixin placeholder {
+    ::-webkit-input-placeholder {
+      @content
+    }
+    :-moz-placeholder {
+      @content
+    }
+    ::-moz-placeholder {
+      @content
+    }
+    :-ms-input-placeholder {
+      @content
+    }
+  }
+
+  .cs-card {
+    @include vr-spacing(ml, 2);
+    width: rem-calc(366px);
+    height: rem-calc(458px);
+    display: flex;
+    flex-flow: column;
+    .cardHeader1 {
+      text-align: center;
+      color: $gray-dark-1;
+    }
+    .articleHeight {
+      height: 100%;
+    }
+  }
+
+  .cardScroll {
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pr, 3.75);
+    @include vr-spacing(pb, 3.125);
+    @include vr-spacing(pl, 2);
+  }
+
+  .ct-feedback-rating {
+    width: 100%;
+  }
+
+  .ct-left-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+  }
+
+  .labelText {
+    @include vr-spacing(pt, 0.75);
+  }
+
+  .textOverflow{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .inputField {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+    color: $gray-dark-2;
+  }
+
+  .ct-left-cs-input {
+    @include vr-spacing(ml, 1);
+    @extend .cs-input;
+    border-color: $gray-light-3;
+    cursor: default;
+    color: $gray-dark-1;
+    pointer-events: none;
+    width: 90%
+  }
+
+  .ct-footer {
+    color: $gray-light-1;
+    border-top: 1px solid $gray-light-3;
+    @include vr-spacing(pv, 0.75);
+    @include vr-spacing(pl, 0.5);
+  }
+
+  .ct-flex-topleft {
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+
+
+  .ct-attribute-field-label {
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+    font-family: "CiscoSansTT Regular";
+  }
+
+  .ct-attribute-field-textbox {
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+    font-family: "CiscoSansTT Light";
+    @include vr-spacing(ml, 1);
+    width: 90%;
+    height: 2rem;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      max-width: 60%;
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-row {
+    width: 100%;
+  }
+
+  .feedback-question-text {
+    @include vr-spacing(mt, 5.5);
+    font-size: 14px;
+    font-family: CiscoSansTT Light;
+    color: $gray-dark-2;
+    align-self: center;
+  }
+
+  .feedback-radio-list {
+    @include vr-spacing(mt, 1.5);
+    @include vr-spacing(mr, 1.8);
+    @include vr-spacing(mb, 3.5);
+    @include vr-spacing(ml, 1.8);
+    display: flex;
+    align-self: stretch;
+    justify-content: space-between;
+    position: relative;
+    outline: none;
+    z-index: 20;
+  }
+
+  .feedback-radio-outer {
+    @include vr-spacing(mb, 0);
+    display: inline-block;
+  }
+
+  .feedback-radio {
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    width:1.5rem;
+    height:1.5rem;
+    margin:auto;
+    border:1px solid #999999;
+    border-radius:50%;
+    outline:#999999;
+    position: relative;
+    background-color: $white;
+  }
+
+  .feedback-radio-inner {
+    @include vr-spacing(m, 0.25);
+    background-color: $white;
+    display:block;
+    width:0.85rem;
+    height:0.85rem;
+    border-radius:50%;
+  }
+  .feedback-radio-green {
+    background-color:#7CC153;
+  }
+
+  .feedback-radio-line {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(ml, 2);
+    height: 1px;
+    width: 80%;
+    background-color: #979797;
+    position: relative;
+    top: -5.4rem;
+    z-index: 1;
+  }
+
+  .radio-text-div {
+    @include vr-spacing(pb, 1.25);
+    @include vr-spacing(mt, -5.4);
+    align-self: stretch;
+    display: flex;
+  }
+
+  .radio-text {
+    @include vr-spacing(mt, 0.625);
+    font-size: 10px;
+    font-family: Arial;
+    color: $gray-dark-2;
+    text-align: center;
+    width: 100%;
+  }
+
+  .radio-text-left {
+    width: 40%;
+  }
+
+  .radio-text-middle {
+    @include vr-spacing(pl, 2.5);
+    width: 50%;
+  }
+
+  .radio-text-right {
+    @include vr-spacing(pl, 3.125);
+    width: 50%;
+  }
+
+  .feedback-comment-text {
+    @include vr-spacing(pt, 0.375);
+    @include vr-spacing(pr, 0.3125);
+    @include vr-spacing(pl, 0.625);
+    @include vr-spacing(m, 0);
+    width: 18.75rem;
+    height: 8.75rem !important;
+    position: relative;
+    align-self: center;
+    font-family: CiscoSansTT Light;
+    font-size: 14px;
+    resize: none;
+    border: 1px solid $gray-light-2;
+    border-radius: 3px;
+    background-color: $white;
+  }
+
+  .feedback-buttons {
+    align-self: center;
+  }
+
+  .feedback-btn {
+    @include vr-spacing(p, 0.3125);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mr, 0.3125);
+    @include vr-spacing(mb, 0.625);
+    @include vr-spacing(ml, 0.5);
+    border: medium none;
+    border-radius: 0.25rem;
+    color: $white;
+    font-size: 15px;
+    height: rem-calc(35px);
+    position: relative;
+    text-align: center;
+    width: rem-calc(141px);
+  }
+}

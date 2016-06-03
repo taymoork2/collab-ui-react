@@ -26,8 +26,14 @@ describe('Controller: TrialAddCtrl', function () {
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
+      if (input === 'atlasTrialsShipDevices') {
+        return ($q.when(false));
+      } else {
+        return ($q.when(true));
+      }
+    });
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')

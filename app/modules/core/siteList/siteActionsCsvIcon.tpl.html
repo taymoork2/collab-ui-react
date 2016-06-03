@@ -13,7 +13,7 @@
               row.entity.isError"
        id="{{row.entity.license.siteUrl}}_csvUnavailable"
        name="{{row.entity.license.siteUrl}}_csvUnavailable"
-       class="icon icon-admin grid-vcenter"
+       class="icon icon-admin iconDisabled grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
     
@@ -24,7 +24,7 @@
               !row.entity.isCSVSupported"
        id="{{row.entity.license.siteUrl}}_csvNotSupported"
        name="{{row.entity.license.siteUrl}}_csvNotSupported"
-       class="icon icon-admin grid-vcenter"
+       class="icon icon-admin iconDisabled grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"></i>
        
@@ -36,7 +36,7 @@
       <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || 
                    (row.entity.csvStatusObj.status == 'importInProgress')">
                    
-        <i class="icon icon-admin grid-vcenter"
+        <i class="icon icon-admin iconDisabled grid-vcenter"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
         
@@ -63,7 +63,7 @@
       <span ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && 
                    (row.entity.csvStatusObj.status != 'exportInProgress')">
                 
-        <i class="icon icon-admin iconEnabled grid-vcenter"
+        <i class="icon icon-admin iconEnabledWithHover grid-vcenter"
            ui-sref="site-csv({siteRow:row.entity})"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>

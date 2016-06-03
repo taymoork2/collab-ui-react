@@ -275,6 +275,7 @@
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
       updateScheduleActionSetMap: updateScheduleActionSetMap,
+      updateDefaultActionSet: updateDefaultActionSet,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
@@ -438,6 +439,8 @@
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
+              action.maxNumberOfCharacters = inAction.runActionsOnInput.maxNumberOfCharacters;
+              action.minNumberOfCharacters = inAction.runActionsOnInput.minNumberOfCharacters;
               menuEntry.voice = inAction.runActionsOnInput.voice;
               menuEntry.language = inAction.runActionsOnInput.language;
               menuEntry.attempts = inAction.runActionsOnInput.attempts;
@@ -534,6 +537,7 @@
       }
 
       var actionSet = getActionSet(ceRecord, actionSetName);
+
       if (angular.isUndefined(actionSet)) {
         return undefined;
       }
@@ -697,17 +701,21 @@
       }
       if (actionSetName === 'openHours') {
         ceRecord.scheduleEventTypeMap['open'] = actionSetName;
-        if (!ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'openHours';
-        }
       } else if (actionSetName === 'closedHours') {
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
-        ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
         ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
-        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
-          ceRecord.defaultActionSet = 'holidays';
-        }
+      }
+    }
+
+    function updateDefaultActionSet(ceRecord, hasClosedHours) {
+      if (angular.isUndefined(hasClosedHours) && !_.isEmpty(ceRecord.defaultActionSet)) {
+        return;
+      }
+      if (hasClosedHours) {
+        ceRecord.defaultActionSet = 'closedHours';
+      } else {
+        ceRecord.defaultActionSet = 'openHours';
       }
     }
 
@@ -962,8 +970,8 @@
           rawInputAction.routeToExtension = routeToExtension;
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
-          newAction.minNumberOfCharacters = 4;
-          newAction.maxNumberOfCharacters = 4;
+          newAction.minNumberOfCharacters = action.minNumberOfCharacters;
+          newAction.maxNumberOfCharacters = action.maxNumberOfCharacters;
           newAction.attempts = 3;
           newAction.repeats = 2;
         }
@@ -1134,17 +1142,6 @@
       }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
-        if (ceRecord.scheduleEventTypeMap) {
-          if (ceRecord.scheduleEventTypeMap.closed) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
-          } else if (ceRecord.scheduleEventTypeMap.open) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
-          } else if (ceRecord.scheduleEventTypeMap.holiday) {
-            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
-          } else {
-            delete ceRecord.defaultActionSet;
-          }
-        }
       }
     }
 

@@ -1,9 +1,8 @@
 'use strict';
 
 describe('Controller: AABuilderContainerCtrl', function () {
-  var $scope, controller, $modal, $q;
-  var AAModelService, AutoAttendantCeInfoModelService, AAUiModelService, AAValidationService;
-  var FeatureToggleService;
+  var $scope, controller, $modal;
+  var AAModelService, AAUiModelService, AAValidationService;
 
   var uiModel = {
     isClosedHours: false,
@@ -33,23 +32,18 @@ describe('Controller: AABuilderContainerCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _$q_, _AAModelService_, _AAUiModelService_, _AAValidationService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
     $scope = _$rootScope_;
     $modal = _$modal_;
-    $q = _$q_;
 
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AAValidationService = _AAValidationService_;
 
-    FeatureToggleService = _FeatureToggleService_;
-
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(uiModel);
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
     spyOn($modal, 'open').and.returnValue(fakeModal);
-
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('AABuilderContainerCtrl', {
       $scope: $scope

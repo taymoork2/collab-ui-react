@@ -3,8 +3,8 @@
     margin-right: 10px;
   }
   .gridStyle {
-    width: 795px;
-    height: 271px;
+    width: 860px;
+    height: 400px;
     background-color: $brand-white;
   }
 
@@ -13,13 +13,13 @@
   }
 
   .search {
-    width: 800px;
+    width: 870px;
     position: relative;
     margin-bottom: 15px;
     margin-top: 15px;
 
     input {
-      width: 790px;
+      width: 860px;
       height: 32px;
       text-indent: 20px;
     }
@@ -32,6 +32,6 @@
   }
    .spinner-example--large {
     font-size: 2rem;
-    padding-left: 350px;
+    padding-left: 425px;
   }
 }

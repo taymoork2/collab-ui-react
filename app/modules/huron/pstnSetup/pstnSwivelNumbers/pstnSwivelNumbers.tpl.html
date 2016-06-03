@@ -11,10 +11,10 @@
     <div class="did-input">
       <cs-token-field tokens="pstnSwivelNumbers.swivelNumbers" tokenfieldid="pstnSwivelNumbers.tokenfieldid" tokenplaceholder="pstnSwivelNumbers.tokenplaceholder" tokenoptions="pstnSwivelNumbers.tokenoptions" tokenmethods="pstnSwivelNumbers.tokenmethods"></cs-token-field>
       <p class="modal-note" translate="didManageModal.didFormatHelpText" translate-values="{examples: pstnSwivelNumbers.getExampleNumbers}"/></p>
+      <cs-checkbox ckid="swivelEmergencyAcknowledge" ng-model="pstnSwivelNumbers.emergencyAcknowledge" label="{{::'pstnSetup.emergencyAcknowledge' | translate}}"></cs-checkbox>
     </div>
   </div>
   <div class="modal-footer">
-    <cs-checkbox ckid="swivelEmergencyAcknowledge" ng-model="pstnSwivelNumbers.emergencyAcknowledge" label="{{::'pstnSetup.emergencyAcknowledge' | translate}}"></cs-checkbox>
     <div class="buttons">
       <button class="btn" ng-if="::pstnSwivelNumbers.hasBackButton()" ng-click="pstnSwivelNumbers.goBack()" translate="common.back"></button>
       <button class="btn btn--primary" ng-disabled="!pstnSwivelNumbers.emergencyAcknowledge" ng-click="pstnSwivelNumbers.validateSwivelNumbers()" translate="common.next"></button>

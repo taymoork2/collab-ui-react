@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -287,6 +287,7 @@
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
         vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
+        vm.ui.hasClosedHours = (vm.openhours.length) ? true : false;
         if (vm.holidayBehavior && vm.holidays.length > 0) {
           vm.ui.holidaysValue = 'closedHours';
         } else {
@@ -509,7 +510,9 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
-      populateUiModel();
+      $timeout(function () {
+        populateUiModel();
+      }, 250);
       vm.isDeleted = false;
     }
 
