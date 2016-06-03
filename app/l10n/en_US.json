@@ -17,7 +17,7 @@
     "add": "Add Users",
     "entitle": "Entitle",
     "invitePending": "Invite Pending",
-    "inviteMsg": "Users services are pending and will be shown here when the user activates their account",
+    "inviteMsg": "This user has not set their password yet",
     "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
