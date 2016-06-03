@@ -11,7 +11,7 @@ describe('Care admin should be able to', function () {
     utils.click(careLandingPage.creatCTButton);
   });
 
-  it('create a chat template', function () {
+  it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
@@ -26,18 +26,12 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfChatStringsPage();
-    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
-
-    //utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
-    //validateDismissOfCTSetupWizard();
-
-    //utils.waitForModal().then(function () {
-    //validateDisplayEmbedCodeModal();
-    //utils.click(careChatTemplateSetupPage.copyEmbedScriptBtn);
-    //validateDismissOfEmbedCodeModal();
-    //});
+    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    validateDismissOfCTSetupWizard();
+    validateDisplayEmbedCodeModal();
+    validateDismissOfEmbedCodeModal();
+    validateFeaturesPage();
   });
 
   function validateDismissOfCTSetupWizard() {
@@ -45,7 +39,9 @@ describe('Care admin should be able to', function () {
   }
 
   function validateDisplayEmbedCodeModal() {
-    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal)
+    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedScriptBtn);
+    utils.click(careChatTemplateSetupPage.closeEmbedScriptModel);
   }
 
   function validateDismissOfEmbedCodeModal() {
@@ -57,8 +53,6 @@ describe('Care admin should be able to', function () {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
-  // Creating placeholder functions for testing multiple setUp assistant pages
-  // these placeholder functions will be implemented in coming stories
   function validateContentsOfNamePage() {
     utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
@@ -173,12 +167,23 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Off-Hours', 'This screen is shown during business off-hours');
   }
 
-  function validateContentsOfChatStringsPage() {
-    validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
-  }
-
   function validateContentsOfSummaryPage() {
     validateTitleAndDesc('Summary', 'Configuration Summary');
+  }
+
+  function validateFeaturesPage() {
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedCodeOnCard);
+    utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
+    utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been deleted successfully')
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
   }
 
 });
