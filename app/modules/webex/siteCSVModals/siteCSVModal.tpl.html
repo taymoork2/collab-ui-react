@@ -32,7 +32,7 @@
       <!-- csv export card -->
       <cs-card class="large">
         <article>
-          <div class="export-import-container">
+          <div class="webex-export-users-container">
             <div class="file-drop">
               <p align="center">
                 <label for='download'> 
@@ -65,7 +65,7 @@
       <!-- start of csv import card -->
       <cs-card class="large">
         <article>
-		  <div class="users-upload-csv">
+		  <div class="webex-import-users-container">
 				<div ng-if="!siteCSVModalCtrl.modal.file" 
 				     class="file-drop"
 					 cr-file-drop 
@@ -100,9 +100,7 @@
                     </p>
 				</div>
 				
-				<div ng-if="siteCSVModalCtrl.modal.file"
-				     class="export-import-container">
-
+				<div ng-if="siteCSVModalCtrl.modal.file">
                     <p>
                         &nbsp;
                     </p>
