@@ -26,12 +26,13 @@
 
     vm.siteRow = $stateParams.siteRow;
     vm.siteUrl = vm.siteRow.license.siteUrl;
-    vm.viewReady = true;
+    vm.importing = false;
 
     vm.onFileTypeError = onFileTypeError;
     vm.resetFile = resetFile;
     vm.startExport = startExport;
     vm.startImport = startImport;
+    vm.viewReady = true;
 
     function onFileTypeError() {
       displayResult(
@@ -106,6 +107,8 @@
         "vm.modal.file=" + vm.modal.file;
       //$log.log(logMsg);
 
+      vm.importing = true;
+
       if (
         (null == vm.modal.file) ||
         (0 == vm.modal.file.length)
@@ -171,6 +174,8 @@
 
         SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
+      } else {
+        vm.importing = false;
       }
     } // displayResult()
   } // SiteCSVModalCtrl()

@@ -1419,7 +1419,7 @@
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
-    "searchError": "Search for '{{roomId}}' returned 0 results.",
+    "searchError": "Your search for '{{roomId}}' returned 0 matches",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1441,7 +1441,8 @@
       "BUSY": "Busy",
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
-    }
+    },
+    "reportTimeout": "Timeout detected. Please cancel the report and try again."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
@@ -2193,7 +2194,6 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -2309,7 +2309,7 @@
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
-    "webex": "WebEx Enterprise Edition 200",
+    "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
@@ -4025,7 +4025,7 @@
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
-    "compliance": "Compliance"
+    "compliance": "Compliance Officer"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -4046,7 +4046,7 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance"
+    "Compliance_User": "Compliance Officer"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

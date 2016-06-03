@@ -89,6 +89,7 @@
     });
 
     function searchForRoom(roomId) {
+      vm.roomInfo = null;
       vm.report = null;
       vm.error = "";
       vm.searchInProgress = true;
@@ -126,7 +127,7 @@
         return;
       }
       vm.report = {
-        "state": "Searching..."
+        "state": "CREATED"
       };
 
       EdiscoveryService.createReport(vm.searchCriteria.displayName)

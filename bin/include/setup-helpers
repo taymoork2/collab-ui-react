@@ -75,12 +75,12 @@ function dirs_exist {
 
 function set_local_npm_path {
     export PATH="$PATH:./node_modules/.bin"
-    echo "export PATH=\"\$PATH:./node_modules/.bin\"" >> ~/.bashrc
+    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/.bashrc
 }
 
 function set_global_npm_path {
     export PATH="$PATH:/usr/local/bin"
-    echo "export PATH=\"\$PATH:/usr/local/bin\"" >> ~/.bashrc
+    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/.bashrc
 }
 
 # clean up all files, but leave most recently modified <num_to_leave> files
@@ -219,10 +219,10 @@ function export_project_root_env_var {
 export_project_root_env_var
 
 # Check NPM local path
-echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
+[[ "$PATH" == *"./node_modules/.bin"* ]] && echo "Local NPM path is set" || set_local_npm_path
 
 # Check NPM global path
-echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
+[[ "$PATH" == *"/usr/local/bin"* ]] && echo "Global NPM path is set" || set_global_npm_path
 
 # setup .cache subdir
 mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"

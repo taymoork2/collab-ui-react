@@ -418,7 +418,8 @@
         labelfield: 'abbr',
         valuefield: 'abbr',
         labelProp: 'abbr',
-        valueProp: 'state'
+        valueProp: 'state',
+        filter: true
 
       },
       expressionProperties: {

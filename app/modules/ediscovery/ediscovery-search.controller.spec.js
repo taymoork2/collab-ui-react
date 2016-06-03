@@ -60,7 +60,6 @@ describe('Controller: EdiscoverySearchController', function () {
 
       var expectedArgument = "https://whatever.com/myFancyRoomsApi" + "/" + "myRoomId";
       expect(EdiscoveryService.getAvalonRoomInfo.withArgs(expectedArgument).callCount).toBe(1);
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
 
     });
 
@@ -97,8 +96,9 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
       httpBackend.flush();
 
-      expect(ediscoverySearchController.error).toEqual("ediscovery.searchError");
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+      expect(ediscoverySearchController.error).toEqual("ediscovery.searchError");
+      expect(ediscoverySearchController.roomInfo).toBeNull();
 
     });
   });

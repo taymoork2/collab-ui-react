@@ -74,8 +74,16 @@
     margin-top: -2rem;;
   }
   .confirm-box {
-    position: absolute;
     margin-top: 2rem;
+  }
+  .save-box {
+    min-height: 2.5rem;
+    position:relative;
+
+    button {
+      position: absolute;
+      right: 1rem;
+    }
   }
   .font-regular {
     font-size: 1rem
