@@ -218,7 +218,6 @@
 
     function deleteTestOrg() {
       if (vm.isTest) {
-
         $modal.open({
           type: 'dialog',
           templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
