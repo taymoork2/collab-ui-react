@@ -74,14 +74,16 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
-    spyOn(Userservice, 'updateUsers');
+    spyOn(Userservice, 'updateUsers').and.callFake(function (usersDataArray, licenses, entitlements, method, callback) {
+      callback();
+    });
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
-    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
     spyOn(modal, 'open').and.callThrough();
 
@@ -123,7 +125,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
       controller.launchCustomerPortal();
+      $scope.$apply();
     });
+
+    it('should call modifyManagedOrgs', function () {
+      expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
+      expect(Authinfo.isPartnerAdmin()).toBe(true);
+      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+
     it('should create proper url', function () {
       expect($state.href).toHaveBeenCalledWith('login_swap', {
         customerOrgId: controller.currentCustomer.customerOrgId,
@@ -141,15 +151,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
-    });
-  });
-
-  describe('should call getUserAuthInfo correctly', function () {
-    it('should expect PartnerService.getUserAuthInfo to be called', function () {
-      expect(controller.customerOrgId).toBe('123-456');
-      expect(Authinfo.isPartnerAdmin()).toBe(true);
-      controller.getUserAuthInfo();
-      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
     });
   });
 

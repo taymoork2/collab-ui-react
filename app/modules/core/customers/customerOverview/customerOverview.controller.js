@@ -21,7 +21,6 @@
     vm.isSquaredUC = isSquaredUC();
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
-    vm.getUserAuthInfo = getUserAuthInfo;
     vm.deleteTestOrg = deleteTestOrg;
 
     vm.uuid = '';
@@ -116,7 +115,7 @@
     function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;
-      if (angular.isUndefined(liclist)) {
+      if (_.isUndefined(liclist)) {
         liclist = [];
       }
       for (i = 0; i < liclist.length; i++) {
@@ -125,7 +124,7 @@
         var lictype = lic.licenseType;
         var isConfType = lictype === "CONFERENCING";
         if (isConfType) {
-          licIds.push(new LicenseFeature(licId, (angular.isUndefined(lic.siteUrl) === false)));
+          licIds.push(new LicenseFeature(licId, (_.isUndefined(lic.siteUrl) === false)));
         }
       }
       return licIds;
@@ -135,28 +134,40 @@
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
-      var u = {
+      var emailObj = {
         'address': partnerEmail
       };
-      if (licIds.length > 0) {
-        Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
-      } else {
-        AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
-          var d = data;
-          var len = d.accounts.length;
-          var i = 0;
-          for (i = 0; i < len; i++) {
-            var account = d.accounts[i];
-            var lics = account.licenses;
-            var licIds = collectLicenseIdsForWebexSites(lics);
-            Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
-          }
-        });
+      var promise = $q.when();
+      if (vm.isPartnerAdmin) {
+        promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
-      $window.open($state.href('login_swap', {
-        customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.customerName
-      }));
+      promise.then(function () {
+        if (licIds.length > 0) {
+          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
+          $window.open($state.href('login_swap', {
+            customerOrgId: vm.customerOrgId,
+            customerOrgName: vm.customerName
+          }));
+        } else {
+          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
+            var len = data.accounts.length;
+            var updateUsersList = [];
+            for (var i = 0; i < len; i++) {
+              var account = data.accounts[i];
+              var lics = account.licenses;
+              var licIds = collectLicenseIdsForWebexSites(lics);
+              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+            }
+            $q.all(updateUsersList).then(function () {
+              $window.open($state.href('login_swap', {
+                customerOrgId: vm.customerOrgId,
+                customerOrgName: vm.customerName
+              }));
+            });
+          });
+        }
+      });
+
     }
 
     function openEditTrialModal() {
@@ -200,10 +211,6 @@
 
     function isOwnOrg() {
       return vm.customerName === Authinfo.getOrgName();
-    }
-
-    function getUserAuthInfo() {
-      PartnerService.getUserAuthInfo(vm.customerOrgId);
     }
 
     function getIsTestOrg() {
