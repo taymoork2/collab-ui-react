@@ -6,9 +6,9 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
-    HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService, ModalService, FeatureToggleService) {
+  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
+    ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
+    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -70,7 +70,8 @@
         ftswCompanyVoicemailNumber: undefined
       },
       ftswSteeringDigit: undefined,
-      hideExtensionLength: true
+      hideExtensionLength: true,
+      disableExtensions: false
     };
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
@@ -285,35 +286,25 @@
       templateOptions: {
         label: $translate.instant('serviceSetupModal.extensionLength'),
         description: $translate.instant('serviceSetupModal.extensionLengthDescription'),
+        helpText: $translate.instant('serviceSetupModal.extensionLengthHelpText'),
         warnMsg: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
         isWarn: false,
         options: vm.availableExtensions,
         onChange: function (options, scope) {
           if (vm.model.site.extensionLength !== vm.model.previousLength) {
-            return ModalService.open({
-                title: $translate.instant('common.warning'),
-                message: $translate.instant('serviceSetupModal.extensionLengthChangeWarning'),
-                close: $translate.instant('common.continue'),
-                dismiss: $translate.instant('common.cancel'),
-                type: 'negative'
-              })
-              .result.then(function () {
-                vm.model.previousLength = vm.model.site.extensionLength;
-                for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
-                  vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
-                  vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
-                }
-              })
-              .catch(function () {
-                vm.model.site.extensionLength = vm.model.previousLength;
-                return $q.reject();
-              });
+            vm.model.previousLength = vm.model.site.extensionLength;
+            for (var i = 0; i < vm.model.displayNumberRanges.length; i++) {
+              vm.model.displayNumberRanges[i].beginNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_beginNumber_0'].$viewValue, '0');
+              vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
+            }
+            scope.resetModel();
           }
+          vm.model.site.extensionLength = vm.model.previousLength;
         }
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return angular.isDefined(_.get(scope.originalModel.displayNumberRanges, "[0].uuid", undefined));
+          return vm.model.disableExtensions;
         },
         // hide function added to expressionProperties because hideExpression does not dependably hide
         // the element on load, and will evaluate only after the model updates after first load
@@ -370,7 +361,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions;
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -431,7 +422,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return angular.isDefined(scope.model.uuid);
+                return vm.model.disableExtensions;
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -657,6 +648,9 @@
         // Get the extemsion length feature toggle setting
         return enableExtensionLengthFeatureToggle();
       }).then(function () {
+        // Determine if extension ranges and length can be modified
+        return enableExtensionLengthModifiable();
+      }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
@@ -756,6 +750,50 @@
       }).catch(function (response) {
         // extension length feature toggle not enabled for customer
       });
+    }
+
+    function testForExtensions() {
+      return InternalNumberPoolService.query({
+          customerId: Authinfo.getOrgId()
+        }).$promise
+        .then(function (extensionList) {
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
+        });
+    }
+
+    function testForAutoAttendant() {
+      return CeService.query({
+          customerId: Authinfo.getOrgId()
+        }).$promise
+        .then(function (autoAttendant) {
+          vm.model.disableExtensions = true;
+        }).catch(function (response) {
+          // auto attendant does not exist
+        });
+    }
+
+    function testForHuntGroup() {
+      return HuntGroupServiceV2.query({
+          customerId: Authinfo.getOrgId()
+        }).$promise
+        .then(function (huntGroup) {
+          if (angular.isArray(huntGroup) && huntGroup.length > 0) {
+            vm.model.disableExtensions = true;
+          }
+        }).catch(function (response) {
+          // hunt group does not exist
+        });
+    }
+
+    function enableExtensionLengthModifiable() {
+      var promises = [];
+      promises.push(testForExtensions());
+      promises.push(testForAutoAttendant());
+      promises.push(testForHuntGroup());
+
+      return $q.all(promises);
     }
 
     function listVoicemailTimezone(timezones) {
