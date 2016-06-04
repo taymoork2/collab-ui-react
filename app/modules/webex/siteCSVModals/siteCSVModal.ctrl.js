@@ -15,6 +15,7 @@
     SiteListService,
     WebExSiteRowService
   ) {
+	  
     var funcName = "SiteCSVModalCtrl()";
     var logMsg = '';
     var vm = this;
@@ -33,7 +34,7 @@
     };
 
     vm.siteRow = $stateParams.siteRow;
-    vm.siteUrl = vm.siteRow.license.siteUrl;
+    vm.siteUrl = $stateParams.siteRow.license.siteUrl;
     vm.requestingImport = false;
     vm.requestingExport = false;
     vm.viewReady = true;
