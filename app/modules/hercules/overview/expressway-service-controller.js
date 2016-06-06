@@ -171,9 +171,18 @@
     function openAddResourceModal() {
       if (vm.featureToggled) {
         $modal.open({
+          resolve: {
+            connectorType: function () {
+              return vm.connectorType;
+            },
+            servicesId: function () {
+              return vm.servicesId;
+            }
+          },
           controller: 'AddResourceController',
           controllerAs: 'addResource',
-          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html'
+          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+          type: 'small'
         });
       } else {
         $modal.open({
