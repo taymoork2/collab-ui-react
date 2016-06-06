@@ -32,6 +32,7 @@ namespace globalsettings {
 
       it('should create the ctrl and add the partner setting sections', ()=> {
         expect(controller.domains).toBeFalsy();
+        expect(controller.sipDomain).toBeFalsy();
       });
     });
 
@@ -42,7 +43,8 @@ namespace globalsettings {
 
       it('should create the ctrl and add the normal setting sections', ()=> {
         expect(controller.domains).toBeTruthy();
-      });
+        expect(controller.sipDomain).toBeTruthy();
+        });
     });
 
     function setAuthinfoIsPartnerSpy(isPartner) {

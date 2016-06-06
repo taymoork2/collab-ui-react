@@ -160,9 +160,6 @@
             }
             starttime = moment().set(dateData).set(startData);
             endtime = moment().set(dateData).set(endData);
-            if (hoursRange.allDay || hoursRange.endtime === '12:00 AM') {
-              endtime = endtime.add(1, 'day');
-            }
             if (hoursRange.recurAnnually) {
               //Set the rule in the calendar
               strRRule = '';
@@ -225,7 +222,7 @@
       var dayOfWeek = hoursRange.day.index;
       if (hoursRange.rank.index == -1) {
         //Set the date to the last of the <month>
-        date = moment({
+        date = moment().set({
           month: hoursRange.month.index + 1,
           date: 0
         });
@@ -237,7 +234,7 @@
 
         //If the date is in the past,
         if (moment().diff(date, 'day') > 0) {
-          date = moment({
+          date = moment().set({
             month: hoursRange.month.index + 1,
             date: 0,
             year: moment().year() + 1
@@ -249,7 +246,7 @@
         }
       } else {
         //Set the date to the 1st of the <month>
-        date = moment({
+        date = moment().set({
           month: hoursRange.month.index,
           date: 1
         });
@@ -263,7 +260,7 @@
 
         //If the date is in the past,
         if (moment().diff(date, 'day') > 0) {
-          date = moment({
+          date = moment().set({
             month: hoursRange.month.index,
             date: 1,
             year: moment().year() + 1
@@ -278,7 +275,7 @@
         }
       }
       //Force moment to proceed the date
-      date = moment({
+      date = moment().set({
         year: date.year(),
         month: date.month(),
         date: date.date()
@@ -338,11 +335,11 @@
         var dtend = vevent.getFirstPropertyValue('dtend');
         var hoursRange = getDefaultRange(summary);
 
-        hoursRange.starttime = moment({
+        hoursRange.starttime = moment().set({
           hour: dtstart.hour,
           minute: dtstart.minute
         }).format('hh:mm A');
-        hoursRange.endtime = moment({
+        hoursRange.endtime = moment().set({
           hour: dtend.hour,
           minute: dtend.minute
         }).format('hh:mm A');
@@ -371,7 +368,7 @@
             hoursRange.day.index = getTwoLetterDays().indexOf(description[3]);
             hoursRange.exactDate = false;
           }
-          hoursRange.date = moment({
+          hoursRange.date = moment().set({
             year: dtstart.year,
             month: dtstart.month - 1,
             date: dtstart.day

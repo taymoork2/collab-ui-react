@@ -1112,10 +1112,17 @@
               currentOrg: {}
             }
           })
-          .state('site-list', {
+          /**.state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
             controller: 'SiteListCtrl',
+            controllerAs: 'siteList',
+            parent: 'main'
+          })**/
+          .state('site-list', {
+            url: '/site-list',
+            templateUrl: 'modules/core/siteList/siteList.tpl.html',
+            controller: 'SiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main'
           })
@@ -1138,7 +1145,12 @@
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
-                controllerAs: 'siteCSVModalCtrl'
+                controllerAs: 'siteCSVModalCtrl',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -1150,8 +1162,13 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+                templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
                 controllerAs: 'siteCSVResult',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -1559,7 +1576,8 @@
             },
             params: {
               currentTab: {},
-              currentStep: ''
+              currentStep: '',
+              onlyShowSingleTab: false
             },
             data: {
               firstTimeSetup: false
@@ -2447,7 +2465,12 @@
               'modal@': {
                 controller: 'CareFeaturesDeleteCtrl',
                 controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {

@@ -18,7 +18,7 @@
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.filterAction = filterAction;
-    $scope.getUserAuthInfo = getUserAuthInfo;
+    $scope.modifyManagedOrgs = modifyManagedOrgs;
     $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
@@ -66,6 +66,7 @@
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
+      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -318,8 +319,8 @@
         });
     }
 
-    function getUserAuthInfo(customerOrgId) {
-      PartnerService.getUserAuthInfo(customerOrgId);
+    function modifyManagedOrgs(customerOrgId) {
+      PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
@@ -380,11 +381,11 @@
         closeActionsDropdown();
       } else if (action === 'customer') {
         closeActionsDropdown();
-        getUserAuthInfo(org.customerOrgId);
+        modifyManagedOrgs(org.customerOrgId);
       } else if (action === 'pstn') {
         closeActionsDropdown();
         addNumbers(org);
-        getUserAuthInfo(org.customerOrgId);
+        modifyManagedOrgs(org.customerOrgId);
       }
       return;
     }

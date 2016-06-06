@@ -17,7 +17,7 @@
     "add": "Add Users",
     "entitle": "Entitle",
     "invitePending": "Invite Pending",
-    "inviteMsg": "Users services are pending and will be shown here when the user activates their account",
+    "inviteMsg": "This user has not set their password yet",
     "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -1441,7 +1441,8 @@
       "BUSY": "Busy",
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
-    }
+    },
+    "reportTimeout": "Timeout detected. Please cancel the report and try again."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
@@ -2193,7 +2194,6 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -2309,7 +2309,7 @@
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
-    "webex": "WebEx Enterprise Edition 200",
+    "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
@@ -2405,9 +2405,11 @@
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System",
-    "deleteOrg": "Delete Org {{orgName}}",
+    "deleteOrgTitle": "Delete Customer",
+    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
+    "deleteOrg": "Delete '{{orgName}}'",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted",
+    "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
   },
@@ -3351,6 +3353,7 @@
     "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3613,6 +3616,7 @@
     "deleteAction": "Delete",
     "deleteFeature": "Delete {{ featureText }}",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "createSuccessText": "{{ featureName }} Chat Template has been created successfully",
     "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
     "messageError": "Message {{ message }}",
@@ -3655,8 +3659,8 @@
     "field3HintText": "Select from the list or type",
     "defaultTypeMessageText": "Type your message and press enter",
     "selectFieldText": "Select a field on the left to change it's attribute.",
-    "ciHelpText": "Help directs customers to the right agent",
-    "riHelpText": "",
+    "ciHelpText": "Helps direct customers to the right agent",
+    "riHelpText": "Helps direct customers to the right agent",
     "requiredField": "Required Field",
     "optionalField": "Optional Field",
     "categoryLabel": "Category",
@@ -3692,6 +3696,11 @@
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
     "noThanksBtn": "No Thanks",
+    "typeCategory": "Category",
+    "typeName": "Name",
+    "typeEmail": "Email",
+    "typeId": "Id",
+    "typePhone": "Phone",
 
     "ctOverview": {
       "customerInformation": {
@@ -4020,7 +4029,7 @@
     "user": "User",
     "ciscouc.devops": "Spark Call Devops",
     "ciscouc.devsupport": "Spark Call Dev Support",
-    "compliance": "Compliance"
+    "compliance": "Compliance Officer"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -4041,7 +4050,7 @@
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
-    "Compliance_User": "Compliance"
+    "Compliance_User": "Compliance Officer"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",

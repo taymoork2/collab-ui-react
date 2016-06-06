@@ -158,7 +158,6 @@
           vm.ui.closedHours.setType('MENU_WELCOME');
         }
       }
-
     }
 
     function saveUiModel() {
@@ -185,6 +184,8 @@
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.holidays.setType('MENU_WELCOME');
       }
+
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(vm.aaModel.aaRecord, vm.ui.hasClosedHours);
     }
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
@@ -509,6 +510,7 @@
       return AAUiScheduleService.create8To5Schedule(aaName).then(
         function (scheduleId) {
           vm.ui.ceInfo.scheduleId = scheduleId;
+          vm.ui.hasClosedHours = true;
         },
         function (error) {
           AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {

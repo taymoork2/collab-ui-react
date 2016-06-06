@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, Authinfo, $q, FeatureToggleService) {
+  function SetupWizardCtrl($scope, Authinfo, $q, FeatureToggleService, $stateParams) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -109,7 +109,14 @@
     }
 
     function init() {
-      $scope.tabs = tabs;
+      $scope.tabs = _.filter(tabs, function (tab) {
+        if ($stateParams.onlyShowSingleTab && $stateParams.currentTab) {
+          return $stateParams.currentTab == tab.name;
+        } else {
+          return true;
+        }
+      });
+
       setupAddUserSubTabs();
 
       if (Authinfo.isSquaredUC()) {

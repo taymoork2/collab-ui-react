@@ -274,7 +274,41 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.radioStates.msgRadio).toEqual(true);
       });
     });
+  });
 
+  describe('With assigning meeting and message licenses on invitations', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = {
+        licenseID: [
+          'MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0',
+          'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
+        ],
+        pendingStatus: true,
+        invitations: {
+          ms: true,
+          cf: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
+        }
+      };
+      initController();
+    });
+    beforeEach(function () {
+      $scope.allLicenses = [{
+        billing: 'testOrg1',
+        confModel: false,
+        label: 'test org',
+        licenseId: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062',
+        offerName: 'CF',
+        siteUrl: '',
+        volume: 100
+      }];
+    });
+    it('should set MS license to true based on invitation', function () {
+      expect($scope.radioStates.msgRadio).toBeTruthy();
+    });
+    it('should set meeting to true on invitation', function () {
+      $scope.populateConfInvitations();
+      expect($scope.allLicenses[0].confModel).toEqual(true);
+    });
   });
 
   describe('UserAdd DID and DN assignment', function () {

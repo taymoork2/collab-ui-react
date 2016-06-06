@@ -1,5 +1,5 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
-/// <reference path="ServicesOverview.ctrl.ts"/>
+/// <reference path="servicesOverview.ctrl.ts"/>
 namespace servicesOverview {
 
   describe('ServiceOverviewCtrl', ()=> {

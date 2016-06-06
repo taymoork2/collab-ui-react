@@ -57,7 +57,7 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
@@ -225,13 +225,13 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
-  describe('getUserAuthInfo should be called correctly', function () {
+  describe('modifyManagedOrgs should be called correctly', function () {
     beforeEach(initController);
 
-    it('should have called PartnerService.getUserAuthInfo', function () {
+    it('should have called PartnerService.modifyManagedOrgs', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
-      $scope.getUserAuthInfo(testOrg.customerOrgId);
-      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
+      $scope.modifyManagedOrgs(testOrg.customerOrgId);
+      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });
   });
 });
