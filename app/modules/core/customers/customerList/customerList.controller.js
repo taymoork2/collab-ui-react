@@ -108,7 +108,7 @@
         }, {
           field: 'meeting',
           displayName: $translate.instant('customerPage.meeting'),
-          width: '30%',
+          width: '14%',
           cellTemplate: multiServiceTemplate,
           headerCellClass: 'align-center',
           sortingAlgorithm: serviceSort
