@@ -21,7 +21,6 @@ describe('Controller: LineListCtrl', function () {
     spyOn(Notification, 'error');
 
     spyOn(LineListService, 'getLineList').and.returnValue($q.when(lines));
-    spyOn(LineListService, 'getCount').and.returnValue($q.when(count));
     spyOn(FeatureToggleService, 'supports');
 
     controller = $controller('LinesListCtrl', {
@@ -50,24 +49,10 @@ describe('Controller: LineListCtrl', function () {
   describe('filter', function () {
     beforeEach(function () {
       LineListService.getLineList.calls.reset();
-      LineListService.getCount.calls.reset();
     });
 
     it('should exist', function () {
       expect(controller.setFilter).toBeDefined();
-    });
-
-    it('should not call getLineList when filter is already set to all', function () {
-      controller.setFilter('all');
-
-      expect(LineListService.getLineList).not.toHaveBeenCalled();
-      expect(LineListService.getCount).not.toHaveBeenCalled();
-
-      // validate the grid data & the counts
-      expect($scope.gridData.length).toBe(3);
-      expect(controller.placeholder.count).toBe('3');
-      expect(controller.filters[0].count).toBe('1');
-      expect(controller.filters[1].count).toBe('2');
     });
 
     it('should call getLineList with filter assignedLines', function () {
@@ -77,9 +62,6 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getCount.calls.count()).toEqual(1);
-
-      expect(LineListService.getCount).toHaveBeenCalledWith('');
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines');
     });
 
@@ -90,9 +72,6 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getCount.calls.count()).toEqual(1);
-
-      expect(LineListService.getCount).toHaveBeenCalledWith('');
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines');
     });
   });
@@ -100,17 +79,6 @@ describe('Controller: LineListCtrl', function () {
   describe('getLineList with exception', function () {
     it('should display notification on exception', function () {
       LineListService.getLineList.and.returnValue($q.reject());
-      controller = $controller('LinesListCtrl', {
-        $scope: $scope
-      });
-      $scope.$apply();
-      expect(Notification.errorResponse).toHaveBeenCalled();
-    });
-  });
-
-  describe('getCount with exception', function () {
-    it('should display notification on exception', function () {
-      LineListService.getCount.and.returnValue($q.reject());
       controller = $controller('LinesListCtrl', {
         $scope: $scope
       });
@@ -156,7 +124,6 @@ describe('Controller: LineListCtrl', function () {
   describe('search pattern filter', function () {
     beforeEach(function () {
       LineListService.getLineList.calls.reset();
-      LineListService.getCount.calls.reset();
     });
 
     it('should exist', function () {
@@ -168,9 +135,6 @@ describe('Controller: LineListCtrl', function () {
       $timeout.flush();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getCount.calls.count()).toEqual(1);
-
-      expect(LineListService.getCount).toHaveBeenCalledWith('abc');
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all');
     });
   });

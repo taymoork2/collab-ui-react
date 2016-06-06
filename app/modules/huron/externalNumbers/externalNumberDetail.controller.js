@@ -25,16 +25,9 @@
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
-    vm.addNumbers = addNumbers;
     vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
-
-    //TODO: remove when removing toggle 'huron-order-management'
-    var numberPromise = ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
-      .then(function (response) {
-        vm.showPstnSetup = response;
-      });
 
     init();
 
@@ -102,30 +95,6 @@
       vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
-    }
-
-    //TODO: remove when removing toggle 'huron-order-management'
-    function getIsTrial(org) {
-      if (!!org.isPartner) return false;
-      return _.get(org, 'communications.isTrial', true);
-    }
-
-    //TODO: remove when removing toggle 'huron-order-management'
-    function addNumbers(org) {
-      numberPromise.then(function () {
-        if (vm.showPstnSetup) {
-          return $state.go('pstnSetup', {
-            customerId: org.customerOrgId,
-            customerName: org.customerName,
-            customerEmail: org.customerEmail,
-            customerCommunicationLicenseIsTrial: getIsTrial(org)
-          });
-        } else {
-          return $state.go('didadd', {
-            currentOrg: org
-          });
-        }
-      });
     }
 
     function getQuantity(type) {

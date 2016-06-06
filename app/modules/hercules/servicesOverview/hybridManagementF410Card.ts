@@ -9,7 +9,7 @@ namespace servicesOverview {
     private _buttons:Array<servicesOverview.CardButton> = [
       {
         name: 'servicesOverview.cards.clusterList.buttons.all',
-        link: 'services/resource',
+        link: 'services/clusters',
         buttonClass: 'btn-link'
       }
     ];

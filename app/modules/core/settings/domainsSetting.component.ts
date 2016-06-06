@@ -1,4 +1,4 @@
-/// <reference path="SettingSection.ts"/>
+/// <reference path="settingSection.ts"/>
 namespace globalsettings {
 
   export class DomainsSetting extends SettingSection {

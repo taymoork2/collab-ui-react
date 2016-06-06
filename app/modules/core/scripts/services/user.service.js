@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $location, $q, $rootScope, $translate, Auth, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, Storage, TelephoneNumberService, UrlConfig, Utils) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -60,7 +60,7 @@
       }
 
       if (userData.users.length > 0) {
-        $http({
+        return $http({
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData
@@ -79,6 +79,8 @@
             callback(data, status, method, headers);
           }
         });
+      } else {
+        return $q.when();
       }
     }
 

@@ -2,7 +2,7 @@
 
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
 
-  <form class="cs-form" action="">
+  <div class="cs-form" action="">
     <div class="cs-form__section">
 
       <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
@@ -13,6 +13,10 @@
         <sipdomain-setting show-save-button="true"></sipdomain-setting>
       </setting-section>
 
+      <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
+        <support-setting></support-setting>
+      </setting-section>
+
     </div>
-  </form>
+  </div>
 </div>

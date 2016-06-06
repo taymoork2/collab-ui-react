@@ -3,10 +3,10 @@
 
   angular
     .module('Hercules')
-    .controller('FusionResourceListController', FusionResourceListController);
+    .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionResourceListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -14,9 +14,10 @@
 
     var vm = this;
     var clustersCache = [];
+    var activeFilter = 'all';
 
     vm.loading = true;
-    vm.activeFilter = 'all';
+    vm.backState = 'services-overview';
     vm.displayedClusters = [];
     vm.placeholder = {
       name: $translate.instant('hercules.fusion.list.all'),
@@ -36,6 +37,7 @@
     vm.setFilter = setFilter;
     vm.searchData = searchData;
     vm.openService = openService;
+    vm.openSettings = openSettings;
 
     loadClusters();
 
@@ -68,7 +70,7 @@
     }
 
     function setFilter(filter) {
-      vm.activeFilter = filter.filterValue || 'all';
+      activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
         vm.displayedClusters = _.filter(clustersCache, 'type', 'expressway');
       } else if (filter.filterValue === 'mediafusion') {
@@ -97,6 +99,12 @@
       } else if (serviceId === 'squared-fusion-media') {
         $state.go('media-service.list');
       }
+    }
+
+    function openSettings(type, id) {
+      $state.go(type + '-settings', {
+        id: id
+      });
     }
   }
 })();
