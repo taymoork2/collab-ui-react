@@ -71,8 +71,8 @@
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName,
           "roomQuery": {
-            "startDate": moment.utc(startDate).format(),
-            "endDate": moment.utc(endDate).format(),
+            "startDate": moment.utc(startDate).toISOString(),
+            "endDate": moment.utc(endDate).toISOString(),
             "roomId": roomId
           }
         })
