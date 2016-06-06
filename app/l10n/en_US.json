@@ -1144,6 +1144,19 @@
       "register-error-400": "Could not register Expressway. The hostname is not valid.",
       "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
     },
+    "addResourceDialog": {
+      "title": "Add Resource for {{ServiceName}}",
+      "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
+      "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
+      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
+      "enterHostnamePlaceholder": "Enter Expressway hostname",
+      "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
+      "selectExisting": "Select one or more existing Expressway clusters",
+      "selectClusterPlaceholder": "Select one or more Expressway clusters…",
+      "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists."
+    },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
       "serviceNames": {
