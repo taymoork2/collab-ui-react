@@ -1,3 +1,4 @@
+/// <reference path="authenticationSetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
@@ -22,6 +23,7 @@ namespace globalsettings {
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
         this.support = new SupportSetting();
+        this.authentication = new AuthenticationSetting();
       }
     }
   }
