@@ -157,19 +157,25 @@
         </div>
       </div>
 
-
-
-      <div class="form-group" ng-show="deviceOverview.currentDevice.timeZone">
+      <div class="form-group" ng-show="deviceOverview.timeZone">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
-        <div class="col-sm-8">
-          <sq-editable-input
-              ng-if="deviceOverview.currentDevice.timeZone"
-              sq-save="deviceOverview.setTimezone(newText)"
-              ng-model="deviceOverview.currentDevice.timeZone">
-          </sq-editable-input>
-          <!--<p class="form-control-static">{{deviceOverview.currentDevice.timeZone}}</p>-->
+        <div class="col-sm-3">
+          <cs-select
+              ng-model="deviceOverview.selectedTimeZone"
+              ng-style="{'width': '300px'}"
+              options="deviceOverview.timeZoneOptions"
+              is-disabled="deviceOverview.updatingTimeZone"
+              labelfield="label"
+              valuefield="value"
+              on-change-fn="deviceOverview.saveTimeZoneAndWait()"
+              filter="true">
+          </cs-select>
+        </div>
+        <div class="col-sm-4" ng-show="deviceOverview.updatingTimeZone">
+          <div cs-loader class="loader-example--small"></div>
         </div>
       </div>
+
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
         <div class="col-sm-3" ng-show="deviceOverview.canChangeUpgradeChannel">

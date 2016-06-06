@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, TimeZoneService) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -14,15 +14,35 @@
 
     deviceOverview.linesAreLoaded = false;
 
+
+
     if (deviceOverview.currentDevice.isHuronDevice) {
-      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
-        deviceOverview.timeZone = result;
-      });
+      initTimeZone();
+      resetTimeZone();
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
       });
       pollLines();
+    }
+
+    function resetTimeZone() {
+      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.timeZone = result;
+        deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+      });
+    }
+
+    function getTimeZoneFromValue(value) {
+      return _.find(deviceOverview.timeZoneOptions, function (o) {
+        return o.value == value
+      });
+    }
+
+    function initTimeZone() {
+      return TimeZoneService.query().$promise.then(function (timezones) {
+        deviceOverview.timeZoneOptions = timezones;
+      });
     }
 
     function pollLines() {
@@ -44,11 +64,48 @@
       }
     };
 
-    deviceOverview.setTimezone = function (timezone) {
-      huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
-        deviceOvervew.timeZone = timezone;
+    function setTimeZone(timezone) {
+      return huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
+        deviceOverview.timeZone = timezone;
       });
+    }
+
+    deviceOverview.saveTimeZoneAndWait = function () {
+      var newValue = deviceOverview.selectedTimeZone.value;
+      if (newValue != deviceOverview.timeZone) {
+        deviceOverview.updatingTimeZone = true;
+        setTimeZone(newValue)
+            .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
+            .catch(function (error) {
+              XhrNotificationService.notify(error);
+              resetTimeZone();
+            })
+            .finally(function () {
+              deviceOverview.updatingTimeZone = false;
+            });
+      }
     };
+
+    function waitForDeviceToUpdateTimeZone(newValue) {
+      var deferred = $q.defer();
+      pollDeviceForNewTimeZone(newValue, new Date().getTime() + 5000, deferred);
+      return deferred.promise;
+    }
+
+    function pollDeviceForNewTimeZone(newValue, endTime, deferred) {
+      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
+        if (result == newValue) {
+          Notification.success($translate.instant('deviceOverviewPage.timeZoneUpdated'));
+          return deferred.resolve();
+        }
+        if (new Date().getTime() > endTime) {
+          return deferred.reject($translate.instant('deviceOverviewPage.timeZoneUpdateFailed'));
+        }
+        $timeout(function () {
+          pollDeviceForNewTimeZone(newValue, endTime, deferred);
+        }, 1000);
+      });
+    }
 
     deviceOverview.reportProblem = function () {
       var uploadLogsPromise;

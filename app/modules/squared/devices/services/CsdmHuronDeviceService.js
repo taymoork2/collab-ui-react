@@ -125,15 +125,15 @@
           .then(function (res) {
             var timeZone = null;
             if (res.data) {
-              timeZone = data.timeZone;
+              timeZone = res.data.timeZone;
             }
             return timeZone;
           });
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
-      return $http.put(huronDevice.url.replace('/lists',''), {
-        timezone: timezone
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        timeZone: timezone
       });
     }
 

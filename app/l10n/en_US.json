@@ -2509,6 +2509,8 @@
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
+    "timeZoneUpdated": "Time Zone updated",
+    "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
     "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
     "timeZone": "Timezone"
   },
