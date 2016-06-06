@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body add-resource">
-  <form name="selectNewOrExisting" ng-show="!addResource.PreregistrationCompleted">
+  <form name="selectNewOrExisting" ng-show="!addResource.preregistrationCompleted">
     <div class="cs-radio-group">
       <input
         cs-input
@@ -28,14 +28,14 @@
     </div>
   </form>
 
-  <form ng-show="addResource.selectedAction === 'new' && !addResource.PreregistrationCompleted" class="inputbox">
+  <form ng-show="addResource.selectedAction === 'new' && !addResource.preregistrationCompleted" class="inputbox">
     <span translate="hercules.addResourceDialog.enterHostname"></span>
     <input type="text"
            ng-model="addResource.newHostname"
            placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}" class="normaltextinput">
   </form>
 
-  <div ng-show="addResource.PreregistrationCompleted" class="add-resource">
+  <div ng-show="addResource.preregistrationCompleted" class="add-resource">
     <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
              translate-values="{hostname: addResource.newHostname || ''}"></span>
     </p>
@@ -62,19 +62,19 @@
 </div>
 
 <div class="modal-footer add-resource">
-  <button class="btn" ng-click="$close()" ng-hide="addResource.PreregistrationCompleted">
+  <button class="btn" ng-click="$close()" ng-hide="addResource.preregistrationCompleted">
     <span translate="common.cancel"></span>
   </button>
   <button class="btn btn--primary"
           ng-click="addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
           ng-disabled="addResource.selectedAction !== 'new' || !addResource.newHostname"
-          ng-hide="addResource.PreregistrationCompleted"
+          ng-hide="addResource.preregistrationCompleted"
   >
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>
 
   <button class="btn btn--primary"
-          ng-show="addResource.PreregistrationCompleted"
+          ng-show="addResource.preregistrationCompleted"
           ng-click="addResource.redirectToTargetAndCloseWindowClicked(addResource.newHostname)">
     <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
   </button>

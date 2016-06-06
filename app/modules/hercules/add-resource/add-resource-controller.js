@@ -12,7 +12,7 @@
     vm.releaseChannel = 'GA'; // hard-coded for now, release channel support is not part of phase 1
     vm.connectorType = connectorType;
     vm.servicesId = servicesId;
-    vm.PreregistrationCompleted = false;
+    vm.preregistrationCompleted = false;
     vm.selectedAction = '';
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
@@ -55,7 +55,7 @@
     };
 
     function pregistrationSucceeded() {
-      vm.PreregistrationCompleted = true;
+      vm.preregistrationCompleted = true;
     }
 
     function preregisterCluster(hostname) {
