@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ResourceSettings', function () {
+describe('Controller: ExpresswayClusterSettingsController', function () {
   beforeEach(module('Hercules'));
   var $scope;
   var view;
@@ -9,8 +9,8 @@ describe('ResourceSettings', function () {
 
   beforeEach(inject(function ($rootScope, $templateCache, $compile) {
     $scope = $rootScope.$new();
-    html = $templateCache.get("modules/hercules/resource-settings/resource-settings.html");
-    $scope.resourceSetting = {
+    html = $templateCache.get('modules/hercules/fusion-pages/expressway-settings.html');
+    $scope.clusterSettings = {
       deactivateService: sinon.stub(),
       enabledServices: ['c_cal', 'c_ucmc', 'c_mgmt']
     };
@@ -25,7 +25,7 @@ describe('ResourceSettings', function () {
     view.find('#deactivateCalendar').click();
     expect(view.find('#deactivateCalendar').length).toBe(1);
     // … then de-provision 'c_cal' …
-    $scope.resourceSetting.enabledServices = ['c_ucmc', 'c_mgmt'];
+    $scope.clusterSettings.enabledServices = ['c_ucmc', 'c_mgmt'];
     view = compile(angular.element(html))($scope);
     $scope.$digest();
     // … and verify that the "Deactivate Calendar" button is *not* there anymore.
