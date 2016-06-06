@@ -64,21 +64,21 @@ describe('Service: LineListService', function () {
       });
     });
 
-    it('should set seach criteria assignedlines=true', function () {
+    it('should set search criteria assignedlines=true', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=false&limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'unassignedLines').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
-    it('should set seach criteria assignedlines=false', function () {
+    it('should set search criteria assignedlines=false', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=true&limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'assignedLines').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
-    it('should set seach criteria pending and return pending orders', function () {
+    it('should set search criteria pending and return pending orders', function () {
       PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
@@ -87,7 +87,7 @@ describe('Service: LineListService', function () {
       });
     });
 
-    it('should set seach criteria all and include pending orders', function () {
+    it('should set search criteria all and include pending orders', function () {
       PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
@@ -96,7 +96,7 @@ describe('Service: LineListService', function () {
       });
     });
 
-    it('should set seach criteria to pending and and return nothing if lines is empty', function () {
+    it('should set search criteria to pending and and return nothing if lines is empty', function () {
       PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond([]);
       $scope.$apply();
@@ -105,7 +105,7 @@ describe('Service: LineListService', function () {
       });
     });
 
-    it('should set seach criteria to all and and return lines and not query pending since not a terminus customer', function () {
+    it('should set search criteria to all and and return lines and not query pending since not a terminus customer', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.reject());
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
@@ -115,7 +115,7 @@ describe('Service: LineListService', function () {
       });
     });
 
-    it('should set seach criteria to pending and and return nothing since not a terminus customer', function () {
+    it('should set search criteria to pending and and return nothing since not a terminus customer', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.reject());
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond([]);
       $scope.$apply();
