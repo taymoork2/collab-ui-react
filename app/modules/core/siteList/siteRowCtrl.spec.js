@@ -1,7 +1,9 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
+
   var controller, $scope, $q, FeatureToggleService, WebExSiteRowService;
+
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
