@@ -9,6 +9,7 @@
   function webexCsvDownloadCtrl(
     $log,
     $scope,
+    $window,
     WebExCsvDownloadService,
     Notification
   ) {
@@ -25,11 +26,12 @@
 
         if (vm.type == WebExCsvDownloadService.typeExport) {
           WebExCsvDownloadService.getCsv(
-            vm.type
+            vm.type,
+            FILENAME
           ).then(
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
-
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content, FILENAME);
+             // $log.log("********1. inside download CSV function, filename:------");
               $scope.$emit('downloaded', objectUrl);
             }
           ).catch(
@@ -41,13 +43,13 @@
           WebExCsvDownloadService.getWebExCsv(
             vm.fileDownloadUrl
           ).then(
-            function (csvData) {
-              var objectUrl = WebExCsvDownloadService.webexCreateObjectUrl(csvData.content);
-
+            function success(csvData) {
+              var objectUrl = WebExCsvDownloadService.webexCreateObjectUrl(csvData.content, vm.fileName);
+              $log.log("********2. else part- inside download CSV function------");
               $scope.$emit('downloaded', objectUrl);
             }
           ).catch(
-            function (response) {
+            function err(response) {
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
               $scope.$emit('download-error');
             }
@@ -70,7 +72,8 @@
       templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
       scope: {
         type: '@',
-        downloading: '@'
+        downloading: '@',
+        filename: '@'
       },
       controller: webexCsvDownloadCtrl,
       controllerAs: 'webexCsvDownload',
@@ -85,7 +88,8 @@
       element,
       attrs
     ) {
-
+      var FILENAME = scope.filename || 'exported_file.csv';
+      $log.log("*****filename passed:" + FILENAME);
       // disable the button when download starts
       scope.$on('download-start', function () {
         scope.webexCsvDownload.downloading = true;
@@ -105,6 +109,7 @@
 
         $timeout(function () {
           anchor[0].click();
+          $log.log("*************inside timeout ***************");
         });
 
         $timeout(
@@ -135,10 +140,11 @@
         $timeout(function () {
           var anchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
           scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
-          scope.webexCsvDownload.downloadCsv = angular.noop;
+          //scope.webexCsvDownload.downloadCsv = angular.noop;
+          scope.webexCsvDownload.downloadCsv = openInIE;
           anchor.attr({
             href: url,
-            download: attrs.filename
+            download: FILENAME
           }).removeAttr('disabled');
         });
       } // changeAnchorAttrToDownload()
@@ -152,6 +158,10 @@
           }).removeAttr('download');
         });
       } // changeAnchorAttrToOriginalState()
+
+      function openInIE() {
+        WebExCsvDownloadService.openInIE(scope.type, FILENAME);
+      }
     } // link()
   } // webexCsvDownloadCtrl()
 })();

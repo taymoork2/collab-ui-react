@@ -21,6 +21,7 @@
     var typeExport = 'export';
     var typeWebExExport = 'webexexport';
     var typeWebExImport = 'webeximport';
+    var objectBlob;
 
     var userCsvUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/:type';
     var csvUserResource = $resource(
@@ -59,13 +60,14 @@
       revokeObjectUrl: revokeObjectUrl,
       getObjectUrl: getObjectUrl,
       setObjectUrl: setObjectUrl,
+      openInIE: openInIE,
       getObjectUrlTemplate: getObjectUrlTemplate,
       setObjectUrlTemplate: setObjectUrlTemplate
     };
 
     return service;
 
-    function getCsv(type) {
+    function getCsv(type, fileName) {
       return csvUserResource.get({
         type: typeExport
       }).$promise;
@@ -101,26 +103,36 @@
       return webexCsvResource.get('').$promise;
     } // getWebExCsv()
 
-    function createObjectUrl(data) {
+    function createObjectUrl(data, fileName) {
+      $log.log("********** inside createObjectUrl****");
       var blob = new $window.Blob([data], {
         type: 'text/csv'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
 
+      objectBlob = blob;
       setObjectUrl(oUrl);
+      //      if ($window.navigator.msSaveOrOpenBlob) {
+      //        openInIE(fileName);
+      //      }
 
       return oUrl;
     } // createObjectUrl()
 
-    function webexCreateObjectUrl(data) {
+    function openInIE(fileName) {
+      $log.log("*****inside openInIE*****");
+      $window.navigator.msSaveOrOpenBlob(objectBlob, fileName);
+    }
+
+    function webexCreateObjectUrl(data, fileName) {
       var funcName = "webexCreateObjectUrl()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "data.length=" + data.length;
       $log.log(logMsg);
-
+      $log.log("******************fileName:" + fileName);
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
       var newData = new Uint8Array(intBytes);
@@ -134,14 +146,21 @@
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
 
       setObjectUrl(oUrl);
+      $log.log("******************oUrl:" + oUrl);
 
+      if ($window.navigator.msSaveOrOpenBlob) {
+        openInIE(fileName);
+
+      }
       return oUrl;
+
     } // webexCreateObjectUrl()
 
     function revokeObjectUrl() {
       if (getObjectUrl()) {
         ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
+        objectBlob = null;
       }
     }
 

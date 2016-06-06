@@ -9,8 +9,10 @@
     $log,
     $scope,
     $interval,
+    $state,
     Authinfo,
     Userservice,
+    LogMetricsService,
     SiteListService,
     WebExApiGatewayService,
     Notification
@@ -24,8 +26,8 @@
     vm.showGridData = false;
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
-    
- // Logging site-list data using logMetrics
+
+    // Logging site-list data using logMetrics
     if ($state.current.name === "site.list") {
       LogMetricsService.logMetrics('In site list page', LogMetricsService.getEventType('siteListPage'), LogMetricsService.getEventAction('pageLoad'), 200, moment(), 1, null);
     }
