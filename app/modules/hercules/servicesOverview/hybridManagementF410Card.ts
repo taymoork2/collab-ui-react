@@ -28,7 +28,8 @@ namespace servicesOverview {
         name: 'servicesOverview.cards.clusterList.title',
         description: 'servicesOverview.cards.clusterList.description',
         cardClass: 'cluster-list',
-        cardType: CardType.hybrid
+        cardType: CardType.hybrid,
+        display : false
       });
       this._loading = false;
     }
