@@ -6,7 +6,7 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($http, $q, $translate, Authinfo, CeService, Config, FeatureToggleService, HuntGroupServiceV2, Log, PstnSetupService, UserLineAssociationService, UserLineAssociationCountService) {
+  function LineListService($http, $q, $translate, Authinfo, CeService, Config, ExternalNumberService, FeatureToggleService, HuntGroupServiceV2, Log, PstnSetupService, UserLineAssociationService, UserLineAssociationCountService) {
 
     var customerId = Authinfo.getOrgId();
 
@@ -46,50 +46,62 @@
       queryString.order = sortBy + sortOrder;
 
       var linesPromise = UserLineAssociationService.query(queryString).$promise;
-      var orderPromise = PstnSetupService.listPendingOrders(customerId);
 
-      return $q.all([linesPromise, orderPromise])
-        .then(function (results) {
-          var lines = results[0];
-          var orders = results[1];
+      return ExternalNumberService.isTerminusCustomer(customerId).then(function () {
+          var orderPromise = PstnSetupService.listPendingOrders(customerId);
 
-          var pendingLines = [];
-          var nonProvisionedPendingLines = [];
+          return $q.all([linesPromise, orderPromise])
+            .then(function (results) {
+              var lines = results[0];
+              var orders = results[1];
 
-          if (lines.length === 0) {
-            return lines;
-          }
+              var pendingLines = [];
+              var nonProvisionedPendingLines = [];
 
-          _.forEach(orders, function (order) {
-            try {
-              var parsedResponse = JSON.parse(order.response);
-              var numbers = parsedResponse[order.carrierOrderId];
-            } catch (error) {
-              return;
-            }
-            _.forEach(numbers, function (number) {
-              var lineFound = _.find(lines, function (line) {
-                return (number.e164 && number.e164 === line.externalNumber);
-              });
-              if (lineFound) {
-                lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
-                pendingLines.push(lineFound);
-              } else {
-                nonProvisionedPendingLines.push({
-                  externalNumber: number.e164,
-                  userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+              if (lines.length === 0) {
+                return lines;
+              }
+
+              _.forEach(orders, function (order) {
+                try {
+                  var parsedResponse = JSON.parse(order.response);
+                  var numbers = parsedResponse[order.carrierOrderId];
+                } catch (error) {
+                  return;
+                }
+                _.forEach(numbers, function (number) {
+                  var lineFound = _.find(lines, function (line) {
+                    return (number.e164 && number.e164 === line.externalNumber);
+                  });
+                  if (lineFound) {
+                    lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                    pendingLines.push(lineFound);
+                  } else {
+                    nonProvisionedPendingLines.push({
+                      externalNumber: number.e164,
+                      userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                    });
+                  }
                 });
+              });
+
+              if (filterType === 'pending') {
+                return pendingLines.concat(nonProvisionedPendingLines);
+              } else if (filterType === 'all') {
+                return lines.concat(nonProvisionedPendingLines);
+              } else {
+                return lines;
               }
             });
+        })
+        .catch(function () {
+          return $q.when(linesPromise).then(function (results) {
+            if(filterType === 'pending'){
+              return [];
+            } else {
+              return results;
+            }
           });
-
-          if (filterType === 'pending') {
-            return pendingLines.concat(nonProvisionedPendingLines);
-          } else if (filterType === 'all') {
-            return lines.concat(nonProvisionedPendingLines);
-          } else {
-            return lines;
-          }
         });
 
     } // end of function getLineList
