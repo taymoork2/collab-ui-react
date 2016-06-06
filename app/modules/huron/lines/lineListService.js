@@ -96,7 +96,7 @@
         })
         .catch(function () {
           return $q.when(linesPromise).then(function (results) {
-            if(filterType === 'pending'){
+            if (filterType === 'pending') {
               return [];
             } else {
               return results;
