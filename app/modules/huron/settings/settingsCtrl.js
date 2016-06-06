@@ -469,6 +469,13 @@
           } else {
             return vm.hideFieldInternalNumberRange;
           }
+        },
+        controller: function ($scope) {
+          $scope.$watch(function () {
+            return vm.form.$invalid;
+          }, function () {
+              $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
+          });
         }
       }]
     }, {
@@ -1522,9 +1529,12 @@
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          if (angular.isArray(extensionList) && extensionList.length > 0) {
-            vm.model.disableExtensions = true;
-          }
+          _.forEach(extensionList, function(value, key) {
+            if (value.directoryNumber !== null) {
+              vm.model.disableExtensions = true;
+              // value.directoryNumber is not null if assigned, hence extension exists
+            }
+          });
         });
     }
 
