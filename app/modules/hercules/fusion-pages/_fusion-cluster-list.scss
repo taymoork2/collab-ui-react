@@ -1,4 +1,4 @@
-.fusion-resource-list {
+.fusion-cluster-list {
   .loading-list {
     text-align: center;
     margin-top: 2rem;
@@ -26,14 +26,21 @@
 
   .cs-card {
     header {
+      display: flex;
       position: relative;;
       padding-top: 19px;
       padding-bottom: 15px;
 
+      h4 {
+        flex-grow: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-right: 10px;
+      }
+
       .cluster-type-orb {
-        position: absolute;
-        right: 24px;
-        top: 18px;
+        flex-grow: 0;
         border-radius: 34px;
         width: 34px;
         height: 34px;
@@ -71,6 +78,9 @@
 
       a {
         text-align: right;
+        &:focus {
+          box-shadow: none
+        }
       }
 
       span {
@@ -79,7 +89,7 @@
 
       i {
         font-size: 24px;
-        vertical-align: middle;
+        vertical-align: -7px;
         color: $gray-light-2;
       }
     }

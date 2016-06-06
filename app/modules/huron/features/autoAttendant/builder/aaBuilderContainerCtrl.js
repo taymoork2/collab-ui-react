@@ -6,20 +6,14 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService, Config, FeatureToggleService) {
+  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
 
     var vm = this;
     vm.aaModel = {};
     vm.ui = {};
-    vm.scheduleAvailable = false;
 
     vm.getScheduleTitle = getScheduleTitle;
     vm.openScheduleModal = openScheduleModal;
-    vm.isScheduleAvailable = isScheduleAvailable;
-
-    function isScheduleAvailable() {
-      return vm.scheduleAvailable;
-    }
 
     function openScheduleModal(sectionToToggle) {
       if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
@@ -82,22 +76,10 @@
       }
     }
 
-    function setFeatureToggle() {
-      //toggle for huronAASchedules
-      if (Config.isDev() || Config.isIntegration()) {
-        vm.scheduleAvailable = true;
-      } else {
-        FeatureToggleService.supports(FeatureToggleService.features.huronAASchedules).then(function (result) {
-          vm.scheduleAvailable = result;
-        });
-      }
-    }
-
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
       setUpStyle();
-      setFeatureToggle();
     }
 
     activate();

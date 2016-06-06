@@ -346,12 +346,14 @@
 
     var userEnts = null;
     var userLicenseIds = null;
+    var userInvites = null;
     $scope.cmrFeature = null;
     $scope.messageFeatures = [];
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     var convertSuccess = [];
     var convertFailures = [];
@@ -369,6 +371,7 @@
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
+      userInvites = $scope.currentUser.invitations;
     }
 
     function populateConf() {
@@ -396,6 +399,22 @@
       }
     }
 
+    function populateConfInvitations() {
+      if (userInvites && userInvites.cf) {
+        _.forEach($scope.allLicenses, function (siteObj) {
+          if (siteObj.siteUrl === '' && !siteObj.confModel) {
+            siteObj.confModel = siteObj.licenseId === userInvites.cf;
+          }
+          siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+            if (!conf.confModel) {
+              conf.confModel = conf.licenseId === userInvites.cf;
+            }
+            return conf;
+          });
+        });
+      }
+    }
+
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false
@@ -409,6 +428,12 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         }
+      }
+    }
+
+    if (userInvites) {
+      if (userInvites.ms) {
+        $scope.radioStates.msgRadio = true;
       }
     }
 
@@ -495,6 +520,9 @@
       }
 
       populateConf();
+      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
+        populateConfInvitations();
+      }
     };
 
     $scope.isSubscribeable = function (license) {

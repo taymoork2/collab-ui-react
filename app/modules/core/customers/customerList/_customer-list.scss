@@ -42,6 +42,20 @@
   padding: 35px 0 0px 30px;
 }
 
+.subcol {
+  display:inline-block;
+  margin-left:10px;
+
+  &:first-child {
+    margin-left: 0px;
+  }
+
+  .free {
+    min-width: 3.75rem;
+    display: inline-block;
+  }
+}
+
 .trials-badge {
   line-height: 1;
   margin: 0;

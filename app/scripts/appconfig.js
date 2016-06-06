@@ -1112,10 +1112,17 @@
               currentOrg: {}
             }
           })
-          .state('site-list', {
+          /**.state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
             controller: 'SiteListCtrl',
+            controllerAs: 'siteList',
+            parent: 'main'
+          })**/
+          .state('site-list', {
+            url: '/site-list',
+            templateUrl: 'modules/core/siteList/siteList.tpl.html',
+            controller: 'SiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main'
           })
@@ -2089,9 +2096,9 @@
             parent: 'main'
           })
           .state('cluster-list', {
-            url: '/services/resource',
-            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
-            controller: 'FusionResourceListController',
+            url: '/services/clusters',
+            templateUrl: 'modules/hercules/fusion-pages/cluster-list.html',
+            controller: 'FusionClusterListController',
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
@@ -2100,11 +2107,18 @@
               }
             }
           })
-          .state('cluster-settings-page', {
-            url: '/services/resource/settings/:id',
-            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
-            controller: 'FusionResourceSettingsController',
-            controllerAs: 'resourceSetting',
+          .state('expressway-settings', {
+            url: '/services/cluster/expressway/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
+            controller: 'ExpresswayClusterSettingsController',
+            controllerAs: 'clusterSettings',
+            parent: 'main'
+          })
+          .state('mediafusion-settings', {
+            url: '/services/cluster/mediafusion/:id/settings',
+            templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
+            controller: 'MediafusionClusterSettingsController',
+            controllerAs: 'clusterSettings',
             parent: 'main'
           })
           .state('calendar-service', {

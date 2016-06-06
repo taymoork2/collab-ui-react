@@ -32,20 +32,31 @@
       <!-- csv export card -->
       <cs-card class="large">
         <article>
-          <div class="export-import-container">
-            <p align="center">
-			  <i class="icon icon-download icon-3x icon-export-import"
-				 ng-click="siteCSVModalCtrl.startExport()"></i>
-			</p>
-			
-            <p align="center">
-			  <b><span translate='siteList.siteCsvExportLinkLabel'></span></b>
+          <div class="webex-csv-container">
+            <div class="file-drop">
+              <p align="center">
+                <label for='download'> 
+			      <i ng-if="!siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import"
+				     ng-click="siteCSVModalCtrl.startExport()"></i>
+				 
+			      <i ng-if="siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
+                </label>
+
+                <br>
 			  
-			  <br><br>
+			    <b><span translate='siteList.siteCsvExportLinkLabel'></span></b>
 			  
-			  <span translate='siteList.siteCsvModalExportText'
-			        translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
-			</p>
+			    <br><br>
+			  
+			    <!-- 
+			    <span translate='siteList.siteCsvModalExportText'
+			          translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
+			    -->
+			    <span translate='siteList.siteCsvModalExportTextShort'></span>
+			  </p>
+            </div>
           </div>
         </article>
       </cs-card>
@@ -54,7 +65,7 @@
       <!-- start of csv import card -->
       <cs-card class="large">
         <article>
-		  <div class="users-upload-csv">
+		  <div class="webex-csv-container">
 				<div ng-if="!siteCSVModalCtrl.modal.file" 
 				     class="file-drop"
 					 cr-file-drop 
@@ -76,7 +87,7 @@
 							   file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
 								   
 						<label for='upload'> 
-							<i class="icon icon-upload icon-3x icon-export-import"></i>
+							<i class="icon icon-upload-contain icon-4x icon-export-import"></i>
 						</label>
 						
 						<br>
@@ -89,9 +100,7 @@
                     </p>
 				</div>
 				
-				<div ng-if="siteCSVModalCtrl.modal.file"
-				     class="export-import-container">
-
+				<div ng-if="siteCSVModalCtrl.modal.file">
                     <p>
                         &nbsp;
                     </p>
@@ -104,7 +113,7 @@
 				        <button cs-btn
 				                type="button" 
 						        class="btn btn--primary"
-						        loading="siteCSVModalCtrl.improting"
+						        loading="siteCSVModalCtrl.importing"
 							    ng-click="siteCSVModalCtrl.startImport()">
 							  
 					      <span translate="siteList.importButton"></span>

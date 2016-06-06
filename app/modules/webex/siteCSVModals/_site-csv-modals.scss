@@ -1,24 +1,50 @@
 
-.users-upload-csv {
-  border:none;
-  outline:none;
-  height: 276px;
- }
- 
 .icon-export-import {
-  top: 41px;
-  width: 44px;
-  height: 44px;
-  background-color: $color-primary-base;
-  color:white;
+  top: 40px;
+  color: $color-primary-base;
+  &:hover {
+    cursor: pointer;
+    color: $color-primary-dark;
+  }
 }
  
-.file-drop {
-  border: none !important;
+.icon-export-import-disabled {
+  top: 40px;
+  color: $gray-light-3;
 }
-
-.export-import-container {
-  border:none;
-  outline:none;
-  height: 276px;
+ 
+.webex-csv-container {
+  height: 275px;
+  .file-drop {
+    height: 275px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    &.dragover {
+      border: 1px dashed $gray-light;
+      border-color: $link-hover-color;
+      background: $gray-lightest;
+    }
+  }
+  .file-drop-content {
+    position: relative;
+    align-self: center;
+  }
+  .file-drop-inactive {
+    @extend .file-drop;
+    .file-drop-content {
+      width: 50%;
+    }
+    .close {
+      align-self: center;
+      margin-left: rem(5);
+      margin-top: rem(-15);
+    }
+    .file-name {
+      margin-top: rem(5);
+    }
+  }
+  input {
+    display: none;
+  }
 }
