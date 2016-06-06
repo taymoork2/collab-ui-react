@@ -269,9 +269,7 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       addAvailableFeatures();
-      vm.keyActions.sort(function (arg1, arg2) {
-        return arg1.name.toUpperCase().localeCompare(arg2.name.toUpperCase());
-      });
+      vm.keyActions.sort(AACommonService.sortByProperty('name'));
       if (vm.menuEntry.type === '') {
         createOptionMenu();
       } else if (vm.menuEntry.type === 'MENU_OPTION') {

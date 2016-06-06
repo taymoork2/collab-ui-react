@@ -6,7 +6,7 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService, AACommonService) {
 
     var vm = this;
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -62,9 +62,7 @@
     function activate() {
       var ui = AAUiModelService.getUiModel();
       vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
-      vm.options.sort(function (arg1, arg2) {
-        return arg1.label.toUpperCase().localeCompare(arg2.label.toUpperCase());
-      });
+      vm.options.sort(AACommonService.sortByProperty('label'));
       setSelects();
 
     }

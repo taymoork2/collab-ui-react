@@ -123,10 +123,8 @@
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();
       setOption();
-      vm.options.sort(function (arg1, arg2) {
-        return arg1.title.toUpperCase().localeCompare(arg2.title.toUpperCase());
-      });
       setFeatureToggle();
+      vm.options.sort(AACommonService.sortByProperty('title'));
     }
 
     activate();
