@@ -126,8 +126,8 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
-    function getPhoneUrl(deviceId) {
-      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/phones/' + deviceId;
+    function getPhoneUrl(deviceId, cisUuid) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId;
     }
 
     function encodeHuronTags(description) {
@@ -160,7 +160,7 @@
     }
 
     function getTimezoneForDevice(huronDevice) {
-      return $http.get(getPhoneUrl(huronDevice.huronId))
+      return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
           .then(function (res) {
             var timeZone = null;
             if (res.data) {
@@ -171,7 +171,7 @@
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
-      return $http.put(huronDevice.url, {
+      return $http.put(huronDevice.url.replace('/lists',''), {
         timezone: timezone
       });
     }
