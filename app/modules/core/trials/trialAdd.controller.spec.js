@@ -1,31 +1,43 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService;
+  var controller, $scope, $q, $translate, $state, $httpBackend, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService, Orgservice;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
     $state = _$state_;
+    $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
     TrialPstnService = _TrialPstnService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
+      if (input === 'atlasTrialsShipDevices') {
+        return ($q.when(false));
+      } else {
+        return ($q.when(true));
+      }
+    });
+
+    $httpBackend
+      .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
+      .respond({});
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -36,6 +48,7 @@ describe('Controller: TrialAddCtrl', function () {
       Notification: Notification,
       EmailService: EmailService,
       FeatureToggleService: FeatureToggleService,
+      Orgservice: Orgservice
     });
     $scope.$apply();
   }));
@@ -49,7 +62,8 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.meetingTrial.enabled).toBeTruthy();
     expect(controller.webexTrial.enabled).toBeTruthy();
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
-    expect(controller.callTrial.enabled).toBeFalsy();
+    expect(controller.callTrial.enabled).toBeTruthy();
+    expect(controller.pstnTrial.enabled).toBeTruthy();
   });
 
   it('should start in trialAdd.info state', function () {
@@ -112,6 +126,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('basic behavior', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -127,6 +143,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle enabled', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = true;
         controller.startTrial(callback);
         $scope.$apply();
@@ -139,6 +157,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle disabled', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.webexTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
@@ -151,6 +171,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with addNumbers callback', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
       });
@@ -166,6 +188,8 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('without addNumbers callback', function () {
       beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.pstnTrial.enabled = false;
         controller.startTrial();
         $scope.$apply();
       });
@@ -181,12 +205,12 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('With Squared UC', function () {
       beforeEach(function () {
-        controller.callTrial.enabled = true;
         controller.pstnTrial.enabled = false;
       });
 
       it('should have Squared UC offer', function () {
         expect(controller.callTrial.enabled).toBeTruthy();
+        expect(controller.pstnTrial.enabled).toBeFalsy();
       });
 
       it('should notify success', function () {
@@ -208,11 +232,6 @@ describe('Controller: TrialAddCtrl', function () {
     });
 
     describe('With Squared UC and PSTN', function () {
-      beforeEach(function () {
-        controller.callTrial.enabled = true;
-        controller.pstnTrial.enabled = true;
-      });
-
       it('should have Squared UC offer', function () {
         expect(controller.callTrial.enabled).toBeTruthy();
         expect(controller.pstnTrial.enabled).toBeTruthy();
@@ -279,6 +298,20 @@ describe('Controller: TrialAddCtrl', function () {
       controller.startTrial();
       $scope.$apply();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+  });
+
+  describe('Set ship devices modal display with Orgservice call', function () {
+    it('should disable ship devices modal for test org', function () {
+      spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+        data: {
+          success: true,
+          isTestOrg: true
+        }
+      }));
+      controller.setDeviceModal();
+      $scope.$apply();
+      expect(controller.devicesModal.enabled).toBeFalsy();
     });
   });
 });

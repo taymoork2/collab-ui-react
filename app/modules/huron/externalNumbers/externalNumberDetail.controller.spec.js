@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $state, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification, $interval, $intervalSpy;
+  var controller, $controller, $interval, $intervalSpy, $q, $scope, $state, $stateParams, ModalService, ExternalNumberService, DialPlanService, Notification;
 
   var externalNumbers, modalDefer;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _$interval_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$interval_, _$stateParams_, _$q_, _$state_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $state = _$state_;
@@ -120,90 +120,5 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   it('should cancel( the timeout on destroy method', function () {
     $scope.$destroy();
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
-  });
-
-  //TODO: remove when removing toggle 'huron-order-management'
-  describe('customerCommunicationLicenseIsTrial flag', function () {
-    it('should be true if communication license is a trial.', function () {
-      var org = {
-        customerOrgId: '1234-34534-afdagfg-425345-afaf',
-        customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com',
-        communications: {
-          isTrial: true
-        }
-      };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when());
-      controller.showPstnSetup = true;
-      controller.addNumbers(org);
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
-      });
-    });
-
-    it('should be false if communication license is not a trial.', function () {
-      var org = {
-        customerOrgId: '1234-34534-afdagfg-425345-afaf',
-        customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com',
-        communications: {
-          isTrial: false
-        }
-      };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when());
-      controller.showPstnSetup = true;
-      controller.addNumbers(org);
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
-      });
-    });
-
-    it('should be true if trial data is missing.', function () {
-      var org = {
-        customerOrgId: '1234-34534-afdagfg-425345-afaf',
-        customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com'
-      };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when());
-      controller.showPstnSetup = true;
-      controller.addNumbers(org);
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: true
-      });
-    });
-
-    it('should always be false if isPartner is true.', function () {
-      var org = {
-        customerOrgId: '1234-34534-afdagfg-425345-afaf',
-        customerName: 'ControllerTestOrg',
-        customerEmail: 'customer@cisco.com',
-        isPartner: true,
-        communications: {
-          isTrial: true
-        }
-      };
-      ExternalNumberService.isTerminusCustomer.and.returnValue($q.when());
-      controller.showPstnSetup = true;
-      controller.addNumbers(org);
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail,
-        customerCommunicationLicenseIsTrial: false
-      });
-    });
   });
 });

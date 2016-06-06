@@ -23,6 +23,8 @@
       setCENumberStatus: setCENumberStatus,
       isValid: isValid,
       setIsValid: setIsValid,
+      getInvalid: getInvalid,
+      makeKey: makeKey,
       resetFormStatus: resetFormStatus,
       saveUiModel: saveUiModel
     };
@@ -37,6 +39,17 @@
 
     function isValid() {
       return !_.size(invalidList);
+    }
+
+    function getInvalid(which) {
+      return invalidList[which];
+    }
+
+    function makeKey(schedule, whichMenu, tag) {
+      /* Used by aaVerificationSuccess and aaRouteToExtNum */
+      /* this is an attempt to (weakly) codify the keys used by getInvalid */
+
+      return schedule + '-' + whichMenu + '-' + tag;
     }
 
     function setIsValid(element, validity) {
@@ -104,12 +117,13 @@
           holidays.setType('MENU_WELCOME');
         }
         AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'holidays', holidays, ui.holidaysValue);
-
       } else if (ui.isHolidays) {
         AutoAttendantCeMenuModelService.updateScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       }
+
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(aaRecord, ui.hasClosedHours);
     }
 
   }

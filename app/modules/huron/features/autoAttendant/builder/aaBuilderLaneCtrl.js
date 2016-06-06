@@ -6,13 +6,12 @@
     .controller('AABuilderLaneCtrl', AABuilderLaneCtrl);
 
   /* @ngInject */
-  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, Config, AACommonService, $timeout) {
+  function AABuilderLaneCtrl($scope, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeMenuModelService, AACommonService, $timeout) {
 
     var vm = this;
     vm.schedule = "";
     vm.entries = [];
     vm.templateName = $stateParams.aaTemplate;
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
     vm.addAction = addAction;
 
     /////////////////////

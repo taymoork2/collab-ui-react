@@ -26,14 +26,10 @@ if [ -f $BUILD_DEPS_ARCHIVE ]; then
     # unpack previously built dependencies (but don't overwrite anything newer)
     echo "Restoring previous deps..."
     tar --keep-newer-files -xf $BUILD_DEPS_ARCHIVE
-    ./setup.sh --restore-soft
 fi
 
 echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
-
-echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
-dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
 
 echo "Checking if it is time to refresh..."
 min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
@@ -41,17 +37,16 @@ time_to_refresh=`is_time_to_refresh $min_refresh_period $last_refreshed_file \
     && echo "true" || echo "false"`
 
 echo "INFO: checksums_ok: $checksums_ok"
-echo "INFO: dirs_ok: $dirs_ok"
 echo "INFO: time_to_refresh: $time_to_refresh"
 if [ "$checksums_ok"    = "true" -a \
-     "$dirs_ok"         = "true" -a \
      "$time_to_refresh" = "false" ]; then
-    echo "Install manifests haven't changed, dependency dirs still exist, and not yet time to" \
-        "refresh, skipping 'setup.sh'..."
+    echo "Install manifests haven't changed and not yet time to" \
+        "refresh, restore soft dependencies..."
+    ./setup.sh --restore
 else
-    # use the '--quick' option to retain existing dependency dirs
+    # we want to fresh install npm dependencies
     echo "Running 'setup'..."
-    ./setup.sh --quick
+    ./setup.sh
 
     # setup succeeded
     if [ $? -eq 0 ]; then
@@ -69,7 +64,6 @@ else
             $last_refreshed_file \
             $manifest_checksums_file \
             .cache/npm-deps-for-*.tar.gz \
-            .cache/bower-deps-for-*.tar.gz \
             .cache/npm-shrinkwrap-for-*.tar.gz
 
     # setup failed
@@ -92,10 +86,6 @@ else
     fi
 fi
 
-# list our current bower_components for build reference
-echo "Currently installed bower_components:"
-./bin/helpers/list-bower-components.js | sort
-
 
 # -----
 # Phase 3: Build
@@ -111,7 +101,7 @@ time gulp karma-parallel || exit $?
 gulp karma-combine-coverage || exit $?
 
 # - e2e tests
-gulp e2e --sauce --production-backend --nobuild | tee ./.cache/e2e-sauce-logs
+gulp e2e --sauce --production-backend --nobuild --verbose | tee ./.cache/e2e-sauce-logs
 e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output

@@ -1,0 +1,56 @@
+<div class="subscriptions-container">
+  <cs-card-layout block-view="true">
+    <cs-card class="full subscriptions">
+      <article><section>
+        <div class="row" ng-repeat="usageCategory in mcpSubscription.usageCategory" ng-show="usageCategory.subscriptions && usageCategory.subscriptions.length > 0">
+          <div class="columns subscription-type">{{::usageCategory.label}}</div>
+          <div class="columns subscription-column">
+            <div class="subscription-item" ng-repeat="subscription in usageCategory.subscriptions" ng-class="{'item-with-borders': usageCategory.borders}">
+              <!-- default path, no borders -->
+              <cs-donut name="subscription.id" value="subscription.usage" max="subscription.volume" ssize="48" class="text-center" ng-if="!usageCategory.borders"></cs-donut>
+              <div class="subscription-description" ng-if="!usageCategory.borders" ng-if="!usageCategory.borders">
+                <div class="description-line">
+                  <span class="name" translate="subscriptions.licenseTypes.{{::subscription.offerName}}"></span>
+                </div><div class="description-line">
+                  <span translate="subscriptions.usage"></span>
+                  <span ng-class="{'warning': subscription.usage > subscription.volume}">{{::subscription.usage}}/{{::subscription.volume}}</span>
+                </div>
+              </div>
+              
+              <!-- if not default, there are borders -->
+              <div class="subscription-site" ng-if="subscription.siteUrl && usageCategory.borders">
+                <span class="subscription-site">{{::subscription.siteUrl}}</span>
+              </div>
+              <div ng-repeat="offer in subscription.offers" class="subscription-interior" ng-if="usageCategory.borders">
+                <cs-donut name="offer.id" value="offer.usage" max="offer.volume" ssize="48" class="text-center"></cs-donut>
+                <div class="subscription-description">
+                  <div class="description-line">
+                    <span class="name" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></span>
+                  </div><div class="description-line" ng-if="offer.subscription">
+                    <span translate="subscriptions.subscription"></span><span>{{::offer.subscription}}</span>
+                  </div><div class="description-line">
+                    <span translate="subscriptions.usage"></span>
+                    <span ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-show="mcpSubscription.hybridServices && mcpSubscription.hybridServices.length > 0">
+          <div class="columns subscription-type" translate="subscriptions.hybrid"></div>
+          <div class="columns subscription-column">
+            <ul class="hybrid-ul">
+              <li class="description-line" ng-repeat="service in mcpSubscription.hybridServices">
+                <div class="description-line">
+                  <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
+                  <span>{{::service.label}}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section></article>
+    </cs-card>
+  </cs-card-layout>
+</div>

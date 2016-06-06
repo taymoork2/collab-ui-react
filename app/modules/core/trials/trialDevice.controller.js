@@ -26,16 +26,17 @@
     vm.validateRoomSystemsQuantity = validateRoomSystemsQuantity;
     vm.validatePhonesQuantity = validatePhonesQuantity;
     vm.validateTotalQuantity = validateTotalQuantity;
+    vm.getTotalQuantity = getTotalQuantity;
     vm.calcQuantity = calcQuantity;
     vm.calcRelativeQuantity = calcRelativeQuantity;
     vm.skip = skip;
     vm.getQuantity = getQuantity;
     vm.setQuantity = setQuantity;
     vm.validateChecks = validateChecks;
-    vm.toggleShipFields = toggleShipFields;
     vm.disabledChecks = disabledChecks;
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
+    vm.getQuantityInputDefault = _getQuantityInputDefault;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -46,6 +47,9 @@
       }
     }
     vm.shippingInfo = _trialDeviceData.shippingInfo;
+    if (_.has($stateParams, 'currentTrial.dealId')) {
+      vm.shippingInfo.dealId = $stateParams.currentTrial.dealId;
+    }
 
     vm.sx10 = _.find(_trialRoomSystemData.details.roomSystems, {
       model: 'CISCO_SX10'
@@ -73,49 +77,51 @@
       model: vm.sx10,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.sx10'),
         id: 'cameraSX10',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddRoomSystemDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.sx10,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 2,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
 
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.sx10.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.sx10.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.sx10.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.sx10.enabled || vm.sx10.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.sx10, 2);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
@@ -125,47 +131,48 @@
       model: vm.phone8865,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8865'),
         id: 'phone8865',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8865,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8865.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8865.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8865.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8865.enabled || vm.phone8865.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8865, 1);
         }
       },
       watcher: _addWatcher(),
@@ -174,48 +181,50 @@
       model: vm.phone8845,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8845'),
         id: 'phone8845',
-        class: 'columns medium-offset-1',
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8845,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8845.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8845.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8845.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8845.enabled || vm.phone8845.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8845, 1);
         }
+
       },
       watcher: _addWatcher(),
       validators: _addPhonesValidators()
@@ -223,47 +232,48 @@
       model: vm.phone8841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8841'),
         id: 'phone8841',
-        class: 'columns medium-offset-1'
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone8841,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
+      },
+      validation: {
+        show: true
       },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone8841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone8841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone8841.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone8841.enabled || vm.phone8841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone8841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -272,47 +282,48 @@
       model: vm.phone7841,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-6 pad-top',
+      className: 'pull-left medium-5 medium-offset-1',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone7841'),
         id: 'phone7841',
-        class: 'columns medium-offset-1'
+        labelClass: 'medium-offset-1',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return !vm.canAddCallDevice;
         }
       },
-      watcher: _checkWatcher(),
       validators: _checkValidators()
     }, {
       model: vm.phone7841,
       key: 'quantity',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4 medium-offset-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
         max: 5,
-        min: 0,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
         allowInvalid: true
       },
+      validation: {
+        show: true
+      },
       expressionProperties: {
         'templateOptions.required': function () {
           return vm.phone7841.enabled;
         },
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          var disabled = !vm.phone7841.enabled;
-          if (disabled) {
-            scope.model.quantity = 0;
-          }
-          return disabled || vm.phone7841.readonly;
+        'templateOptions.disabled': function () {
+          return !vm.phone7841.enabled || vm.phone7841.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.phone7841, 1);
         }
       },
       watcher: _addWatcher(),
@@ -323,27 +334,25 @@
       model: vm.shippingInfo,
       key: 'name',
       type: 'input',
-      className: 'columns medium-12',
+      className: 'pull-left medium-8 with-slim-offset',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       },
     }, {
       model: vm.shippingInfo,
       key: 'phoneNumber',
       type: 'input',
-      className: 'columns medium-12',
+      className: 'pull-left medium-4 with-slim-offset offset-l',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.phone'),
         type: 'text',
         required: true,
-        disabled: true
       }
     }, {
       model: vm.shippingInfo,
@@ -352,48 +361,46 @@
       defaultValue: _.find(TrialDeviceService.getCountries(), {
         country: vm.shippingInfo.country
       }),
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
         labelfield: 'country',
         labelProp: 'country',
         valueProp: 'country',
-        disabled: true
+
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getCountries();
+          return _.map(TrialDeviceService.getCountries(), 'country');
         }
       }
     }, {
       model: vm.shippingInfo,
       key: 'addressLine1',
       type: 'input',
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.address'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       }
     }, {
       model: vm.shippingInfo,
       key: 'city',
       type: 'input',
-      className: 'columns medium-12',
+      className: '',
       templateOptions: {
-        labelClass: 'columns medium-2 text-right',
-        inputClass: 'columns medium-7',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.city'),
         type: 'text',
-        required: true,
-        disabled: true
+        required: true
       },
     }, {
       model: vm.shippingInfo,
@@ -402,38 +409,51 @@
       defaultValue: _.find(TrialDeviceService.getStates(), {
         country: vm.shippingInfo.state
       }),
-      className: 'columns medium-5',
+      className: 'pull-left medium-8 with-slim-offset',
       templateOptions: {
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-6',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.state'),
         required: true,
         labelfield: 'abbr',
+        valuefield: 'abbr',
         labelProp: 'abbr',
         valueProp: 'state',
-        disabled: true
+        filter: true
+
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getStates();
+          return _.map(TrialDeviceService.getStates(), 'abbr');
         }
       }
     }, {
       model: vm.shippingInfo,
       key: 'postalCode',
       type: 'input',
-      className: 'columns medium-6',
+      className: 'pull-left medium-4 with-slim-offset offset-l',
       templateOptions: {
-        labelClass: 'columns medium-2 medium-offset-1 text-right',
-        inputClass: 'columns medium-5',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.call.zip'),
         type: 'text',
         max: 99999,
         min: 0,
         pattern: '\\d{5}',
-        required: true,
-        disabled: true
+        required: true
       }
+    }, {
+      model: vm.shippingInfo,
+      key: 'dealId',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        labelClass: '',
+        inputClass: '',
+        label: $translate.instant('trialModal.call.dealId'),
+        type: 'text',
+        required: false
+      },
     }];
 
     init();
@@ -476,6 +496,11 @@
       _trialDeviceData.skipDevices = skipped;
     }
 
+    function getTotalQuantity() {
+      var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
+      return quantity;
+    }
+
     function validateInputQuantity($viewValue, $modelValue, scope) {
       var quantity = $modelValue || $viewValue;
       var device = scope.model;
@@ -487,23 +512,12 @@
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems);
+
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialCallData.details.phones);
-      var device = scope.model;
-      if (!device.enabled) {
-        return true;
-      } else {
-        return !(quantity > 5);
-      }
+      return _validateTypeQuantity(scope, _trialCallData.details.phones);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -539,6 +553,28 @@
         .reduce(_.add) || 0;
     }
 
+    function _getQuantityInputDefault(device, defaultValue) {
+
+      var disabled = !device.enabled;
+      if (disabled) {
+        return 0;
+      } else if (device.quantity === 0) {
+        return defaultValue;
+      } else {
+        return device.quantity;
+      }
+    }
+
+    function _validateTypeQuantity(scope, deviceType) {
+      var quantity = vm.calcQuantity(deviceType);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity < 2 || quantity > 5);
+      }
+    }
+
     function _addWatcher() {
       return {
         expression: function () {
@@ -546,7 +582,6 @@
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
-            // trigger validation when quantity has changed
             field.formControl.$validate();
           }
         }
@@ -615,22 +650,6 @@
       }), 'quantity', 0);
     }
 
-    function toggleShipFields() {
-      var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
-      var invalidDeviceQuantity = quantity < 2 || quantity > 7;
-      var invalidPhoneQuantity = _(_trialCallData.details.phones)
-        .flatten()
-        .pluck('quantity')
-        .some(function (quantity) {
-          return quantity > 5;
-        });
-      var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
-
-      _.forEach(vm.shippingFields, function (field) {
-        field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
-      });
-    }
-
     function disabledChecks() {
       return !_.chain(_trialCallData.details.phones)
         .concat(_trialRoomSystemData.details.roomSystems)
@@ -638,7 +657,7 @@
         .filter({
           enabled: true
         })
-        .isEmpty();
+        .isEmpty().value();
     }
 
     function validateChecks($viewValue, $modelValue, scope) {
@@ -649,15 +668,6 @@
       return {
         checkbox: {
           expression: vm.validateChecks
-        }
-      };
-    }
-
-    function _checkWatcher() {
-      return {
-        expression: vm.toggleShipFields,
-        listener: function () {
-          return disabledChecks();
         }
       };
     }

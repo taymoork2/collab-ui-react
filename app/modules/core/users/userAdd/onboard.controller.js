@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics) {
+  function OnboardCtrl($http, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, $window, addressparser, Authinfo, chartColors, CsvDownloadService, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, TelephoneNumberService, TrackingId, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -346,12 +346,14 @@
 
     var userEnts = null;
     var userLicenseIds = null;
+    var userInvites = null;
     $scope.cmrFeature = null;
     $scope.messageFeatures = [];
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     var convertSuccess = [];
     var convertFailures = [];
@@ -369,6 +371,7 @@
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
+      userInvites = $scope.currentUser.invitations;
     }
 
     function populateConf() {
@@ -396,6 +399,22 @@
       }
     }
 
+    function populateConfInvitations() {
+      if (userInvites && userInvites.cf) {
+        _.forEach($scope.allLicenses, function (siteObj) {
+          if (siteObj.siteUrl === '' && !siteObj.confModel) {
+            siteObj.confModel = siteObj.licenseId === userInvites.cf;
+          }
+          siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+            if (!conf.confModel) {
+              conf.confModel = conf.licenseId === userInvites.cf;
+            }
+            return conf;
+          });
+        });
+      }
+    }
+
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false
@@ -409,6 +428,12 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         }
+      }
+    }
+
+    if (userInvites) {
+      if (userInvites.ms) {
+        $scope.radioStates.msgRadio = true;
       }
     }
 
@@ -495,6 +520,9 @@
       }
 
       populateConf();
+      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
+        populateConfInvitations();
+      }
     };
 
     $scope.isSubscribeable = function (license) {
@@ -569,24 +597,6 @@
       getAccountServices();
     }
 
-    GroupService.getGroupList(function (data, status) {
-      if (data.success) {
-        $scope.groups = data.groups || [];
-        if ($scope.groups && $scope.groups.length === 0) {
-          var defaultGroup = {
-            displayName: 'Default License Group'
-          };
-          $scope.groups.push(defaultGroup);
-        }
-        $scope.selectedGroup = $scope.groups[0];
-      } else {
-        Log.debug('Failed to retrieve group list. Status: ' + status);
-        Notification.notify([$translate.instant('onboardModal.apiError', {
-          status: status
-        })], 'error');
-      }
-    });
-
     $scope.collabRadio1 = {
       label: $translate.instant('onboardModal.enableCollab'),
       value: 1,
@@ -656,7 +666,7 @@
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
       if (newVal != oldVal) {
-        $scope.usrlist = $window.addressparser.parse($scope.model.userList);
+        $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
 
@@ -1048,7 +1058,7 @@
     }
 
     var getUsersList = function () {
-      return $window.addressparser.parse($scope.model.userList);
+      return addressparser.parse($scope.model.userList);
     };
 
     $scope.validateTokensBtn = function () {
@@ -1360,10 +1370,9 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length === usersList.length) {
+          if (successes.length + errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
           }
         } else {
@@ -1757,7 +1766,7 @@
       data: 'unlicensedUsersList',
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 40,
+      selectionRowHeaderWidth: 50,
       enableRowHeaderSelection: true,
       enableFullRowSelection: true,
       useExternalSorting: false,

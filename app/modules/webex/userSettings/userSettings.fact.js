@@ -18,7 +18,16 @@
     WebexUserSettingsSvc,
     WebExXmlApiInfoSvc
   ) {
+    var loading = {
+      reloadBtn: false,
+      reloadBtn2: false,
+      resetBtn: false,
+      resetBtn2: false,
+      saveBtn: false,
+      saveBtn2: false
+    };
     return {
+      loading: loading,
       /**
        * If user does not have first and last names, use the email address as the display name
        */
@@ -627,8 +636,8 @@
         var funcName = "getUserSettingsFromWebEx()";
         var logMsg = "";
 
-        angular.element('#reloadBtn').button('loading');
-        angular.element('#reloadBtn2').button('loading');
+        loading.reloadBtn = true;
+        loading.reloadBtn2 = true;
 
         var _self = this;
         var webexSiteUrl = this.getSiteUrl();
@@ -636,8 +645,8 @@
 
         this.getSessionTicket(webexSiteUrl).then(
           function getSessionTicketSuccess(webexAdminSessionTicket) {
-            angular.element('#reloadBtn').button('reset'); //Reset "try again" button to normal state
-            angular.element('#reloadBtn2').button('reset'); //Reset "try again" button to normal state
+            loading.reloadBtn = false;
+            loading.reloadBtn2 = false;
 
             _self.initXmlApiInfo(
               webexSiteUrl,
@@ -721,11 +730,11 @@
         WebexUserSettingsSvc.disableSave = true;
         WebexUserSettingsSvc.disableSave2 = true;
 
-        angular.element('#reloadBtn').button('loading');
-        angular.element('#reloadBtn2').button('loading');
+        loading.reloadBtn = true;
+        loading.reloadBtn2 = true;
 
-        angular.element('#resetBtn').button('loading');
-        angular.element('#resetBtn2').button('loading');
+        loading.resetBtn = true;
+        loading.resetBtn2 = true;
 
         var _self = this;
 
@@ -769,8 +778,10 @@
                 WebexUserSettingsSvc.hasLoadError = false;
                 WebexUserSettingsSvc.viewReady = true; // only set this after the model has finished being updated
 
-                angular.element('#reloadBtn').button('reset');
-                angular.element('#reloadBtn2').button('reset');
+                loading.reloadBtn = false;
+                loading.reloadBtn2 = false;
+                loading.resetBtn = false;
+                loading.resetBtn2 = false;
 
                 if (null != form) {
                   form.$setPristine();
@@ -847,8 +858,8 @@
         WebexUserSettingsSvc.sessionTicketErr = sessionTicketErr;
         WebexUserSettingsSvc.allowRetry = allowRetry;
 
-        angular.element('#reloadBtn').button('reset');
-        angular.element('#reloadBtn2').button('reset');
+        loading.reloadBtn = false;
+        loading.reloadBtn2 = false;
 
         if (null != form) {
           form.$setPristine();
@@ -863,7 +874,7 @@
 
         WebexUserSettingsSvc.disableCancel = true;
 
-        angular.element('#saveBtn').button('loading');
+        loading.saveBtn = true;
 
         var _self = this;
         var useSupportedServices = WebexUserSettingsSvc.userInfo.bodyJson.use_supportedServices;
@@ -920,8 +931,8 @@
         $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
 
         if (blockDueToNoSession) {
-          angular.element('#saveBtn').button('reset');
-          angular.element('#saveBtn2').button('reset');
+          loading.saveBtn = false;
+          loading.saveBtn2 = false;
           WebexUserSettingsSvc.disableCancel = false;
           WebexUserSettingsSvc.disableCancel2 = false;
           errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
@@ -935,8 +946,8 @@
         $log.log("DURE blockDueToPMR=" + blockDueToPMR);
 
         if (blockDueToPMR) {
-          angular.element('#saveBtn').button('reset');
-          angular.element('#saveBtn2').button('reset');
+          loading.saveBtn = false;
+          loading.saveBtn2 = false;
           WebexUserSettingsSvc.disableCancel = false;
           WebexUserSettingsSvc.disableCancel2 = false;
           errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
@@ -966,7 +977,7 @@
 
         WebexUserSettingsSvc.disableCancel2 = true;
 
-        angular.element('#saveBtn2').button('loading');
+        loading.saveBtn2 = true;
 
         switch (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
         case 1:
@@ -1084,7 +1095,7 @@
       notifyError: function (notificationMsg) {
         var updateStatus = "error";
         Notification.notify([notificationMsg], updateStatus);
-        angular.element('#saveBtn2').button('reset');
+        loading.saveBtn2 = false;
         WebexUserSettingsSvc.disableCancel2 = false;
       },
 
@@ -1142,25 +1153,29 @@
           );
         }
 
-        angular.element('#saveBtn').button('reset');
-        angular.element('#saveBtn2').button('reset');
+        loading.saveBtn = false;
+        loading.saveBtn2 = false;
 
         WebexUserSettingsSvc.disableCancel = false;
         WebexUserSettingsSvc.disableCancel2 = false;
 
-        Notification.notify([notificationMsg], updateStatus);
+        //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
+        if (resultJson.errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+          Notification.notifyReadOnly(resultJson.errId);
+        } else {
+          Notification.notify([notificationMsg], updateStatus);
+        }
       }, // processUpdateResponse()
 
       processNoUpdateResponse: function (result) {
         var funcName = "processNoUpdateResponse()";
         var logMsg = "";
 
-        logMsg = funcName + ": " + "result=" + "\n" +
-          result;
-        // $log.log(logMsg);
+        logMsg = funcName + ": " + "result=" + "\n" + result;
+        $log.log(logMsg);
 
-        angular.element('#saveBtn').button('reset');
-        angular.element('#saveBtn2').button('reset');
+        loading.saveBtn = false;
+        loading.saveBtn2 = false;
 
         WebexUserSettingsSvc.disableCancel = false;
         WebexUserSettingsSvc.disableCancel2 = false;

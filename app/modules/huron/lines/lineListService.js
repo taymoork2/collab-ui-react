@@ -6,47 +6,22 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($http, $q, $translate, Authinfo, Config, Log, UserLineAssociationService, UserLineAssociationCountService) {
+  function LineListService($http, $q, $translate, Authinfo, CeService, Config, FeatureToggleService, HuntGroupServiceV2, Log, PstnSetupService, UserLineAssociationService, UserLineAssociationCountService) {
+
+    var customerId = Authinfo.getOrgId();
 
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
-      getCount: getCount,
       exportCSV: exportCSV
     };
     return service;
-
-    function getCount(searchStr) {
-      var wildcard = "%";
-
-      var queryString = {
-        'customerId': Authinfo.getOrgId()
-      };
-
-      if (searchStr.length > 0) {
-        queryString.userid = wildcard + searchStr + wildcard;
-        queryString.internalnumber = wildcard + searchStr + wildcard;
-        queryString.externalnumber = wildcard + searchStr + wildcard;
-
-        queryString.predicatejoinoperator = "or";
-      }
-
-      return UserLineAssociationCountService.query(queryString)
-        .$promise.then(function (response) {
-          if (response === undefined || response[0] === undefined) {
-            return $q.reject(response);
-          }
-          // there should only be one element in the response array; take the first one
-          // because it is the one we want
-          return response[0];
-        });
-    }
 
     function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
       var wildcard = "%";
 
       var queryString = {
-        'customerId': Authinfo.getOrgId()
+        'customerId': customerId
       };
 
       if (searchStr.length > 0) {
@@ -70,8 +45,53 @@
       queryString.limit = count;
       queryString.order = sortBy + sortOrder;
 
-      return UserLineAssociationService.query(queryString)
-        .$promise;
+      var linesPromise = UserLineAssociationService.query(queryString).$promise;
+      var orderPromise = PstnSetupService.listPendingOrders(customerId);
+
+      return $q.all([linesPromise, orderPromise])
+        .then(function (results) {
+          var lines = results[0];
+          var orders = results[1];
+
+          var pendingLines = [];
+          var nonProvisionedPendingLines = [];
+
+          if (lines.length === 0) {
+            return lines;
+          }
+
+          _.forEach(orders, function (order) {
+            try {
+              var parsedResponse = JSON.parse(order.response);
+              var numbers = parsedResponse[order.carrierOrderId];
+            } catch (error) {
+              return;
+            }
+            _.forEach(numbers, function (number) {
+              var lineFound = _.find(lines, function (line) {
+                return (number.e164 && number.e164 === line.externalNumber);
+              });
+              if (lineFound) {
+                lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                pendingLines.push(lineFound);
+              } else {
+                nonProvisionedPendingLines.push({
+                  externalNumber: number.e164,
+                  userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                });
+              }
+            });
+          });
+
+          if (filterType === 'pending') {
+            return pendingLines.concat(nonProvisionedPendingLines);
+          } else if (filterType === 'all') {
+            return lines.concat(nonProvisionedPendingLines);
+          } else {
+            return lines;
+          }
+        });
+
     } // end of function getLineList
 
     function exportCSV(scope) {

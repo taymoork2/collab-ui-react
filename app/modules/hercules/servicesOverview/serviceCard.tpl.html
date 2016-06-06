@@ -1,0 +1,26 @@
+<header>
+  <h4 class="size-{{card.cardType}}"><i class="icon" ng-class="card.icon"></i> {{card.name | translate}}</h4>
+</header>
+<section ng-if="!card.loading">
+  <p>
+    {{card.description | translate}}
+  </p>
+  <div class="card-button" ng-class="{alignedButtons: !card.loading && card.status}">
+    <a ng-href="#/{{button.link}}" ng-repeat="button in card.getButtons()">
+      <button ng-class="button.buttonClass">{{button.name | translate}}</button>
+      <!--      <button class="btn-link">{{button.name | translate}}</button> -->
+    </a>
+    <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">
+      <button ng-class="button.buttonClass" class="btn-link">{{card.getShowMoreButton().name | translate}}</button>
+    </a>
+  </div>
+</section>
+<section ng-if="card.loading">
+  <i class='icon icon-spinner icon-2x'></i>
+</section>
+<footer ng-if="card.showStatus">
+  <a class="status" ng-href="#/{{card.status.link}}">
+    <i class="icon icon-circle" ng-class="card.status.status || 'disabled'"></i>
+    <span ng-class="card.status.status || 'disabled'">{{card.status.text| translate}}</span>
+  </a>
+</footer>

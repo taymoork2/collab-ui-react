@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -24,8 +24,8 @@
     var factory = {
       customerStatus: customerStatus,
       getManagedOrgsList: getManagedOrgsList,
-      addToManagedOrgsList: addToManagedOrgsList,
-      getUserAuthInfo: getUserAuthInfo,
+      patchManagedOrgs: patchManagedOrgs,
+      modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
@@ -48,7 +48,7 @@
       });
     }
 
-    function addToManagedOrgsList(uuid, orgId) {
+    function patchManagedOrgs(uuid, customerOrgId) {
       var authUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + uuid;
 
       var payload = {
@@ -57,7 +57,7 @@
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
         ],
         'managedOrgs': [{
-          'orgId': orgId,
+          'orgId': customerOrgId,
           'role': 'ID_Full_Admin'
         }]
       };
@@ -69,13 +69,16 @@
       });
     }
 
-    function getUserAuthInfo(customerOrgId) {
-      Auth.getAuthorizationUrlList().then(function (response) {
+    function modifyManagedOrgs(customerOrgId) {
+      return Auth.getAuthorizationUrlList().then(function (response) {
         if (response.status === 200) {
           var uuid = response.data.uuid;
-          if (_.indexOf(response.data.managedOrgs, customerOrgId)) {
-            addToManagedOrgsList(uuid, customerOrgId);
+          if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
+            patchManagedOrgs(uuid, customerOrgId);
             Localytics.tagEvent('patch user call', {
+              by: response.data.orgId
+            });
+            Mixpanel.trackEvent('patch user call', {
               by: response.data.orgId
             });
           }
@@ -185,6 +188,7 @@
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
+        dealId: customer.dealId,
         offer: {},
         offers: customer.offers,
         status: customer.state,

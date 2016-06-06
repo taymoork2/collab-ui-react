@@ -1,0 +1,24 @@
+<div class="ediscovery-search">
+  <div class="ediscovery-search-bar">
+    <div class="main-heading">
+      <h1>Search Activities</h1>
+      <span class="help" ng-click="ediscoverySearchCtrl.showSearchHelp()"></span>
+    </div>
+
+    <div class="typeahead-large" style="text-align: left;">
+      <!--<form class="searchInputForm">-->
+      <input class="fit" id="searchInput" type="search" tabindex="1" placeholder="Type in a room id" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
+
+      <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
+      <!--</form>-->
+
+      <div class="input-description"></div>
+    </div>
+    <div class="searchError" ng-show="ediscoverySearchCtrl.error">
+      {{ediscoverySearchCtrl.error}}
+    </div>
+  </div>
+
+  <div ng-show="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
+
+</div>

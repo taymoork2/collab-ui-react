@@ -369,7 +369,10 @@
               template: '<div ui-view="modal"></div>',
               size: options.size,
               windowClass: options.windowClass,
-              backdrop: options.backdrop || 'static'
+              backdrop: options.backdrop || 'static',
+              modalClass: $state.params.modalClass,
+              modalId: $state.params.modalId,
+              type: $state.params.modalType
             });
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
@@ -421,8 +424,6 @@
           })
           .state('domainmanagement', {
             templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
-            controller: 'DomainManagementCtrl',
-            controllerAs: 'dv',
             parent: 'main'
           })
           .state('domainmanagement.add', {
@@ -431,7 +432,12 @@
               'modal@': {
                 controller: 'DomainManageAddCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/add.tpl.html'
+                templateUrl: 'modules/core/domainManagement/add.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -444,7 +450,12 @@
               'modal@': {
                 controller: 'DomainManageInstructionsCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+                templateUrl: 'modules/core/domainManagement/instructions.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -458,7 +469,12 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/delete.tpl.html'
+                templateUrl: 'modules/core/domainManagement/delete.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -472,7 +488,12 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
+                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -486,7 +507,12 @@
               'modal@': {
                 controller: 'DomainManageClaimCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+                templateUrl: 'modules/core/domainManagement/claim.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -500,12 +526,34 @@
               'modal@': {
                 controller: 'DomainManageVerifyCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/verify.tpl.html'
+                templateUrl: 'modules/core/domainManagement/verify.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
               domain: null,
               loggedOnUser: null
+            }
+          })
+          .state('settings', {
+            url: '/settings',
+            templateUrl: 'modules/core/settings/settings.tpl.html',
+            controller: 'SettingsCtrl',
+            controllerAs: 'settingsCtrl',
+            parent: 'main'
+          })
+          .state('authentication.enable3rdPartyAuth', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'Enable3rdPartyAuthCtrl',
+                controllerAs: 'enable3rdPartyAuth',
+                templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'
+              }
             }
           })
           .state('profile', {
@@ -559,6 +607,44 @@
             controllerAs: 'overview',
             parent: 'main'
           })
+          .state('my-company', {
+            // url: '/my-company',
+            templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+            controller: 'MyCompanyPageCtrl',
+            controllerAs: 'mcp',
+            parent: 'main',
+            abstract: true
+          })
+          .state('my-company.subscriptions', {
+            url: '/my-company/subscriptions',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpSubscription',
+                controller: 'MyCompanyPageSubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+              }
+            }
+          })
+          .state('my-company.info', {
+            url: '/my-company',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpInfo',
+                controller: 'MyCompanyPageInfoCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html'
+              }
+            }
+          })
+          .state('my-company.orders', {
+            url: '/my-company/orders',
+            views: {
+              'tabContent': {
+                controllerAs: 'mcpOrder',
+                controller: 'MyCompanyPageOrderCtrl',
+                templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+              }
+            }
+          })
           .state('users', {
             abstract: true,
             template: '<div ui-view></div>',
@@ -578,7 +664,14 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
+                templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalId = 'deleteUserModal';
+                    $state.params.modalClass = 'modalContent';
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -593,7 +686,14 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
+                templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalId = 'deleteUserModal';
+                    $state.params.modalClass = 'modalContent';
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -610,14 +710,26 @@
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
+                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
               }
             }
           })
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
+                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
               }
             }
           })
@@ -636,7 +748,13 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'convert-users';
+                    $state.params.modalId = 'convertDialog';
+                  }
+                }
               }
             }
           })
@@ -994,10 +1112,17 @@
               currentOrg: {}
             }
           })
-          .state('site-list', {
+          /**.state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
             controller: 'SiteListCtrl',
+            controllerAs: 'siteList',
+            parent: 'main'
+          })**/
+          .state('site-list', {
+            url: '/site-list',
+            templateUrl: 'modules/core/siteList/siteList.tpl.html',
+            controller: 'SiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main'
           })
@@ -1020,11 +1145,16 @@
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
-                controllerAs: 'siteCSVModalCtrl'
+                controllerAs: 'siteCSVModalCtrl',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
-              csvImportObj: null
+              siteRow: null
             }
           })
           .state('site-csv-results', {
@@ -1032,8 +1162,13 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+                templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
                 controllerAs: 'siteCSVResult',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'small';
+                  }
+                }
               }
             },
             params: {
@@ -1066,6 +1201,17 @@
             parent: 'main',
             params: {
               tab: null,
+              siteUrl: null
+            }
+          })
+          .state('reports-metrics', {
+            url: '/reports/metrics',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'metrics',
               siteUrl: null
             }
           })
@@ -1318,6 +1464,14 @@
               displayName: 'Phone Numbers'
             }
           })
+          .state('customer-overview.customerAdministrators', {
+            controller: 'CustomerAdministratorDetailCtrl',
+            controllerAs: 'customerAdmins',
+            templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            data: {
+              displayName: 'Administrators'
+            }
+          })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
@@ -1422,7 +1576,8 @@
             },
             params: {
               currentTab: {},
-              currentStep: ''
+              currentStep: '',
+              onlyShowSingleTab: false
             },
             data: {
               firstTimeSetup: false
@@ -1614,7 +1769,12 @@
               'modal@': {
                 templateUrl: 'modules/huron/moh/moh.tpl.html',
                 controller: 'MohCtrl',
-                controllerAs: 'moh'
+                controllerAs: 'moh',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'moh-content';
+                  }
+                }
               }
             }
           })
@@ -1689,6 +1849,12 @@
             templateUrl: 'modules/core/trials/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
+            resolve: {
+              modalInfo: function ($state) {
+                $state.params.modalClass = 'add-did-numbers-modal';
+                $state.params.modalId = 'didAddModal add-numbers';
+              }
+            },
             params: {
               currentOrg: {}
             }
@@ -1862,7 +2028,12 @@
               'modal@': {
                 controller: 'HuronFeatureDeleteCtrl',
                 controllerAs: 'huronFeatureDelete',
-                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
+                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -1877,7 +2048,12 @@
               'modal@': {
                 controller: 'HuronFeatureAADependsCtrl',
                 controllerAs: 'huronFeatureAADepends',
-                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
+                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
               }
             },
             params: {
@@ -1912,6 +2088,32 @@
     .config(['$stateProvider',
       function ($stateProvider) {
         $stateProvider
+          .state('services-overview', {
+            url: '/services/overview',
+            templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+            controller: 'ServicesOverviewCtrl',
+            controllerAs: 'servicesOverviewCtrl',
+            parent: 'main'
+          })
+          .state('cluster-list', {
+            url: '/services/resource',
+            templateUrl: 'modules/hercules/fusion-pages/resource-list.html',
+            controller: 'FusionResourceListController',
+            controllerAs: 'resourceList',
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('cluster-settings-page', {
+            url: '/services/resource/settings/:id',
+            templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+            controller: 'FusionResourceSettingsController',
+            controllerAs: 'resourceSetting',
+            parent: 'main'
+          })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
             controller: 'ExpresswayServiceController',
@@ -2160,8 +2362,8 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHeaderController',
-              controllerAs: 'helpdeskHeaderCtrl',
+              controller: 'EdiscoveryHeaderController',
+              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2172,15 +2374,20 @@
         .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
-            controller: 'EdiscoveryController',
-            controllerAs: 'ediscoveryCtrl',
             parent: 'ediscovery-main'
           })
           .state('ediscovery.search', {
-            url: '/',
-            templateUrl: 'modules/ediscovery/ediscovery.html'
+            url: '/search',
+            controller: 'EdiscoverySearchController',
+            controllerAs: 'ediscoverySearchCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+          })
+          .state('ediscovery.reports', {
+            url: '/reports',
+            controller: 'EdiscoveryController',
+            controllerAs: 'ediscoveryCtrl',
+            templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-
       }
     ]);
 
@@ -2234,7 +2441,9 @@
           .state('care.Features', {
             url: '/features',
             parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/features.tpl.html'
+            templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
+            controller: 'CareFeaturesCtrl',
+            controllerAs: 'careFeaturesCtrl'
           })
           .state('care.ChatSA', {
             url: '/careChat',
@@ -2242,6 +2451,26 @@
             templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
             controller: 'CareChatSetupAssistantCtrl',
             controllerAs: 'careChatSA'
+          })
+          .state('care.Features.DeleteFeature', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'CareFeaturesDeleteCtrl',
+                controllerAs: 'careFeaturesDeleteCtrl',
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalType = 'dialog';
+                  }
+                }
+              }
+            },
+            params: {
+              deleteFeatureName: null,
+              deleteFeatureId: null,
+              deleteFeatureType: null
+            }
           });
       }
     ]);

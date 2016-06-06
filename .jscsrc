@@ -1,5 +1,4 @@
 {
-  "excludeFiles": ["bower_components/**"],
   "requireCurlyBraces": [
     "for",
     "while",

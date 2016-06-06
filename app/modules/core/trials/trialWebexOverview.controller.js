@@ -22,9 +22,7 @@
     function init() {
       if (vm.trialId) {
         TrialWebexService.getTrialStatus(vm.trialId).then(function (status) {
-          var timeZone = _.find(TrialTimeZoneService.getTimeZones(), {
-            timeZoneId: status.timeZoneId
-          });
+          var timeZone = TrialTimeZoneService.getTimeZone(status.timeZoneId);
           vm.webexTrialExists = status.trialExists;
           vm.pending = status.pending;
           vm.timezone = timeZone.label;

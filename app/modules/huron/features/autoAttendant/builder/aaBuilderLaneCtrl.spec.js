@@ -4,6 +4,7 @@ describe('Controller: AABuilderLaneCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var $rootScope, $scope, $timeout;
+
   var aaUiModel = {
     openHours: {}
   };
@@ -15,10 +16,12 @@ describe('Controller: AABuilderLaneCtrl', function () {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $timeout = _$timeout_;
+
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderLaneCtrl', {
       $scope: $scope

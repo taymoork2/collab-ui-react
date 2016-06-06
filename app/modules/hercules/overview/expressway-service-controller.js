@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils, FeatureToggleService) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -121,6 +121,7 @@
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
         templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;
@@ -155,6 +156,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;
@@ -167,11 +169,30 @@
     }
 
     function openAddResourceModal() {
-      $modal.open({
-        controller: 'RedirectTargetController',
-        controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
-      });
+      if (vm.featureToggled) {
+        $modal.open({
+          controller: 'AddResourceController',
+          controllerAs: 'addResource',
+          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html'
+        });
+      } else {
+        $modal.open({
+          controller: 'RedirectTargetController',
+          controllerAs: 'redirectTarget',
+          templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+          type: 'small'
+        });
+      }
     }
+
+    vm.featureToggled = false;
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.featureToggled = reply;
+    });
+
   }
 }());

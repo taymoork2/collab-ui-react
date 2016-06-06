@@ -1,7 +1,164 @@
 <div>
   <div class="ct-title">
     <i class="icon icon-circle-user ct-title-icon"></i>
-    <span class="h1" translate="careChatTpl.customerInfo"></span>
+    <span class="h2" translate="careChatTpl.customerInfo"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.customerInfoDesc"></div>
+
+  <div class="ct-customer ct-sa-content">
+    <cs-card-layout>
+      <cs-card class="ct-customer-card">
+        <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
+
+        <article class="customer-preview-article ct-article header-border header-background articleHeight">
+
+          <header class="customerHeader ct-selectable-container"
+                  selectable ng-click="careChatSA.setActiveItem('welcomeHeader')">
+            <label title="{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}"
+                   class="welcomeText textOverflow">{{careChatSA.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
+            <label title="{{careChatSA.orgName}}"
+                   class="orgText textOverflow">{{careChatSA.orgName}}</label>
+          </header>
+
+          <section>
+            <ct-customer-form
+              ct-model='careChatSA'
+              fields='careChatSA.template.configuration.pages.customerInformation.fields'
+              ignore-fields='["welcomeHeader"]'
+              type-attr='type'
+              label-attr='label'
+              placeholder-attr='hintText'
+              required-attr='required'>
+            </ct-customer-form>
+          </section>
+
+          <footer class="ct-footer">
+            <label class="h5 typeText" translate="careChatTpl.defaultTypeMessageText"></label>
+          </footer>
+
+        </article>
+      </cs-card>
+
+      <cs-card class="ct-customer-card">
+        <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
+        <article class="customer-attributes-article ct-article articleHeight">
+          <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
+            <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
+          </section>
+
+          <section class="ct-attribute-section ct-flex-topleft ng-hide" ng-hide="careChatSA.activeItem === undefined">
+            <div class="row ct-attribute-row" ng-repeat="attribute in careChatSA.activeItem.attributes">
+
+              <label
+                      ng-if="attribute.name === 'header'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.windowTitleLabel">
+              </label>
+
+              <label
+                      ng-if="attribute.name === 'category'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.categoryLabel">
+              </label>
+              <label
+                      ng-if="attribute.name === 'label'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.label">
+              </label>
+              <label
+                      ng-if="attribute.name === 'hintText'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.hintText">
+              </label>
+              <label
+                      ng-if="attribute.name === 'type'"
+                      class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.type">
+              </label>
+
+              <input
+                ng-if="attribute.name === 'header' ||
+                attribute.name === 'label' ||
+                attribute.name === 'hintText'"
+                id="attribute.fieldName"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                type="text"
+                ng-model="attribute.value"
+              />
+
+              <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
+                <input
+                  cs-input
+                  ng-repeat="option in careChatSA.requiredOptions"
+                  type="radio"
+                  ng-model="attribute.value"
+                  id="{{option.id}}"
+                  name="{{option.id}}"
+                  value="{{option.id}}"
+                  cs-input-label="{{option.text}}"
+                />
+              </div>
+
+              <div ng-if="attribute.name === 'category'">
+                <cs-select
+                  ng-model="attribute.value"
+                  options="careChatSA.categoryTypeOptions"
+                  labelfield="text"
+                  valuefield="id"
+                  class="ct-attribute-field-textbox"
+                  placeholder="attribute.defaultValue">
+                </cs-select>
+                <label
+                  class="cs-input__label ct-attribute-field-helptext large-11">
+                  <em ng-if="attribute.value.id === 'customerInfo'"
+                          translate="careChatTpl.ciHelpText">
+                  </em>
+                  <em ng-if="attribute.value.id === 'requestInfo'"
+                      translate="careChatTpl.riHelpText">
+                  </em>
+                </label>
+              </div>
+
+              <div ng-if="attribute.name === 'type'">
+                <cs-select
+                        ng-model="attribute.value"
+                        options="careChatSA.typeOptions"
+                        labelfield="text"
+                        valuefield="id"
+                        class="ct-attribute-field-textbox"
+                        placeholder="attribute.defaultValue">
+                </cs-select>
+                <label
+                        ng-if="careChatSA.isDefined(attribute.value, 'helpText')"
+                        class="cs-input__label ct-attribute-field-helptext large-11">
+                  <em>{{attribute.value.helpText}}</em>
+                </label>
+              </div>
+              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name == 'type' && attribute.value.id == 'category'">
+                <i class="icon icon-add-contain" ng-click="careChatSA.addCategoryOption()"></i>
+                <input
+                        id="categoryTextBox"
+                        class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
+                        type="text"
+                        ng-keypress="careChatSA.onEnterKey($event)"
+                        ng-model="careChatSA.categoryOptionTag"
+                        maxlength="25"/>
+                <div class="category-tokens">
+                  <cs-token-field
+                          tokenfieldid="careChatSA.categoryTokensId"
+                          tokens="attribute.categoryOptions"
+                          static="true"></cs-token-field>
+                </div>
+              </div>
+            </div>
+            <div ng-if="careChatSA.getFieldByName('welcomeHeader') === careChatSA.activeItem"
+                 class="row ct-attribute-row" >
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.defaultOrgLabel">
+              </label>
+               <input ng-disabled= "careChatSA.isUserProfileSelected()"
+                      id="orgText"
+                      class="h5 inputField ct-attribute-field-textbox large-11"
+                      type="text"
+                      ng-model="careChatSA.orgName"/>
+              </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
 </div>

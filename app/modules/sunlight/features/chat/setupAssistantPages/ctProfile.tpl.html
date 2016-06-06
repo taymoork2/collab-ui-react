@@ -1,16 +1,13 @@
 <div class="ct-profile">
   <div>
-    <div class="h1 ct-title" translate="careChatTpl.profile"></div>
+    <div class="h2 ct-title" translate="careChatTpl.profile"></div>
     <div class="h4 ct-title-desc" translate="careChatTpl.profileDesc"></div>
   </div>
-  <div class="ct-profile-body">
-    <div>
-      <span class="h4 preview" translate="careChatTpl.screen"></span>
-      <span class="h4 attributes" translate="careChatTpl.attributes"></span>
-    </div>
-    <div class="cs-card-container ">
-      <cs-card-layout block-view="true">
+  <div class="ct-profile-body ct-sa-content">
+    <div class="cs-card-container">
+      <cs-card-layout>
         <cs-card class="medium header-border">
+          <div class="h4 card-info" translate="careChatTpl.screen"></div>
           <article class="ct-profile-preview">
             <header>
                <div class="img-details">
@@ -23,11 +20,10 @@
                  </div>
               </div>
               <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
-               <div title="{{ careChatSA.orgName | translate}}" class="orgOrAgentName">{{careChatSA.orgName | translate}}</div>
-               <div class="desc" translate="careChatTpl.org"></div>
+               <div title="{{ careChatSA.orgName | translate}}" class="orgName">{{careChatSA.orgName | translate}}</div>
               </div>
                <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                  <div class="orgOrAgentName">{{careChatSA.agentNamePreview | translate}}</div>
+                  <div class="agentName">{{careChatSA.agentNamePreview | translate}}</div>
                   <div class="desc" translate="careChatTpl.agent"></div>
                 </div>
               <div class="right action-details">
@@ -47,38 +43,39 @@
                 </span>
                 <span class="customer-msg" translate="careChatTpl.customerMsg"></span>
                 <div class="body-smallest timer" translate="careChatTpl.agentMsgTime"></div>
+                <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
               </div>
+
             </section>
-            <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
             <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
           </article>
         </cs-card>
         <cs-card class="medium section-background">
+          <div class="h4 card-info" translate="careChatTpl.attributes"></div>
           <article>
             <section class="ct-profile-attributes">
-              <span class="h4" translate="careChatTpl.profileSelector"></span>
+              <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
               <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles" label="profile" value="profile" name="{{profile}}" id="profile" ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
               <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
-                <div class="h4 img-txt" translate="careChatTpl.image"></div>
+                <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                 <div class="ct-profile-img">
                   <i class="icon icon-circle-computer-blank preview-img" ng-hide="careChatSA.logoUploaded"></i>
                   <img class="uploaded-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <input class="h6" cs-input type="text" placeholder="Enter organization name" ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
+                <input focus-on class="h6" cs-input type="text" placeholder="Enter organization name" ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
               </div>
               <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
                 <div>
-                  <div class="h4 img-txt" translate="careChatTpl.image"></div>
+                  <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                   <div class="ct-profile-agent-img">
                     <i class="agent-img icon icon-user"></i>
                   </div>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <div class="agent-name-options">
+                <div focus-on class="agent-name-options">
                   <cs-radio ng-repeat="(key, name) in careChatSA.agentNames" label="name" value="name" name="{{name}}" id="name" ng-model="careChatSA.selectedAgentProfile" ng-click="careChatSA.setAgentProfile()"></cs-radio>
                 </div>
-
               </div>
             </section>
           </article>

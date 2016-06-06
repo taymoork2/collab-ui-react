@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -27,6 +27,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -271,8 +272,10 @@
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-
-        vm.canSeeDevicePage = results[2];
+        // TODO: override atlasDeviceTrials to show Ship devices to all partners
+        //       and do not show to test orgs (US12063)
+        //vm.canSeeDevicePage = results[2];
+        setDeviceModal();
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
@@ -567,6 +570,24 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
+    }
+
+    function setDeviceModal() {
+      var overrideTestOrg = false;
+      var isTestOrg = false;
+
+      $q.all([
+        FeatureToggleService.supports('atlasTrialsShipDevices'),
+        Orgservice.getAdminOrg(_.noop)
+      ]).then(function (results) {
+        overrideTestOrg = results[0];
+        if (results[1].data.success) {
+          isTestOrg = results[1].data.isTestOrg;
+        }
+      }).finally(function () {
+        // Display devices modal if not a test org or if toggle is set
+        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
+      });
     }
   }
 })();

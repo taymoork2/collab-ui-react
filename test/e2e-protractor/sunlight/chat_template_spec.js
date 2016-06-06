@@ -7,13 +7,11 @@ describe('Care admin should be able to', function () {
   });
 
   it('see the landing page and able to click on new btn', function () {
-    utils.expectIsDisplayed(careLandingPage.careLandingPgae);
-    utils.expectIsDisplayed(careLandingPage.cccIcon);
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
   });
 
-  it('create a chat template', function () {
+  it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
@@ -30,16 +28,32 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfChatStringsPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfEmbedCodePage();
+    validateContentsOfSummaryPage();
+    validateDismissOfCTSetupWizard();
+    validateDisplayEmbedCodeModal();
+    validateDismissOfEmbedCodeModal();
+    validateFeaturesPage();
   });
+
+  function validateDismissOfCTSetupWizard() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.careChatSetupWizard)
+  }
+
+  function validateDisplayEmbedCodeModal() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.embedCodeModal);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedScriptBtn);
+    utils.click(careChatTemplateSetupPage.closeEmbedScriptModel);
+  }
+
+  function validateDismissOfEmbedCodeModal() {
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.embedCodeModal)
+  }
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
-  // Creating placeholder functions for testing multiple setUp assistant pages
-  // these placeholder functions will be implemented in coming stories
   function validateContentsOfNamePage() {
     utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
     utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
@@ -52,16 +66,15 @@ describe('Care admin should be able to', function () {
     // validateTitleAndDesc('Chat Template Profile', 'Select how your company will be represented');
     utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitle, 'Chat Template Profile');
     utils.expectTextToBeSet(careChatTemplateSetupPage.profileTitleDesc, 'Select how your company will be represented');
-    utils.expectTextToBeSet(careChatTemplateSetupPage.orgProfile, 'Organization');
     utils.clear(careChatTemplateSetupPage.OrgName);
     utils.sendKeys(careChatTemplateSetupPage.OrgName, careChatTemplateSetupPage.testOrgName);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, careChatTemplateSetupPage.testOrgName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.orgNamePreview, careChatTemplateSetupPage.testOrgName);
     utils.click(careChatTemplateSetupPage.agentProfile);
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, 'Agent Name');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentNamePreview, 'Agent Name');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.expectTextToBeSet(careChatTemplateSetupPage.orgOrAgentNamePreview, 'Agent Alias');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentNamePreview, 'Agent Alias');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
@@ -80,6 +93,67 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfCustomerInfoPage() {
     validateTitleAndDesc('Customer Info Screen', 'This is the screen a customer fills out before they chat with an agent');
+    validateCustomerInfoDefaultPage();
+    validateHeaderChange();
+    validateField1Change();
+    validateField2Change();
+  }
+
+  function validateCustomerInfoDefaultPage() {
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Welcome);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_Header_Org);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional3);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_default_Content);
+  }
+
+  function validateHeaderChange() {
+    utils.click(careChatTemplateSetupPage.customerInfo_Header_Welcome);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField1, "Custom Welcome Msq");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Welcome, "Custom Welcome Msq");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "OrgName1");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_Header_Org, "OrgName1");
+  }
+
+  function validateField1Change() {
+    utils.click(careChatTemplateSetupPage.customerInfo_screen_div1);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
+    utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional1);
+  }
+
+  function validateField2Change() {
+    utils.click(careChatTemplateSetupPage.customerInfo_screen_div2);
+
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField1);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField2);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField3);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_attCard_textField4);
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField2, "Custom Label");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.customerInfo_screen_field1Label, "Custom Label");
+
+    utils.sendKeys(careChatTemplateSetupPage.customerInfo_attCard_textField3, "Custom HintText");
+
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
+    utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
   }
 
   function validateContentsOfFeedbackPage() {
@@ -98,8 +172,25 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
   }
 
-  function validateContentsOfEmbedCodePage() {
-    validateTitleAndDesc('Embed Code', 'Use the embed code to add this chat template to your site');
+  function validateContentsOfSummaryPage() {
+    validateTitleAndDesc('Summary', 'Configuration Summary');
+    utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
+  }
+
+  function validateFeaturesPage() {
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.copyEmbedCodeOnCard);
+    utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
+    utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
+    notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been deleted successfully');
+    utils.click(utils.searchbox);
+    utils.clear(utils.searchField);
+    utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
   }
 
 });

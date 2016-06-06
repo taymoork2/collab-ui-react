@@ -1,0 +1,22 @@
+<div class="settings">
+
+  <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
+
+  <div class="cs-form" action="">
+    <div class="cs-form__section">
+
+      <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
+        <domains-setting></domains-setting>
+      </setting-section>
+
+      <setting-section setting="settingsCtrl.sipDomain" ng-if="settingsCtrl.sipDomain">
+        <sipdomain-setting show-save-button="true"></sipdomain-setting>
+      </setting-section>
+
+      <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
+        <support-setting></support-setting>
+      </setting-section>
+
+    </div>
+  </div>
+</div>

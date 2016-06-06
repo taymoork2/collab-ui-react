@@ -1,0 +1,149 @@
+.servicesOverview {
+  .hidden {
+    display: none;
+  }
+
+  .gray-light header:after {
+    border-top-color: $gray-light-1 !important;
+  }
+
+  h5 {
+    color: $gray-dark-2;
+  }
+
+  .servicesBlock {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    margin-top: 1rem;
+    margin-left: -1rem;
+
+    display: block;
+    min-height: 85vh;
+    width: 100%;
+    width: calc(100% + 2rem);
+
+    .cluster-list.header-bar header:after {
+      border-top-color: transparent !important;
+    }
+
+    h5 {
+      margin-bottom: 0;
+      margin-left: 0.5rem;
+
+      opacity: 1;
+      z-index: 100;
+      span {
+        font-size: 1rem;
+      }
+    }
+    .cs-card-layout {
+      padding-bottom: 2rem;
+      z-index: 1;
+      overflow: hidden;
+      .cs-card {
+        padding-bottom: 1rem;
+        display: block;
+        height: 350px;
+        min-height: 320px;
+        position: relative;
+        .cardLink {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        article {
+          height: 100%;
+        }
+        h4 {
+          font-size: 1.75rem;
+          padding-top: 0.5rem;
+          text-align: center;
+          i {
+            position: relative;
+            top: 0.2rem;
+          }
+        }
+        h4.size-1 {
+          font-size: 1.3rem;
+          padding-top: 1rem;
+        }
+        section {
+          position: relative;
+        }
+        button {
+          width: 100%;
+          margin-left: 0;
+          background-color: $gray-light-3;
+          color: $gray-dark-2;
+          text-overflow: ellipsis;
+          a {
+            color: $gray-dark-2;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            padding-top: 1px;
+            padding-bottom: 1px;
+          }
+        }
+        .cta-btn {
+          background-color: $color-primary-base !important;
+          color: white;
+          margin-top: 1rem;
+          width: auto;
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        button.btn-link {
+          color: $color-primary-base;
+          background-color: transparent;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        footer {
+          border-top: 1px solid $gray-light-4;
+          height: 3rem;
+          .status {
+            position: relative;
+            top: 0.9rem;
+            display: block;
+            span {
+              position: relative;
+              top: -0.2rem;
+              left: 0.1rem;
+            }
+            .icon {
+              font-size: 0.825rem;
+              top: -0.2rem;
+            }
+          }
+          .danger {
+            color: $color-negative-base;
+          }
+        }
+      }
+      .cs-card.header-bar.cta-bar header:after {
+        border-top-color: $color-cta-base !important;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .servicesOverview {
+    .servicesBlock {
+      .cs-card-layout {
+        .cs-card {
+          height: 350px;
+        }
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@
 *.swp
 *.swo
 *.ts.spec.js
+*.spec.ts.js
 
 .DS_Store
 .idea
@@ -18,6 +19,7 @@
 .e2e-fail-retry
 .oauth_token_metadata
 .vscode
+.project
 
 build
 coverage
@@ -25,10 +27,9 @@ dist
 screenshots
 plato
 typings
-/ts/ts-manifest.txt
+/ts/*manifest.txt
 .cache
 
-bower_components
 node_modules
 npm-debug.log
 npm-shrinkwrap.json

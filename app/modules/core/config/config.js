@@ -110,7 +110,8 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         spark_synckms: 'Spark_SyncKms',
-        readonly_admin: 'Readonly_Admin'
+        readonly_admin: 'Readonly_Admin',
+        compliance_user: 'Compliance_User'
       },
 
       roleState: {
@@ -226,6 +227,7 @@
         'cdr-overview',
         'cdrladderdiagram',
         'activateProduct',
+        'settings',
         'userRedirect'
       ],
       Readonly_Admin: [
@@ -242,15 +244,16 @@
         'support',
         'editService',
         'trialExtInterest',
-        'activateProduct'
+        'activateProduct',
+        'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
-      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
-      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
+      PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
+      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
+      PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
       User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -265,7 +268,8 @@
         'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
     config.serviceStates = {
@@ -289,11 +293,14 @@
         'huntgroupedit',
         'devices',
         'device-overview',
-        'devices-redux'
+        'devices-redux',
+        'services-overview'
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
-        'management-service'
+        'management-service',
+        'services-overview',
+        'my-company'
       ],
       'spark-room-system': [
         'devices',
@@ -301,10 +308,15 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
-        'call-service'
+        'cluster-list',
+        'call-service',
+        'cluster-settings-page'
       ],
       'squared-fusion-cal': [
-        'calendar-service'
+        'calendar-service',
+        'services-overview',
+        'cluster-list',
+        'cluster-settings-page'
       ],
       'squared-team-member': [
         'organization'
@@ -312,6 +324,7 @@
       'squared-fusion-media': [
         //'mediafusionconnector',
         'metrics',
+        'reports-metrics',
         'media-service',
         'connector-details'
       ],
@@ -341,6 +354,8 @@
         'media-service',
         'hurondetails',
         'huronsettings',
+        'cluster-list',
+        'cluster-settings-page',
         'calendar-service',
         'call-service',
         'management-service'

@@ -19,11 +19,11 @@
     vm.siteUrlFields = [{
       model: vm.details,
       key: 'siteUrl',
-      type: 'input',
+      type: 'cs-input',
       templateOptions: {
         required: true,
-        labelClass: 'small-2 columns',
-        inputClass: 'small-9 columns left',
+        labelClass: '',
+        inputClass: '',
         label: $translate.instant('trialModal.meeting.siteUrl'),
         placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
       },
@@ -57,8 +57,6 @@
       templateOptions: {
         required: true,
         labelfield: 'label',
-        labelClass: 'small-2 columns',
-        inputClass: 'small-9 columns left',
         labelProp: 'label',
         valueProp: 'timeZoneId',
         label: $translate.instant('trialModal.meeting.timezone')

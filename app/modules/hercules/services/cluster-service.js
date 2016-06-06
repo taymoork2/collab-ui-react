@@ -21,11 +21,15 @@
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
+      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
-      getReleaseNotes: getReleaseNotes
+      mergeRunningState: mergeRunningState,
+      getReleaseNotes: getReleaseNotes,
+      deprovisionConnector: deprovisionConnector,
+      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster
     };
 
     return service;
@@ -112,7 +116,7 @@
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        .get('state')
+        // .get('state')
         .value();
     }
 
@@ -128,7 +132,7 @@
         .value();
       return {
         alarms: mergeAllAlarms(connectors),
-        state: mergeRunningState(connectors),
+        state: mergeRunningState(connectors).state,
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
@@ -207,6 +211,16 @@
         });
     }
 
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          // only keep fused clusters
+          return _.filter(data.clusters, 'state', 'fused');
+        });
+    }
+
     function getCluster(type, id) {
       return clusterCache[type][id];
     }
@@ -256,6 +270,20 @@
         .then(extractDataFromResponse)
         .then(function (data) {
           return data.releaseNotes;
+        });
+    }
+
+    function deprovisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function getAllConnectorTypesForCluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
+      return $http.get(url)
+        .then(function (response) {
+          return _.map(response.data.provisioning, 'connectorType');
         });
     }
 

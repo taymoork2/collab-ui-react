@@ -689,7 +689,7 @@ exports.quickDeleteUser = function (bFirst, name) {
 };
 
 exports.waitForModal = function () {
-  return this.wait(element(by.css('.modal-dialog')));
+  return this.wait(element(by.css('.reveal-modal')));
 };
 
 exports.selectDropdown = function (dropdown, option) {

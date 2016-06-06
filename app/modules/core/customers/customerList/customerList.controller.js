@@ -13,24 +13,27 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
 
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
+    $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.filterAction = filterAction;
+    $scope.modifyManagedOrgs = modifyManagedOrgs;
+    $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
-    $scope.getUserAuthInfo = getUserAuthInfo;
-    $scope.getTrialsList = getTrialsList;
-    $scope.partnerClicked = partnerClicked;
-    $scope.isPartnerOrg = isPartnerOrg;
+    $scope.actionEvents = actionEvents;
+    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
-    $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    $scope.closeActionsDropdown = closeActionsDropdown;
+    $scope.partnerClicked = partnerClicked;
+    $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
+    $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.addNumbers = addNumbers;
-    $scope.isOrgSetup = isOrgSetup;
-    $scope.isOwnOrg = isOwnOrg;
+
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
@@ -63,6 +66,7 @@
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
+      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -152,6 +156,10 @@
       return _.every(customer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
+    }
+
+    function isPartnerAdminWithCall(customer) {
+      return !_.isUndefined(customer.communications.licenseType) && $scope.isPartnerAdmin;
     }
 
     function isOwnOrg(customer) {
@@ -311,8 +319,8 @@
         });
     }
 
-    function getUserAuthInfo(customerOrgId) {
-      PartnerService.getUserAuthInfo(customerOrgId);
+    function modifyManagedOrgs(customerOrgId) {
+      PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
@@ -365,6 +373,21 @@
         customerOrgId: customer.customerOrgId,
         customerOrgName: customer.customerName
       }));
+    }
+
+    function actionEvents($event, action, org) {
+      $event.stopPropagation();
+      if (action === 'myOrg') {
+        closeActionsDropdown();
+      } else if (action === 'customer') {
+        closeActionsDropdown();
+        modifyManagedOrgs(org.customerOrgId);
+      } else if (action === 'pstn') {
+        closeActionsDropdown();
+        addNumbers(org);
+        modifyManagedOrgs(org.customerOrgId);
+      }
+      return;
     }
 
     function isLicenseInfoAvailable(licenses) {

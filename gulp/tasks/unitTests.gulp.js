@@ -145,8 +145,8 @@ function createGulpKarmaConfigModule(module) {
       var unitTestFiles = [].concat(
         config.vendorFiles.js,
         config.testFiles.js,
-        config.testFiles.notTs,
         config.testFiles.app,
+        config.testFiles.notTs,
         config.testFiles.global
       );
 
@@ -176,7 +176,10 @@ function createGulpKarmaConfigModule(module) {
             gulp.src(unitTestFiles, {
               read: false
             }),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsManifest), {
+              read: false
+            }),
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest), {
               read: false
             })
           ), {

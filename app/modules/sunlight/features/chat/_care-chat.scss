@@ -2,13 +2,6 @@
 
 .careChatSetup {
   @extend %content-header;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  .cs-setupassistant--content {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
 }
 .care-chat {
   &.overlay-panel {
@@ -37,13 +30,38 @@
     @include vr-spacing(mt, 0.75);
   }
 }
-.careChatSetup {
-  @extend %content-header;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  .cs-setupassistant--content {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.ct-embed-code-area {
+	width: 100%;
+	margin: 0;
+	.embed-code-textarea {
+		width: 100%;
+		resize: none;
+		color: $gray-dark-4;
+    font-family: monospace;
+	}
 }
+
+.ct-finish-btn-div {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	@include vr-spacing(pt, 5);
+}
+
+.ct-status-div{
+  height: rem-calc(250px);
+  @include vr-spacing(pt, 2);
+  @include vr-spacing(mt, 2);
+  @include vr-spacing(ml, 2);
+  @include vr-spacing(mr, 5);
+}
+.ct-error-desc{
+  text-align: center;
+  color: $color-negative-dark;
+  @include vr-spacing(pt, 1);
+  @include vr-spacing(pb, 1);
+  @include vr-spacing(mr, 5);
+  @include vr-spacing(ml, 5);
+  border: rem-calc(1) solid $gray-light-2;
+}
+

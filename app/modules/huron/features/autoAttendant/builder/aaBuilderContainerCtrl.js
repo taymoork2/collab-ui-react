@@ -6,7 +6,7 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService, Config) {
+  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
 
     var vm = this;
     vm.aaModel = {};
@@ -14,14 +14,9 @@
 
     vm.getScheduleTitle = getScheduleTitle;
     vm.openScheduleModal = openScheduleModal;
-    vm.isScheduleAvailable = isScheduleAvailable;
 
-    function isScheduleAvailable() {
-      return (Config.isDev() || Config.isIntegration());
-    }
-
-    function openScheduleModal() {
-      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
+    function openScheduleModal(sectionToToggle) {
+      if (!AAValidationService.isRouteToValidationSuccess(vm.ui)) {
         return;
       }
 
@@ -29,7 +24,13 @@
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
-        size: 'lg'
+        size: 'lg',
+        resolve: {
+          sectionToToggle: function () {
+            return sectionToToggle;
+          }
+        },
+        modalClass: 'aa-schedule'
       });
 
       modalInstance.result.then(function (result) {

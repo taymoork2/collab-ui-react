@@ -36,6 +36,16 @@
 
         <br>
 
+        <div ng-if="showEdiscoveryLink()">
+          <h5 translate="supportPage.cards.tools.ediscovery"></h5>
+          <p class="content" translate="supportPage.cards.tools.launchEdicoveryDesc"></p>
+          <a target="_blank">
+            <button id="toolsCardEdiscoveryButton" ng-click="gotoEdiscovery()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewEdiscovery"></button>
+          </a>
+        </div>
+
+        <br>
+
         <div ng-show="showCdrCallFlowLink">
           <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
           <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>

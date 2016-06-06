@@ -1,0 +1,287 @@
+.ct-customer {
+  @mixin placeholder {
+    ::-webkit-input-placeholder {
+      @content
+    }
+    :-moz-placeholder {
+      @content
+    }
+    ::-moz-placeholder {
+      @content
+    }
+    :-ms-input-placeholder {
+      @content
+    }
+  }
+
+  @include vr-spacing(ml, 3);
+
+  .ct-customer-card {
+    width: rem-calc(414px);
+    display: flex;
+    flex-flow: column;
+    @include vr-spacing(mr, 1);
+    .cardHeader1 {
+      text-align: center;
+      color: $gray-dark-1;
+    }
+    .customerHeader {
+      background-color:$gray-light-4;
+      border-color: $gray-light-3;
+      border-width: rem-calc(1px);
+      border-style: solid;
+      &:hover {
+        background-color:$color-primary-lighter;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .customer-preview-article {
+    height: rem-calc(500);
+  }
+
+  .customer-attributes-article {
+    min-height: rem-calc(500);
+  }
+
+  .cs-card-layout.cs-card-block {
+    height: rem-calc(530px);
+  }
+
+  .ct-left-row {
+    &:hover {
+      background-color: $color-primary-lighter;
+    }
+  }
+
+  .welcomeText {
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(22px);
+    color: $color-primary-base;
+    @include vr-spacing(mb, 0);
+    max-width: 100%;
+  }
+
+  .orgText {
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(16px);
+    color: $gray-dark-2;
+    margin-bottom: 0;
+  }
+
+  .labelText {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.25);
+    color: $gray-dark-2;
+    opacity: .5;
+    max-width: 70%;
+  }
+
+  .textOverflow{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .typeText {
+    @include vr-spacing(mt, 0.25);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.25);
+    color: $gray-dark-2;
+    opacity: .5;
+  }
+
+  .inputField {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+    font-family: "CiscoSansTT Light";
+    color: $gray-dark-2;
+  }
+
+  .inputField_select {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.8);
+    color: $gray-dark-2;
+    width: 90%;
+    .form-control{
+      background-color: white;
+    }
+  }
+
+  .ct-left-cs-input {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 1);
+    @extend .cs-input;
+    border-color: $gray-light-3;
+    cursor: default;
+    color: $gray-dark-1;
+    pointer-events: none;
+    font-family: "CiscoSansTT Light";
+    font-size: rem-calc(16px);
+    width: 90%;
+    ~ i {
+      @include vr-spacing(ml, -2.4);
+      font-size: rem-calc(24px);
+      color: $gray-base;
+      line-height: inherit;
+      pointer-events: none;
+      position: absolute;
+    }
+  }
+
+  .ct-footer {
+    color: $gray-light-1;
+    border-top: 1px solid $gray-light-3;
+    @include vr-spacing(pv, 0.75);
+    @include vr-spacing(pl, 0.5);
+  }
+
+  .ct-selectable-element {
+    &.active {
+      color: $color-primary-darker;
+      border-color: $color-primary-darker;
+    }
+  }
+
+  .ct-selectable-container {
+    &.active {
+      border-color: $color-primary-darker;
+      border-style: solid;
+      border-width: rem-calc(1px);
+      background-color: white;
+    }
+  }
+
+  .ct-flex-center {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  .ct-flex-topleft {
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      text-align: center;
+      flex: 0;
+      font-family: "CiscoSansTT Light";
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-field-helptext {
+    @include vr-spacing(pt, 0.25);
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(mt, 0);
+    font: italic 12px "CiscoSansTT Regular";
+    color: $gray-light-1;
+  }
+
+  .ct-attribute-field-label {
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+    font-family: "CiscoSansTT Regular";
+  }
+
+  .ct-attribute-field-textbox {
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+    font-family: "CiscoSansTT Light";
+    @include vr-spacing(ml, 1);
+    width: 90%;
+  }
+
+  .ct-attribute-field-radio {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 0);
+    font-family: "CiscoSansTT Light";
+  }
+
+
+  .ct-flex-container {
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-flow: row;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    .ct-default-msg {
+      max-width: 60%;
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-row {
+    width: 100%;
+    .ct-customer-info-category-input {
+      @include vr-spacing(mt, 0.25);
+    }
+  }
+
+  .right-inner-addon {
+    position: relative;
+  }
+
+  .right-inner-addon input {
+    @include vr-spacing(pr, 0.3125);
+  }
+
+  .right-inner-addon i {
+    position: absolute;
+    right: 0rem;
+    @include vr-spacing(pv, 0.6);
+    @include vr-spacing(ph, 2);
+  }
+
+  .category-tokens {
+    .tokenfield.form-control,
+    .tokenfield.form-control-static {
+      @include vr-spacing(mt, 1);
+      @include vr-spacing(mb, 1);
+      @include vr-spacing(mh, 1);
+      height:rem-calc(96px);
+      overflow-y:auto;
+      overflow-x: hidden;
+      input.token-input {
+        border-color: transparent;
+        outline: 0;
+        background-color: transparent;
+        box-shadow: none;
+      }
+      .token {
+        height: rem-calc(39px);
+        pointer-events: none;
+        .token-label {
+          padding-top: rem-calc(3px);
+          @include vr-spacing(mr, 0.5);
+        }
+        .close {
+          float: right;
+          font-size: 1.2em;
+          padding-top: rem-calc(0px);
+          line-height: 0.9em;
+          pointer-events: all;
+        }
+      }
+    }
+  }
+
+}

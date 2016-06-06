@@ -1,53 +1,130 @@
-<div ng-if="siteCSVModalCtrl.viewReady" id="siteCSVImportModal">
-    <div class="modal-header">
-        <button id="closeCSVImportModal" type="button" class="close"
-            ng-click="$dismiss()">
-            <span class="sr-only" translate="siteCSVModalCtrl.common.close"></span>
-        </button>
+<div ng-if="siteCSVModalCtrl.viewReady"
+     class="modal-header">
+     
+  <button id="closeCSVImportModal" 
+          type="button" 
+          class="close"
+          ng-click="$dismiss()">
+                
+    <span class="sr-only" 
+          translate="siteCSVModalCtrl.common.close"></span>
+  </button>
         
-        <h4 class="modal-title" translate='siteList.siteCsvColumnHeader'>
-        </h4>
-    </div>
-
-    <!-- 
-    <div>
-        <div class="modal-body csv-import-modal-body">
-            <p translate='siteList.importStartModalInstruction_1'></p>
-        </div>
-        <div class="users-upload-csv">
-            <div ng-if="!siteCSVModalCtrl.modal.file" class="file-drop" cr-file-drop
-                file="siteCSVModalCtrl.modal.file" file-name="siteCSVModalCtrl.modal.fileName"
-                file-type="text/csv, application/csv, application/vnd.ms-excel"
-                file-suffix="csv" file-type-error="siteCSVModalCtrl.onFileTypeError()">
-                <div class="file-drop-content">
-                    <div class="icon icon-circle-upload center"></div>
-                    <input id="upload" name="upload" type="file" cr-file-read
-                        file="siteCSVModalCtrl.modal.file" file-name="siteCSVModalCtrl.modal.fileName"
-                        file-type="text/csv, application/csv, application/vnd.ms-excel"
-                        file-suffix="csv" file-type-error="siteCSVModalCtrl.onFileTypeError()" />
-                        <span translate="firstTimeWizard.uploadPrompt"></span>
-                        <label for='upload' translate="firstTimeWizard.fileBrowser"></label>
-                </div>
-            </div>
-            <div ng-if="siteCSVModalCtrl.modal.file" class="file-drop-inactive">
-                <div class="file-drop-content">
-                    <div class="file-name">{{siteCSVModalCtrl.modal.fileName}}</div>
-                </div>
-                <button type="button" class="close" ng-click="siteCSVModalCtrl.resetFile();">
-                    <span class="sr-only" translate="common.close"></span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal-footer">
-        <button type="button" class="btn btn--people"
-            ng-click="siteCSVModalCtrl.startImport()"
-            translate="siteList.importButton"></button>
-        <button type="button" class="btn" ng-click="$dismiss()"
-            translate="common.cancel"></button>
-    </div>
-    -->
+  <h3 class="modal-title" 
+      translate='siteList.siteCsvColumnHeader'></h3>
 </div>
 
+<div class="modal-body">
+  <h4>
+    {{siteCSVModalCtrl.siteUrl}}
+  </h4>
+    
+  <p style="font-size:25%">
+    &nbsp;
+  </p>
+    
+  <p>
+    <span translate='siteList.siteCsvModalText'></xpan>
+  </p>
+		  
+  <div class="cs-card-container">
+    <cs-card-layout block-view="true">
+      <!-- csv export card -->
+      <cs-card class="large">
+        <article>
+          <div class="webex-csv-container">
+            <div class="file-drop">
+              <p align="center">
+                <label for='download'> 
+			      <i ng-if="!siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import"
+				     ng-click="siteCSVModalCtrl.startExport()"></i>
+				 
+			      <i ng-if="siteCSVModalCtrl.modal.file"
+			         class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
+                </label>
+
+                <br>
+			  
+			    <b><span translate='siteList.siteCsvExportLinkLabel'></span></b>
+			  
+			    <br><br>
+			  
+			    <!-- 
+			    <span translate='siteList.siteCsvModalExportText'
+			          translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
+			    -->
+			    <span translate='siteList.siteCsvModalExportTextShort'></span>
+			  </p>
+            </div>
+          </div>
+        </article>
+      </cs-card>
+      <!-- end of csv export card -->
+      
+      <!-- start of csv import card -->
+      <cs-card class="large">
+        <article>
+		  <div class="webex-csv-container">
+				<div ng-if="!siteCSVModalCtrl.modal.file" 
+				     class="file-drop"
+					 cr-file-drop 
+					 file="siteCSVModalCtrl.modal.file"
+				     file-name="siteCSVModalCtrl.modal.fileName"
+					 file-type="text/csv, application/csv, application/vnd.ms-excel"
+					 file-suffix="csv"
+					 file-type-error="siteCSVModalCtrl.onFileTypeError()">
+
+                    <p align="center">
+						<input id="upload" 
+						       name="upload" 
+						       type="file" 
+						       cr-file-read
+							   file="siteCSVModalCtrl.modal.file"
+							   file-name="siteCSVModalCtrl.modal.fileName"
+							   file-type="text/csv, application/csv, application/vnd.ms-excel"
+							   file-suffix="csv"
+							   file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
+								   
+						<label for='upload'> 
+							<i class="icon icon-upload-contain icon-4x icon-export-import"></i>
+						</label>
+						
+						<br>
+						
+						<b><span translate='siteList.siteCsvImportLinkLabel'></span></b>
+						
+						<br><br>
+						
+						<span translate='siteList.siteCsvModalImportText'></span>
+                    </p>
+				</div>
+				
+				<div ng-if="siteCSVModalCtrl.modal.file">
+                    <p>
+                        &nbsp;
+                    </p>
+				    
+					<p align="center">
+				        {{siteCSVModalCtrl.modal.fileName}}
+				      
+				        <br><br>
+				      
+				        <button cs-btn
+				                type="button" 
+						        class="btn btn--primary"
+						        loading="siteCSVModalCtrl.importing"
+							    ng-click="siteCSVModalCtrl.startImport()">
+							  
+					      <span translate="siteList.importButton"></span>
+			            </button>
+				    </p>
+				</div>
+          </div>
+        </article>
+      </cs-card>
+      <!-- end of csv import card -->
+    </cs-card-layout>
+  </div>
+</div>
 

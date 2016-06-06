@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -21,7 +21,6 @@
     vm.isSquaredUC = isSquaredUC();
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
-    vm.getUserAuthInfo = getUserAuthInfo;
     vm.deleteTestOrg = deleteTestOrg;
 
     vm.uuid = '';
@@ -31,6 +30,8 @@
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
+    vm.isDeleting = false;
+    vm.atlasPartnerAdminFeatureToggle = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -39,15 +40,15 @@
     var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-      if (result) {
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials), FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)])
+      .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
             id: Config.offerTypes.roomSystems
           })) {
-          vm.showRoomSystems = result;
+          vm.showRoomSystems = result[0];
         }
-      }
-    });
+        vm.atlasPartnerAdminFeatureToggle = result[1];
+      });
 
     init();
 
@@ -114,7 +115,7 @@
     function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;
-      if (angular.isUndefined(liclist)) {
+      if (_.isUndefined(liclist)) {
         liclist = [];
       }
       for (i = 0; i < liclist.length; i++) {
@@ -123,7 +124,7 @@
         var lictype = lic.licenseType;
         var isConfType = lictype === "CONFERENCING";
         if (isConfType) {
-          licIds.push(new LicenseFeature(licId, (angular.isUndefined(lic.siteUrl) === false)));
+          licIds.push(new LicenseFeature(licId, (_.isUndefined(lic.siteUrl) === false)));
         }
       }
       return licIds;
@@ -133,28 +134,40 @@
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
-      var u = {
+      var emailObj = {
         'address': partnerEmail
       };
-      if (licIds.length > 0) {
-        Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
-      } else {
-        AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
-          var d = data;
-          var len = d.accounts.length;
-          var i = 0;
-          for (i = 0; i < len; i++) {
-            var account = d.accounts[i];
-            var lics = account.licenses;
-            var licIds = collectLicenseIdsForWebexSites(lics);
-            Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
-          }
-        });
+      var promise = $q.when();
+      if (vm.isPartnerAdmin) {
+        promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
-      $window.open($state.href('login_swap', {
-        customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.customerName
-      }));
+      promise.then(function () {
+        if (licIds.length > 0) {
+          Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
+          $window.open($state.href('login_swap', {
+            customerOrgId: vm.customerOrgId,
+            customerOrgName: vm.customerName
+          }));
+        } else {
+          AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
+            var len = data.accounts.length;
+            var updateUsersList = [];
+            for (var i = 0; i < len; i++) {
+              var account = data.accounts[i];
+              var lics = account.licenses;
+              var licIds = collectLicenseIdsForWebexSites(lics);
+              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+            }
+            $q.all(updateUsersList).then(function () {
+              $window.open($state.href('login_swap', {
+                customerOrgId: vm.customerOrgId,
+                customerOrgName: vm.customerName
+              }));
+            });
+          });
+        }
+      });
+
     }
 
     function openEditTrialModal() {
@@ -200,10 +213,6 @@
       return vm.customerName === Authinfo.getOrgName();
     }
 
-    function getUserAuthInfo() {
-      PartnerService.getUserAuthInfo(vm.customerOrgId);
-    }
-
     function getIsTestOrg() {
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
@@ -216,17 +225,30 @@
 
     function deleteTestOrg() {
       if (vm.isTest) {
-        if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
+          controller: function () {
+            var ctrl = this;
+            ctrl.orgName = vm.customerName;
+          },
+          controllerAs: 'ctrl'
+        }).result.then(function () {
+          // delete the customer
+          vm.isDeleting = true;
           Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+            $state.go('partnercustomers.list');
             Notification.success('customerPage.deleteOrgSuccess', {
               orgName: vm.customerName
             });
           }).catch(function (error) {
+            vm.isDeleting = false;
             Notification.error('customerPage.deleteOrgError', {
-              orgName: vm.customerName
+              orgName: vm.customerName,
+              message: error.data.message
             });
           });
-        }
+        });
       }
     }
 

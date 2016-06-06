@@ -4,6 +4,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
+
   var aaUiModel = {
     openHours: {}
   };
@@ -16,6 +17,30 @@ describe('Controller: AABuilderActionsCtrl', function () {
     help: 'testHelp',
     actions: ['testAction']
   }];
+
+  var testOptionsWithPhoneMenu = [{
+    title: 'Phone Menu',
+    controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
+    url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
+    hint: 'testHint',
+    help: 'testHelp',
+    actions: ['runActionsOnInput']
+  }];
+
+  var testOptionsWithDialByExt = [{
+    title: 'Dial By phoneMenuDialExt',
+    controller: 'AADialByExtCtrl as aaDialByExtCtrl',
+    url: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
+    hint: 'testHint',
+    help: 'testHelp',
+    type: 2,
+    actions: ['runActionsOnInput']
+  }];
+
+  function type(obj) {
+    var text = obj.constructor.toString();
+    return text.match(/function (.*)\(/)[1];
+  }
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
@@ -30,6 +55,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
       $scope: $scope
@@ -60,9 +86,31 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('selectOption', function () {
-    it('enables save when a option is selected', function () {
+    it('enables save and replaces CeMenuEntry with CeMenu when phone-menu option is selected', function () {
+      controller.option = testOptionsWithPhoneMenu[0];
+      controller.schedule = 'openHours';
+      controller.index = 0;
+      controller.ui['openHours'] = AutoAttendantCeMenuModelService.newCeMenu();
+      controller.ui['openHours'].addEntryAt(controller.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
       expect(AACommonService.isFormDirty()).toBeFalsy();
       controller.selectOption();
+      var _menuEntry = controller.ui['openHours'].getEntryAt(controller.index);
+      expect(type(_menuEntry)).toBe('CeMenu');
+      expect(AACommonService.isFormDirty()).toBeTruthy();
+    });
+
+    it('enables save and retains CeMenuEntry when dial-by-ext option is selected', function () {
+      controller.option = testOptionsWithDialByExt[0];
+      controller.schedule = 'openHours';
+      controller.index = 0;
+      controller.ui['openHours'] = AutoAttendantCeMenuModelService.newCeMenu();
+      controller.ui['openHours'].addEntryAt(controller.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      expect(AACommonService.isFormDirty()).toBeFalsy();
+      controller.selectOption();
+      var _menuEntry = controller.ui['openHours'].getEntryAt(controller.index);
+      expect(type(_menuEntry)).toBe('CeMenuEntry');
       expect(AACommonService.isFormDirty()).toBeTruthy();
     });
   });

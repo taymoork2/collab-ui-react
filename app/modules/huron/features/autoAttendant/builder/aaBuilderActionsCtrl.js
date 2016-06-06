@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService, Config, AACommonService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
 
     var vm = this;
 
@@ -51,11 +51,16 @@
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 
-    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
-
     /////////////////////
 
     function selectOption() {
+      // if we are selecting a phone menu, re-initialize uiMenu.entries[vm.index] with a CeMenu.
+      if (vm.option.actions[0] === 'runActionsOnInput' && !_.has(vm.option, 'type')) {
+        var menu = AutoAttendantCeMenuModelService.newCeMenu();
+        menu.type = 'MENU_OPTION';
+        var uiMenu = vm.ui[vm.schedule];
+        uiMenu.entries[vm.index] = menu;
+      }
       AACommonService.setActionStatus(true);
     }
 
@@ -109,6 +114,7 @@
     }
 
     function activate() {
+      vm.index = $scope.index;
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();
       setOption();

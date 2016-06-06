@@ -1,10 +1,9 @@
 <div class="pendingStatus">
-  <div class="icon icon-circle-email"></div>
-  <div class="pendingTitle" translate="usersPage.invitePending"></div>
-  <div class="pendingMsg" translate="usersPage.inviteMsg"></div>
-  <div class="resendMsg">
-    <button class="btn" translate="usersPage.resendInvitation"
-    ng-click="resendInvitation(userOverview.currentUser.emails[0].value, userOverview.currentUser.userName, 
-    userOverview.currentUser.id, userOverview.currentUser.userStatus, userOverview.dirsyncEnabled, userOverview.entitlements)"></button>
+  <div class="pending-icon">
+    <i class="icon icon-warning"></i>
+  </div>
+  <div class="pending-text">
+    <p class="pendingTitle" translate="usersPage.invitePending"></p>
+    <p class="pendingMsg" translate="usersPage.inviteMsg"></p>
   </div>
 </div>

@@ -58,7 +58,8 @@
             },
             controllerAs: 'rs',
             controller: 'RemoteSupportController',
-            templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html'
+            templateUrl: 'modules/squared/devices/remoteSupport/remoteSupport.html',
+            modalId: 'remoteSupportModal'
           }).result;
         }
 

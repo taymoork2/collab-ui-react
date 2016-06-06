@@ -6,19 +6,19 @@
     .factory('ReadonlyInterceptor', ReadonlyInterceptor);
 
   /*ngInject*/
-  function ReadonlyInterceptor($q, $injector) {
+  function ReadonlyInterceptor($q, $injector, Log) {
 
     var allowedList = [
+      '/api/v1/metrics',
+      '/api/v1/compliance/',
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
-      '/WBXService/XMLService',
       '/resendinvitation/invoke',
       '/sendverificationcode/invoke',
       '/elevatereadonlyadmin/invoke',
+      '/WBXService/XMLService',
       '/meetingsapi/v1/users/',
-      '/meetingsapi/v1/users/importexportstatus',
-      '/meetingsapi/v1/users/export',
-      '/meetingsapi/v1/users/import'
+      '/meetingsapi/v1/files/'
     ];
 
     return {
@@ -31,6 +31,7 @@
       var Notification = $injector.get('Notification');
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
         Notification.notifyReadOnly(config);
+        Log.error('Intercepting request in read-only mode: ' + config);
         return $q.reject(config);
       } else {
         return config;
@@ -43,7 +44,7 @@
 
     function isInAllowedList(url) {
       var found = _.find(allowedList, function (p) {
-        return _.endsWith(url, p);
+        return _.includes(url, p);
       });
       if (found) {
         return true;

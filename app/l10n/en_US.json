@@ -17,7 +17,7 @@
     "add": "Add Users",
     "entitle": "Entitle",
     "invitePending": "Invite Pending",
-    "inviteMsg": "Users services are pending and will be shown here when the user activates their account",
+    "inviteMsg": "This user has not set their password yet",
     "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -108,7 +108,7 @@
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
-    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
+    "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -219,6 +219,7 @@
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
+    "settingsTab": "Settings",
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
@@ -498,7 +499,8 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
-    "rolesError": "Error updating user's roles."
+    "rolesError": "Error updating user's roles.",
+    "complianceError": "Error updating compliance entitlement"
   },
   "supportPage": {
     "title": "Support",
@@ -582,7 +584,10 @@
         "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
         "cdrLogs": "CDR Call Flow",
         "viewCdrCallFlow": "View CDR Call Flow",
-        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+        "viewCdrCallFlowDesc": "Open the tool in a new tab",
+        "ediscovery": "Activity Reports",
+        "launchEdicoveryDesc": "Open the Activity Reports dashboard in a new tab",
+        "viewEdiscovery": "View Activity Reports"
       }
     }
   },
@@ -654,7 +659,8 @@
     "cdrSave": "Save Call",
     "element": "Element",
     "value": "Value",
-    "sparkCall": "(Spark Call)"
+    "sparkCall": "(Spark Call)",
+    "callingCustomer": "Calling Customer"
   },
   "cdrLadderDiagram": {
     "title": "Call Flow Ladder Diagram",
@@ -843,7 +849,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -1125,7 +1131,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Domain"
+      "setupCloudSipUriHeader": "Define Spark SIP Address"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1149,6 +1155,14 @@
         "squared-fusion-mgmt": "Expressway Management Service Activation"
       },
       "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "deactivateServiceSingleCluster": {
+      "title": "Deactivate {{serviceName}}",
+      "intro": "You are about to remove the following Hybrid Service:",
+      "fromCluster": "from the Expressway cluster {{clusterName}}.",
+      "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
+      "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "confirmButton": "Confirm Deactivation"
     },
     "clusters": {
       "listing": {
@@ -1184,7 +1198,8 @@
       "has_alarms": "Alarms",
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
-      "pending": "Pending"
+      "pending": "Pending",
+      "initializing": "Initializing"
     },
     "setup": {
       "label": "Connector Management",
@@ -1214,6 +1229,16 @@
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector"
+    },
+    "connectorNameFromConnectorType": {
+      "c_cal": "Calendar Connector",
+      "c_ucmc": "Call Connector",
+      "c_mgmt": "Management Connector"
+    },
+    "serviceNameFromConnectorType": {
+      "c_cal": "Calendar Service",
+      "c_ucmc": "Call Service",
+      "c_mgmt": "Management Service"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
@@ -1270,6 +1295,22 @@
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+    },
+    "expresswayClusterSettings": {
+      "pageTitle": "{{clusterName}} settings",
+      "releasechannelHeader": "Users and Release Channel",
+      "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
+      "releasechannelUsers": "Users",
+      "releasechannelReleasechannel": "Release Channel",
+      "deactivateServicesHeader": "Deactivate Services",
+      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarButton": "Deactivate Calendar",
+      "deactivateServicesCallButton": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Deregister Cluster",
+      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
+      "deregisterClusterButton": "Deregister",
+      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1356,18 +1397,52 @@
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
+    },
+    "fusion": {
+      "list": {
+        "title": "Clusters",
+        "empty": "No clusters to display.",
+        "users": "Users:",
+        "releaseChannel": "Release Channels:",
+        "upgradeTime": "Upgrade Time:",
+        "hosts": "{count, plural, one{# Host} other{# Hosts}}",
+        "settings": "Settings",
+        "all": "All",
+        "expressway-short": "EW",
+        "mediafusion-short": "MS",
+        "expressway": "Expressway",
+        "mediafusion": "Mediafusion"
+      }
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "eDiscovery",
-    "ediscovery": "eDiscovery",
-    "searchHeading": "eDiscovery search",
-    "navHeaderTitle": "eDiscovery Dashboard",
+    "browserTabHeaderTitle": "Activity Reports",
+    "navHeaderTitle": "Activity Reports",
     "searchHelp": "Search Help",
+    "searchError": "Your search for '{{roomId}}' returned 0 matches",
+    "dateError": {
+      "StartDateMustBeforeEndDate": "Start date must be before end date",
+      "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
+    },
     "searchingPleaseWait": "Finding information, please wait...",
     "help": {
-      "title": "eDiscovery Help"
-    }
+      "title": "Activity Reports Help"
+    },
+    "reportStates": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "RUNNING": "Running",
+      "CREATED": "Created",
+      "ACCEPTED": "Accepted",
+      "ABORTED": "Aborted"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Unexpected failure",
+      "BUSY": "Busy",
+      "INSUFFICIENT_STORAGE": "Insufficient storage",
+      "ROOM_NOT_FOUND": "Room not found"
+    },
+    "reportTimeout": "Timeout detected. Please cancel the report and try again."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
@@ -1450,18 +1525,16 @@
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
     "communicationsSub": "Setup calling service",
-    "setSipDomainDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipDomainDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
-    "setSipDomainDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
-    "setSipDomainDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
-    "setSipDomainMsg": "Enter a prefix for the SIP domain",
-    "setSipDomainTitle": "SIP Domain",
-    "setSipDomainCompNames": "Your organization's SIP Domains:",
+    "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
+    "setSipDomainMsg": "Enter a subdomain",
+    "setSipDomainTitle": "Spark SIP Address",
+    "setSipDomainCompNames": "These subdomains can be reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
-    "setSipDomainPlaceholder": "input a unique domain",
+    "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
     "setSipDomainErrorMessageInvalidDomain": "Invalid domain, please try another name",
-    "setSipDomainSuccessMessage": "The SIP Domain has been successfully saved",
+    "setSipDomainSuccessMessage": "The Spark SIP Address has been successfully saved",
+    "setSipDomainConfirmText": "I acknowledge this is a one-time setting that cannot be changed later.",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -1506,12 +1579,14 @@
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
-    "cloudSipSuccess": "Successfully added Cloud SIP Domain.",
-    "cloudSipError": "Failed to add Cloud SIP Domain.",
+    "cloudSipSuccess": "Successfully added Cloud Spark SIP Address.",
+    "cloudSipError": "Failed to add Cloud Spark SIP Address.",
     "messengerRetentionSuccess": "Successfully added retention period setting.",
     "messengerRetentionError": "Failed to add retention period setting.",
     "messengerRetentionEditSuccess": "Successfully changed retention period setting.",
     "messengerRetentionEditError": "Failed to change retention period setting.",
+    "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
+    "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -1524,7 +1599,7 @@
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
     "appSecurity": "App Security",
-    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devicess",
+    "appSecurityLabel": "Users can launch the Cisco Spark app only on protected devices",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
@@ -1544,6 +1619,11 @@
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
     "messagingSetupPlaceholder": "Select retention time",
+    "messagingSetupDataRetentionOption1": "Delete Immediately",
+    "messagingSetupDataRetentionOption2": "30 days",
+    "messagingSetupDataRetentionOption3": "60 days",
+    "messagingSetupDataRetentionOption4": "90 days",
+    "messagingSetupDataRetentionOption5": "Keep Forever",
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
@@ -1601,7 +1681,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
-    "successImport": "Copied {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
+    "successImport": "Copied {{hours}} Open Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1628,7 +1708,6 @@
     "actionEndCall": "Disconnect",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
-    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleClosedHolidays": "Closed/Holidays",
@@ -1664,19 +1743,17 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
-    "phoneMenuErrorRouteToQueueTargetMissing": "Key {{key}} is missing a Route To Queue target.",
-    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target for the {{schedule}} schedule at Phone Menu {{at}}.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target for {{schedule}} schedule at Phone Menu {{at}}.",
+    "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
+    "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
+    "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
+    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
+    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
+    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
+    "routeCallErrorRouteToAATargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To AutoAttendant is missing target.",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Phone Number has a missing or invalid target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1698,7 +1775,7 @@
     "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Copy Schedule",
-    "importDesc": "Select an existing Auto Attendant to copy the Open/Closed and Holiday schedule from",
+    "importDesc": "Select an existing Auto Attendant to copy the Open Hours and Holidays schedule from",
     "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
@@ -2117,11 +2194,11 @@
     "meeting": {
       "title": "Trial Setup - WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "WebEx Enterprise Edition 200",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
+      "customerTimezone": "Customer Time Zone",
       "default": "Set as default",
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
@@ -2167,7 +2244,8 @@
       "unit": "Unit",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "dealId": "Deal ID"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2209,6 +2287,9 @@
         "siteFail": "Site was not created"
       }
     },
+    "finish": {
+      "title": "Congratulations!"
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
@@ -2224,21 +2305,23 @@
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "licenseQuantity": "Licenses Quantity",
+    "licenseCount": "License Count",
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
-    "webex": "WebEx Enterprise Edition 200",
+    "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
-    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
     "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
-    "requestPurchaseBtn": "Request Purchase",
+    "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "trialDuration": "Trial Duration"
   },
 
   "status": {
@@ -2253,6 +2336,8 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "adminManagement": "Administrator Management",
+    "administrators": "Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2320,11 +2405,17 @@
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System",
-    "deleteOrg": "Delete Org {{orgName}}",
+    "deleteOrgTitle": "Delete Customer",
+    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
+    "deleteOrg": "Delete '{{orgName}}'",
     "deleteOrgSuccess": "{{orgName}} was successfully deleted",
-    "deleteOrgError": "{{orgName}} was not deleted",
+    "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
+  },
+  "customerAdminPanel": {
+    "addAdministrators": "Add Adminsitrators",
+    "assignedAdministrators": "Assigned Administrators"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2456,11 +2547,11 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "compliance": "Compliance"
   },
   "mohManagement": {
     "title": "Media On Hold",
-    "subtitle": "New copy to come from Ahmed.",
     "newPlaylistButton": "New Playlist",
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
@@ -2881,6 +2972,7 @@
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
     "indexPageLabel_CommonSettings_site_info": "Site Information",
+    "indexPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2934,6 +3026,7 @@
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
     "settingPageLabel_CommonSettings_site_info": "Site Overview",
+    "settingPageLabel_CommonSettings_pda_settings": "Partner Delegated Authentication",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -2981,6 +3074,7 @@
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
+    "inactive_user": "Inactive Users",
 
     "training_usage": "Training Usage",
     "registration": "Registration",
@@ -3036,6 +3130,7 @@
     "meeting_usage": "Meeting Usage",
     "recording_usage": "Recording Usage",
     "storage_utilization": "Storage Usage",
+    "inactive_user": "Inactive Users",
     "event_center_overview": "Event Overview",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
@@ -3061,19 +3156,15 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Export Results",
-    "csvExportRecordsAvailable": "Records requested:",
-    "csvExportRecordsSuccessful": "Records returned:",
-    "csvExportDownloadFile": "Download CSV file:",
-
     "csvImportTitle": "Import Results",
-    "csvImportFileName": "File name:",
-    "csvImportRecordsRequested": "Total records requested:",
-    "csvImportRecordsUpdated": "Records successfully updated:",
-    "csvImportDownloadErr": "Download error log:",
 
     "csvStarted": "Started:",
     "csvFinished": "Completed:",
-    "csvRecordsFailed": "Errors:"
+    "csvRecordsRequested": "Records requested:",
+    "csvRecordsReturned": "Records returned:",
+    "csvRecordsUpdated": "Records updated:",
+    "csvRecordsFailed": "Errors:",
+    "csvDownloadImportErr": "Download import error log"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3260,6 +3351,10 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
+    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
+    "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
+    "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3425,6 +3520,9 @@
     "title": "Care",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page",
+    "newFeatureButtonText": "New",
     "featuresNotYetConfiguredPage": {
       "createCT": "Create a Chat Template",
       "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
@@ -3449,7 +3547,7 @@
     "aaDependsTitle": "Auto Attendant Dependents",
     "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
-    "deleteFeature": "Delete {{ featureType }}",
+    "deleteFeature": "Delete",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",
@@ -3466,6 +3564,7 @@
     "allLines": "All",
     "unassignedLines": "Unassigned",
     "assignedLines": "Assigned",
+    "pending": "Pending",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Internal Extension",
@@ -3473,7 +3572,10 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
-    "getCountError": "Failed to fetch record counts."
+    "getCountError": "Failed to fetch record counts.",
+    "phoneNumbers": "Phone Numbers",
+    "assignedTo": "Assigned to",
+    "inProgress": "In Progress"
   },
 
   "messengerCiSync": {
@@ -3511,6 +3613,16 @@
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
   "careChatTpl": {
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "deleteFeature": "Delete {{ featureText }}",
+    "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} {{featureText}} ?",
+    "createSuccessText": "{{ featureName }} Chat Template has been created successfully",
+    "deleteSuccessText": "{{ featureName }} {{ featureText }} has been deleted successfully",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureText }}.",
+    "messageError": "Message {{ message }}",
+    "failedToLoad": "Unable to load {{ featureText }}(s) information",
+    "chatTemplate": "Chat Template",
     "namePlaceholder": "Name the Chat Template",
     "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
@@ -3529,11 +3641,36 @@
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "embedCodeDesc": "Use the embed code to add this chat template to your site",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
+    "screenCard": "Screen",
+    "attributesCard": "Attributes",
+    "windowTitleLabel": "Window Title",
+    "defaultOrgLabel": "Organization",
+    "defaultWelcomeText": "Welcome to",
+    "defaultOrgText": "Cumulus Customer Care",
+    "defaultNameText": "Name",
+    "defaultNameHint": "",
+    "defaultEmailText": "Your email or customer ID",
+    "defaultEmail": "e.g. abc@xyz.com",
+    "defaultQuestionText": "How may I assist you?",
+    "optionalText": "(Optional)",
+    "field3HintText": "Select from the list or type",
+    "defaultTypeMessageText": "Type your message and press enter",
+    "selectFieldText": "Select a field on the left to change it's attribute.",
+    "ciHelpText": "Helps direct customers to the right agent",
+    "riHelpText": "Helps direct customers to the right agent",
+    "requiredField": "Required Field",
+    "optionalField": "Optional Field",
+    "categoryLabel": "Category",
+    "categoryTextCustomer": "Customer Information",
+    "categoryTextRequest": "Request Information",
+    "label": "Label",
+    "hintText": "Hint Text",
+    "type": "Type",
+    "defaultRightCardText": "Select a field on the left to change it's attribute.",
     "profileSelector": "Profile",
     "screen": "Screen",
     "attributes": "Attributes",
@@ -3551,6 +3688,21 @@
     "customerMsgTime": "10:11 AM",
     "agentEnteredStatus": "Agent has entered chat room",
     "typeNewMsg": "Type your message and press enter.",
+    "feedbackQuery": "Are you satisfied with your chat experience?",
+    "rating": "Rating {{index}}",
+    "rating1Text": "Not at all",
+    "rating2Text": "Moderately",
+    "rating3Text": "Absolutely",
+    "ratingHintText": "Hint Text",
+    "ratingComment": "Add comments",
+    "submitFeedbackBtn": "Submit Feedback",
+    "noThanksBtn": "No Thanks",
+    "typeCategory": "Category",
+    "typeName": "Name",
+    "typeEmail": "Email",
+    "typeId": "Id",
+    "typePhone": "Phone",
+
     "ctOverview": {
       "customerInformation": {
         "title": "Customer Info",
@@ -3568,7 +3720,11 @@
         "title": "Feedback",
         "desc": "This screen is used to collect feedback from the customer after chat ends"
       }
-    }
+    },
+    "summary": "Summary",
+    "summaryDesc": "Configuration Summary",
+    "copyEmbedCode": "Copy Embed Code",
+    "errorCreateChatTemplate": "Error creating chat template."
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -3740,7 +3896,7 @@
     "lastMonth": "Last month:",
     "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "visitCsb": "Visit",
-    "telstraMarketplace": "Telstra App Marketplace",
+    "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
@@ -3779,10 +3935,87 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Management"
-
+          "squared-fusion-mgmt": "Management",
+          "squared-fusion-media": "Mediafusion"
         }
       }
+    }
+  },
+  "globalSettings": {
+    "pageTitle": "Settings",
+    "branding": {
+      "title": "Branding",
+      "subsectionLabel": "Branding"
+    },
+    "sipDomain": {
+      "title": "SIP Domain",
+      "subsectionLabel": "SIP Domain Prefix",
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
+    },
+    "domains": {
+      "title": "Domains"
+    },
+    "authentication": {
+      "title": "Authentication",
+      "subsectionLabel": "Single Sign-On"
+    },
+    "dataPolicy": {
+      "title": "Data Policy",
+      "subsectionLabel": "Data Retention (after deletion of org)",
+      "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
+      "retentionOption1": "Delete immediately",
+      "retentionOption2": "Keep for 1 year",
+      "retentionOption3": "Keep forever"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "supportAccessHeader": "Support Access",
+      "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
+      "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
+      "usageDataHeader": "Usage Data Sent to Cisco Partner",
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
+    },
+    "security": {
+      "title": "Security",
+      "subsectionLabel": "Spark Client Security",
+      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
+    },
+    "support": {
+      "title": "Support",
+      "subsectionLabel": "Problem Reports",
+      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "problemReportsToCustomUrl": "Send problem reports to a custom URL",
+      "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
+      "helpSiteLabel": "Help Site",
+      "useCustomHelpSite": "Use a custom help site"
+    }
+  },
+  "my-company": {
+    "pageTitle": "My Company",
+    "subscription": "Subscriptions",
+    "info": "Info",
+    "order": "Order History"
+  },
+  "subscriptions": {
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "room": "Room Systems",
+    "hybrid": "Hybrid Services",
+    "subscription": "Subscription: ",
+    "usage": "Usage: ",
+    "licenseTypes": {
+      "MS": "Standard Team Rooms",
+      "CF": "Meeting 25 Party",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "WebEx Collaboration Meeting Rooms",
+      "CO": "Call",
+      "ST": "Storage",
+      "SD": "Spark Room Systems"
     }
   },
   "ciRoles": {
@@ -3794,7 +4027,10 @@
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
     "id_readonly_admin": "Read-only Admin",
-    "user": "User"
+    "user": "User",
+    "ciscouc.devops": "Spark Call Devops",
+    "ciscouc.devsupport": "Spark Call Dev Support",
+    "compliance": "Compliance Officer"
   },
   "atlasRoles": {
     "Full_Admin": "Full Admin",
@@ -3814,7 +4050,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
     "Readonly_Admin": "Read-only Admin",
-    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin",
+    "Compliance_User": "Compliance Officer"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
@@ -3921,7 +4158,8 @@
     "help": {
       "title": "Help",
       "navigation-title": "Navigating by Keyboard",
-      "navigation-info": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms. Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only. ",
+      "navigation-info1": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms.",
+      "navigation-info2": "Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only.",
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (requires two words with at least three characters each)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name (requires at least three characters)",
@@ -3945,6 +4183,7 @@
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
+    "noDeviceEntitlementsCustomerOrg": "Device search not applicable.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
@@ -4052,11 +4291,99 @@
     "inProgress": "Background task 'Export {{type}} list' is running...",
     "success": "Your {{type}} list has been compiled and your download has started."
   },
+  "servicesOverview": {
+    "title": "Services",
+    "cloudServices": "Cloud services",
+    "hybridServices": "Hybrid services",
+    "showAllCards": "Show all cards",
+    "showActiveCards": "Show active cards only",
+    "cards": {
+      "message": {
+        "title": "Message",
+        "description": "Cisco Spark configurations for your organization and individuals.",
+        "buttons": {
+          "webexMessenger": "Webex Messenger"
+        }
+      },
+      "meeting": {
+        "title": "Meeting",
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
+      },
+      "call": {
+        "title": "Call",
+        "description": "Unified Communications and basic calling configurations for your organization.",
+        "buttons": {
+          "numbers": "Numbers",
+          "features": "Features",
+          "settings": "Settings"
+        }
+      },
+      "hybridManagement": {
+        "title": "Hybrid Management",
+        "description": "Connector management for Hybrid Call and Calendar Services.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "clusterList": {
+        "title": "Cluster List",
+        "description": "On-prem clusters and configuration for your organization.",
+        "buttons": {
+          "all": "All Clusters",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Context"
+        }
+      },
+      "calendar": {
+        "title": "Hybrid Calendar",
+        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridCall": {
+        "title": "Hybrid Call",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridMedia": {
+        "title": "Hybrid Media",
+        "description": "The Media Service enables you to host meetings in the cloud and on-premise.",
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
+        }
+      },
+      "hybridContext": {
+        "title": "Context",
+        "description": "Enables a storage service that provides a repository of customer journey data for Cisco Contact Center customers.",
+        "buttons": {
+          "settings": "Settings"
+        }
+      }
+    },
+    "showMore": "View all",
+    "genericButtons": {
+      "setup": "Setup"
+    },
+    "cardStatus": {
+      "running": "Operational",
+      "alarms": "Impaired Service",
+      "error": "Outage",
+      "disabled": "Disabled"
+    }
+  },
   "readOnlyModal": {
     "banner": "You are in read-only mode",
-    "title": "Read Only",
+    "title": "Read-only",
     "okButton": "OK",
-    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a read-only user. Your limited access allows viewing of the entire portal, but will not accept changes."
   },
   "readOnlyMessages": {
     "notAllowed": "Not allowed in read-only mode. Operation not executed."

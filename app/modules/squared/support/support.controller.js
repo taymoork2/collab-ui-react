@@ -27,6 +27,7 @@
     $scope.gridRefresh = false;
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
+    $scope.gotoEdiscovery = gotoEdiscovery;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -39,6 +40,11 @@
     function gotoCdrSupport() {
       var url = $state.href('cdrsupport');
       $window.open(url, '_self');
+    }
+
+    function gotoEdiscovery() {
+      var url = $state.href('ediscovery.search');
+      $window.open(url, '_blank');
     }
 
     function initializeShowCdrCallFlowLink() {
@@ -91,7 +97,11 @@
       // Without it, small screens may initially render card(s) partly on top of each other
       if (!vm.masonryRefreshed)
         reInstantiateMasonry();
-      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
+      return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
+    };
+
+    $scope.showEdiscoveryLink = function () {
+      return Authinfo.isComplianceUser();
     };
 
     $scope.tabs = [{
@@ -474,13 +484,11 @@
             }
           } else {
             $scope.getPending = false;
-            angular.element('#logInfoPendingBtn').button('reset');
             Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
           }
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          angular.element('#logInfoPendingBtn').button('reset');
           Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
             status: status
           })], 'error');
