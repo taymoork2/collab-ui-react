@@ -15,7 +15,7 @@
     SiteListService,
     WebExSiteRowService
   ) {
-	  
+
     var funcName = "SiteCSVModalCtrl()";
     var logMsg = '';
     var vm = this;
