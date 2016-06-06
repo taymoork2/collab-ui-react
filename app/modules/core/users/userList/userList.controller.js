@@ -216,7 +216,7 @@
                 $scope.totalUsers = allUsersCount;
                 $scope.obtainedTotalUserCount = true;
               }
-              if (startIndex  === 0) {
+              if (startIndex === 0) {
                 $scope.userList.allUsers = allUsers;
               } else if (allUsers.length > 0) {
                 $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
