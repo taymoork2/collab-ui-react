@@ -166,6 +166,7 @@
             Notification.error('csvDownload.isRunning');
           } else {
             $modal.open({
+              type: 'dialog',
               templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
               controller: function () {
                 var vm = this;
