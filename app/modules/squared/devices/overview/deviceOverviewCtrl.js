@@ -14,8 +14,6 @@
 
     deviceOverview.linesAreLoaded = false;
 
-
-
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZone();
       resetTimeZone();
@@ -35,7 +33,7 @@
 
     function getTimeZoneFromValue(value) {
       return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.value == value
+        return o.value == value;
       });
     }
 
@@ -75,14 +73,14 @@
       if (newValue != deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
         setTimeZone(newValue)
-            .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
-            .catch(function (error) {
-              XhrNotificationService.notify(error);
-              resetTimeZone();
-            })
-            .finally(function () {
-              deviceOverview.updatingTimeZone = false;
-            });
+          .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
+          .catch(function (error) {
+            XhrNotificationService.notify(error);
+            resetTimeZone();
+          })
+          .finally(function () {
+            deviceOverview.updatingTimeZone = false;
+          });
       }
     };
 

@@ -122,13 +122,13 @@
 
     function getTimezoneForDevice(huronDevice) {
       return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
-          .then(function (res) {
-            var timeZone = null;
-            if (res.data) {
-              timeZone = res.data.timeZone;
-            }
-            return timeZone;
-          });
+        .then(function (res) {
+          var timeZone = null;
+          if (res.data) {
+            timeZone = res.data.timeZone;
+          }
+          return timeZone;
+        });
     }
 
     function setTimezoneForDevice(huronDevice, timezone) {
