@@ -28,14 +28,12 @@
     </div>
   </form>
 
-  <div ng-show="!addResource.PreregistrationCompleted">
-    <form ng-show="addResource.selectedAction === 'new'" class="inputbox">
-      <span translate="hercules.addResourceDialog.enterHostname"></span>
-      <input type="text"
-             ng-model="addResource.newHostname"
-             placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}" class="normaltextinput">
-    </form>
-  </div>
+  <form ng-show="addResource.selectedAction === 'new' && !addResource.PreregistrationCompleted" class="inputbox">
+    <span translate="hercules.addResourceDialog.enterHostname"></span>
+    <input type="text"
+           ng-model="addResource.newHostname"
+           placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}" class="normaltextinput">
+  </form>
 
   <div ng-show="addResource.PreregistrationCompleted" class="add-resource">
     <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
