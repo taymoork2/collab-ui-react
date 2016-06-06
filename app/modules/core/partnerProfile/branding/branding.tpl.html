@@ -12,7 +12,7 @@
       <div class="small-12 columns form-group">
         <div class="cs-radio-group">
           <div class="cs-input-group cs-input-radio">
-            <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
+            <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(usePartnerLogo)">
             <label for="partnerLogoRadio">
               <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
               <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
@@ -20,15 +20,15 @@
           </div>
 
           <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
-            <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+            <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(usePartnerLogo)">
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
-                <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
+                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
                   <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
                   <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
                   <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
                 </div>
-                <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                <button class="btn btn-primary" name="file" accept="image/png" ngf-select="bctrl.upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
                   <span translate="partnerProfile.chooseFile"></span>
                 </button>
               </div>
@@ -44,7 +44,7 @@
           id="allowCustomerLogo"
           name="allowCustomerLogo"
           ng-model="allowCustomerLogos"
-          ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+          ng-change="bctrl.toggleAllowCustomerLogos(allowCustomerLogos)">
           <label for="allowCustomerLogo" translate="partnerProfile.allowCustomerLogo"></label>
       </div>
     </div>
@@ -64,7 +64,7 @@
               ng-model="wbxclientversionselected"
               options="wbxclientversions"
               placeholder="wbxclientversionplaceholder"
-              on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
+              on-change-fn="bctrl.wbxclientversionselectchanged(wbxclientversionselected)"
               is-disabled="useLatestWbxVersion">
             </cs-select>
           </div>
@@ -78,7 +78,7 @@
             id="useLatestWbxVersion"
             name="useLatestWbxVersion"
             ng-model="useLatestWbxVersion"
-            ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
+            ng-change="bctrl.toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
             cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}"
             cs-input-help-text="{{::'partnerProfile.WbxClientVersionOnlyOnNewSites' | translate}}">
         </div>

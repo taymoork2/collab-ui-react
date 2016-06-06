@@ -8,45 +8,45 @@
 
     var orgId = Authinfo.getOrgId();
 
-    $scope.isPartner = Authinfo.isPartner();
-    $scope.usePartnerLogo = true;
-    $scope.allowCustomerLogos = false;
-    $scope.allowCustomerLogos = false;
-    $scope.progress = 0;
+    this.isPartner = Authinfo.isPartner();
+    this.usePartnerLogo = true;
+    this.allowCustomerLogos = false;
+    this.allowCustomerLogos = false;
+    this.progress = 0;
 
-    $scope.logoCriteria = {
+    this.logoCriteria = {
       'pattern': '.png',
       'width': {
         min: '100'
       }
     };
 
-    $scope.useLatestWbxVersion = false;
-    $scope.wbxclientversionselected = '';
-    $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
-    $scope.wbxNoClientSelected = true;
-    $scope.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
+    this.useLatestWbxVersion = false;
+    this.wbxclientversionselected = '';
+    this.wbxclientversions = ['testversion1.0', 'testversion2.0'];
+    this.wbxNoClientSelected = true;
+    this.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
     this.wbxclientversionplaceholder = 'Select webex client version';
-    $scope.showClientVersions = true;
+    this.showClientVersions = true;
 
-    $scope.init = function () {
+    this.init = function () {
 
-      $scope.logoUrl = '';
-      $scope.logoError = null;
+      this.logoUrl = '';
+      this.logoError = null;
 
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
           if (!_.isUndefined(settings.usePartnerLogo)) {
-            $scope.usePartnerLogo = settings.usePartnerLogo;
+            this.usePartnerLogo = settings.usePartnerLogo;
           }
 
           if (!_.isUndefined(settings.allowCustomerLogos)) {
-            $scope.allowCustomerLogos = settings.allowCustomerLogos;
+            this.allowCustomerLogos = settings.allowCustomerLogos;
           }
 
           if (!_.isUndefined(settings.logoUrl)) {
-            $scope.logoUrl = settings.logoUrl;
+            this.logoUrl = settings.logoUrl;
           }
 
         } else {
@@ -56,19 +56,19 @@
       }, orgId, true);
 
       BrandService.getLogoUrl(orgId).then(function (logoUrl) {
-        $scope.tempLogoUrl = logoUrl;
+        this.tempLogoUrl = logoUrl;
       });
 
-      $scope.initWbxClientVersions();
+      this.initWbxClientVersions();
     };
 
     // TODO webex team clean this up and add unit tests
-    $scope.initWbxClientVersions = function () {
+    this.initWbxClientVersions = function () {
 
       //wbxclientversionselected
-      //$scope.wbxclientversions = "";
+      //this.wbxclientversions = "";
       var succ = function (data) {
-        $scope.wbxclientversions = data;
+        this.wbxclientversions = data;
       };
 
       //nothing to do on error.
@@ -88,32 +88,32 @@
           clientVersion = '';
         }
         if (clientVersion === '') {
-          $scope.wbxNoClientSelected = true;
-          $scope.wbxclientversionselected = $scope.wbxclientversionplaceholder;
+          this.wbxNoClientSelected = true;
+          this.wbxclientversionselected = this.wbxclientversionplaceholder;
         } else {
-          $scope.wbxNoClientSelected = false;
-          $scope.wbxclientversionselected = clientVersion;
+          this.wbxNoClientSelected = false;
+          this.wbxclientversionselected = clientVersion;
         }
 
-        $scope.useLatestWbxVersion = _.get(json, 'data.useLatest');
+        this.useLatestWbxVersion = _.get(json, 'data.useLatest');
 
       });
     };
 
-    $scope.init();
+    this.init();
 
     function toggleWebexSelectLatestVersionAlways(useLatest) {
       Log.info("webex use latest version toggle");
-      var selected = $scope.wbxclientversionselected;
-      $scope.useLatestWbxVersion = useLatest;
-      var alwaysSelectLatest = $scope.useLatestWbxVersion;
-      //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
+      var selected = this.wbxclientversionselected;
+      this.useLatestWbxVersion = useLatest;
+      var alwaysSelectLatest = this.useLatestWbxVersion;
+      //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, this.allowCustomerWbxClientVersions);
       var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
         return resp.data.partnerId; //this is the pid
       }).then(function (pid) {
-        return WebexClientVersion.postOrPutTemplate(pid, selected, $scope.useLatestWbxVersion);
+        return WebexClientVersion.postOrPutTemplate(pid, selected, this.useLatestWbxVersion);
       });
-      //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, $scope.useLatestWbxVersion);
+      //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, this.useLatestWbxVersion);
       var successMessage = "";
       if (alwaysSelectLatest) {
         successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
@@ -133,16 +133,16 @@
 
     function wbxclientversionselectchanged(wbxclientversionselected) {
       Log.info("Webex selected version changed");
-      $scope.wbxclientversionselected = wbxclientversionselected;
-      var versionSelected = $scope.wbxclientversionselected;
+      this.wbxclientversionselected = wbxclientversionselected;
+      var versionSelected = this.wbxclientversionselected;
 
       var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
         return resp.data.partnerId; //this is the pid
       }).then(function (pid) {
-        return WebexClientVersion.postOrPutTemplate(pid, versionSelected, $scope.useLatestWbxVersion);
+        return WebexClientVersion.postOrPutTemplate(pid, versionSelected, this.useLatestWbxVersion);
       });
 
-      //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+      //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, this.useLatestWbxVersion);
 
       Log.info("New version selected is " + versionSelected);
       var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
@@ -160,24 +160,24 @@
 
     this.wbxclientversionselectchanged = wbxclientversionselectchanged;
 
-    $scope.wbxclientversionselectchanged = _.debounce(
+    this.wbxclientversionselectchanged = _.debounce(
       wbxclientversionselectchanged,
       2000, {
         'leading': true,
         'trailing': false
       });
 
-    $scope.toggleWebexSelectLatestVersionAlways = _.debounce(
+    this.toggleWebexSelectLatestVersionAlways = _.debounce(
       toggleWebexSelectLatestVersionAlways,
       100, {
         'leading': true,
         'trailing': false
       });
 
-    $scope.upload = function (file, event) {
+    this.upload = function (file, event) {
       openModal('sm');
       if (validateLogo(file)) {
-        $scope.progress = 0;
+        this.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
       }
@@ -185,14 +185,14 @@
 
     // TODO: Refactor to use appconfig states
     function openModal(size) {
-      $scope.uploadModal = $modal.open({
-        scope: $scope,
+      this.uploadModal = $modal.open({
+        scope: this,
         templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
         size: size
       });
     }
 
-    $scope.toggleLogo = _.debounce(function (value) {
+    this.toggleLogo = _.debounce(function (value) {
       if (value) {
         BrandService.usePartnerLogo(orgId);
       } else {
@@ -203,7 +203,7 @@
       'trailing': false
     });
 
-    $scope.toggleAllowCustomerLogos = _.debounce(function (value) {
+    this.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
         BrandService.enableCustomerLogos(orgId);
       } else {
@@ -214,19 +214,19 @@
       'trailing': false
     });
 
-    $scope.upload = function (file, event) {
+    this.upload = function (file, event) {
       openModal('sm');
       if (validateLogo(file)) {
-        $scope.progress = 0;
+        this.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
       }
     };
     // Add branding example static page
-    $scope.showBrandingExample = function (type) {
-      $scope.type = type;
+    this.showBrandingExample = function (type) {
+      this.type = type;
       $modal.open({
-        scope: $scope,
+        scope: this,
         templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
         size: 'lg'
       });
@@ -234,8 +234,8 @@
 
     // TODO: Refactor to use appconfig states
     function openModal(size) {
-      $scope.uploadModal = $modal.open({
-        scope: $scope,
+      this.uploadModal = $modal.open({
+        scope: this,
         templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
         size: size
       });
@@ -244,9 +244,9 @@
     function validateLogo(logo) {
       var error = logo.$error;
       if (error === 'maxWidth' || error === 'minWidth') {
-        $scope.logoError = 'dimensions';
+        this.logoError = 'dimensions';
       } else {
-        $scope.logoError = logo.$error;
+        this.logoError = logo.$error;
       }
 
       if (logo && !logo.$error) {
@@ -256,22 +256,22 @@
 
     function uploadSuccess(response) {
       $timeout(function () {
-        if ($scope.uploadModal) {
-          $scope.uploadModal.close();
+        if (this.uploadModal) {
+          this.uploadModal.close();
         }
       }, 3000);
       // Automatically start using the custom logo
       BrandService.resetCdnLogo(Authinfo.getOrgId());
-      $scope.usePartnerLogo = false;
-      $scope.toggleLogo(false);
+      this.usePartnerLogo = false;
+      this.toggleLogo(false);
     }
 
     function uploadError(error) {
-      $scope.logoError = 'unknown';
+      this.logoError = 'unknown';
     }
 
     function uploadProgress(evt) {
-      $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+      this.progress = parseInt(100.0 * evt.loaded / evt.total);
     }
   }
 
