@@ -22,8 +22,8 @@ namespace globalsettings {
       } else {
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
-        this.support = new SupportSetting();
         this.authentication = new AuthenticationSetting();
+        this.support = new SupportSetting();
       }
     }
   }
