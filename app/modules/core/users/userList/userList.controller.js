@@ -216,12 +216,12 @@
                 $scope.totalUsers = allUsersCount;
                 $scope.obtainedTotalUserCount = true;
               }
-              if (endOfUserList === 0) {
+              if (startIndex  === 0) {
                 $scope.userList.allUsers = allUsers;
               } else if (allUsers.length > 0) {
                 $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
               } else {
-                noUsersLeft = true;
+                endOfUserList = true;
               }
 
               $scope.setFilter($scope.activeFilter);
