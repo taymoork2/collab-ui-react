@@ -39,10 +39,6 @@ describe('Controller: FusionClusterListController', function () {
     it('should have 0 clusters to be displayed', function () {
       expect(controller.displayedClusters).toEqual([]);
     });
-
-    it('should not have any filter', function () {
-      expect(controller.activeFilter).toBe('all');
-    });
   });
 
   describe('after loading clusters', function () {
