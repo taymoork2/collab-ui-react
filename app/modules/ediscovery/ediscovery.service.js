@@ -64,12 +64,17 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
-          "displayName": displayName
+          "displayName": displayName,
+          "roomQuery": {
+            "startDate": moment.utc(startDate).toISOString(),
+            "endDate": moment.utc(endDate).toISOString(),
+            "roomId": roomId
+          }
         })
         .then(extractData);
     }

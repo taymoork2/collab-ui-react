@@ -17,7 +17,7 @@
           {{ediscoverySearchCtrl.roomInfo.displayName}}
         </h4>
         <h5 class="ellipsis">{{ediscoverySearchCtrl.roomInfo.id}}</h5>
-        <div class="row">
+        <div class="row" ng-hide="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-8 large-8">
             <div class="input-section">
               <h5>Report Name</h5>
@@ -25,7 +25,15 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
+          <div class="columns small-12 medium-8 large-8">
+            <div class="input-section">
+              <h5>Report Name</h5>
+              <h6 class="ellipsis">{{ediscoverySearchCtrl.report.displayName}}</h6>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-hide="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-4 large-4">
             <div class="input-section">
               <h5>Start Date</h5>
@@ -39,6 +47,16 @@
             </div>
           </div>
           <div class="columns small-12 medium-4 large-4"></div>
+        </div>
+        <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
+          <div class="columns small-12 medium-12 large-12">
+            <div class="input-section">
+              <h5>Report Date Range</h5>
+              <span>{{ediscoverySearchCtrl.searchCriteria.startDate | date: 'medium'}}
+                to
+                {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'medium'}}</span>
+            </div>
+          </div>
         </div>
         <div class="row" ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report && (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED'))">
           <div class="columns small-12 medium-4 large-4">
