@@ -1148,7 +1148,7 @@
       "title": "Add Resource for {{ServiceName}}",
       "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
       "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
-      "enterHostname":"Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
+      "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
       "selectExisting": "Select one or more existing Expressway clusters",

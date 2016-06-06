@@ -172,10 +172,10 @@
       if (vm.featureToggled) {
         $modal.open({
           resolve: {
-            connectorType: function() {
+            connectorType: function () {
               return vm.connectorType;
             },
-            servicesId: function() {
+            servicesId: function () {
               return vm.servicesId;
             }
           },

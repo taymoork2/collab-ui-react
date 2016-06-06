@@ -570,21 +570,21 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('should preregister Expressway cluster', function() {
-    it ('should add the empty cluster to the FMS list of clusters and return a clusterId', function() {
+  describe('should preregister Expressway cluster', function () {
+    it('should add the empty cluster to the FMS list of clusters and return a clusterId', function () {
       var response = '{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/3803ded5-70d9-4e7d-bdc4-fe3dbf319e59","id":"3803ded5-70d9-4e7d-bdc4-fe3dbf319e59","name":"man.united","connectors":[],"releaseChannel":"GA","provisioning":[],"state":"preregistered"}';
       $httpBackend
         .expectPOST('http://elg.no/organizations/orgId/clusters')
         .respond(201, response);
 
-        var newExpresswayPromise = ClusterService.preregisterCluster('man.united', 'GA');
-        $httpBackend.flush();
-        newExpresswayPromise.then(function (clusterId) {
-          expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
-        });
+      var newExpresswayPromise = ClusterService.preregisterCluster('man.united', 'GA');
+      $httpBackend.flush();
+      newExpresswayPromise.then(function (clusterId) {
+        expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
+      });
     });
 
-    it ('should provision management and calendar connectors', function() {
+    it('should provision management and calendar connectors', function () {
 
       $httpBackend
         .expectPOST('http://elg.no/organizations/orgId/clusters/clusterId/provisioning/actions/add/invoke?connectorType=c_mgmt')
@@ -599,7 +599,7 @@ describe('ClusterService', function () {
       $httpBackend.flush();
     });
 
-    it ('should add the new cluster to the FMS allow-list', function() {
+    it('should add the new cluster to the FMS allow-list', function () {
 
       $httpBackend
         .expectPOST('http://ulv.no/organizations/orgId/allowedRedirectTargets')
