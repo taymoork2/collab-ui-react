@@ -5,7 +5,7 @@ namespace globalsettings {
     private orgId:string;
 
     retentionTimeSelected:{
-      value:number,
+      value:string,
       label:string
     };
 
@@ -36,7 +36,7 @@ namespace globalsettings {
 
       this.AccountOrgService
         .getOrgSettings(this.orgId)
-        .then(this.getOrgSettings.bind(this));
+        .then(this.gotOrgSettings.bind(this));
     }
 
     public retentionTimeUpdate() {
@@ -52,16 +52,21 @@ namespace globalsettings {
       }
     }
 
-    private getOrgSettings(response) {
+    private gotOrgSettings(response:{
+      data:{
+       settings:[{
+         key:string,
+         value:string,
+         label:string}]
+     }}) {
 
-      var dataRetPeriodSetting = _.find(response.data.settings, {key: 'dataRetentionPeriodDays'});
-
-      if (dataRetPeriodSetting) {
-
-        var retentionGuiOption = _.find(this.retentionTimeOptions, {value: dataRetPeriodSetting.value});
-
-        if (retentionGuiOption) {
-          this.retentionTimeSelected = retentionGuiOption;
+      if (response.data){
+        var dataRetPeriodSetting = _.find(response.data.settings, {key: 'dataRetentionPeriodDays'});
+        if (dataRetPeriodSetting) {
+          var retentionGuiOption = _.find(this.retentionTimeOptions, {value: dataRetPeriodSetting.value});
+          if (retentionGuiOption) {
+            this.retentionTimeSelected = retentionGuiOption;
+          }
         }
       }
       this.dataLoaded = true;
