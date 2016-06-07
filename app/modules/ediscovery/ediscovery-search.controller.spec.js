@@ -107,6 +107,10 @@ describe('Controller: EdiscoverySearchController', function () {
 
     it('with happy-clappy legal input parameters', function () {
 
+      ediscoverySearchController.searchCriteria.id = "whatever";
+      ediscoverySearchController.searchCriteria.endDate = moment().format();
+      ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, "day").format();
+
       sinon.stub(EdiscoveryService, 'runReport');
       var deferedRunReportResult = $q.defer();
       EdiscoveryService.runReport.returns(deferedRunReportResult.promise);
@@ -129,6 +133,7 @@ describe('Controller: EdiscoverySearchController', function () {
       });
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
+      expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
 
     });
 

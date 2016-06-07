@@ -26,7 +26,6 @@
       "endDate": null, //moment(),
       "displayName": "TBD"
     };
-    vm.reports = [];
     vm.report = null;
 
     function getStartDate() {
@@ -128,11 +127,11 @@
       if (!validateDate()) {
         return;
       }
-      vm.report = {
-        "state": "CREATED"
-      };
+      // vm.report = {
+      //   "state": "CREATED"
+      // };
 
-      EdiscoveryService.createReport(vm.searchCriteria.displayName)
+      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.id, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .then(function (res) {
           vm.searchResult = res;
           runReport();
