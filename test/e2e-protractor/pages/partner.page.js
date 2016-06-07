@@ -130,6 +130,8 @@ var PartnerHomePage = function () {
   };
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
+  this.deleteCustomerButton = element(by.id('deleteCustomer'));
+  this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
 
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
