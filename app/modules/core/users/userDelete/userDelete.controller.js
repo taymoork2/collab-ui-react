@@ -88,7 +88,12 @@
     }
 
     function deleteError(response) {
-      Notification.errorResponse(response, 'usersPage.deleteUserError');
+      var messageKey = 'usersPage.deleteUserError';
+      var errrorCode = _.get(response, 'data.details[0].productErrorCode');
+      if (!_.isUndefined(errrorCode) && errrorCode === 'DN_IS_FALLBACK') {
+        messageKey = 'usersPage.deleteUserDnFallbackError';
+      }
+      Notification.errorResponse(response, messageKey);
     }
 
     function stopLoading() {
