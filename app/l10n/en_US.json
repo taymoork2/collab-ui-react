@@ -1779,6 +1779,7 @@
     "sayMessageVoice": "Voice",
     "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "scheduleAddAdditionalHolidays": "Add Holidays",
+    "scheduleInfoPopover": "Schedules let you handle calls differently when you are open, closed, or observing a holiday. You may enter multiple open hour blocks and Holidays.",
     "selectDate": "Select Date",
     "allDay": "All Day",
     "recurAnnually": "Recur Annually",
