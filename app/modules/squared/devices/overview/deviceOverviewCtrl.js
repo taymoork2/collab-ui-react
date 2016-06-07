@@ -13,6 +13,7 @@
     var huronDeviceService = $stateParams.huronDeviceService;
 
     deviceOverview.linesAreLoaded = false;
+    deviceOverview.tzIsLoaded = false;
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZone();
@@ -28,6 +29,7 @@
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
         deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+        deviceOverview.tzIsLoaded = true;
       });
     }
 
@@ -38,6 +40,7 @@
     }
 
     function initTimeZone() {
+      deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
       return TimeZoneService.query().$promise.then(function (timezones) {
         deviceOverview.timeZoneOptions = timezones;
       });
