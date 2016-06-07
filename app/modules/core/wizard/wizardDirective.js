@@ -120,7 +120,7 @@
         }
         vm.current.step = steps[index];
       }
-      
+
     }
 
     function init() {
@@ -128,7 +128,7 @@
         if (ServiceSetup.sites.length !== 0) {
           vm.firstTimeSetup = false;
         }
-      }).finally(function(){
+      }).finally(function () {
         initCurrent();
         setNextText();
         vm.isNextDisabled = false;

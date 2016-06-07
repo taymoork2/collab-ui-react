@@ -505,7 +505,7 @@
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
-            $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
+          $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
         });
       }
     }, {
@@ -753,7 +753,7 @@
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function(value, key) {
+          _.forEach(extensionList, function (value, key) {
             if (value.directoryNumber !== null) {
               vm.model.disableExtensions = true;
               // value.directoryNumber is not null if assigned, hence extension exists

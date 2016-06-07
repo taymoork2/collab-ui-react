@@ -29,7 +29,7 @@ describe('Controller: ServiceSetup', function () {
     FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
-    Authinfo =  _Authinfo_;
+    Authinfo = _Authinfo_;
     modalDefer = $q.defer();
 
     customer = {
@@ -143,15 +143,17 @@ describe('Controller: ServiceSetup', function () {
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/internalnumberpools')
-      .respond();
-
+      .respond([{
+        directoryNumber: null
+      }]);
     $httpBackend
       .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
-      .respond();
-
+      .respond([{
+        itemID: 0
+      }]);
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
-      .respond();
+      .respond([]);
 
     controller = $controller('ServiceSetupCtrl', {
       $scope: $scope,
@@ -163,6 +165,12 @@ describe('Controller: ServiceSetup', function () {
     $scope.$apply();
     $httpBackend.flush();
   }));
+
+  describe('auto attendants returns an array with an element', function () {
+    it('should set the disableExtensions property as true', function () {
+      expect(controller.model.disableExtensions).toEqual(true);
+    });
+  });
 
   describe('initController when is first time setup', function () {
     beforeEach(function () {

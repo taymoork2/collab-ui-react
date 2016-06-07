@@ -10,7 +10,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_, 
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_,
     _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
 
     $scope = $rootScope.$new();
@@ -83,15 +83,17 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/internalnumberpools')
-      .respond();
-
+      .respond([{
+        directoryNumber: null
+      }]);
     $httpBackend
       .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
-      .respond();
-
+      .respond([{
+        itemID: 0
+      }]);
     $httpBackend
       .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
-      .respond();
+      .respond([]);
 
     controller = $controller('HuronSettingsCtrl', {
       $scope: $scope
@@ -99,6 +101,10 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
     $httpBackend.flush();
   }));
+
+  it('should set the disableExtensions property as true', function () {
+    expect(controller.model.disableExtensions).toEqual(true);
+  });
 
   it('should initialize the Settings page', function () {
     expect(HuronCustomer.get).toHaveBeenCalled();

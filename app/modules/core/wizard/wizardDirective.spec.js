@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: WizardCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice, 
-  FeatureToggleService, ServiceSetup, rootScope;
+  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice,
+    FeatureToggleService, ServiceSetup, rootScope;
 
   var getUserMe, getMyFeatureToggles;
 
