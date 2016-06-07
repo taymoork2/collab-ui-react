@@ -2371,6 +2371,7 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "webexCMR": "WebEx EE 200 with CMR",
     "adminManagement": "Administrator Management",
     "administrators": "Administrators",
     "meeting": "Meeting",
