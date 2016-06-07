@@ -70,13 +70,12 @@
               {{lic.site}}
             </div>
             <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
-              <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}">
-<!--          TODO: hiding CMR temporarily and will revert the following part back when assigning CMR works    
+              <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}"> 
               <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
                   <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel = true;" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
                 </div>
-              </div> -->
+              </div>
             </div>
           </div>
         </div>

@@ -1122,7 +1122,7 @@
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteRowCtrl',
+            controller: 'WebExSiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main'
           })

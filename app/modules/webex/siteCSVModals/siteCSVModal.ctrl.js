@@ -15,6 +15,7 @@
     SiteListService,
     WebExSiteRowService
   ) {
+
     var funcName = "SiteCSVModalCtrl()";
     var logMsg = '';
     var vm = this;
@@ -23,16 +24,19 @@
       "$stateParams=" + JSON.stringify($stateParams);
     // $log.log(logMsg);
 
-    vm.modal = {};
-
-    vm.siteRow = $stateParams.siteRow;
-    vm.siteUrl = vm.siteRow.license.siteUrl;
-    vm.importing = false;
-
     vm.onFileTypeError = onFileTypeError;
     vm.resetFile = resetFile;
     vm.startExport = startExport;
     vm.startImport = startImport;
+
+    vm.modal = {
+      file: null
+    };
+
+    vm.siteRow = $stateParams.siteRow;
+    vm.siteUrl = $stateParams.siteRow.license.siteUrl;
+    vm.requestingImport = false;
+    vm.requestingExport = false;
     vm.viewReady = true;
 
     function onFileTypeError() {
@@ -60,6 +64,8 @@
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       // $log.log(logMsg);
+
+      vm.requestingExport = true;
 
       WebExApiGatewayService.csvExport(
         siteUrl,
@@ -108,7 +114,7 @@
         "vm.modal.file=" + vm.modal.file;
       //$log.log(logMsg);
 
-      vm.importing = true;
+      vm.requestingImport = true;
 
       if (
         (null == vm.modal.file) ||
@@ -177,7 +183,8 @@
         //SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
       } else {
-        vm.importing = false;
+        vm.requestingImport = false;
+        vm.requestingImExport = false;
       }
     } // displayResult()
   } // SiteCSVModalCtrl()
