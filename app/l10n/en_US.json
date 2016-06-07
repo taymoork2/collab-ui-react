@@ -2341,7 +2341,7 @@
       "unit": "Unit",
       "city": "City",
       "zip": "Zip",
-      "skip": "Skip and add numbers later",
+      "skip": "Skip",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
       "addrFound": "This is the address found in the system.",

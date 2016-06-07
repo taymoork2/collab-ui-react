@@ -89,13 +89,6 @@
     }
     padding: rem(6px);
   }
-  .no-pad {
-    padding-bottom: 0;
-  }
-  .no-flex {
-    flex: none;
-    -webkit-flex: none;
-  }
   .state-zip-wrapper {
     /* nested form grid fix */
     @include vr-spacing(pl, 0.75, 2px);
@@ -239,8 +232,26 @@
     max-height:13rem;
   }
 
-  #callTrialForm div[name="state"] div.dropdown-menu {
-    max-height:5.25rem;
+  .state-dropdown div.dropdown-menu {
+    max-height: 12rem;
+  }
+  
+  .did-input .tokenfield {
+    min-height: rem(144px);
+  }
+  
+  .inline-row {
+    > div {
+      display: inline-block;
+    }
+  }
+  
+  .skip_numbers {
+    color: $gray-dark-1;
+    padding-right: 1rem;
+    &:hover {
+      color: $color-primary-base;
+    }
   }
 }
 
