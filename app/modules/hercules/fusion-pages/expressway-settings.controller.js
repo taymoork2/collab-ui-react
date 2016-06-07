@@ -3,12 +3,12 @@
 
   angular
     .module('Hercules')
-    .controller('FusionResourceSettingsController', FusionResourceSettingsController);
+    .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function FusionResourceSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
-
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
     var vm = this;
+    vm.backUrl = 'cluster-list';
 
     loadCluster($stateParams.id);
 
@@ -23,7 +23,7 @@
           vm.releasechannelsSelected = '';
           vm.releasechannelsOptions = [vm.cluster.releaseChannel];
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
-            "clusterName": cluster.name
+            clusterName: cluster.name
           });
         }, XhrNotificationService.notify);
     }
