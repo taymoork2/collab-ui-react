@@ -767,7 +767,9 @@
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (autoAttendant) {
-          vm.model.disableExtensions = true;
+          if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         }).catch(function (response) {
           // auto attendant does not exist
         });
