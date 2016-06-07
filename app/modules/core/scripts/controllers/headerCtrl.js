@@ -18,11 +18,11 @@
     init();
 
     function init() {
-      $scope.icon = 'icon-cisco-logo';
+      vm.icon = 'icon-cisco-logo';
       $translate('loginPage.title').then(function (title) {
-        $scope.headerTitle = title;
+        vm.headerTitle = title;
       });
-      $scope.navStyle = 'admin';
+      vm.navStyle = 'admin';
       initFeatureToggles();
     }
 
