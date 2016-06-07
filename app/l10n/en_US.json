@@ -2227,7 +2227,7 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "deviceTrialCapacityHeader": "Unable to Add Devices",
-      "remainingDeviceTrials": "You have {{number}} remaining out of 20 concurrent active device trials.",
+      "remainingDeviceTrials": "Your organization has {{number}} remaining out of 20 concurrent active device trials.",
       "deviceTrialLimitReached": "Your organization has reached its concurrent active device trial limit of {{number}}. You can add more device trials once you convert existing trials.",
       "deviceTrialLimitHelp": "If you have questions about this limit, please contact the Partner Help Desk: webexpartnerhelp@cisco.com or 1-800-553-6387",
       "deviceTrialTip": "Ongoing trial with devices shipped",
