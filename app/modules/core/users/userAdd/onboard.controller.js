@@ -923,7 +923,25 @@
       }
       $scope.btnSaveEntLoad = true;
 
-      Userservice.updateUsers(user, getAccountLicenses('patch'), null, 'updateUserLicense', entitleUserCallback);
+      Userservice.onboardUsers(user, null, getAccountLicenses('patch'))
+        .then(successCallback)
+        .catch(errorCallback);
+
+      function successCallback(response) {
+        // adapt response to call existing entitleUserCallback
+        var rdata = response.data || {};
+        rdata.success = true;
+        $rootScope.$broadcast('Userservice::updateUsers');
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
+      function errorCallback(response) {
+        var rdata = response || {};
+        rdata.success = false;
+        rdata.status = response.status || false;
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
     };
 
     //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
