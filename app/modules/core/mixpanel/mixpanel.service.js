@@ -25,49 +25,38 @@
       ENV_DO_NOT_TRACK: 'do-not-track'
     };
 
-    var isTestOrgPromise = null;
+    var isTestOrg = null;
+    var hasInit = false;
 
     return service;
 
     function _init() {
       return $q(function (resolve, reject) {
-        if (service.env === internals.ENV_DO_NOT_TRACK) {
-          return reject();
-        } else if (service.env) {
-          return resolve(service.env);
+        if (hasInit) {
+          return resolve();
         }
 
         if (Config.isProd()) {
-          service.env = internals.ENV_PROD;
-          resolve({
-            env: service.env,
-            key: internals.prodKey
-          });
+          resolve(internals.prodKey);
         } else {
-          getTestOrg().then(function (isTestOrg) {
+          return resolve(getTestOrg().then(function () {
             if (isTestOrg) {
-              service.env = internals.ENV_TEST;
-              resolve({
-                env: service.env,
-                key: internals.testKey
-              });
+              return internals.testKey;
             } else {
               service.env = internals.ENV_DO_NOT_TRACK;
-              reject();
             }
-          });
+          }));
         }
       }).then(function (result) {
-        if (result.key) {
-          mixpanel.init(result.key);
+        hasInit = true;
+        if (result) {
+          mixpanel.init(result);
         }
-
-        return service.env;
       });
     }
 
     function _track(eventName, properties) {
-      mixpanel.track(eventName, properties || {});
+      mixpanel.track(eventName, properties);
     }
 
     /**
@@ -80,14 +69,14 @@
     }
 
     function getTestOrg() {
-      if (!isTestOrgPromise) {
-        isTestOrgPromise = $q(function (resolve, reject) {
+      if (!isTestOrg) {
+        isTestOrg = $q(function (resolve, reject) {
           Orgservice.getOrg(function (response) {
             resolve(response.isTestOrg);
           });
         });
       }
-      return isTestOrgPromise;
+      return isTestOrg;
     }
   }
 
