@@ -12,7 +12,6 @@
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
-    var careTemplateOptionId = 'careTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
     vm.trialData = TrialService.getData();
@@ -186,7 +185,6 @@
       type: 'checkbox',
       className: '',
       templateOptions: {
-        id: careTemplateOptionId,
         label: $translate.instant('trials.care')
       },
       hideExpression: function () {
@@ -289,10 +287,8 @@
           updateTrialService(messageTemplateOptionId);
         }
 
+        vm.showCare = results[3];
         vm.careTrial.enabled = results[3];
-        if (vm.careTrial.enabled === true) {
-          vm.showCare = true;
-        }
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {
