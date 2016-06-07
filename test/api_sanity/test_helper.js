@@ -63,7 +63,7 @@ var auth = {
   },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'Cisco123!!',
     org: '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
   },
   'non-trial-admin': {

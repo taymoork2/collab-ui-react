@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Core').controller('SiteRowCtrl', SiteRowCtrl);
+  angular.module('Core').controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function SiteRowCtrl(
+  function WebExSiteRowCtrl(
     $q,
     $translate,
     $log,
@@ -19,7 +19,7 @@
     WebExSiteRowService
   ) {
 
-    var funcName = "SiteRowCtrl()";
+    var funcName = "WebExSiteRowCtrl()";
     var logMsg = "";
     var _this = this;
 
@@ -42,8 +42,8 @@
       _this.gridOptions = WebExSiteRowService.getGridOptions();
       _this.showGridData = WebExSiteRowService.getShowGridData();
 
-      $log.log("***" + JSON.stringify(_this.gridOptions));
-      $log.log("***" + _this.showGridData);
+      //$log.log("***" + JSON.stringify(_this.gridOptions));
+      //$log.log("***" + _this.showGridData);
 
     } //init()
 
@@ -97,5 +97,5 @@
       WebExSiteRowService.stopPolling();
     });
 
-  } // SiteRowCtrl()
+  } // WebExSiteRowCtrl()
 })(); // top level function
