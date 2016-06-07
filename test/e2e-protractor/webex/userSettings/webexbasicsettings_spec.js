@@ -3,7 +3,7 @@
 /* global usersettings */
 /* global webEx */
 
-xdescribe('WebEx user settings', function () {
+describe('WebEx user settings', function () {
   var setup = false;
 
   beforeAll(function () {
