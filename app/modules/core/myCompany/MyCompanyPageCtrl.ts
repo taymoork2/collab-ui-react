@@ -3,7 +3,7 @@ namespace myCompanyPage {
 
     private _tabs;
     private _title;
-    
+
     get tabs() {
       return this._tabs;
     }
@@ -20,10 +20,11 @@ namespace myCompanyPage {
       }, {
         title: $translate.instant('my-company.info'),
         state: 'my-company.info'
-      },{
-        title: $translate.instant('my-company.order'),
-        state: 'my-company.orders'
       }];
+    // ,{
+    //     title: $translate.instant('my-company.order'),
+    //     state: 'my-company.orders'
+    //   }];
 
       this._title = $translate.instant('my-company.pageTitle');
     }
