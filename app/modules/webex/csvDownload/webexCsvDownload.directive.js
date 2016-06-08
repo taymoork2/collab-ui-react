@@ -84,6 +84,7 @@
 
       // pass the objectUrl to the href of downloadAnchor when download is done
       scope.$on('downloaded', function (event, url) {
+
         scope.webexCsvDownload.downloading = false;
 
         var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
@@ -114,24 +115,25 @@
 
       function changeAnchorAttrToDownload(url) {
         $timeout(function () {
-          if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
-            var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
+          $log.log("*******changeAnchorAttrToDownload function******S");
+          //  if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+          var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
 
-            scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
-            scope.webexCsvDownload.downloadCsv = angular.noop;
-            // scope.webexCsvDownload = removeFocus;
+          scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
+          scope.webexCsvDownload.downloadCsv = angular.noop;
+          // scope.webexCsvDownload = removeFocus;
 
-            downloadAnchor
-              .attr({
-                href: url,
-                download: attrs.filename
-              })
-              .removeAttr('disabled');
-          } else {
-            // IE download option since IE won't download the created url
-            scope.webexCsvDownload = openInIE;
-            downloadAnchor.removeAttr('disabled');
-          }
+          downloadAnchor
+            .attr({
+              href: url,
+              download: attrs.filename
+            })
+            .removeAttr('disabled');
+          //    } else {
+          //     // IE download option since IE won't download the created url
+          //    scope.webexCsvDownload = openInIE;
+          //   downloadAnchor.removeAttr('disabled');
+          //  }
         });
       } // changeAnchorAttrToDownload()
 
