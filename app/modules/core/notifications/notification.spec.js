@@ -1,14 +1,16 @@
 describe('Service: Notification', function () {
   beforeEach(module('Core'));
 
-  var Notification, $translate, toaster, Authinfo, Config;
+  var Notification, $translate, toaster, Authinfo, Config, $timeout, Log;
 
-  beforeEach(inject(function (_Notification_, _$translate_, _toaster_, _Authinfo_, _Config_) {
+  beforeEach(inject(function (_Notification_, _$translate_, _toaster_, _Authinfo_, _Config_, _$timeout_, _Log_) {
     Notification = _Notification_;
     $translate = _$translate_;
     toaster = _toaster_;
     Authinfo = _Authinfo_;
     Config = _Config_;
+    $timeout = _$timeout_;
+    Log = _Log_;
 
     spyOn(Config, "isE2E").and.returnValue(false);
   }));
@@ -50,18 +52,48 @@ describe('Service: Notification', function () {
 
     });
 
-    it('in read only mode creates toaster with predefined warning message', function () {
-      spyOn(toaster, "pop");
-      spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
+    describe('read only mode toaster', function () {
 
-      Notification.notifyReadOnly();
-      expect(toaster.pop).toHaveBeenCalledWith({
-        type: 'warning',
-        body: 'readOnlyMessages.notAllowed',
-        timeout: 0,
-        closeHtml: jasmine.any(String)
+      it('has a predefined warning message', function () {
+        spyOn(toaster, "pop");
+        spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
+
+        Notification.notifyReadOnly();
+        expect(toaster.pop).toHaveBeenCalledWith({
+          type: 'warning',
+          body: 'readOnlyMessages.notAllowed',
+          timeout: 0,
+          closeHtml: jasmine.any(String)
+        });
+        expect(toaster.pop.calls.count()).toEqual(1);
+
       });
-      expect(toaster.pop.calls.count()).toEqual(1);
+
+      it("prevents other toasters but logs a warning if prevent-timer hasn't expired", function () {
+        spyOn(toaster, "pop");
+        spyOn(Log, "warn");
+        spyOn(Authinfo, "isReadOnlyAdmin").and.returnValue(true);
+
+        Notification.notifyReadOnly();
+        expect(toaster.pop.calls.count()).toEqual(1);
+
+        toaster.pop.calls.reset();
+        Log.warn.calls.reset();
+
+        Notification.notify(["an error message"], "warning");
+        expect(toaster.pop.calls.count()).toEqual(0);
+        expect(Log.warn.calls.count()).toEqual(1);
+
+        Notification.notify(["yet an error message"], "warning");
+        expect(toaster.pop.calls.count()).toEqual(0);
+        expect(Log.warn.calls.count()).toEqual(2);
+
+        $timeout.flush();
+        Notification.notify(["another error message"], "warning");
+        expect(toaster.pop.calls.count()).toEqual(1);
+        expect(Log.warn.calls.count()).toEqual(2);
+
+      });
 
     });
   });
