@@ -1457,7 +1457,26 @@
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
     },
-    "reportTimeout": "Timeout detected. Please cancel the report and try again."
+    "reportTimeout": "Timeout detected. Please cancel the report and try again.",
+    "search": {
+      "participants": "Participants",
+      "reportName": "Report Name",
+      "reportNamePlaceholder": "Enter report name",
+      "reportNameNotEmpty": "Report Name can not be empty",
+      "startDate": "Start Date",
+      "dateTo": "to",
+      "startDatePlaceholder": "Choose a start Day",
+      "endDate": "End Date",
+      "endDateUntil": "until",
+      "endDateOnward": "onward",
+      "endDatePlaceholder": "Choose an end Day",
+      "reportDateRange": "Report Date Range",
+      "noRangeSpecified": "No range specified",
+      "generateReport": "Generate Report",
+      "cancelReport": "Cancel Report",
+      "downloadReport": "Download Report",
+      "failure": "Failure: {{failure}}"
+    }
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",

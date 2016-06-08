@@ -6,7 +6,7 @@
           <i class="room-icon icon icon-meeting-room"></i>
         </div>
         <h6 class="content">
-          Participants
+          <span translate="ediscovery.search.participants"></span>
           {{ediscoverySearchCtrl.roomInfo.participants.items.length}}
         </h6>
       </div>
@@ -20,16 +20,15 @@
         <div class="row" ng-hide="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-8 large-8">
             <div class="input-section">
-              <h5>Report Name</h5>
-              <input required id="displayName" class="cs-input report-name" placeholder="Enter report name" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
+              <h5 translate="ediscovery.search.reportName"></h5>
+              <input required id="displayName" class="cs-input report-name" placeholder="{{'ediscovery.search.reportNamePlaceholder' | translate}}" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
             </div>
           </div>
         </div>
         <div class="row" ng-if="!ediscoverySearchCtrl.searchCriteria.displayName">
           <div class="columns small-12 medium-12 medium-12">
             <div class="input-section">
-              <p class="date-error">
-                Report Name can not be empty
+              <p class="date-error" translate="ediscovery.search.reportNameNotEmpty">
               </p>
             </div>
           </div>
@@ -37,7 +36,7 @@
         <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-8 large-8">
             <div class="input-section">
-              <h5>Report Name</h5>
+              <h5 translate="ediscovery.search.reportName"></h5>
               <h6 class="ellipsis">{{ediscoverySearchCtrl.report.displayName}}</h6>
             </div>
           </div>
@@ -45,14 +44,14 @@
         <div class="row" ng-hide="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-4 large-4">
             <div class="input-section">
-              <h5>Start Date</h5>
-              <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="Choose a start Day" view-format="YYYY-MM-DD"></cs-datepicker>
+              <h5 translate="ediscovery.search.startDate"></h5>
+              <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="{{'ediscovery.search.startDatePlaceholder' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
             </div>
           </div>
           <div class="columns small-12 medium-4 large-4">
             <div class="input-section">
-              <h5 class="sub-section__label">End Date</h5>
-              <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="Choose an end Day" view-format="YYYY-MM-DD"></cs-datepicker>
+              <h5 translate="ediscovery.search.endDate"></h5>
+              <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="{{'ediscovery.search.endDatePlaceholder' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
             </div>
           </div>
           <div class="columns small-12 medium-4 large-4"></div>
@@ -69,18 +68,17 @@
         <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED'">
           <div class="columns small-12 medium-12 large-12">
             <div class="input-section">
-              <h5>Report Date Range</h5>
+              <h5 translate="ediscovery.search.reportDateRange"></h5>
               <span ng-if="ediscoverySearchCtrl.searchCriteria.startDate && ediscoverySearchCtrl.searchCriteria.endDate">
-                {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'medium'}} to {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'medium'}}
+                {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'medium'}} {{'ediscovery.search.dateTo' | translate}} {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'medium'}}
               </span>
               <span ng-if="ediscoverySearchCtrl.searchCriteria.startDate && !ediscoverySearchCtrl.searchCriteria.endDate">
-                {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'medium'}} onward
+                {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'medium'}} {{'ediscovery.search.endDateOnward' | translate}}
               </span>
               <span ng-if="!ediscoverySearchCtrl.searchCriteria.startDate && ediscoverySearchCtrl.searchCriteria.endDate">
-                until {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'medium'}}
+                {{'ediscovery.search.endDateUntil' | translate}} {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'medium'}}
               </span>
-              <span ng-if="!ediscoverySearchCtrl.searchCriteria.startDate && !ediscoverySearchCtrl.searchCriteria.endDate">
-                No range specified
+              <span translate="ediscovery.search.noRangeSpecified" ng-if="!ediscoverySearchCtrl.searchCriteria.startDate && !ediscoverySearchCtrl.searchCriteria.endDate">
               </span>
             </div>
           </div>
@@ -88,7 +86,7 @@
         <div class="row" ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report && (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED'))">
           <div class="columns small-12 medium-4 large-4">
             <div class="input-section-last">
-              <button ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError || (ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED')" type="button" class="button btn--primary" ng-click="ediscoverySearchCtrl.createReport()">Generate Report</button>
+              <button translate="ediscovery.search.generateReport" ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError || (ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state !== 'FAILED' && ediscoverySearchCtrl.report.state !== 'ABORTED')" type="button" class="button btn--primary" ng-click="ediscoverySearchCtrl.createReport()"></button>
             </div>
           </div>
         </div>
@@ -106,8 +104,8 @@
             <div ng-if="ediscoverySearchCtrl.report" class="buttons" ng-hide="ediscoverySearchCtrl.report.state == 'FAILED' || ediscoverySearchCtrl.report.state == 'ABORTED'">
               <div ng-if="ediscoverySearchCtrl.report.state === 'ACCEPTED' || ediscoverySearchCtrl.report.state === 'RUNNING' || ediscoverySearchCtrl.report.state === 'COMPLETED'">
                 <button ng-cloak type="button" class="btn btn--circle" ng-class="{'btn--primary': ediscoverySearchCtrl.report.state === 'COMPLETED', 'btn--attention': ediscoverySearchCtrl.report.state !== 'COMPLETED'}">
-                  <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'" ng-click="ediscoverySearchCtrl.downloadReport()" tooltip-placement="top" cs-tooltip="Download Report {{ediscoverySearchCtrl.report.sizeInBytes/1000}}kb" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-download"></span>
-                  <span ng-if="ediscoverySearchCtrl.report.state !== 'COMPLETED'" ng-click="ediscoverySearchCtrl.cancelReport(ediscoverySearchCtrl.report.id)" tooltip-placement="top" cs-tooltip="Cancel Report" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-close"></span>
+                  <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'" ng-click="ediscoverySearchCtrl.downloadReport()" tooltip-placement="top" cs-tooltip=" {{'ediscovery.search.downloadReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-download"></span>
+                  <span ng-if="ediscoverySearchCtrl.report.state !== 'COMPLETED'" ng-click="ediscoverySearchCtrl.cancelReport(ediscoverySearchCtrl.report.id)" tooltip-placement="top" cs-tooltip="{{'ediscovery.search.cancelReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" class="icon icon-close"></span>
                 </button>
               </div>
             </div>
@@ -117,8 +115,8 @@
         <div class="row">
           <div class="columns small-12 medium-6 large-6">
             <div class="failure">
-              <span ng-show="ediscoverySearchCtrl.report.state === 'FAILED'">Failure:
-                {{ediscoverySearchCtrl.report.failureReason}}</span>
+              <span translate="ediscovery.search.failure" translate-values="{failure: ediscoverySearchCtrl.report.failureReason}" ng-show="ediscoverySearchCtrl.report.state === 'FAILED'">
+              </span>
             </div>
           </div>
         </div>
