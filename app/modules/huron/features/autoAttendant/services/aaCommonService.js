@@ -133,7 +133,7 @@
    */
   var sortByProperty = function (property) {
     return function (a, b) {
-      return a[property].toUpperCase().localeCompare(b[property].toUpperCase());
+      return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
     };
   };
 
