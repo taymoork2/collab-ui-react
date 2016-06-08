@@ -6,6 +6,8 @@ namespace globalsettings {
     /* @ngInject */
     constructor() {
       super('sipDomain');
+      this.subsectionLabel = '';
+      this.subsectionDescription = '';
     }
   }
   angular.module('Core').component('sipdomainSetting', {
@@ -13,6 +15,7 @@ namespace globalsettings {
       showSaveButton: '<'
     },
     controller: 'EnterpriseSettingsCtrl',
-    templateUrl:'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
+    templateUrl:'modules/core/settings/sipDomain/sipDomainSetting.tpl.html',
+    //templateUrl:'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
   });
 }
