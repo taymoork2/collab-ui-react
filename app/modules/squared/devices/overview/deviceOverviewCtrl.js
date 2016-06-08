@@ -204,7 +204,7 @@
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
-      if (newValue != deviceOverview.currentDevice.upgradeChannel) {
+      if (newValue !== deviceOverview.currentDevice.upgradeChannel) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
