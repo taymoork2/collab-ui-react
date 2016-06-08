@@ -78,8 +78,7 @@ describe('Controller: CustomerListCtrl', function () {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
-      Config: Config,
-      FeatureToggleService: FeatureToggleService
+      Config: Config
     });
 
     $scope.$apply();
@@ -160,11 +159,23 @@ describe('Controller: CustomerListCtrl', function () {
   });
 
   describe('addCorrectMeetingColumn function', function () {
-    beforeEach(initController);
 
     it('should add a meeting column if FeatureToggle is true', function () {
+      initController();
       $scope.addCorrectMeetingColumn();
       expect($scope.gridColumns[2].field).toBe('meeting');
+    });
+  });
+
+  describe('addCorrectMeetingColumn function', function () {
+
+    it('should add a conferencing column if FeatureToggle is false', function () {
+      FeatureToggleService.supports.and.callFake(function (val) {
+        return $q.when(false);
+      });
+      initController();
+      $scope.addCorrectMeetingColumn();
+      expect($scope.gridColumns[2].field).toBe('conferencing');
     });
   });
 

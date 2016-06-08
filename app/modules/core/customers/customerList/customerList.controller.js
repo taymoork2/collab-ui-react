@@ -79,53 +79,50 @@
     }];
 
     $scope.gridColumns = [{
-        field: 'customerName',
-        displayName: $translate.instant('customerPage.customerNameHeader'),
-        width: '25%',
-        cellTemplate: nameTemplate,
-        cellClass: 'ui-grid-add-column-border',
-        sortingAlgorithm: partnerAtTopSort,
-        sort: {
-          direction: 'asc',
-          priority: 0,
-        },
-      }, {
-        field: 'messaging',
-        displayName: $translate.instant('customerPage.message'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      },
-
-      {
-        field: 'communications',
-        displayName: $translate.instant('customerPage.call'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'roomSystems',
-        displayName: $translate.instant('customerPage.roomSystems'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'notes',
-        displayName: $translate.instant('customerPage.notes'),
-        cellTemplate: noteTemplate,
-        sortingAlgorithm: notesSort
-      }, {
-        field: 'action',
-        displayName: $translate.instant('customerPage.actionHeader'),
-        sortable: false,
-        cellTemplate: actionTemplate,
-        width: '95',
-        cellClass: 'align-center'
+      field: 'customerName',
+      displayName: $translate.instant('customerPage.customerNameHeader'),
+      width: '25%',
+      cellTemplate: nameTemplate,
+      cellClass: 'ui-grid-add-column-border',
+      sortingAlgorithm: partnerAtTopSort,
+      sort: {
+        direction: 'asc',
+        priority: 0,
       }
-    ];
+    }, {
+      field: 'messaging',
+      displayName: $translate.instant('customerPage.message'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'communications',
+      displayName: $translate.instant('customerPage.call'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'roomSystems',
+      displayName: $translate.instant('customerPage.roomSystems'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'notes',
+      displayName: $translate.instant('customerPage.notes'),
+      cellTemplate: noteTemplate,
+      sortingAlgorithm: notesSort
+    }, {
+      field: 'action',
+      displayName: $translate.instant('customerPage.actionHeader'),
+      sortable: false,
+      cellTemplate: actionTemplate,
+      width: '95',
+      cellClass: 'align-center'
+    }];
 
     $scope.gridOptions = {
       data: 'gridData',
@@ -246,15 +243,9 @@
 
     function addCorrectMeetingColumn() {
       FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (results) {
-        if (results) {
-
-          $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[0]);
-        } else {
-          $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[1]);
-        }
-
+        var index = results ? 0 : 1;
+        $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[index]);
       });
-
     }
 
     function setNotesTextOrder() {
