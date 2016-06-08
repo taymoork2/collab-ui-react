@@ -103,7 +103,7 @@ var auth = {
   },
   'multiple-subscription-user': {
     user: 'int-esub-1@mailinator.com',
-    pass: 'C1sc0123!',
+    pass: 'P@ssword123',
     org: '9d173ec9-198e-430d-9363-688a333bdee7'
   },
   'selfsign-sso-admin': {

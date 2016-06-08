@@ -17,6 +17,8 @@
       vm.showAppSecurity = true;
       vm.appSecurity = false;
       vm.currentAppSecurity = false;
+      // US11663 - Hide data retention content for now.  Will be restored in the future.
+      vm.showDrContent = false;
 
       vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
       vm.selected = {
