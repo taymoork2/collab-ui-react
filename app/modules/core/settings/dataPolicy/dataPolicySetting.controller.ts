@@ -1,4 +1,17 @@
 namespace globalsettings {
+
+  interface OrgSetting {
+    key:string,
+    value:string,
+    label:string
+  }
+
+  interface GetOrgResponse {
+    data:{
+      settings:[OrgSetting]
+    }
+  }
+
   export class DataPolicySettingController {
 
     public dataLoaded = false;
@@ -52,21 +65,13 @@ namespace globalsettings {
       }
     }
 
-    private gotOrgSettings(response:{
-      data:{
-       settings:[{
-         key:string,
-         value:string,
-         label:string}]
-     }}) {
+    private gotOrgSettings({data:{settings:settings}={settings: null}}:GetOrgResponse) {
 
-      if (response.data){
-        var dataRetPeriodSetting = _.find(response.data.settings, {key: 'dataRetentionPeriodDays'});
-        if (dataRetPeriodSetting) {
-          var retentionGuiOption = _.find(this.retentionTimeOptions, {value: dataRetPeriodSetting.value});
-          if (retentionGuiOption) {
-            this.retentionTimeSelected = retentionGuiOption;
-          }
+      let dataRetPeriodSetting = _.find(settings, {key: 'dataRetentionPeriodDays'});
+      if (dataRetPeriodSetting) {
+        var retentionGuiOption = _.find(this.retentionTimeOptions, {value: dataRetPeriodSetting.value});
+        if (retentionGuiOption) {
+          this.retentionTimeSelected = retentionGuiOption;
         }
       }
       this.dataLoaded = true;
