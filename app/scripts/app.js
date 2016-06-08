@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* global window, document */
+  /* global window, document, MIXPANEL_CUSTOM_LIB_URL: false */
 
   /**
    * @ngdoc overview
@@ -66,7 +66,6 @@
       f.parentNode.insertBefore(a, f);
     }
   })(document, window.mixpanel || []);
-  //mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 

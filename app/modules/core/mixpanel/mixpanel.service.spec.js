@@ -35,7 +35,7 @@ describe('Service: Mixpanel', function () {
   describe('when Production is false', function () {
     beforeEach(setIsProd(false));
 
-    xit('should call _track', function () {
+    it('should call _track', function () {
       Mixpanel.trackEvent('myState', {});
       $scope.$apply();
       expect(Mixpanel._track).toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('Service: Mixpanel', function () {
   describe('when Production is true', function () {
     beforeEach(setIsProd(true));
 
-    xit('should call _track', function () {
+    it('should call _track', function () {
       Mixpanel.trackEvent('myState', {});
       $scope.$apply();
       expect(Mixpanel._track).toHaveBeenCalled();

@@ -17,12 +17,9 @@
       trackEvent: trackEvent
     };
 
-    var internals = {
-      prodKey: '536df13b2664a85b06b0b6cf32721c24',
-      testKey: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      ENV_PROD: 'Prod',
-      ENV_TEST: 'Test',
-      ENV_DO_NOT_TRACK: 'do-not-track'
+    var token = {
+      ProdKey: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
+      TestKey: '536df13b2664a85b06b0b6cf32721c24'
     };
 
     var isTestOrg = null;
@@ -37,13 +34,11 @@
         }
 
         if (Config.isProd()) {
-          resolve(internals.prodKey);
+          resolve(token.ProdKey);
         } else {
           return resolve(getTestOrg().then(function () {
             if (isTestOrg) {
-              return internals.testKey;
-            } else {
-              service.env = internals.ENV_DO_NOT_TRACK;
+              return token.TestKey;
             }
           }));
         }
@@ -56,7 +51,7 @@
     }
 
     function _track(eventName, properties) {
-      mixpanel.track(eventName, properties);
+      mixpanel.track(eventName, properties || {});
     }
 
     /**
