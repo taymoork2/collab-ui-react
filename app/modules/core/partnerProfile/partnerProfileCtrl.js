@@ -129,7 +129,6 @@
 
       // branding feture toogle
       FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
-        $scope.isNewBranding = toggle;
         if (toggle) {
           $scope.brandingTpl = 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html';
         } else {

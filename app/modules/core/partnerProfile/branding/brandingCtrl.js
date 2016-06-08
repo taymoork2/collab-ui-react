@@ -4,49 +4,63 @@
   angular.module('Core')
     .controller('BrandingCtrl', BrandingCtrl);
 
-  function BrandingCtrl($scope, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, WebexClientVersion, BrandService, Orgservice) {
-
+  function BrandingCtrl($scope, $state, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, UserListService, WebexClientVersion, BrandService, Orgservice) {
+    var brand = this;
     var orgId = Authinfo.getOrgId();
 
-    this.isPartner = Authinfo.isPartner();
-    this.usePartnerLogo = true;
-    this.allowCustomerLogos = false;
-    this.allowCustomerLogos = false;
-    this.progress = 0;
+    brand.isPartner = Authinfo.isPartner();
+    brand.usePartnerLogo = true;
+    brand.allowCustomerLogos = false;
+    brand.allowCustomerLogos = false;
+    brand.progress = 0;
+    brand.modalType = $state.params.modalType;
 
-    this.logoCriteria = {
+    brand.logoCriteria = {
       'pattern': '.png',
       'width': {
         min: '100'
       }
     };
 
-    this.useLatestWbxVersion = false;
-    this.wbxclientversionselected = '';
-    this.wbxclientversions = ['testversion1.0', 'testversion2.0'];
-    this.wbxNoClientSelected = true;
-    this.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
-    this.wbxclientversionplaceholder = 'Select webex client version';
-    this.showClientVersions = true;
+    brand.useLatestWbxVersion = false;
+    brand.wbxclientversionselected = '';
+    brand.wbxclientversions = ['testversion1.0', 'testversion2.0'];
+    brand.wbxNoClientSelected = true;
+    brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
+    brand.showClientVersions = true;
 
-    this.init = function () {
+    brand.init = function () {
+      brand.rep = null; // cs admin rep
+      brand.partner = {};
 
-      this.logoUrl = '';
-      this.logoError = null;
+      brand.logoUrl = '';
+      brand.logoError = null;
+
+      UserListService.listPartners(orgId, function (data) {
+        for (var partner in data.partners) {
+          var currentPartner = data.partners[partner];
+          if (!brand.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
+            brand.partner = currentPartner;
+
+          } else if (currentPartner.userName.indexOf('@cisco.com') > -1) {
+            brand.rep = currentPartner;
+          }
+        }
+      });
 
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           var settings = data.orgSettings;
           if (!_.isUndefined(settings.usePartnerLogo)) {
-            this.usePartnerLogo = settings.usePartnerLogo;
+            brand.usePartnerLogo = settings.usePartnerLogo;
           }
 
           if (!_.isUndefined(settings.allowCustomerLogos)) {
-            this.allowCustomerLogos = settings.allowCustomerLogos;
+            brand.allowCustomerLogos = settings.allowCustomerLogos;
           }
 
           if (!_.isUndefined(settings.logoUrl)) {
-            this.logoUrl = settings.logoUrl;
+            brand.logoUrl = settings.logoUrl;
           }
 
         } else {
@@ -56,19 +70,19 @@
       }, orgId, true);
 
       BrandService.getLogoUrl(orgId).then(function (logoUrl) {
-        this.tempLogoUrl = logoUrl;
+        brand.tempLogoUrl = logoUrl;
       });
 
-      this.initWbxClientVersions();
+      brand.initWbxClientVersions();
     };
 
-    // TODO webex team clean this up and add unit tests
-    this.initWbxClientVersions = function () {
+    // TODO webex team clean bCtrl up and add unit tests
+    brand.initWbxClientVersions = function () {
 
       //wbxclientversionselected
-      //this.wbxclientversions = "";
+      //brand.wbxclientversions = "";
       var succ = function (data) {
-        this.wbxclientversions = data;
+        brand.wbxclientversions = data;
       };
 
       //nothing to do on error.
@@ -88,32 +102,32 @@
           clientVersion = '';
         }
         if (clientVersion === '') {
-          this.wbxNoClientSelected = true;
-          this.wbxclientversionselected = this.wbxclientversionplaceholder;
+          brand.wbxNoClientSelected = true;
+          brand.wbxclientversionselected = brand.wbxclientversionplaceholder;
         } else {
-          this.wbxNoClientSelected = false;
-          this.wbxclientversionselected = clientVersion;
+          brand.wbxNoClientSelected = false;
+          brand.wbxclientversionselected = clientVersion;
         }
 
-        this.useLatestWbxVersion = _.get(json, 'data.useLatest');
+        brand.useLatestWbxVersion = _.get(json, 'data.useLatest');
 
       });
     };
 
-    this.init();
+    brand.init();
 
     function toggleWebexSelectLatestVersionAlways(useLatest) {
       Log.info("webex use latest version toggle");
-      var selected = this.wbxclientversionselected;
-      this.useLatestWbxVersion = useLatest;
-      var alwaysSelectLatest = this.useLatestWbxVersion;
-      //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, this.allowCustomerWbxClientVersions);
+      var selected = brand.wbxclientversionselected;
+      brand.useLatestWbxVersion = useLatest;
+      var alwaysSelectLatest = brand.useLatestWbxVersion;
+      //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, brand.allowCustomerWbxClientVersions);
       var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
-        return resp.data.partnerId; //this is the pid
+        return resp.data.partnerId; //bCtrl is the pid
       }).then(function (pid) {
-        return WebexClientVersion.postOrPutTemplate(pid, selected, this.useLatestWbxVersion);
+        return WebexClientVersion.postOrPutTemplate(pid, selected, brand.useLatestWbxVersion);
       });
-      //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, this.useLatestWbxVersion);
+      //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, brand.useLatestWbxVersion);
       var successMessage = "";
       if (alwaysSelectLatest) {
         successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
@@ -133,16 +147,16 @@
 
     function wbxclientversionselectchanged(wbxclientversionselected) {
       Log.info("Webex selected version changed");
-      this.wbxclientversionselected = wbxclientversionselected;
-      var versionSelected = this.wbxclientversionselected;
+      brand.wbxclientversionselected = wbxclientversionselected;
+      var versionSelected = brand.wbxclientversionselected;
 
       var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
-        return resp.data.partnerId; //this is the pid
+        return resp.data.partnerId; //bCtrl is the pid
       }).then(function (pid) {
-        return WebexClientVersion.postOrPutTemplate(pid, versionSelected, this.useLatestWbxVersion);
+        return WebexClientVersion.postOrPutTemplate(pid, versionSelected, brand.useLatestWbxVersion);
       });
 
-      //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, this.useLatestWbxVersion);
+      //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, brand.useLatestWbxVersion);
 
       Log.info("New version selected is " + versionSelected);
       var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
@@ -158,41 +172,41 @@
       //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
     }
 
-    this.wbxclientversionselectchanged = wbxclientversionselectchanged;
+    brand.wbxclientversionselectchanged = wbxclientversionselectchanged;
 
-    this.wbxclientversionselectchanged = _.debounce(
+    brand.wbxclientversionselectchanged = _.debounce(
       wbxclientversionselectchanged,
       2000, {
         'leading': true,
         'trailing': false
       });
 
-    this.toggleWebexSelectLatestVersionAlways = _.debounce(
+    brand.toggleWebexSelectLatestVersionAlways = _.debounce(
       toggleWebexSelectLatestVersionAlways,
       100, {
         'leading': true,
         'trailing': false
       });
 
-    this.upload = function (file, event) {
+    brand.upload = function (file, event) {
       openModal('sm');
       if (validateLogo(file)) {
-        this.progress = 0;
+        brand.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
       }
     };
 
-    // TODO: Refactor to use appconfig states
     function openModal(size) {
-      this.uploadModal = $modal.open({
-        scope: this,
-        templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
-        size: size
-      });
+      $state.go('brandingUpload').then(function () {});
+      // brand.uploadModal = $modal.open({
+      //   scope: bCtrl,
+      //   templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
+      //   size: size
+      // });
     }
 
-    this.toggleLogo = _.debounce(function (value) {
+    brand.toggleLogo = _.debounce(function (value) {
       if (value) {
         BrandService.usePartnerLogo(orgId);
       } else {
@@ -203,7 +217,7 @@
       'trailing': false
     });
 
-    this.toggleAllowCustomerLogos = _.debounce(function (value) {
+    brand.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
         BrandService.enableCustomerLogos(orgId);
       } else {
@@ -214,39 +228,33 @@
       'trailing': false
     });
 
-    this.upload = function (file, event) {
+    brand.upload = function (file, event) {
       openModal('sm');
       if (validateLogo(file)) {
-        this.progress = 0;
+        brand.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
       }
     };
     // Add branding example static page
-    this.showBrandingExample = function (type) {
-      this.type = type;
-      $modal.open({
-        scope: this,
-        templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-        size: 'lg'
-      });
+    brand.showBrandingExample = function (type) {
+      $state.go('brandingExample', {
+        modalType: type
+      }).then(function () {});
+      // brand.type = type;
+      // $modal.open({
+      //   scope: bCtrl,
+      //   templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
+      //   size: 'lg'
+      // });
     };
-
-    // TODO: Refactor to use appconfig states
-    function openModal(size) {
-      this.uploadModal = $modal.open({
-        scope: this,
-        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
-        size: size
-      });
-    }
 
     function validateLogo(logo) {
       var error = logo.$error;
       if (error === 'maxWidth' || error === 'minWidth') {
-        this.logoError = 'dimensions';
+        brand.logoError = 'dimensions';
       } else {
-        this.logoError = logo.$error;
+        brand.logoError = logo.$error;
       }
 
       if (logo && !logo.$error) {
@@ -256,22 +264,22 @@
 
     function uploadSuccess(response) {
       $timeout(function () {
-        if (this.uploadModal) {
-          this.uploadModal.close();
+        if (brand.uploadModal) {
+          brand.uploadModal.close();
         }
       }, 3000);
       // Automatically start using the custom logo
       BrandService.resetCdnLogo(Authinfo.getOrgId());
-      this.usePartnerLogo = false;
-      this.toggleLogo(false);
+      brand.usePartnerLogo = false;
+      brand.toggleLogo(false);
     }
 
     function uploadError(error) {
-      this.logoError = 'unknown';
+      brand.logoError = 'unknown';
     }
 
     function uploadProgress(evt) {
-      this.progress = parseInt(100.0 * evt.loaded / evt.total);
+      brand.progress = parseInt(100.0 * evt.loaded / evt.total);
     }
   }
 

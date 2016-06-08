@@ -1,34 +1,34 @@
 <ng-form name="brandingForm" isolate-form="partnerProfileForm"  ng-controller="BrandingCtrl as bctrl" class="branding">
   <!-- branding logo upload -->
-  <div ng-if="isPartner || allowCustomerLogos">
+  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">
       <h4 translate="partnerProfile.brandingTitle"></h4>
       <div class="form-spacing form-group">
-        <span ng-if="!isPartner"  translate="customerProfile.brandingInfo"></span>
-        <span ng-if="isPartner"  translate="partnerProfile.brandingInfo"></span>
+        <span ng-if="!bctrl.isPartner"  translate="customerProfile.brandingInfo"></span>
+        <span ng-if="bctrl.isPartner"  translate="partnerProfile.brandingInfo"></span>
       </div>
     </div>
     <div class="row form-spacing collapse-both">
       <div class="small-12 columns form-group">
         <div class="cs-radio-group">
           <div class="cs-input-group cs-input-radio">
-            <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(usePartnerLogo)">
+            <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(usePartnerLogo)">
             <label for="partnerLogoRadio">
               <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+              <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
             </label>
           </div>
 
           <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
-            <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(usePartnerLogo)">
+            <input type="radio" id="customLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(usePartnerLogo)">
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
-                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
-                  <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
-                  <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
-                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-drag-over-class="dragover" ngf-validate="{{bctrl.logoCriteria}}">
+                  <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile" ng-hide="bctrl.logoError" />
+                  <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
+                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="bctrl.logoFile"></p>
                 </div>
-                <button class="btn btn-primary" name="file" accept="image/png" ngf-select="bctrl.upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                <button class="btn btn-primary" name="file" accept="image/png" ngf-select="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-validate="{{bctrl.logoCriteria}}">
                   <span translate="partnerProfile.chooseFile"></span>
                 </button>
               </div>
@@ -37,24 +37,24 @@
         </div>
       </div>
     </div>
-    <div class="row form-spacing" ng-if="isPartner">
+    <div class="row form-spacing" ng-if="bctrl.isPartner">
       <div class="small-12 columns cs-checkbox-group">
         <input 
           type="checkbox"
           id="allowCustomerLogo"
           name="allowCustomerLogo"
-          ng-model="allowCustomerLogos"
-          ng-change="bctrl.toggleAllowCustomerLogos(allowCustomerLogos)">
+          ng-model="bctrl.allowCustomerLogos"
+          ng-change="bctrl.toggleAllowCustomerLogos(bctrl.allowCustomerLogos)">
           <label for="allowCustomerLogo" translate="partnerProfile.allowCustomerLogo"></label>
       </div>
     </div>
   </div>
 
   <div>
-    <div ng-if="showClientVersions">
+    <div ng-if="bctrl.showClientVersions">
       <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
         <div class="small-12 columns">
-          <div class="row collapse" ng-if="isPartner">
+          <div class="row collapse" ng-if="bctrl.isPartner">
             <p>
               <h4 translate="partnerProfile.webexClientVersion"></h4>
               <span class="badge"></span>
@@ -62,22 +62,22 @@
             <cs-select
               id="webex_client_version_drop_down"
               ng-model="wbxclientversionselected"
-              options="wbxclientversions"
-              placeholder="wbxclientversionplaceholder"
-              on-change-fn="bctrl.wbxclientversionselectchanged(wbxclientversionselected)"
-              is-disabled="useLatestWbxVersion">
+              options="bctrl.wbxclientversions"
+              placeholder="bctrl.wbxclientversionplaceholder"
+              on-change-fn="bctrl.wbxclientversionselectchanged(bctrl.wbxclientversionselected)"
+              is-disabled="bctrl.useLatestWbxVersion">
             </cs-select>
           </div>
         </div>
       </div>
-      <div class="row form-spacing" ng-if="isPartner">
+      <div class="row form-spacing" ng-if="bctrl.isPartner">
         <div class="small-12 columns cs-checkbox-group">
           <input
             cs-input
             type="checkbox"
             id="useLatestWbxVersion"
             name="useLatestWbxVersion"
-            ng-model="useLatestWbxVersion"
+            ng-model="bctrl.useLatestWbxVersion"
             ng-change="bctrl.toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
             cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}"
             cs-input-help-text="{{::'partnerProfile.WbxClientVersionOnlyOnNewSites' | translate}}">

@@ -1,25 +1,25 @@
 <div class="upload-modal">
   <div class="modal-body">
-    <div class="progressbar-info" ng-hide="logoError">
-      <span ng-show="progress < 100" translate="fileUpload.uploading"></span>
-      <span ng-show="progress == 100" translate="fileUpload.success"></span>
+    <div class="progressbar-info" ng-hide="brandupload.logoError">
+      <span ng-show="brandupload.progress < 100" translate="fileUpload.uploading"></span>
+      <span ng-show="brandupload.progress == 100" translate="fileUpload.success"></span>
       <div class="upload-progress">
-        <progressbar animate="false" value="progress" type="primary"></progressbar>
+        <progressbar animate="false" value="brandupload.progress" type="primary"></progressbar>
       </div>
     </div>
-    <div ng-if="logoError === 'pattern'">
+    <div ng-if="brandupload.logoError === 'pattern'">
       <span class="upload-error" translate="fileUpload.errorFileType"></span>
       <span class="upload-error" translate="fileUpload.errorFilePNG"></span>
     </div>
-    <div ng-if="logoError === 'dimensions'">
+    <div ng-if="brandupload.logoError === 'dimensions'">
       <span class="upload-error" translate="fileUpload.errorDimensions"></span>
-      <span class="upload-error" translate="fileUpload.errorWidthHeight"></span>
+      <span class="brandupload.upload-error" translate="fileUpload.errorWidthHeight"></span>
     </div>
-    <div ng-if="logoError === 'unknown'">
+    <div ng-if="brandupload.logoError === 'unknown'">
       <span class="upload-error" translate="fileUpload.errorUnknown"></span>
     </div>
   </div>
-  <div class="modal-footer" ng-show="logoError">
+  <div class="modal-footer" ng-show="brandupload.logoError">
     <button class="btn btn--primary" ng-click="$dismiss()">Dismiss</button>
   </div>
 </div>
