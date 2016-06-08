@@ -108,7 +108,7 @@
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
-    "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
+    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is On.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
@@ -1520,7 +1520,6 @@
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
     "bulk401And403Error": "Customer is not authorized to add or update this user.",
-    "bulk403AndNotSetupManUserAddError": "User {{email}} not found. This organization is not set up for adding users manually.",
     "bulk404Error": "Server is unable to respond at this time. Please try again at a later time.",
     "bulk408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
