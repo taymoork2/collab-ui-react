@@ -77,7 +77,7 @@
             email: email
           });
         } else if (messageCode === '400096') {
-          responseMessage = $translate.instant('firstTimeWizard.bulk403AndNotSetupManUserAddError', {
+          responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
             email: email
           });
         } else {
