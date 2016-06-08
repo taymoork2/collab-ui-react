@@ -16,8 +16,8 @@
     deviceOverview.tzIsLoaded = false;
 
     if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZone();
-      resetTimeZone();
+      initTimeZoneOptions();
+      loadDeviceTimeZone();
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
@@ -25,7 +25,7 @@
       pollLines();
     }
 
-    function resetTimeZone() {
+    function loadDeviceTimeZone() {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
         deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
@@ -39,7 +39,7 @@
       });
     }
 
-    function initTimeZone() {
+    function initTimeZoneOptions() {
       deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
       return ServiceSetup.getTimeZones().then(function (timezones) {
         deviceOverview.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
@@ -73,13 +73,13 @@
 
     deviceOverview.saveTimeZoneAndWait = function () {
       var newValue = deviceOverview.selectedTimeZone.value;
-      if (newValue != deviceOverview.timeZone) {
+      if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
         setTimeZone(newValue)
           .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
           .catch(function (error) {
             XhrNotificationService.notify(error);
-            resetTimeZone();
+            loadDeviceTimeZone();
           })
           .finally(function () {
             deviceOverview.updatingTimeZone = false;
