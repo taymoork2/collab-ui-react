@@ -111,10 +111,10 @@
           //text-align: left;
           border: 0px;
           font-size:24px;
-          width: 32rem;
+          width: 33rem;
           @media only screen and (max-width: 640px) {
             font-size: 21px;
-            width:22rem;
+            width:80%;
             padding-bottom:0px;
           };
           @media only screen and (max-width: 500px) {
@@ -148,6 +148,11 @@
             height: 1.7rem;
           }
         }
+      }
+      .searchError {
+        position: relative;
+        right: 1.1rem;
+        padding-top: 2rem;
       }
     }
     .create-report {
@@ -195,6 +200,57 @@
       line-height: 0.5rem;
       margin-bottom: 0.5rem;
       margin-top: 1rem;
+    }
+
+    .search-result {
+      box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
+      border-radius: 2px;
+      margin-top: 3rem;
+      .create-form {
+        padding-top: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 1rem;
+        padding-bottom: 1rem;
+        h4 {
+          font-size: 2rem;
+          width: 80%;
+        }
+        .cancel-or-download {
+          width: 50%;
+          padding-top: 1rem;
+          .buttons {
+            padding-top: 1rem;
+          }
+        }
+        .input-section {
+          padding-top: 0.5rem;
+          .report-name {
+            width: 100%;
+          }
+        }
+        .input-section-last {
+          padding-top: 2.5rem;
+          padding-right: 2rem;
+        }
+        .buttons {
+          padding-top: 2rem;
+        }
+        .failure {
+          color: $color-negative-base;
+          padding-top: 1rem;
+        }
+      }
+      .left-side {
+        padding-left: 1rem;
+
+        .logo {
+          font-size: 10rem;
+          height: 12rem;
+        }
+        .content {
+          padding-left: 0.3rem;
+        }
+      }
     }
 
   }

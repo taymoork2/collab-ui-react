@@ -14,19 +14,16 @@
     }
   }
 
-  align-items: center;
+  @include vr-spacing(ml, 3);
 
-  .cs-card {
-    width: rem-calc(400px);
-    height: rem-calc(490px);
+  .ct-customer-card {
+    width: rem-calc(414px);
     display: flex;
     flex-flow: column;
+    @include vr-spacing(mr, 1);
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;
-    }
-    .articleHeight {
-      height: 100%;
     }
     .customerHeader {
       background-color:$gray-light-4;
@@ -40,8 +37,12 @@
     }
   }
 
-  .cardScroll {
-    padding: rem-calc(15px) rem-calc(60px) rem-calc(50px) rem-calc(60px);
+  .customer-preview-article {
+    height: rem-calc(500);
+  }
+
+  .customer-attributes-article {
+    min-height: rem-calc(500);
   }
 
   .cs-card-layout.cs-card-block {
@@ -230,5 +231,57 @@
 
   .ct-attribute-row {
     width: 100%;
+    .ct-customer-info-category-input {
+      @include vr-spacing(mt, 0.25);
+    }
   }
+
+  .right-inner-addon {
+    position: relative;
+  }
+
+  .right-inner-addon input {
+    @include vr-spacing(pr, 0.3125);
+  }
+
+  .right-inner-addon i {
+    position: absolute;
+    right: 0rem;
+    @include vr-spacing(pv, 0.6);
+    @include vr-spacing(ph, 2);
+  }
+
+  .category-tokens {
+    .tokenfield.form-control,
+    .tokenfield.form-control-static {
+      @include vr-spacing(mt, 1);
+      @include vr-spacing(mb, 1);
+      @include vr-spacing(mh, 1);
+      height:rem-calc(96px);
+      overflow-y:auto;
+      overflow-x: hidden;
+      input.token-input {
+        border-color: transparent;
+        outline: 0;
+        background-color: transparent;
+        box-shadow: none;
+      }
+      .token {
+        height: rem-calc(39px);
+        pointer-events: none;
+        .token-label {
+          padding-top: rem-calc(3px);
+          @include vr-spacing(mr, 0.5);
+        }
+        .close {
+          float: right;
+          font-size: 1.2em;
+          padding-top: rem-calc(0px);
+          line-height: 0.9em;
+          pointer-events: all;
+        }
+      }
+    }
+  }
+
 }

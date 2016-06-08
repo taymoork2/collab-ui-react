@@ -3,4 +3,15 @@
   .hidden {
     display: none;
   }
+
+  .setting {
+    i.icon-circle {
+      &.success {
+        color: $color-cta-base;
+      }
+      &.disabled {
+        color: $gray-base;
+      }
+    }
+  }
 }

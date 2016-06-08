@@ -1,4 +1,4 @@
-.fusion-resource-list {
+.fusion-cluster-list {
   .loading-list {
     text-align: center;
     margin-top: 2rem;
@@ -26,27 +26,29 @@
 
   .cs-card {
     header {
+      display: flex;
       position: relative;;
       padding-top: 19px;
       padding-bottom: 15px;
 
+      h4 {
+        flex-grow: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-right: 10px;
+      }
+
       .cluster-type-orb {
-        position: absolute;
-        right: 24px;
-        top: 18px;
+        flex-grow: 0;
         border-radius: 34px;
         width: 34px;
         height: 34px;
-        color: $color-primary-base;
-        background-color: $gray-light-4;
         font-size: 14px;
         line-height: 2.8;
         text-align: center;
+        background-color: $gray-light-4;
       }
-    }
-
-    section {
-      // outline: 1px dotted gray;
     }
 
     .service-list {
@@ -76,6 +78,9 @@
 
       a {
         text-align: right;
+        &:focus {
+          box-shadow: none
+        }
       }
 
       span {
@@ -84,8 +89,25 @@
 
       i {
         font-size: 24px;
-        vertical-align: middle;
+        vertical-align: -7px;
         color: $gray-light-2;
+      }
+    }
+
+    &.card-expressway {
+      header:after {
+        border-top-color: $color-primary-base;
+      }
+      .cluster-type-orb {
+        color: $color-primary-base;
+      }
+    }
+    &.card-mediafusion {
+      header:after {
+        border-top-color: $color-meetings-base;
+      }
+      .cluster-type-orb {
+        color: $color-meetings-base;
       }
     }
   }

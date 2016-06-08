@@ -14,9 +14,10 @@
 	</div>
 	<div class="ct-finish-btn-div " >
 		<button ng-disabled="careChatSA.saveCTErrorOccurred"
-				cs-btn id="chatSetupFinishBtn"
-				id="chatSetupFinishBtn"
-				cs-btn class="btn btn--primary"
-				ng-click="careChatSA.submitChatTemplate()">{{:: 'common.finish' | translate }}</button>
+            loading="careChatSA.creatingChatTemplate";
+            cs-btn id="chatSetupFinishBtn"
+            id="chatSetupFinishBtn"
+            cs-btn class="btn btn--primary"
+            ng-click="careChatSA.submitChatTemplate()">{{:: 'common.finish' | translate }}</button>
 	</div>
 </div>

@@ -1,5 +1,5 @@
-<div class="fusion-resource-list">
-  <cs-page-header title="{{::'hercules.fusion.list.title' | translate}}" back="true"></cs-page-header>
+<div class="fusion-cluster-list">
+  <cs-page-header title="{{::'hercules.fusion.list.title' | translate}}" back="true" back-url="resourceList.backState"></cs-page-header>
   <cs-page-sub-header >
     <cs-page-sub-header-left>
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
@@ -11,13 +11,16 @@
         <i class="icon icon-spinner"></i>
       </span>
     </div>
-    <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="'hercules.fusion.list.title'"></div>
+    <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="small header-bar" ng-repeat="cluster in resourceList.displayedClusters">
+      <cs-card class="small header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
-            <div class="cluster-type-orb">EW</div>
+            <div class="cluster-type-orb">
+              <span ng-if="cluster.type === 'expressway'" translate="hercules.fusion.list.expressway-short"></span>
+              <span ng-if="cluster.type === 'mediafusion'" translate="hercules.fusion.list.mediafusion-short"></span>
+            </div>
           </header>
           <section>
             <ul class="service-list">
@@ -30,7 +33,7 @@
           </section>
           <footer>
               <div translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
-              <a href="#" ui-sref="cluster-settings-page({clusterid: cluster.id})"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
+              <a ng-click="resourceList.openSettings(cluster.type, cluster.id)"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
             </div>
           </footer>
         </article>

@@ -2,9 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
-      //setSearchFieldFocus();
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
@@ -24,8 +23,6 @@
     });
 
     vm.reports = [];
-
-    var avalonPoller = $timeout(pollAvalonReport, 0);
 
     //grantNotification();
     pollAvalonReport();
@@ -47,7 +44,7 @@
 
     function cancable(id) {
       var r = findReportById(id);
-      return r && r.state === "RUNNING";
+      return r && (r.state === "RUNNING" || r.timeoutDetected);
     }
 
     function cancelReport(id) {
@@ -118,7 +115,6 @@
     function pollAvalonReport() {
       EdiscoveryService.getReports().then(function (res) {
         vm.reports = res;
-        //notifyOnEvent(vm.reports);
       }).finally(function (res) {
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
@@ -151,7 +147,7 @@
 
     function prettyPrintBytes(bytes, precision) {
       if (bytes === 0) {
-        return '0 bytes';
+        return '0';
       }
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
         return '-';

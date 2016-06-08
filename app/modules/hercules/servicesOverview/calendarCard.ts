@@ -34,7 +34,7 @@ namespace servicesOverview {
         description: 'servicesOverview.cards.calendar.description',
         activeServices: ['squared-fusion-cal'],
         statusServices: ['squared-fusion-cal'],
-        statusLink: 'services/calendar/',
+        statusLink: 'services/calendar',
         cardClass: 'calendar',
         cardType: CardType.hybrid
       });

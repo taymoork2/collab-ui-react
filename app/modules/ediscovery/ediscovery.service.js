@@ -2,17 +2,26 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, $q, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
-    function deferredResolve(resolved) {
-      var deferred = $q.defer();
-      deferred.resolve(resolved);
-      return deferred.promise;
+    function extractReports(res) {
+      var reports = res.data.reports;
+      _.each(reports, function (report) {
+        detectAndSetReportTimeout(report);
+      });
+      return reports;
     }
 
-    function extractReports(res) {
-      return res.data.reports;
+    function extractReport(res) {
+      return detectAndSetReportTimeout(res.data);
+    }
+
+    function detectAndSetReportTimeout(report) {
+      if (report) {
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime).getTime() > 300000;
+      }
+      return report;
     }
 
     function extractData(res) {
@@ -30,18 +39,14 @@
     function getAvalonRoomInfo(url) {
       return $http
         .get(url)
-        .then(extractData)
-        .catch(function (err) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + err)
-        });
+        .then(extractData);
     }
 
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractData)
+        .then(extractReport)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
           //console.log("error getReports: " + data)
@@ -59,12 +64,17 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
-          "displayName": displayName
+          "displayName": displayName,
+          "roomQuery": {
+            "startDate": moment.utc(startDate).toISOString(),
+            "endDate": moment.utc(endDate).toISOString(),
+            "roomId": roomId
+          }
         })
         .then(extractData);
     }

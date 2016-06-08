@@ -3,6 +3,7 @@
 describe('Care Chat Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
+  var Notification;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -56,7 +57,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   }));
 
   var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
-    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_) {
+    _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
@@ -66,11 +67,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     CTService = _CTService_;
     SunlightConfigService = _SunlightConfigService_;
     $state = _$state_;
+    Notification = _Notification_;
 
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
     spyOn($modal, 'open');
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(Notification, 'success');
 
     controller = $controller('CareChatSetupAssistantCtrl');
   };
@@ -315,6 +318,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       isDefinedRes = controller.isDefined(testObj, "trees-16");
       expect(isDefinedRes).toBe(false);
     });
+
+    it("should add a new category token and clear the input field when a new token is added", function () {
+      var ENTER_KEYPRESS_EVENT = {
+        which: 13
+      };
+      controller.categoryOptionTag = 'Mock Category Token';
+      var mockElementObject = jasmine.createSpyObj('element', ['tokenfield']);
+      spyOn(angular, 'element').and.returnValue(mockElementObject);
+      spyOn(controller, 'addCategoryOption').and.callThrough();
+
+      controller.onEnterKey(ENTER_KEYPRESS_EVENT);
+
+      expect(controller.addCategoryOption).toHaveBeenCalled();
+      expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
+      expect(controller.categoryOptionTag).toEqual('');
+    });
   });
 
   describe('Summary Page', function () {
@@ -359,6 +378,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         resolve: {
           templateId: jasmine.any(Function)
         }
+      });
+      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String)
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
