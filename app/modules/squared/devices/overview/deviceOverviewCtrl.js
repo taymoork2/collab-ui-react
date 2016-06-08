@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, TimeZoneService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -41,8 +41,8 @@
 
     function initTimeZone() {
       deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
-      return TimeZoneService.query().$promise.then(function (timezones) {
-        deviceOverview.timeZoneOptions = timezones;
+      return ServiceSetup.getTimeZones().then(function (timezones) {
+        deviceOverview.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
       });
     }
 
