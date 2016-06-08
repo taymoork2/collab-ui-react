@@ -150,11 +150,9 @@
       multiFields: {
         meeting: [{
           columnName: 'conferencing',
-          toggleName: null,
           tooltip: $translate.instant('customerPage.meeting')
         }, {
           columnName: 'webexEEConferencing',
-          toggleName: 'atlasWebexTrials',
           tooltip: $translate.instant('customerPage.webexCMR')
         }]
       },

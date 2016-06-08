@@ -3,13 +3,13 @@
     <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeActive(row.entity, field.columnName)"
       class="badge"
       ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-      translate="customerPage.active" tooltip="{{field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
+      translate="customerPage.active" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
     <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeATrial(row.entity, field.columnName)"
       class="badge"
       ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-      translate="customerPage.trial" tooltip="{{field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
+      translate="customerPage.trial" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
     <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeFree(row.entity, field.columnName)"
       ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
-      translate="customerPage.free" tooltip="{{field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
+      translate="customerPage.free" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
   </div>
 </div>
