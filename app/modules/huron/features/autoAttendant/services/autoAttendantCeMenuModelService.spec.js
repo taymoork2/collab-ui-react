@@ -47,7 +47,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   // Custom menu
   var cmenu = getJSONFixture('huron/json/autoAttendant/customMenu.json');
   var ceCustom = cmenu.ceCustom;
-  var customWelcomeMenu = cmenu.customWelcomeMenu;
   var customMenu = cmenu.customMenu;
 
   beforeEach(module('uc.autoattendant'));
@@ -89,7 +88,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Combined';
       var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombined, 'openHours');
-      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
+      AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'openHours', _combinedMenu);
       expect(angular.equals(_ceRecord, ceCombined)).toBe(true);
     });
   });
@@ -350,25 +349,49 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   });
 
   describe('updateScheduleActionSetMap', function () {
-    it('should set defaultActionSet and scheduleActionSetMap attributes in AARecord object', function () {
+    it('should set scheduleActionSetMap attributes in AARecord object', function () {
       var _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'openHours');
-      expect(_ceRecord.defaultActionSet).toBe('openHours');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.open).toBe('openHours');
 
       _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'closedHours');
-      expect(_ceRecord.defaultActionSet).toBe('closedHours');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.closed).toBe('closedHours');
 
       _ceRecord = {};
       AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays', 'closedHours');
-      expect(_ceRecord.defaultActionSet).toBe('holidays');
-      expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
       expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('closedHours');
+    });
+  });
+
+  describe('updateDefaultActionSet', function () {
+    it('should set defaultActionSet to closedHours in AARecord object', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, true);
+      expect(_ceRecord.defaultActionSet).toBe('closedHours');
+    });
+
+    it('should set defaultActionSet to openHours in AARecord object', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, false);
+      expect(_ceRecord.defaultActionSet).toBe('openHours');
+    });
+
+    it('should set defaultActionSet to openHours in AARecord object with hasClosedHours undefined', function () {
+      var _ceRecord = {};
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, undefined);
+      expect(_ceRecord.defaultActionSet).toBe('openHours');
+    });
+
+    it('should not change defaultActionSet', function () {
+      var _ceRecord = {
+        defaultActionSet: 'test'
+      };
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(_ceRecord, undefined);
+      expect(_ceRecord.defaultActionSet).toBe('test');
     });
   });
 
@@ -384,15 +407,12 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       };
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'closedHours');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.closed)).toBe(true);
-      expect(_ceRecord.defaultActionSet).toBe('openHours');
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'openHours');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.open)).toBe(true);
-      expect(_ceRecord.defaultActionSet).toBe('holidays');
 
       AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(_ceRecord, 'holidays');
       expect(angular.isUndefined(_ceRecord.scheduleEventTypeMap.holiday)).toBe(true);
-      expect(angular.isUndefined(_ceRecord.defaultActionSet)).toBe(true);
     });
   });
 });

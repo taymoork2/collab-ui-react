@@ -40,7 +40,7 @@
       case 'c_mgmt':
         return ['squared-fusion-mgmt'];
       default:
-        return '';
+        return [];
       }
     }
 
@@ -75,5 +75,6 @@
         return 'icon icon-circle-question';
       }
     }
+
   }
 }());

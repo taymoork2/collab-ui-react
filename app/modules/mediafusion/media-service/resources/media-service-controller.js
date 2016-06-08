@@ -119,7 +119,8 @@
       $modal.open({
         controller: 'RedirectAddResourceController',
         controllerAs: 'redirectResource',
-        templateUrl: 'modules/mediafusion/media-service/add-resources/redirect-add-resource-dialog.html'
+        templateUrl: 'modules/mediafusion/media-service/add-resources/redirect-add-resource-dialog.html',
+        modalClass: 'redirect-add-resource'
       });
     }
 

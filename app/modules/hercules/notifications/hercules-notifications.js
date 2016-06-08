@@ -62,6 +62,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return [serviceId];
@@ -82,7 +83,8 @@
       $modal.open({
         controller: 'RedirectTargetController',
         controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+        type: 'small'
       });
     };
 

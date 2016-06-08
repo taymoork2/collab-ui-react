@@ -37,8 +37,14 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($state, 'go');
     spyOn($state, 'href');
     spyOn($window, 'open');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
+      if (input === 'atlasTrialsShipDevices') {
+        return $q.when(false);
+      } else {
+        return $q.when(true);
+      }
+    });
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')

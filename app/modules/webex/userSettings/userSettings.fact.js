@@ -1159,16 +1159,20 @@
         WebexUserSettingsSvc.disableCancel = false;
         WebexUserSettingsSvc.disableCancel2 = false;
 
-        Notification.notify([notificationMsg], updateStatus);
+        //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
+        if (resultJson.errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+          Notification.notifyReadOnly(resultJson.errId);
+        } else {
+          Notification.notify([notificationMsg], updateStatus);
+        }
       }, // processUpdateResponse()
 
       processNoUpdateResponse: function (result) {
         var funcName = "processNoUpdateResponse()";
         var logMsg = "";
 
-        logMsg = funcName + ": " + "result=" + "\n" +
-          result;
-        // $log.log(logMsg);
+        logMsg = funcName + ": " + "result=" + "\n" + result;
+        $log.log(logMsg);
 
         loading.saveBtn = false;
         loading.saveBtn2 = false;

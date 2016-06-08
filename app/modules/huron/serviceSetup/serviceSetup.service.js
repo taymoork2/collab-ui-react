@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
+  function ServiceSetup($q, $translate, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
 
     return {
       internalNumberRanges: [],
@@ -119,6 +119,24 @@
 
       getTimeZones: function () {
         return TimeZoneService.query().$promise;
+      },
+
+      getTranslatedTimeZones: function (timeZones) {
+        var localizedTimeZones = _.map(timeZones, function (timeZone) {
+          if (_.has(timeZone, 'id')) {
+            // for compatibility with new jodaTimeZones.json called by cmiServices.js.
+            return _.extend(timeZone, {
+              label: $translate.instant('timeZones.' + timeZone.id),
+              value: timeZone.id
+            });
+          } else {
+            // for compatibility with old timeZones.json called by cmiServices.js.
+            return _.extend(timeZone, {
+              label: $translate.instant('timeZones.' + timeZone.value),
+            });
+          }
+        });
+        return localizedTimeZones;
       },
 
       isOverlapping: function (x1, x2, y1, y2) {

@@ -7,6 +7,10 @@
 
   /* @ngInject */
   function UserListCtrl($location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
+    // variables to prevent userlist 'bounce' after all users/admins have been loaded
+    var endOfAdminList = false;
+    var endOfUserList = false;
+
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -146,15 +150,25 @@
 
     function getUserList(startAt) {
       var startIndex = startAt || 0;
-      // show spinning icon
-      $scope.gridRefresh = true;
-      // clear currentUser if a new search begins
-      $scope.currentUser = null;
 
-      getAdmins(startIndex);
-      getUsers(startIndex);
-      getPartners();
-      getOrg();
+      // when the startIndex is 0, assume that not all users have been loaded
+      if (startIndex === 0) {
+        endOfAdminList = false;
+        endOfUserList = false;
+      }
+
+      // should not try to load more users once all users have already been loaded
+      if (!endOfAdminList && !endOfUserList) {
+        // show spinning icon
+        $scope.gridRefresh = true;
+        // clear currentUser if a new search begins
+        $scope.currentUser = null;
+
+        getAdmins(startIndex);
+        getUsers(startIndex);
+        getPartners();
+        getOrg();
+      }
     }
 
     function getAdmins(startIndex) {
@@ -169,8 +183,10 @@
           $scope.filters[0].count = _.get(data, 'totalResults', 0);
           if (startIndex === 0) {
             $scope.userList.adminUsers = adminUsers;
-          } else {
+          } else if (adminUsers.length > 0) {
             $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
+          } else {
+            endOfAdminList = true;
           }
           $scope.setFilter($scope.activeFilter);
         } else {
@@ -202,8 +218,10 @@
               }
               if (startIndex === 0) {
                 $scope.userList.allUsers = allUsers;
-              } else {
+              } else if (allUsers.length > 0) {
                 $scope.userList.allUsers = $scope.userList.allUsers.concat(allUsers);
+              } else {
+                endOfUserList = true;
               }
 
               $scope.setFilter($scope.activeFilter);

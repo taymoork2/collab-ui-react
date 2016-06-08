@@ -13,11 +13,14 @@ namespace servicesOverview {
     }
 
     public constructor(Authinfo) {
-      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
-        'servicesOverview.cards.message.title', 'servicesOverview.cards.message.description', 'icon-circle-message', true);
+      super({
+        name: 'servicesOverview.cards.message.title',
+        description: 'servicesOverview.cards.message.description',
+        icon: 'icon-circle-message',
+      });
 
       this._buttons = Authinfo.isAllowedState('messenger')
-        ? [{name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass:'btn-link'}]
+        ? [{name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link'}]
         : [];
 
       this._loading = false;

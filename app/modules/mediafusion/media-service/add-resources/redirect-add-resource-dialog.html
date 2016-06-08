@@ -1,40 +1,40 @@
-<div class="redirect-add-resource">
-	<div class="modal-header" popover="">
-    <button type="button" class="close" ng-click="$close()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h5 class="modal-title"><span translate="mediaFusion.add-resource-dialog.title"></span></h5>
-  </div>
+<div class="modal-header" popover="">
+  <button type="button" class="close" ng-click="$close()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h5 class="modal-title"><span translate="mediaFusion.add-resource-dialog.title"></span></h5>
+</div>
+<div class="modal-body">
   <form name="inputHostNameForm">
-  	<div class="modal-body" ng-hide="redirectResource.enableRedirectToTarget">
-  		<ol>
-  			<li>
-  				<p><span
-		        translate="mediaFusion.add-resource-dialog.text1"></span></p>
-		      <div class="row">
-				    <div class="large-7 columns details-value">
-				      <cs-select
-				        ng-model="redirectResource.selectedCluster"
-				        options="redirectResource.clusterList"
-				        placeholder="redirectResource.selectPlaceholder"
-				        combo="true"
-				        required>
-				      </cs-select>
-				    </div>
-				  </div>  
-  			</li>	
-  			<li>
-		      <p><span
-		        translate="mediaFusion.add-resource-dialog.text2"></span></p>
-		      <div class="large-7">  
-		      	<input type="text" placeholder="{{'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}} "
-		             ng-model="redirectResource.hostName" required>
-		      </div>       
-	      </li>
-  		</ol>
-  	</div>
+    <div ng-hide="redirectResource.enableRedirectToTarget">
+      <ol>
+        <li>
+          <p><span
+            translate="mediaFusion.add-resource-dialog.text1"></span></p>
+          <div class="row">
+            <div class="large-7 columns details-value">
+              <cs-select
+                ng-model="redirectResource.selectedCluster"
+                options="redirectResource.clusterList"
+                placeholder="redirectResource.selectPlaceholder"
+                combo="true"
+                required>
+              </cs-select>
+            </div>
+          </div>  
+        </li>	
+        <li>
+          <p><span
+            translate="mediaFusion.add-resource-dialog.text2"></span></p>
+          <div class="large-7">  
+            <input type="text" placeholder="{{'mediaFusion.add-resource-dialog.hostname-placeholder' | translate}} "
+                  ng-model="redirectResource.hostName" required>
+          </div>       
+        </li>
+      </ol>
+    </div>
   </form>
-  <div class="modal-body" ng-show="redirectResource.enableRedirectToTarget">
+  <div ng-show="redirectResource.enableRedirectToTarget">
     <h3><span ng-hide="redirectResource.createNewGroup" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster"
               translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span></h3>
     <h3><span ng-show="redirectResource.createNewGroup" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-new-cluster"
@@ -42,28 +42,28 @@
     <p><span
       translate="mediaFusion.add-resource-dialog.grant-success-information"></span></p>
   </div>
-  <div class="modal-footer">
-    <button class="btn" 
-            ng-hide="redirectResource.enableRedirectToTarget"
-            ng-click="$close()">
-      <span translate="mediaFusion.add-resource-dialog.cancel"></span>
-    </button>
-    <button class="btn" 
-            ng-show="redirectResource.enableRedirectToTarget"
-            ng-click="redirectResource.back()">
-      <span translate="mediaFusion.add-resource-dialog.back"></span>
-    </button>
-    <button class="btn activate-button btn--primary"
-            ng-hide="redirectResource.enableRedirectToTarget"
-            ng-disabled="inputHostNameForm.$invalid"
-            ng-click="redirectResource.addRedirectTargetClicked(redirectResource.hostName, redirectResource.selectedCluster)">
-      <span translate="mediaFusion.add-resource-dialog.next"></span>
-    </button>
-    <button class="btn register-button btn--primary"
-            ng-show="redirectResource.enableRedirectToTarget"
-            ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
-      <span translate="mediaFusion.add-resource-dialog.register"></span>
-    </button>
-  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn" 
+          ng-hide="redirectResource.enableRedirectToTarget"
+          ng-click="$close()">
+    <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+  </button>
+  <button class="btn" 
+          ng-show="redirectResource.enableRedirectToTarget"
+          ng-click="redirectResource.back()">
+    <span translate="mediaFusion.add-resource-dialog.back"></span>
+  </button>
+  <button class="btn activate-button btn--primary"
+          ng-hide="redirectResource.enableRedirectToTarget"
+          ng-disabled="inputHostNameForm.$invalid"
+          ng-click="redirectResource.addRedirectTargetClicked(redirectResource.hostName, redirectResource.selectedCluster)">
+    <span translate="mediaFusion.add-resource-dialog.next"></span>
+  </button>
+  <button class="btn register-button btn--primary"
+          ng-show="redirectResource.enableRedirectToTarget"
+          ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
+    <span translate="mediaFusion.add-resource-dialog.register"></span>
+  </button>
+</div>
 
-</div>	

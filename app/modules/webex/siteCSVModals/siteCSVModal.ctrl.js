@@ -12,8 +12,10 @@
     $log,
     Notification,
     WebExApiGatewayService,
-    SiteListService
+    SiteListService,
+    WebExSiteRowService
   ) {
+
     var funcName = "SiteCSVModalCtrl()";
     var logMsg = '';
     var vm = this;
@@ -22,16 +24,20 @@
       "$stateParams=" + JSON.stringify($stateParams);
     // $log.log(logMsg);
 
-    vm.modal = {};
-
-    vm.siteRow = $stateParams.siteRow;
-    vm.siteUrl = vm.siteRow.license.siteUrl;
-    vm.viewReady = true;
-
     vm.onFileTypeError = onFileTypeError;
     vm.resetFile = resetFile;
     vm.startExport = startExport;
     vm.startImport = startImport;
+
+    vm.modal = {
+      file: null
+    };
+
+    vm.siteRow = $stateParams.siteRow;
+    vm.siteUrl = $stateParams.siteRow.license.siteUrl;
+    vm.requestingImport = false;
+    vm.requestingExport = false;
+    vm.viewReady = true;
 
     function onFileTypeError() {
       displayResult(
@@ -58,6 +64,8 @@
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       // $log.log(logMsg);
+
+      vm.requestingExport = true;
 
       WebExApiGatewayService.csvExport(
         siteUrl,
@@ -105,6 +113,8 @@
         "vm.siteRow=" + JSON.stringify(vm.siteRow) +
         "vm.modal.file=" + vm.modal.file;
       //$log.log(logMsg);
+
+      vm.requestingImport = true;
 
       if (
         (null == vm.modal.file) ||
@@ -156,7 +166,8 @@
       var funcName = "displayResult()";
       var logMsg = "";
 
-      SiteListService.updateCSVStatusInRow(vm.siteRow);
+      WebExSiteRowService.updateCSVStatusInRow(vm.siteUrl);
+      //SiteListService.updateCSVStatusInRow(vm.siteRow);
 
       if (isSuccess) {
         Notification.success($translate.instant(resultMsg));
@@ -169,8 +180,11 @@
         (_.isFunction($scope.$close))
       ) {
 
-        SiteListService.updateCSVStatusInRow(vm.siteRow);
+        //SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
+      } else {
+        vm.requestingImport = false;
+        vm.requestingImExport = false;
       }
     } // displayResult()
   } // SiteCSVModalCtrl()

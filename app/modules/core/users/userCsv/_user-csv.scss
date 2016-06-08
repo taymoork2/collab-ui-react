@@ -26,6 +26,7 @@
     }
     .file-drop-content {
       @extend .center;
+      position: relative;
       align-self: center;
       width: rem(400);
       padding-top: 2rem;
@@ -44,7 +45,6 @@
     .file-drop-content {
       background: $gray-light-4;
       .icon-check {
-        // border-radius: 50%;
         color: $color-cta-base;
       }
     }

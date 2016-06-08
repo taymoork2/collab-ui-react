@@ -21,37 +21,24 @@
 }
 
 .pendingStatus {
-  text-align: center;
-  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  .icon-circle-email {
-    font-size: 96px;
-    padding-top: 96px;
+  background-color: $color-attention-light;
+  color: $white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .pending-icon {
+    font-size: 1rem;
+    margin: 1rem;
+    margin-left: 1.5rem;
   }
-
-  .pendingTitle {
-    font-size: 20px;
-    line-height: 32px;
-    padding-top: 24px;
+  .pending-text {
+    flex: 1;
+    .pendingTitle {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .pendingMsg {
+      font-size: rem(14);
+    }
   }
-
-  .pendingMsg {
-    font-size: 14px;
-    line-height: 24px;
-    padding-top: 12px; 
-  }
-
-  .resendMsg {
-    padding-top: 44px;
-  }
-}
-
-.editServices{
-  text-align: center;
-  font-size: 14px;
-  line-height: 24px;
-  padding-top: 36px;
-  a {
-    color: $color-primary-base;
-  }    
 }
