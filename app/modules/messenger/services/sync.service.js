@@ -31,6 +31,11 @@
       }
     });
 
+    // Flag to indicate new data format or not
+    // This will be removed when backend moves to new data format, we have to support both before that
+    var isNewDataFormat = false;
+    var syncStringFromServer = "";
+
     // Flag to notify when to fetch status from Msgr-Admin-Service
     //  - first time a user/client requests info from this service
     //  - when explicitly requested by a user/client
@@ -59,6 +64,8 @@
         shouldFetch = true;
         return getSyncStatus();
       },
+      parseSyncMode: parseSyncMode,
+      getNewDataFormat: getNewDataFormat,
       setDirSyncMode: setDirSyncMode,
       setMessengerSyncMode: setMessengerSyncMode
     };
@@ -267,8 +274,16 @@
       return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
     }
 
+    function getNewDataFormat() {
+      return isNewDataFormat;
+    }
+
     function parseSyncMode(syncString) {
       var syncMode = syncModes.messenger.off;
+
+      // set to old data format by default, use new data format only when we detect it.
+      isNewDataFormat = false;
+      syncStringFromServer = syncString;
 
       switch (syncString) {
       case syncModes.messenger.off.text:
@@ -284,7 +299,28 @@
         syncMode = syncModes.dirsync.on;
         break;
       default:
-        Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+        // new data format handled here -- "msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0"
+        var arraySyncString = syncString.trim().split(";");
+        if (arraySyncString.length > 0) {
+          var primaryKey = arraySyncString[0];
+          switch (primaryKey) {
+          case "msgr_to_spark":
+            isNewDataFormat = true;
+            syncMode = syncModes.messenger.on;
+            break;
+          case "spark_to_msgr":
+          case "disabled":
+            isNewDataFormat = true;
+            syncMode = syncModes.messenger.off;
+            break;
+          default:
+            // error
+            Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+          }
+        } else {
+          // error
+          Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+        }
       }
 
       return syncMode;
@@ -317,6 +353,22 @@
         ciSyncMode: syncStatus.syncMode.text,
         authRedirect: syncStatus.isAuthRedirect
       };
+      // new data format
+      if (isNewDataFormat) {
+        var primaryKey = "msgr_to_spark";
+        if (!isSyncEnabled) {
+          primaryKey = "disabled";
+        }
+        var newSyncString = primaryKey;
+        var indexSemicolon = syncStringFromServer.indexOf(";");
+        if (indexSemicolon >= 0) {
+          newSyncString = primaryKey + syncStringFromServer.substr(indexSemicolon, syncStringFromServer.length - 1);
+        }
+        params = {
+          ciSyncMode: syncStringFromServer,
+          authRedirect: syncStatus.isAuthRedirect
+        };
+      }
 
       $http.patch(serviceUrl, params).then(function (response) {
         defer.resolve('PATCH Status ' + response.status);

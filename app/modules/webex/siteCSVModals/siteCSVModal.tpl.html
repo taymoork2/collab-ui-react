@@ -33,15 +33,16 @@
       <cs-card class="large">
         <article>
           <div class="webex-csv-container">
-            <div class="file-drop">
               <p align="center">
-                <label for='download'> 
-			      <i ng-if="!siteCSVModalCtrl.modal.file"
-			         class="icon icon-download-contain icon-4x icon-export-import"
-				     ng-click="siteCSVModalCtrl.startExport()"></i>
-				 
-			      <i ng-if="siteCSVModalCtrl.modal.file"
-			         class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
+                <label for='download'>
+                  <i ng-if="(!siteCSVModalCtrl.modal.file) && 
+                            (!siteCSVModalCtrl.requestingExport)"
+                     class="icon icon-download-contain icon-4x icon-export-import"
+                     ng-click="siteCSVModalCtrl.startExport()"></i>
+                 
+                  <i ng-if="(siteCSVModalCtrl.modal.file) || 
+                            (siteCSVModalCtrl.requestingExport)"
+                     class="icon icon-download-contain icon-4x icon-export-import-disabled"></i>
                 </label>
 
                 <br>
@@ -54,9 +55,9 @@
 			    <span translate='siteList.siteCsvModalExportText'
 			          translate-values='{siteUrl: siteCSVModalCtrl.siteUrl}'></span>
 			    -->
-			    <span translate='siteList.siteCsvModalExportTextShort'></span>
+			    <span style="font-size:90%"
+                      translate='siteList.siteCsvModalExportTextShort'></span>
 			  </p>
-            </div>
           </div>
         </article>
       </cs-card>
@@ -66,6 +67,26 @@
       <cs-card class="large">
         <article>
 		  <div class="webex-csv-container">
+              <div ng-if="(siteCSVModalCtrl.requestingExport)">
+                <div class="file-drop">
+                  <p align="center">
+                    <label for='upload'> 
+                      <i class="icon icon-upload-contain icon-4x icon-export-import-disabled"></i>
+                    </label>
+                    
+                    <br>
+                        
+                    <b><span translate='siteList.siteCsvImportLinkLabel'></span></b>
+                        
+                    <br><br>
+                        
+                    <span style="font-size:90%"
+                          translate='siteList.siteCsvModalImportText'></span>
+                  </p>
+                </div>
+              </div>
+                
+              <div ng-if="(!siteCSVModalCtrl.requestingExport)">
 				<div ng-if="!siteCSVModalCtrl.modal.file" 
 				     class="file-drop"
 					 cr-file-drop 
@@ -96,7 +117,8 @@
 						
 						<br><br>
 						
-						<span translate='siteList.siteCsvModalImportText'></span>
+						<span style="font-size:90%"
+                              translate='siteList.siteCsvModalImportText'></span>
                     </p>
 				</div>
 				
@@ -113,13 +135,14 @@
 				        <button cs-btn
 				                type="button" 
 						        class="btn btn--primary"
-						        loading="siteCSVModalCtrl.importing"
+						        loading="siteCSVModalCtrl.requestingImport"
 							    ng-click="siteCSVModalCtrl.startImport()">
 							  
 					      <span translate="siteList.importButton"></span>
 			            </button>
 				    </p>
 				</div>
+		      </div>
           </div>
         </article>
       </cs-card>

@@ -77,7 +77,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
         }
       });
 
-      it('should sign in as ' + sitesettings.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
         if (setup) {
           utils.click(sitesettings.t31ConfigureCog);
           utils.wait(sitesettings.siteSettingsPanel);
@@ -85,7 +85,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
         }
       });
     } else {
-      it('should sign in as t30sp6-regression-adm@mailinator.com and navigate to webex site list', function () {
+      it('should sign in as ' + sitesettings.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(sitesettings.conferencing);
