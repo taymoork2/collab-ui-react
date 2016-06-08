@@ -961,25 +961,12 @@
             controllerAs: 'siteList',
             parent: 'main'
           })
-          .state('site-csv-import', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'SiteCSVImportModalCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
-                controllerAs: 'siteCSVImportModalCtrl'
-              }
-            },
-            params: {
-              csvImportObj: null
-            }
-          })
           .state('site-csv', {
             parent: 'modal',
             views: {
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                templateUrl: 'modules/webex/siteCSVModal/siteCSVModal.tpl.html',
                 controllerAs: 'siteCSVModalCtrl',
                 resolve: {
                   modalInfo: function ($state) {
