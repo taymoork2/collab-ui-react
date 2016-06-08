@@ -17,6 +17,7 @@ describe('Service: Mixpanel', function () {
 
   function initSpies() {
     spyOn(Config, 'isProd');
+    spyOn(Mixpanel, '_init').and.callFake(_.noop);
     spyOn(Mixpanel, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
       callback({

@@ -11,19 +11,20 @@
   function Mixpanel($q, Config, Orgservice) {
 
     var service = {
-      env: undefined,
       _init: _init,
       _track: _track,
-      trackEvent: trackEvent
+      trackEvent: trackEvent,
+      getTestOrg: getTestOrg
     };
 
     var token = {
-      ProdKey: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      TestKey: '536df13b2664a85b06b0b6cf32721c24'
+      PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
+      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24'
     };
 
     var isTestOrg = null;
     var hasInit = false;
+    var throwError = false;
 
     return service;
 
@@ -31,16 +32,21 @@
       return $q(function (resolve, reject) {
         if (hasInit) {
           return resolve();
+        } else if (throwError) {
+          return reject();
         }
 
         if (Config.isProd()) {
-          resolve(token.ProdKey);
+          resolve(token.PROD_KEY);
         } else {
-          return resolve(getTestOrg().then(function () {
+          getTestOrg().then(function () {
             if (isTestOrg) {
-              return token.TestKey;
+              resolve(token.TEST_KEY);
+            } else {
+              throwError = true;
+              reject();
             }
-          }));
+          });
         }
       }).then(function (result) {
         hasInit = true;
