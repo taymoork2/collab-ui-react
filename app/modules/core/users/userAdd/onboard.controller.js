@@ -1786,14 +1786,18 @@
         field: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
-        sortable: true
+        sortable: true,
+        minWidth: 449,
+        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
         resizable: false,
         sort: {
           direction: 'desc',
-          priority: 0
+          priority: 0,
+          minWidth: 449,
+          maxWidth: 449
         },
         sortCellFiltered: true
       }]
