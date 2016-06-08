@@ -227,6 +227,10 @@
           .report-name {
             width: 100%;
           }
+          .date-error {
+            margin-bottom: 0;
+            color: $color-negative-base;
+          }
         }
         .input-section-last {
           padding-top: 2.5rem;

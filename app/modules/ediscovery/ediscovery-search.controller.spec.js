@@ -133,7 +133,8 @@ describe('Controller: EdiscoverySearchController', function () {
       });
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
-      expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
+      expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(
+        1);
 
     });
 
@@ -152,9 +153,8 @@ describe('Controller: EdiscoverySearchController', function () {
       });
       EdiscoveryService.createReport.returns(promise);
 
-      ediscoverySearchController.createReport();
+      var result = ediscoverySearchController.createReport();
       httpBackend.flush();
-
       expect(ediscoverySearchController.errors).toEqual(
         [{
           "errorCode": 420000,

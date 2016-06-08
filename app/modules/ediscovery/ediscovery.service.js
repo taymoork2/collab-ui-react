@@ -19,7 +19,8 @@
 
     function detectAndSetReportTimeout(report) {
       if (report) {
-        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime).getTime() > 300000;
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
+          .getTime() > 300000;
       }
       return report;
     }
@@ -67,12 +68,14 @@
     function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName,
           "roomQuery": {
-            "startDate": moment.utc(startDate).toISOString(),
-            "endDate": moment.utc(endDate).toISOString(),
+            "startDate": sd,
+            "endDate": ed,
             "roomId": roomId
           }
         })
