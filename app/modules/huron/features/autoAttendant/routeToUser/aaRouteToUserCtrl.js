@@ -21,7 +21,7 @@
       order: 'ascending',
       maxCount: 10,
       startAt: 0,
-      minOffered: 5 // try to offer at least this many minimum matches (may require multiple GETs if lots of users don't have extensions or voicemail)
+      fullLoad: 10 // how many to query, a full listing
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -178,15 +178,17 @@
       var defer = $q.defer();
 
       UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+
         if (data.success) {
           var userInfoPromises = [];
           _.each(data.Resources, function (aUser) {
+
             userInfoPromises.push(getUserExtension(aUser.id).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
                 // and for voicemail, only add to the list if they have a voicemail profile for the extension
-                if (angular.isDefined($scope.voicemail) && $scope.voicemail) {
-                  getVoicemailProfile(extension).then(function (voicemailProfile) {
+                if ($scope.voicemail) {
+                  return getVoicemailProfile(extension).then(function (voicemailProfile) {
                     if (voicemailProfile) {
                       vm.users.push({
                         description: formatName(aUser, extension),
@@ -218,8 +220,17 @@
             // try to offer a minimum amount of matches.
             // if enough users didn't make it past sanity checks,
             // and we're still getting results back, then get some more.
-            if (_.size(vm.users) < vm.sort.minOffered && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
-              defer.resolve(getUsers(searchStr, startat + vm.sort.maxCount));
+            if (_.size(vm.users) < vm.sort.fullLoad && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
+
+              startat += vm.sort.maxCount;
+
+              /* Adjust the maxCount for query so we don't go over. 
+               * Use of fullLoad instead of maxCount will keep maxCount from
+               * going negative
+               */
+              vm.sort.maxCount = vm.sort.fullLoad - _.size(vm.users);
+
+              defer.resolve(getUsers(searchStr, startat));
             } else {
               // otherwise we're done
               defer.resolve(data.Resources);
