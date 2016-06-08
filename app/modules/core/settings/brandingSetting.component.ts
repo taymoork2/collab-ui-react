@@ -9,8 +9,11 @@ namespace globalsettings {
       this.subsectionDescription = 'branding.description';
     }
   }
-  angular.module('Core').component('brandingSetting', {
-    controller: 'BrandingCtrl as bctrl',
-    templateUrl:'modules/core/partnerProfile/brandingWordingChange.tpl.html',
-  });
+  
+  FeatureToggle.support(FeatureToggle.features.brandingWordingChange).then(function(toggle){
+    angular.module('Core').component('brandingSetting', {
+      controller: 'BrandingCtrl as bctrl',
+      templateUrl:'modules/core/partnerProfile/branding/branding' + (toggle ? 'WordingChange': '') + '.tpl.html',
+    });
+  }) 
 }
