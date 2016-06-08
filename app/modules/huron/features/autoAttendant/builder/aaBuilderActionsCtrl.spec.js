@@ -18,6 +18,16 @@ describe('Controller: AABuilderActionsCtrl', function () {
     actions: ['testAction']
   }];
 
+  var sortedOptions = [{
+    "title": 'autoAttendant.actionPhoneMenu',
+  }, {
+    "title": 'autoAttendant.actionRouteCall',
+  }, {
+    "title": 'autoAttendant.actionSayMessage',
+  }, {
+    "title": 'autoAttendant.phoneMenuDialExt',
+  }];
+
   var testOptionsWithPhoneMenu = [{
     title: 'Phone Menu',
     controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
@@ -165,6 +175,18 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
       expect(aaUiModel['openHours']['entries'][0].getKey()).toEqual('0');
       expect(aaUiModel['openHours']['entries'][1].getKey()).toEqual('1');
+    });
+  });
+
+  /**
+   * title value is not read from properties file in unit test cases. So it will treat the key provided into vm.options for title
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].title).toEqual(sortedOptions[i].title);
+      }
     });
   });
 
