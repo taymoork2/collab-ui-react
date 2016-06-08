@@ -21,6 +21,7 @@
     var service = {
       getTrial: getTrial,
       getTrialsList: getTrialsList,
+      getTrialsListByEmail: getTrialsListByEmail,
       getDeviceTrialsLimit: getDeviceTrialsLimit,
       editTrial: editTrial,
       startTrial: startTrial,
@@ -47,6 +48,14 @@
       return $http.get(trialsUrl, {
         params: {
           customerName: searchText
+        }
+      });
+    }
+
+    function getTrialsListByEmail(searchText) {
+      return $http.get(trialsUrl, {
+        params: {
+          customerEmail: searchText
         }
       });
     }

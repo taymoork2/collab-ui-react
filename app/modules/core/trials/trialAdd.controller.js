@@ -13,11 +13,14 @@
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
+    var debounceTimeout = 2000;
 
     vm.trialData = TrialService.getData();
 
     vm.nameError = false;
     vm.emailError = false;
+    vm.uniqueName = false;
+    vm.uniqueEmail = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.details = vm.trialData.details;
@@ -63,7 +66,53 @@
         type: 'text',
         required: true,
         maxlength: 50,
+        onKeydown: function (value, options) {
+          options.validation.show = false;
+          vm.uniqueName = false;
+        },
+        onBlur: function (value, options) {
+          options.validation.show = null;
+        }
       },
+      asyncValidators: {
+        uniqueName: {
+          expression: function ($viewValue, $modelValue, scope) {
+            // $FIXUP -- input validation required?
+            if ( scope.options.formControl.$isEmpty(scope.options.key) ) {
+              return $q.when();
+            }
+
+            // Show loading glyph
+            scope.options.templateOptions.loading = true;
+            var def = $q.defer();
+            var name = $viewValue.toLowerCase();
+
+            // Fetch list of trials based on name in edit box...
+            TrialService.getTrialsList(name).then(function (response) {
+              var found = _.find(response.data.trials, function (t) {
+                return (name === t.customerName.toLowerCase());
+              });
+              
+              if ( angular.isUndefined(found) ) {
+                vm.uniqueName = true;
+                return def.resolve();   // name unique
+              }
+              else {
+                scope.options.validation.show = true;
+                return def.reject();
+              }
+            });
+
+            scope.options.templateOptions.loading = false;
+            return def.promise;
+          },
+          message: '"This username is already taken."' // $TODO - localize
+        }
+      },
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: { default: debounceTimeout, blur: 0 },
+      }
     }, {
       model: vm.details,
       key: 'customerEmail',
@@ -73,7 +122,53 @@
         label: $translate.instant('partnerHomePage.customerEmail'),
         type: 'email',
         required: true,
+        onKeydown: function (value, options) {
+          //options.validation.show = false;
+          vm.uniqueEmail = false;
+        },
+        onBlur: function (value, options) {
+          options.validation.show = null;
+        }
       },
+      asyncValidators: {
+        uniqueEmail: {
+          expression: function ($viewValue, $modelValue, scope) {
+            // $FIXUP -- input validation required?
+            if ( scope.options.formControl.$isEmpty(scope.options.key) ) {
+              return $q.when();
+            }
+
+            // Show loading glyph
+            scope.options.templateOptions.loading = true;
+            var def = $q.defer();
+            var email = $viewValue.toLowerCase();
+
+            // Fetch list of trials based on email in edit box...
+            TrialService.getTrialsListByEmail(email).then(function (response) {
+              var found = _.find(response.data.trials, function (t) {
+                return (email === t.customerEmail.toLowerCase());
+              });
+              
+              if ( angular.isUndefined(found) ) {
+                vm.uniqueEmail = true;
+                return def.resolve();   // name unique
+              }
+              else {
+                scope.options.validation.show = true;
+                return def.reject();
+              }
+            });
+
+            scope.options.templateOptions.loading = false;
+            return def.promise;
+          },
+          message: '"This email is already taken."' // $TODO - localize
+        }
+      },
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: { default: debounceTimeout, blur: 0 },
+      }
     }];
 
     vm.messageFields = [{
