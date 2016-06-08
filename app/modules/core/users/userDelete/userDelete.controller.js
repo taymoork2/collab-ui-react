@@ -89,8 +89,8 @@
 
     function deleteError(response) {
       var messageKey = 'usersPage.deleteUserError';
-      var errrorCode = _.get(response, 'data.details[0].productErrorCode');
-      if (!_.isUndefined(errrorCode) && errrorCode === 'DN_IS_FALLBACK') {
+      var errorCode = _.get(response, 'data.details[0].productErrorCode');
+      if (!_.isUndefined(errorCode) && errorCode === 'DN_IS_FALLBACK') {
         messageKey = 'usersPage.deleteUserDnFallbackError';
       }
       Notification.errorResponse(response, messageKey);
