@@ -6,14 +6,19 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
+    deviceOverview.csdmTz = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.csdmTz).then(function (result) {
+      deviceOverview.csdmTz = result;
+    });
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZoneOptions();
