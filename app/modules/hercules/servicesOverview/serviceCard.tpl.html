@@ -8,7 +8,6 @@
   <div class="card-button" ng-class="{alignedButtons: !card.loading && card.status}">
     <a ng-href="#/{{button.link}}" ng-repeat="button in card.getButtons()">
       <button ng-class="button.buttonClass">{{button.name | translate}}</button>
-      <!--      <button class="btn-link">{{button.name | translate}}</button> -->
     </a>
     <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">
       <button ng-class="button.buttonClass" class="btn-link">{{card.getShowMoreButton().name | translate}}</button>
@@ -20,7 +19,7 @@
 </section>
 <footer ng-if="card.showStatus">
   <a class="status" ng-href="#/{{card.status.link}}">
-      <i class="icon icon-circle" ng-class="card.status.status || 'disabled'"></i>
-      <span ng-class="card.status.status || 'disabled'">{{card.status.text| translate}}</span>
+    <i class="icon icon-circle" ng-class="card.status.status || 'disabled'"></i>
+    <span ng-class="card.status.status || 'disabled'">{{card.status.text| translate}}</span>
   </a>
 </footer>

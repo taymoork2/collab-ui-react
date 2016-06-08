@@ -1,13 +1,26 @@
-<div class="ui-grid-cell-contents">
-  <span ng-show="row.entity.state === 'RUNNING'">
-    <span class="spinner-example--small">
-      <i class="icon icon-spinner"></i>
+<div class="ui-grid-cell-contents" ng-switch on="row.entity.state">
+
+  <div ng-if="!row.entity.timeoutDetected">
+    <span ng-switch-when="RUNNING">
+      {{'ediscovery.reportStates.RUNNING' | translate}}...
+      <span class="spinner-example--small">
+        <i class="icon icon-spinner"></i>
+      </span>
+      <span ng-if="row.entity.progress > 0">
+        {{row.entity.progress}}%
+      </span>
     </span>
-    <span ng-if="row.entity.progress > 0">
-      {{row.entity.progress}}
+
+    <span ng-switch-when="FAILED" class="red">
+      {{'ediscovery.reportStates.' + row.entity.state | translate}}
+      ({{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}})
     </span>
-  </span>
-  <span ng-show="row.entity.state !== 'RUNNING'">
-     {{row.entity.state}}
-  </span>
+
+    <span ng-switch-default>
+      {{'ediscovery.reportStates.' + row.entity.state | translate}}
+    </span>
+  </div>
+
+  <span ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
+
 </div>

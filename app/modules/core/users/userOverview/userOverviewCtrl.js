@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, $resource, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -17,7 +17,7 @@
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
-    vm.atlasInviteToggleStatus = false;
+    vm.atlasInvitePendingStatusToggle = false;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
     vm.isCSB = false;
@@ -27,49 +27,49 @@
     vm.isFusionCal = Authinfo.isFusionCal();
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
+    var msgState = {
+      name: $translate.instant('onboardModal.message'),
+      icon: $translate.instant('onboardModal.message'),
+      state: 'user-overview.messaging',
+      detail: $translate.instant('onboardModal.msgFree'),
+      actionsAvailable: getDisplayableServices('MESSAGING')
+    };
+    var commState = {
+      name: $translate.instant('onboardModal.call'),
+      icon: $translate.instant('onboardModal.call'),
+      state: 'user-overview.communication',
+      detail: $translate.instant('onboardModal.callFree'),
+      actionsAvailable: true
+    };
+    var confState = {
+      name: $translate.instant('onboardModal.meeting'),
+      icon: $translate.instant('onboardModal.meeting'),
+      state: 'user-overview.conferencing',
+      detail: $translate.instant('onboardModal.mtgFree'),
+      actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
+    };
+    var contactCenterState = {
+      name: $translate.instant('onboardModal.contactCenter'),
+      icon: 'ContactCenter',
+      state: 'user-overview.contactCenter',
+      detail: $translate.instant('onboardModal.freeContactCenter'),
+      actionsAvailable: true
+    };
+    var invitationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
+      customerId: '@customerId',
+      userId: '@userId'
+    });
 
     $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb),
         FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
       ])
       .then(function (result) {
         vm.isCSB = Authinfo.isCSB() && result[0];
-        vm.atlasInviteToggleStatus = result[1];
+        vm.atlasInvitePendingStatusToggle = result[1];
       }).finally(init);
 
     function init() {
       vm.services = [];
-
-      var msgState = {
-        name: $translate.instant('onboardModal.message'),
-        icon: $translate.instant('onboardModal.message'),
-        state: 'user-overview.messaging',
-        detail: $translate.instant('onboardModal.msgFree'),
-        actionsAvailable: getDisplayableServices('MESSAGING')
-      };
-
-      var commState = {
-        name: $translate.instant('onboardModal.call'),
-        icon: $translate.instant('onboardModal.call'),
-        state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.callFree'),
-        actionsAvailable: true
-      };
-
-      var confState = {
-        name: $translate.instant('onboardModal.meeting'),
-        icon: $translate.instant('onboardModal.meeting'),
-        state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.mtgFree'),
-        actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
-      };
-
-      var contactCenterState = {
-        name: $translate.instant('onboardModal.contactCenter'),
-        icon: 'ContactCenter',
-        state: 'user-overview.contactCenter',
-        detail: $translate.instant('onboardModal.freeContactCenter'),
-        actionsAvailable: true
-      };
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
@@ -92,7 +92,6 @@
         }
         vm.services.push(commState);
       }
-
       if (hasEntitlement('cloud-contact-center')) {
         if (getServiceDetails('CC')) {
           contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
@@ -140,6 +139,28 @@
           var licensePrefix = userLicenses[l].substring(0, 2);
           if (licensePrefix === license) {
             return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function getInvitationDetails(invitations, license) {
+      if (invitations) {
+        var idx = _.findIndex(invitations, function (invite) {
+          return invite.id.substring(0, 2) === license;
+        });
+        if (idx > -1) {
+          if (license === 'CF') {
+            return invitations[idx].id;
+          } else {
+            return true;
+          }
+        } else {
+          if (license === 'CF') {
+            return null;
+          } else {
+            return false;
           }
         }
       }
@@ -230,9 +251,41 @@
 
     function getAccountStatus() {
       var currentUserId = vm.currentUser.id;
+      vm.currentUser.pendingStatus = false;
       Userservice.getUser(currentUserId, function (data, status) {
         if (data.success) {
-          vm.pendingStatus = vm.atlasInviteToggleStatus && (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+          vm.pendingStatus = (vm.atlasInvitePendingStatusToggle && _.indexOf(data.accountStatus, 'pending') >= 0);
+          vm.currentUser.pendingStatus = vm.pendingStatus;
+          if (vm.pendingStatus) {
+            invitationResource.get({
+              customerId: Authinfo.getOrgId(),
+              userId: currentUserId
+            }).$promise.then(function (response) {
+              if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
+                vm.currentUser.invitations = {
+                  ms: false,
+                  cf: '',
+                  cc: false
+                };
+                if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
+                  msgState.detail = $translate.instant('onboardModal.paidMsg');
+                  vm.services.push(msgState);
+                  vm.currentUser.invitations.ms = true;
+                }
+                var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
+                if (confId) {
+                  confState.detail = $translate.instant('onboardModal.paidConf');
+                  vm.services.push(confState);
+                  vm.currentUser.invitations.cf = confId;
+                }
+                if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
+                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                  vm.services.push(contactCenterState);
+                  vm.currentUser.invitations.cc = true;
+                }
+              }
+            });
+          }
         } else {
           Log.debug('Get existing account info failed. Status: ' + status);
         }

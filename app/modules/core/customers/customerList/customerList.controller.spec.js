@@ -57,7 +57,7 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);
 
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'getUserAuthInfo').and.returnValue($q.when({}));
+    spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
@@ -142,6 +142,18 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
   });
+  describe('getSubfields', function () {
+    beforeEach(initController);
+
+    it('should return a proper list of subfields given the field type', function () {
+      $scope.gridOptions.multiFields = {
+        meeting: ['conferencing', 'webexEEConferencing']
+      };
+      var result = $scope.getSubfields('meeting');
+      expect(result[0]).toBe('conferencing');
+      expect(result[1]).toBe('webexEEConferencing');
+    });
+  });
 
   describe('customerCommunicationLicenseIsTrial flag', function () {
     beforeEach(initController);
@@ -225,13 +237,13 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
-  describe('getUserAuthInfo should be called correctly', function () {
+  describe('modifyManagedOrgs should be called correctly', function () {
     beforeEach(initController);
 
-    it('should have called PartnerService.getUserAuthInfo', function () {
+    it('should have called PartnerService.modifyManagedOrgs', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
-      $scope.getUserAuthInfo(testOrg.customerOrgId);
-      expect(PartnerService.getUserAuthInfo).toHaveBeenCalled();
+      $scope.modifyManagedOrgs(testOrg.customerOrgId);
+      expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
     });
   });
 });

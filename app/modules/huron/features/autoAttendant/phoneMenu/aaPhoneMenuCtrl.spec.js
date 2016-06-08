@@ -62,7 +62,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
-    aaUiModel['openHours'].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+    var menu = AutoAttendantCeMenuModelService.newCeMenu();
+    menu.type = 'MENU_OPTION';
+    aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
       $scope: $scope
@@ -188,9 +191,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   });
 
-  describe('createOptionMenu', function () {
+  describe('addButtonZero', function () {
     it('should intialize CeMenu first entry with first available key', function () {
-      controller.createOptionMenu();
+      controller.addButtonZero();
 
       var headkey = '0';
       expect(controller.entries[index].entries[0]).toBeDefined();

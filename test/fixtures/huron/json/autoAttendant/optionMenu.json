@@ -359,7 +359,9 @@
         "value": "Enter the extension now.",
         "description": "",
         "inputType": 2,
-        "voice": ""
+        "voice": "",
+        "maxNumberOfCharacters": 4,
+        "minNumberOfCharacters": 4
       }],
       "timeout": "",
       "username": "",

@@ -2,7 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryHeaderController() {
+  function EdiscoveryHeaderController($window, $scope) {
+
+    $scope.$on('$viewContentLoaded', function () {
+      $window.document.title = "Activity Reports";
+    });
+
     var vm = this;
     vm.pageTitle = "eDiscovery";
     vm.headerTabs = [{

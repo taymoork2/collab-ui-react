@@ -110,7 +110,8 @@
         sales: 'Sales_Admin',
         helpdesk: 'Help_Desk',
         spark_synckms: 'Spark_SyncKms',
-        readonly_admin: 'Readonly_Admin'
+        readonly_admin: 'Readonly_Admin',
+        compliance_user: 'Compliance_User'
       },
 
       roleState: {
@@ -267,7 +268,8 @@
         'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
     config.serviceStates = {
@@ -308,13 +310,15 @@
       'squared-fusion-uc': [
         'cluster-list',
         'call-service',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-fusion-cal': [
         'calendar-service',
         'services-overview',
         'cluster-list',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-team-member': [
         'organization'
@@ -322,6 +326,7 @@
       'squared-fusion-media': [
         //'mediafusionconnector',
         'metrics',
+        'reports-metrics',
         'media-service',
         'connector-details'
       ],
@@ -352,7 +357,8 @@
         'hurondetails',
         'huronsettings',
         'cluster-list',
-        'cluster-settings-page',
+        'expressway-settings',
+        'mediafusion-settings',
         'calendar-service',
         'call-service',
         'management-service'

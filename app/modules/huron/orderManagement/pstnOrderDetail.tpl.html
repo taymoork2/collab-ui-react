@@ -7,7 +7,7 @@
       <span class="feature-name">{{pstnOrderDetail.currentOrder.created}}&emsp;{{pstnOrderDetail.currentOrder.type}}</span>
     </div>
     <div>
-      <span class="feature-name">{{pstnOrderDetail.currentOrder.status}}</span>
+      <span class="feature-name">{{pstnOrderDetail.currentOrder.status}} - {{pstnOrderDetail.currentOrder.statusMessage}}</span>
     </div>
     <div class="filter">
       <input type="text" class="form-control" ng-model="orderDetails.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderDetail.searchPlaceholder' | translate}}">
