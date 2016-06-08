@@ -34,7 +34,7 @@ namespace globalsettings {
       });
       $scope.$apply();
 
-      secondRetentionTimeOption = controller.retentionTimeOptions[2].value;
+      secondRetentionTimeOption = controller.retentionTimeOptions[1].value;//We just pick one of them
     }
 
     describe('contructor()', ()=> {
