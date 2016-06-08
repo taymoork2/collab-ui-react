@@ -18,7 +18,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
     actions: ['testAction']
   }];
 
-
   var sortedOptions = [{
     "title": 'autoAttendant.actionPhoneMenu',
   }, {
@@ -28,7 +27,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
   }, {
     "title": 'autoAttendant.phoneMenuDialExt',
   }];
-
 
   var testOptionsWithPhoneMenu = [{
     title: 'Phone Menu',
