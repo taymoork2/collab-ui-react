@@ -15,10 +15,11 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config, Authinfo) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config, Log) {
     var NO_TIMEOUT = 0;
     var FAILURE_TIMEOUT = NO_TIMEOUT;
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
+    var preventToasters = false;
 
     return {
       success: success,
@@ -44,11 +45,16 @@
     }
 
     function notifyReadOnly(rejection) {
-      notify($translate.instant('readOnlyMessages.notAllowed'), 'warning', true);
+      notify($translate.instant('readOnlyMessages.notAllowed'), 'warning');
+      preventToasters = true;
+      $timeout(function () {
+        preventToasters = false;
+      }, 1000);
     }
 
-    function notify(notifications, type, readOnly) {
-      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && !readOnly) {
+    function notify(notifications, type) {
+      if (preventToasters === true) {
+        Log.warn('Deliberately prevented a notification:', notifications);
         return;
       }
       var types = ['success', 'warning', 'error'];

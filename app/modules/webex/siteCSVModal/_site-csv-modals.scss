@@ -11,6 +11,9 @@
 .icon-export-import-disabled {
   top: 40px;
   color: $gray-light-3;
+  &:hover {
+    cursor: default;
+  }
 }
  
 .webex-csv-container {

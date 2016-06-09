@@ -42,6 +42,7 @@
 
     function dateErrors(start, end) {
       var errors = [];
+
       if (moment(start).isAfter(moment(end))) {
         errors.push($translate.instant("ediscovery.dateError.StartDateMustBeforeEndDate"));
       }
@@ -51,26 +52,13 @@
       return errors;
     }
 
-    function openGenericModal(title, messages) {
-      $modal.open({
-        templateUrl: "modules/ediscovery/genericModal.html",
-        controller: 'EdiscoveryGenericModalCtrl as modal',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          messages: function () {
-            return messages;
-          }
-        }
-      });
-    }
-
     function validateDate() {
-      var title = "Date validation";
+      vm.dateValidationError = null;
       var errors = dateErrors(getStartDate(), getEndDate());
       if (errors.length > 0) {
-        openGenericModal(title, errors);
+        vm.dateValidationError = {
+          errors: errors
+        };
         return false;
       } else {
         return true;
@@ -82,11 +70,11 @@
     });
 
     $scope.$watch(getStartDate, function (startDate) {
-      //validateDate();
+      validateDate();
     });
 
     $scope.$watch(getEndDate, function (endDate) {
-      //validateDate();
+      validateDate();
     });
 
     function searchForRoom(roomId) {
@@ -124,12 +112,6 @@
     function createReport() {
       disableAvalonPolling();
       vm.errors = [];
-      if (!validateDate()) {
-        return;
-      }
-      // vm.report = {
-      //   "state": "CREATED"
-      // };
 
       EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.id, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .then(function (res) {
