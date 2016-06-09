@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($state, $timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -15,6 +15,7 @@
     $scope.downloadReport = downloadReport;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
+    $scope.rerunReport = rerunReport;
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
@@ -73,7 +74,7 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      rowHeight: 40,
+      rowHeight: 55,
       enableRowHeaderSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
@@ -82,27 +83,39 @@
       columnDefs: [{
         field: 'displayName',
         displayName: 'Name',
-        sortable: true
+        sortable: true,
+        cellTemplate: 'modules/ediscovery/cell-template-name.html',
+        width: '25%'
       }, {
         field: 'createdTime',
         displayName: 'Created At',
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html'
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
+        width: '15%'
+      }, {
+        field: 'roomQuery.roomId',
+        displayName: 'Room Id',
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
+        width: '15%'
+      }, {
+        field: 'roomQueryDates',
+        displayName: 'Activity dates',
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
+        width: '15%'
       }, {
         field: 'state',
         displayName: 'State',
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html'
-      }, {
-        field: 'sizeInBytes',
-        displayName: 'Size',
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-size.html'
+        cellTemplate: 'modules/ediscovery/cell-template-state.html',
+        width: '20%'
       }, {
         field: 'actions',
         displayName: 'Actions',
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-action.html'
+        cellTemplate: 'modules/ediscovery/cell-template-action.html',
+        width: '10%'
       }]
     };
 
@@ -125,6 +138,14 @@
       if ($window.Notification) {
         $window.Notification.requestPermission().then(function (result) {});
       }
+    }
+
+    function rerunReport(roomId, startDate, endDate) {
+      $state.go('ediscovery.search', {
+        roomId: roomId,
+        startDate: startDate,
+        endDate: endDate
+      });
     }
 
     function notifyOnEvent(reports) {

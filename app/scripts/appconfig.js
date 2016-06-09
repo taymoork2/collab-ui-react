@@ -2209,7 +2209,12 @@
             url: '/search',
             controller: 'EdiscoverySearchController',
             controllerAs: 'ediscoverySearchCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+            templateUrl: 'modules/ediscovery/ediscovery-search.html',
+            params: {
+              roomId: null,
+              startDate: null,
+              endDate: null
+            }
           })
           .state('ediscovery.reports', {
             url: '/reports',
