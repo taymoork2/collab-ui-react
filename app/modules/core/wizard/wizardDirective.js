@@ -110,6 +110,13 @@
       } else {
         vm.current.tab = getTabs()[0];
       }
+
+      if ($stateParams.currentSubTab) {
+        vm.current.subTab = _.findWhere(getTab().subTabs, {
+          name: $stateParams.currentSubTab
+        });
+      }
+
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {
@@ -369,7 +376,11 @@
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
+
+      var currentStep = getStep();
+      if (currentStep.nextText) {
+        vm.nextText = $translate.instant(currentStep.nextText);
+      } else if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');

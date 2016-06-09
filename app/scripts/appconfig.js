@@ -1398,6 +1398,7 @@
             },
             params: {
               currentTab: {},
+              currentSubTab: '',
               currentStep: '',
               onlyShowSingleTab: false
             },

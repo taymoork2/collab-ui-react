@@ -35,19 +35,30 @@
       description: 'firstTimeWizard.enterpriseSettingsSub',
       icon: 'icon-settings',
       title: 'firstTimeWizard.enterpriseSettings',
-      controller: 'EnterpriseSettingsCtrl',
-      steps: [{
-        name: 'init',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
+
+      subTabs: [{
+        name: 'enterpriseSipUrl',
+        steps: [{
+          name: 'enterpriseSipUrl',
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
+          nextText: 'common.next'
+        }]
       }, {
-        name: 'exportMetadata',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
-      }, {
-        name: 'importIdp',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
-      }, {
-        name: 'testSSO',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
+        name: 'enterpriseSSO',
+        controller: 'EnterpriseSettingsCtrl',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
+        }, {
+          name: 'exportMetadata',
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
+        }, {
+          name: 'importIdp',
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
+        }, {
+          name: 'testSSO',
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
+        }]
       }]
     }, {
       name: 'addUsers',
@@ -155,18 +166,6 @@
         _.remove($scope.tabs, {
           name: 'addUsers'
         });
-      }
-
-      var enterpriseSipUrlStep = {
-        name: 'enterpriseSipUrl',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
-      };
-
-      var enterpriseSettingsTab = _.find($scope.tabs, {
-        name: 'enterpriseSettings',
-      });
-      if (angular.isDefined(enterpriseSettingsTab)) {
-        enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
       }
 
       // if we have any step thats is empty, we remove the tab

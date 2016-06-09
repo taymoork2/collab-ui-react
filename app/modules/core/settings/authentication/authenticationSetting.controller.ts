@@ -25,6 +25,7 @@ namespace globalsettings {
     public modifySSO() {
       this.$state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings',
+        currentSubTab: 'enterpriseSSO',
         onlyShowSingleTab: true
       });
     }
