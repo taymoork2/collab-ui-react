@@ -22,7 +22,8 @@ namespace globalsettings {
 
   angular.module('Core').component('settingSection', {
     bindings: {
-      setting: '<'
+      setting: '<',
+      hideBottomLine: '<'
     },
     transclude: true,
     templateUrl: "modules/core/settings/settingSection.tpl.html"

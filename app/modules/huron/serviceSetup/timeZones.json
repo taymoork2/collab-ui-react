@@ -519,10 +519,6 @@
   "label": "Africa/Gaborone",
   "timezoneid": "100020"
 }, {
-  "value": "Africa/Juba",
-  "label": "Africa/Juba",
-  "timezoneid": "100022"
-}, {
   "value": "Africa/Kampala",
   "label": "Africa/Kampala",
   "timezoneid": "100023"
@@ -707,10 +703,6 @@
   "label": "America/Chihuahua",
   "timezoneid": "100079"
 }, {
-  "value": "America/Creston",
-  "label": "America/Creston",
-  "timezoneid": "100080"
-}, {
   "value": "America/Cuiaba",
   "label": "America/Cuiaba",
   "timezoneid": "100081"
@@ -843,14 +835,6 @@
   "label": "America/Kentucky/Monticello",
   "timezoneid": "100113"
 }, {
-  "value": "America/Kralendijk",
-  "label": "America/Kralendijk",
-  "timezoneid": "100114"
-}, {
-  "value": "America/Lower_Princes",
-  "label": "America/Lower_Princes",
-  "timezoneid": "100115"
-}, {
   "value": "America/Maceio",
   "label": "America/Maceio",
   "timezoneid": "100116"
@@ -858,10 +842,6 @@
   "value": "America/Managua",
   "label": "America/Managua",
   "timezoneid": "100117"
-}, {
-  "value": "America/Marigot",
-  "label": "America/Marigot",
-  "timezoneid": "100119"
 }, {
   "value": "America/Martinique",
   "label": "America/Martinique",
@@ -878,10 +858,6 @@
   "value": "America/Merida",
   "label": "America/Merida",
   "timezoneid": "100123"
-}, {
-  "value": "America/Metlakatla",
-  "label": "America/Metlakatla",
-  "timezoneid": "100124"
 }, {
   "value": "America/Miquelon",
   "label": "America/Miquelon",
@@ -914,10 +890,6 @@
   "value": "America/Nome",
   "label": "America/Nome",
   "timezoneid": "100133"
-}, {
-  "value": "America/North_Dakota/Beulah",
-  "label": "America/North_Dakota/Beulah",
-  "timezoneid": "100135"
 }, {
   "value": "America/North_Dakota/Center",
   "label": "America/North_Dakota/Center",
@@ -998,18 +970,6 @@
   "value": "America/Scoresbysund",
   "label": "America/Scoresbysund",
   "timezoneid": "100154"
-}, {
-  "value": "America/Shiprock",
-  "label": "America/Shiprock",
-  "timezoneid": "100155"
-}, {
-  "value": "America/Sitka",
-  "label": "America/Sitka",
-  "timezoneid": "100156"
-}, {
-  "value": "America/St_Barthelemy",
-  "label": "America/St_Barthelemy",
-  "timezoneid": "100157"
 }, {
   "value": "America/St_Kitts",
   "label": "America/St_Kitts",
@@ -1103,10 +1063,6 @@
   "label": "Antarctica/Rothera",
   "timezoneid": "100181"
 }, {
-  "value": "Antarctica/South_Pole",
-  "label": "Antarctica/South_Pole",
-  "timezoneid": "100182"
-}, {
   "value": "Antarctica/Syowa",
   "label": "Antarctica/Syowa",
   "timezoneid": "100183"
@@ -1114,10 +1070,6 @@
   "value": "Antarctica/Vostok",
   "label": "Antarctica/Vostok",
   "timezoneid": "100184"
-}, {
-  "value": "Arctic/Longyearbyen",
-  "label": "Arctic/Longyearbyen",
-  "timezoneid": "100185"
 }, {
   "value": "Asia/Aden",
   "label": "Asia/Aden",
@@ -1187,10 +1139,6 @@
   "label": "Asia/Harbin",
   "timezoneid": "100204"
 }, {
-  "value": "Asia/Hebron",
-  "label": "Asia/Hebron",
-  "timezoneid": "100205"
-}, {
   "value": "Asia/Ho_Chi_Minh",
   "label": "Asia/Ho_Chi_Minh",
   "timezoneid": "100206"
@@ -1198,10 +1146,6 @@
   "value": "Asia/Hovd",
   "label": "Asia/Hovd",
   "timezoneid": "100207"
-}, {
-  "value": "Asia/Istanbul",
-  "label": "Asia/Istanbul",
-  "timezoneid": "100208"
 }, {
   "value": "Asia/Jayapura",
   "label": "Asia/Jayapura",
@@ -1214,10 +1158,6 @@
   "value": "Asia/Kashgar",
   "label": "Asia/Kashgar",
   "timezoneid": "100213"
-}, {
-  "value": "Asia/Khandyga",
-  "label": "Asia/Khandyga",
-  "timezoneid": "100214"
 }, {
   "value": "Asia/Kuching",
   "label": "Asia/Kuching",
@@ -1267,18 +1207,6 @@
   "label": "Asia/Qyzylorda",
   "timezoneid": "100228"
 }, {
-  "value": "Asia/Riyadh87",
-  "label": "Asia/Riyadh87",
-  "timezoneid": "100230"
-}, {
-  "value": "Asia/Riyadh88",
-  "label": "Asia/Riyadh88",
-  "timezoneid": "100231"
-}, {
-  "value": "Asia/Riyadh89",
-  "label": "Asia/Riyadh89",
-  "timezoneid": "100232"
-}, {
   "value": "Asia/Sakhalin",
   "label": "Asia/Sakhalin",
   "timezoneid": "100233"
@@ -1302,10 +1230,6 @@
   "value": "Asia/Urumqi",
   "label": "Asia/Urumqi",
   "timezoneid": "100240"
-}, {
-  "value": "Asia/Ust-Nera",
-  "label": "Asia/Ust-Nera",
-  "timezoneid": "100241"
 }, {
   "value": "Asia/Vientiane",
   "label": "Asia/Vientiane",
@@ -1383,25 +1307,9 @@
   "label": "EST5EDT",
   "timezoneid": "100260"
 }, {
-  "value": "Etc/GMT0",
-  "label": "Etc/GMT0",
-  "timezoneid": "100262"
-}, {
-  "value": "Etc/GMT-0",
-  "label": "Etc/GMT-0",
-  "timezoneid": "100263"
-}, {
-  "value": "Etc/GMT+0",
-  "label": "Etc/GMT+0",
-  "timezoneid": "100264"
-}, {
   "value": "Etc/GMT-1",
   "label": "Etc/GMT-1",
   "timezoneid": "100265"
-}, {
-  "value": "Etc/GMT+1",
-  "label": "Etc/GMT+1",
-  "timezoneid": "100266"
 }, {
   "value": "Etc/GMT-10",
   "label": "Etc/GMT-10",
@@ -1499,25 +1407,13 @@
   "label": "Etc/GMT+9",
   "timezoneid": "100290"
 }, {
-  "value": "Etc/Greenwich",
-  "label": "Etc/Greenwich",
-  "timezoneid": "100291"
-}, {
   "value": "Etc/UCT",
   "label": "Etc/UCT",
   "timezoneid": "100292"
 }, {
-  "value": "Etc/Universal",
-  "label": "Etc/Universal",
-  "timezoneid": "100293"
-}, {
   "value": "Etc/UTC",
   "label": "Etc/UTC",
   "timezoneid": "100294"
-}, {
-  "value": "Etc/Zulu",
-  "label": "Etc/Zulu",
-  "timezoneid": "100295"
 }, {
   "value": "Europe/Andorra",
   "label": "Europe/Andorra",
@@ -1527,17 +1423,9 @@
   "label": "Europe/Berlin",
   "timezoneid": "100298"
 }, {
-  "value": "Europe/Bratislava",
-  "label": "Europe/Bratislava",
-  "timezoneid": "100299"
-}, {
   "value": "Europe/Budapest",
   "label": "Europe/Budapest",
   "timezoneid": "100301"
-}, {
-  "value": "Europe/Busingen",
-  "label": "Europe/Busingen",
-  "timezoneid": "100302"
 }, {
   "value": "Europe/Chisinau",
   "label": "Europe/Chisinau",
@@ -1555,21 +1443,9 @@
   "label": "Europe/Gibraltar",
   "timezoneid": "100306"
 }, {
-  "value": "Europe/Guernsey",
-  "label": "Europe/Guernsey",
-  "timezoneid": "100307"
-}, {
-  "value": "Europe/Isle_of_Man",
-  "label": "Europe/Isle_of_Man",
-  "timezoneid": "100308"
-}, {
   "value": "Europe/Istanbul",
   "label": "Europe/Istanbul",
   "timezoneid": "100309"
-}, {
-  "value": "Europe/Jersey",
-  "label": "Europe/Jersey",
-  "timezoneid": "100310"
 }, {
   "value": "Europe/Kaliningrad",
   "label": "Europe/Kaliningrad",
@@ -1583,10 +1459,6 @@
   "label": "Europe/Lisbon",
   "timezoneid": "100313"
 }, {
-  "value": "Europe/Ljubljana",
-  "label": "Europe/Ljubljana",
-  "timezoneid": "100314"
-}, {
   "value": "Europe/Luxembourg",
   "label": "Europe/Luxembourg",
   "timezoneid": "100315"
@@ -1599,25 +1471,13 @@
   "label": "Europe/Malta",
   "timezoneid": "100317"
 }, {
-  "value": "Europe/Mariehamn",
-  "label": "Europe/Mariehamn",
-  "timezoneid": "100318"
-}, {
   "value": "Europe/Monaco",
   "label": "Europe/Monaco",
   "timezoneid": "100320"
 }, {
-  "value": "Europe/Nicosia",
-  "label": "Europe/Nicosia",
-  "timezoneid": "100321"
-}, {
   "value": "Europe/Oslo",
   "label": "Europe/Oslo",
   "timezoneid": "100322"
-}, {
-  "value": "Europe/Podgorica",
-  "label": "Europe/Podgorica",
-  "timezoneid": "100323"
 }, {
   "value": "Europe/Riga",
   "label": "Europe/Riga",
@@ -1631,21 +1491,9 @@
   "label": "Europe/Samara",
   "timezoneid": "100327"
 }, {
-  "value": "Europe/San_Marino",
-  "label": "Europe/San_Marino",
-  "timezoneid": "100328"
-}, {
-  "value": "Europe/Sarajevo",
-  "label": "Europe/Sarajevo",
-  "timezoneid": "100329"
-}, {
   "value": "Europe/Simferopol",
   "label": "Europe/Simferopol",
   "timezoneid": "100330"
-}, {
-  "value": "Europe/Skopje",
-  "label": "Europe/Skopje",
-  "timezoneid": "100331"
 }, {
   "value": "Europe/Sofia",
   "label": "Europe/Sofia",
@@ -1671,10 +1519,6 @@
   "label": "Europe/Vaduz",
   "timezoneid": "100337"
 }, {
-  "value": "Europe/Vatican",
-  "label": "Europe/Vatican",
-  "timezoneid": "100338"
-}, {
   "value": "Europe/Vienna",
   "label": "Europe/Vienna",
   "timezoneid": "100339"
@@ -1686,10 +1530,6 @@
   "value": "Europe/Volgograd",
   "label": "Europe/Volgograd",
   "timezoneid": "100341"
-}, {
-  "value": "Europe/Zagreb",
-  "label": "Europe/Zagreb",
-  "timezoneid": "100342"
 }, {
   "value": "Europe/Zaporozhye",
   "label": "Europe/Zaporozhye",
@@ -1746,18 +1586,6 @@
   "value": "MET",
   "label": "MET",
   "timezoneid": "100356"
-}, {
-  "value": "Mideast/Riyadh87",
-  "label": "Mideast/Riyadh87",
-  "timezoneid": "100357"
-}, {
-  "value": "Mideast/Riyadh88",
-  "label": "Mideast/Riyadh88",
-  "timezoneid": "100358"
-}, {
-  "value": "Mideast/Riyadh89",
-  "label": "Mideast/Riyadh89",
-  "timezoneid": "100359"
 }, {
   "value": "MST",
   "label": "MST",
@@ -1878,10 +1706,6 @@
   "value": "PST8PDT",
   "label": "PST8PDT",
   "timezoneid": "100393"
-}, {
-  "value": "US/Pacific-New",
-  "label": "US/Pacific-New",
-  "timezoneid": "100394"
 }, {
   "value": "WET",
   "label": "WET",
