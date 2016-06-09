@@ -65,7 +65,7 @@ describe('OnboardCtrl: Ctrl', function () {
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
-    allLicensesData = getJSONFixture('core/json/myCompany/allLicenses.json');
+    allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
