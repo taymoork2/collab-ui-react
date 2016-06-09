@@ -3,11 +3,11 @@
   <div ng-if="!row.entity.timeoutDetected">
     <span ng-switch-when="RUNNING">
       {{'ediscovery.reportStates.RUNNING' | translate}}...
-      <span class="spinner-example--small">
-        <i class="icon icon-spinner"></i>
-      </span>
       <span ng-if="row.entity.progress > 0">
         {{row.entity.progress}}%
+      </span>
+      <span class="spinner-example--small">
+        <i class="icon icon-spinner" style="top:4px"></i>
       </span>
     </span>
 
@@ -19,9 +19,11 @@
     <span ng-switch-default>
       {{'ediscovery.reportStates.' + row.entity.state | translate}}
     </span>
-    <br>
-    {{grid.appScope.prettyPrintBytes(row.entity.sizeInBytes)}}
-
+    <span ng-switch-when="COMPLETED">
+      {{'ediscovery.reportStates.' + row.entity.state | translate}}
+      <br>
+      {{grid.appScope.prettyPrintBytes(row.entity.sizeInBytes)}}
+    </span>
   </div>
 
   <span ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
