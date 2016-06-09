@@ -456,11 +456,13 @@
     }
 
     $scope.checkCMR = function (confModel, cmrLics) {
-      if (!confModel) {
-        angular.forEach(cmrLics, function (cmrLic) {
-          cmrLic.cmrModel = confModel;
-        });
-      }
+      angular.forEach(cmrLics, function (cmrLic) {
+        cmrLic.cmrModel = confModel;
+      });
+    };
+
+    $scope.cmrMetric = function (cmrModel, licenseId) {
+      // TODO Metrics API call
     };
 
     var generateConfChk = function (confs, cmrs) {

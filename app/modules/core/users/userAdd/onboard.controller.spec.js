@@ -16,6 +16,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var unlicensedUsers;
+  var allLicensesData;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -64,6 +65,7 @@ describe('OnboardCtrl: Ctrl', function () {
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
+    allLicensesData = getJSONFixture('core/json/myCompany/allLicenses.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -620,6 +622,34 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.updateUserLicense();
       $scope.$apply();
     }
+  });
+
+  describe('MC/CMR Checkbox logic', function () {
+    beforeEach(initCurrentUserAndController);
+
+    it('should check if CMR gets checked when EE gets checked', function () {
+      angular.forEach(allLicensesData.allLicenses, function (lic) {
+        angular.forEach(lic.confLic, function (cfLic) {
+          cfLic.confModel = true;
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          angular.forEach(lic.cmrLic, function (cmrLic) {
+            expect(cmrLic).toBeTruthy();
+          });
+        });
+      });
+    });
+
+    it('should check if EE gets checked when CMR gets checked', function () {
+      angular.forEach(allLicensesData.allLicenses, function (lic) {
+        angular.forEach(lic.confLic, function (cfLic) {
+          angular.forEach(lic.cmrLic, function (cmrLic) {
+            cmrLic = true;
+          });
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          expect(cfLic.confModel).toBeTruthy();
+        });
+      });
+    });
   });
 
   function initUserShouldAddCall() {
