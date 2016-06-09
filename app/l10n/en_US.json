@@ -2288,7 +2288,8 @@
       "city": "City",
       "state": "State",
       "zip": "Zip",
-      "dealId": "Deal ID"
+      "dealId": "Deal ID",
+      "usOnly": "Currently U.S. only"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2355,6 +2356,7 @@
     "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
     "callUsOnly": "Call (Currently U.S. only)",
+    "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
