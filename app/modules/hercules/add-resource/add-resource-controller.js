@@ -101,7 +101,10 @@
       FusionClusterService.getAll()
         .then(getAllExpressways)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
-        .then(updateDropdownMenu);
+        .then(updateDropdownMenu)
+        .catch(function(error) {
+          XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotReadExpresswayList'));
+        });
     }
 
     function getAllExpressways(data) {

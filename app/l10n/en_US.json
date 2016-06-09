@@ -1158,7 +1158,8 @@
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
-      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational."
+      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
