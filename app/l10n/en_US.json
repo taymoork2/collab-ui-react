@@ -2741,7 +2741,7 @@
       "callReject": "Call Rejects  for",
       "node": "Node",
       "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "callVolumesDescription": "",
       "callLocal": "Calls local to cluster",
       "callReject": "Calls rejected by cluster",
       "availabilityOfCluster": "Cluster Availability",
