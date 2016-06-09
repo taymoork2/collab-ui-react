@@ -7,6 +7,7 @@
       <h5 class="sub-section__label" translate="{{$ctrl.setting.subsectionLabel}}"></h5>
       <p ng-if="$ctrl.setting.subsectionDescription" class="sub-section__description" translate="{{$ctrl.setting.subsectionDescription}}"></p>
     </div>
-    <article ng-transclude=""></article>
+    <article class="setting" ng-transclude=""></article>
   </div>
+  <hr class="section_hr" ng-if="!$ctrl.hideBottomLine">
 </div>

@@ -6,20 +6,49 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
+    deviceOverview.csdmTz = false;
     deviceOverview.linesAreLoaded = false;
+    deviceOverview.tzIsLoaded = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.csdmTz).then(function (result) {
+      deviceOverview.csdmTz = result;
+    });
 
     if (deviceOverview.currentDevice.isHuronDevice) {
+      initTimeZoneOptions();
+      loadDeviceTimeZone();
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
       });
       pollLines();
+    }
+
+    function loadDeviceTimeZone() {
+      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.timeZone = result;
+        deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+        deviceOverview.tzIsLoaded = true;
+      });
+    }
+
+    function getTimeZoneFromValue(value) {
+      return _.find(deviceOverview.timeZoneOptions, function (o) {
+        return o.value == value;
+      });
+    }
+
+    function initTimeZoneOptions() {
+      deviceOverview.searchTimeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+      return ServiceSetup.getTimeZones().then(function (timezones) {
+        deviceOverview.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
+      });
     }
 
     function pollLines() {
@@ -40,6 +69,49 @@
           .catch(XhrNotificationService.notify);
       }
     };
+
+    function setTimeZone(timezone) {
+      return huronDeviceService.setTimezoneForDevice(deviceOverview.currentDevice, timezone).then(function () {
+        deviceOverview.timeZone = timezone;
+      });
+    }
+
+    deviceOverview.saveTimeZoneAndWait = function () {
+      var newValue = deviceOverview.selectedTimeZone.value;
+      if (newValue !== deviceOverview.timeZone) {
+        deviceOverview.updatingTimeZone = true;
+        setTimeZone(newValue)
+          .then(_.partial(waitForDeviceToUpdateTimeZone, newValue))
+          .catch(function (error) {
+            XhrNotificationService.notify(error);
+            loadDeviceTimeZone();
+          })
+          .finally(function () {
+            deviceOverview.updatingTimeZone = false;
+          });
+      }
+    };
+
+    function waitForDeviceToUpdateTimeZone(newValue) {
+      var deferred = $q.defer();
+      pollDeviceForNewTimeZone(newValue, new Date().getTime() + 5000, deferred);
+      return deferred.promise;
+    }
+
+    function pollDeviceForNewTimeZone(newValue, endTime, deferred) {
+      huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
+        if (result == newValue) {
+          Notification.success($translate.instant('deviceOverviewPage.timeZoneUpdated'));
+          return deferred.resolve();
+        }
+        if (new Date().getTime() > endTime) {
+          return deferred.reject($translate.instant('deviceOverviewPage.timeZoneUpdateFailed'));
+        }
+        $timeout(function () {
+          pollDeviceForNewTimeZone(newValue, endTime, deferred);
+        }, 1000);
+      });
+    }
 
     deviceOverview.reportProblem = function () {
       var uploadLogsPromise;
@@ -137,7 +209,7 @@
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
-      if (newValue != deviceOverview.currentDevice.upgradeChannel) {
+      if (newValue !== deviceOverview.currentDevice.upgradeChannel) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
           .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))

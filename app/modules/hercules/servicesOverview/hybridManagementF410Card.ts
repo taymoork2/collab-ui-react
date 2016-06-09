@@ -9,7 +9,7 @@ namespace servicesOverview {
     private _buttons:Array<servicesOverview.CardButton> = [
       {
         name: 'servicesOverview.cards.clusterList.buttons.all',
-        link: 'services/resource',
+        link: 'services/clusters',
         buttonClass: 'btn-link'
       }
     ];
@@ -28,7 +28,8 @@ namespace servicesOverview {
         name: 'servicesOverview.cards.clusterList.title',
         description: 'servicesOverview.cards.clusterList.description',
         cardClass: 'cluster-list',
-        cardType: CardType.hybrid
+        cardType: CardType.hybrid,
+        display : false
       });
       this._loading = false;
     }

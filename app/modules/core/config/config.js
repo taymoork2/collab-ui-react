@@ -310,13 +310,15 @@
       'squared-fusion-uc': [
         'cluster-list',
         'call-service',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-fusion-cal': [
         'calendar-service',
         'services-overview',
         'cluster-list',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-team-member': [
         'organization'
@@ -355,7 +357,8 @@
         'hurondetails',
         'huronsettings',
         'cluster-list',
-        'cluster-settings-page',
+        'expressway-settings',
+        'mediafusion-settings',
         'calendar-service',
         'call-service',
         'management-service'

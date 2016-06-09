@@ -47,7 +47,8 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo,
+    SessionStorage, $stateParams, $state, FeatureToggleService, Userservice, ModalService, ServiceSetup) {
     var vm = this;
     vm.current = {};
 
@@ -92,6 +93,8 @@
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
+    vm.firstTimeSetup = true;
+
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
       if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
@@ -117,12 +120,19 @@
         }
         vm.current.step = steps[index];
       }
+
     }
 
     function init() {
-      initCurrent();
-      setNextText();
-      vm.isNextDisabled = false;
+      ServiceSetup.listSites().then(function () {
+        if (ServiceSetup.sites.length !== 0) {
+          vm.firstTimeSetup = false;
+        }
+      }).finally(function () {
+        initCurrent();
+        setNextText();
+        vm.isNextDisabled = false;
+      });
     }
 
     function getSteps() {
@@ -261,6 +271,23 @@
 
     function nextStep() {
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
+      if (getTab().name === 'serviceSetup' && getStep().name === 'init' && vm.firstTimeSetup) {
+        return ModalService.open({
+            title: $translate.instant('common.warning'),
+            message: $translate.instant('serviceSetupModal.saveCallSettingsExtensionLengthAllowed'),
+            close: $translate.instant('common.continue'),
+            dismiss: $translate.instant('common.cancel'),
+            type: 'negative'
+          })
+          .result.then(function () {
+            executeNextStep(subTabControllerAs);
+          });
+      } else {
+        executeNextStep(subTabControllerAs);
+      }
+    }
+
+    function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         //TODO remove these broadcasts
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {

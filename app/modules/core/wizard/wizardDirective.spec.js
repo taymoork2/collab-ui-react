@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller: WizardCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice, FeatureToggleService, rootScope;
+  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice,
+    FeatureToggleService, ServiceSetup, rootScope;
 
   var getUserMe, getMyFeatureToggles;
 
@@ -89,7 +90,8 @@ describe('Controller: WizardCtrl', function () {
     }]
   }];
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Authinfo_, _SessionStorage_, $stateParams, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Authinfo_, _SessionStorage_,
+    $stateParams, _Userservice_, _FeatureToggleService_, _ServiceSetup_) {
     rootScope = $rootScope;
     $scope = rootScope.$new();
     Authinfo = _Authinfo_;
@@ -99,6 +101,7 @@ describe('Controller: WizardCtrl', function () {
     $translate = _$translate_;
     SessionStorage = _SessionStorage_;
     Userservice = _Userservice_;
+    ServiceSetup = _ServiceSetup_;
     FeatureToggleService = _FeatureToggleService_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
@@ -108,6 +111,7 @@ describe('Controller: WizardCtrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
     spyOn(rootScope, '$broadcast').and.callThrough();
+    spyOn(ServiceSetup, 'listSites').and.returnValue($q.when());
 
     controller = $controller('WizardCtrl', {
       $rootScope: rootScope,

@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, FeatureToggleService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -17,8 +17,10 @@
     $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
+    $scope.getSubfields = getSubfields;
+    $scope.addCorrectMeetingColumn = addCorrectMeetingColumn;
     $scope.filterAction = filterAction;
-    $scope.getUserAuthInfo = getUserAuthInfo;
+    $scope.modifyManagedOrgs = modifyManagedOrgs;
     $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
@@ -57,7 +59,70 @@
     var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
+    var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
+
+    $scope.conferencingColumns = [{
+      field: 'meeting',
+      displayName: $translate.instant('customerPage.meeting'),
+      width: '14%',
+      cellTemplate: multiServiceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'conferencing',
+      displayName: $translate.instant('customerPage.meeting'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }];
+
+    $scope.gridColumns = [{
+      field: 'customerName',
+      displayName: $translate.instant('customerPage.customerNameHeader'),
+      width: '25%',
+      cellTemplate: nameTemplate,
+      cellClass: 'ui-grid-add-column-border',
+      sortingAlgorithm: partnerAtTopSort,
+      sort: {
+        direction: 'asc',
+        priority: 0,
+      }
+    }, {
+      field: 'messaging',
+      displayName: $translate.instant('customerPage.message'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'communications',
+      displayName: $translate.instant('customerPage.call'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'roomSystems',
+      displayName: $translate.instant('customerPage.roomSystems'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'notes',
+      displayName: $translate.instant('customerPage.notes'),
+      cellTemplate: noteTemplate,
+      sortingAlgorithm: notesSort
+    }, {
+      field: 'action',
+      displayName: $translate.instant('customerPage.actionHeader'),
+      sortable: false,
+      cellTemplate: actionTemplate,
+      width: '95',
+      cellClass: 'align-center'
+    }];
 
     $scope.gridOptions = {
       data: 'gridData',
@@ -66,6 +131,7 @@
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       enableColumnResizing: true,
+      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -81,64 +147,23 @@
           }
         });
       },
-      columnDefs: [{
-        field: 'customerName',
-        displayName: $translate.instant('customerPage.customerNameHeader'),
-        width: '25%',
-        cellTemplate: nameTemplate,
-        cellClass: 'ui-grid-add-column-border',
-        sortingAlgorithm: partnerAtTopSort,
-        sort: {
-          direction: 'asc',
-          priority: 0,
-        },
-      }, {
-        field: 'messaging',
-        displayName: $translate.instant('customerPage.message'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'conferencing',
-        displayName: $translate.instant('customerPage.meeting'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'communications',
-        displayName: $translate.instant('customerPage.call'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'roomSystems',
-        displayName: $translate.instant('customerPage.roomSystems'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
-        field: 'notes',
-        displayName: $translate.instant('customerPage.notes'),
-        cellTemplate: noteTemplate,
-        sortingAlgorithm: notesSort
-      }, {
-        field: 'action',
-        displayName: $translate.instant('customerPage.actionHeader'),
-        sortable: false,
-        cellTemplate: actionTemplate,
-        width: '95',
-        cellClass: 'align-center'
-      }]
+      multiFields: {
+        meeting: [{
+          columnName: 'conferencing',
+          tooltip: $translate.instant('customerPage.meeting')
+        }, {
+          columnName: 'webexEEConferencing',
+          tooltip: $translate.instant('customerPage.webexCMR')
+        }]
+      },
+      columnDefs: $scope.gridColumns
     };
 
     init();
 
     function init() {
       setNotesTextOrder();
+      addCorrectMeetingColumn();
       resetLists().then(function () {
         setFilter($stateParams.filter);
       });
@@ -149,6 +174,13 @@
           Log.error('Query org info failed. Status: ' + status);
         }
       });
+
+    }
+
+    function getSubfields(name) {
+
+      var fields = $scope.gridOptions.multiFields[name];
+      return fields;
     }
 
     function isOrgSetup(customer) {
@@ -205,6 +237,13 @@
       } else {
         return sortByName(a, b);
       }
+    }
+
+    function addCorrectMeetingColumn() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (results) {
+        var index = results ? 0 : 1;
+        $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[index]);
+      });
     }
 
     function setNotesTextOrder() {
@@ -318,8 +357,8 @@
         });
     }
 
-    function getUserAuthInfo(customerOrgId) {
-      PartnerService.getUserAuthInfo(customerOrgId);
+    function modifyManagedOrgs(customerOrgId) {
+      PartnerService.modifyManagedOrgs(customerOrgId);
     }
 
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
@@ -380,11 +419,11 @@
         closeActionsDropdown();
       } else if (action === 'customer') {
         closeActionsDropdown();
-        getUserAuthInfo(org.customerOrgId);
+        modifyManagedOrgs(org.customerOrgId);
       } else if (action === 'pstn') {
         closeActionsDropdown();
         addNumbers(org);
-        getUserAuthInfo(org.customerOrgId);
+        modifyManagedOrgs(org.customerOrgId);
       }
       return;
     }

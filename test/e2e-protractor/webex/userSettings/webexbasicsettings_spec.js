@@ -34,7 +34,7 @@ describe('WebEx user settings', function () {
     navigation.clickUsers();
   });
 
-  it('should allow search and click on user', function () {
+  it('should allow search and click on user ' + usersettings.testUser.username, function () {
     utils.searchAndClick(usersettings.testUser.username);
   });
 
@@ -44,7 +44,7 @@ describe('WebEx user settings', function () {
     utils.click(users.conferencingService);
   });
 
-  it('should allow click on site name', function () {
+  it('should allow click on site name ' + usersettings.testSiteElement, function () {
     if (setup) {
       utils.wait(usersettings.testSiteElement);
       expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
@@ -66,23 +66,6 @@ describe('WebEx user settings', function () {
     }
   });
 
-  it('should allow navigation to the 4th panel', function () {
-    if (setup) {
-      utils.click(usersettings.userPrivilegesLink);
-      utils.wait(usersettings.userPrivilegesPanel);
-      expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
-    }
-  });
-
-  it('should allow navigation back to the 3rd panel', function () {
-    if (setup) {
-      utils.clickLastBreadcrumb();
-      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
-    }
-  });
-
   it('should not show save button without any changes', function () {
     if (setup) {
       expect(usersettings.saveButton.isPresent()).toBeFalsy();
@@ -91,6 +74,7 @@ describe('WebEx user settings', function () {
 
   it('should allow edit in 3rd panel', function () {
     if (setup) {
+      utils.wait(usersettings.userSettingsPanel);
       expect(usersettings.mcAuoCheckbox.isPresent());
       usersettings.mcAuo.click();
       expect(usersettings.saveButton.isPresent()).toBeTruthy();
@@ -101,6 +85,15 @@ describe('WebEx user settings', function () {
     if (setup) {
       usersettings.save();
       // expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
+    }
+  });
+
+  it('should allow navigation to the 4th panel', function () {
+    if (setup) {
+      utils.click(usersettings.userPrivilegesLink);
+      utils.wait(usersettings.userPrivilegesPanel);
+      expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+      expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
     }
   });
 
@@ -139,6 +132,15 @@ describe('WebEx user settings', function () {
         expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
         usersettings.alertSuccess.click();
       }
+    }
+  });
+
+  xit('should allow navigation back to the 3rd panel', function () {
+    if (setup) {
+      utils.clickLastBreadcrumb();
+      utils.wait(usersettings.userSettingsPanel);
+      expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
+      expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
     }
   });
 

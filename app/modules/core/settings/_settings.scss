@@ -3,4 +3,24 @@
   .hidden {
     display: none;
   }
+
+  .cs-form__section{
+    border:none;
+  }
+
+  .setting {
+    i.icon-circle {
+      &.success {
+        color: $color-cta-base;
+      }
+      &.disabled {
+        color: $gray-base;
+      }
+    }
+  }
+
+  .section_hr{
+    width: 100vw;
+    margin-left: -2rem;
+  }
 }

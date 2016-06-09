@@ -3,8 +3,7 @@
 describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
-  var $rootScope, $scope, $q;
-  var FeatureToggleService;
+  var $rootScope, $scope;
 
   var aaUiModel = {
     openHours: {}
@@ -17,6 +16,16 @@ describe('Controller: AABuilderActionsCtrl', function () {
     hint: 'testHint',
     help: 'testHelp',
     actions: ['testAction']
+  }];
+
+  var sortedOptions = [{
+    "title": 'autoAttendant.actionPhoneMenu',
+  }, {
+    "title": 'autoAttendant.actionRouteCall',
+  }, {
+    "title": 'autoAttendant.actionSayMessage',
+  }, {
+    "title": 'autoAttendant.phoneMenuDialExt',
   }];
 
   var testOptionsWithPhoneMenu = [{
@@ -46,20 +55,16 @@ describe('Controller: AABuilderActionsCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
-    $q = _$q_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
 
-    FeatureToggleService = _FeatureToggleService_;
-
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
@@ -170,6 +175,18 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
       expect(aaUiModel['openHours']['entries'][0].getKey()).toEqual('0');
       expect(aaUiModel['openHours']['entries'][1].getKey()).toEqual('1');
+    });
+  });
+
+  /**
+   * title value is not read from properties file in unit test cases. So it will treat the key provided into vm.options for title
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].title).toEqual(sortedOptions[i].title);
+      }
     });
   });
 

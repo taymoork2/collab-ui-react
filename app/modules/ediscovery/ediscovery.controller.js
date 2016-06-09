@@ -2,9 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $rootScope, $scope, $state, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($state, $timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
-      //setSearchFieldFocus();
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
@@ -16,6 +15,7 @@
     $scope.downloadReport = downloadReport;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
+    $scope.rerunReport = rerunReport;
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
@@ -24,8 +24,6 @@
     });
 
     vm.reports = [];
-
-    var avalonPoller = $timeout(pollAvalonReport, 0);
 
     //grantNotification();
     pollAvalonReport();
@@ -47,7 +45,7 @@
 
     function cancable(id) {
       var r = findReportById(id);
-      return r && r.state === "RUNNING";
+      return r && (r.state === "RUNNING" || r.timeoutDetected);
     }
 
     function cancelReport(id) {
@@ -76,7 +74,7 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      rowHeight: 40,
+      rowHeight: 55,
       enableRowHeaderSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
@@ -84,28 +82,40 @@
 
       columnDefs: [{
         field: 'displayName',
-        displayName: 'Name',
-        sortable: true
+        displayName: $translate.instant("ediscovery.reportsList.name"),
+        sortable: true,
+        cellTemplate: 'modules/ediscovery/cell-template-name.html',
+        width: '25%'
       }, {
         field: 'createdTime',
-        displayName: 'Created At',
+        displayName: $translate.instant("ediscovery.reportsList.createdAt"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html'
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
+        width: '15%'
+      }, {
+        field: 'roomQuery.roomId',
+        displayName: $translate.instant("ediscovery.reportsList.roomId"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
+        width: '15%'
+      }, {
+        field: 'roomQueryDates',
+        displayName: $translate.instant("ediscovery.reportsList.dateRange"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
+        width: '15%'
       }, {
         field: 'state',
-        displayName: 'State',
+        displayName: $translate.instant("ediscovery.reportsList.state"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html'
-      }, {
-        field: 'sizeInBytes',
-        displayName: 'Size',
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-size.html'
+        cellTemplate: 'modules/ediscovery/cell-template-state.html',
+        width: '20%'
       }, {
         field: 'actions',
-        displayName: 'Actions',
+        displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-action.html'
+        cellTemplate: 'modules/ediscovery/cell-template-action.html',
+        width: '10%'
       }]
     };
 
@@ -118,7 +128,6 @@
     function pollAvalonReport() {
       EdiscoveryService.getReports().then(function (res) {
         vm.reports = res;
-        //notifyOnEvent(vm.reports);
       }).finally(function (res) {
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
@@ -129,6 +138,14 @@
       if ($window.Notification) {
         $window.Notification.requestPermission().then(function (result) {});
       }
+    }
+
+    function rerunReport(roomId, startDate, endDate) {
+      $state.go('ediscovery.search', {
+        roomId: roomId,
+        startDate: startDate,
+        endDate: endDate
+      });
     }
 
     function notifyOnEvent(reports) {
@@ -151,7 +168,7 @@
 
     function prettyPrintBytes(bytes, precision) {
       if (bytes === 0) {
-        return '0 bytes';
+        return '0';
       }
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
         return '-';
