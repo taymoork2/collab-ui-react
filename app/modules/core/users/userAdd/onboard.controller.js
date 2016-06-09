@@ -456,7 +456,7 @@
     }
 
     $scope.checkCMR = function (confModel, cmrLics) {
-      angular.forEach(cmrLics, function (cmrLic) {
+      cmrLics.forEach(function (cmrLic) {
         cmrLic.cmrModel = confModel;
       });
     };

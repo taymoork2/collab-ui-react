@@ -627,26 +627,39 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('MC/CMR Checkbox logic', function () {
     beforeEach(initCurrentUserAndController);
 
-    it('should check if CMR gets checked when EE gets checked', function () {
-      angular.forEach(allLicensesData.allLicenses, function (lic) {
-        angular.forEach(lic.confLic, function (cfLic) {
-          cfLic.confModel = true;
+    it('should check if CMR gets checked when CF gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
           $scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          angular.forEach(lic.cmrLic, function (cmrLic) {
-            expect(cmrLic).toBeTruthy();
+          lic.cmrLic.forEach(function (cmrLic) {
+            expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
           });
         });
       });
     });
 
-    it('should check if EE gets checked when CMR gets checked', function () {
-      angular.forEach(allLicensesData.allLicenses, function (lic) {
-        angular.forEach(lic.confLic, function (cfLic) {
-          angular.forEach(lic.cmrLic, function (cmrLic) {
-            cmrLic = true;
+    it('should check if CF gets checked when CMR gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = true; // check CMR license
           });
           $scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          expect(cfLic.confModel).toBeTruthy();
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked 
+        });
+      });
+    });
+
+    it('should check if CF remains checked when CMR is unchecked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = false; // uncheck CMR license
+          });
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
         });
       });
     });
