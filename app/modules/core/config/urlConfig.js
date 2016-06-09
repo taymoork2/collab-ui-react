@@ -140,11 +140,6 @@
       integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
     },
-    MetricUrl: {
-      integration: 'https://metrics-integration.wbx2.com',
-      loadTest: 'https://metrics-e.wbx2.com',
-      DR: 'https://metrics-a5.wbx2.com',
-    },
 
     // urls same for all environments
 
