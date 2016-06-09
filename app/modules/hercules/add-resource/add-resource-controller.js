@@ -121,13 +121,9 @@
     }
 
     function removeAlreadyProvisionedExpressways(currentConnectorType, expressways) {
-      var unprovisionedExpressways = [];
-      expressways.forEach(function (expressway) {
-        if (!_.includes(expressway.provisionedConnectors, currentConnectorType)) {
-          unprovisionedExpressways.push(expressway);
-        }
+      return _.filter(expressways, function (e) {
+        return !_.includes(e.provisionedConnectors, currentConnectorType);
       });
-      return unprovisionedExpressways;
     }
 
     function updateDropdownMenu(expressways) {
