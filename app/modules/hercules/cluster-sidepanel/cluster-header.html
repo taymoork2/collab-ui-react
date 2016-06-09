@@ -7,7 +7,11 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        <span>{{clusterDetailsCtrl.cluster.name}}<span>
+        <span>{{clusterDetailsCtrl.cluster.name}}</span>
+      </div>
+      <div class="body-smallest" ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
+        <span translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></span>:
+        <span>{{clusterDetailsCtrl.cluster.releaseChannel}}</span>
       </div>
     </div>
   </div>
