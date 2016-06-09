@@ -38,6 +38,7 @@
     vm.save8To5Schedule = save8To5Schedule;
     vm.saveCeDefinition = saveCeDefinition;
     vm.delete8To5Schedule = delete8To5Schedule;
+    vm.evalKeyPress = evalKeyPress;
 
     vm.templateDefinitions = [{
       tname: 'Basic',
@@ -581,6 +582,17 @@
         vm.selectAA(aaName);
       });
 
+    }
+
+    function evalKeyPress($keyCode) {
+      switch ($keyCode) {
+        // esc key
+      case 27:
+        closePanel();
+        break;
+      default:
+        break;
+      }
     }
 
     activate();

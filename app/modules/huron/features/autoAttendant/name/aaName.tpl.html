@@ -1,9 +1,11 @@
 <div class="aa-flex-row centered" ng-controller="aaBuilderNameCtrl as nameCtrl">
-  <!--form novalidate name="addAutoDetailForm" id="addAutoDetailForm" class="form-horizontal"  -->
-  <form  class="aa-flex-name-item" id="nameForm" ng-submit="nameCtrl.saveAARecord()">
-    <input type="text" aa-builder-autofocus aa-keypress maxlength="64" ng-model="nameCtrl.name" id="aa-name-detail" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
-           />
-  </form>
+	<cs-setup-assistant previous="nameCtrl.previousButton()" next="nameCtrl.nextButton()" next-fn="nameCtrl.nextPage()">
+  	<!--form novalidate name="addAutoDetailForm" id="addAutoDetailForm" class="form-horizontal"  -->
+  	<form  class="aa-flex-name-item" id="nameForm" ng-submit="nameCtrl.saveAARecord()">
+    	<input type="text" aa-builder-autofocus aa-keypress maxlength="64" ng-model="nameCtrl.name" id="aa-name-detail" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
+    		ng-keyup="nameCtrl.evalKeyPress($event.keyCode)" />
+  	</form>
+  	</cs-setup-assistant>
 </div>
 
 

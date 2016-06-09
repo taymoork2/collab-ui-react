@@ -16,6 +16,12 @@
     // exposed checkNameEntry and saveUiModel for unit tests
     vm.saveUiModel = saveUiModel;
 
+    vm.nextButton = nextButton;
+    vm.previousButton = previousButton;
+    vm.nextPage = nextPage;
+    vm.evalKeyPress = evalKeyPress;
+    vm.name = '';
+
     var name = "";
     var aaBuilderMainCtrl_saveAARecords;
 
@@ -41,6 +47,33 @@
 
       vm.ui = AAUiModelService.getUiModel();
 
+    }
+
+    function previousButton() {
+      return 'hidden';
+    }
+
+    function nextButton() {
+      if (vm.name === '')
+        return false;
+      else
+        return true;
+    }
+
+    function nextPage() {
+      saveAARecord();
+    }
+
+    function evalKeyPress($keyCode) {
+      switch ($keyCode) {
+        //right arrow
+      case 39:
+        nextPage();
+        break;
+
+      default:
+        break;
+      }
     }
 
     activate();

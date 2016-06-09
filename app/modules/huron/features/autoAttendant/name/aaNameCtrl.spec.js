@@ -19,7 +19,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
   };
 
   var aaModel = {};
-
+  var rightArrow = 39;
+  var testGroupName = 'test';
   var listCesSpy;
   var saveCeSpy;
 
@@ -91,6 +92,18 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.ui.builder = {};
     });
 
+    it("should save a new aaRecord successfully", function () {
+      controller.name = testGroupName;
+      controller.saveAARecord();
+      expect(controller.ui.ceInfo.name).toEqual(testGroupName);
+    });
+
+    it("should save a new aaRecord successfully on right arrow press", function () {
+      controller.name = testGroupName;
+      controller.evalKeyPress(rightArrow);
+      expect(controller.ui.ceInfo.name).toEqual(testGroupName);
+    });
+
     /*  Commented out as code references AutoAttendant.saveAARecords()
      *
      *
@@ -135,7 +148,16 @@ describe('Controller: aaBuilderNameCtrl', function () {
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe');
     });
     **** */
+  });
 
+  it("should test the next Button when name is null", function () {
+    controller.name = '';
+    expect(controller.nextButton()).toEqual(false);
+  });
+
+  it("should test the next Button when name is not null", function () {
+    controller.name = testGroupName;
+    expect(controller.nextButton()).toEqual(true);
   });
 
 });
