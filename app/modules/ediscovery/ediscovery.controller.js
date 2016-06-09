@@ -82,37 +82,37 @@
 
       columnDefs: [{
         field: 'displayName',
-        displayName: 'Name',
+        displayName: $translate.instant("ediscovery.reportsList.name"),
         sortable: true,
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '25%'
       }, {
         field: 'createdTime',
-        displayName: 'Created At',
+        displayName: $translate.instant("ediscovery.reportsList.createdAt"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '15%'
       }, {
         field: 'roomQuery.roomId',
-        displayName: 'Room Id',
+        displayName: $translate.instant("ediscovery.reportsList.roomId"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
         width: '15%'
       }, {
         field: 'roomQueryDates',
-        displayName: 'Activity dates',
+        displayName: $translate.instant("ediscovery.reportsList.dateRange"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
         width: '15%'
       }, {
         field: 'state',
-        displayName: 'State',
+        displayName: $translate.instant("ediscovery.reportsList.state"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html',
         width: '20%'
       }, {
         field: 'actions',
-        displayName: 'Actions',
+        displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
         width: '10%'

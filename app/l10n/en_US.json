@@ -1477,6 +1477,14 @@
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
       "failure": "Failure: {{failure}}"
+    },
+    "reportsList": {
+      "name": "Name",
+      "createdAt": "Created At",
+      "roomId": "Room Id",
+      "dateRange": "Date Range",
+      "state": "State",
+      "actions": "Actions"
     }
   },
   "firstTimeWizard": {
