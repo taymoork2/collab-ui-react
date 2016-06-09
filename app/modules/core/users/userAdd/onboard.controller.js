@@ -462,7 +462,11 @@
     };
 
     $scope.cmrMetric = function (cmrModel, licenseId) {
-      // TODO Metrics API call
+      if(cmrModel) {
+        Mixpanel.trackEvent("CMR checkbox unselected", {
+          licenseId: licenseId
+        });
+      }
     };
 
     var generateConfChk = function (confs, cmrs) {
