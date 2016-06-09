@@ -294,6 +294,7 @@
     }, {
       className: 'service-setup service-setup-extension',
       fieldGroup: [{
+        className: 'extension-list',
         key: 'displayNumberRanges',
         type: 'repeater',
         hideExpression: function () {
