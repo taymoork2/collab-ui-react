@@ -84,6 +84,8 @@
 
             // Show loading glyph
             scope.options.templateOptions.loading = true;
+            vm.loading = true;
+
             var def = $q.defer();
             var name = $viewValue.toLowerCase();
 
@@ -93,6 +95,7 @@
                 return (name === t.customerName.toLowerCase());
               });
               
+              vm.loading = false;
               if ( angular.isUndefined(found) ) {
                 vm.uniqueName = true;
                 return def.resolve();   // name unique
@@ -140,6 +143,8 @@
 
             // Show loading glyph
             scope.options.templateOptions.loading = true;
+            vm.loading = true;
+
             var def = $q.defer();
             var email = $viewValue.toLowerCase();
 
@@ -148,6 +153,8 @@
               var found = _.find(response.data.trials, function (t) {
                 return (email === t.customerEmail.toLowerCase());
               });
+              
+              vm.loading = false;
               
               if ( angular.isUndefined(found) ) {
                 vm.uniqueEmail = true;
