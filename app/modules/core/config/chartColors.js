@@ -26,7 +26,12 @@
     dummyGrayLight: '#F3F3F3',
     dummyGrayLighter: '#FAFAFA',
     colorAttentionBase: '#F5A623',
-    colorPeopleBase: '#14A792'
+    colorPeopleBase: '#14A792',
+    brandRoyalBlue: '#2E9AFE',
+    brandSkyBlue: '#58FAF4',
+    colorGreen: '#006600',
+    colorRed: '#FF0000',
+    colorYellow: '#FADB0F'
   };
 
   angular
