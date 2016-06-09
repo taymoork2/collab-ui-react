@@ -40,15 +40,16 @@
     vm.selectedCluster = '';
     vm.expresswayOptions = [];
 
+    vm.provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
+    vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
+    vm.getIconClassForService = getIconClassForService;
+    vm.updateDropdownMenu = updateDropdownMenu;
+
     findAndPopulateExistingExpressways(vm.connectorType);
 
     vm.redirectToTargetAndCloseWindowClicked = function (hostName) {
       $modalInstance.close();
       $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration");
-    };
-
-    vm.closeWindowClicked = function () {
-      $modalInstance.close();
     };
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
@@ -88,8 +89,6 @@
         });
     }
 
-    vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
-
     function addPreregisteredClusterToAllowList(clusterId) {
       return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
         .catch(function () {
@@ -102,7 +101,7 @@
         .then(getAllExpressways)
         .then(_.partial(removeAlreadyProvisionedExpressways, connectorType))
         .then(updateDropdownMenu)
-        .catch(function(error) {
+        .catch(function (error) {
           XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotReadExpresswayList'));
         });
     }
@@ -131,8 +130,6 @@
       return unprovisionedExpressways;
     }
 
-    vm.updateDropdownMenu = updateDropdownMenu;
-
     function updateDropdownMenu(expressways) {
       expressways.forEach(function (expressway) {
         vm.expresswayOptions.push({
@@ -146,8 +143,6 @@
         vm.localizedClusterlistPlaceholder = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
       }
     }
-
-    vm.provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
 
     function provisionExpresswayWithNewConnector(clusterId, connectorType) {
       FusionClusterService.provisionConnector(clusterId, connectorType)
@@ -174,8 +169,6 @@
           }
         });
     }
-
-    vm.getIconClassForService = getIconClassForService;
 
     function getIconClassForService() {
       return FusionUtils.serviceId2Icon(vm.servicesId[0]);
