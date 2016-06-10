@@ -12,6 +12,7 @@
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
+    $scope.cmrLicensesForMetric = {};
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -244,6 +245,13 @@
     };
 
     $scope.editServicesSave = function () {
+      for (var licenseId in $scope.cmrLicensesForMetric) {
+        if ($scope.cmrLicensesForMetric) {
+          Mixpanel.trackEvent("CMR checkbox unselected", {
+            licenseId: licenseId
+          });
+        }
+      }
       if (shouldAddCallService()) {
         $scope.processing = true;
         $scope.editServicesFlow = true;
@@ -462,10 +470,11 @@
     };
 
     $scope.cmrMetric = function (cmrModel, licenseId) {
-      if(cmrModel) {
-        Mixpanel.trackEvent("CMR checkbox unselected", {
-          licenseId: licenseId
-        });
+      if (cmrModel) {
+        if (!$scope.cmrLicensesForMetric[licenseId])
+          $scope.cmrLicensesForMetric[licenseId] = true;
+      } else {
+        delete $scope.cmrLicensesForMetric[licenseId];
       }
     };
 
