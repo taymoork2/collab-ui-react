@@ -44,7 +44,8 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'error');
+    spyOn(Notification, 'success');
   }));
 
   function initController() {
@@ -54,14 +55,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
     $scope.$apply();
   }
-
-  describe('controller', function () {
-    beforeEach(initController);
-
-    it('should be defined', function () {
-      expect(controller).toBeDefined();
-    });
-  });
 
   describe('getAssignedSalesAdministrators', function () {
     beforeEach(initController);

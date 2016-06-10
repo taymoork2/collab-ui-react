@@ -41,27 +41,54 @@
           .then(function (response) {
             var fullName = '';
             if (response.data.name) {
-              fullName = _.get(response.data, 'name.givenName') + ' ' + _.get(user, 'name.familyName');
+              var givenName = _.get(response.data, 'name.givenName');
+              var familyName = _.get(response.data, 'name.familyName');
+              if (givenName && familyName) {
+                fullName = givenName + ' ' + familyName;
+              }
             } else if (response.data.displayName) {
               fullName = _.get(response.data, 'displayName');
             } else {
               fullName = _.get(response.data, 'username');
             }
+            var userEmails = _.get(response.data, 'emails', []);
+            var email = '';
+            _.forEach(userEmails, function (emailDetail) {
+              if (emailDetail.primary === true) {
+                email = emailDetail.value;
+              }
+            });
             var uuid = _.get(response.data, 'id');
             var avatarSyncEnabled = _.get(response.data, 'avatarSyncEnabled');
             $log.log(fullName);
             var adminProfile = {
               uuid: uuid,
               fullName: fullName,
-              avatarSyncEnabled: avatarSyncEnabled
+              avatarSyncEnabled: avatarSyncEnabled,
+              email: email
             };
             vm.administrators.push(adminProfile);
-            Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorAddSuccess')], 'success');
+            patchSalesAdminRole(email);
+            Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
           })
           .catch(function () {
-            Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorAddFailure')], 'error');
+            Notification.error('customerAdminPanel.customerAdministratorAddFailure');
           });
       }
+    }
+
+    function patchSalesAdminRole(email) {
+      CustomerAdministratorService.patchSalesAdminRole(email)
+        .catch(function () {
+          var someUser = _.find(vm.administrators, {
+            email: email
+          });
+          CustomerAdministratorService.unassignCustomerSalesAdmin(customerOrgId, someUser.uuid)
+            .then(function () {
+              var index = vm.administrators.indexOf(someUser);
+              vm.administrators.splice(index, 1);
+            });
+        });
     }
 
     function unassignSalesAdmin(uuid, fullName) {
@@ -81,10 +108,10 @@
             });
             var index = vm.administrators.indexOf(someUser);
             vm.administrators.splice(index, 1);
-            Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorRemoveSuccess')], 'success');
+            Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
           })
           .catch(function () {
-            Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorRemoverFailure')], 'error');
+            Notification.error('customerAdminPanel.customerAdministratorRemoverFailure');
           });
       });
     }
@@ -92,69 +119,75 @@
     function getPartnerUsers() {
       CustomerAdministratorService.getPartnerUsers()
         .then(function (response) {
-          if (_.has(response, 'data.Resources')) {
-            var resources = _.get(response, 'data.Resources');
-          }
-          if (resources) {
-            var fullName = '';
-            var uuid = '';
-            _.each(resources, function (user) {
-              if (user.name) {
-                fullName = _.get(user, 'name.givenName') + ' ' + _.get(user, 'name.familyName');
-              } else if (user.displayName) {
-                fullName = _.get(user, 'displayName');
-              } else {
-                fullName = _.get(user, 'username');
+          var resources = _.get(response, 'data.Resources', []);
+          var fullName = '';
+          var uuid = '';
+          _.each(resources, function (user) {
+            if (user.name) {
+              var givenName = _.get(user, 'name.givenName');
+              var familyName = _.get(user, 'name.familyName');
+              if (givenName && familyName) {
+                fullName = givenName + ' ' + familyName;
               }
-              uuid = _.get(user, 'id');
-              vm.searchUsers.push(fullName);
-              vm.users.push({
-                fullName: fullName,
-                uuid: uuid
-              });
+            } else if (user.displayName) {
+              fullName = _.get(user, 'displayName');
+            } else {
+              fullName = _.get(user, 'username');
+            }
+            uuid = _.get(user, 'id');
+            vm.searchUsers.push(fullName);
+            vm.users.push({
+              fullName: fullName,
+              uuid: uuid
             });
-          }
+          });
         })
         .catch(function () {
-          Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorServiceError')], 'error');
+          Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
 
     function getAssignedSalesAdministrators() {
       CustomerAdministratorService.getAssignedSalesAdministrators(customerOrgId)
         .then(function (response) {
-          if (_.has(response, 'data.Resources')) {
-            var resources = _.get(response, 'data.Resources');
-          }
-          if (resources) {
+          var resources = _.get(response, 'data.Resources', []);
+          _.forEach(resources, function (user) {
             var fullName = '';
             var uuid = '';
             var avatarSyncEnabled = false;
             var adminProfile = {};
-
-            _.each(resources, function (user) {
-              if (user.name) {
-                fullName = _.get(user, 'name.givenName') + ' ' + _.get(user, 'name.familyName');
-              } else if (user.displayName) {
-                fullName = _.get(user, 'displayName');
-              } else {
-                fullName = _.get(user, 'username');
+            if (user.name) {
+              var givenName = _.get(user, 'name.givenName');
+              var familyName = _.get(user, 'name.familyName');
+              if (givenName && familyName) {
+                fullName = givenName + ' ' + familyName;
               }
-              uuid = _.get(user, 'id');
-              avatarSyncEnabled = _.get(user, 'avatarSyncEnabled');
-              adminProfile = {
-                uuid: uuid,
-                fullName: fullName,
-                avatarSyncEnabled: avatarSyncEnabled
-              };
-              vm.administrators.push(adminProfile);
+            } else if (user.displayName) {
+              fullName = _.get(user, 'displayName');
+            } else {
+              fullName = _.get(user, 'username');
+            }
+            var userEmails = _.get(response.data, 'emails', []);
+            var email = '';
+            _.forEach(userEmails, function (emailDetail) {
+              if (emailDetail.primary === true) {
+                email = emailDetail.value;
+              }
             });
-          }
+            uuid = _.get(user, 'id');
+            avatarSyncEnabled = _.get(user, 'avatarSyncEnabled');
+            adminProfile = {
+              uuid: uuid,
+              fullName: fullName,
+              avatarSyncEnabled: avatarSyncEnabled,
+              email: email
+            };
+            vm.administrators.push(adminProfile);
+          });
         })
         .catch(function () {
-          Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorServiceError')], 'error');
+          Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
-
   }
 })();

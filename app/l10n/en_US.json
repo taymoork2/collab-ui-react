@@ -2468,7 +2468,7 @@
   },
   "customerAdminPanel": {
     "addSalesAdministrators": "Add Sales Administrators",
-    "Administrators": "Administrators",
+    "administrators": "Administrators",
     "customerAdministratorServiceError": "Customer Organization ID needed",
     "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
     "customerAdministratorAddFailure": "Unable to assign Administrator privileges",

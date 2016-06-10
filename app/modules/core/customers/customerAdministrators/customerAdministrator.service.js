@@ -7,15 +7,16 @@
 
   /* @ngInject */
   function CustomerAdministratorService($http, $q, Authinfo, UrlConfig) {
-    var partnerScimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId());
-    var partnerAdminServiceUrl = UrlConfig.getAdminServiceUrl(Authinfo.getOrgId());
+    var partnerOrgId = Authinfo.getOrgId();
+    var partnerScimUrl = UrlConfig.getScimUrl(partnerOrgId);
+    var partnerAdminServiceUrl = UrlConfig.getAdminServiceUrl(partnerOrgId);
 
     var service = {
       getAssignedSalesAdministrators: getAssignedSalesAdministrators,
       getPartnerUsers: getPartnerUsers,
       addCustomerAdmin: addCustomerAdmin,
       unassignCustomerSalesAdmin: unassignCustomerSalesAdmin,
-      assignRole: assignRole
+      patchSalesAdminRole: patchSalesAdminRole
     };
 
     return service;
@@ -24,13 +25,13 @@
       if (!customerOrgId || customerOrgId === '') {
         return $q.reject('A Customer Organization Id must be passed');
       }
-      var url = partnerScimUrl + '?filter=managedOrgs%5borgId%20eq%20%22' + customerOrgId + '%22%5d';
+      var url = partnerScimUrl + encodeURI('?filter=managedOrgs[orgId eq "') + customerOrgId + encodeURI('"]');
 
       return $http.get(url);
     }
 
     function getPartnerUsers() {
-      var url = partnerScimUrl + '?filter=active%20eq%20true';
+      var url = partnerScimUrl + encodeURI('?filter=active eq true');
 
       return $http.get(url);
     }
@@ -70,13 +71,13 @@
       return $http.patch(url, request);
     }
 
-    function assignRole(role, email) {
-      var url = partnerAdminServiceUrl + '/roles';
+    function patchSalesAdminRole(email) {
+      var url = partnerAdminServiceUrl + 'organization/' + partnerOrgId + '/users/roles';
 
       var request = {
         'users': [{
           'userRoles': {
-            'roleName': role,
+            'roleName': 'Sales_Admin',
             'roleState': 'ACTIVE'
           },
           'email': email

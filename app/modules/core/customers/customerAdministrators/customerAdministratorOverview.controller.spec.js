@@ -21,7 +21,7 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
         totalResults: 2
       }
     }));
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'error');
   }));
 
   function initController() {
@@ -31,14 +31,6 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
     });
     $scope.$apply();
   }
-
-  describe('controller', function () {
-    beforeEach(initController);
-
-    it('should be defined', function () {
-      expect(controller).toBeDefined();
-    });
-  });
 
   describe('test that getAdminCount function and get admin count: ', function () {
     beforeEach(initController);

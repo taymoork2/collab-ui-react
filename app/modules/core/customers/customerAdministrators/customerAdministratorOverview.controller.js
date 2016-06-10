@@ -21,13 +21,14 @@
 
     function getAdminCount() {
       if (currentCustomer && customerOrgId) {
+        vm.loading = true;
         CustomerAdministratorService.getAssignedSalesAdministrators(customerOrgId)
           .then(function (response) {
             vm.loading = false;
             _.set(vm, 'count', response.data.totalResults);
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('customerAdminPanel.customerAdministratorServiceError')], 'error');
+            Notification.error('customerAdminPanel.customerAdministratorServiceError');
           });
       }
     }
