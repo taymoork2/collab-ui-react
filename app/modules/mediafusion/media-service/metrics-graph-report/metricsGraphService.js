@@ -172,9 +172,12 @@
       var endTime = data.data[0].endTime;
       //var endTime = str.substring(0, 10);
       endTime = convertToLocalTime(endTime);
+      var startTime = data.data[0].startTime;
+      startTime = convertToLocalTime(startTime);
+
       var valueAxis = CommonMetricsGraphService.getBaseVariable(AXIS);
       valueAxis.maximumDate = endTime;
-      valueAxis.minimum = 0;
+      valueAxis.minimumDate = startTime;
       valueAxis.type = 'date';
       return valueAxis;
     }
