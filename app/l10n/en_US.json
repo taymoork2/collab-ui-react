@@ -2284,7 +2284,7 @@
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
       "partner": "Partner",
-      "name": "Name",
+      "name": "Recipient Name",
       "phone": "Phone",
       "country": "Country",
       "address": "Address",

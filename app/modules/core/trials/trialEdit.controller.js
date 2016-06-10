@@ -187,7 +187,7 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "",
+      className: '',
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
@@ -209,7 +209,7 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "",
+      className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
         inputClass: 'medium-4',
