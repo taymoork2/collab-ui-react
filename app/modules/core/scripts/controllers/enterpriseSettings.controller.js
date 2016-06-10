@@ -75,12 +75,6 @@
             displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             sipField.isDisabled = true;
             sipField.isButtonDisabled = true;
-          } else if (data.verifiedDomains) {
-            if (_.isArray(data.verifiedDomains)) {
-              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
-            }
-          } else if (data.displayName) {
-            displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);

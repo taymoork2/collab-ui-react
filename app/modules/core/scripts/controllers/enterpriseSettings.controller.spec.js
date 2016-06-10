@@ -70,33 +70,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $scope.$apply();
   }
 
-  describe('test controller creation initialization', function () {
-    beforeEach(initController);
-
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
-    });
-    it('should call the Orgservice and set the displayName', function () {
-      expect($scope.cloudSipDomainField.inputValue).not.toBe('');
-    });
-  });
-
-  describe('test Orgservice getOrg callback sets displayName under different conditions', function () {
-    beforeEach(function () {
-      Orgservice.getOrg.and.callFake(function (callback, status) {
-        callback({
-          verifiedDomains: ['AtlasTestSipDomain.com', 'AtlasTest.com'],
-          orgSettings: {}
-        }, 200);
-      });
-      initController();
-    });
-
-    it('should set displayName using the verifiedDomains from response', function () {
-      expect($scope.cloudSipDomainField.inputValue).toBe('atlastestsipdomain');
-    });
-  });
-
   describe('test Orgservice getOrg callback setting displayName', function () {
     beforeEach(function () {
       Orgservice.getOrg.and.callFake(function (callback, status) {
