@@ -60,6 +60,10 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(false)
+    );
+
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -86,7 +90,6 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('Controller', function () {
     beforeEach(initController);
-
     it('should initialize', function () {
       expect($scope.activeFilter).toBe('all');
     });
@@ -268,6 +271,16 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       $scope.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called, careField should be removed from gridOptions if atlasCareTrials feature toggle is disabled', function () {
+    beforeEach(initController);
+
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+      //care column to be removed if feature toggle is disabled
+      expect($scope.gridColumns.length).toEqual(7);
     });
   });
 });
