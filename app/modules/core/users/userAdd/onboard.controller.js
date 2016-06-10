@@ -469,13 +469,8 @@
       });
     };
 
-    $scope.cmrMetric = function (cmrModel, licenseId) {
-      if (!cmrModel) { // ensure the checkbox is not checked
-        if (!$scope.cmrLicensesForMetric[licenseId])
-          $scope.cmrLicensesForMetric[licenseId] = true;
-      } else {
-        $scope.cmrLicensesForMetric[licenseId] = false;
-      }
+    $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
+      $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
     };
 
     var generateConfChk = function (confs, cmrs) {
