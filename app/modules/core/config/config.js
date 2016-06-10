@@ -69,7 +69,8 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
-        pstn: 'PSTN'
+        pstn: 'PSTN',
+        care: 'CARE'
       },
 
       //WARNING: Deprecated, use offerTypes
@@ -141,6 +142,7 @@
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
+        CDC: 'CDC' // Care Digital Channel
       },
 
       licenseTypes: {
@@ -149,7 +151,8 @@
         COMMUNICATION: 'COMMUNICATION',
         STORAGE: 'STORAGE',
         SHARED_DEVICES: 'SHARED_DEVICES',
-        CMR: 'CMR'
+        CMR: 'CMR',
+        CARE: 'CARE'
       },
 
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],

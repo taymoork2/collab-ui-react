@@ -1154,11 +1154,15 @@
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
-      "selectExisting": "Select one or more existing Expressway clusters",
-      "selectClusterPlaceholder": "Select one or more Expressway clusters…",
+      "selectExisting": "Select an existing Expressway clusters",
+      "selectClusterPlaceholder": "Select an Expressway cluster…",
+      "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists."
+      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
+      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2288,7 +2292,8 @@
       "city": "City",
       "state": "State",
       "zip": "Zip",
-      "dealId": "Deal ID"
+      "dealId": "Deal ID",
+      "usOnly": "Currently U.S. only"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2354,7 +2359,9 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
+    "care": "Care",
     "callUsOnly": "Call (Currently U.S. only)",
+    "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2379,9 +2386,10 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "care": "Care",
     "webexCMR": "WebEx EE 200 with CMR",
     "adminManagement": "Administrator Management",
-    "administrators": "Administrators",
+    "administrators": "Partner Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2407,6 +2415,7 @@
     "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
     "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
     "csvHeaderRoomSystemsEntitlements": "Room Systems Entitlements",
+    "csvHeaderCareEntitlements": "Care Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -2458,8 +2467,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addAdministrators": "Add Adminsitrators",
-    "assignedAdministrators": "Assigned Administrators"
+    "addSalesAdministrators": "Add Sales Administrators",
+    "administrators": "Administrators",
+    "customerAdministratorServiceError": "Customer Organization ID needed",
+    "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
+    "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
+    "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
+    "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
+    "deleteAdministrator": "Unassign Administrator",
+    "deleteConfirmation": "Are you sure you want to unassign {{pattern}}?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

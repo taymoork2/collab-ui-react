@@ -1288,10 +1288,10 @@
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmins',
+            controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
             data: {
-              displayName: 'Administrators'
+              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {

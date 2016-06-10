@@ -171,7 +171,18 @@
       features: features
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);
