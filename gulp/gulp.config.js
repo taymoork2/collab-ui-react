@@ -130,6 +130,7 @@ module.exports = function () {
         squared: appModules + '/squared/**/*.spec.js',
         sunlight: appModules + '/sunlight/**/*.spec.js',
         webex: appModules + '/webex/**/*.spec.js',
+        custom: 'custom'
       },
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
