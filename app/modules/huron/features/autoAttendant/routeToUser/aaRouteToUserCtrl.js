@@ -190,18 +190,22 @@
                 if ($scope.voicemail) {
                   return getVoicemailProfile(extension).then(function (voicemailProfile) {
                     if (voicemailProfile) {
-                      vm.users.push({
-                        description: formatName(aUser, extension),
-                        id: aUser.id
-                      });
+                      if (_.size(vm.users) < vm.sort.fullLoad) {
+                        vm.users.push({
+                          description: formatName(aUser, extension),
+                          id: aUser.id
+                        });
+                      }
                     }
                   });
                 } else {
                   // not voicemail, just add the user with extension
-                  vm.users.push({
-                    description: formatName(aUser, extension),
-                    id: aUser.id
-                  });
+                  if (_.size(vm.users) < vm.sort.fullLoad) {
+                    vm.users.push({
+                      description: formatName(aUser, extension),
+                      id: aUser.id
+                    });
+                  }
                 }
               }
             }, function (error) {
@@ -223,14 +227,8 @@
             if (_.size(vm.users) < vm.sort.fullLoad && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
 
               startat += vm.sort.maxCount;
-
-              /* Adjust the maxCount for query so we don't go over. 
-               * Use of fullLoad instead of maxCount will keep maxCount from
-               * going negative
-               */
-              vm.sort.maxCount = vm.sort.fullLoad - _.size(vm.users);
-
               defer.resolve(getUsers(searchStr, startat));
+
             } else {
               // otherwise we're done
               defer.resolve(data.Resources);
