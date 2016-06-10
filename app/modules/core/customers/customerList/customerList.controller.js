@@ -29,6 +29,7 @@
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
+    $scope.isNoLicense = isNoLicense;
     $scope.partnerClicked = partnerClicked;
     $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
@@ -70,6 +71,9 @@
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
     };
+
+
+    var noFreeLicense= ["roomSystems","webexEEConferencing"];
 
     $scope.isCareEnabled = false;
 
@@ -481,15 +485,21 @@
     }
 
     function isLicenseTypeATrial(rowData, licenseTypeField) {
-      return PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
+      return  isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeActive(rowData, licenseTypeField) {
-      return PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
-      return PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField));
+      return ( isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      _.indexOf(noFreeLicense,licenseTypeField) == -1);
+    }
+
+     function isNoLicense(rowData, licenseTypeField) {
+      return ( isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      _.indexOf(noFreeLicense,licenseTypeField) > -1);
     }
 
     function partnerClicked(rowData) {
