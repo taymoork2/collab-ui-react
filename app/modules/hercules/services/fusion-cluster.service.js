@@ -10,6 +10,11 @@
   /* @ngInject */
   function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
+      preregisterCluster: preregisterCluster,
+      addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
+      provisionConnector: provisionConnector,
+      deprovisionConnector: deprovisionConnector,
+      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
       getAll: getAll
     };
 
@@ -35,6 +40,10 @@
 
     function onlyKeepFusedClusters(clusters) {
       return _.filter(clusters, 'state', 'fused');
+    }
+
+    function extractDataFromResponse(res) {
+      return res.data;
     }
 
     function addServicesStatuses(clusters) {
@@ -74,5 +83,47 @@
       // Could be anything but at least make it consistent between 2 page refresh
       return _.sortBy(clusters, 'type');
     }
+
+    function preregisterCluster(name, releaseChannel, managementConnectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      return $http.post(url, {
+          "name": name,
+          "releaseChannel": releaseChannel,
+          "targetType": managementConnectorType
+        }).then(extractDataFromResponse)
+        .then(function (data) {
+          return data.id;
+        });
+    }
+
+    function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      return $http.post(url, {
+        "hostname": hostname,
+        "ttlInSeconds": ttlInSeconds,
+        "clusterId": clusterId
+      });
+    }
+
+    function provisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function deprovisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function getAllConnectorTypesForCluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
+      return $http.get(url)
+        .then(function (response) {
+          return _.map(response.data.provisioning, 'connectorType');
+        });
+    }
+
   }
 })();
