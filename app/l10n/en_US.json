@@ -2467,15 +2467,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addSalesAdministrators": "Add Sales Administrators",
+    "addAdministrators": "Add Administrators",
     "administrators": "Administrators",
     "customerAdministratorServiceError": "Customer Organization ID needed",
     "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
     "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
     "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
     "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
-    "deleteAdministrator": "Unassign Administrator",
-    "deleteConfirmation": "Are you sure you want to unassign {{pattern}}?"
+    "deleteAdministrator": "Remove Sales Administrator?",
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
