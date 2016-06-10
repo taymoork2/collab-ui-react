@@ -16,7 +16,7 @@
     <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GAx' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
+  <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></div>
       <p>{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
   </cs-sp-section>
