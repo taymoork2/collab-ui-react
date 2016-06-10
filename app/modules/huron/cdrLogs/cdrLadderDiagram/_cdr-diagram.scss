@@ -13,6 +13,9 @@
 
   .icon {
     @include vr-spacing(mt, 0.2, 0.5px, true);
+    &.icon-download {
+      @include vr-spacing(mr, 0.5);
+    }
   }
 
   [id="filterDropdown"]{
