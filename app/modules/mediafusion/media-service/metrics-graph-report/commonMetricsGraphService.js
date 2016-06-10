@@ -180,7 +180,10 @@
         'durationField': 'duration',
         'dataProvider': data,
         'valueScrollbar': {
-          'autoGridCount': true
+          'autoGridCount': true,
+          'color': '#AAAAAA',
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1
         },
         'chartCursor': {
           'cursorColor': '#55bb76',
