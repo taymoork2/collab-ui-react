@@ -20,8 +20,8 @@
     }
 
     function getAdminCount() {
+      vm.loading = true;
       if (currentCustomer && customerOrgId) {
-        vm.loading = true;
         CustomerAdministratorService.getAssignedSalesAdministrators(customerOrgId)
           .then(function (response) {
             vm.loading = false;
