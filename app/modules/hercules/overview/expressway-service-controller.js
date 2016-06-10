@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils, FeatureToggleService) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, FusionUtils, FeatureToggleService, $stateParams) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -53,6 +53,9 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
+        if ($stateParams.clusterId != null) {
+            showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
+        }
       },
       columnDefs: [{
         field: 'name',
@@ -147,7 +150,7 @@
     function showClusterSidepanel(cluster) {
       $state.go('cluster-details', {
         clusterId: cluster.id,
-        connectorType: vm.connectorType
+        connectorType: vm.connectorType,
       });
     }
 

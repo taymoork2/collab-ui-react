@@ -91,11 +91,11 @@
       }
     }
 
-    function openService(serviceId) {
+    function openService(serviceId, clusterId) {
       if (serviceId === 'squared-fusion-uc') {
-        $state.go('call-service.list');
+        $state.go('call-service.list', {'clusterId': clusterId });
       } else if (serviceId === 'squared-fusion-cal') {
-        $state.go('calendar-service.list');
+        $state.go('calendar-service.list', {'clusterId': clusterId });
       } else if (serviceId === 'squared-fusion-media') {
         $state.go('media-service.list');
       }
