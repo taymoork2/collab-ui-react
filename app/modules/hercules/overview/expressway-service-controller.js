@@ -150,7 +150,7 @@
     function showClusterSidepanel(cluster) {
       $state.go('cluster-details', {
         clusterId: cluster.id,
-        connectorType: vm.connectorType,
+        connectorType: vm.connectorType
       });
     }
 
