@@ -5,6 +5,12 @@
   <div class="cs-form" action="">
     <div class="cs-form__section">
 
+      <!--<div cr-feature-toggle feature-show="atlas-data-privacy">-->
+      <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
+        <privacy-setting></privacy-setting>
+      </setting-section>
+      <!--</div>-->
+
       <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
         <domains-setting></domains-setting>
       </setting-section>

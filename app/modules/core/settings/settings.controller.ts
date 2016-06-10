@@ -3,6 +3,7 @@
 /// <reference path="dataPolicySetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
+/// <reference path="privacySection/privacySettings.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
@@ -17,7 +18,7 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo) {
+    constructor(Authinfo, FeatureToggleService) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
       } else {
@@ -25,6 +26,9 @@ namespace globalsettings {
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
+        // PrivacySetting.shouldItShow(FeatureToggleService, ()=> {
+          this.privacy = new PrivacySetting();
+        // });
         this.dataPolicy = new DataPolicySetting();
       }
     }
