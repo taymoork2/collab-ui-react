@@ -470,11 +470,11 @@
     };
 
     $scope.cmrMetric = function (cmrModel, licenseId) {
-      if (cmrModel) {
+      if (!cmrModel) { // ensure the checkbox is not checked
         if (!$scope.cmrLicensesForMetric[licenseId])
           $scope.cmrLicensesForMetric[licenseId] = true;
       } else {
-        delete $scope.cmrLicensesForMetric[licenseId];
+        $scope.cmrLicensesForMetric[licenseId] = false;
       }
     };
 
