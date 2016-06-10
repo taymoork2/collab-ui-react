@@ -51,6 +51,20 @@
     "isTrial": true,
     "trialId": "2ad010b7-218a-4ea5-b7a2-b109476f4c80",
     "status": "ACTIVE"
+  }, {
+    "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+    "offerName": "CDC",
+    "licenseType": "CARE",
+    "features": [
+      "contact-center-context",
+      "spark",
+      "cloud-contact-center",
+      "webex-squared", "ccc_config"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "17d6a45b-62ea-43d2-b114-157df8777fd7",
+    "status": "ACTIVE"
   }],
   "state": "ACTIVE",
   "createdBy": "a9b428a6-65a2-48c4-953d-7b45ad35f676",

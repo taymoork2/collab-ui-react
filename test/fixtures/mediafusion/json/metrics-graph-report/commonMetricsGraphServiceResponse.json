@@ -1,0 +1,178 @@
+{
+  "baseVariables": {
+    "column": {
+      "type": "column",
+      "fillAlphas": 1,
+      "lineAlpha": 0,
+      "balloonColor": "#ccc",
+      "columnWidth": 4
+    },
+    "line": {
+      "type": "line",
+      "bullet": "round",
+      "fillAlphas": 0,
+      "lineAlpha": 1,
+      "lineThickness": 3,
+      "hidden": false
+    },
+    "axis": {
+      "axisColor": "#ccc",
+      "gridColor": "#ccc",
+      "color": "#444",
+      "gridAlpha": 0,
+      "axisAlpha": 1,
+      "tickLength": 0,
+      "titleColor": "#444",
+      "fontFamily": "CiscoSansTT Light"
+    },
+    "legend": {
+      "color": "#444",
+      "align": "center",
+      "autoMargins": false,
+      "switchable": false,
+      "fontSize": 13,
+      "markerLabelGap": 10,
+      "markerType": "square",
+      "markerSize": 10,
+      "position": "absolute",
+      "left": 550,
+      "equalWidths": false,
+      "horizontalGap": 5,
+      "valueAlign": "left",
+      "valueWidth": 0,
+      "verticalGap": 20
+    },
+    "numFormat": {
+      "precision": 0,
+      "decimalSeparator": ".",
+      "thousandsSeparator": ","
+    },
+    "balloon": {
+      "adjustBorderColor": true,
+      "borderThickness": 1,
+      "fillAlpha": 1,
+      "fillColor": "#fff",
+      "fixedPosition": true,
+      "shadowAlpha": 0
+    },
+    "export": {
+      "enabled": true,
+      "libs": {
+        "autoLoad": false
+      },
+      "menu": [{
+        "class": "export-main",
+        "label": "reportsPage.downloadOptions",
+        "menu": [{
+          "label": "reportsPage.saveAs",
+          "title": "reportsPage.saveAs",
+          "class": "export-list",
+          "menu": ["PNG", "JPG", "PDF"]
+        }, "PRINT"]
+      }]
+    },
+    "prefixesOfBigNumbers": [{
+      "number": 1e+3,
+      "prefix": "K"
+    }, {
+      "number": 1e+6,
+      "prefix": "M"
+    }, {
+      "number": 1e+9,
+      "prefix": "B"
+    }, {
+      "number": 1e+12,
+      "prefix": "T"
+    }]
+  },
+  "getBaseStackSerialGraph": {
+    "type": "serial",
+    "startEffect": "easeOutSine",
+    "addClassNames": true,
+    "fontFamily": "CiscoSansTT Extra Light",
+    "backgroundColor": "#fff",
+    "backgroundAlpha": 1,
+    "autoMarginOffset": 25,
+    "marginLeft": 60,
+    "marginTop": 60,
+    "marginRight": 60,
+    "usePrefixes": true,
+    "startDuration": "dummyData",
+    "dataProvider": "dummyData",
+    "valueAxes": "dummyData",
+    "graphs": "dummyData",
+    "gridAboveGraphs": true,
+    "categoryField": "dummyData",
+    "categoryAxis": "dummyData",
+    "mouseWheelZoomEnabled": true,
+    "chartCursor": {
+      "cursorColor": "#55bb76",
+      "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
+      "valueBalloonsEnabled": false,
+      "cursorAlpha": 0,
+      "valueLineAlpha": 0.5,
+      "valueLineBalloonEnabled": true,
+      "valueLineEnabled": true,
+      "zoomable": true,
+      "valueZoomable": false
+    },
+    "chartScrollbar": {
+      "offset": 30,
+      "scrollbarHeight": 20,
+      "backgroundAlpha": 0,
+      "selectedBackgroundAlpha": 0.1,
+      "selectedBackgroundColor": "#888888",
+      "graphFillAlpha": 0,
+      "graphLineAlpha": 0.5,
+      "selectedGraphFillAlpha": 0,
+      "selectedGraphLineAlpha": 1,
+      "autoGridCount": true,
+      "color": "#AAAAAA"
+    }
+  },
+  "getGanttGraph": {
+    "type": "gantt",
+    "theme": "light",
+    "marginRight": 70,
+    "dataDateFormat": "YYYY-MM-DDTJJ:NN:SSZ",
+    "balloonDateFormat": "JJ:NN",
+    "columnWidth": 0.035,
+    "valueAxis": "dummyData",
+    "brightnessStep": 0,
+    "graph": {
+      "fillAlphas": 1,
+      "balloonText": "<b>[[task]]</b>"
+    },
+
+    "rotate": true,
+    "categoryField": "category",
+    "segmentsField": "segments",
+    "colorField": "color",
+    "startField": "start",
+    "endField": "end",
+    "durationField": "duration",
+    "dataProvider": "dummyData",
+    "valueScrollbar": {
+      "autoGridCount": true
+    },
+    "chartCursor": {
+      "cursorColor": "#55bb76",
+      "valueBalloonsEnabled": false,
+      "cursorAlpha": 0,
+      "valueLineAlpha": 0.5,
+      "valueLineBalloonEnabled": true,
+      "valueLineEnabled": true,
+      "zoomable": false,
+      "valueZoomable": true
+    },
+    "chartScrollbar": {
+      "offset": 30,
+      "scrollbarHeight": 20
+    },
+    "legend": {
+      "align": "right",
+      "position": "top",
+      "data": "dummyData"
+    }
+  }
+}

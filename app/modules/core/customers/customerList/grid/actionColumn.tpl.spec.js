@@ -40,6 +40,9 @@
           success: true
         }, 200);
       });
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+        $q.when(true)
+      );
     }
 
     function compileViewWithMockData(mockData) {
