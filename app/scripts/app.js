@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* global window, document */
+  /* global window, document, MIXPANEL_CUSTOM_LIB_URL: false */
 
   /**
    * @ngdoc overview
@@ -66,7 +66,6 @@
       f.parentNode.insertBefore(a, f);
     }
   })(document, window.mixpanel || []);
-  mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 
@@ -104,8 +103,6 @@
 
   angular.module('Squared', ['Core']);
 
-  angular.module('DigitalRiver', ['Core']);
-
   angular.module('Huron', [
     'Core',
     'uc.moh',
@@ -136,7 +133,6 @@
   angular.module('wx2AdminWebClientApp', [
     'Core',
     'Squared',
-    'DigitalRiver',
     'Huron',
     'Hercules',
     'Ediscovery',

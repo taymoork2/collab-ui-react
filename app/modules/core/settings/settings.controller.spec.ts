@@ -35,6 +35,7 @@ namespace globalsettings {
         expect(controller.sipDomain).toBeFalsy();
         expect(controller.authentication).toBeFalsy();
         expect(controller.support).toBeFalsy();
+        expect(controller.dataPolicy).toBeFalsy();
       });
     });
 
@@ -48,6 +49,7 @@ namespace globalsettings {
         expect(controller.sipDomain).toBeTruthy();
         expect(controller.authentication).toBeTruthy();
         expect(controller.support).toBeTruthy();
+        expect(controller.dataPolicy).toBeTruthy();
         });
     });
 

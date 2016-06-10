@@ -17,7 +17,13 @@
     <div class="searchError" ng-show="ediscoverySearchCtrl.error">
       {{ediscoverySearchCtrl.error}}
     </div>
+    <div ng-show="ediscoverySearchCtrl.searchInProgress">
+      <span class="search-spinner">
+        <i class="icon icon-spinner" style="top:4px"></i>
+      </span>
+    </div>
   </div>
+
 
   <div ng-show="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
 

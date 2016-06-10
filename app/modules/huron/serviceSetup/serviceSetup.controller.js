@@ -13,7 +13,7 @@
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       value: 'America/Los_Angeles',
-      label: '(GMT-08:00) Pacific Time (US & Canada)',
+      label: $translate.instant('timeZones.America/Los_Angeles'),
       timezoneid: '4'
     };
     var DEFAULT_SD = '9';
@@ -308,7 +308,7 @@
         },
         // hide function added to expressionProperties because hideExpression does not dependably hide
         // the element on load, and will evaluate only after the model updates after first load
-        'hide': function () {
+        'hideExpression': function () {
           return vm.model.hideExtensionLength;
         }
       }
@@ -723,7 +723,7 @@
 
     function initTimeZone() {
       return ServiceSetup.getTimeZones().then(function (timezones) {
-        vm.timeZoneOptions = timezones;
+        vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
         if (vm.hasVoicemailService) {
           return listVoicemailTimezone(timezones);
         }

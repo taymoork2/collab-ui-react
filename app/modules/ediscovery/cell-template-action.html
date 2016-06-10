@@ -13,5 +13,12 @@
         tooltip-append-to-body="true"
         class="icon icon-exit"
         ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
+  <span ng-if="grid.appScope.downloadable(row.entity.id) || row.entity.state === 'FAILED'"
+        tooltip-placement="top"
+        cs-tooltip="Create new report with same query parameters"
+        tooltip-animation="false"
+        tooltip-append-to-body="true"
+        class="icon icon-refresh"
+        ng-click="grid.appScope.rerunReport(row.entity.roomQuery.roomId, row.entity.roomQuery.startDate, row.entity.roomQuery.endDate)"></span>
 </div>
 

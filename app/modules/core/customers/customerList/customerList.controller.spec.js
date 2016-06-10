@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -28,7 +28,7 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -40,6 +40,7 @@ describe('Controller: CustomerListCtrl', function () {
     Authinfo = _Authinfo_;
     HuronConfig = _HuronConfig_;
     Notification = _Notification_;
+    FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     PartnerService = _PartnerService_;
     TrialService = _TrialService_;
@@ -59,6 +60,10 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(false)
+    );
+
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -68,6 +73,8 @@ describe('Controller: CustomerListCtrl', function () {
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.when());
     spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
   }));
 
   function initController() {
@@ -83,7 +90,6 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('Controller', function () {
     beforeEach(initController);
-
     it('should initialize', function () {
       expect($scope.activeFilter).toBe('all');
     });
@@ -152,6 +158,27 @@ describe('Controller: CustomerListCtrl', function () {
       var result = $scope.getSubfields('meeting');
       expect(result[0]).toBe('conferencing');
       expect(result[1]).toBe('webexEEConferencing');
+    });
+  });
+
+  describe('addCorrectMeetingColumn function', function () {
+
+    it('should add a meeting column if FeatureToggle is true', function () {
+      initController();
+      $scope.addCorrectMeetingColumn();
+      expect($scope.gridColumns[2].field).toBe('meeting');
+    });
+  });
+
+  describe('addCorrectMeetingColumn function', function () {
+
+    it('should add a conferencing column if FeatureToggle is false', function () {
+      FeatureToggleService.supports.and.callFake(function (val) {
+        return $q.when(false);
+      });
+      initController();
+      $scope.addCorrectMeetingColumn();
+      expect($scope.gridColumns[2].field).toBe('conferencing');
     });
   });
 
@@ -244,6 +271,16 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       $scope.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called, careField should be removed from gridOptions if atlasCareTrials feature toggle is disabled', function () {
+    beforeEach(initController);
+
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+      //care column to be removed if feature toggle is disabled
+      expect($scope.gridColumns.length).toEqual(7);
     });
   });
 });

@@ -16,7 +16,7 @@
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       value: 'America/Los_Angeles',
-      label: '(GMT-08:00) Pacific Time (US & Canada)',
+      label: $translate.instant('timeZones.America/Los_Angeles'),
       timezoneid: '4'
     };
     var DEFAULT_SD = '9';
@@ -294,6 +294,7 @@
     }, {
       className: 'service-setup service-setup-extension',
       fieldGroup: [{
+        className: 'extension-list',
         key: 'displayNumberRanges',
         type: 'repeater',
         hideExpression: function () {
@@ -958,7 +959,7 @@
     function loadTimeZoneOptions() {
       return ServiceSetup.getTimeZones()
         .then(function (timeZones) {
-          vm.timeZoneOptions = timeZones;
+          vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timeZones);
         });
     }
 
