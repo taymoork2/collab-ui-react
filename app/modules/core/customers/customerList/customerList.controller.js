@@ -72,8 +72,7 @@
       sortingAlgorithm: serviceSort
     };
 
-
-    var noFreeLicense= ["roomSystems","webexEEConferencing"];
+    var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
 
     $scope.isCareEnabled = false;
 
@@ -168,7 +167,7 @@
           tooltip: $translate.instant('customerPage.meeting')
         }, {
           columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webexCMR')
+          tooltip: $translate.instant('customerPage.webex')
         }]
       },
       columnDefs: $scope.gridColumns
@@ -485,7 +484,7 @@
     }
 
     function isLicenseTypeATrial(rowData, licenseTypeField) {
-      return  isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeActive(rowData, licenseTypeField) {
@@ -493,13 +492,13 @@
     }
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
-      return ( isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-      _.indexOf(noFreeLicense,licenseTypeField) == -1);
+      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+        !_.includes(noFreeLicense, licenseTypeField));
     }
 
-     function isNoLicense(rowData, licenseTypeField) {
-      return ( isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
-      _.indexOf(noFreeLicense,licenseTypeField) > -1);
+    function isNoLicense(rowData, licenseTypeField) {
+      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+        _.includes(noFreeLicense, licenseTypeField));
     }
 
     function partnerClicked(rowData) {
