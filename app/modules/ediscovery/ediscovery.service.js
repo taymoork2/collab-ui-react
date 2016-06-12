@@ -146,7 +146,7 @@
         a.download = 'report_' + report.id + '.zip';
         $window.document.body.appendChild(a);
         a.click();
-      }).error(function(data){
+      }).error(function (data) {
         // TODO: error handling
       });
     }
