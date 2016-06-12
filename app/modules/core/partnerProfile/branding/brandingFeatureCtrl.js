@@ -7,7 +7,7 @@
   function BrandingFeatureCtrl(FeatureToggleService) {
     var brand = this;
     FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
-      brand.feature = !toggle;
+      brand.feature = toggle;
     });
   }
 })();

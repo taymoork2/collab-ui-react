@@ -26,14 +26,11 @@ namespace globalsettings {
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
-<<<<<<< HEAD
         this.branding = new BrandingSetting();
         this.dataPolicy = new DataPolicySetting();
-=======
-
-        this.initBranding();
->>>>>>> 5e1ed502a61ea582410ac05ec49ce51e6577a94c
       }
+      
+      this.initBranding();
     }
 
     private initBranding() {

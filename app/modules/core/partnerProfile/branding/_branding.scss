@@ -13,6 +13,13 @@
     }
   }
 
+  .thumbnail {
+    float: left;
+    max-width: 50%;
+    max-height: 100%;
+  }
+
+
   .drop-box {
     display: inline-block;
     width: calc(100% - 2rem);

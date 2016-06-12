@@ -12,7 +12,7 @@
       <div class="small-12 columns form-group">
         <div class="cs-radio-group">
           <div class="cs-input-group cs-input-radio">
-            <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(usePartnerLogo)">
+            <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="partnerLogoRadio">
               <span ng-if="bctrl.isPartner" translate="branding.useCiscoLogo"></span>
               <span ng-if="!bctrl.isPartner" translate="branding.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
@@ -21,7 +21,7 @@
           </div>
 
           <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
-            <input type="radio" id="customLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(usePartnerLogo)">
+            <input type="radio" id="customLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="customLogoRadio">
               <span translate="branding.useOwnLogo"></span>
               <a ng-if="bctrl.isPartner" ng-click=bctrl.showBrandingExample('Partner') translate="branding.exampleLink"></a>
