@@ -5,15 +5,13 @@ namespace globalsettings {
     /* @ngInject */
     constructor() {
       super('branding');
-      this.subsectionLabel = 'branding.title';
-      this.subsectionDescription = 'branding.description';
+      this.subsectionLabel = '';
+      this.subsectionDescription = '';
     }
   }
-  
-  FeatureToggle.support(FeatureToggle.features.brandingWordingChange).then(function(toggle){
-    angular.module('Core').component('brandingSetting', {
-      controller: 'BrandingCtrl as bctrl',
-      templateUrl:'modules/core/partnerProfile/branding/branding' + (toggle ? 'WordingChange': '') + '.tpl.html',
-    });
-  }) 
+
+  angular.module('Core').component('brandingSetting', {
+    controller: 'BrandingCtrl as bctrl',
+    template:'modules/core/partnerProfile/branding/branding.tpl.html',
+  });
 }

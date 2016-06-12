@@ -126,16 +126,6 @@
       FeatureToggleService.supports(FeatureToggleService.features.enableCrashLogs).then(function (toggle) {
         $scope.showCrashLogUpload = toggle;
       });
-
-      // branding feture toogle
-      FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
-        if (toggle) {
-          $scope.brandingTpl = 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html';
-        } else {
-          $scope.brandingTpl = 'modules/core/partnerProfile/branding/branding.tpl.html';
-        }
-      });
-
     };
 
     // Currently only allow Marvel related orgs to show read only access checkbox

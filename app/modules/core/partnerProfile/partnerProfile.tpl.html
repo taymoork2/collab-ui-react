@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div ng-include="brandingTpl"></div>
+        <div id="brandingTpl" ng-include="'modules/core/partnerProfule/branding/branding.tpl.htm'" ng-controller="BrandingCtrl as bctl"></div>
 
         <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
           <h4 translate="customerProfile.crashReportTitle"></h4>

@@ -1,4 +1,4 @@
-<ng-form name="brandingForm" isolate-form="partnerProfileForm"  ng-controller="BrandingCtrl as bctrl" class="branding">
+<ng-form name="brandingForm" isolate-form="brandingForm" class="branding" ng-if="!bctrl.isSupportAtlasBrand">
   <!-- branding logo upload -->
   <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">

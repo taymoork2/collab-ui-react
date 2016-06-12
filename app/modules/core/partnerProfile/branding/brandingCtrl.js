@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('BrandingCtrl', BrandingCtrl);
 
-  function BrandingCtrl($scope, $state, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, UserListService, WebexClientVersion, BrandService, Orgservice) {
+  function BrandingCtrl($scope, $state, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, UserListService, WebexClientVersion, BrandService, Orgservice, FeatureToggleService) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
 
@@ -73,6 +73,9 @@
         brand.tempLogoUrl = logoUrl;
       });
 
+      FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
+        brand.isSupportAtlasBrand = toggle;
+      });
       brand.initWbxClientVersions();
     };
 

@@ -4,6 +4,8 @@ describe('Template: partnerProfile', function () {
   var $scope, $controller, controller, $q, $templateCache, $compile, $log, view;
   var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
 
+  var BRAND_TPL = '#brandingTpl';
+
   var PROBLEM_SITE_RADIO_0 = 'problemSiteRadio0';
   var PROBLEM_SITE_RADIO_1 = 'problemSiteRadio1';
   var HELP_SITE_RADIO_0 = 'helpSiteRadio0';
@@ -48,7 +50,7 @@ describe('Template: partnerProfile', function () {
         orgSettings: {}
       });
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.reject());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Authinfo, 'isPartner');
   }
 
@@ -57,7 +59,9 @@ describe('Template: partnerProfile', function () {
       $scope: $scope
     });
     var template = $templateCache.get('modules/core/partnerProfile/partnerProfile.tpl.html');
-    view = $compile(angular.element(template))($scope);
+    var elem = angular.element(template);
+    elem.find('#brandingTpl').remove();
+    view = $compile(elem)($scope);
     $scope.$apply();
   }
 
