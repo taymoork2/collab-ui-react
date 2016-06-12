@@ -1,12 +1,5 @@
-.overlay-element {
-    width: 30px; 
-    position: absolute; 
-    top: 18px; 
-    right: 18px; 
-    &:hover {
-        cursor: pointer;
-        color: $brand-primary;
-    }
+.video-frame {
+  margin-top: 20px;
 }
 
 

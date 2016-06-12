@@ -103,7 +103,7 @@ var PartnerHomePage = function () {
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
-  this.closeBtnOnModal = element(by.id('btnCloseModal'));
+  this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
@@ -130,6 +130,8 @@ var PartnerHomePage = function () {
   };
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
+  this.deleteCustomerButton = element(by.id('deleteCustomer'));
+  this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
 
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {

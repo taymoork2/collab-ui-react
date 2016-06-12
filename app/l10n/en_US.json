@@ -1154,11 +1154,15 @@
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
-      "selectExisting": "Select one or more existing Expressway clusters",
-      "selectClusterPlaceholder": "Select one or more Expressway clusters…",
+      "selectExisting": "Select an existing Expressway clusters",
+      "selectClusterPlaceholder": "Select an Expressway cluster…",
+      "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists."
+      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
+      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2284,7 +2288,7 @@
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
       "partner": "Partner",
-      "name": "Name",
+      "name": "Recipient Name",
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
@@ -2389,7 +2393,7 @@
     "care": "Care",
     "webexCMR": "WebEx EE 200 with CMR",
     "adminManagement": "Administrator Management",
-    "administrators": "Administrators",
+    "administrators": "Partner Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2467,8 +2471,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addAdministrators": "Add Adminsitrators",
-    "assignedAdministrators": "Assigned Administrators"
+    "addAdministrators": "Add Administrators",
+    "administrators": "Administrators",
+    "customerAdministratorServiceError": "Customer Organization ID needed",
+    "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
+    "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
+    "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
+    "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
+    "deleteAdministrator": "Remove Sales Administrator?",
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
