@@ -2,18 +2,19 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, $modal, EdiscoveryService, $window) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
 
     var vm = this;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
     vm.progressType = progressType;
-    vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
+    vm.downloadReport = EdiscoveryService.downloadReport;
+    vm.createReportInProgress = false;
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
@@ -110,13 +111,13 @@
         });
     }
 
-    function findReportById(reports, id) {
-      return _.find(reports, function (report) {
-        return report.id === id;
-      });
-    }
-
     function createReport() {
+      vm.report = {
+        id: vm.searchCriteria.roomId,
+        displayName: vm.searchCriteria.displayName,
+        state: 'INIT',
+        progress: 0
+      };
       disableAvalonPolling();
       vm.errors = [];
 
@@ -128,6 +129,7 @@
         .catch(function (err) {
           vm.errors = err.data.errors;
           vm.report = {};
+          vm.createReportInProgress = false;
         });
     }
 
@@ -150,6 +152,7 @@
       // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getReport(vm.currentReportId).then(function (report) {
         vm.report = report;
+        vm.createReportInProgress = false;
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 2000);
         } else {
@@ -191,8 +194,6 @@
       }
     }
 
-    function downloadReport() {}
-
     function cancelReport(id) {
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
@@ -208,7 +209,6 @@
         });
       }
     }
-
   }
 
   function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {

@@ -1434,6 +1434,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
+    "searchWatermark": "Enter a Room ID",
     "searchHelp": "Search Help",
     "searchError": "Your search for '{{roomId}}' returned 0 matches",
     "dateError": {
@@ -1450,7 +1451,8 @@
       "RUNNING": "Running",
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
-      "ABORTED": "Aborted"
+      "ABORTED": "Aborted",
+      "INIT": "Initializing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1466,13 +1468,13 @@
       "reportNameNotEmpty": "Report Name can not be empty",
       "startDate": "Start Date",
       "dateTo": "to",
-      "startDatePlaceholder": "Choose a start Day",
+      "startDatePlaceholder": "Choose a Start Date",
       "endDate": "End Date",
       "endDateUntil": "until",
       "endDateOnward": "onward",
-      "endDatePlaceholder": "Choose an end Day",
-      "reportDateRange": "Report Date Range",
-      "noRangeSpecified": "No range specified",
+      "endDatePlaceholder": "Choose an End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
@@ -1481,10 +1483,12 @@
     "reportsList": {
       "name": "Name",
       "createdAt": "Created At",
-      "roomId": "Room Id",
+      "roomId": "Room ID",
       "dateRange": "Date Range",
       "state": "State",
-      "actions": "Actions"
+      "actions": "Actions",
+      "noReportsFound": "No Reports Found",
+      "noReportsTip": "Click the Search tab to search activities and create reports"
     }
   },
   "firstTimeWizard": {

@@ -133,6 +133,24 @@
       });
     }
 
+    function downloadReport(report) {
+      $http.get(report.downloadUrl, { responseType: 'arraybuffer' }).success(function(data){
+        var file = new Blob([data], {
+          type : 'application/zip'
+        });
+        var a = document.createElement('a');
+        a.href = window.URL.createObjectURL(file);
+        a.target = '_blank';
+        a.download = 'report_' + report.id + '.zip';
+        document.body.appendChild(a);
+        a.click();
+      }).error(function(data){
+        alert(data);
+      });
+    }
+
+
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -143,7 +161,8 @@
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
-      setEntitledForCompliance: setEntitledForCompliance
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport
     };
   }
 
