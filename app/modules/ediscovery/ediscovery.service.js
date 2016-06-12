@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractReports(res) {
@@ -137,17 +137,17 @@
       $http.get(report.downloadUrl, {
         responseType: 'arraybuffer'
       }).success(function (data) {
-        var file = new Blob([data], {
+        var file = new $window.Blob([data], {
           type: 'application/zip'
         });
-        var a = document.createElement('a');
-        a.href = window.URL.createObjectURL(file);
+        var a = $window.document.createElement('a');
+        a.href = $window.URL.createObjectURL(file);
         a.target = '_blank';
         a.download = 'report_' + report.id + '.zip';
-        document.body.appendChild(a);
+        $window.document.body.appendChild(a);
         a.click();
-      }).error(function (data) {
-        alert(data);
+      }).error(function(data){
+        // TODO: error handling
       });
     }
 
