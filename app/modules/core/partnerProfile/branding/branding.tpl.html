@@ -1,4 +1,4 @@
-<ng-form name="brandingForm" isolate-form="partnerProfileForm"  ng-controller="BrandingCtrl as bctrl" class="branding">
+<ng-form name="brandingForm" isolate-form="partnerProfileForm"  class="branding">
   <!-- branding logo upload -->
   <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">
@@ -39,7 +39,7 @@
     </div>
     <div class="row form-spacing" ng-if="bctrl.isPartner">
       <div class="small-12 columns cs-checkbox-group">
-        <input 
+        <input
           type="checkbox"
           id="allowCustomerLogo"
           name="allowCustomerLogo"
