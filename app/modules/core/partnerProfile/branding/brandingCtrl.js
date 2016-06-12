@@ -30,11 +30,17 @@
     brand.showClientVersions = true;
 
     brand.init = function () {
+      console.log("branding init");
       brand.rep = null; // cs admin rep
       brand.partner = {};
 
       brand.logoUrl = '';
       brand.logoError = null;
+
+      // branding feature toogle
+      FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
+        brand.feature = true;
+      });
 
       UserListService.listPartners(orgId, function (data) {
         for (var partner in data.partners) {
