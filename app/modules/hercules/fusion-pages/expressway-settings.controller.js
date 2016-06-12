@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, $modal, $state, $translate) {
     var vm = this;
     vm.backUrl = 'cluster-list';
 
@@ -33,7 +33,7 @@
     vm.usersOptions = ['Default'];
 
     vm.enabledServices = [];
-    ClusterService.getAllConnectorTypesForCluster($stateParams.id)
+    FusionClusterService.getAllConnectorTypesForCluster($stateParams.id)
       .then(function (allConnectorTypes) {
         vm.enabledServices = allConnectorTypes;
       });

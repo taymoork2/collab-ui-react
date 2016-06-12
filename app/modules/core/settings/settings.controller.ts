@@ -1,5 +1,6 @@
 /// <reference path="authenticationSetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
+/// <reference path="dataPolicySetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
@@ -26,6 +27,7 @@ namespace globalsettings {
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
         this.branding = new BrandingSetting();
+        this.dataPolicy = new DataPolicySetting();
       }
     }
   }

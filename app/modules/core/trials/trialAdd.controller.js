@@ -121,7 +121,7 @@
       className: '',
       templateOptions: {
         id: callTemplateOptionId,
-        label: $translate.instant('trials.callUsOnly')
+        label: $translate.instant('trials.call')
       },
       hideExpression: function () {
         return !vm.hasCallEntitlement;
@@ -136,7 +136,7 @@
       className: '',
       templateOptions: {
         id: roomSystemsTemplateOptionId,
-        label: $translate.instant('trials.roomSysUsOnly')
+        label: $translate.instant('trials.roomSystem')
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {

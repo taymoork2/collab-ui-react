@@ -118,6 +118,7 @@
       vm.schedule = $scope.schedule;
       vm.ui = AAUiModelService.getUiModel();
       setOption();
+      vm.options.sort(AACommonService.sortByProperty('title'));
     }
 
     activate();

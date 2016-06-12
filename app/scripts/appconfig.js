@@ -85,171 +85,6 @@
               }
             }
           })
-          // start online order pages. note: unauthenticated pages are protected by a URL token
-          .state('enterEmailAddr', {
-            url: '/enter-email-addr?referrer&sku&orderId&campaignId',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
-                controller: 'enterEmailAddrController',
-                controllerAs: 'enterEmailAddrController'
-              }
-            },
-            authenticate: false
-          })
-          .state('createAccount', {
-            url: '/create-account/',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/login/createAccount/createAccount.tpl.html',
-                controller: 'createAccountController',
-                controllerAs: 'createAccountController'
-              }
-            },
-            params: {
-              referrer: null,
-              email: null,
-              params: null
-            },
-            authenticate: false
-          })
-          .state('submitOrder', {
-            url: '/submitOrder',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/submitOrder/submitOrder.tpl.html',
-                controller: 'submitOrderController',
-                controllerAs: 'submitOrderController'
-              }
-            },
-            params: {
-              referrer: null,
-              email: null,
-              params: {
-                sku: null,
-                orderId: null,
-                campaignId: null,
-                uuid: null
-              }
-            },
-            authenticate: false
-          })
-          .state('drLoginForward', {
-            url: '/dr-login-forward',
-            views: {
-              'main@': {
-                template: ' ',
-                controller: 'drLoginForwardController',
-                controllerAs: 'drLoginForwardController'
-              }
-            },
-            params: {
-              email: null,
-              redirect: null,
-              referrer: null,
-              params: null
-            },
-            authenticate: false
-          })
-          .state('drLoginReturn', {
-            url: '/dr-login-return',
-            views: {
-              'main@': {
-                template: ' ',
-                controller: 'drLoginReturnController',
-                controllerAs: 'drLoginReturnController'
-              }
-            },
-            params: {
-              email: null,
-              referrer: null,
-              redirect: null,
-              params: null
-            },
-            authenticate: true
-          })
-          .state('drOnboard', {
-            url: '/dr-onboard',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/drOnboard.tpl.html',
-                controller: 'drOnboardController',
-                controllerAs: 'drOnboardController'
-              }
-            },
-            params: {
-              email: null,
-              params: null
-            },
-            authenticate: true
-          })
-          .state('drConfirmAdminOrg', {
-            url: '/dr-confirm-adminorg',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/confirmAdminOrg/drConfirmAdminOrg.tpl.html',
-                controller: 'drConfirmAdminOrgController',
-                controllerAs: 'drConfirmAdminOrgController'
-              }
-            },
-            params: {
-              org: null,
-              site: null
-            },
-            authenticate: true
-          })
-          .state('drOnboardQuestion', {
-            url: '/dr-onboard-question',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/question/drOnboardQuestion.tpl.html',
-                controller: 'drOnboardQuestionController',
-                controllerAs: 'drOnboardQuestionController'
-              }
-            },
-            params: {
-              email: null,
-              params: null
-            },
-            authenticate: true
-          })
-          .state('drOrgName', {
-            url: '/drOrgName',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/orgName/drOrgName.tpl.html',
-                controller: 'drOrgNameController',
-                controllerAs: 'drOrgNameController'
-              }
-            },
-            params: {
-              email: null
-            },
-            authenticate: true
-          })
-          .state('drOnboardEnterAdminEmail', {
-            url: '/dr-onboard-enter-admin-email',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/enterAdminEmail/drOnboardEnterAdminEmail.tpl.html',
-                controller: 'drOnboardEnterAdminEmailController',
-                controllerAs: 'drOnboardEnterAdminEmailController'
-              }
-            },
-            authenticate: true
-          })
-          .state('drAdminChoices', {
-            url: '/dr-admin-choices',
-            views: {
-              'main@': {
-                templateUrl: 'modules/digitalRiver/onboard/adminChoices/adminChoices.tpl.html',
-                controller: 'adminChoicesController',
-                controllerAs: 'adminChoicesController'
-              }
-            },
-            authenticate: false
-          })
-          // end online order pages
           .state('unauthorized', {
             views: {
               'main@': {
@@ -1151,25 +986,12 @@
             controllerAs: 'siteList',
             parent: 'main'
           })
-          .state('site-csv-import', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'SiteCSVImportModalCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
-                controllerAs: 'siteCSVImportModalCtrl'
-              }
-            },
-            params: {
-              csvImportObj: null
-            }
-          })
           .state('site-csv', {
             parent: 'modal',
             views: {
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
-                templateUrl: 'modules/webex/siteCSVModals/siteCSVModal.tpl.html',
+                templateUrl: 'modules/webex/siteCSVModal/siteCSVModal.tpl.html',
                 controllerAs: 'siteCSVModalCtrl',
                 resolve: {
                   modalInfo: function ($state) {
@@ -1491,10 +1313,10 @@
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmins',
+            controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
             data: {
-              displayName: 'Administrators'
+              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -2412,7 +2234,12 @@
             url: '/search',
             controller: 'EdiscoverySearchController',
             controllerAs: 'ediscoverySearchCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+            templateUrl: 'modules/ediscovery/ediscovery-search.html',
+            params: {
+              roomId: null,
+              startDate: null,
+              endDate: null
+            }
           })
           .state('ediscovery.reports', {
             url: '/reports',
