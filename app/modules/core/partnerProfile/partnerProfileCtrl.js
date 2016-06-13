@@ -128,14 +128,21 @@
       });
     };
 
-    // Currently only allow Marvel related orgs to show read only access checkbox
+    // Currently only allow Marvel & Cisco related orgs to show read only access checkbox
+    // TODO: Replace by feature toggle !
     function readOnlyAccessCheckboxVisibility(org) {
       var marvelOrgId = "ce8d17f8-1734-4a54-8510-fae65acc505e";
       var isMarvelOrg = (orgId == marvelOrgId);
       var managedByMarvel = _.find(org.managedBy, function (managedBy) {
         return managedBy.orgId == marvelOrgId;
       });
-      $scope.showAllowReadOnlyAccessCheckbox = (isMarvelOrg || managedByMarvel);
+      var ciscoOrgId = "1eb65fdf-9643-417f-9974-ad72cae0e10f";
+      var isCiscoOrg = (orgId == ciscoOrgId);
+      var managedByCisco = _.find(org.managedBy, function (managedBy) {
+        return managedBy.orgId == ciscoOrgId;
+      });
+
+      $scope.showAllowReadOnlyAccessCheckbox = (isMarvelOrg || managedByMarvel || isCiscoOrg || managedByCisco);
     }
 
     $scope.init();

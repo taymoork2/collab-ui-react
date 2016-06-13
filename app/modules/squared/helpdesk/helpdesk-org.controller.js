@@ -35,16 +35,19 @@
     vm.allowLaunchAtlas = false;
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
+
+    // TODO: Replace by feature toggle !
     function isWhitelistedOrg(orgData) {
-      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36");
+      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36" || orgData.id === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
       var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
-        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36");
+        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36" || mb.orgId === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
       });
       return (isWhitelisted || managedByWhitelisted);
     }
 
+    // TODO: Replace by feature toggle !
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36") {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f") {
         vm.allowLaunchAtlas = false;
       } else if (orgData.id == Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
