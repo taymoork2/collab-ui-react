@@ -7,6 +7,107 @@
   }
 }
 
+#customerListPanel {
+  .ui-grid-cell-contents {
+    .badge {
+      min-width: rem-calc(60);
+    }
+
+    &.align-center {
+      text-align: center;
+    }
+
+    .badge-active {
+      @extend .badge.badge-primary;
+    }
+
+    @mixin badge-active-darker {
+      background-color: $brand-primary-dark;
+    }
+
+    .badge-trial {
+      @extend .badge.badge-warning;
+    }
+
+    .badge-disabled {
+      background-color: $gray-lightest;
+      color: $gray-lightest;
+    }
+
+    @mixin badge-disabled-darker {
+      background-color: $gray-lighter;
+      color: $gray-lighter;
+    }
+
+    .badge--managed {
+      margin-left: 12px;
+    }
+
+    .orgnotselected {
+      background-color: $gray-light-3;
+      color: $gray-dark-1;
+    }
+
+    .orgselected {
+      background-color: $color-primary-darker;
+      color: $brand-white;
+    }
+
+    .free {
+      color: $gray;
+    }
+
+    @mixin free-white {
+      color: $brand-white;
+    }
+
+    .free-disabled {
+      color: $gray-lighter;
+    }
+
+    @mixin free-disabled-darker {
+      color: $gray-light;
+    }
+
+    .red {
+      color: $brand-danger;
+    }
+
+    @mixin red-white {
+      color: $brand-white;
+    }
+
+
+    .badge-active.selected {
+      @include badge-active-darker;
+    }
+
+    .free.selected {
+      @include free-white;
+    }
+
+    .red.selected {
+      @include red-white;
+    }
+
+    &:hover {
+      .badge-disabled {
+        @include badge-disabled-darker;
+      }
+
+      .free-disabled {
+        @include free-disabled-darker;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
 .ui-grid-header-cell:last-child .ui-grid-cell-contents {
   padding-right: 10px;
 }
