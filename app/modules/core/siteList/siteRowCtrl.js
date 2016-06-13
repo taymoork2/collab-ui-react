@@ -23,9 +23,6 @@
     var logMsg = "";
     var _this = this;
 
-    _this.gridOptions = WebExSiteRowService.getGridOptions();
-    _this.showGridData = WebExSiteRowService.getShowGridData();
-
     $q.all([FeatureToggleService.supports(FeatureToggleService.features.webexCSV)])
       .then(function (result) {
         WebExSiteRowService.showCSVIconAndResults = result;
@@ -41,9 +38,6 @@
 
       _this.gridOptions = WebExSiteRowService.getGridOptions();
       _this.showGridData = WebExSiteRowService.getShowGridData();
-
-      //$log.log("***" + JSON.stringify(_this.gridOptions));
-      //$log.log("***" + _this.showGridData);
 
     } //init()
 
