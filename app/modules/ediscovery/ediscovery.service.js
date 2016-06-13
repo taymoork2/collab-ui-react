@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig, $window) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractReports(res) {
@@ -20,7 +20,10 @@
     function detectAndSetReportTimeout(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 300000;
+          .getTime() > 180000;
+        if (report.state === 'FAILED' && !report.failureReason) {
+          report.failureReason = 'UNEXPECTED_FAILURE';
+        }
       }
       return report;
     }
@@ -137,17 +140,30 @@
       $http.get(report.downloadUrl, {
         responseType: 'arraybuffer'
       }).success(function (data) {
+        var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/zip'
+          type: 'application/json'
         });
-        var a = $window.document.createElement('a');
-        a.href = $window.URL.createObjectURL(file);
-        a.target = '_blank';
-        a.download = 'report_' + report.id + '.zip';
-        $window.document.body.appendChild(a);
-        a.click();
-      }).error(function (data) {
-        // TODO: error handling
+        if ($window.navigator.msSaveOrOpenBlob) {
+          // IE
+          $window.navigator.msSaveOrOpenBlob(file, fileName);
+        } else if (!('download' in $window.document.createElement('a'))) {
+          // Safari…
+          $window.location.href = $window.URL.createObjectURL(file);
+        } else {
+          var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+          var downloadLink = angular.element(downloadContainer.children()[0]);
+          downloadLink.attr({
+            'href': $window.URL.createObjectURL(file),
+            'download': fileName,
+            'target': '_blank'
+          });
+          $document.find('body').append(downloadContainer);
+          $timeout(function () {
+            downloadLink[0].click();
+            downloadLink.remove();
+          }, 100);
+        }
       });
     }
 

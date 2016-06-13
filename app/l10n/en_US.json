@@ -1482,7 +1482,7 @@
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failure: {{failure}}"
+      "failure": "Failed to generate report:"
     },
     "reportsList": {
       "name": "Name",
