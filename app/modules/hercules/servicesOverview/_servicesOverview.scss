@@ -87,11 +87,8 @@
         button {
           width: 100%;
           margin-left: 0;
-          background-color: $gray-light-3;
-          color: $gray-dark-2;
           text-overflow: ellipsis;
           a {
-            color: $gray-dark-2;
             white-space: nowrap;
             overflow: hidden;
             display: block;
@@ -100,11 +97,9 @@
             padding-bottom: 1px;
           }
         }
-        .cta-btn {
-          background-color: $color-primary-base !important;
-          color: white;
+        .btn {
           margin-top: 1rem;
-          width: auto;
+          width: auto !important;
           padding-left: 1rem;
           padding-right: 1rem;
         }
