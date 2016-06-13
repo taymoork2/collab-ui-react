@@ -110,6 +110,13 @@
       } else {
         vm.current.tab = getTabs()[0];
       }
+
+      if ($stateParams.currentSubTab) {
+        vm.current.subTab = _.findWhere(getTab().subTabs, {
+          name: $stateParams.currentSubTab
+        });
+      }
+
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {

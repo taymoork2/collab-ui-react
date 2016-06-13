@@ -127,7 +127,7 @@
       type: 'checkbox',
       className: '',
       templateOptions: {
-        label: $translate.instant('trials.callUsOnly'),
+        label: $translate.instant('trials.call'),
         id: 'squaredUCTrial',
         class: '',
       },
@@ -187,9 +187,9 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "",
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.roomSysUsOnly'),
+        label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
         class: '',
       },
@@ -209,10 +209,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-12 small-offset-1",
+      className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-4',
+        inputClass: 'medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
