@@ -35,7 +35,6 @@
     vm.allowLaunchAtlas = false;
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-
     // TODO: Replace by feature toggle !
     function isWhitelistedOrg(orgData) {
       var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36" || orgData.id === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
