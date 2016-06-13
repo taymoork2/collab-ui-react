@@ -49,8 +49,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $scope.$apply();
   }
 
-  });
-
   describe('test the ssoEnabled settings', function () {
     beforeEach(initController);
 
