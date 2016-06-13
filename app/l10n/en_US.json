@@ -958,6 +958,7 @@
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
+    "extensionUpdateError": "Failed to update extension {{extension}}.",
     "greaterThan": "{{endNumber}} must be greater than or equal to {{beginNumber}}.",
     "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
     "rangeOverlap": "Extension Ranges must not overlap.",
@@ -2375,7 +2376,8 @@
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
-    "trialDuration": "Trial Duration"
+    "trialDuration": "Trial Duration",
+    "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
 
   "status": {
