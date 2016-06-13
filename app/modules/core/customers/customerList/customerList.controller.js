@@ -320,11 +320,32 @@
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
+        var custName = Authinfo.getOrgName();
+        var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
             var myOrg = PartnerService.loadRetrievedDataToList([data], false, $scope.isCareEnabled);
-            myOrg.customerName = Authinfo.getOrgName();
-            myOrg.customerOrgId = Authinfo.getOrgId();
+            // Not sure why this is set again, afaik it is the same as myOrg
+            myOrg[0].customerName = custName;
+            myOrg[0].customerOrgId = accountId;
+
+            myOrg[0].messaging = _.merge(myOrg[0].messaging, _.find(licenses, {
+              licenseType: "MESSAGING"
+            }));
+            myOrg[0].communications = _.merge(myOrg[0].communications, _.find(licenses, {
+              licenseType: "COMMUNICATION"
+            }));
+            myOrg[0].roomSystems = _.merge(myOrg[0].roomSystems, _.find(licenses, {
+              licenseType: "SHARED_DEVICES"
+            }));
+            myOrg[0].conferencing = _.merge(myOrg[0].conferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "CF"
+            }));
+            myOrg[0].webexEEConferencing = _.merge(myOrg[0].webexEEConferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "EE"
+            }));
 
             resolve(myOrg);
           } else {

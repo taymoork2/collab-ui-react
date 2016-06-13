@@ -9,10 +9,11 @@
     var vm = this;
 
     vm.deleteReports = deleteReports;
+    vm.readingReports = true;
 
     $scope.prettyPrintBytes = prettyPrintBytes;
     $scope.downloadable = downloadable;
-    $scope.downloadReport = downloadReport;
+    $scope.downloadReport = EdiscoveryService.downloadReport;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -61,10 +62,6 @@
       return r && r.state === "COMPLETED";
     }
 
-    function downloadReport(id) {
-      openGenericModal("Note", "Download not implemented yet!");
-    }
-
     function findReportById(id) {
       return _.find(vm.reports, function (report) {
         return report.id === id;
@@ -74,7 +71,7 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      rowHeight: 55,
+      rowHeight: 68,
       enableRowHeaderSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
@@ -84,38 +81,33 @@
         field: 'displayName',
         displayName: $translate.instant("ediscovery.reportsList.name"),
         sortable: true,
-        cellTemplate: 'modules/ediscovery/cell-template-name.html',
-        width: '25%'
+        cellTemplate: 'modules/ediscovery/cell-template-name.html'
       }, {
         field: 'createdTime',
         displayName: $translate.instant("ediscovery.reportsList.createdAt"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
-        width: '15%'
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html'
       }, {
         field: 'roomQuery.roomId',
         displayName: $translate.instant("ediscovery.reportsList.roomId"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
-        width: '15%'
+        cellTemplate: 'modules/ediscovery/cell-template-room-id.html'
       }, {
         field: 'roomQueryDates',
         displayName: $translate.instant("ediscovery.reportsList.dateRange"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
-        width: '15%'
+        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html',
-        width: '20%'
+        cellTemplate: 'modules/ediscovery/cell-template-state.html'
       }, {
         field: 'actions',
         displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
-        width: '10%'
+        width: '85'
       }]
     };
 
@@ -129,6 +121,7 @@
       EdiscoveryService.getReports().then(function (res) {
         vm.reports = res;
       }).finally(function (res) {
+        vm.readingReports = false;
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
       });

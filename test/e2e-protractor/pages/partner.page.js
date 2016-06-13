@@ -103,7 +103,7 @@ var PartnerHomePage = function () {
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
-  this.closeBtnOnModal = element(by.id('btnCloseModal'));
+  this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
