@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -27,6 +27,7 @@
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.openExtendedInformation = openExtendedInformation;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -41,8 +42,24 @@
       }, XhrNotificationService.notify);
     }
 
+    function openExtendedInformation(title, message) {
+      $modal.open({
+        templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+        controller: 'HelpdeskExtendedInformationCtrl as modal',
+        resolve: {
+          title: function () {
+            return title;
+          },
+          message: function () {
+            return message;
+          }
+        }
+      });
+    }
+
     function initUserView(user) {
       vm.user = user;
+      vm.userStringified = JSON.stringify(user, null, 4);
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
@@ -116,7 +133,14 @@
     }
   }
 
+  function HelpdeskExtendedInformationCtrl($modalInstance, title, message) {
+    var vm = this;
+    vm.message = message;
+    vm.title = title;
+  }
+
   angular
     .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController);
+    .controller('HelpdeskUserController', HelpdeskUserController)
+    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
 }());
