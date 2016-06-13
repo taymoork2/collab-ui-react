@@ -1482,7 +1482,7 @@
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failure: {{failure}}"
+      "failure": "Failed to generate report:"
     },
     "reportsList": {
       "name": "Name",
@@ -3299,7 +3299,6 @@
     "allowCustomerLogo": "Enable all customers to use their own logo",
     "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
-    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3355,6 +3354,23 @@
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
   },
+  "branding": {
+    "customTitle": "Custom Branding",
+    "tenantTitle": "Tenant Branding",
+    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "exampleLink": "&nbsp;(see example)",
+    "useCiscoLogo": "Use default Cisco logos",
+    "usePartnerLogo": "Use {{partner}} logo",
+    "useOwnLogo": "Use your own logo",
+    "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image  le size must be less than 1 MB.",
+    "customBrandingExample": "Custom Branding Examples",
+    "companyLogo": "{{partner}} Company Logos",
+    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
+    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+  },
   "fileUpload": {
     "uploading": "Uploading File",
     "success": "File Uploaded Successfully",
@@ -3363,10 +3379,6 @@
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
     "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
-  },
-  "brandingEample": {
-    "title": "Examples of Custom Branding",
-    "note": "Logo Placement Examples: After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",

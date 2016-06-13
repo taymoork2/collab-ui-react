@@ -6,7 +6,7 @@ namespace globalsettings {
     /* @ngInject */
     constructor() {
       super('sipDomain');
-      this.subsectionLabel = '';
+      this.subsectionLabel = 'firstTimeWizard.setSipDomainTitle';
       this.subsectionDescription = '';
     }
   }
@@ -14,8 +14,7 @@ namespace globalsettings {
     bindings: {
       showSaveButton: '<'
     },
-    controller: 'EnterpriseSettingsCtrl',
+    controller: 'SipDomainSettingController as vm',
     templateUrl:'modules/core/settings/sipDomain/sipDomainSetting.tpl.html',
-    //templateUrl:'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
   });
 }

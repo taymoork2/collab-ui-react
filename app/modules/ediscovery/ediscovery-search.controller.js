@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
-
     var vm = this;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
@@ -15,21 +14,19 @@
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.downloadReport = EdiscoveryService.downloadReport;
     vm.createReportInProgress = false;
-
-    $scope.$on('$destroy', function () {
-      disableAvalonPolling();
-    });
-
     vm.searchInProgress = false;
-
     vm.currentReportId = null;
+    vm.report = null;
     vm.searchCriteria = {
       "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
       "startDate": null,
       "endDate": null,
       "displayName": "TBD"
     };
-    vm.report = null;
+
+    $scope.$on('$destroy', function () {
+      disableAvalonPolling();
+    });
 
     if ($stateParams.roomId) {
       vm.searchCriteria.roomId = $stateParams.roomId;
@@ -86,6 +83,7 @@
     });
 
     function searchForRoom(roomId) {
+      disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
       vm.error = "";
