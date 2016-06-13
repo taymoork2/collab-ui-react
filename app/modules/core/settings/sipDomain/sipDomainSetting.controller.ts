@@ -24,7 +24,7 @@ namespace globalsettings {
       let onSaveEventDeregister = $rootScope.$on('wizard-enterprise-sip-url-event', this.saveDomain.bind(this));
 
       $scope.$on('$destroy', onSaveEventDeregister);
-      
+
       this.checkRoomLicense();
       this.loadSipDomain();
     }
@@ -130,12 +130,6 @@ namespace globalsettings {
             displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             this.isDisabled = true;
             this.isButtonDisabled = true;
-          } else if (data.verifiedDomains) {
-            if (_.isArray(data.verifiedDomains)) {
-              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
-            }
-          } else if (data.displayName) {
-            displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
           }
         } else {
           this.Log.debug('Get existing org failed. Status: ' + status);
