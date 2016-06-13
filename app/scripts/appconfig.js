@@ -397,6 +397,31 @@
             controller: 'PartnerProfileCtrl',
             parent: 'main'
           })
+          .state('brandingUpload', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+                controller: 'BrandingCtrl',
+                controllerAs: 'brandupload',
+              }
+            },
+            authenticate: false
+          })
+          .state('brandingExample', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
+                controller: 'BrandingCtrl',
+                controllerAs: 'brandEg',
+              }
+            },
+            authenticate: false,
+            params: {
+              modalType: 'Partner'
+            }
+          })
           .state('invite', {
             url: '/invite',
             views: {
@@ -1398,6 +1423,7 @@
             },
             params: {
               currentTab: {},
+              currentSubTab: '',
               currentStep: '',
               onlyShowSingleTab: false
             },

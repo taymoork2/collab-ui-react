@@ -129,6 +129,7 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmTz: 'csdm-timezone',
       readonlyAdmin: 'atlas-read-only-admin',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'

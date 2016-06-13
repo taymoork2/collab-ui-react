@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -192,7 +192,8 @@
           if (trial.type === Config.offerTypes.pstn) {
             return;
           }
-          var licenseCount = trial.type === Config.trials.roomSystems ?
+          var licenseCount =
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -208,6 +209,7 @@
       TrialMeetingService.reset();
       TrialWebexService.reset();
       TrialCallService.reset();
+      TrialCareService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
@@ -227,6 +229,7 @@
           meetingTrial: TrialMeetingService.getData(),
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
+          careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData()
