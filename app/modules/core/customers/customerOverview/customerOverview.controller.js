@@ -158,24 +158,31 @@
           }));
         } else {
           AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            var len = data.accounts.length;
-            var updateUsersList = [];
-            for (var i = 0; i < len; i++) {
-              var account = data.accounts[i];
-              var lics = account.licenses;
-              var licIds = collectLicenseIdsForWebexSites(lics);
-              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+            if (!_.isUndefined(data.accounts)) {
+              var len = data.accounts.length;
+              var updateUsersList = [];
+              for (var i = 0; i < len; i++) {
+                var account = data.accounts[i];
+                var lics = account.licenses;
+                var licIds = collectLicenseIdsForWebexSites(lics);
+                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+              }
+              $q.all(updateUsersList).then(function () {
+                openCustomerPortal();
+              });
+            } else {
+              openCustomerPortal();
             }
-            $q.all(updateUsersList).then(function () {
-              $window.open($state.href('login_swap', {
-                customerOrgId: vm.customerOrgId,
-                customerOrgName: vm.customerName
-              }));
-            });
           });
         }
       });
+    }
 
+    function openCustomerPortal() {
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.customerName
+      }));
     }
 
     function openEditTrialModal() {
