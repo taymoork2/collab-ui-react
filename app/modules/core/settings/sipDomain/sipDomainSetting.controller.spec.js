@@ -33,22 +33,21 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     };
 
     spyOn($scope.wizard, 'nextTab');
-
-    SparkDomainManagementService.checkDomainAvailability = jasmine.createSpy().and.returnValue($q.when({
+    spyOn(SparkDomainManagementService, 'checkDomainAvailability').and.returnValue($q.when({
       data: {
         isDomainAvailable: true,
         isDomainReserved: false
       }
     }));
 
-    SparkDomainManagementService.addSipDomain = jasmine.createSpy().and.returnValue($q.when({
+    spyOn(SparkDomainManagementService, 'addSipDomain').and.returnValue($q.when({
       data: {
         isDomainAvailable: false,
         isDomainReserved: true
       }
     }));
 
-    Orgservice.getLicensesUsage = jasmine.createSpy().and.returnValue($q.when([{
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when([{
       licenses: [{
         offerName: 'SD'
       }]
