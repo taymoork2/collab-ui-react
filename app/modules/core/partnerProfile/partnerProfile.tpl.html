@@ -52,9 +52,7 @@
             </div>
         </div>
 
-        <div id="brandingTpl" ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'" ng-controller="BrandingCtrl as bctrl" ng-if="!showNewBrand"></div>
-
-         <div id="brandingTpl" ng-include="'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'" ng-controller="BrandingCtrl as bctrl" ng-if="showNewBrand"></div>
+        <div id="brandingTpl" ng-include="atlasBrandingTpl" ng-controller="BrandingCtrl as bctrl"></div>
 
         <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
           <h4 translate="customerProfile.crashReportTitle"></h4>

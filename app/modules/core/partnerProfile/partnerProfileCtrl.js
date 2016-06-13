@@ -128,7 +128,11 @@
       });
 
       FeatureToggleService.supports(FeatureToggleService.features.brandingWordingChange).then(function (toggle) {
-        $scope.showNewBrand = toggle;
+        if (toggle) {
+          $scope.atlasBrandingTpl = 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html';
+        } else {
+          $scope.atlasBrandingTpl = 'modules/core/partnerProfile/branding/branding.tpl.html';
+        }
       });
     };
 

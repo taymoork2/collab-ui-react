@@ -19,8 +19,7 @@ namespace globalsettings {
     templateUrl: 'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'
   });
   angular.module('Core').component('brandingSetting', {
-    controller: 'BrandingFeatureCtrl',
-    template: '<branding-setting-new ng-if="$ctrl.feature"></branding-setting-new><branding-setting-old ng-if="!$ctrl.feature"></branding-setting-old>'
+    template: '<branding-setting-new cr-feature-toggle feature-show="atlas-branding-wording-change"></branding-setting-new><branding-setting-old cr-feature-toggle feature-hide="atlas-branding-wording-change"></branding-setting-old>'
   });
 }
 
