@@ -152,24 +152,19 @@
       promise.then(function () {
         if (licIds.length > 0) {
           Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
-          $window.open($state.href('login_swap', {
-            customerOrgId: vm.customerOrgId,
-            customerOrgName: vm.customerName
-          }));
+          openCustomerPortal();
         } else {
           AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            if (!_.isUndefined(data) && !_.isUndefined(data.accounts)) {
-              var len = data.accounts.length;
+            var accountsLength = _.get(data, 'accounts.length');
+            if (accountsLength) {
               var updateUsersList = [];
-              for (var i = 0; i < len; i++) {
+              for (var i = 0; i < accountsLength; i++) {
                 var account = data.accounts[i];
                 var lics = account.licenses;
                 var licIds = collectLicenseIdsForWebexSites(lics);
                 updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
               }
-              $q.all(updateUsersList).then(function () {
-                openCustomerPortal();
-              });
+              $q.all(updateUsersList).then(openCustomerPortal);
             } else {
               openCustomerPortal();
             }
