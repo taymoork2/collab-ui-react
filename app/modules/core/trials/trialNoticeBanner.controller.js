@@ -77,8 +77,19 @@
       var customerName = Authinfo.getOrgName();
       var customerEmail = Authinfo.getPrimaryEmail();
       var partnerEmail = vm.partnerAdminEmail;
+      var webexSiteUrl = getWebexSiteUrl();
       return EmailService.emailNotifyPartnerTrialConversionRequest(
-        customerName, customerEmail, partnerEmail);
+        customerName, customerEmail, partnerEmail, webexSiteUrl);
+    }
+
+    function getWebexSiteUrl() {
+      var result = _.reduce(Authinfo.getConferenceServices(), function (url, service) {
+        if (service.license && service.license.siteUrl) {
+          url.push(service.license.siteUrl);
+        }
+        return url;
+      }, []);
+      return result[0] || null;
     }
   }
 })();

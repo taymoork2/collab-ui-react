@@ -26,6 +26,54 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     trialPeriod: 90
   };
 
+  var fakeConferenceDataWithWebex = [{
+    "label": "Enterprise Edition 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "features": ["cloudmeetings"],
+      "volume": 100,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "test.webex.com",
+      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    },
+    "isCustomerPartner": false
+  }, {
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "features": ["squared-syncup"],
+      "volume": 100,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    },
+    "isCustomerPartner": false
+  }];
+
+  var fakeConferenceDataWithoutWebex = [{
+    "label": "Meeting 25 Party",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "features": ["squared-syncup"],
+      "volume": 100,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
+    },
+    "isCustomerPartner": false
+  }];
+
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -156,16 +204,54 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     });
 
     describe('sendEmail():', function () {
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()"', function () {
+      beforeEach(function () {
         spyOn(Authinfo, 'getOrgName').and.returnValue('fake-cust-name');
         spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-cust-admin-email');
         controller.partnerAdminEmail = 'fake-partner-admin-email';
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
+      });
 
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()"', function () {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+          return null;
+        });
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
         controller._helpers.sendEmail();
         expect(EmailService.emailNotifyPartnerTrialConversionRequest)
           .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email');
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+      });
+
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" without Conference Services', function () {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+          return null;
+        });
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
+        controller._helpers.sendEmail();
+        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
+          .toHaveBeenCalledWith(
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+      });
+
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" with conferencing without webex', function () {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+          return fakeConferenceDataWithoutWebex;
+        });
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
+        controller._helpers.sendEmail();
+        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
+          .toHaveBeenCalledWith(
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+      });
+
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" with conferencing with webex', function () {
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+          return fakeConferenceDataWithWebex;
+        });
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
+        controller._helpers.sendEmail();
+        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
+          .toHaveBeenCalledWith(
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', 'test.webex.com');
       });
     });
   });
