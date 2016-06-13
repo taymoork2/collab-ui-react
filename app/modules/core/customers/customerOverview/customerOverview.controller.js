@@ -158,7 +158,7 @@
           }));
         } else {
           AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            if (!_.isUndefined(data.accounts)) {
+            if (!_.isUndefined(data) && !_.isUndefined(data.accounts)) {
               var len = data.accounts.length;
               var updateUsersList = [];
               for (var i = 0; i < len; i++) {
