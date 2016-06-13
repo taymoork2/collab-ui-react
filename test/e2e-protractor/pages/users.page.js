@@ -82,6 +82,7 @@ var UsersPage = function () {
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
   this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+  this.paidCareCheckbox = element(by.cssContainingText('cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
