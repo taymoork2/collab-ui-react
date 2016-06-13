@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('SetupWizardCtrl', function () {
+describe('SetupWizardCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
