@@ -57,13 +57,50 @@
       name: 'trialAdd.call'
     });
 
+    function validateField(key, uniqueFlag, errorMsg) {
+      return function ($viewValue, $modelValue, scope) {
+        // Show loading glyph
+        vm.loading = true;
+        var def = $q.defer();
+        var inputText = $viewValue.toLowerCase();
+        errorMsg = null;
+
+        // Fetch list of trials based on email in edit box...
+        TrialService.shallowValidation(key, inputText).then(function (response) {
+          vm.loading = false;
+          if (angular.isDefined(response.unique)) {
+            uniqueFlag = true;
+            return def.resolve(); // name unique
+          } else {
+            if (angular.isDefined(response.error)) {
+              errorMsg = 'serverDown';
+            } else {
+              errorMsg = 'inUse';
+            }
+            scope.options.validation.show = true;
+            return def.reject();
+          }
+        });
+        return def.promise;
+      };
+    }
+
+    function errorMessage(key) {
+      var errors = {
+        'inUse': $translate.instant('trialModal.errorInUse'),
+        'serverDown': $translate.instant('trialModal.errorServerDown'),
+        'failSafe': $translate.instant('trialModal.errorFailSafe')
+      };
+      var err = _.find(errors, key);
+      return angular.isDefined(err) ? err : errors['failSafe'];
+    }
+
     vm.custInfoFields = [{
       model: vm.details,
       key: 'customerName',
-      type: 'input',
+      type: 'cs-input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        type: 'text',
         required: true,
         maxlength: 50,
         onKeydown: function (value, options) {
@@ -76,57 +113,27 @@
       },
       asyncValidators: {
         uniqueName: {
-          expression: function ($viewValue, $modelValue, scope) {
-            // $FIXUP -- input validation required?
-            if ( scope.options.formControl.$isEmpty(scope.options.key) ) {
-              return $q.when();
-            }
-
-            // Show loading glyph
-            scope.options.templateOptions.loading = true;
-            vm.loading = true;
-
-            var def = $q.defer();
-            var name = $viewValue.toLowerCase();
-
-            // Fetch list of trials based on name in edit box...
-            TrialService.getTrialsList(name).then(function (response) {
-              var found = _.find(response.data.trials, function (t) {
-                return (name === t.customerName.toLowerCase());
-              });
-              
-              vm.loading = false;
-              if ( angular.isUndefined(found) ) {
-                vm.uniqueName = true;
-                return def.resolve();   // name unique
-              }
-              else {
-                scope.options.validation.show = true;
-                return def.reject();
-              }
-            });
-
-            scope.options.templateOptions.loading = false;
-            return def.promise;
-          },
-          message: '"This username is already taken."' // $TODO - localize
+          expression: validateField('orginizationName', vm.uniqueName, vm.uniqueNameError),
+          message: errorMessage(vm.uniqueNameError),
         }
       },
       modelOptions: {
         updateOn: 'default blur',
-        debounce: { default: debounceTimeout, blur: 0 },
+        debounce: {
+          default: debounceTimeout,
+          blur: 0
+        },
       }
     }, {
       model: vm.details,
       key: 'customerEmail',
-      type: 'input',
-      className: '',
+      type: 'cs-input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
         type: 'email',
         required: true,
         onKeydown: function (value, options) {
-          //options.validation.show = false;
+          options.validation.show = false;
           vm.uniqueEmail = false;
         },
         onBlur: function (value, options) {
@@ -135,46 +142,16 @@
       },
       asyncValidators: {
         uniqueEmail: {
-          expression: function ($viewValue, $modelValue, scope) {
-            // $FIXUP -- input validation required?
-            if ( scope.options.formControl.$isEmpty(scope.options.key) ) {
-              return $q.when();
-            }
-
-            // Show loading glyph
-            scope.options.templateOptions.loading = true;
-            vm.loading = true;
-
-            var def = $q.defer();
-            var email = $viewValue.toLowerCase();
-
-            // Fetch list of trials based on email in edit box...
-            TrialService.getTrialsListByEmail(email).then(function (response) {
-              var found = _.find(response.data.trials, function (t) {
-                return (email === t.customerEmail.toLowerCase());
-              });
-              
-              vm.loading = false;
-              
-              if ( angular.isUndefined(found) ) {
-                vm.uniqueEmail = true;
-                return def.resolve();   // name unique
-              }
-              else {
-                scope.options.validation.show = true;
-                return def.reject();
-              }
-            });
-
-            scope.options.templateOptions.loading = false;
-            return def.promise;
-          },
-          message: '"This email is already taken."' // $TODO - localize
+          expression: validateField('endCustomerEmail', vm.uniqueEmail, vm.uniqueEmailError),
+          message: errorMessage(vm.uniqueEmailError),
         }
       },
       modelOptions: {
         updateOn: 'default blur',
-        debounce: { default: debounceTimeout, blur: 0 },
+        debounce: {
+          default: debounceTimeout,
+          blur: 0
+        },
       }
     }];
 

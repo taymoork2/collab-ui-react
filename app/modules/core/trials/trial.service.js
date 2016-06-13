@@ -17,11 +17,11 @@
   function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
+    var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
 
     var service = {
       getTrial: getTrial,
       getTrialsList: getTrialsList,
-      getTrialsListByEmail: getTrialsListByEmail,
       getDeviceTrialsLimit: getDeviceTrialsLimit,
       editTrial: editTrial,
       startTrial: startTrial,
@@ -31,7 +31,8 @@
       getTrialPeriodData: getTrialPeriodData,
       calcDaysLeft: calcDaysLeft,
       calcDaysUsed: calcDaysUsed,
-      getExpirationPeriod: getExpirationPeriod
+      getExpirationPeriod: getExpirationPeriod,
+      shallowValidation: shallowValidation,
     };
 
     return service;
@@ -52,12 +53,28 @@
       });
     }
 
-    function getTrialsListByEmail(searchText) {
-      return $http.get(trialsUrl, {
-        params: {
-          customerEmail: searchText
-        }
-      });
+    function shallowValidation(key, val) {
+      var req = {
+        properties: [{
+          key: key,
+          value: val.toString()
+        }]
+      };
+      return $http.post(validationUrl, req)
+        .success(function (data, status) {
+          data = data || {};
+          var obj = _.find(data, {
+            'key': key,
+            'isExist': true
+          });
+          return angular.isDefined(obj);
+        })
+        .error(function (data, status) {
+          data = {
+            error: 'serverDown'
+          };
+          return false;
+        });
     }
 
     function getDeviceTrialsLimit() {
