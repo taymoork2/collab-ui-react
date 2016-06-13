@@ -1,9 +1,7 @@
 [{
   "value": "America/Anchorage",
-  "label": "(GMT-09:00) Alaska",
-  "timezoneid": "3"
+  "label": "America/Anchorage"
 }, {
   "value": "America/Los_Angeles",
-  "label": "(GMT-08:00) Pacific Time (US & Canada)",
-  "timezoneid": "4"
+  "label": "America/Los_Angeles"
 }]

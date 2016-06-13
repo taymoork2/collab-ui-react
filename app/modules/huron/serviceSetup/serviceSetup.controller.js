@@ -13,8 +13,7 @@
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
       value: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles'),
-      timezoneid: '4'
+      label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -672,7 +671,7 @@
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.value === site.timeZone.value;
               });
               vm.previousTimeZone = vm.model.site.timeZone;
             });
@@ -803,7 +802,7 @@
           vm.timeZone = '' + usertemplates[0].timeZone;
           vm.objectId = usertemplates[0].objectId;
           var currentTimeZone = timezones.filter(function (timezone) {
-            return timezone.timezoneid === vm.timeZone;
+            return timezone.value === vm.timeZone.value;
           });
           if (currentTimeZone.length > 0) {
             vm.model.site.timeZone = currentTimeZone[0];
@@ -1067,13 +1066,13 @@
         }
       }
 
-      function updateTimezone(timeZoneId) {
-        if (!timeZoneId) {
+      function updateTimezone(timeZone) {
+        if (!timeZone) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
-          return $q.reject('No timezoneid set');
+          return $q.reject('No timeZone set');
         }
 
-        return ServiceSetup.updateVoicemailTimezone(timeZoneId, vm.objectId)
+        return ServiceSetup.updateVoicemailTimezone(timeZone.value, vm.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -1083,7 +1082,7 @@
       function saveTimezone() {
         if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
 
-          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
+          return updateTimezone(_.get(vm, 'model.site.timeZone.value'));
         }
       }
 

@@ -299,15 +299,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     };
 
     var userTemplate = [{
-      "timeZone": 3,
+      "timeZone": "America/Anchorage",
       "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
 
     controller.model.site.timeZone = {
       "value": "Pacific/Honolulu",
-      "label": "(GMT-10:00) Hawaii",
-      "timezoneid": "2"
-
+      "label": "Pacific/Honolulu"
     };
 
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
@@ -427,8 +425,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     controller.timeZoneOptions = [{
       "value": "America/Anchorage",
-      "label": "(GMT-09:00) Alaska",
-      "timezoneid": "3"
+      "label": "America/Anchorage"
     }];
 
     controller._buildTimeZoneOptions($scope);
@@ -796,8 +793,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     it('should update timezone when timezone selection changes and feature toggle is ON', function () {
       controller.model.site.timeZone = {
         "value": "America/Anchorage",
-        "label": "(GMT-09:00) Alaska",
-        "timezoneid": "3"
+        "label": "America/Anchorage"
       };
       controller.save();
       $scope.$apply();
@@ -808,13 +804,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     it('should not update timezone when timezone selection did not change and Feature toggle is ON', function () {
-      /* the default "timezoneid = 4" is loaded in the beginnig
+      /* the default "value = 'America/Los_Angeles'" is loaded in the beginnig
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
       controller.model.site.timeZone = {
         "value": "America/Los_Angeles",
-        "label": "(GMT-08:00) Pacific Time (US & Canada)",
-        "timezoneid": "4"
+        "label": "America/Los_Angeles"
       };
       controller.save();
       $scope.$apply();
