@@ -222,6 +222,7 @@
               defer.resolve(getUsers(searchStr, startat + vm.sort.maxCount));
             } else {
               // otherwise we're done
+              vm.users.sort(AACommonService.sortByProperty('description'));
               defer.resolve(data.Resources);
             }
           });
@@ -269,7 +270,6 @@
         }
 
       }
-
       populateUiModel();
 
     }
