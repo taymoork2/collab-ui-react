@@ -1,6 +1,6 @@
 'use strict';
 
-describe('SetupWizardCtrl', function () {
+fdescribe('SetupWizardCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
@@ -317,6 +317,20 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
 
     expectStepOrder(['messagingSetup']);
+  });
+
+  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
+    controller = $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init',
+        onlyShowSingleTab: true
+      }
+    });
+    $scope.$apply();
+    expectStepOrder(['enterpriseSettings']);
+    expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
   });
 
 });
