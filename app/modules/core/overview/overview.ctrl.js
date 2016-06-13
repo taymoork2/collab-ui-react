@@ -138,7 +138,6 @@
     vm.showSSOSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings',
-        currentSubTab: 'enterpriseSSO',
         currentStep: 'init'
       });
     };

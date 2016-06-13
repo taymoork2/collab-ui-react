@@ -35,30 +35,22 @@
       description: 'firstTimeWizard.enterpriseSettingsSub',
       icon: 'icon-settings',
       title: 'firstTimeWizard.enterpriseSettings',
-
-      subTabs: [{
+      controller: 'EnterpriseSettingsCtrl',
+      steps: [{
         name: 'enterpriseSipUrl',
-        steps: [{
-          name: 'enterpriseSipUrl',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
-          nextText: 'common.next'
-        }]
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html'
       }, {
-        name: 'enterpriseSSO',
-        controller: 'EnterpriseSettingsCtrl',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
-        }, {
-          name: 'exportMetadata',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
-        }, {
-          name: 'importIdp',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
-        }, {
-          name: 'testSSO',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
-        }]
+        name: 'init',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
+      }, {
+        name: 'exportMetadata',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
+      }, {
+        name: 'importIdp',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
+      }, {
+        name: 'testSSO',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
       }]
     }, {
       name: 'addUsers',
@@ -104,8 +96,8 @@
         }, {
           name: 'syncStatus',
           template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-        }],
-      }],
+        }]
+      }]
     }];
 
     $scope.isDirSyncEnabled = false;
@@ -120,13 +112,8 @@
     }
 
     function init() {
-      $scope.tabs = _.filter(tabs, function (tab) {
-        if ($stateParams.onlyShowSingleTab && $stateParams.currentTab) {
-          return $stateParams.currentTab == tab.name;
-        } else {
-          return true;
-        }
-      });
+
+      $scope.tabs = filterTabs(tabs);
 
       setupAddUserSubTabs();
 
@@ -174,6 +161,28 @@
           $scope.tabs.splice(index, 1);
         }
       });
+    }
+
+    function filterTabs(tabs) {
+      if (!($stateParams.onlyShowSingleTab && $stateParams.currentTab)) {
+        return tabs;
+      }
+
+      var filteredTabs = _.filter(tabs, function (tab) {
+        return ($stateParams.currentTab == tab.name);
+      });
+
+      if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs.steps) {
+        //prevent "back" button if a step is defined in single tab mode:
+        var tab = filteredTabs[0];
+        var index = _.findIndex(tab.steps, {
+          name: $stateParams.currentStep
+        });
+        if (index > 0) {
+          tab.steps.splice(0, index);
+        }
+      }
+      return filteredTabs;
     }
 
     function setupAddUserSubTabs() {

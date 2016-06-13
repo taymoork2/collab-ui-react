@@ -376,11 +376,7 @@
     }
 
     function setNextText() {
-
-      var currentStep = getStep();
-      if (currentStep.nextText) {
-        vm.nextText = $translate.instant(currentStep.nextText);
-      } else if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');

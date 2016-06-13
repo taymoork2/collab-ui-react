@@ -166,16 +166,8 @@ describe('SetupWizardCtrl', function () {
       expectSubStepOrder('messagingSetup', ['setup']);
     });
 
-    it('enterpriseSettings should have two subtabs', function () {
-      expectSubTabOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterpriseSSO']);
-    });
-
-    it('enterpriseSettings SSO subtab should have four substeps', function () {
-      expectSubTabStepOrder('enterpriseSettings', 'enterpriseSSO', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
-    });
-
-    it('enterpriseSettings sip url subtab should have one substep', function () {
-      expectSubTabStepOrder('enterpriseSettings', 'enterpriseSipUrl', ['enterpriseSipUrl']);
+    it('enterpriseSettings should have five steps', function () {
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
 
     it('addUsers should have 3 sub tabs with substeps having 4, 5, and 4 entries respectively', function () {
@@ -307,13 +299,10 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have a lot of settings', function () {
       expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
-
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
-      expectSubTabOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterpriseSSO']);
-      expectSubTabStepOrder('enterpriseSettings', 'enterpriseSSO', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
-      expectSubTabStepOrder('enterpriseSettings', 'enterpriseSipUrl', ['enterpriseSipUrl']);
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
   });
 
