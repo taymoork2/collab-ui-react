@@ -1103,16 +1103,16 @@
       }
 
       function updateInternalNumbers(internalNumberRange) {
-        return ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function() {
+        return ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
           internalNumberRange.uuid = undefined;
           internalNumberRange.links = undefined;
           internalNumberRange.url = undefined;
           ServiceSetup.createInternalNumberRange(internalNumberRange)
-          .catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
-              extension: this.name
-            }));
-          }.bind(internalNumberRange));
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+                extension: this.name
+              }));
+            }.bind(internalNumberRange));
         }).catch(function (response) {
           errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
             extension: this.name
@@ -1120,16 +1120,15 @@
         });
       }
 
-
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (angular.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
-              } else if (vm.extensionLengthChanged){
+              } else if (vm.extensionLengthChanged) {
                 return updateInternalNumbers(internalNumberRange);
-              } 
+              }
             });
           }
         });

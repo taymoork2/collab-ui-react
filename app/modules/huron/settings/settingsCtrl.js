@@ -1154,16 +1154,16 @@
                     }));
                   }));
               } else if (vm.extensionLengthChanged) {
-                promises.push(ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function() {
+                promises.push(ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
                   internalNumberRange.uuid = undefined;
                   internalNumberRange.links = undefined;
                   internalNumberRange.url = undefined;
                   ServiceSetup.createInternalNumberRange(internalNumberRange)
-                  .catch(function (response) {
-                    errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
-                      extension: this.name
-                    }));
-                  });
+                    .catch(function (response) {
+                      errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+                        extension: this.name
+                      }));
+                    });
                 }).catch(function (response) {
                   errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
                     extension: this.name
