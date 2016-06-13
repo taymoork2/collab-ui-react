@@ -20,11 +20,13 @@
     vm.emailError = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
+    vm.showCare = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
+    vm.careTrial = vm.trialData.trials.careTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.trialStates = [{
@@ -121,7 +123,7 @@
       className: '',
       templateOptions: {
         id: callTemplateOptionId,
-        label: $translate.instant('trials.callUsOnly')
+        label: $translate.instant('trials.call')
       },
       hideExpression: function () {
         return !vm.hasCallEntitlement;
@@ -136,7 +138,7 @@
       className: '',
       templateOptions: {
         id: roomSystemsTemplateOptionId,
-        label: $translate.instant('trials.roomSysUsOnly')
+        label: $translate.instant('trials.roomSystem')
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -172,6 +174,39 @@
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
           }
+        }
+      }
+    }];
+
+    // Care Trial
+    vm.careFields = [{
+      model: vm.careTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.care')
+      },
+      hideExpression: function () {
+        return !vm.showCare;
+      },
+    }, {
+      model: vm.careTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialCareLicenseCount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.careTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.careTrial.enabled;
         }
       }
     }];
@@ -234,7 +269,8 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -250,6 +286,9 @@
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
         }
+
+        vm.showCare = results[3];
+        vm.careTrial.enabled = results[3];
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {

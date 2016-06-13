@@ -49,12 +49,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $scope.$apply();
   }
 
-  describe('test controller creation initialization', function () {
-    beforeEach(initController);
-
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
-    });
   });
 
   describe('test the ssoEnabled settings', function () {

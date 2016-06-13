@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractReports(res) {
@@ -133,6 +133,24 @@
       });
     }
 
+    function downloadReport(report) {
+      $http.get(report.downloadUrl, {
+        responseType: 'arraybuffer'
+      }).success(function (data) {
+        var file = new $window.Blob([data], {
+          type: 'application/zip'
+        });
+        var a = $window.document.createElement('a');
+        a.href = $window.URL.createObjectURL(file);
+        a.target = '_blank';
+        a.download = 'report_' + report.id + '.zip';
+        $window.document.body.appendChild(a);
+        a.click();
+      }).error(function (data) {
+        // TODO: error handling
+      });
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -143,7 +161,8 @@
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
-      setEntitledForCompliance: setEntitledForCompliance
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport
     };
   }
 

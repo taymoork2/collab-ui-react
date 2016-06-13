@@ -1288,10 +1288,10 @@
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmins',
+            controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
             data: {
-              displayName: 'Administrators'
+              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -2210,7 +2210,12 @@
             url: '/search',
             controller: 'EdiscoverySearchController',
             controllerAs: 'ediscoverySearchCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+            templateUrl: 'modules/ediscovery/ediscovery-search.html',
+            params: {
+              roomId: null,
+              startDate: null,
+              endDate: null
+            }
           })
           .state('ediscovery.reports', {
             url: '/reports',

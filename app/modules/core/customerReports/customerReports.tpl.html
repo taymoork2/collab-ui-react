@@ -2,7 +2,7 @@
 <div class="customer-reports">
   <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
   <div ng-if='nav.showMFMetrics'>
-    <div ng-controller="AnalyticsUtilizationGraphController as GraphUtilCtrl" ng-include="'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'"></div>
+    <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
   </div>
   <cs-page-sub-header ng-if="nav.showEngagement">
     <cs-page-sub-header-left>

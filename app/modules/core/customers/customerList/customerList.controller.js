@@ -62,6 +62,17 @@
     var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
 
+    var careField = {
+      field: 'care',
+      displayName: $translate.instant('customerPage.care'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+
+    $scope.isCareEnabled = false;
+
     $scope.conferencingColumns = [{
       field: 'meeting',
       displayName: $translate.instant('customerPage.meeting'),
@@ -103,7 +114,7 @@
       cellTemplate: serviceTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
-    }, {
+    }, careField, {
       field: 'roomSystems',
       displayName: $translate.instant('customerPage.roomSystems'),
       width: '12%',
@@ -164,8 +175,18 @@
     function init() {
       setNotesTextOrder();
       addCorrectMeetingColumn();
-      resetLists().then(function () {
-        setFilter($stateParams.filter);
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+        $scope.isCareEnabled = careStatus;
+        if (!careStatus) {
+          $scope.gridColumns.splice($scope.gridColumns.indexOf(careField), 1);
+        }
+      }, function () {
+        // if getting care feature status fails, fall back to the old behavior
+        $scope.gridColumns.splice($scope.gridColumns.indexOf(careField), 1);
+      }).finally(function () {
+        resetLists().then(function () {
+          setFilter($stateParams.filter);
+        });
       });
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
@@ -299,11 +320,32 @@
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
+        var custName = Authinfo.getOrgName();
+        var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
-            var myOrg = PartnerService.loadRetrievedDataToList([data], false);
-            myOrg.customerName = Authinfo.getOrgName();
-            myOrg.customerOrgId = Authinfo.getOrgId();
+            var myOrg = PartnerService.loadRetrievedDataToList([data], false, $scope.isCareEnabled);
+            // Not sure why this is set again, afaik it is the same as myOrg
+            myOrg[0].customerName = custName;
+            myOrg[0].customerOrgId = accountId;
+
+            myOrg[0].messaging = _.merge(myOrg[0].messaging, _.find(licenses, {
+              licenseType: "MESSAGING"
+            }));
+            myOrg[0].communications = _.merge(myOrg[0].communications, _.find(licenses, {
+              licenseType: "COMMUNICATION"
+            }));
+            myOrg[0].roomSystems = _.merge(myOrg[0].roomSystems, _.find(licenses, {
+              licenseType: "SHARED_DEVICES"
+            }));
+            myOrg[0].conferencing = _.merge(myOrg[0].conferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "CF"
+            }));
+            myOrg[0].webexEEConferencing = _.merge(myOrg[0].webexEEConferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "EE"
+            }));
 
             resolve(myOrg);
           } else {
@@ -338,7 +380,8 @@
           $scope.showManagedOrgsRefresh = false;
         })
         .then(function (results) {
-          var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false);
+          var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
+            $scope.isCareEnabled);
 
           if (results[1]) {
             // 4/11/2016 admolla
@@ -373,7 +416,8 @@
           });
         })
         .then(function (response) {
-          $scope.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true);
+          $scope.trialsList = PartnerService.loadRetrievedDataToList(_.get(response, 'data.trials', []), true,
+            $scope.isCareEnabled);
           $scope.totalTrials = $scope.trialsList.length;
         });
     }

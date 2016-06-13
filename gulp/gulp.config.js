@@ -147,6 +147,7 @@ module.exports = function () {
         node_modules + '/collab-amcharts/amcharts/pie.js',
         node_modules + '/collab-amcharts/amcharts/serial.js',
         node_modules + '/collab-amcharts/amcharts/funnel.js',
+        node_modules + '/collab-amcharts/amcharts/gantt.js',
         node_modules + '/collab-amcharts/amcharts/plugins/export/export.js',
         node_modules + '/collab-amcharts/amcharts/plugins/export/libs/fabric.js/fabric.js',
         node_modules + '/collab-amcharts/amcharts/plugins/export/libs/blob.js/blob.js',
@@ -227,6 +228,7 @@ module.exports = function () {
       ],
       images: [
         node_modules + '/collab-ui/images/*',
+        node_modules + '/collab-amcharts/amcharts/images/*',
       ]
     },
 
