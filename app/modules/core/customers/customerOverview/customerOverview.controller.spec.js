@@ -85,6 +85,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(true)
+    );
     spyOn(modal, 'open').and.callThrough();
 
     controller = $controller('CustomerOverviewCtrl', {
@@ -164,6 +167,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
     it('should call deleteTestOrg', function () {
       controller.deleteTestOrg();
       expect(modal.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called', function () {
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
     });
   });
 

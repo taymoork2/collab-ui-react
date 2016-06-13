@@ -1,0 +1,52 @@
+<div class="enterprise-sipDomain-page" id="sip-url-domain-setup">
+	<h5 id="sipDomainTitle" translate="firstTimeWizard.setSipDomainTitle"></h5>
+	<div class="title space-flow">
+		<p class="paragraphSpacing inline" translate="firstTimeWizard.setSipDomainDescription"></p>
+		<a class="space icon icon-info" ng-click="openSipHelpWiki()"></a>
+	</div>
+	<div class="row-fluid">
+	  	<form name="sipDomainForm" novalidate>
+	    	<div class="row">
+				<p translate="firstTimeWizard.setSipDomainMsg"></p>
+	    		<div class="cs-input-group medium-3 columns" ng-class="{'error': validateSipDomain()}">
+	        		<input class="sip-domain-input col-lg-5" name="sipDomainInput" type="text" placeholder="{{'firstTimeWizard.setSipDomainPlaceholder' | translate}}" ng-model="cloudSipDomainField.inputValue" ng-disabled="cloudSipDomainField.isDisabled">
+	        		<div class="cs-input__messages error-msg-spacing" role="alert" ng-if="validateSipDomain()">
+	          			<div class="message">{{cloudSipDomainField.errorMsg}}</div>
+	        		</div>
+	        	</div>
+	        	<div class="col-lg-7">
+	        		<button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipDomainAvailability()" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-disabled="cloudSipDomainField.isButtonDisabled"></button>
+	        	</div>
+	    	</div>
+	  	</form>
+	</div>
+	<div class="row-fluid error-msg-spacing">
+		<p class="url-examples-style" translate="firstTimeWizard.setSipDomainCompNames"></p>
+		<div class="domain-check-space url-examples-style">
+			<h5 class="inline">{{cloudSipDomainField.inputValue}}.call{{cloudSipDomainField.domainSuffix}}</h5>
+			<i ng-if="cloudSipDomainField.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+			<i ng-if="cloudSipDomainField.isError" class="red-error-icon space icon icon-error"></i>
+			<i ng-if="cloudSipDomainField.isLoading" class="space icon icon-spinner"></i>
+		</div>
+		<div ng-if="cloudSipDomainField.isRoomLicensed" class="domain-check-space url-examples-style">
+			<h5 class="inline">{{cloudSipDomainField.inputValue}}.room{{cloudSipDomainField.domainSuffix}}</h5>
+			<i ng-if="cloudSipDomainField.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+			<i ng-if="cloudSipDomainField.isError" class="red-error-icon space icon icon-error"></i>
+			<i ng-if="cloudSipDomainField.isLoading" class="space icon icon-spinner"></i>
+		</div>
+	</div>
+	<div class="row-fluid" ng-if="cloudSipDomainField.isUrlAvailable">
+		<div class="confirm-box">
+			<cs-checkbox ckid="confirmSaveCheckBox" ng-model="cloudSipDomainField.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
+		</div>
+  </div>
+  <div class="row-fluid" ng-if="$ctrl.showSaveButton && cloudSipDomainField.isUrlAvailable">
+    <div class="save-box">
+      <button id="save"
+              ng-disabled="!cloudSipDomainField.isConfirmed"
+              class="space btn--primary"
+              ng-click="_saveDomain()"
+              translate="common.save"></button>
+    </div>
+  </div>
+</div>

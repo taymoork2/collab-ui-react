@@ -65,18 +65,94 @@
     vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
 
-    vm.individualServices = [{
+    vm.messageFields = [{
+      // Message Trial
+      model: vm.messageTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.message'),
+        id: _messageTemplateOptionId,
+        class: '',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.message;
+        }
+      }
+    }];
+
+    vm.meetingFields = [{
+      // Meeting Trial
+      model: vm.meetingTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.meeting'),
+        id: 'meetingTrial',
+        class: '',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.meeting;
+        }
+      }
+    }, {
+      // Webex Trial
+      model: vm.webexTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.webex'),
+        id: 'webexTrial',
+        class: '',
+      },
+      'hideExpression': function () {
+        return !vm.showWebex;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.webex;
+        }
+      }
+    }];
+
+    vm.callFields = [{
+      // Call Trial
+      model: vm.callTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.call'),
+        id: 'squaredUCTrial',
+        class: '',
+      },
+      'hideExpression': function () {
+        return !vm.hasCallEntitlement;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.call;
+        }
+      }
+    }];
+
+    vm.licenseCountFields = [{
       model: vm.details,
       key: 'licenseCount',
       type: 'input',
-
-      className: 'columns medium-12 license-count',
+      className: '',
       templateOptions: {
-        label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-6',
-        inputClass: 'columns medium-3',
+        label: $translate.instant('trials.licenseQuantity'),
+        labelClass: 'medium-4',
+        inputClass: 'medium-4',
         type: 'number',
         required: true,
+        secondaryLabel: $translate.instant('trials.users')
       },
       validators: {
         count: {
@@ -86,76 +162,6 @@
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
-        },
-      },
-    }, {
-      // Message Trial
-      model: vm.messageTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12',
-      templateOptions: {
-        label: $translate.instant('trials.message'),
-        id: _messageTemplateOptionId,
-        class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.message;
-        },
-      },
-    }, {
-      // Meeting Trial
-      model: vm.meetingTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12',
-      templateOptions: {
-        label: $translate.instant('trials.meeting'),
-        id: 'meetingTrial',
-        class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.meeting;
-        },
-      },
-    }, {
-      // Webex Trial
-      model: vm.webexTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.webex'),
-        id: 'webexTrial',
-        class: 'columns medium-12',
-      },
-      'hideExpression': function () {
-        return !vm.showWebex;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.webex;
-        },
-      },
-    }, {
-      // Call Trial
-      model: vm.callTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.callUsOnly'),
-        id: 'squaredUCTrial',
-        class: 'columns medium-12',
-      },
-      'hideExpression': function () {
-        return !vm.hasCallEntitlement;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.call;
         },
       },
     }];
@@ -170,8 +176,8 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-4',
+        labelClass: '',
+        inputClass: 'medium-4',
         options: [30, 60, 90]
       },
     }];
@@ -181,11 +187,11 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-12",
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.roomSysUsOnly'),
+        label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
-        class: 'columns medium-12',
+        class: '',
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -203,10 +209,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-12 small-offset-1",
+      className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-4',
+        inputClass: 'medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -305,16 +311,11 @@
     // If Webex Trials are enabled, we switch out offerType Collab for Message
     // This requires changing the label it contains as well
     function updateTrialService(templateOptionsId) {
-      var index = _.findIndex(vm.individualServices, function (individualService) {
-        return individualService.templateOptions.id === templateOptionsId;
-      });
-      if (index) {
-        switch (templateOptionsId) {
-        case _messageTemplateOptionId:
-          vm.individualServices[index].model.type = Config.offerTypes.message;
-          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
-          break;
-        }
+      switch (templateOptionsId) {
+      case _messageTemplateOptionId:
+        vm.messageFields[0].model.type = Config.offerTypes.message;
+        vm.messageFields[0].templateOptions.label = $translate.instant('trials.message');
+        break;
       }
     }
 
@@ -331,8 +332,13 @@
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
 
       addRemoveStates();
-      _.forEach(vm.individualServices, function (service) {
-        service.runExpressions();
+
+      var fieldsArray = [vm.individualServices, vm.messageFields, vm.meetingFields, vm.callFields, vm.licenseCountFields];
+
+      _.forEach(fieldsArray, function (fields) {
+        _.forEach(fields, function (service) {
+          service.runExpressions();
+        });
       });
     }
 

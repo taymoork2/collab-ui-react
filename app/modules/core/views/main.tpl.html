@@ -1,6 +1,6 @@
 <div class="app-container">
   <div ng-controller="HeaderCtrl as headerCtrl">
-    <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" show-read-only>
+    <cs-header navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only>
       <cs-header-left>
         <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>

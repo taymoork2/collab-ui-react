@@ -49,11 +49,6 @@
   .cloudChkBox {
     margin-left: -15px;
   }
-  .roles-tooltip {
-    list-style-type: none;
-    text-align: left;
-    height: 100%;
-  }
   .tooltip-inner {
     max-width: 100%;
   }
@@ -72,5 +67,13 @@
   .cs-radio {
     cursor: pointer;
     display: inline-block;
+  }
+}
+
+.admin-roles-panel, .roles-panel {
+  .roles-tooltip {
+    list-style-type: none;
+    text-align: left;
+    height: 100%;
   }
 }

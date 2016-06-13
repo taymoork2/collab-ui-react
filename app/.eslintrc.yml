@@ -67,8 +67,6 @@
     it: true
     jasmine: true
     jstz: true
-    mixpanel: true
-    MIXPANEL_CUSTOM_LIB_URL: true
     moment: true
     phoneUtils: true
     sinon: true

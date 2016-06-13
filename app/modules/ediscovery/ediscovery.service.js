@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractReports(res) {
@@ -19,7 +19,8 @@
 
     function detectAndSetReportTimeout(report) {
       if (report) {
-        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime).getTime() > 300000;
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
+          .getTime() > 300000;
       }
       return report;
     }
@@ -64,12 +65,19 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
-          "displayName": displayName
+          "displayName": displayName,
+          "roomQuery": {
+            "startDate": sd,
+            "endDate": ed,
+            "roomId": roomId
+          }
         })
         .then(extractData);
     }
@@ -125,6 +133,24 @@
       });
     }
 
+    function downloadReport(report) {
+      $http.get(report.downloadUrl, {
+        responseType: 'arraybuffer'
+      }).success(function (data) {
+        var file = new $window.Blob([data], {
+          type: 'application/zip'
+        });
+        var a = $window.document.createElement('a');
+        a.href = $window.URL.createObjectURL(file);
+        a.target = '_blank';
+        a.download = 'report_' + report.id + '.zip';
+        $window.document.body.appendChild(a);
+        a.click();
+      }).error(function (data) {
+        // TODO: error handling
+      });
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -135,7 +161,8 @@
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
-      setEntitledForCompliance: setEntitledForCompliance
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport
     };
   }
 

@@ -27,9 +27,7 @@
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
-      getReleaseNotes: getReleaseNotes,
-      deprovisionConnector: deprovisionConnector,
-      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
@@ -270,20 +268,6 @@
         .then(extractDataFromResponse)
         .then(function (data) {
           return data.releaseNotes;
-        });
-    }
-
-    function deprovisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
-      return $http.post(url);
-    }
-
-    function getAllConnectorTypesForCluster(clusterId) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
-      return $http.get(url)
-        .then(function (response) {
-          return _.map(response.data.provisioning, 'connectorType');
         });
     }
 

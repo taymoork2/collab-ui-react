@@ -142,6 +142,7 @@
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
+        CDC: 'CDC' // Care Digital Channel
       },
 
       licenseTypes: {
@@ -150,7 +151,8 @@
         COMMUNICATION: 'COMMUNICATION',
         STORAGE: 'STORAGE',
         SHARED_DEVICES: 'SHARED_DEVICES',
-        CMR: 'CMR'
+        CMR: 'CMR',
+        CARE: 'CARE'
       },
 
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -249,7 +251,7 @@
         'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
+      WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
@@ -311,13 +313,15 @@
       'squared-fusion-uc': [
         'cluster-list',
         'call-service',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-fusion-cal': [
         'calendar-service',
         'services-overview',
         'cluster-list',
-        'cluster-settings-page'
+        'expressway-settings',
+        'mediafusion-settings'
       ],
       'squared-team-member': [
         'organization'
@@ -356,7 +360,8 @@
         'hurondetails',
         'huronsettings',
         'cluster-list',
-        'cluster-settings-page',
+        'expressway-settings',
+        'mediafusion-settings',
         'calendar-service',
         'call-service',
         'management-service'

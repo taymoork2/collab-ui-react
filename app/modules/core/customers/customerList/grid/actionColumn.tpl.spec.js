@@ -2,7 +2,7 @@
   'use strict';
 
   var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-  var Authinfo, Orgservice, PartnerService, TrialService;
+  var Authinfo, FeatureToggleService, Orgservice, PartnerService, TrialService;
 
   describe('Template: actionColumn.tpl.html', function () {
 
@@ -12,13 +12,14 @@
 
     // TODO: refactor this once we have a way of sharing code in karma unit tests (dupe code of
     //   'customerList.tpl.spec.js')
-    function dependencies($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _TrialService_) {
+    function dependencies($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
       $controller = _$controller_;
       Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
+      FeatureToggleService = _FeatureToggleService_;
       Orgservice = _Orgservice_;
       TrialService = _TrialService_;
       $q = _$q_;
@@ -33,11 +34,15 @@
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
         data: {}
       }));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
         callback({
           success: true
         }, 200);
       });
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+        $q.when(true)
+      );
     }
 
     function compileViewWithMockData(mockData) {

@@ -2,19 +2,21 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($state, $timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
 
     vm.deleteReports = deleteReports;
+    vm.readingReports = true;
 
     $scope.prettyPrintBytes = prettyPrintBytes;
     $scope.downloadable = downloadable;
-    $scope.downloadReport = downloadReport;
+    $scope.downloadReport = EdiscoveryService.downloadReport;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
+    $scope.rerunReport = rerunReport;
 
     var avalonPoller = $timeout(pollAvalonReport, 0);
 
@@ -60,10 +62,6 @@
       return r && r.state === "COMPLETED";
     }
 
-    function downloadReport(id) {
-      openGenericModal("Note", "Download not implemented yet!");
-    }
-
     function findReportById(id) {
       return _.find(vm.reports, function (report) {
         return report.id === id;
@@ -73,7 +71,7 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      rowHeight: 40,
+      rowHeight: 68,
       enableRowHeaderSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
@@ -81,28 +79,35 @@
 
       columnDefs: [{
         field: 'displayName',
-        displayName: 'Name',
-        sortable: true
+        displayName: $translate.instant("ediscovery.reportsList.name"),
+        sortable: true,
+        cellTemplate: 'modules/ediscovery/cell-template-name.html'
       }, {
         field: 'createdTime',
-        displayName: 'Created At',
+        displayName: $translate.instant("ediscovery.reportsList.createdAt"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html'
       }, {
+        field: 'roomQuery.roomId',
+        displayName: $translate.instant("ediscovery.reportsList.roomId"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-room-id.html'
+      }, {
+        field: 'roomQueryDates',
+        displayName: $translate.instant("ediscovery.reportsList.dateRange"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html'
+      }, {
         field: 'state',
-        displayName: 'State',
+        displayName: $translate.instant("ediscovery.reportsList.state"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-state.html'
       }, {
-        field: 'sizeInBytes',
-        displayName: 'Size',
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-size.html'
-      }, {
         field: 'actions',
-        displayName: 'Actions',
+        displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-action.html'
+        cellTemplate: 'modules/ediscovery/cell-template-action.html',
+        width: '85'
       }]
     };
 
@@ -116,6 +121,7 @@
       EdiscoveryService.getReports().then(function (res) {
         vm.reports = res;
       }).finally(function (res) {
+        vm.readingReports = false;
         $timeout.cancel(avalonPoller);
         avalonPoller = $timeout(pollAvalonReport, 5000);
       });
@@ -125,6 +131,14 @@
       if ($window.Notification) {
         $window.Notification.requestPermission().then(function (result) {});
       }
+    }
+
+    function rerunReport(roomId, startDate, endDate) {
+      $state.go('ediscovery.search', {
+        roomId: roomId,
+        startDate: startDate,
+        endDate: endDate
+      });
     }
 
     function notifyOnEvent(reports) {
