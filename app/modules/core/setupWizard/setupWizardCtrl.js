@@ -172,7 +172,7 @@
         return ($stateParams.currentTab == tab.name);
       });
 
-      if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs.steps) {
+      if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs[0].steps) {
         //prevent "back" button if a step is defined in single tab mode:
         var tab = filteredTabs[0];
         var index = _.findIndex(tab.steps, {
