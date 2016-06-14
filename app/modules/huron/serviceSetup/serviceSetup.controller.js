@@ -674,7 +674,7 @@
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone.value;
+                return timezone.value === site.timeZone;
               });
               vm.previousTimeZone = vm.model.site.timeZone;
             });
@@ -1086,7 +1086,7 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+        if ((_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone')) && voicemailToggleEnabled && vm.hasVoicemailService) {
 
           return updateTimezone(_.get(vm, 'model.site.timeZone.value'));
         }
