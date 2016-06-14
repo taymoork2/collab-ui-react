@@ -166,7 +166,7 @@ describe('SetupWizardCtrl', function () {
       expectSubStepOrder('messagingSetup', ['setup']);
     });
 
-    it('enterpriseSettings should have five substeps', function () {
+    it('enterpriseSettings should have five steps', function () {
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
 
@@ -268,10 +268,6 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have 5 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
-
-    it('enterpriseSettings should have five substeps', function () {
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-    });
   });
 
   describe('When atlasTelstraCsb is enabled', function () {
@@ -303,7 +299,6 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have a lot of settings', function () {
       expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
-
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
@@ -322,6 +317,20 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
 
     expectStepOrder(['messagingSetup']);
+  });
+
+  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
+    controller = $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init',
+        onlyShowSingleTab: true
+      }
+    });
+    $scope.$apply();
+    expectStepOrder(['enterpriseSettings']);
+    expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
   });
 
 });

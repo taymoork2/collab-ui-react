@@ -397,6 +397,31 @@
             controller: 'PartnerProfileCtrl',
             parent: 'main'
           })
+          .state('brandingUpload', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+                controller: 'BrandingCtrl',
+                controllerAs: 'brandupload',
+              }
+            },
+            authenticate: false
+          })
+          .state('brandingExample', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
+                controller: 'BrandingCtrl',
+                controllerAs: 'brandEg',
+              }
+            },
+            authenticate: false,
+            params: {
+              modalType: 'Partner'
+            }
+          })
           .state('invite', {
             url: '/invite',
             views: {
@@ -411,20 +436,6 @@
             url: '/invitelauncher',
             templateUrl: 'modules/squared/views/invitelauncher.html',
             controller: 'InvitelauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
-          .state('applauncher', {
-            url: '/applauncher',
-            templateUrl: 'modules/squared/views/applauncher.html',
-            controller: 'ApplauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
-          .state('appdownload', {
-            url: '/appdownload',
-            templateUrl: 'modules/squared/views/appdownload.html',
-            controller: 'AppdownloadCtrl',
             parent: 'main',
             authenticate: false
           })
@@ -1288,10 +1299,10 @@
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmins',
+            controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
             data: {
-              displayName: 'Administrators'
+              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -1398,6 +1409,7 @@
             },
             params: {
               currentTab: {},
+              currentSubTab: '',
               currentStep: '',
               onlyShowSingleTab: false
             },
@@ -1950,6 +1962,9 @@
             data: {
               connectorType: 'c_cal'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main',
             abstract: true
           })
@@ -1959,6 +1974,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('calendar-service.settings', {
@@ -1978,6 +1996,9 @@
             data: {
               connectorType: 'c_ucmc'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main'
           })
           .state('call-service.list', {
@@ -1986,6 +2007,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('call-service.settings', {

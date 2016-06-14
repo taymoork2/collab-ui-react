@@ -6,16 +6,19 @@
     </div>
 
     <div class="typeahead-large">
-      <!--<form class="searchInputForm">-->
-      <input spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" placeholder="Type in a room id" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
-
+      <input spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" placeholder="{{'ediscovery.searchWatermark' | translate}}" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
       <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
-      <!--</form>-->
-
       <div class="input-description"></div>
     </div>
+
     <div class="searchError" ng-show="ediscoverySearchCtrl.error">
       {{ediscoverySearchCtrl.error}}
+    </div>
+
+    <div ng-show="ediscoverySearchCtrl.searchInProgress">
+      <span class="search-spinner">
+        <i class="icon icon-spinner" style="top: 1rem;"></i>
+      </span>
     </div>
   </div>
 

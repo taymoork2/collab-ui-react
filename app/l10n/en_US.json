@@ -958,6 +958,7 @@
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
+    "extensionUpdateError": "Failed to update extension {{extension}}.",
     "greaterThan": "{{endNumber}} must be greater than or equal to {{beginNumber}}.",
     "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
     "rangeOverlap": "Extension Ranges must not overlap.",
@@ -1154,11 +1155,15 @@
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
-      "selectExisting": "Select one or more existing Expressway clusters",
-      "selectClusterPlaceholder": "Select one or more Expressway clusters…",
+      "selectExisting": "Select an existing Expressway clusters",
+      "selectClusterPlaceholder": "Select an Expressway cluster…",
+      "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists."
+      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
+      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1434,6 +1439,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Activity Reports",
     "navHeaderTitle": "Activity Reports",
+    "searchWatermark": "Enter a Room ID",
     "searchHelp": "Search Help",
     "searchError": "Your search for '{{roomId}}' returned 0 matches",
     "dateError": {
@@ -1450,7 +1456,8 @@
       "RUNNING": "Running",
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
-      "ABORTED": "Aborted"
+      "ABORTED": "Aborted",
+      "INIT": "Initializing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1466,25 +1473,27 @@
       "reportNameNotEmpty": "Report Name can not be empty",
       "startDate": "Start Date",
       "dateTo": "to",
-      "startDatePlaceholder": "Choose a start Day",
+      "startDatePlaceholder": "Choose a Start Date",
       "endDate": "End Date",
       "endDateUntil": "until",
       "endDateOnward": "onward",
-      "endDatePlaceholder": "Choose an end Day",
-      "reportDateRange": "Report Date Range",
-      "noRangeSpecified": "No range specified",
+      "endDatePlaceholder": "Choose an End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failure: {{failure}}"
+      "failure": "Failed to generate report:"
     },
     "reportsList": {
       "name": "Name",
       "createdAt": "Created At",
-      "roomId": "Room Id",
+      "roomId": "Room ID",
       "dateRange": "Date Range",
       "state": "State",
-      "actions": "Actions"
+      "actions": "Actions",
+      "noReportsFound": "No Reports Found",
+      "noReportsTip": "Click the Search tab to search activities and create reports"
     }
   },
   "firstTimeWizard": {
@@ -2224,6 +2233,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -2280,7 +2290,7 @@
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
       "partner": "Partner",
-      "name": "Name",
+      "name": "Recipient Name",
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
@@ -2288,7 +2298,8 @@
       "city": "City",
       "state": "State",
       "zip": "Zip",
-      "dealId": "Deal ID"
+      "dealId": "Deal ID",
+      "usOnly": "Currently U.S. only"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2354,7 +2365,9 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
+    "care": "Care",
     "callUsOnly": "Call (Currently U.S. only)",
+    "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2364,7 +2377,8 @@
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
-    "trialDuration": "Trial Duration"
+    "trialDuration": "Trial Duration",
+    "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
 
   "status": {
@@ -2379,9 +2393,10 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
-    "webexCMR": "WebEx EE 200 with CMR",
+    "care": "Care",
+    "webex": "WebEx",
     "adminManagement": "Administrator Management",
-    "administrators": "Administrators",
+    "administrators": "Partner Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2407,6 +2422,7 @@
     "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
     "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
     "csvHeaderRoomSystemsEntitlements": "Room Systems Entitlements",
+    "csvHeaderCareEntitlements": "Care Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -2458,8 +2474,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addAdministrators": "Add Adminsitrators",
-    "assignedAdministrators": "Assigned Administrators"
+    "addAdministrators": "Add Administrators",
+    "administrators": "Administrators",
+    "customerAdministratorServiceError": "Customer Organization ID needed",
+    "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
+    "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
+    "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
+    "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
+    "deleteAdministrator": "Remove Sales Administrator?",
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2584,7 +2607,7 @@
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
-    "readonlyAdmin": "Read only administrator privileges",
+    "readonlyAdmin": "Read-only administrator privileges",
     "partialAdmin": "Some administrator privileges",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
@@ -3279,7 +3302,6 @@
     "allowCustomerLogo": "Enable all customers to use their own logo",
     "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
-    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3335,6 +3357,23 @@
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
   },
+  "branding": {
+    "customTitle": "Custom Branding",
+    "tenantTitle": "Tenant Branding",
+    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "exampleLink": "&nbsp;(see example)",
+    "useCiscoLogo": "Use default Cisco logos",
+    "usePartnerLogo": "Use {{partner}} logo",
+    "useOwnLogo": "Use your own logo",
+    "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image  le size must be less than 1 MB.",
+    "customBrandingExample": "Custom Branding Examples",
+    "companyLogo": "{{partner}} Company Logos",
+    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
+    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+  },
   "fileUpload": {
     "uploading": "Uploading File",
     "success": "File Uploaded Successfully",
@@ -3343,10 +3382,6 @@
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
     "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
-  },
-  "brandingEample": {
-    "title": "Examples of Custom Branding",
-    "note": "Logo Placement Examples: After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -4071,6 +4106,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription: ",

@@ -40,7 +40,7 @@
       'markerType': 'square',
       'markerSize': 10,
       'position': 'absolute',
-      'left': 550,
+      'left': 350,
       'equalWidths': false,
       'horizontalGap': 5,
       'valueAlign': 'left',
@@ -180,7 +180,10 @@
         'durationField': 'duration',
         'dataProvider': data,
         'valueScrollbar': {
-          'autoGridCount': true
+          'autoGridCount': true,
+          'color': '#AAAAAA',
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1
         },
         'chartCursor': {
           'cursorColor': '#55bb76',

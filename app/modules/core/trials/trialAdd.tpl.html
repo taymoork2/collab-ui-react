@@ -26,6 +26,7 @@
     <div class="cs-form__section">
       <div class="section__info">
         <h4 translate="partnerHomePage.trialServices"></h4>
+            <p class="section__description" translate="trials.supportSelectLocations"></p>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -41,6 +42,11 @@
         <div class="sub-section">
           <h5 class="sub-section__label" translate="subscriptions.call"></h5>
           <formly-form model="trial.trialData.trials" fields="trial.callFields"></formly-form>
+        </div>
+
+        <div class="sub-section" ng-if="trial.showCare">
+          <h5 class="sub-section__label" translate="subscriptions.care"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.careFields"></formly-form>
         </div>
 
         <div class="sub-section" ng-if="trial.showRoomSystems">
