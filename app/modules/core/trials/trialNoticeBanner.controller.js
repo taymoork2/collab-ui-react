@@ -20,7 +20,8 @@
     vm._helpers = {
       getDaysLeft: getDaysLeft,
       getPrimaryPartnerInfo: getPrimaryPartnerInfo,
-      sendEmail: sendEmail
+      sendEmail: sendEmail,
+      getWebexSiteUrl: getWebexSiteUrl
     };
 
     init();
@@ -77,7 +78,7 @@
       var customerName = Authinfo.getOrgName();
       var customerEmail = Authinfo.getPrimaryEmail();
       var partnerEmail = vm.partnerAdminEmail;
-      var webexSiteUrl = getWebexSiteUrl();
+      var webexSiteUrl = vm._helpers.getWebexSiteUrl();
       return EmailService.emailNotifyPartnerTrialConversionRequest(
         customerName, customerEmail, partnerEmail, webexSiteUrl);
     }

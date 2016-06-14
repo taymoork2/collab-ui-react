@@ -187,38 +187,32 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
           .toHaveBeenCalledWith(
             'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
       });
+    });
 
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" without Conference Services', function () {
+    describe('getWebexSiteUrl():', function () {
+
+      it('should return null without Conference Services', function () {
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
           return null;
         });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
-        controller._helpers.sendEmail();
-        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
-          .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+        var url = controller._helpers.getWebexSiteUrl();
+        expect(url).toBe(null);
       });
 
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" with conferencing without webex', function () {
+      it('should return null when Conference Services without webex', function () {
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
           return fakeConferenceDataWithoutWebex;
         });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
-        controller._helpers.sendEmail();
-        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
-          .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+        var url = controller._helpers.getWebexSiteUrl();
+        expect(url).toBe(null);
       });
 
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" with conferencing with webex', function () {
+      it('should return webex siteUrl when Conference Services with webex', function () {
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
           return fakeConferenceDataWithWebex;
         });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
-        controller._helpers.sendEmail();
-        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
-          .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', 'test.webex.com');
+        var url = controller._helpers.getWebexSiteUrl();
+        expect(url).toBe('test.webex.com');
       });
     });
   });
