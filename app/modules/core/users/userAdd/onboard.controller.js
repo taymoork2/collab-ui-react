@@ -246,7 +246,7 @@
 
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
-        if ($scope.cmrLicensesForMetric.hasOwnProperty(licenseId) && $scope.cmrLicensesForMetric) {
+        if ($scope.cmrLicensesForMetric[licenseId]) {
           Mixpanel.trackEvent("CMR checkbox unselected", {
             licenseId: licenseId
           });
