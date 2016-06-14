@@ -1319,6 +1319,8 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
+      "upgradeScheduleHeader": "Upgrade Schedule",
+      "upgradeScheduleParagraph": "Select the upgrade schedule for this cluster: the connectors will upgrade automatically in the selected time when  an upgrade is available.",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
@@ -2233,6 +2235,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -4433,7 +4436,7 @@
         }
       },
       "clusterList": {
-        "title": "Cluster List",
+        "title": "Clusters",
         "description": "On-prem clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
