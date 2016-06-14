@@ -14,7 +14,6 @@
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
-    var careTemplateOptionId = 'careTrial';
 
     vm.trialData = TrialService.getData();
 
@@ -187,7 +186,7 @@
       type: 'checkbox',
       className: '',
       templateOptions: {
-        id: careTemplateOptionId,
+        id: 'careTrial',
         label: $translate.instant('trials.care')
       },
       hideExpression: function () {

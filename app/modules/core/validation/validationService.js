@@ -30,8 +30,8 @@
     }
 
     function trialCareQuantity(viewValue, modelValue, totalCount) {
-      var value = modelValue || viewValue;
-      return (/^(\d|[1-4]\d|50)$/.test(value) && totalCount >= value);
+      var value = +modelValue || +viewValue;
+      return (value >= 0 && value <= 50 && totalCount >= value);
     }
 
     function trialRoomSystemQuantity(viewValue, modelValue) {
