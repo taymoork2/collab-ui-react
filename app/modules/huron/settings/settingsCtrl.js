@@ -7,7 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberServiceQuery,
+    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService,
     InternationalDialing) {
 
     var vm = this;
@@ -1550,7 +1550,7 @@
     }
 
     function testForExtensions() {
-      return DirectoryNumberServiceQuery.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
