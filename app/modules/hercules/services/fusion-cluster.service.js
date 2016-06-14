@@ -15,7 +15,9 @@
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
       getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
-      getAll: getAll
+      getAll: getAll,
+      findClusterInClusterList: findClusterInClusterList,
+      buildSidepanelConnectorList: buildSidepanelConnectorList
     };
 
     return service;
@@ -123,6 +125,45 @@
         .then(function (response) {
           return _.map(response.data.provisioning, 'connectorType');
         });
+    }
+
+    function findClusterInClusterList(clusters, clusterId) {
+      return _.find(clusters, function (cluster) {
+        return cluster.id === clusterId;
+      });
+    }
+
+    function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
+      var sidepanelConnectorList = {};
+      sidepanelConnectorList.hosts = [];
+      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
+      sidepanelConnectorList.name = cluster.name;
+      sidepanelConnectorList.id = cluster.id;
+
+      /* Find and populate hostnames only, and make sure that they are only there once */
+      _.forEach(cluster.connectors, function (connector) {
+        sidepanelConnectorList.hosts.push({
+          hostname: connector.hostname,
+          connectors: []
+        });
+      });
+      sidepanelConnectorList.hosts = _.uniq(sidepanelConnectorList.hosts, function (host) {
+        return host.hostname;
+      });
+
+      /* Find and add all c_mgmt connectors, plus the connectors we're really interested in  */
+      _.forEach(cluster.connectors, function (connector) {
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
+          var host = _.find(sidepanelConnectorList.hosts, function (host) {
+            return host.hostname === connector.hostname;
+          });
+          var index = _.indexOf(sidepanelConnectorList.hosts, host);
+          if (index !== -1) {
+            sidepanelConnectorList.hosts[index].connectors.push(connector);
+          }
+        }
+      });
+      return sidepanelConnectorList;
     }
 
   }

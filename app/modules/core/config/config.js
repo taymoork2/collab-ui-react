@@ -303,7 +303,8 @@
         'cluster-details',
         'management-service',
         'services-overview',
-        'my-company'
+        'my-company',
+        'management-connector-details'
       ],
       'spark-room-system': [
         'devices',
