@@ -12,8 +12,9 @@
 	            typeahead-on-select="customerAdmin.selectAdmin($item)"
 	            placeholder="Enter Administrator name"
 	            typeahead-wait-ms="0"
+              ng-change="customerAdmin.filterList(customerAdmin.selected)"
 	            ng-disabled="customerAdmin.disableAdminSearch" />
-        <span type="button" class="btn btn--cta inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
+        <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
       </div>
      </div>
     <div class="section-title-row">
@@ -24,7 +25,7 @@
     		<li class="feature" ng-repeat= "administrator in customerAdmin.administrators | orderBy: 'fullName'">
     			<a>
     				<span class="feature-name">{{administrator.fullName}}</span>
-    				<span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.unassignSalesAdmin(administrator.uuid, administrator.fullName)">
+    				<span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeSalesAdmin(administrator.uuid, administrator.fullName)">
     				</span>
     			</a>
     		</li>

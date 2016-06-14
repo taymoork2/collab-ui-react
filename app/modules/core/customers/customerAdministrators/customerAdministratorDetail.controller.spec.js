@@ -19,7 +19,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     };
 
     modalDefer = $q.defer();
-    spyOn(CustomerAdministratorService, 'unassignCustomerSalesAdmin').and.returnValue($q.when({}));
+    spyOn(CustomerAdministratorService, 'removeCustomerSalesAdmin').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
@@ -69,11 +69,11 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
   });
 
-  describe('unassignCustomerSalesAdmin', function () {
+  describe('removeCustomerSalesAdmin', function () {
     beforeEach(initController);
 
     it('must splice administrator from View-Model administrators array', function () {
-      controller.unassignSalesAdmin('1', 'Jane Doe');
+      controller.removeSalesAdmin('1', 'Jane Doe');
       modalDefer.resolve();
       $scope.$apply();
 
@@ -83,11 +83,11 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
   });
 
-  describe('unassignCustomerSalesAdmin', function () {
+  describe('removeCustomerSalesAdmin', function () {
     beforeEach(initController);
 
     it('must not delete on Modal dismiss', function () {
-      controller.unassignSalesAdmin('1', 'Jane Doe');
+      controller.removeSalesAdmin('1', 'Jane Doe');
       modalDefer.reject();
       $scope.$apply();
 
