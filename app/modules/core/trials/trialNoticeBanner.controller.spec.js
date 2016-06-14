@@ -27,51 +27,18 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   };
 
   var fakeConferenceDataWithWebex = [{
-    "label": "Enterprise Edition 200",
-    "value": 1,
-    "name": "confRadio",
     "license": {
-      "offerName": "EE",
       "licenseType": "CONFERENCING",
-      "features": ["cloudmeetings"],
-      "volume": 100,
-      "isTrial": true,
-      "status": "ACTIVE",
-      "capacity": 200,
       "siteUrl": "test.webex.com",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    "isCustomerPartner": false
+    }
   }, {
-    "label": "Meeting 25 Party",
-    "value": 1,
-    "name": "confRadio",
     "license": {
-      "offerName": "CF",
       "licenseType": "CONFERENCING",
-      "features": ["squared-syncup"],
-      "volume": 100,
-      "isTrial": true,
-      "status": "ACTIVE",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    "isCustomerPartner": false
+    }
   }];
 
   var fakeConferenceDataWithoutWebex = [{
-    "label": "Meeting 25 Party",
-    "value": 1,
-    "name": "confRadio",
-    "license": {
-      "offerName": "CF",
-      "licenseType": "CONFERENCING",
-      "features": ["squared-syncup"],
-      "volume": 100,
-      "isTrial": true,
-      "status": "ACTIVE",
-      "partnerEmail": "fakeuserunodostres+admin1@gmail.com"
-    },
-    "isCustomerPartner": false
+    "license": {}
   }];
 
   beforeEach(module('core.trial'));

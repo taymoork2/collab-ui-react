@@ -83,13 +83,13 @@
     }
 
     function getWebexSiteUrl() {
-      var result = _.reduce(Authinfo.getConferenceServices(), function (url, service) {
-        if (service.license && service.license.siteUrl) {
-          url.push(service.license.siteUrl);
-        }
-        return url;
-      }, []);
-      return result[0] || null;
+      // find the first instance matching the criteria...
+      var result = _.find(Authinfo.getConferenceServices(), function (service) {
+        return _.get(service, 'license.siteUrl', null);
+      });
+      // ...and return the appropriate value
+      return _.get(result, 'license.siteUrl', null);
+
     }
   }
 })();
