@@ -57,42 +57,32 @@
       name: 'trialAdd.call'
     });
 
-    function validateField(key, uniqueFlag, errorMsg) {
-      return function ($viewValue, $modelValue, scope) {
-        // Show loading glyph
-        vm.loading = true;
-        var def = $q.defer();
-        var inputText = $viewValue.toLowerCase();
-        errorMsg = null;
+    function validateField($viewValue, scope, key, uniqueFlag, errorMsg) {
+      // Show loading glyph
+      vm.loading = true;
+      vm[errorMsg] = null;
 
-        // Fetch list of trials based on email in edit box...
-        TrialService.shallowValidation(key, inputText).then(function (response) {
-          vm.loading = false;
-          if (angular.isDefined(response.unique)) {
-            uniqueFlag = true;
-            return def.resolve(); // name unique
-          } else {
-            if (angular.isDefined(response.error)) {
-              errorMsg = 'serverDown';
-            } else {
-              errorMsg = 'inUse';
-            }
-            scope.options.validation.show = true;
-            return def.reject();
-          }
-        });
-        return def.promise;
-      };
+      // Fetch list of trials based on email in edit box...
+      return TrialService.shallowValidation(key, $viewValue).then(function (response) {
+        vm.loading = false;
+        if (angular.isDefined(response.unique)) {
+          // name unique
+          vm[uniqueFlag] = true;
+          return true;
+        }
+
+        // Name in use, or API call failed
+        vm[errorMsg] = response.error;
+        scope.options.validation.show = true;
+        return false;
+      });
     }
 
     function errorMessage(key) {
-      var errors = {
-        'inUse': $translate.instant('trialModal.errorInUse'),
-        'serverDown': $translate.instant('trialModal.errorServerDown'),
-        'failSafe': $translate.instant('trialModal.errorFailSafe')
-      };
-      var err = _.find(errors, key);
-      return angular.isDefined(err) ? err : errors['failSafe'];
+      if ( angular.isUndefined(vm[key]) || vm[key] === "" ) {
+        vm[key] = 'trialModal.errorFailSafe';
+      }
+      return $translate.instant(vm[key]);
     }
 
     vm.custInfoFields = [{
@@ -113,8 +103,19 @@
       },
       asyncValidators: {
         uniqueName: {
-          expression: validateField('orginizationName', vm.uniqueName, vm.uniqueNameError),
-          message: errorMessage(vm.uniqueNameError),
+          expression: function ($viewValue, $modelValue, scope) {
+            return $q(function (resolve, reject) {
+              validateField($viewValue, scope, 'organizationName', 'uniqueName', 'uniqueNameError').then(function (valid) {
+                if (valid) {
+                  resolve();
+                }
+                else {
+                  reject();
+                }
+              });
+            });
+          },
+          message: function() { return errorMessage('uniqueNameError'); },
         }
       },
       modelOptions: {
@@ -142,8 +143,19 @@
       },
       asyncValidators: {
         uniqueEmail: {
-          expression: validateField('endCustomerEmail', vm.uniqueEmail, vm.uniqueEmailError),
-          message: errorMessage(vm.uniqueEmailError),
+          expression: function ($viewValue, $modelValue, scope) {
+            return $q(function (resolve, reject) {
+              validateField($viewValue, scope, 'endCustomerEmail', 'uniqueEmail', 'uniqueEmailError').then(function (valid) {
+                if (valid) {
+                  resolve();
+                }
+                else {
+                  reject();
+                }
+              });
+            });
+          },
+          message: function() { return errorMessage('uniqueEmailError'); }
         }
       },
       modelOptions: {

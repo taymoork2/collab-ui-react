@@ -17,7 +17,6 @@
   function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
-    var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
 
     var service = {
       getTrial: getTrial,
@@ -54,27 +53,46 @@
     }
 
     function shallowValidation(key, val) {
-      var req = {
-        properties: [{
-          key: key,
-          value: val.toString()
-        }]
+      var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
+ 
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          isTrial: true,
+          properties: [{
+            key: key,
+            value: val.toString()
+          }]
+        }
       };
-      return $http.post(validationUrl, req)
-        .success(function (data, status) {
-          data = data || {};
-          var obj = _.find(data, {
-            'key': key,
-            'isExist': true
-          });
-          return angular.isDefined(obj);
-        })
-        .error(function (data, status) {
-          data = {
-            error: 'serverDown'
-          };
-          return false;
-        });
+
+      return $http(config).then(function (response) {
+        var data = response.data || {};
+        var obj = _.find(data.properties, {key: key});
+        if ( angular.isUndefined(obj) ) {
+          return { error: 'trialModal.errorServerDown' };
+        }
+        else {
+          if ( obj.isExist == "true" ) {
+            return {error: 'trialModal.errorInUse'};
+          }
+          else if ( obj.isValid == "false") {
+            if ( key == "organizationName" ) {
+              return {error: 'trialModal.errorInvalidName'};
+            }
+            else {
+              return {error: 'trialModal.errorInvalid'};
+            }
+          }
+          return { unique: true };
+        }
+      }).catch(function (response) {
+        return { error: 'trialModal.errorServerDown' };
+      });
     }
 
     function getDeviceTrialsLimit() {
