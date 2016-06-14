@@ -13,6 +13,7 @@
     .factory('RemoteDestinationService', RemoteDestinationService)
     .factory('UnassignedDirectoryNumberService', UnassignedDirectoryNumberService)
     .factory('UserDirectoryNumberService', UserDirectoryNumberService)
+    .factory('DirectoryNumberServiceQuery', DirectoryNumberServiceQuery)
     .factory('DirectoryNumberService', DirectoryNumberService)
     .factory('CustomerCommonService', CustomerCommonService)
     .factory('UserServiceCommon', UserServiceCommon)
@@ -111,6 +112,13 @@
       customerId: '@customerId',
       userId: '@userId',
       directoryNumberId: '@directoryNumberId'
+    });
+  }
+
+  /* @ngInject */
+  function DirectoryNumberServiceQuery($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers', {
+      customerId: '@customerId'
     });
   }
 

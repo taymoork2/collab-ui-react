@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, FeatureToggleService) {
+    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, DirectoryNumberServiceQuery, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -364,7 +364,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -425,7 +425,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -752,16 +752,13 @@
     }
 
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberServiceQuery.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 
