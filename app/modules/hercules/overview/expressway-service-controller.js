@@ -53,8 +53,8 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
-        if ($stateParams.clusterId != null) {
-            showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
+        if ($stateParams.clusterId !== null) {
+          showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
         }
       },
       columnDefs: [{
