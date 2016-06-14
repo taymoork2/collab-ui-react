@@ -833,7 +833,7 @@
               site: {}
             }
           })
-          .state('user-overview.conferencing.webex.webex2', {
+          .state('user-overview.conferencing.webex2', {
             templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
             controller: 'WebExUserSettings2Ctrl',
             data: {
