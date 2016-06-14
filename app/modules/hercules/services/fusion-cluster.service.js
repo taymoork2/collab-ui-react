@@ -15,7 +15,10 @@
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
       getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
-      getAll: getAll
+      getAll: getAll,
+      getUpgradeSchedule: getUpgradeSchedule,
+      setUpgradeSchedule: setUpgradeSchedule,
+      postponeUpgradeSchedule: postponeUpgradeSchedule
     };
 
     return service;
@@ -34,8 +37,30 @@
         .then(sort);
     }
 
+    function getUpgradeSchedule(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http.get(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
+        .then(extractData);
+    }
+
+    function setUpgradeSchedule(id, params) {
+      var orgId = Authinfo.getOrgId();
+      return $http.patch(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params)
+        .then(extractData);
+    }
+
+    function postponeUpgradeSchedule(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http.patch(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
+        .then(extractData);
+    }
+
+    function extractData(response) {
+      return response.data;
+    }
+
     function extractClustersFromResponse(response) {
-      return response.data.clusters;
+      return extractData(response).clusters;
     }
 
     function onlyKeepFusedClusters(clusters) {
