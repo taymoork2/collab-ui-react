@@ -439,20 +439,6 @@
             parent: 'main',
             authenticate: false
           })
-          .state('applauncher', {
-            url: '/applauncher',
-            templateUrl: 'modules/squared/views/applauncher.html',
-            controller: 'ApplauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
-          .state('appdownload', {
-            url: '/appdownload',
-            templateUrl: 'modules/squared/views/appdownload.html',
-            controller: 'AppdownloadCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
@@ -1976,6 +1962,9 @@
             data: {
               connectorType: 'c_cal'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main',
             abstract: true
           })
@@ -1985,6 +1974,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('calendar-service.settings', {
@@ -2004,6 +1996,9 @@
             data: {
               connectorType: 'c_ucmc'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main'
           })
           .state('call-service.list', {
@@ -2012,6 +2007,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('call-service.settings', {
