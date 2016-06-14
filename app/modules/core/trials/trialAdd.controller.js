@@ -209,7 +209,7 @@
           return vm.messageTrial.enabled; // Since, it depends on Message Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression();
         }
       }
     }, {
@@ -228,13 +228,13 @@
           return vm.careTrial.enabled;
         },
         'templateOptions.disabled': function () {
-          return careLicenseInputDisabledExpression();
+          return vm.careLicenseInputDisabledExpression();
         }
       },
       validators: {
         quantity: {
           expression: function ($viewValue, $modelValue) {
-            return validateCareLicense($viewValue, $modelValue);
+            return vm.validateCareLicense($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
@@ -264,7 +264,15 @@
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
         },
-      },
+        validEnough: {
+          expression: function () {
+            return vm.trialLicenseCountHasEnough();
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.trialLicenseCountNotEnough');
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -296,6 +304,7 @@
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
+    vm.trialLicenseCountHasEnough = trialLicenseCountHasEnough;
     init();
 
     ///////////////////////
@@ -395,6 +404,10 @@
     function validateCareLicense($viewValue, $modelValue) {
       return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
         $viewValue, $modelValue, vm.details.licenseCount);
+    }
+
+    function trialLicenseCountHasEnough() {
+      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
     }
 
     // Update offer and label for Meetings/WebEx trial.

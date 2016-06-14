@@ -409,5 +409,19 @@ describe('Controller: TrialAddCtrl', function () {
       controller.careTrial.enabled = true;
       expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
     });
+
+    it('Total license count cannot be lesser than Care license count.', function () {
+      controller.details.licenseCount = 10;
+      controller.careTrial.enabled = true;
+      controller.careTrial.details.quantity = 20;
+      expect(controller.trialLicenseCountHasEnough()).toBeFalsy();
+    });
+
+    it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
+      controller.details.licenseCount = 10;
+      controller.careTrial.enabled = false;
+      controller.careTrial.details.quantity = 20;
+      expect(controller.trialLicenseCountHasEnough()).toBeTruthy();
+    });
   });
 });
