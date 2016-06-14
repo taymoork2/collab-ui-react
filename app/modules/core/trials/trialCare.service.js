@@ -31,7 +31,7 @@
         enabled: false,
         details: {
           enabled: false,
-          quantity: 5
+          quantity: 15
         }
       };
 
