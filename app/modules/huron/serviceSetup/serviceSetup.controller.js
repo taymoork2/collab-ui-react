@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, DirectoryNumberServiceQuery, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberServiceQuery, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {

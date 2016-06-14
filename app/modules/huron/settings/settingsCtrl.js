@@ -7,7 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, InternalNumberPoolService, CeService, HuntGroupServiceV2, DirectoryNumberServiceQuery,
+    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberServiceQuery,
     InternationalDialing) {
 
     var vm = this;
