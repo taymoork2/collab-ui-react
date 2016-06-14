@@ -1,35 +1,26 @@
 /// <reference path="privacySettings.component.ts"/>
 namespace globalsettings {
 
-  fdescribe('Controller: PrivacySettingController', ()=> {
+  describe('Controller: PrivacySettingController', ()=> {
     let Authinfo, $controller, controller:PrivacySettingController, $q, $scope;
     let Notification, Orgservice;
     let orgId = 'superOrg';
     beforeEach(angular.mock.module('Core'));
-    // beforeEach(angular.mock.module('Huron'));
-    // beforeEach(angular.mock.module('WebExApp'));
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
-    // beforeEach(initController);
 
     function dependencies($rootScope,
                           _Authinfo_,
                           _$controller_,
                           _$q_,
                           _Notification_,
-                          _Orgservice_
-                          // _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_
-    ) {
+                          _Orgservice_) {
       $scope = $rootScope.$new();
       Authinfo = _Authinfo_;
       $controller = _$controller_;
       $q = _$q_;
       Notification = _Notification_;
       Orgservice = _Orgservice_;
-      // UserListService = _UserListService_;
-      // BrandService = _BrandService_;
-      // FeatureToggleService = _FeatureToggleService_;
-      // WebexClientVersion = _WebexClientVersion_;
     }
 
     function initSpies() {
@@ -37,7 +28,6 @@ namespace globalsettings {
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
       spyOn(Notification, 'errorResponse');
-      // spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
       spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
     }
 
@@ -60,7 +50,6 @@ namespace globalsettings {
         initController({success: true, orgSettings: {allowReadOnlyAccess: true}});
 
         expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
-        // expect(Orgservice.getOrg).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
         expect(controller.allowReadOnlyAccess).toBeTruthy();
       });
 
@@ -68,7 +57,6 @@ namespace globalsettings {
         initController({success: true, orgSettings: {allowReadOnlyAccess: false}});
 
         expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
-        // expect(Orgservice.getOrg).toHaveBeenCalledWith('partnerProfile.orgSettingsError');
         expect(controller.allowReadOnlyAccess).toBeFalsy();
         expect(controller.allowReadOnlyAccess).toBeDefined();
       });
@@ -87,7 +75,7 @@ namespace globalsettings {
       it('should call setOrgSetting on orgService with only one setting specified', ()=> {
         controller.allowReadOnlyAccess = true;
         $scope.$digest();
-        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(orgId,{allowReadOnlyAccess: true});
+        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(orgId, {allowReadOnlyAccess: true});
       });
     });
   });

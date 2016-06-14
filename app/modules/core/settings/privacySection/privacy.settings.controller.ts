@@ -9,15 +9,16 @@ namespace globalsettings {
     /* @ngInject */
     constructor(private Orgservice, Authinfo, private Notification) {
       this.orgId = Authinfo.getOrgId();
-      //get the current setting:
-      // setTimeout(this.sendUsageDataLoaded.bind(this), 1200, false);
 
       Orgservice.getOrg((data)=> {
         this.orgDataLoaded(data)
       }, this.orgId, false);
     }
 
-    orgDataLoaded({success:success = false, orgSettings:settings = undefined}={success: false, orgSettings: undefined}) {
+    orgDataLoaded({success:success = false, orgSettings:settings = undefined}={
+      success: false,
+      orgSettings: undefined
+    }) {
       if (success) {
         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
           this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
@@ -34,7 +35,6 @@ namespace globalsettings {
       this.updateAllowReadOnlyOrgAccess();
     }
 
-
     updateAllowReadOnlyOrgAccess() {
       let settings = {
         allowReadOnlyAccess: this.allowReadOnlyAccess,
@@ -43,7 +43,6 @@ namespace globalsettings {
     }
 
     private updateOrgSettings(orgId, settings) {
-
       this.Orgservice.setOrgSettings(orgId, settings)
         .then()
         .catch(this.notifyError.bind(this))
