@@ -3,6 +3,7 @@
     - "../.eslintrc.yml"
     - "angular"
   env:
+    # We don't want to add "Notification" or "status" as globals
     browser: false
   rules:
     # airbnb-config inherited rules

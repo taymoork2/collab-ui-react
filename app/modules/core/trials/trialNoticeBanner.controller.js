@@ -20,7 +20,8 @@
     vm._helpers = {
       getDaysLeft: getDaysLeft,
       getPrimaryPartnerInfo: getPrimaryPartnerInfo,
-      sendEmail: sendEmail
+      sendEmail: sendEmail,
+      getWebexSiteUrl: getWebexSiteUrl
     };
 
     init();
@@ -77,8 +78,19 @@
       var customerName = Authinfo.getOrgName();
       var customerEmail = Authinfo.getPrimaryEmail();
       var partnerEmail = vm.partnerAdminEmail;
+      var webexSiteUrl = vm._helpers.getWebexSiteUrl();
       return EmailService.emailNotifyPartnerTrialConversionRequest(
-        customerName, customerEmail, partnerEmail);
+        customerName, customerEmail, partnerEmail, webexSiteUrl);
+    }
+
+    function getWebexSiteUrl() {
+      // find the first instance matching the criteria...
+      var result = _.find(Authinfo.getConferenceServices(), function (service) {
+        return _.get(service, 'license.siteUrl', null);
+      });
+      // ...and return the appropriate value
+      return _.get(result, 'license.siteUrl', null);
+
     }
   }
 })();
