@@ -958,6 +958,7 @@
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
+    "extensionUpdateError": "Failed to update extension {{extension}}.",
     "greaterThan": "{{endNumber}} must be greater than or equal to {{beginNumber}}.",
     "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
     "rangeOverlap": "Extension Ranges must not overlap.",
@@ -1318,6 +1319,8 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
+      "upgradeScheduleHeader": "Upgrade Schedule",
+      "upgradeScheduleParagraph": "Select the upgrade schedule for this cluster: the connectors will upgrade automatically in the selected time when  an upgrade is available.",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
@@ -2232,6 +2235,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -2375,7 +2379,8 @@
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
-    "trialDuration": "Trial Duration"
+    "trialDuration": "Trial Duration",
+    "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
 
   "status": {
@@ -2391,7 +2396,7 @@
     "message": "Message",
     "call": "Call",
     "care": "Care",
-    "webexCMR": "WebEx EE 200 with CMR",
+    "webex": "WebEx",
     "adminManagement": "Administrator Management",
     "administrators": "Partner Administrators",
     "meeting": "Meeting",
@@ -4431,7 +4436,7 @@
         }
       },
       "clusterList": {
-        "title": "Cluster List",
+        "title": "Clusters",
         "description": "On-prem clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",

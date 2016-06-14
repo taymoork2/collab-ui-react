@@ -102,6 +102,21 @@
         }
       },
 
+      updateInternalNumberRange: function (internalNumberRange) {
+        if (angular.isDefined(internalNumberRange.uuid)) {
+          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
+          internalNumberRange.patternUsage = "Device";
+          return InternalNumberRangeService.save({
+            customerId: Authinfo.getOrgId(),
+            internalNumberRangeId: internalNumberRange.uuid
+          }, internalNumberRange, function (data, headers) {
+            internalNumberRange.uuid = headers('location').split("/").pop();
+          }).$promise;
+        } else {
+          return $q.when();
+        }
+      },
+
       deleteInternalNumberRange: function (internalNumberRange) {
         return InternalNumberRangeService.delete({
           customerId: Authinfo.getOrgId(),

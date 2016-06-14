@@ -10,34 +10,13 @@
     $log,
     $resource,
     $window,
-    Authinfo,
-    UrlConfig,
     WebExUtilsFact
   ) {
 
+    var _this = this;
     var objectUrl;
-    var objectUrlTemplate;
 
-    var typeWebExExport = 'webexexport';
-    var typeWebExImport = 'webeximport';
-    var objectBlob = null;
-
-    var service = {
-      typeWebExExport: typeWebExExport,
-      typeWebExImport: typeWebExImport,
-      getWebExCsv: getWebExCsv,
-      webexCreateObjectUrl: webexCreateObjectUrl,
-      openInIE: openInIE,
-      revokeObjectUrl: revokeObjectUrl,
-      getObjectUrl: getObjectUrl,
-      setObjectUrl: setObjectUrl,
-      getObjectUrlTemplate: getObjectUrlTemplate,
-      setObjectUrlTemplate: setObjectUrlTemplate
-    };
-
-    return service;
-
-    function getWebExCsv(
+    this.getWebExCsv = function (
       fileDownloadUrl
     ) {
 
@@ -51,13 +30,9 @@
       var webexCsvResource = $resource(fileDownloadUrl, {}, {
         get: {
           method: 'POST',
-          // override transformResponse function because $resource
+          // override transformResponse function to return JSON; otherwise, $resource
           // returns string array in the case of CSV file download
-          transformResponse: function (
-              data,
-              headers
-            ) {
-
+          transformResponse: function (data, headers) {
               var resultData = {
                 content: data
               };
@@ -68,12 +43,13 @@
       }); // $resource()
 
       return webexCsvResource.get('').$promise;
-    } // getWebExCsv()
+    }; // getWebExCsv()
 
-    function webexCreateObjectUrl(
+    this.webexCreateObjectUrl = function (
       data,
       fileName
     ) {
+
       var funcName = "webexCreateObjectUrl()";
       var logMsg = "";
 
@@ -82,58 +58,68 @@
         "fileName=" + fileName;
       $log.log(logMsg);
 
+      logMsg = funcName + "\n" +
+        "data=" + JSON.stringify(data);
+      $log.log(logMsg);
+
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
-
       var newData = new Uint8Array(intBytes);
-      // var newData = data;
+      var blob = _this.getNewBlob(newData);
 
+      logMsg = funcName + "\n" +
+        "intBytes=" + intBytes;
+      $log.log(logMsg);
+
+      // IE download option since IE won't download the created url
+      if (_this.isWindowsIE()) {
+        _this.windowsIEDownload(
+          blob,
+          fileName
+        );
+      }
+
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
+      _this.objectUrl = oUrl;
+      return oUrl;
+    }; // webexCreateObjectUrl()
+
+    this.getNewBlob = function (newData) {
       var blob = new $window.Blob([newData], {
-        // type: 'text/csv;charset=UTF-16LE;'
         type: 'text/plain'
       });
 
-      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
+      return blob;
+    }; // getNewBlob()
 
-      setObjectUrl(oUrl);
-      objectBlob = blob;
+    this.isWindowsIE = function () {
+      var funcName = "isWindowsIE()";
+      var logMsg = "";
 
-      // IE download option since IE won't download the created url
-      if ($window.navigator.msSaveOrOpenBlob) {
-        openInIE(fileName);
-      }
+      var result = ($window.navigator.msSaveOrOpenBlob) ? true : false;
 
-      return oUrl;
-    } // webexCreateObjectUrl()
+      logMsg = funcName + "\n" +
+        "result=" + result;
+      $log.log(logMsg);
 
-    function openInIE(fileName) {
+      return result;
+    }; // isWindowsIE()
+
+    this.windowsIEDownload = function (
+      blob,
+      fileName
+    ) {
+
       $window.navigator.msSaveOrOpenBlob(
-        objectBlob,
+        blob,
         fileName
       );
-    } // openInIE()
+    }; // windowsIEDownload()
 
-    function revokeObjectUrl() {
-      if (getObjectUrl()) {
-        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
-        setObjectUrl(null);
-        objectBlob = null;
+    this.revokeObjectUrl = function () {
+      if (_this.objectUrl) {
+        ($window.URL || $window.webkitURL).revokeObjectURL(_this.objectUrl);
+        _this.objectUrl = null;
       }
-    } // revokeObjectUrl()
-
-    function getObjectUrl() {
-      return objectUrl;
-    }
-
-    function setObjectUrl(oUrl) {
-      objectUrl = oUrl;
-    }
-
-    function getObjectUrlTemplate() {
-      return objectUrlTemplate;
-    }
-
-    function setObjectUrlTemplate(oUrl) {
-      objectUrlTemplate = oUrl;
-    }
+    }; // revokeObjectUrl()
   } // WebExCsvDownloadService()
 })();

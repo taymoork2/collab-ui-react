@@ -1,0 +1,13 @@
+<div class="cs-form__section">
+  <div class="section__info">
+    <h4 class="section__title" translate="{{$ctrl.setting.title}}"></h4>
+    <p class="section__description" ng-if="$ctrl.setting.description" translate="{{$ctrl.setting.description}}"></p>
+  </div>
+  <div class="section__content">
+    <div class="sub-section" ng-if="$ctrl.setting.subsectionLabel">
+      <h5 class="sub-section__label" translate="{{$ctrl.setting.subsectionLabel}}"></h5>
+      <p class="sub-section__description" ng-if="$ctrl.setting.subsectionDescription" translate="{{$ctrl.setting.subsectionDescription}}"></p>
+    </div>
+    <div class="setting" ng-transclude=""></div>
+  </div>
+</div>
