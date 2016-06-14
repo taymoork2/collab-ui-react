@@ -3,6 +3,7 @@
 /// <reference path="dataPolicySetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
+/// <reference path="brandingSetting.component.ts"/>
 /// <reference path="privacySection/privacySettings.component.ts"/>
 namespace globalsettings {
 
@@ -18,7 +19,7 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, FeatureToggleService) {
+    constructor(Authinfo, private FeatureToggleService) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
       } else {
@@ -26,11 +27,19 @@ namespace globalsettings {
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
-        // PrivacySetting.shouldItShow(FeatureToggleService, ()=> {
-          this.privacy = new PrivacySetting();
-        // });
+        this.branding = new BrandingSetting();
+        this.privacy = new PrivacySetting();
         this.dataPolicy = new DataPolicySetting();
       }
+      
+      this.initBranding();
+    }
+
+    private initBranding() {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(toggle=> {
+        //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
+        this.branding = new BrandingSetting();
+      });
     }
   }
   angular

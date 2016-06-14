@@ -8,9 +8,57 @@
 }
 
 .customer-admin-detail {
+  .align-search-inputs {
+    display: flex;
+    align-items: center;
+  }
 
+  .plus-icon {
+    @extend .icon;
+    @extend .icon-plus;
+    border-radius: 50%;
+    font-size: 25px;
+    margin-left: 10px;
+  }
+  .plus-icon-inactive {
+    color: $gray-lighter;
+    background-color: $gray-lightest;
+  }
+  .plus-icon-active {
+    cursor: pointer;
+    color: $brand-white;
+    background-color: $brand-info;
+  }
+
+  .search {
+    position: relative;
+    padding-right: 0px;
+
+    input {
+      width: 450px;
+      height: 32px;
+      text-indent: 20px;
+    }
+    .icon-search {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  }
+
+  .search-add-button {
+    padding-top: 10px !important;
+    margin-left: 5px !important;
+    margin-bottom: 5px !important;
+    height: 31px !important;
+  }
+  
   .tab-content {
     border: 0;
+  }
+
+  .close-icon-height {
+    line-height:inherit;  
   }
 
   .nav-tabs + .tab-content {

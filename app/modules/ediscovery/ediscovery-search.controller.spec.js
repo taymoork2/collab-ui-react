@@ -24,14 +24,16 @@ describe('Controller: EdiscoverySearchController', function () {
 
   }));
 
+  beforeEach(function () {
+    sinon.stub(EdiscoveryService, 'getAvalonServiceUrl');
+    var promise = $q.resolve({
+      "avalonRoomsUrl": "https://whatever.com/myFancyRoomsApi"
+    });
+    EdiscoveryService.getAvalonServiceUrl.returns(promise);
+  });
+
   describe('Search for room', function () {
     beforeEach(function () {
-      sinon.stub(EdiscoveryService, 'getAvalonServiceUrl');
-      var promise = $q.resolve({
-        "avalonRoomsUrl": "https://whatever.com/myFancyRoomsApi"
-      });
-      EdiscoveryService.getAvalonServiceUrl.returns(promise);
-
       expect(ediscoverySearchController.searchInProgress).toBeFalsy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
     });
@@ -63,23 +65,38 @@ describe('Controller: EdiscoverySearchController', function () {
 
     });
 
-    it('found a room', function () {
+    describe('finds a room', function () {
 
-      sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
-      var promise = $q.resolve({
-        "displayName": "whatever"
+      var lastReadableActivityDate = moment().subtract(1, "day");
+      var publishedDate = moment().subtract(2, "day");
+
+      beforeEach(function () {
+        sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
+
+        var promise = $q.resolve({
+          "id": "1234",
+          "displayName": "whatever",
+          "lastReadableActivityDate": lastReadableActivityDate,
+          "published": publishedDate
+        });
+        EdiscoveryService.getAvalonRoomInfo.returns(promise);
       });
-      EdiscoveryService.getAvalonRoomInfo.returns(promise);
 
-      ediscoverySearchController.searchForRoom("myRoomId");
-      expect(ediscoverySearchController.searchInProgress).toBeTruthy();
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      httpBackend.flush();
+      it('prepopulates search date with relevant room info data', function () {
 
-      expect(ediscoverySearchController.roomInfo).toEqual({
-        "displayName": "whatever"
+        ediscoverySearchController.searchForRoom("myRoomId");
+        expect(ediscoverySearchController.searchInProgress).toBeTruthy();
+        expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+        httpBackend.flush();
+
+        expect(ediscoverySearchController.searchCriteria.roomId).toEqual("myRoomId");
+        expect(ediscoverySearchController.searchCriteria.displayName).toEqual("whatever");
+        expect(ediscoverySearchController.searchCriteria.startDate).toEqual(publishedDate);
+        expect(ediscoverySearchController.searchCriteria.endDate).toEqual(lastReadableActivityDate);
+
+        expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
+
       });
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
 
     });
 
@@ -96,7 +113,7 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
       httpBackend.flush();
 
-      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
       expect(ediscoverySearchController.error).toEqual("ediscovery.searchError");
       expect(ediscoverySearchController.roomInfo).toBeNull();
 
@@ -125,12 +142,6 @@ describe('Controller: EdiscoverySearchController', function () {
 
       ediscoverySearchController.createReport();
       httpBackend.flush();
-
-      expect(ediscoverySearchController.searchResult).toEqual({
-        "displayName": "test",
-        "url": "whatever",
-        "id": "12345678"
-      });
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
       expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(
@@ -161,6 +172,56 @@ describe('Controller: EdiscoverySearchController', function () {
           "description": "displayName: may not be empty"
         }]
       );
+    });
+
+  });
+
+  describe('entering controller with stateParams', function () {
+
+    var $stateParams;
+
+    beforeEach(inject(function (_$stateParams_, _$translate_, _EdiscoveryService_, _$q_, _$rootScope_, $httpBackend, _$controller_) {
+      $scope = _$rootScope_.$new();
+      $controller = _$controller_;
+      httpBackend = $httpBackend;
+      EdiscoveryService = _EdiscoveryService_;
+      $translate = _$translate_;
+      $q = _$q_;
+      $stateParams = _$stateParams_;
+
+      httpBackend
+        .when('GET', 'l10n/en_US.json')
+        .respond({});
+
+      ediscoverySearchController = $controller('EdiscoverySearchController', {
+        $translate: $translate,
+        $scope: $scope,
+        EdiscoveryService: EdiscoveryService,
+        $stateParams: {
+          startDate: "startDateFromStateParam",
+          endDate: "endDateFromStateParam",
+          roomId: "roomIdFromStateParam"
+        }
+      });
+    }));
+
+    it('automatically performs a search using stateParams content', function () {
+
+      sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
+      var promise = $q.resolve({
+        "id": "1234",
+        "displayName": "whatever",
+        "lastReadableActivityDate": "irrelevant",
+        "published": "irrelevent"
+      });
+      EdiscoveryService.getAvalonRoomInfo.returns(promise);
+
+      httpBackend.flush();
+
+      expect(ediscoverySearchController.searchCriteria.roomId).toEqual("roomIdFromStateParam");
+      expect(ediscoverySearchController.searchCriteria.displayName).toEqual("whatever");
+      expect(ediscoverySearchController.searchCriteria.startDate).toEqual("startDateFromStateParam");
+      expect(ediscoverySearchController.searchCriteria.endDate).toEqual("endDateFromStateParam");
     });
 
   });
