@@ -13,7 +13,7 @@ module.exports = csp({
   browserSniff: false,
   directives: {
     defaultSrc: ['\'self\'', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.localytics.com', '*.webexconnect.com'],
-    connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000'],
+    connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000', 'http://127.0.0.1:8080', 'http://localhost:8080'],
     imgSrc: ['\'self\'', 'data:', '*.localytics.com', '*.rackcdn.com', '*.clouddrive.com'],
     scriptSrc: ['\'self\'', onlyForDev, '\'unsafe-eval\'', '*.webex.com', '*.localytics.com', 'cdn.mxpnl.com', 'api.mixpanel.com'],
     styleSrc: ['\'self\'', '\'unsafe-inline\'']

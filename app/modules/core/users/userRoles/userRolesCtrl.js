@@ -106,10 +106,10 @@
       if ($scope.roles) {
         if (hasRole(Config.backend_roles.full_admin)) {
           return 1;
-        } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
-          return 2;
         } else if (hasRole(Config.backend_roles.readonly_admin)) {
           return 3;
+        } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
+          return 2;
         }
       }
       return 0;

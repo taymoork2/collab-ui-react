@@ -8,6 +8,7 @@
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
+    var _careDefaultQuantity = 15;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
@@ -185,11 +186,20 @@
       type: 'checkbox',
       className: '',
       templateOptions: {
+        id: 'careTrial',
         label: $translate.instant('trials.care')
       },
       hideExpression: function () {
         return !vm.showCare;
       },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+        },
+        'templateOptions.disabled': function () {
+          return messageOfferDisabledExpression();
+        }
+      }
     }, {
       model: vm.careTrial.details,
       key: 'quantity',
@@ -206,7 +216,17 @@
           return vm.careTrial.enabled;
         },
         'templateOptions.disabled': function () {
-          return !vm.careTrial.enabled;
+          return careLicenseInputDisabledExpression();
+        }
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return validateCareLicense($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          }
         }
       }
     }];
@@ -261,6 +281,9 @@
     vm.showDefaultFinish = showDefaultFinish;
     vm.getNextState = getNextState;
 
+    vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
+    vm.validateCareLicense = validateCareLicense;
     init();
 
     ///////////////////////
@@ -330,6 +353,33 @@
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
         toggleTrial();
       });
+    }
+
+    function messageOfferDisabledExpression() {
+      if (!vm.messageTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.messageTrial.enabled;
+    }
+
+    function careLicenseInputDisabledExpression() {
+      if (vm.careTrial.enabled) {
+        resetToDefaultIfNeeded();
+      } else {
+        vm.careTrial.details.quantity = 0;
+      }
+      return !vm.careTrial.enabled;
+    }
+
+    function resetToDefaultIfNeeded() {
+      if (vm.careTrial.details.quantity === 0) {
+        vm.careTrial.details.quantity = _careDefaultQuantity;
+      }
+    }
+
+    function validateCareLicense($viewValue, $modelValue) {
+      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
+        $viewValue, $modelValue, vm.details.licenseCount);
     }
 
     // Update offer and label for Meetings/WebEx trial.

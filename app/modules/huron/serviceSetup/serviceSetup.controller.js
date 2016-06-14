@@ -82,6 +82,7 @@
     vm.hideFieldSteeringDigit = false;
     vm.timeZoneToggleEnabled = false;
     vm.previousTimeZone = DEFAULT_TZ;
+    vm.extensionLengthChanged = false;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -297,8 +298,10 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
+            scope.formControl.$setDirty();
           }
           vm.model.site.extensionLength = vm.model.previousLength;
+          vm.extensionLengthChanged = true;
         }
       },
       expressionProperties: {
@@ -504,7 +507,7 @@
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
-          $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
+          $scope.options.templateOptions.disabled = vm.form.$invalid;
         });
       }
     }, {
@@ -663,7 +666,7 @@
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
-              vm.model.site.extensionLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
@@ -1048,6 +1051,9 @@
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
+          if (vm.model.site.extensionLength !== vm.model.extensionLength) {
+            siteData.extensionLength = vm.model.site.extensionLength;
+          }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
             // otherwise, don't update site since nothing changed.
@@ -1095,12 +1101,32 @@
           }.bind(internalNumberRange));
       }
 
+      function updateInternalNumbers(internalNumberRange) {
+        return ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
+          internalNumberRange.uuid = undefined;
+          internalNumberRange.links = undefined;
+          internalNumberRange.url = undefined;
+          ServiceSetup.createInternalNumberRange(internalNumberRange)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+                extension: this.name
+              }));
+            }.bind(internalNumberRange));
+        }).catch(function (response) {
+          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+            extension: this.name
+          }));
+        });
+      }
+
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (angular.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
+              } else if (vm.extensionLengthChanged) {
+                return updateInternalNumbers(internalNumberRange);
               }
             });
           }
