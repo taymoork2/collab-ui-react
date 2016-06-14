@@ -53,7 +53,7 @@ describe('Service: CustomerAdministratorService', function () {
     });
   });
 
-  describe('unassignCustomerSalesAdmin', function () {
+  describe('removeCustomerSalesAdmin', function () {
     it('should patch Org data to User', function () {
       $httpBackend.whenPATCH(userUuidRegex).respond([200, {}]);
 
