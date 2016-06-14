@@ -9,6 +9,7 @@
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
+    var _licenseCountDefaultQuantity = 0;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
@@ -31,6 +32,7 @@
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
+    _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -252,8 +254,23 @@
         label: $translate.instant('trials.licenseQuantity'),
         inputClass: 'medium-4',
         type: 'number',
-        required: true,
         secondaryLabel: $translate.instant('trials.users'),
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return hasUserServices();
+        },
+        'templateOptions.disabled': function () {
+          return !hasUserServices();
+        },
+
+        'model.licenseCount': function ($viewValue, $modelValue) {
+          if (hasUserServices()) {
+            return ($viewValue > 0) ? $viewValue : _licenseCountDefaultQuantity;
+          } else {
+            return 0;
+          }
+        }
       },
       validators: {
         count: {
@@ -300,6 +317,7 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm.getNextState = getNextState;
+    vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
@@ -375,6 +393,7 @@
         }
 
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+
         toggleTrial();
       });
     }
@@ -406,8 +425,17 @@
         $viewValue, $modelValue, vm.details.licenseCount);
     }
 
+
     function careLicenseCountLessThanTotalCount() {
       return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
+    }
+
+    function hasUserServices() {
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var result = _.some(services, {
+        enabled: true
+      });
+      return result;
     }
 
     // Update offer and label for Meetings/WebEx trial.
