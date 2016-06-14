@@ -1,52 +1,63 @@
 namespace globalsettings {
   export class PrivacySettingController {
 
-    allowReadOnlyOrgAccess:boolean = undefined;
+    private _allowReadOnlyAccess:boolean = undefined;
     sendUsageData:boolean = undefined;
     showAllowReadOnlyAccessCheckbox:boolean = true;
+    private orgId;
 
     /* @ngInject */
-    constructor(Orgservice) {
-      console.log("privacy load ctrl")
+    constructor(private Orgservice, Authinfo, private Notification) {
+      this.orgId = Authinfo.getOrgId();
       //get the current setting:
-      setTimeout( this.sendUsageDataLoaded.bind(this), 1200, false);
+      // setTimeout(this.sendUsageDataLoaded.bind(this), 1200, false);
 
-      Orgservice.getOrg(this.orgDataLoaded.bind(this));
+      Orgservice.getOrg((data)=> {
+        this.orgDataLoaded(data)
+      }, this.orgId, false);
     }
 
-    orgDataLoaded(data){
-      if (data.success) {
-        var settings = data.orgSettings;
+    orgDataLoaded({success:success = false, orgSettings:settings = undefined}={success: false, orgSettings: undefined}) {
+      if (success) {
         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
-          this.allowReadOnlyOrgAccess = settings.allowReadOnlyAccess;
+          this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
         }
-
-        this.readOnlyAccessCheckboxVisibility(data);
       }
     }
 
-    // Currently only allow Marvel related orgs to show read only access checkbox
-    readOnlyAccessCheckboxVisibility(org:{id:string,
-      managedBy:[{orgId:string}]
-    }) {
-      var marvelOrgId = "ce8d17f8-1734-4a54-8510-fae65acc505e";
-      var isMarvelOrg = (org.id == marvelOrgId);
-      var managedByMarvel = _.find(org.managedBy, function (managedBy) {
-        return managedBy.orgId == marvelOrgId;
+    get allowReadOnlyAccess():boolean {
+      return this._allowReadOnlyAccess;
+    }
+
+    set allowReadOnlyAccess(value:boolean) {
+      this._allowReadOnlyAccess = value;
+      this.updateAllowReadOnlyOrgAccess();
+    }
+
+
+    updateAllowReadOnlyOrgAccess() {
+      let settings = {
+        allowReadOnlyAccess: this.allowReadOnlyAccess,
+      };
+      this.updateOrgSettings(this.orgId, settings);
+    }
+
+    private updateOrgSettings(orgId, settings) {
+
+      this.Orgservice.setOrgSettings(orgId, settings)
+        .then()
+        .catch(this.notifyError.bind(this))
+        .finally(this.stopLoading.bind(this));
+    }
+
+    private notifyError(response) {
+      this.Notification.errorResponse(response, 'errors.statusError', {
+        status: response.status
       });
-      this.showAllowReadOnlyAccessCheckbox = false;//(isMarvelOrg || managedByMarvel != null);
     }
 
-    allowReadOnlyOrgAccessUpdate(){
-      alert('allowReadOnlyOrgAccess changed to' + this.allowReadOnlyOrgAccess);
-    }
+    private stopLoading() {
 
-    sendUsageDataLoaded(sendUsageData:boolean) {
-      this.sendUsageData = sendUsageData;
-    }
-
-    sendUsageDataUpdate(){
-      alert('sendUsageData changed to' + this.sendUsageData);
     }
   }
   angular.module('Core')
