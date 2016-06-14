@@ -142,7 +142,7 @@
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/json'
+          type: 'application/zip'
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
