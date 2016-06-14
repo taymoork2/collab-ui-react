@@ -1962,6 +1962,9 @@
             data: {
               connectorType: 'c_cal'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main',
             abstract: true
           })
@@ -1971,6 +1974,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('calendar-service.settings', {
@@ -1990,6 +1996,9 @@
             data: {
               connectorType: 'c_ucmc'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main'
           })
           .state('call-service.list', {
@@ -1998,6 +2007,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('call-service.settings', {
