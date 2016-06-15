@@ -140,7 +140,8 @@
     }
   }
 
-  function HelpdeskExtendedInformationCtrl($modalInstance, title, message) {
+  /* @ngInject */
+  function HelpdeskExtendedInformationCtrl(title, message) {
     var vm = this;
     vm.message = message;
     vm.title = title;

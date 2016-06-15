@@ -65,28 +65,14 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('read only access', function () {
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'usersWithRole');
-      var deferredUsersWithRoleResult = q.defer();
-      deferredUsersWithRoleResult.resolve({});
-      HelpdeskService.usersWithRole.returns(deferredUsersWithRoleResult.promise);
-
-      sinon.stub(LicenseService, 'getLicensesInOrg');
-      var deferredLicensesResult = q.defer();
-      deferredLicensesResult.resolve({});
-      LicenseService.getLicensesInOrg.returns(deferredLicensesResult.promise);
+      sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
+      sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
 
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
 
-      sinon.stub(HelpdeskService, 'getOrgDisplayName');
-      var deferredDisplayName = q.defer();
-      deferredDisplayName.resolve("Marvel");
-      HelpdeskService.getOrgDisplayName.returns(deferredDisplayName.promise);
-
-      sinon.stub(FeatureToggleService, 'supports');
-      var deferredFeatureToggle = q.defer();
-      deferredFeatureToggle.resolve(false);
-      FeatureToggleService.supports.returns(deferredFeatureToggle.promise);
+      sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
 
       httpBackend
         .when('GET', 'l10n/en_US.json')
@@ -139,10 +125,7 @@ describe('Controller: HelpdeskOrgController', function () {
       HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
 
       sinon.restore(FeatureToggleService, 'supports');
-      sinon.stub(FeatureToggleService, 'supports');
-      var deferredFeatureToggle = q.defer();
-      deferredFeatureToggle.resolve(true);
-      FeatureToggleService.supports.returns(deferredFeatureToggle.promise);
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
 
       orgController = $controller('HelpdeskOrgController', {
         HelpdeskService: HelpdeskService,
