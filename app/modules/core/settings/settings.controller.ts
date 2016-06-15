@@ -18,19 +18,26 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, private FeatureToggleService) {
+    constructor(Authinfo, private Orgservice, private FeatureToggleService) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
+        this.initBranding();
       } else {
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
-        this.branding = new BrandingSetting();
+        this.initBrandingForNonPartner();
         this.dataPolicy = new DataPolicySetting();
       }
-      
-      this.initBranding();
+    }
+
+    private initBrandingForNonPartner(){
+      this.Orgservice.getOrg(data => {
+        if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+          this.initBranding();
+        }
+      });
     }
 
     private initBranding() {
