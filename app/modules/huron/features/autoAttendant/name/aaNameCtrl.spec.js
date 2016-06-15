@@ -159,5 +159,10 @@ describe('Controller: aaBuilderNameCtrl', function () {
     controller.name = testGroupName;
     expect(controller.nextButton()).toEqual(true);
   });
+  
+  it("should test the previous  Button", function () {
+	    controller.name = testGroupName;
+	    expect(controller.previousButton()).toEqual("hidden");
+	  });
 
 });
