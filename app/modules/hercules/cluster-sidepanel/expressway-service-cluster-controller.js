@@ -116,12 +116,9 @@
 
     if (hasF410FeatureToggle) {
 
-      FusionClusterService.getAll()
-        .then(function (allClusters) {
-          return FusionClusterService.findClusterInClusterList(allClusters, vm.clusterId);
-        })
-        .then(function (oneCluster) {
-          vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(oneCluster, vm.connectorType);
+      FusionClusterService.get(vm.clusterId)
+        .then(function (cluster) {
+          vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
         });
       vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
       vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');

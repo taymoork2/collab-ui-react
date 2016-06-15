@@ -16,7 +16,7 @@
       deprovisionConnector: deprovisionConnector,
       getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
       getAll: getAll,
-      findClusterInClusterList: findClusterInClusterList,
+      get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList
     };
 
@@ -26,6 +26,14 @@
 
     // TODO: maybe cache data for the cluster list and
     // poll new data every 30 seconds
+
+    function get(clusterId) {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .then(function (response) {
+          return response.data;
+        });
+    }
 
     function getAll() {
       return $http
@@ -120,17 +128,10 @@
     }
 
     function getAllConnectorTypesForCluster(clusterId) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
-      return $http.get(url)
-        .then(function (response) {
-          return _.map(response.data.provisioning, 'connectorType');
+      return get(clusterId)
+        .then(function (data) {
+          return _.map(data.provisioning, 'connectorType');
         });
-    }
-
-    function findClusterInClusterList(clusters, clusterId) {
-      return _.find(clusters, function (cluster) {
-        return cluster.id === clusterId;
-      });
     }
 
     function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {

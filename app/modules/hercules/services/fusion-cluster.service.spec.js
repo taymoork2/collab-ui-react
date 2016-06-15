@@ -192,6 +192,25 @@ describe('Service: FusionClusterService', function () {
 
   });
 
+  describe('get()', function () {
+
+    afterEach(verifyHttpBackend);
+
+    function verifyHttpBackend() {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    }
+
+    it('should call FMS to get a cluster', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, 'dummy response');
+      FusionClusterService.get('clusterId');
+    });
+
+  });
+
   describe('finding and filtering a cluster for the service specific sidepanel', function () {
 
     it('should format a cluster object so that it is suitable for the sidepanel', function () {

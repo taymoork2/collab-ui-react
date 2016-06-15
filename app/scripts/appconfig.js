@@ -2066,7 +2066,7 @@
             params: {
               host: null,
               clusterId: null,
-              connectorType: 'c_mgmt',
+              connectorType: 'c_mgmt'
             }
           })
           .state('cluster-details.alarm-details', {
