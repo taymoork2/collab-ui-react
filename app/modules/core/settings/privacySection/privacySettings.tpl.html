@@ -1,9 +1,7 @@
 <div class="setting">
-  <div>
-    <div class="sub-section">
-      <h5 class="sub-section__label" translate='globalSettings.privacy.supportAccessHeader'></h5>
-      <p class="sub-section__description" translate='globalSettings.privacy.supportAccessDescription'></p>
-    </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate='globalSettings.privacy.supportAccessHeader'></h5>
+    <p class="sub-section__description" translate='globalSettings.privacy.supportAccessDescription'></p>
     <input
       cs-input
       type="checkbox"
@@ -12,10 +10,9 @@
       cs-input-label="{{'globalSettings.privacy.allowReadOnlyOrgAccess'|translate}}"
       ng-disabled="vm.allowReadOnlyAccess===undefined">
   </div>
-  <div ng-if="!vm.hideUsagePart">
-    <div class="sub-section">
-      <h5 class="sub-section__label" translate='globalSettings.privacy.usageDataHeader'></h5>
-    </div>
+
+  <div class="sub-section" ng-if="!vm.hideUsagePart">
+    <h5 class="sub-section__label" translate='globalSettings.privacy.usageDataHeader'></h5>
     <input
       cs-input
       type="checkbox"
@@ -24,4 +21,5 @@
       cs-input-label="{{'globalSettings.privacy.usageDataDescription'|translate}}"
       ng-disabled="vm.sendUsageData===undefined">
   </div>
+
 </div>
