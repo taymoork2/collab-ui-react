@@ -4,8 +4,8 @@
   angular.module('Hercules')
     .component('upgradeScheduleConfiguration', {
       bindings: {
-        canPostpone: '@',
-        daily: '@',
+        canPostpone: '<',
+        daily: '<',
         clusterId: '<'
       },
       controller: UpgradeScheduleConfigurationCtrl,
@@ -13,7 +13,7 @@
     });
 
   /* @ngInject */
-  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $translate, $log, $modal, Authinfo, FusionClusterService, NotificationService, TimezoneService) {
+  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $translate, $window, $modal, Authinfo, FusionClusterService, NotificationService, TimezoneService) {
     var vm = this;
     vm.$onInit = $onInit;
     vm.$onChanges = $onChanges;
@@ -63,16 +63,14 @@
 
     function init() {
       return FusionClusterService.getUpgradeSchedule(Authinfo.getOrgId())
-        .then(function (data) {
-          $log.warn('success', data);
-          vm.data = convertDataForUI(data);
-          vm.isAcknowledged = data.isAcknowledged;
-          vm.postponed = data.postponed;
+        .then(function (response) {
+          vm.data = convertDataForUI(response);
+          vm.isAcknowledged = response.isAcknowledged;
+          vm.postponed = response.postponed;
           vm.nextUpdate = findNextUpdate();
           vm.errorMessage = '';
           vm.state = 'idle';
         }, function (error) {
-          $log.error('ERROR', error);
           vm.errorMessage = error.message || error.statusText;
           vm.state = 'error';
         });
@@ -85,8 +83,8 @@
           value: data.scheduleTime
         },
         scheduleDay: {
-          label: labelForDay(data.scheduleDay),
-          value: data.scheduleDay
+          label: labelForDay(data.scheduleDays[0]),
+          value: data.scheduleDays[0]
         },
         scheduleTimeZone: {
           label: labelForTimezone(data.scheduleTimeZone),
@@ -169,7 +167,7 @@
       return FusionClusterService.setUpgradeSchedule(Authinfo.getOrgId(), {
           scheduleTime: data.scheduleTime.value,
           scheduleTimeZone: data.scheduleTimeZone.value,
-          scheduleDay: data.scheduleDay.value
+          scheduleDays: [data.scheduleDay.value]
         })
         .then(function (data) {
           $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
@@ -185,23 +183,24 @@
 
     function openModal(event) {
       event.preventDefault();
-      $modal.open({
-        templateUrl: 'modules/hercules/schedule-upgrade-configuration/postpone-modal.html',
-        controller: 'PostponeModalController',
-        controllerAs: 'postponeModal',
-        type: 'dialog',
-        resolve: {
-          data: function () {
-            return vm.data;
-          },
-          nextUpdate: function () {
-            return vm.nextUpdate;
-          }
-        }
-      }).result.then(function (data) {
-        vm.postponed = data.postponed;
-        vm.nextUpdate = findNextUpdate();
-      });
+      $window.alert('Not implemented yet');
+      // $modal.open({
+      //   templateUrl: 'modules/hercules/schedule-upgrade-configuration/postpone-modal.html',
+      //   controller: 'PostponeModalController',
+      //   controllerAs: 'postponeModal',
+      //   type: 'dialog',
+      //   resolve: {
+      //     data: function () {
+      //       return vm.data;
+      //     },
+      //     nextUpdate: function () {
+      //       return vm.nextUpdate;
+      //     }
+      //   }
+      // }).result.then(function (data) {
+      //   vm.postponed = data.postponed;
+      //   vm.nextUpdate = findNextUpdate();
+      // });
     }
 
     function findNextUpdate() {

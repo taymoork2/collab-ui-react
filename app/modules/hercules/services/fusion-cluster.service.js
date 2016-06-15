@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, $q, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -39,20 +39,17 @@
 
     function getUpgradeSchedule(id) {
       var orgId = Authinfo.getOrgId();
-      return $http.get(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgrade_schedule')
         .then(extractData);
     }
 
     function setUpgradeSchedule(id, params) {
       var orgId = Authinfo.getOrgId();
-      return $http.patch(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params)
-        .then(extractData);
+      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgrade_schedule', params);
     }
 
     function postponeUpgradeSchedule(id) {
-      var orgId = Authinfo.getOrgId();
-      return $http.patch(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
-        .then(extractData);
+      return $q.reject('Not Implemented');
     }
 
     function extractData(response) {
