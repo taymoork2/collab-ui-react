@@ -62,8 +62,8 @@
               ng-model="deviceOverview.newTag"
               ng-show="deviceOverview.isAddingTag"
               focus-on="deviceOverview.isAddingTag"
-              ng-blur="deviceOverview.isAddingTag = false"
-              ng-keyup="deviceOverview.addTag($event)" />
+              ng-blur="deviceOverview.addTag()"
+              ng-keyup="deviceOverview.addTagOnEnter($event)" />
         </div>
       </div>
     </cs-sp-section>

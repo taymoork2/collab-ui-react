@@ -165,14 +165,23 @@
       RemoteSupportModal.open(deviceOverview.currentDevice);
     };
 
-    deviceOverview.addTag = function ($event) {
+    deviceOverview.addTag = function () {
       var tag = _.trim(deviceOverview.newTag);
-      if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
+      if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
         var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
         return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
+      } else {
+        deviceOverview.isAddingTag = false;
+        deviceOverview.newTag = undefined;
+      }
+    };
+
+    deviceOverview.addTagOnEnter = function ($event) {
+      if ($event.keyCode == 13) {
+        deviceOverview.addTag();
       }
     };
 
