@@ -1,0 +1,78 @@
+<div ui-view="header"></div>
+
+<cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
+
+  <cs-sp-section ng-if="groupDetails.clusterList.length > 0">
+    <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
+    <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in groupDetails.alarms">
+          <a ui-sref="connector-details.alarm-details({alarm: alarm})">
+            <i class="icon icon-error hercules-alarm status-icon"/>
+            <span class="feature-name">{{alarm.alarm.title}}</span>
+            <i class="feature-arrow"></i>
+          </a>  
+        </li>
+      </ul>
+    </div>
+    <p ng-if="groupDetails.alarms.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <table>
+      <thead>
+        <tr>
+          <td class="col-md-4 bold pointer" translate="mediaFusion.connectors.hosts"></td>
+          <!--td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td-->
+          <td></td>
+        </tr>
+      </thead>
+    </table> 
+
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">
+
+          <a
+            ui-sref="connector-details.host-details({clusterId: ecp.id, properties: ecp.properties, connector: ecp.services[0].connectors[0], hostLength: groupDetails.clusterList.length})">
+
+            <span class="feature-name">{{ecp.hosts[0].host_name}}</span>
+
+            <!--span class="feature-name">{{ecp.properties["mf.role"]}} {{ecp.hosts[0].state}} {{ecp.hosts[0].offline}} {{ecp.needs_attention}} {{ecp.needs_attention &&  ecp.host[0].state == 'offline' && ecp.host[0].offline}}</span-->
+
+            {{cluster.needs_attention}}{{cluster.alarms_present}}
+            <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count > 0 && !ecp.hosts[0].offline" class="yellow">
+            <i class="fa fa-circle" />
+            <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
+            </span>
+            <span ng-if="ecp.needs_attention &&  ecp.hosts[0].state == 'offline' && ecp.hosts[0].offline" class="red">
+            <i class="fa fa-circle" />
+            <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
+            </span>
+            <span ng-if="!ecp.needs_attention &&  !ecp.alarms_present" class="green">
+            <i class="fa fa-circle" />
+            <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
+            </span>
+
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="groupDetails.clusterList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="groupDetails.clusterList.length == 0">
+    <div>
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--negative"
+              style="margin-top: 15px;"
+              ng-click="sp.close(); groupDetails.deleteGroup();"
+              translate="mediaFusion.deleteCluster">
+      </button>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>
+

@@ -61,14 +61,18 @@
     </div>
     </div>
   </form>
-  </div>
+</div>
+
 <!-- footer -->
-<div class="modal-footer">
-  <a class="pad-top pull-left" ng-if="callTrial.canAddDevice || !callTrial.limitReached"
+<div class="modal-footer trials">
+  <a class="alt-btn-link"
+    ng-if="callTrial.canAddDevice || !callTrial.limitReached"
     ng-click="callTrial.skip(true); trial.nextStep()"
-    translate="trialModal.call.skipAddDevices">
+    translate="trialModal.skip">
   </a>
-  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+  <button class="btn with-slim-offset offset-l"
+    ng-click="trial.previousStep()"
+    ng-disabled="trial.loading"
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"

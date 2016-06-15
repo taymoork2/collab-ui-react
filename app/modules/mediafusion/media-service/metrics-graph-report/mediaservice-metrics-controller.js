@@ -96,7 +96,7 @@
     }
 
     function setAllGraphs() {
-      // setUtilizationData();
+      setUtilizationData();
       setCallVolumeData();
       setAvailabilityData();
     }
@@ -121,8 +121,9 @@
     }
 
     function setDummyData() {
-      //   setCallVolumeGraph(DummyMetricsReportService.dummyCallVolumeData(vm.timeSelected));
-      //    setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+      setCallVolumeGraph(DummyMetricsReportService.dummyCallVolumeData(vm.timeSelected));
+      setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+      setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
       resizeCards();
     }
 
@@ -158,7 +159,7 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (response.data[0].clusterCategories === 0) {
+        } else if (!angular.isDefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !angular.isDefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           setAvailabilityGraph(response);
@@ -169,7 +170,7 @@
     }
 
     function setUtilizationGraph(data) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart, vm.clusterSelected);
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
@@ -179,10 +180,10 @@
       MetricsReportService.getUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (response.data[0].clusterCategories === 0) {
+        } else if (!angular.isDefined(response.graphData) || response.graphData.length === 0) {
           vm.utilizationStatus = vm.EMPTY;
         } else {
-          setUtilizationGraph(response);
+          setUtilizationGraph(response.graphData);
           vm.utilizationStatus = vm.SET;
         }
         resizeCards();
