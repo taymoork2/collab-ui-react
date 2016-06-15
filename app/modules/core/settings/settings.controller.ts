@@ -42,10 +42,9 @@ namespace globalsettings {
 
     private initBranding() {
       this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(toggle=> {
-            //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
-            this.branding = new BrandingSetting();
-       });
-
+        //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
+        this.branding = new BrandingSetting();
+      });
     }
   }
   angular
