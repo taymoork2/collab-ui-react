@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -189,7 +189,7 @@
           enabled: true
         })
         .map(function (trial) {
-          if (trial.type === Config.offerTypes.pstn) {
+          if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
             return;
           }
           var licenseCount =
@@ -213,6 +213,7 @@
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
+      TrialContextService.reset();
 
       var defaults = {
         customerName: '',
@@ -232,7 +233,8 @@
           careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
-          pstnTrial: TrialPstnService.getData()
+          pstnTrial: TrialPstnService.getData(),
+          contextTrial: TrialContextService.getData()
         },
       };
 

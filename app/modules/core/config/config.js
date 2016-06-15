@@ -70,7 +70,8 @@
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         pstn: 'PSTN',
-        care: 'CARE'
+        care: 'CARE',
+        context: 'CONTEXT'
       },
 
       //WARNING: Deprecated, use offerTypes
@@ -303,7 +304,8 @@
         'cluster-details',
         'management-service',
         'services-overview',
-        'my-company'
+        'my-company',
+        'management-connector-details'
       ],
       'spark-room-system': [
         'devices',
@@ -328,6 +330,7 @@
       ],
       'squared-fusion-media': [
         //'mediafusionconnector',
+        'media-service-v2',
         'metrics',
         'reports-metrics',
         'media-service',
@@ -356,6 +359,7 @@
         'devices',
         'fusion',
         //'mediafusionconnector',
+        'media-service-v2',
         'media-service',
         'hurondetails',
         'huronsettings',

@@ -27,11 +27,12 @@
     dummyGrayLighter: '#FAFAFA',
     colorAttentionBase: '#F5A623',
     colorPeopleBase: '#14A792',
-    brandRoyalBlue: '#2E9AFE',
-    brandSkyBlue: '#58FAF4',
-    colorGreen: '#006600',
-    colorRed: '#FF0000',
-    colorYellow: '#FADB0F'
+    brandRoyalBlue: '#5390E0',
+    brandSkyBlue: '#3FAAB5',
+    colorGreen: '#5AAE76',
+    colorRed: '#F4735E',
+    colorYellow: '#E99849',
+    colorPurple: '#8E5ACF'
   };
 
   angular

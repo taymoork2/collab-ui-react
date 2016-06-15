@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -83,6 +83,7 @@
     vm.hideFieldSteeringDigit = false;
     vm.timeZoneToggleEnabled = false;
     vm.previousTimeZone = DEFAULT_TZ;
+    vm.extensionLengthChanged = false;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -298,8 +299,10 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
+            scope.formControl.$setDirty();
           }
           vm.model.site.extensionLength = vm.model.previousLength;
+          vm.extensionLengthChanged = true;
         }
       },
       expressionProperties: {
@@ -361,7 +364,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -422,7 +425,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -505,7 +508,7 @@
         $scope.$watch(function () {
           return vm.form.$invalid;
         }, function () {
-          $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
+          $scope.options.templateOptions.disabled = vm.form.$invalid;
         });
       }
     }, {
@@ -664,7 +667,7 @@
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
-              vm.model.site.extensionLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
@@ -749,16 +752,13 @@
     }
 
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 
@@ -1049,6 +1049,9 @@
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
+          if (vm.model.site.extensionLength !== vm.model.extensionLength) {
+            siteData.extensionLength = vm.model.site.extensionLength;
+          }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
             // otherwise, don't update site since nothing changed.
@@ -1096,12 +1099,32 @@
           }.bind(internalNumberRange));
       }
 
+      function updateInternalNumbers(internalNumberRange) {
+        return ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
+          internalNumberRange.uuid = undefined;
+          internalNumberRange.links = undefined;
+          internalNumberRange.url = undefined;
+          ServiceSetup.createInternalNumberRange(internalNumberRange)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+                extension: this.name
+              }));
+            }.bind(internalNumberRange));
+        }).catch(function (response) {
+          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+            extension: this.name
+          }));
+        });
+      }
+
       function saveInternalNumbers() {
         return $q.when(true).then(function () {
           if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (angular.isUndefined(internalNumberRange.uuid)) {
                 return createInternalNumbers(internalNumberRange);
+              } else if (vm.extensionLengthChanged) {
+                return updateInternalNumbers(internalNumberRange);
               }
             });
           }

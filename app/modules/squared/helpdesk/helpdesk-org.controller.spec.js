@@ -2,10 +2,11 @@
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Authinfo, httpBackend, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config;
+  var Authinfo, httpBackend, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService;
 
-  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, $httpBackend, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_) {
+  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, $httpBackend, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_, _FeatureToggleService_) {
     HelpdeskService = _HelpdeskService_;
+    FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     Config = _Config_;
@@ -64,23 +65,14 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('read only access', function () {
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'usersWithRole');
-      var deferredUsersWithRoleResult = q.defer();
-      deferredUsersWithRoleResult.resolve({});
-      HelpdeskService.usersWithRole.returns(deferredUsersWithRoleResult.promise);
-
-      sinon.stub(LicenseService, 'getLicensesInOrg');
-      var deferredLicensesResult = q.defer();
-      deferredLicensesResult.resolve({});
-      LicenseService.getLicensesInOrg.returns(deferredLicensesResult.promise);
+      sinon.stub(HelpdeskService, 'usersWithRole').returns(q.resolve({}));
+      sinon.stub(LicenseService, 'getLicensesInOrg').returns(q.resolve({}));
 
       sinon.stub(Authinfo, 'getOrgId');
       Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
 
-      sinon.stub(HelpdeskService, 'getOrgDisplayName');
-      var deferredDisplayName = q.defer();
-      deferredDisplayName.resolve("Marvel");
-      HelpdeskService.getOrgDisplayName.returns(deferredDisplayName.promise);
+      sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
 
       httpBackend
         .when('GET', 'l10n/en_US.json')
@@ -89,6 +81,65 @@ describe('Controller: HelpdeskOrgController', function () {
 
     afterEach(function () {
       httpBackend.verifyNoOutstandingExpectation();
+    });
+
+    it('extended information feature toggle is default false', function () {
+      sinon.stub(HelpdeskService, 'getOrg');
+      var deferredOrgLookupResult = q.defer();
+      deferredOrgLookupResult.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+        }],
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+      });
+      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        FeatureToggleService: FeatureToggleService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService,
+        Authinfo: Authinfo
+      });
+      httpBackend.flush();
+      expect(orgController.supportsExtendedInformation).toBeFalsy();
+    });
+
+    it('extended information feature toggle is true when toggle is active from service', function () {
+      sinon.stub(HelpdeskService, 'getOrg');
+      var deferredOrgLookupResult = q.defer();
+      deferredOrgLookupResult.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+        }],
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+      });
+      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+
+      sinon.restore(FeatureToggleService, 'supports');
+      sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(true));
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        FeatureToggleService: FeatureToggleService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService,
+        Authinfo: Authinfo
+      });
+      httpBackend.flush();
+      expect(orgController.supportsExtendedInformation).toBeTruthy();
     });
 
     it('allow read only access for marvel partners', function () {

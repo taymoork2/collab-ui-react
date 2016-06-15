@@ -147,8 +147,8 @@
     }, {
       title: 'tabs.metricsDetailsTab',
       //desc: 'tabs.metricsDetailsTabDesc',
-      state: 'metrics',
-      link: '#metrics'
+      state: 'media-service-v2',
+      link: '#mediaserviceV2'
     }]
   }];
 

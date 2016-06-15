@@ -539,6 +539,8 @@
         var funcName = "getUserWebExEntitlementFromAtlas";
         var logMsg = "";
 
+        var _self = this;
+
         Orgservice.getValidLicenses().then(
           function getOrgLicensesSuccess(orgLicenses) {
             var funcName = "getOrgLicensesSuccess()";
@@ -547,6 +549,8 @@
             logMsg = funcName + ": " + "\n" +
               "orgLicenses=" + JSON.stringify(orgLicenses);
             // $log.log(logMsg);
+
+            _self.getUserSettingsFromWebEx();
 
             var currSite = $stateParams.site;
             var userName = $stateParams.currentUser.userName;
@@ -628,6 +632,8 @@
             logMsg = funcName + ": " + "\n" +
               "response=" + JSON.stringify(response);
             $log.log(logMsg);
+
+            _self.getUserSettingsFromWebEx();
           } // getOrgLicensesError()
         ); // Orgservice.getValidLicenses().then()
       }, // getUserWebExEntitlementFromAtlas()
@@ -755,7 +761,7 @@
 
               _self.updateCenterLicenseEntitlements();
 
-              // var validLicenseEntitlements = true;
+              // var isValidLicenseEntitlement = true;
               var isValidLicenseEntitlement = (
                 (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
                 (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
@@ -764,6 +770,10 @@
               ) ? true : false;
 
               if (!isValidLicenseEntitlement) {
+                logMsg = funcName + "\n" +
+                  "entitlement mismatch detected";
+                $log.log(logMsg);
+
                 _self.setLoadingErrorDisplay(
                   "defaultDbMismatchError",
                   false,

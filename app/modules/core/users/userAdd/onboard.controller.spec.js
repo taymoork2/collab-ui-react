@@ -16,6 +16,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var unlicensedUsers;
+  var allLicensesData;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -64,6 +65,7 @@ describe('OnboardCtrl: Ctrl', function () {
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
+    allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -620,6 +622,47 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.updateUserLicense();
       $scope.$apply();
     }
+  });
+
+  describe('MC/CMR Checkbox logic', function () {
+    beforeEach(initCurrentUserAndController);
+
+    it('should check if CMR gets checked when CF gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
+          });
+        });
+      });
+    });
+
+    it('should check if CF gets checked when CMR gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = true; // check CMR license
+          });
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked 
+        });
+      });
+    });
+
+    it('should check if CF remains checked when CMR is unchecked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = false; // uncheck CMR license
+          });
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
+        });
+      });
+    });
   });
 
   function initUserShouldAddCall() {

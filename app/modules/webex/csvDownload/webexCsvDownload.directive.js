@@ -24,12 +24,12 @@
         $scope.$emit('download-start');
 
         WebExCsvDownloadService.getWebExCsv(
-          vm.fileDownloadUrl
+          vm.filedownloadurl
         ).then(
           function getWebExCsvSuccess(csvData) {
             var objectUrl = WebExCsvDownloadService.webexCreateObjectUrl(
               csvData.content,
-              vm.fileName);
+              vm.filename);
 
             $scope.$emit('downloaded', objectUrl);
           }
@@ -57,6 +57,8 @@
       templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
       scope: {
         type: '@',
+        filedownloadurl: '@',
+        filename: '@',
         downloading: '@'
       },
       controller: webexCsvDownloadCtrl,
@@ -84,7 +86,6 @@
 
       // pass the objectUrl to the href of downloadAnchor when download is done
       scope.$on('downloaded', function (event, url) {
-
         scope.webexCsvDownload.downloading = false;
 
         var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
@@ -110,13 +111,8 @@
         // changeAnchorAttrToOriginalState();
       });
 
-      scope.webexCsvDownload.fileDownloadUrl = attrs.filedownloadurl;
-      scope.webexCsvDownload.fileName = attrs.filename;
-
       function changeAnchorAttrToDownload(url) {
         $timeout(function () {
-          $log.log("*******changeAnchorAttrToDownload function******S");
-          //  if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
           var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
 
           scope.webexCsvDownload.tempFunction = scope.webexCsvDownload.downloadCsv || angular.noop;
@@ -129,17 +125,8 @@
               download: attrs.filename
             })
             .removeAttr('disabled');
-          //    } else {
-          //     // IE download option since IE won't download the created url
-          //    scope.webexCsvDownload = openInIE;
-          //   downloadAnchor.removeAttr('disabled');
-          //  }
         });
       } // changeAnchorAttrToDownload()
-
-      function openInIE() {
-        WebExCsvDownloadService.openInIE(attrs.filename);
-      }
 
       function changeAnchorAttrToOriginalState() {
         $timeout(function () {

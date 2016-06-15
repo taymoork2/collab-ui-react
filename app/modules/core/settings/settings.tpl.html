@@ -2,32 +2,33 @@
 
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
 
-  <div class="cs-form" action="">
-    <div class="cs-form__section">
+  <form class="cs-form" action="">
+    <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
+      <privacy-setting></privacy-setting>
+    </setting-section>
+  
+    <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
+      <domains-setting></domains-setting>
+    </setting-section>
 
-      <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
-        <domains-setting></domains-setting>
-      </setting-section>
+    <setting-section setting="settingsCtrl.sipDomain" ng-if="settingsCtrl.sipDomain">
+      <sipdomain-setting show-save-button="true"></sipdomain-setting>
+    </setting-section>
 
-      <setting-section setting="settingsCtrl.sipDomain" ng-if="settingsCtrl.sipDomain">
-        <sipdomain-setting show-save-button="true"></sipdomain-setting>
-      </setting-section>
+    <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
+      <authentication-setting></authentication-setting>
+    </setting-section>
 
-      <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
-        <authentication-setting></authentication-setting>
-      </setting-section>
+    <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
+      <support-setting></support-setting>
+    </setting-section>
 
-      <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
-        <support-setting></support-setting>
-      </setting-section>
+    <setting-section setting="settingsCtrl.branding" ng-if="settingsCtrl.branding">
+      <branding-setting></branding-setting>
+    </setting-section>
 
-      <setting-section setting="settingsCtrl.branding" ng-if="settingsCtrl.branding">
-        <branding-setting></branding-setting>
-      </setting-section>
-      
-      <setting-section setting="settingsCtrl.dataPolicy" hide-bottom-line=true ng-if="settingsCtrl.dataPolicy">
-        <datapolicy-setting></datapolicy-setting>
-      </setting-section>
-    </div>
-  </div>
+    <setting-section setting="settingsCtrl.dataPolicy" hide-bottom-line=true ng-if="settingsCtrl.dataPolicy">
+      <datapolicy-setting></datapolicy-setting>
+    </setting-section>
+  </form>
 </div>
