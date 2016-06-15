@@ -1,12 +1,12 @@
 'use strict';
 
-describe('Controller: ReassignClusterController', function () {
+describe('Controller: ReassignClusterControllerV2', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var vm, controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var vm, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 
-  beforeEach(inject(function ($controller, _MediaClusterService_, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _XhrNotificationService_, _$q_, _$translate_, $log) {
     cluster = {
       id: 'a',
       name: 'b',
@@ -16,13 +16,13 @@ describe('Controller: ReassignClusterController', function () {
       assigned_property_sets: '606599c8-8e72-491f-9212-153a0877eb84' // or whatever you prefer
     };
 
-    /* MediaClusterService = {
+    /* MediaClusterServiceV2 = {
 
        getGroups: sinon.stub(),
        removeGroupAssignment: sinon.stub(),
        updateGroupAssignment: sinon.stub()
      };*/
-    MediaClusterService = _MediaClusterService_;
+    MediaClusterServiceV2 = _MediaClusterServiceV2_;
     XhrNotificationService = _XhrNotificationService_;
     $q = _$q_;
     $translate = _$translate_;
@@ -36,9 +36,9 @@ describe('Controller: ReassignClusterController', function () {
     log = $log;
     log.reset();
 
-    controller = $controller('ReassignClusterController', {
+    controller = $controller('ReassignClusterControllerV2', {
       cluster: cluster,
-      MediaClusterService: MediaClusterService,
+      MediaClusterServiceV2: MediaClusterServiceV2,
       XhrNotificationService: XhrNotificationService,
       $q: $q,
       $translate: $translate,
@@ -49,24 +49,24 @@ describe('Controller: ReassignClusterController', function () {
 
   }));
 
-  it('check if ReassignClusterController is Defined', function () {
+  it('check if ReassignClusterControllerV2 is Defined', function () {
     expect(controller).toBeDefined();
   });
 
   it('check if getGroups is called', function () {
-    spyOn(MediaClusterService, 'getGroups').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'getGroups').and.returnValue($q.when());
     controller.getGroups();
-    expect(MediaClusterService.getGroups).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.getGroups).toHaveBeenCalled();
 
   });
 
   it('check if removeGroupAssignment is called with  clusterId', function () {
 
-    spyOn(MediaClusterService, 'removeGroupAssignment').and.returnValue($q.when());
-    spyOn(MediaClusterService, 'updateGroupAssignment').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'removeGroupAssignment').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'updateGroupAssignment').and.returnValue($q.when());
     controller.reassign();
     expect(controller.saving).toBe(true);
-    expect(MediaClusterService.removeGroupAssignment).toHaveBeenCalledWith(cluster.id, cluster.assigned_property_sets[0]);
+    expect(MediaClusterServiceV2.removeGroupAssignment).toHaveBeenCalledWith(cluster.id, cluster.assigned_property_sets[0]);
 
   });
 
