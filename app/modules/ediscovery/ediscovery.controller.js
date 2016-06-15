@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($state, $timeout, $interval, $window, $scope, $translate, $modal, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -10,6 +10,8 @@
 
     vm.deleteReports = deleteReports;
     vm.readingReports = true;
+    vm.concat = false;
+    vm.moreReports = false;
 
     $scope.prettyPrintBytes = prettyPrintBytes;
     $scope.downloadable = downloadable;
@@ -17,11 +19,16 @@
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
+    $scope.oldOffset = 0;
+    $scope.offset = 0;
+    $scope.limit = 10;
 
-    var avalonPoller = $timeout(pollAvalonReport, 0);
+    //var avalonPoller = $timeout(pollAvalonReport, 0);
+    var avalonPoller = $interval(pollAvalonReport, 5000);
 
     $scope.$on('$destroy', function () {
-      $timeout.cancel(avalonPoller);
+      //$timeout.cancel(avalonPoller);
+      $interval.cancel(avalonPoller);
     });
 
     vm.reports = [];
@@ -71,12 +78,33 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
+      enableRowSelection: true,
       rowHeight: 68,
       enableRowHeaderSelection: false,
       enableColumnResize: true,
       enableColumnMenus: false,
       enableHorizontalScrollbar: 0,
-
+      infiniteScrollUp: true,
+      infiniteScrollDown: true,
+      infiniteScrollRowsFromEnd: 10,
+      onRegisterApi: function (gridApi) {
+        vm.gridApi = gridApi;
+        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+          $interval.cancel(avalonPoller);
+          if (vm.moreReports) {
+            $scope.offset = $scope.offset + $scope.limit;
+            vm.concat = true;
+            pollAvalonReport();
+          }
+        });
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
+            EdiscoveryService.getReport(row.entity.id).then(function (report) {
+              row.entity = report;
+            });
+          }
+        });
+      },
       columnDefs: [{
         field: 'displayName',
         displayName: $translate.instant("ediscovery.reportsList.name"),
@@ -118,12 +146,27 @@
     }
 
     function pollAvalonReport() {
-      EdiscoveryService.getReports().then(function (res) {
-        vm.reports = res;
+      EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
+        var reports = res.reports;
+        var paging = res.paging;
+        if (paging.next) {
+          vm.moreReports = true;
+        } else {
+          vm.moreReports = false;
+        }
+        if (vm.concat) {
+          vm.reports = vm.reports.concat(reports);
+        } else {
+          vm.reports = reports;
+        }
+        if (vm.gridApi) {
+          vm.gridApi.infiniteScroll.dataLoaded(false, true);
+        }
+
       }).finally(function (res) {
         vm.readingReports = false;
-        $timeout.cancel(avalonPoller);
-        avalonPoller = $timeout(pollAvalonReport, 5000);
+        //$timeout.cancel(avalonPoller);
+        //avalonPoller = $timeout(pollAvalonReport, 5000);
       });
     }
 
