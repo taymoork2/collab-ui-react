@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AAScrollBar) {
 
     var vm = this;
 
@@ -62,6 +62,7 @@
         uiMenu.entries[vm.index] = menu;
       }
       AACommonService.setActionStatus(true);
+      AAScrollBar.resizeBuilderScrollBar(800); // delay for transitions to finish
     }
 
     function getSelectHint() {
@@ -92,6 +93,7 @@
       uiMenu.deleteEntryAt(index);
 
       AACommonService.setActionStatus(true);
+      AAScrollBar.resizeBuilderScrollBar(800); // delay for transitions to finish
     }
 
     function setOption() {
