@@ -1,4 +1,4 @@
-/// <reference path="privacySettings.component.ts"/>
+/// <reference path="privacy.settings.controller.ts"/>
 namespace globalsettings {
 
   describe('Controller: PrivacySettingController', ()=> {
