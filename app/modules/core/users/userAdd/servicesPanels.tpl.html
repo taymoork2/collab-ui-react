@@ -73,7 +73,7 @@
               <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}"> 
               <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
-                  <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel = true;" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
+                  <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
                 </div>
               </div>
             </div>

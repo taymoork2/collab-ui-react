@@ -12,6 +12,7 @@
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
+    $scope.cmrLicensesForMetric = {};
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -244,6 +245,13 @@
     };
 
     $scope.editServicesSave = function () {
+      for (var licenseId in $scope.cmrLicensesForMetric) {
+        if ($scope.cmrLicensesForMetric[licenseId]) {
+          Mixpanel.trackEvent("CMR checkbox unselected", {
+            licenseId: licenseId
+          });
+        }
+      }
       if (shouldAddCallService()) {
         $scope.processing = true;
         $scope.editServicesFlow = true;
@@ -456,11 +464,13 @@
     }
 
     $scope.checkCMR = function (confModel, cmrLics) {
-      if (!confModel) {
-        angular.forEach(cmrLics, function (cmrLic) {
-          cmrLic.cmrModel = confModel;
-        });
-      }
+      cmrLics.forEach(function (cmrLic) {
+        cmrLic.cmrModel = confModel;
+      });
+    };
+
+    $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
+      $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
     };
 
     var generateConfChk = function (confs, cmrs) {
