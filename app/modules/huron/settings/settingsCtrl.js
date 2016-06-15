@@ -15,7 +15,7 @@
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
-      value: 'America/Los_Angeles',
+      id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
@@ -225,7 +225,7 @@
         description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
-        valuefield: 'value',
+        valuefield: 'id',
         inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
         filter: true
       },
@@ -755,7 +755,7 @@
     function updateVoicemailUserTimeZone() {
       // TODO: This is not a good way to determine when to update the timezone, get site doesn't
       // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'model.voicemailTimeZone.value'))) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -807,7 +807,7 @@
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
 
-      if (vm.model.site.timeZone.value !== savedModel.site.timeZone.value) {
+      if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
         siteData.timeZone = vm.model.site.timeZone;
       }
 
@@ -834,8 +834,8 @@
     }
 
     function updateVoicemailUserTemplate() {
-      if (_.get(vm, 'model.site.timeZone.value') && _.get(vm, 'voicemailUserTemplate.objectId')) {
-        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.value, vm.voicemailUserTemplate.objectId)
+      if (_.get(vm, 'model.site.timeZone.id') && _.get(vm, 'voicemailUserTemplate.objectId')) {
+        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.id, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -921,7 +921,7 @@
                 return digit === site.siteSteeringDigit;
               });
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.id === site.timeZone;
               });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -980,7 +980,7 @@
               };
 
               vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === vm.voicemailUserTemplate.timeZone;
+                return timezone.id === vm.voicemailUserTemplate.timeZone;
               });
 
             }

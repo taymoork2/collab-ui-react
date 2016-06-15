@@ -304,7 +304,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     }];
 
     controller.model.site.timeZone = {
-      "value": "Pacific/Honolulu",
+      "id": "Pacific/Honolulu",
       "label": "Pacific/Honolulu"
     };
 
@@ -424,7 +424,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.to = {};
 
     controller.timeZoneOptions = [{
-      "value": "America/Anchorage",
+      "id": "America/Anchorage",
       "label": "America/Anchorage"
     }];
 
@@ -792,7 +792,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     it('should update timezone when timezone selection changes and feature toggle is ON', function () {
       controller.model.site.timeZone = {
-        "value": "America/Anchorage",
+        "id": "America/Anchorage",
         "label": "America/Anchorage"
       };
       controller.save();
@@ -808,7 +808,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
       controller.model.site.timeZone = {
-        "value": "America/Los_Angeles",
+        "id": "America/Los_Angeles",
         "label": "America/Los_Angeles"
       };
       controller.save();

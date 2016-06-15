@@ -263,7 +263,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('getTimeZones', function () {
     beforeEach(function () {
-      $httpBackend.expectGET('/app/modules/huron/timeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
+      $httpBackend.expectGET('/app/modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
 
       it('should get time zones', function () {
         ServiceSetup.getTimeZones();
