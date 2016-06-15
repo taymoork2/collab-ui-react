@@ -1,4 +1,5 @@
 /// <reference path="authenticationSetting.component.ts"/>
+/// <reference path="securitySetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
 /// <reference path="dataPolicySetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
@@ -24,6 +25,7 @@ namespace globalsettings {
         //Add setting sections for partner admins here.
         this.initBranding();
       } else {
+        this.initSecurity();
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
@@ -43,9 +45,17 @@ namespace globalsettings {
     }
 
     private initBranding() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(toggle=> {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(() => {
         //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
         this.branding = new BrandingSetting();
+      });
+    }
+
+    private initSecurity() {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then(toggle=> {
+        if (toggle) {
+          this.security = new SecuritySetting();
+        }
       });
     }
   }
