@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -34,6 +34,12 @@
     vm.isTrials = isTrials;
     vm.allowLaunchAtlas = false;
     vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
+
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     // TODO: Replace by feature toggle !
@@ -72,18 +78,20 @@
     }
 
     function openExtendedInformation(title, message) {
-      $modal.open({
-        templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-        controller: 'HelpdeskExtendedInformationCtrl as modal',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          message: function () {
-            return message;
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          resolve: {
+            title: function () {
+              return title;
+            },
+            message: function () {
+              return message;
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     function initOrgView(org) {

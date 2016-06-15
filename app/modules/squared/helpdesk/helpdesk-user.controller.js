@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -28,6 +28,11 @@
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -43,18 +48,20 @@
     }
 
     function openExtendedInformation(title, message) {
-      $modal.open({
-        templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-        controller: 'HelpdeskExtendedInformationCtrl as modal',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          message: function () {
-            return message;
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          resolve: {
+            title: function () {
+              return title;
+            },
+            message: function () {
+              return message;
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     function initUserView(user) {
