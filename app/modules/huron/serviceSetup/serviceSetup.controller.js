@@ -805,7 +805,7 @@
           vm.timeZone = '' + usertemplates[0].timeZone;
           vm.objectId = usertemplates[0].objectId;
           var currentTimeZone = timezones.filter(function (timezone) {
-            return timezone.id === vm.timeZone.id;
+            return timezone.id === vm.timeZone;
           });
           if (currentTimeZone.length > 0) {
             vm.model.site.timeZone = currentTimeZone[0];

@@ -433,7 +433,7 @@ describe('Controller: ServiceSetup', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('customer with voicemail service should not update timezone when timezone value is missing', function () {
+    it('customer with voicemail service should not update timezone when timezone id is missing', function () {
       var selectedPilotNumber = {
         pattern: '+19728965000',
         label: '(972) 896-5000'
