@@ -62,13 +62,18 @@
   </form>
 </section>
 <!-- footer -->
-<div class="modal-footer">
-  <a class="pull-left" ng-click="pstnTrial.skip(true)" translate="trialModal.pstn.skip"></a>
-  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+<div class="modal-footer trials">
+  <a class="alt-btn-link"
+    ng-click="pstnTrial.skip(true)"
+    translate="trialModal.skip">
+  </a>
+  <button class="btn with-slim-offset offset-l"
+    ng-click="trial.previousStep()"
+    ng-disabled="trial.loading"
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" 
+    ng-click="trialForm.$setPristine(true); trial.nextStep()"
     ng-disabled="(trialForm.$invalid && pstnTrial.showOrdering) || pstnTrial.disableNextButton()">
     <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
     <span ng-if="trial.hasNextStep()" translate="common.next"></span>

@@ -4,6 +4,7 @@
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
+/// <reference path="privacySection/privacySettings.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
@@ -18,19 +19,27 @@ namespace globalsettings {
     public dataPolicy:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, private FeatureToggleService) {
+    constructor(Authinfo, private Orgservice, private FeatureToggleService) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
+        this.initBranding();
       } else {
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
-        this.branding = new BrandingSetting();
+        this.initBrandingForNonPartner();
+        this.privacy = new PrivacySetting();
         this.dataPolicy = new DataPolicySetting();
       }
-      
-      this.initBranding();
+    }
+
+    private initBrandingForNonPartner(){
+      this.Orgservice.getOrg(data => {
+        if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+          this.initBranding();
+        }
+      });
     }
 
     private initBranding() {

@@ -59,16 +59,18 @@ describe('emailService', function () {
           fakeCustName = 'Fake Customer, Inc.',
           fakeCustEmail = 'fake-customer-admin@example.com',
           fakePartnerEmail = 'fake-partner-admin@example.com',
+          webexSiteUrl = 'fake.webex.com',
           NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST =
           EmailService._types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST;
 
-        expect(mkTrialConversionReqPayload(fakeCustName, fakeCustEmail, fakePartnerEmail))
+        expect(mkTrialConversionReqPayload(fakeCustName, fakeCustEmail, fakePartnerEmail, webexSiteUrl))
           .toEqual({
             type: NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
             properties: {
               CUSTOMER_NAME: fakeCustName,
               CUSTOMER_EMAIL: fakeCustEmail,
               PARTNER_EMAIL: fakePartnerEmail,
+              WEBEX_SITE_URL: webexSiteUrl,
               SUBJECT: fakeCustName + ' wants to order or extend their trial'
             }
           });

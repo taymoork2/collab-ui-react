@@ -7,7 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, InternalNumberPoolService, CeService, HuntGroupServiceV2,
+    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService,
     InternationalDialing) {
 
     var vm = this;
@@ -354,7 +354,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
@@ -414,7 +414,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -1550,16 +1550,13 @@
     }
 
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 

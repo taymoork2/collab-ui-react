@@ -16,7 +16,7 @@ describe('Remove partner trials from partner org page', function () {
     for (var i = 0; i < 1; i++) {
       navigation.clickCustomers();
       utils.click(partner.trialFilter);
-      utils.expectIsNotDisplayed(element(by.css('.icon-spinner')));
+      utils.expectIsNotDisplayed(element.all(by.css('.icon-spinner')).get(0));
 
       //      utils.click(element(by.css('.ui-grid-icon-up-dir')));
 

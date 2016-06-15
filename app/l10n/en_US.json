@@ -1319,6 +1319,8 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
+      "upgradeScheduleHeader": "Upgrade Schedule",
+      "upgradeScheduleParagraph": "Select the upgrade schedule for this cluster: the connectors will upgrade automatically in the selected time when  an upgrade is available.",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
@@ -2233,6 +2235,7 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -2273,7 +2276,6 @@
       "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
-      "skipAddDevices": "Skip adding devices",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
@@ -2347,6 +2349,7 @@
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
+    "skip": "Skip",
     "finishTrialAdded": "Your trial has been added",
     "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
@@ -2784,7 +2787,9 @@
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",
-      "utilizationDescription": "Description text for Percentage utilization should be displayed here."
+      "utilizationDescription": "Description text for Percentage utilization should be displayed here.",
+      "peakutilization": "Peak Utilization",
+      "averageutilization": "Average Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -4433,7 +4438,7 @@
         }
       },
       "clusterList": {
-        "title": "Cluster List",
+        "title": "Clusters",
         "description": "On-prem clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
