@@ -972,13 +972,6 @@
               currentOrg: {}
             }
           })
-          /**.state('site-list', {
-            url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteListCtrl',
-            controllerAs: 'siteList',
-            parent: 'main'
-          })**/
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
