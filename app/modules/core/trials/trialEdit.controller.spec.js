@@ -408,7 +408,7 @@ describe('Controller: TrialEditCtrl:', function () {
         controller.editTrial();
         $scope.$apply();
         expect(TrialContextService.addService).toHaveBeenCalled();
-       expect(TrialContextService.removeService).not.toHaveBeenCalled();
+        expect(TrialContextService.removeService).not.toHaveBeenCalled();
       });
 
       it('should display notification if call to enable context service fails', function () {
