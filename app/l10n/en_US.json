@@ -2787,7 +2787,9 @@
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",
-      "utilizationDescription": "Description text for Percentage utilization should be displayed here."
+      "utilizationDescription": "Description text for Percentage utilization should be displayed here.",
+      "peakutilization": "Peak Utilization",
+      "averageutilization": "Average Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3368,7 +3370,7 @@
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
     "useOwnLogo": "Use your own logo",
-    "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image  le size must be less than 1 MB.",
+    "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
     "companyLogo": "{{partner}} Company Logos",
     "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",

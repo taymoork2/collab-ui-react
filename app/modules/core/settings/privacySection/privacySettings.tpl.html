@@ -1,0 +1,27 @@
+<div class="setting">
+  <div cr-feature-toggle feature-show="atlas-readonly-support-access">
+    <div class="sub-section">
+      <h5 class="sub-section__label" translate='globalSettings.privacy.supportAccessHeader'></h5>
+      <p class="sub-section__description" translate='globalSettings.privacy.supportAccessDescription'></p>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      id="allowReadOnlyOrgAccess"
+      ng-model="vm.allowReadOnlyAccess"
+      cs-input-label="{{'globalSettings.privacy.allowReadOnlyOrgAccess'|translate}}"
+      ng-disabled="vm.allowReadOnlyAccess===undefined">
+  </div>
+  <div ng-if="!vm.hideUsagePart">
+    <div class="sub-section">
+      <h5 class="sub-section__label" translate='globalSettings.privacy.usageDataHeader'></h5>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      id="sendUsageData"
+      ng-model="vm.sendUsageData"
+      cs-input-label="{{'globalSettings.privacy.usageDataDescription'|translate}}"
+      ng-disabled="vm.sendUsageData===undefined">
+  </div>
+</div>
