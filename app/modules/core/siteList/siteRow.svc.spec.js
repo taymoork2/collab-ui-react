@@ -256,7 +256,7 @@ describe('Service: WebExSiteRowService', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
-    spyOn(WebExApiGatewayService, 'isSiteSupportsIframe').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
 
   }));
