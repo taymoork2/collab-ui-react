@@ -57,7 +57,7 @@ describe('SiteListService.updateWebExColumnsInRow() test', function () {
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
     spyOn(UrlConfig, 'getWebexAdvancedEditUrl').and.returnValue("fake.admin.webex.com");
     spyOn(UrlConfig, 'getWebexAdvancedHomeUrl').and.returnValue("fake.webex.com");
-    spyOn(WebExApiGatewayService, 'isSiteSupportsIframe').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
   })); // beforeEach(inject())
 

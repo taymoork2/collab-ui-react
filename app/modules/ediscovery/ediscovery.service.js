@@ -10,7 +10,7 @@
       _.each(reports, function (report) {
         detectAndSetReportTimeout(report);
       });
-      return reports;
+      return res.data;
     }
 
     function extractReport(res) {
@@ -57,10 +57,11 @@
         });
     }
 
-    function getReports() {
+    function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
+      var reqParams = 'offset=' + offset + '&limit=' + limit;
       return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
         .then(extractReports)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place

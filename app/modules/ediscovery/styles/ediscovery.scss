@@ -245,6 +245,11 @@
       }
     }
 
+    .with-scroll {
+      //height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
+      height: 60vh;
+    }
+
   }
 
 }

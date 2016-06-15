@@ -61,7 +61,7 @@
     min-width: rem-calc(650);
     animation: scaleUpCard .5s linear;
     article {
-      min-height: vr-adjust(590);
+      min-height: vr-adjust(390);
       min-width: rem-calc(650);
       padding: rem-calc(15);
       animation: scaleUpCard .5s linear;
@@ -151,17 +151,24 @@
         margin: 0;
       }
     }
+    .utilization-chart
+    {
+    margin-right: 1rem;
+    height: 400px;
+    width: 100%
+
+    }
     .availability-chart
     {
     margin-right: 1rem;
-    height: 500px;
+    height: 400px;
     width: 100%
 
     }
     .call-volume-chart
     {
     margin-right: 1rem;
-    height: 500px;
+    height: 400px;
     width: 100%
     }
      .amcharts-value-axis .amcharts-axis-label {
