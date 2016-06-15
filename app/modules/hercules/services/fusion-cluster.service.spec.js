@@ -177,7 +177,7 @@ describe('Service: FusionClusterService', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
         .respond(200, response);
-      var connectorListPromise = FusionClusterService.getAllConnectorTypesForCluster("clusterId");
+      var connectorListPromise = FusionClusterService.getAllProvisionedConnectorTypes("clusterId");
       connectorListPromise.then(function (allConnectors) {
         expect(allConnectors.length).toBe(3);
       });

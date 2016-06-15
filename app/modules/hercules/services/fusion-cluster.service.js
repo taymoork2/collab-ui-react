@@ -14,7 +14,7 @@
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
-      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
+      getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
       getAll: getAll,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList
@@ -30,9 +30,7 @@
     function get(clusterId) {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
-        .then(function (response) {
-          return response.data;
-        });
+        .then(extractDataFromResponse);
     }
 
     function getAll() {
@@ -127,7 +125,7 @@
       return $http.post(url);
     }
 
-    function getAllConnectorTypesForCluster(clusterId) {
+    function getAllProvisionedConnectorTypes(clusterId) {
       return get(clusterId)
         .then(function (data) {
           return _.map(data.provisioning, 'connectorType');
