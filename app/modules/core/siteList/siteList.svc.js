@@ -261,7 +261,7 @@
       siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteUrl);
       siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteUrl);
 
-      WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
+      WebExApiGatewayService.siteFunctions(siteUrl).then(
         function isSiteSupportsIframeSuccess(result) {
           var funcName = "isSiteSupportsIframeSuccess()";
           var logMsg = "";
@@ -327,7 +327,7 @@
             "response=" + JSON.stringify(response);
           // $log.log(logMsg);
         } // isSiteSupportsIframeError()
-      ); // WebExApiGatewayService.isSiteSupportsIframe().then
+      ); // WebExApiGatewayService.siteFunctions().then
     }; // updateWebExColumnsInRow()
 
     this.updateDisplayControlFlagsInRow = function (siteRow) {

@@ -522,7 +522,7 @@
       siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteRow.siteUrl);
       siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteRow.siteUrl);
 
-      WebExApiGatewayService.isSiteSupportsIframe(siteRow.siteUrl).then(
+      WebExApiGatewayService.siteFunctions(siteRow.siteUrl).then(
         function isSiteSupportsIframeSuccess(result) {
           var funcName = "isSiteSupportsIframeSuccess()";
           var logMsg = "";
@@ -586,7 +586,7 @@
             "response=" + JSON.stringify(response);
           //$log.log(logMsg);
         } // isSiteSupportsIframeError()
-      ); // WebExApiGatewayService.isSiteSupportsIframe().then
+      ); // WebExApiGatewayService.siteFunctions().then
     }; // updateWebExColumnsInRow()
 
     siteRows.updateCSVStatusInRow = function (siteUrl) {

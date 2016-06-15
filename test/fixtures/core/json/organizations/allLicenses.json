@@ -1,0 +1,55 @@
+{
+  "allLicenses": [{
+    "siteUrl": "",
+    "billing": "SubRef-intesub1",
+    "volume": 50,
+    "licenseId": "CF_dcc9177a-0550-45f7-95d7-6c40de0943e3",
+    "offerName": "CF",
+    "label": "Meeting 25 Party",
+    "isTrial": false,
+    "confModel": false,
+    "cmrModel": false,
+    "confLic": [],
+    "cmrLic": []
+  }, {
+    "site": "intesub1.webex.test",
+    "billing": ["SubRef-intesub1"],
+    "confLic": [{
+      "siteUrl": "intesub1.webex.test",
+      "billing": "SubRef-intesub1",
+      "volume": 50,
+      "licenseId": "EE_d86740bf-f2ca-4f9f-92dc-006899dc926f_intesub1.webex.test",
+      "offerName": "EE",
+      "label": "Enterprise Edition 100",
+      "isTrial": false,
+      "confModel": true,
+      "cmrModel": false
+    }],
+    "cmrLic": [{
+      "siteUrl": "intesub1.webex.test",
+      "billing": "SubRef-intesub1",
+      "volume": 8,
+      "licenseId": "CMR_549eabc6-42a6-4af5-a0ea-74b1ba281516_intesub1.webex.test",
+      "offerName": "CMR",
+      "label": "Collaboration Meeting Rooms",
+      "isTrial": false,
+      "confModel": false,
+      "cmrModel": true
+    }]
+  }, {
+    "site": "intesub2.webex.test",
+    "billing": ["SubRef-intesub1"],
+    "confLic": [{
+      "siteUrl": "intesub2.webex.test",
+      "billing": "SubRef-intesub1",
+      "volume": 100,
+      "licenseId": "TC_16eeb18d-5e2d-4108-a744-4dfba20d19b0_intesub2.webex.test",
+      "offerName": "TC",
+      "label": "Training Center 100",
+      "isTrial": false,
+      "confModel": false,
+      "cmrModel": false
+    }],
+    "cmrLic": []
+  }]
+}
