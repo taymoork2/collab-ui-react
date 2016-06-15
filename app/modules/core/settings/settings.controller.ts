@@ -4,6 +4,7 @@
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
+/// <reference path="privacySection/privacySettings.component.ts"/>
 namespace globalsettings {
 
   export class SettingsCtrl {
@@ -28,6 +29,7 @@ namespace globalsettings {
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
         this.initBrandingForNonPartner();
+        this.privacy = new PrivacySetting();
         this.dataPolicy = new DataPolicySetting();
       }
     }
