@@ -1441,19 +1441,17 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Activity Reports",
-    "navHeaderTitle": "Activity Reports",
-    "searchWatermark": "Enter a Room ID",
-    "searchHelp": "Search Help",
-    "searchError": "Your search for '{{roomId}}' returned 0 matches",
+    "browserTabHeaderTitle": "Spark Activity Reports",
+    "navHeaderTitle": "Spark Activity Reports",
+    "heading": "Search Spark Room Activity",
+    "subheading": "Find all relevant data for a room",
+    "searchTip": "Search by Room ID",
+    "searchError": "Your search for '{{roomId}}' returned no matches",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
     },
     "searchingPleaseWait": "Finding information, please wait...",
-    "help": {
-      "title": "Activity Reports Help"
-    },
     "reportStates": {
       "COMPLETED": "Completed",
       "FAILED": "Failed",

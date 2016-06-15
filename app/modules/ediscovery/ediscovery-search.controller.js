@@ -3,6 +3,9 @@
 
   /* @ngInject */
   function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
+    $scope.$on('$viewContentLoaded', function () {
+      angular.element('#searchInput').focus();
+    });
     var vm = this;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
@@ -39,10 +42,6 @@
 
     function getEndDate() {
       return vm.searchCriteria.endDate;
-    }
-
-    function setEndDate(endDate) {
-      vm.searchCriteria.endDate = endDate;
     }
 
     function dateErrors(start, end) {
@@ -209,14 +208,7 @@
     }
   }
 
-  function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {
-    var vm = this;
-    vm.messages = $.isArray(messages) ? messages : [messages];
-    vm.title = title;
-  }
-
   angular
     .module('Ediscovery')
-    .controller('EdiscoverySearchController', EdiscoverySearchController)
-    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
+    .controller('EdiscoverySearchController', EdiscoverySearchController);
 }());
