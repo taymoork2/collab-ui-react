@@ -26,7 +26,7 @@
             <ul class="service-list">
               <li ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
                 <div ng-hide="service.total === 0">
-                  <a ng-click="resourceList.openService(service.serviceId)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+                  <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
                 </div>
               </li>
             </ul>

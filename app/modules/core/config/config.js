@@ -328,6 +328,7 @@
       ],
       'squared-fusion-media': [
         //'mediafusionconnector',
+        'media-service-v2',
         'metrics',
         'reports-metrics',
         'media-service',
@@ -356,6 +357,7 @@
         'devices',
         'fusion',
         //'mediafusionconnector',
+        'media-service-v2',
         'media-service',
         'hurondetails',
         'huronsettings',
