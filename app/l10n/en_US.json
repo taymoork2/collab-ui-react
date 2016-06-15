@@ -1115,7 +1115,9 @@
       "goToHost": "Go to Host",
       "removeButton": "Remove",
       "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud."
+      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud.",
+      "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
+      "actions": "Actions"
     },
     "export": {
       "modalTitle": "User Status Report",

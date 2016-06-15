@@ -2068,6 +2068,29 @@
             params: {
               clusterId: null,
               connectorType: null
+            },
+            resolve: {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('management-connector-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                controller: 'ExpresswayHostDetailsController',
+                controllerAs: 'hostDetailsCtrl'
+              }
+            },
+            data: {
+              displayName: 'Management Connector'
+            },
+            params: {
+              host: null,
+              clusterId: null,
+              connectorType: 'c_mgmt'
             }
           })
           .state('cluster-details.alarm-details', {

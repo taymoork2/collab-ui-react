@@ -53,7 +53,7 @@
     vm.usersOptions = ['Default'];
 
     vm.enabledServices = [];
-    FusionClusterService.getAllConnectorTypesForCluster($stateParams.id)
+    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
       .then(function (allConnectorTypes) {
         vm.enabledServices = allConnectorTypes;
       });
