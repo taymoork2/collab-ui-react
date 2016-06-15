@@ -2787,7 +2787,9 @@
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",
-      "utilizationDescription": "Description text for Percentage utilization should be displayed here."
+      "utilizationDescription": "Description text for Percentage utilization should be displayed here.",
+      "peakutilization": "Peak Utilization",
+      "averageutilization": "Average Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
