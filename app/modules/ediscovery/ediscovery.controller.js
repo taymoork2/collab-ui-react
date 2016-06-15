@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $timeout, $window, $scope, $translate, $modal, EdiscoveryService) {
+  function EdiscoveryController($state, $timeout, $window, $scope, $translate, EdiscoveryService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -28,21 +28,6 @@
 
     //grantNotification();
     pollAvalonReport();
-
-    function openGenericModal(title, messages) {
-      $modal.open({
-        templateUrl: "modules/ediscovery/genericModal.html",
-        controller: 'EdiscoveryGenericModalCtrl as modal',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          messages: function () {
-            return messages;
-          }
-        }
-      });
-    }
 
     function cancable(id) {
       var r = findReportById(id);
@@ -178,14 +163,7 @@
     }
   }
 
-  function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {
-    var vm = this;
-    vm.messages = $.isArray(messages) ? messages : [messages];
-    vm.title = title;
-  }
-
   angular
     .module('Ediscovery')
-    .controller('EdiscoveryController', EdiscoveryController)
-    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
+    .controller('EdiscoveryController', EdiscoveryController);
 }());
