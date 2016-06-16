@@ -1222,7 +1222,8 @@
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
-      "initializing": "Initializing"
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
     },
     "setup": {
       "label": "Connector Management",
