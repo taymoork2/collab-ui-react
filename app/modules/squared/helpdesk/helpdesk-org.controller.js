@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -35,12 +35,23 @@
     vm.allowLaunchAtlas = false;
     vm.openExtendedInformation = openExtendedInformation;
     vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+    vm.adminUsersAvailable = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
+    scrollToTop();
+
+    function scrollToTop() {
+      if ($location && $anchorScroll) {
+        $location.hash('helpdeskPageTop');
+        $anchorScroll();
+      }
+    }
 
     // TODO: Replace by feature toggle !
     function isWhitelistedOrg(orgData) {
@@ -119,6 +130,7 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.cardsAvailable = true;
     }
 
     function findManagedByOrgs(org) {
@@ -151,6 +163,7 @@
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
         });
+        vm.adminUsersAvailable = true;
       }, XhrNotificationService.notify);
     }
 
