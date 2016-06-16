@@ -62,7 +62,7 @@
     }, true);
 
     function init() {
-      return FusionClusterService.getUpgradeSchedule(Authinfo.getOrgId())
+      return FusionClusterService.getUpgradeSchedule(vm.clusterId)
         .then(function (response) {
           vm.data = convertDataForUI(response);
           vm.isAcknowledged = response.isAcknowledged;

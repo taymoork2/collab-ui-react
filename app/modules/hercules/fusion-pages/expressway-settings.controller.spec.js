@@ -22,7 +22,7 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
     $scope.$digest();
   }));
 
-  it('should remove a deactivate service button once a service is deactivated', function () {
+  xit('should remove a deactivate service button once a service is deactivated', function () {
 
     // First verify that the "Deactivate Calendar" button is there when 'c_cal' is provisioned …
     view.find('#deactivateCalendar').click();
