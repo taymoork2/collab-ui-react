@@ -264,12 +264,12 @@
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
         },
-        validEnough: {
+        countWithCare: {
           expression: function () {
-            return vm.trialLicenseCountHasEnough();
+            return vm.careLicenseCountLessThanTotalCount();
           },
           message: function () {
-            return $translate.instant('partnerHomePage.trialLicenseCountNotEnough');
+            return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
           }
         }
       }
@@ -304,7 +304,7 @@
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
-    vm.trialLicenseCountHasEnough = trialLicenseCountHasEnough;
+    vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
     init();
 
     ///////////////////////
@@ -406,7 +406,7 @@
         $viewValue, $modelValue, vm.details.licenseCount);
     }
 
-    function trialLicenseCountHasEnough() {
+    function careLicenseCountLessThanTotalCount() {
       return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
     }
 

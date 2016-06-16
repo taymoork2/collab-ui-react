@@ -414,14 +414,14 @@ describe('Controller: TrialAddCtrl', function () {
       controller.details.licenseCount = 10;
       controller.careTrial.enabled = true;
       controller.careTrial.details.quantity = 20;
-      expect(controller.trialLicenseCountHasEnough()).toBeFalsy();
+      expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
     });
 
     it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
       controller.details.licenseCount = 10;
       controller.careTrial.enabled = false;
       controller.careTrial.details.quantity = 20;
-      expect(controller.trialLicenseCountHasEnough()).toBeTruthy();
+      expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
     });
   });
 });
