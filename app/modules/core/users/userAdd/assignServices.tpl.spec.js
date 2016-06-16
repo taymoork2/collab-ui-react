@@ -32,7 +32,7 @@ describe('assignServices', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($compile, $resource, $rootScope, $templateCache, _$httpBackend_,
+  beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
     _Orgservice_, _Userservice_) {
 

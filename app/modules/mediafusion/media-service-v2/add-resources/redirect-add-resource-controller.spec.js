@@ -5,7 +5,7 @@
     var hostname = "MFA";
     var enteredCluster = "blr-ecp-246";
     var $rootScope, getClusterListDiffered, getGroupsDiffered, addRedirectTargetDiffered, httpBackend;
-    beforeEach(inject(function (_$rootScope_, $httpBackend, $controller, _RedirectTargetService_, _$q_, _XhrNotificationService_, $log, _$modal_) {
+    beforeEach(inject(function (_$rootScope_, $httpBackend, $controller, _$q_, _XhrNotificationService_, $log, _$modal_) {
       $q = _$q_;
       $scope = _$rootScope_.$new();
       httpBackend = $httpBackend;

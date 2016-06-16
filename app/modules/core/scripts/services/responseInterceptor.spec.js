@@ -15,7 +15,7 @@ describe('ResponseInterceptor', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _ResponseInterceptor_) {
+  beforeEach(inject(function (_ResponseInterceptor_) {
     Interceptor = _ResponseInterceptor_;
   }));
 

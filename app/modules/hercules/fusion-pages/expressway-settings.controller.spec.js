@@ -9,7 +9,7 @@ describe('Controller: ExpresswayClusterSettingsController', function () {
 
   beforeEach(inject(function ($rootScope, $templateCache, _$compile_, $q, FusionClusterService) {
     $scope = $rootScope.$new();
-    $compile = $compile;
+    $compile = _$compile_;
     html = $templateCache.get('modules/hercules/fusion-pages/expressway-settings.html');
     $scope.clusterSettings = {
       deactivateService: sinon.stub(),
