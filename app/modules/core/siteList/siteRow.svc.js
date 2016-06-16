@@ -5,7 +5,7 @@
     .service('WebExSiteRowService', WebExSiteRowService);
 
   /* @ngInject */
-  function WebExSiteRowService($log, $interval, $translate, Authinfo, Userservice, FeatureToggleService, WebExUtilsFact, UrlConfig, WebExApiGatewayService, WebExApiGatewayConstsService) {
+  function WebExSiteRowService($interval, $translate, Authinfo, Userservice, FeatureToggleService, WebExUtilsFact, UrlConfig, WebExApiGatewayService, WebExApiGatewayConstsService) {
 
     var siteRows = {};
 
@@ -558,7 +558,7 @@
           siteRows.updateCSVStatusInRow(siteRow.siteUrl);
 
           // start CSV status poll
-          var pollInterval = 30000; // 30sec (15000 is 15sec; 3600000 is 1hr;) 
+          var pollInterval = 30000; // 30sec (15000 is 15sec; 3600000 is 1hr;)
           siteRow.csvPollIntervalObj = $interval(
             function () {
               siteRows.updateCSVStatusInRow(siteRow.siteUrl);

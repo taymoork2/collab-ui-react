@@ -30,7 +30,7 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
+  beforeEach(inject(function (_$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $translate = _$translate_;
@@ -52,7 +52,7 @@ describe('Controller: AASayMessageCtrl', function () {
   }));
 
   describe('create say action', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       controller = $controller('AASayMessageCtrl', {
         $scope: $scope
@@ -119,7 +119,7 @@ describe('Controller: AASayMessageCtrl', function () {
 
   describe('create say action as menu header for phone menu', function () {
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.isMenuHeader = true;
 
@@ -164,7 +164,7 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('read back say action as menu header for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.isMenuHeader = true;
 
@@ -210,7 +210,7 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('create say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
 
@@ -233,7 +233,7 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('edit say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
 
@@ -270,7 +270,7 @@ describe('Controller: AASayMessageCtrl', function () {
   });
 
   describe('read back say action as menu key for phone menu', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.menuKeyIndex = keyIndex;
 

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, XhrNotificationService, $state, $stateParams, $log, $translate, Authinfo) {
+  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, $stateParams, $log) {
 
     var vm = this;
     vm.clusterName = 'default-cluster-name';

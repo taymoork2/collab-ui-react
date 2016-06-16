@@ -6,14 +6,7 @@
   /*@ngInject*/
   function WebExSiteRowCtrl(
     $q,
-    $translate,
-    $log,
     $scope,
-    $interval,
-    Authinfo,
-    Userservice,
-    WebExApiGatewayService,
-    Notification,
     FeatureToggleService,
     WebExSiteRowService
   ) {

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function WebExApiGatewayService(
-    $rootScope,
     $q,
     $window,
     $log,

@@ -6,7 +6,7 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig, HermesQRCodeService) {
+  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HermesQRCodeService) {
 
     var service = {
       loadOtps: loadOtps,

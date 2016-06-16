@@ -6,7 +6,7 @@
     .factory('DeviceService', DeviceService);
 
   /* @ngInject */
-  function DeviceService($rootScope, $http, Authinfo, UserEndpointService, SipEndpointService) {
+  function DeviceService($rootScope, Authinfo, UserEndpointService, SipEndpointService) {
     var currentDevice = {};
 
     var service = {

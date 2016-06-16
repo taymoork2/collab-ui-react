@@ -5,7 +5,7 @@
     .controller('DownloadsCtrl', DownloadsCtrl);
 
   /* @ngInject */
-  function DownloadsCtrl($scope, $location, $http, UrlConfig, Userservice) {
+  function DownloadsCtrl($scope, $location, UrlConfig, Userservice) {
     $scope.email = $location.search().email;
     $scope.tlData = {
       email: $scope.email

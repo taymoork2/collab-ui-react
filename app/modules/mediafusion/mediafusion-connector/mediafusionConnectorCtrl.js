@@ -5,7 +5,7 @@
     .controller('mediafusionConnectorCtrl', mediafusionConnectorCtrl);
 
   /* @ngInject */
-  function mediafusionConnectorCtrl($scope, $state, $interval, $http, $modal, $translate, MediafusionProxy, Authinfo, $log, MediafusionClusterService, MediaServiceDescriptor, Notification) {
+  function mediafusionConnectorCtrl($scope, $state, $translate, MediafusionProxy, Authinfo, $log, MediaServiceDescriptor, Notification) {
     $scope.loading = true;
     $scope.pollHasFailed = false;
     $scope.showInfoPanel = true;

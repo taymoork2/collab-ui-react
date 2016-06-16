@@ -6,7 +6,7 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($http, $q, $translate, Authinfo, CeService, Config, ExternalNumberService, FeatureToggleService, HuntGroupServiceV2, Log, PstnSetupService, UserLineAssociationService, UserLineAssociationCountService) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnSetupService, UserLineAssociationService) {
 
     var customerId = Authinfo.getOrgId();
 

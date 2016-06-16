@@ -5,7 +5,7 @@
     .module('wx2AdminWebClientApp')
     .run(wx2AdminWebClientApp);
 
-  function wx2AdminWebClientApp($location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $window, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState, Localytics, TrackingId, $animate) {
+  function wx2AdminWebClientApp($location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $window, Config, $state, SessionStorage, $translate, LogMetricsService, formlyValidationMessages, PreviousState, Localytics, TrackingId, $animate) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
