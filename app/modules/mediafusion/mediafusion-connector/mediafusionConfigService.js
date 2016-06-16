@@ -5,7 +5,7 @@
     .service('MediafusionConfigService', MediafusionConfigService);
 
   /* @ngInject */
-  function MediafusionConfigService($location, UrlConfig) {
+  function MediafusionConfigService(UrlConfig) {
 
     var baseHerculesUrl = UrlConfig.getHerculesUrl();
     var baseUssUrl = UrlConfig.getUssUrl();

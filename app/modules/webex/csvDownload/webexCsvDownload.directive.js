@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function webexCsvDownloadCtrl(
-    $log,
     $scope,
     WebExCsvDownloadService,
     Notification
@@ -45,10 +44,7 @@
 
   /* @ngInject */
   function webexCsvDownload(
-    $log,
-    $compile,
     $timeout,
-    $window,
     WebExCsvDownloadService
   ) {
 

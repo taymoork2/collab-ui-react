@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
-  function MetricsReportService($http, $translate, $q, Config, Authinfo, Notification, $log, Log, chartColors, UrlConfig) {
+  function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     //var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';

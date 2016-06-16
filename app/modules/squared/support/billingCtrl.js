@@ -5,7 +5,7 @@
     .controller('BillingCtrl', BillingCtrl);
 
   /* @ngInject */
-  function BillingCtrl($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, $translate, PageParam, $stateParams, $window, BillingService, $log) {
+  function BillingCtrl($scope, $filter, Notification, Log, $translate, PageParam, $stateParams, BillingService) {
 
     var enc;
     $scope.orderDetails = [];

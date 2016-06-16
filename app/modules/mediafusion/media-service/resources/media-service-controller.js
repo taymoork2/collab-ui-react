@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService, Notification) {
+  function MediaServiceController(MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService, Notification) {
 
     MediaClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -200,7 +200,7 @@
   }
 
   /* @ngInject */
-  function MediaClusterSettingsController($modal, $stateParams, MediaClusterService, $scope, XhrNotificationService) {
+  function MediaClusterSettingsController($modal, $stateParams, MediaClusterService) {
     var vm = this;
     vm.clusterId = $stateParams.clusterId;
     vm.serviceType = $stateParams.serviceType;

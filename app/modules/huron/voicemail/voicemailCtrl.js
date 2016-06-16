@@ -6,7 +6,7 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, TelephonyInfoService, Notification, LineSettings, DirectoryNumber) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;

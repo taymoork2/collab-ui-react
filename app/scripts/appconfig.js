@@ -186,8 +186,8 @@
 
   angular
     .module('Squared')
-    .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
-      function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 

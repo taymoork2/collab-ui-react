@@ -6,7 +6,7 @@
     .factory('LineSettings', LineSettings);
 
   /* @ngInject */
-  function LineSettings($q, Authinfo, Log, Notification, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
+  function LineSettings($q, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
     var service = {
       addNewLine: addNewLine,
       changeInternalLine: changeInternalLine,

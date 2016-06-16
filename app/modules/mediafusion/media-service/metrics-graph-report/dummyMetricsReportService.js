@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
   /* @ngInject */
-  function DummyMetricsReportService($translate, chartColors) {
+  function DummyMetricsReportService(chartColors) {
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";

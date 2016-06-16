@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage) {
+  function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
