@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('BrandingCtrl', BrandingCtrl);
 
-  function BrandingCtrl($state, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
+  function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
 

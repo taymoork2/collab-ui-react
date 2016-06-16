@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaFusionAnalyticsService, MetricsReportService, MetricsGraphService) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaFusionAnalyticsService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
