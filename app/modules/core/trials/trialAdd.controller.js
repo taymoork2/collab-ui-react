@@ -425,7 +425,6 @@
         $viewValue, $modelValue, vm.details.licenseCount);
     }
 
-
     function careLicenseCountLessThanTotalCount() {
       return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
     }
