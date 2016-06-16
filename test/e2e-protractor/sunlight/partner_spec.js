@@ -14,13 +14,6 @@ describe('Spark Care Partner flow', function () {
       });
     });
 
-    function expectAllOffersChecked() {
-      utils.expectCheckbox(partner.messageTrialCheckbox, true);
-      utils.expectCheckbox(partner.careTrialCheckbox, true);
-      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
-      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
-    }
-
     it('should add a new care trial', function () {
       utils.click(partner.trialFilter);
       utils.click(partner.addButton);
@@ -31,7 +24,11 @@ describe('Spark Care Partner flow', function () {
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsDisplayed(partner.careTrialCheckbox);
 
-      expectAllOffersChecked();
+      // expect all offers checked
+      utils.expectCheckbox(partner.messageTrialCheckbox, true);
+      utils.expectCheckbox(partner.careTrialCheckbox, true);
+      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);

@@ -357,7 +357,7 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Care offer trial', function () {
 
     describe('primary behaviors:', function () {
-      it('Message and Care are enabled by default', function() {
+      it('Message and Care are enabled by default', function () {
         expect(controller.messageTrial.enabled).toBeTruthy();
         expect(controller.careTrial.enabled).toBeTruthy();
       });
