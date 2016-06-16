@@ -368,7 +368,8 @@
         'mediafusion-settings',
         'calendar-service',
         'call-service',
-        'management-service'
+        'management-service',
+        'services-overview'
       ]
     };
 
