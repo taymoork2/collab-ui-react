@@ -4,7 +4,7 @@ describe('Controller: customerAdministratorOverviewCtrl', function () {
   beforeEach(module('Core'));
   var controller, $controller, $scope, $stateParams, $q, CustomerAdministratorService, Notification;
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Authinfo_, _Notification_, _CustomerAdministratorService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;

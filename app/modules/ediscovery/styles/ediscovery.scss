@@ -38,7 +38,7 @@
     margin-right: 2rem;
     padding-top: 4rem;
     padding-bottom: 2rem;
-    min-height: 95vh;
+    min-height: 100vh;
     a:focus {
       outline: none;
       box-shadow: none;
@@ -209,8 +209,12 @@
             padding-top: 1rem;
           }
         }
+        .room-id {
+          color: $gray-base;
+          padding-bottom: 2.0rem;
+        }
         .input-section {
-          padding-top: 0.5rem;
+          padding-bottom: 0.75rem;
           .report-name {
             width: 100%;
           }
@@ -218,29 +222,28 @@
             margin-bottom: 0;
             color: $color-negative-base;
           }
+          h5 {
+            padding-bottom: 0.25rem;
+          }
+          .progressbar-info {
+            padding-top: 0.5rem;
+          }
         }
         .input-section-last {
-          padding-top: 2rem;
+          padding-top: 0.75rem;
           padding-right: 2rem;
-          padding-bottom: 1rem;
-        }
-        .buttons {
-          padding-top: 2rem;
+          padding-bottom: 0.75rem;
         }
         .failure {
           color: $color-negative-base;
         }
       }
       .left-side {
-        padding-left: 1.5rem;
-
+        padding-left: 1rem;
         .logo {
-          font-size: 7rem;
-          height: 8rem;
-          color: $gray-light-1;
-        }
-        .content {
-          padding-left: 0.3rem;
+          color: $gray-base;
+          font-size: 9rem;
+          height: 10rem;
         }
       }
     }

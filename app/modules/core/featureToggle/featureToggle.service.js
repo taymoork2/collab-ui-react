@@ -7,7 +7,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',

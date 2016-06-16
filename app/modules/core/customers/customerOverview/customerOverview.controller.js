@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;

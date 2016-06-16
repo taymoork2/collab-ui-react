@@ -13,7 +13,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
   var Authinfo;
   var UrlConfig;
   var WebExApiGatewayService;
-  var SiteListService;
   var WebExSiteRowService;
   var SiteCSVModalCtrl;
   var Notification;
@@ -31,7 +30,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     _Authinfo_,
     _UrlConfig_,
     _WebExApiGatewayService_,
-    _SiteListService_,
     _WebExSiteRowService_,
     _Notification_,
     _WebExApiGatewayConstsService_
@@ -45,7 +43,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     WebExApiGatewayService = _WebExApiGatewayService_;
-    SiteListService = _SiteListService_;
     WebExSiteRowService = _WebExSiteRowService_;
     Notification = _Notification_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function GroupSettingsControllerV2($stateParams, MediaClusterServiceV2, $log) {
+  function GroupSettingsControllerV2($stateParams, MediaClusterServiceV2) {
     var vm = this;
     vm.config = "";
     vm.cluster = $stateParams.cluster;

@@ -1222,7 +1222,8 @@
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
-      "initializing": "Initializing"
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
     },
     "setup": {
       "label": "Connector Management",
@@ -1447,6 +1448,7 @@
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search by Room ID",
     "searchError": "Your search for '{{roomId}}' returned no matches",
+    "invalidRoomId": "'{{roomId}}' is not a valid Room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1467,7 +1469,7 @@
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
     },
-    "reportTimeout": "Timeout detected. Please cancel the report and try again.",
+    "reportTimeout": "Timeout detected. <br>Please cancel the report and try again.",
     "search": {
       "participants": "Participants",
       "reportName": "Report Name",
@@ -1485,7 +1487,10 @@
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failed to generate report:"
+      "failure": "Report generation failed",
+      "tryAgain": "Try again or contact Customer Support",
+      "reportStatus": "Status",
+      "reportSize": "Total Size"
     },
     "reportsList": {
       "name": "Name",
@@ -1496,6 +1501,10 @@
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
       "noReportsTip": "Click the Search tab to search activities and create reports"
+    },
+    "tabs": {
+      "search": "Search",
+      "reports": "Reports"
     }
   },
   "firstTimeWizard": {
@@ -2237,6 +2246,7 @@
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
+    "careLicenseCountExceedsTotalCount": "Care license requested is more than the total license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -4205,6 +4215,7 @@
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",
+    "none": "None",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -4311,8 +4322,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
     "view": "View"
   },
   "activation": {
@@ -4411,8 +4423,8 @@
   },
   "servicesOverview": {
     "title": "Services",
-    "cloudServices": "Cloud services",
-    "hybridServices": "Hybrid services",
+    "cloudServices": "Cloud Services",
+    "hybridServices": "Hybrid Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
     "cards": {

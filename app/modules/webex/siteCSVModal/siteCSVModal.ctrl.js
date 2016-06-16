@@ -6,13 +6,11 @@
   /*@ngInject*/
   function SiteCSVModalCtrl(
     $scope,
-    $state,
     $stateParams,
     $translate,
     $log,
     Notification,
     WebExApiGatewayService,
-    SiteListService,
     WebExSiteRowService,
     Authinfo
   ) {

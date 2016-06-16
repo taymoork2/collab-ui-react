@@ -186,8 +186,8 @@
 
   angular
     .module('Squared')
-    .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
-      function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -958,13 +958,6 @@
               currentOrg: {}
             }
           })
-          /**.state('site-list', {
-            url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteListCtrl',
-            controllerAs: 'siteList',
-            parent: 'main'
-          })**/
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',

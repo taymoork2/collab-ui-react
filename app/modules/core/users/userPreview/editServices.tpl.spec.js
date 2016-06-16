@@ -18,7 +18,7 @@ describe('Template: editServices', function () {
   beforeEach(compileView);
   beforeEach(initSpies);
 
-  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
+  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _CsvDownloadService_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
     $templateCache = _$templateCache_;

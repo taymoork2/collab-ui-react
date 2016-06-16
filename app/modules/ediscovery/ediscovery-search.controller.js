@@ -10,11 +10,11 @@
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
-    vm.progressType = progressType;
     vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
+    vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.downloadReport = EdiscoveryService.downloadReport;
     vm.createReportInProgress = false;
     vm.searchInProgress = false;
@@ -99,9 +99,15 @@
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
-          vm.error = $translate.instant("ediscovery.searchError", {
-            roomId: roomId
-          });
+          if (err.status === 400) {
+            vm.error = $translate.instant("ediscovery.invalidRoomId", {
+              roomId: roomId
+            });
+          } else {
+            vm.error = $translate.instant("ediscovery.searchError", {
+              roomId: roomId
+            });
+          }
         })
         .finally(function () {
           vm.searchInProgress = false;
@@ -173,19 +179,9 @@
         });
     }
 
-    function progressType() {
-      if (vm.report) {
-        if (vm.report.state === 'FAILED' || vm.report.state === 'ABORTED') {
-          return 'danger';
-        } else {
-          return 'success';
-        }
-      }
-    }
-
     function reportProgress() {
       if (vm.report && (vm.report.state === 'RUNNING' || vm.report.state === 'COMPLETED')) {
-        return vm.report.progress;
+        return vm.report.progress || 0;
       } else {
         return 0;
       }

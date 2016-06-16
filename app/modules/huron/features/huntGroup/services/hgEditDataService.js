@@ -14,7 +14,7 @@
   /* @ngInject */
 
   function HuntGroupEditDataService(HuntGroupService, HuntGroupMemberDataService,
-    HuntGroupFallbackDataService, TelephoneNumberService, Notification, $q) {
+    HuntGroupFallbackDataService, TelephoneNumberService) {
 
     var pristineHGData = {};
 

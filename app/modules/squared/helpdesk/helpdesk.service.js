@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, USSService2, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {

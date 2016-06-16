@@ -5,7 +5,7 @@
     .controller('UserInfoController', UserInfoController);
 
   /* @ngInject */
-  function UserInfoController($scope, Authinfo, Auth, Log, Config, $window, $location, $state, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
+  function UserInfoController($scope, Authinfo, Auth, Log, Config, $window, $state, Userservice, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();

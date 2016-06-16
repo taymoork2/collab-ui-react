@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing, FeatureToggleService) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
 
     var broadcastEvent = "telephonyInfoUpdated";
 

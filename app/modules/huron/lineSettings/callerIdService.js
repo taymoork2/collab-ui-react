@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
-    SharedLineInfoService, UserEndpointService, SipEndpointDirectoryNumberService) {
+    UserEndpointService, SipEndpointDirectoryNumberService) {
 
     var callerIdOptions = [];
     var userDnList = [];

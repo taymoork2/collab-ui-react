@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice, UrlConfig) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
