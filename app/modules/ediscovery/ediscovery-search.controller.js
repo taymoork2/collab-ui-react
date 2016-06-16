@@ -35,7 +35,7 @@
       vm.searchCriteria.roomId = $stateParams.roomId;
       searchForRoom($stateParams.roomId);
     }
-    
+
     function getStartDate() {
       return vm.searchCriteria.startDate;
     }
