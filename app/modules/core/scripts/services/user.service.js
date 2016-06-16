@@ -22,7 +22,8 @@
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
       resendInvitation: resendInvitation,
-      sendSparkWelcomeEmail: sendSparkWelcomeEmail
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
+      isInvitePending: isInvitePending
     };
 
     return service;
@@ -442,6 +443,10 @@
 
     function isHuronUser(allEntitlements) {
       return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
+    }
+
+    function isInvitePending(user) {
+      return _.includes(user.accountStatus, 'pending');
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
