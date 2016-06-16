@@ -281,6 +281,14 @@ describe('Controller: TrialAddCtrl', function () {
         expect(TrialContextService.addService).toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
       });
+
+      it('should not be able to proceed if no other trial services are checked', function () {
+        // uncheck all services except for Context Service
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'contextTrial';
+        });
+        expect(controller.hasTrial()).toBeFalsy();
+      });
     });
 
     describe('without context service checked', function () {
@@ -293,6 +301,14 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should not enable context service', function () {
         expect(TrialContextService.addService).not.toHaveBeenCalled();
+      });
+
+      it('should be able to proceed with trial services enabled', function () {
+        // uncheck Context Service and all other services except for Message
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'messageTrial';
+        });
+        expect(controller.hasTrial()).toBeTruthy();
       });
     });
   });

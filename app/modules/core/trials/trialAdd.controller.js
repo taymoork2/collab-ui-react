@@ -436,8 +436,10 @@
     }
 
     function hasTrial() {
-      return _.some(vm.trialData.trials, {
-        enabled: true
+      // Context is a non-trial service. We don't want the Next/Start
+      // Trial button to be enabled if only Context is checked
+      return _.some(vm.trialData.trials, function (service) {
+        return service.enabled && service.type !== Config.offerTypes.context;
       });
     }
 
