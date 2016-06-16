@@ -12,7 +12,6 @@
     $log,
     Notification,
     WebExApiGatewayService,
-    SiteListService,
     WebExSiteRowService
   ) {
 

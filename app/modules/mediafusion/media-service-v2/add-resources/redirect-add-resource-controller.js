@@ -89,7 +89,7 @@
 
     function redirectPopUpAndClose(hostName, enteredCluster, clusterId) {
       $modalInstance.close();
-      vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?groupName=" + encodeURIComponent(enteredCluster) + "&clusterId=" + encodeURIComponent(clusterId));
+      vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?clusterName=" + encodeURIComponent(enteredCluster) + "&clusterId=" + encodeURIComponent(clusterId));
       if (!vm.popup || vm.popup.closed || typeof vm.popup.closed == 'undefined') {
         $log.log('popup.closed');
       }

@@ -12,7 +12,6 @@
     $interval,
     Authinfo,
     Userservice,
-    SiteListService,
     WebExApiGatewayService,
     Notification,
     FeatureToggleService,
