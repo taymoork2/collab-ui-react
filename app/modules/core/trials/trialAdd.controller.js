@@ -252,7 +252,7 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
         secondaryLabel: $translate.instant('trials.users'),
       },
@@ -275,7 +275,7 @@
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !vm.licenseCountFields.enabled || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
