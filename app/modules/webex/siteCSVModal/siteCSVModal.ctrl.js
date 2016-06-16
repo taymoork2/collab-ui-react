@@ -11,7 +11,8 @@
     $log,
     Notification,
     WebExApiGatewayService,
-    WebExSiteRowService
+    WebExSiteRowService,
+    Authinfo
   ) {
 
     var funcName = "SiteCSVModalCtrl()";
@@ -97,7 +98,8 @@
           displayResult(
             false,
             false,
-            'siteList.exportRejectedToast'
+            'siteList.exportRejectedToast',
+            response.errId
           );
         } // catchError()
       ); // WebExApiGatewayService.csvExport()
@@ -122,7 +124,8 @@
         displayResult(
           false,
           false,
-          'siteList.importInvalidFileToast'
+          'siteList.importInvalidFileToast',
+          0
         );
       } else {
         //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
@@ -131,7 +134,8 @@
             displayResult(
               true,
               true,
-              'siteList.importStartedToast'
+              'siteList.importStartedToast',
+              0
             );
           },
 
@@ -140,7 +144,8 @@
             displayResult(
               false,
               true,
-              'siteList.csvRejectedToast-' + response.errorCode
+              'siteList.csvRejectedToast-' + response.errorCode,
+              response.errorCode
             );
           }
         ).catch(
@@ -148,7 +153,8 @@
             displayResult(
               false,
               false,
-              'siteList.importRejectedToast'
+              'siteList.importRejectedToast',
+              response.errorCode
             );
           }
         ); // WebExApiGatewayService.csvImport()
@@ -158,7 +164,8 @@
     function displayResult(
       isSuccess,
       closeModal,
-      resultMsg
+      resultMsg,
+      errId
     ) {
 
       var funcName = "displayResult()";
@@ -170,7 +177,12 @@
       if (isSuccess) {
         Notification.success($translate.instant(resultMsg));
       } else {
-        Notification.error($translate.instant(resultMsg));
+        //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
+        if (errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+          Notification.notifyReadOnly(errId);
+        } else {
+          Notification.error($translate.instant(resultMsg));
+        }
       }
 
       if (
