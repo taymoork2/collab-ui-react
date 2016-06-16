@@ -1447,6 +1447,7 @@
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search by Room ID",
     "searchError": "Your search for '{{roomId}}' returned no matches",
+    "invalidRoomId": "'{{roomId}}' is not a valid Room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1467,7 +1468,7 @@
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
     },
-    "reportTimeout": "Timeout detected. Please cancel the report and try again.",
+    "reportTimeout": "Timeout detected. <br>Please cancel the report and try again.",
     "search": {
       "participants": "Participants",
       "reportName": "Report Name",
@@ -1485,7 +1486,10 @@
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failed to generate report:"
+      "failure": "Report generation failed",
+      "tryAgain": "Try again or contact Customer Support",
+      "reportStatus": "Status",
+      "reportSize": "Total Size"
     },
     "reportsList": {
       "name": "Name",
@@ -1496,6 +1500,10 @@
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
       "noReportsTip": "Click the Search tab to search activities and create reports"
+    },
+    "tabs": {
+      "search": "Search",
+      "reports": "Reports"
     }
   },
   "firstTimeWizard": {
