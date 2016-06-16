@@ -83,7 +83,7 @@ describe('Controller: HelpdeskOrgController', function () {
       httpBackend.verifyNoOutstandingExpectation();
     });
 
-    it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function() {
+    it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       HelpdeskService.getOrg.returns(q.resolve({
         "id": "whatever",
