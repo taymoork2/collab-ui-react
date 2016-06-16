@@ -6,7 +6,7 @@ describe('MediaConfigServiceV2', function () {
   var Service;
   var rootPath;
 
-  beforeEach(inject(function ($injector, _MediaConfigServiceV2_, UrlConfig) {
+  beforeEach(inject(function (_MediaConfigServiceV2_, UrlConfig) {
     Service = _MediaConfigServiceV2_;
     rootPath = UrlConfig.getHerculesUrl();
   }));

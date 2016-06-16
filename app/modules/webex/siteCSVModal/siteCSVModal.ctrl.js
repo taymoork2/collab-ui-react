@@ -6,7 +6,6 @@
   /*@ngInject*/
   function SiteCSVModalCtrl(
     $scope,
-    $state,
     $stateParams,
     $translate,
     $log,

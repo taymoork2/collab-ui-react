@@ -32,7 +32,7 @@ describe('Service: SharedLineInfoService', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, $resource, _SharedLineInfoService_, _HuronConfig_) {
+      function (_$httpBackend_, _$rootScope_, _SharedLineInfoService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         SharedLineInfoService = _SharedLineInfoService_;

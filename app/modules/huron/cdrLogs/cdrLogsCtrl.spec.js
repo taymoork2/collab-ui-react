@@ -9,7 +9,7 @@ describe('Controller: CdrLogsCtrl', function () {
   var statusResponse = ['primary', 'danger'];
   var dateFormat = 'YYYY-MM-DD';
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$state_, _$translate_, _$timeout_, _Config_, _formlyConfig_, _CdrService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$state_, _$translate_, _$timeout_, _Config_, _formlyConfig_, _Notification_) {
     var $scope = $rootScope.$new();
     state = _$state_;
     translate = _$translate_;

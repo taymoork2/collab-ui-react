@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusCarrierService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();

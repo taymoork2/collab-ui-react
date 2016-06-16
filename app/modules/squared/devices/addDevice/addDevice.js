@@ -5,7 +5,7 @@
     .controller('AddDeviceController',
 
       /* @ngInject */
-      function ($scope, $q, $state, $modalInstance, Notification, CsdmCodeService, XhrNotificationService, $timeout, activationCode) {
+      function ($scope, $q, $state, $modalInstance, CsdmCodeService, XhrNotificationService, $timeout, activationCode) {
         var adc = this;
 
         var formatActivationCode = function (activationCode) {

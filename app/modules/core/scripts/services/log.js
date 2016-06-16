@@ -7,7 +7,7 @@
     .service('Log', Log);
 
   /* @ngInject */
-  function Log($rootScope, $location, Config) {
+  function Log($rootScope, Config) {
     var Log = function (type, msg, data) {
       if (enableLogging()) {
         if (!type) type = 'log';

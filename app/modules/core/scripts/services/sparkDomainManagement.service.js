@@ -5,7 +5,7 @@
     .service('SparkDomainManagementService', sparkDomainManagementService);
 
   /* @ngInject */
-  function sparkDomainManagementService($http, $q, Config, Authinfo, UrlConfig) {
+  function sparkDomainManagementService($http, $q, Authinfo, UrlConfig) {
     var sparksUrl = UrlConfig.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
     var service = {
       checkDomainAvailability: checkDomainAvailability,

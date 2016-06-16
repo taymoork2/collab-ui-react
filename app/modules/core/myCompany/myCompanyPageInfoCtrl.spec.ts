@@ -8,7 +8,7 @@ namespace myCompanyPage {
     describe('loading partners', ()=> {
 
       let listpartnerCall;
-      beforeEach(inject(($injector, $controller)=> {
+      beforeEach(inject(($controller)=> {
         listpartnerCall = {};
         ctrl = $controller('MyCompanyPageInfoCtrl', {
           UserListService: {

@@ -6,7 +6,7 @@
     .controller('TelephonyInfoCtrl', TelephonyInfoCtrl);
 
   /* @ngInject */
-  function TelephonyInfoCtrl($scope, $state, TelephonyInfoService, DeviceService, Config) {
+  function TelephonyInfoCtrl($scope, TelephonyInfoService, Config) {
     var vm = this;
     vm.showDirectoryNumberPanel = showDirectoryNumberPanel;
     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();

@@ -216,7 +216,7 @@ describe('Service: WebExSiteRowService', function () {
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
 
-  beforeEach(inject(function (_$rootScope_, _$log_, _$q_, $interval, $translate, _Authinfo_, _Userservice_, _FeatureToggleService_, _WebExUtilsFact_, _UrlConfig_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
 
     Authinfo = _Authinfo_;
     WebExSiteRowService = _WebExSiteRowService_;
