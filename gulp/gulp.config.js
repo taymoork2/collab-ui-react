@@ -190,6 +190,7 @@ module.exports = function () {
         node_modules + '/d3/d3.js',
         node_modules + '/jquery-csv/src/jquery.csv.js',
         node_modules + '/angular-timer/dist/angular-timer.js',
+        node_modules + '/angular-timer/bower_components/humanize-duration/humanize-duration.js',
         node_modules + '/angular-libphonenumber/dist/libphonenumber.full.js',
         node_modules + '/angular-libphonenumber/dist/angular-libphonenumber.js',
         node_modules + '/angularjs-toaster/toaster.js',
