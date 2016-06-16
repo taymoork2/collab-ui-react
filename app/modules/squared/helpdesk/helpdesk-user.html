@@ -153,7 +153,14 @@
 
     </div>
 
-    <div class="columns large-8 medium-7 card-panel" ng-include src="'modules/squared/helpdesk/user-cards.html'"></div>
+    <div ng-if="helpdeskUserCtrl.cardsAvailable"
+         class="columns large-8 medium-7 card-panel"
+         ng-include src="'modules/squared/helpdesk/user-cards.html'">
+    </div>
+    <div ng-if="!helpdeskUserCtrl.cardsAvailable"
+         class="columns large-8 medium-7 card-panel">
+      <div cs-loader class="helpdesk-cards-loading"></div>
+    </div>
 
   </div>
 
