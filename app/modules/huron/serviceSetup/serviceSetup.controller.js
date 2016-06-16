@@ -1075,10 +1075,15 @@
       function updateTimezone(timeZone) {
         if (!timeZone) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
-          return $q.reject('No timeZone set');
+          return $q.reject('No timeZone Id set');
         }
 
-        return ServiceSetup.updateVoicemailTimezone(timeZone.id, vm.objectId)
+        if (!angular.isString(timeZone)) {
+          errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
+          return $q.reject('TimeZone Id is not a String');
+        }
+
+        return ServiceSetup.updateVoicemailTimezone(timeZone, vm.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);

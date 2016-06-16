@@ -128,7 +128,7 @@ describe('Service: ServiceSetup', function () {
 
   describe('updateVoicemailTimezone', function () {
     var usertemplate = [{
-      timeZone: '20',
+      timeZoneName: 'America/Chicago',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
     beforeEach(function () {
@@ -136,14 +136,14 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should update timezone', function () {
-      ServiceSetup.updateVoicemailTimezone(usertemplate.timeZone, usertemplate.objectId);
+      ServiceSetup.updateVoicemailTimezone(usertemplate.timeZoneName, usertemplate.objectId);
       $httpBackend.flush();
     });
   });
 
   describe('listVoicemailTimezone', function () {
     var usertemplate = [{
-      timeZone: '20',
+      timeZoneName: 'America/Chicago',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
     beforeEach(function () {

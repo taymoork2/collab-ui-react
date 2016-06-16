@@ -72,7 +72,7 @@
           customerId: Authinfo.getOrgId(),
           objectId: objectId
         }, {
-          timeZone: timeZone
+          timeZoneName: timeZone
         }).$promise;
       },
 

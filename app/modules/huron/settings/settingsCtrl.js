@@ -808,7 +808,7 @@
       }
 
       if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
-        siteData.timeZone = vm.model.site.timeZone;
+        siteData.timeZone = vm.model.site.timeZone.id;
       }
 
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {

@@ -791,15 +791,18 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     it('should update timezone when timezone selection changes and feature toggle is ON', function () {
-      controller.model.site.timeZone = {
+      var newTimeZone = {
         "id": "America/Anchorage",
         "label": "America/Anchorage"
       };
+      controller.model.site.timeZone = newTimeZone;
       controller.save();
       $scope.$apply();
 
-      expect(ServiceSetup.updateSite).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
+        timeZone: newTimeZone.id
+      });
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(newTimeZone.id, jasmine.any(String));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 

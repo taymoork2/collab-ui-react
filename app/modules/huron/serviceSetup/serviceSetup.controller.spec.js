@@ -748,4 +748,55 @@ describe('Controller: ServiceSetup', function () {
     });
   });
 
+  describe('initnext.updateTimezone', function () {
+
+    it('should notify error if timeZone Id is not a string', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        id: 3
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('should pass timeZone Id to ServiceSetup.updateVoicemailTimezone', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        id: 'America/Chicago'
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(controller.model.site.timeZone.id, usertemplate[0].objectId);
+    });
+  });
 });
