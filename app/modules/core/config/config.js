@@ -355,7 +355,8 @@
         'cluster-settings-page',
         'calendar-service',
         'call-service',
-        'management-service'
+        'management-service',
+        'services-overview'
       ]
     };
 
