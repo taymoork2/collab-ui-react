@@ -1,0 +1,19 @@
+<cs-sp-section class="customer-admin-overview">
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.adminManagement"></span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature">
+        <a ui-sref="customer-overview.customerAdministrators">
+          <span class="feature-name" translate="customerPage.administrators"></span>
+          <span class="feature-status">
+            <span ng-if="!customerAdminOverview.loading">{{customerAdminOverview.count}}</span>
+              <i class="icon icon-spinner" ng-if="customerAdminOverview.loading"></i>
+            </span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</cs-sp-section>

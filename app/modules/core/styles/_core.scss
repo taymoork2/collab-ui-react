@@ -1,13 +1,14 @@
 /*************************************
  *      Atlas Core Style imports
  ************************************/
+@import '../components/setting-section';
 @import '../convertUsers/convertUsersModal';
 @import '../groups/groupList/group-list';
 @import '../groups/groupPreview/group-preview';
 @import '../customers/customerList/customer-list';
 @import '../customers/customerOverview/customer-overview';
+@import '../customers/customerAdministrators/customer-admin';
 @import '../customerReports/customer-reports';
-@import '../landingPage/landing-page';
 @import '../login/login';
 @import '../organizations/organizationOverview/organization-overview';
 @import '../organizations/organizationList/organization-list';
@@ -30,7 +31,8 @@
 @import '../convertUsers/convertUsersModal';
 @import '../leaderBoard/leaderBoard';
 @import '../partnerProfile/partnerProfile';
-@import '../partnerProfile/brandingUpload';
+@import '../partnerProfile/branding/branding';
+@import '../partnerProfile/branding/brandingUpload';
 @import '../overview/overview';
 @import '../siteList/site-list';
 @import '../domainManagement/domainManagement';

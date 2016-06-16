@@ -51,95 +51,12 @@
               <span class="rep-info">{{partner.userName}}</span>
             </div>
         </div>
-
-        <ng-form name="brandingForm" isolate-form="partnerProfileForm">
-          <!-- branding logo upload -->
-          <div ng-if="isPartner || allowCustomerLogos">
-            <div id="brandingLogoPanel" class="small-12 columns optional-row">
-              <h4 translate="partnerProfile.brandingTitle"></h4>
-              <div class="form-spacing form-group">
-                <span ng-if="!isPartner"  translate="customerProfile.brandingInfo"></span>
-                <span ng-if="isPartner"  translate="partnerProfile.brandingInfo"></span>
-              </div>
-            </div>
-            <div class="row form-spacing collapse-both">
-              <div class="small-12 columns form-group">
-                <div class="cs-radio-group">
-                  <div class="cs-input-group cs-input-radio">
-                    <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
-                    <label for="partnerLogoRadio">
-                      <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-                      <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
-                    </label>
-                  </div>
-
-                  <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
-                    <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
-                    <label for="customLogoRadio" class="radio-input-spacing">
-                      <div class="radio-input-flex">
-                        <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
-                          <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
-                          <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
-                          <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
-                        </div>
-                        <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
-                          <span translate="partnerProfile.chooseFile"></span>
-                        </button>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row form-spacing" ng-if="isPartner">
-              <div class="small-12 columns cs-checkbox-group">
-                <input 
-                  type="checkbox"
-                  id="allowCustomerLogo"
-                  name="allowCustomerLogo"
-                  ng-model="allowCustomerLogos"
-                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
-                  <label for="allowCustomerLogo" translate="partnerProfile.allowCustomerLogo"></label>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div ng-if="showClientVersions">
-              <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
-                <div class="small-12 columns">
-                  <div class="row collapse" ng-if="isPartner">
-                    <p>
-                      <h4 translate="partnerProfile.webexClientVersion"></h4>
-                      <span class="badge"></span>
-                    </p>
-                    <cs-select
-                      id="webex_client_version_drop_down"
-                      ng-model="wbxclientversionselected"
-                      options="wbxclientversions"
-                      placeholder="wbxclientversionplaceholder"
-                      on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
-                      is-disabled="useLatestWbxVersion">
-                    </cs-select>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-spacing" ng-if="isPartner">
-                <div class="small-12 columns cs-checkbox-group">
-                  <input
-                    cs-input
-                    type="checkbox"
-                    id="useLatestWbxVersion"
-                    name="useLatestWbxVersion"
-                    ng-model="useLatestWbxVersion"
-                    ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
-                    cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}"
-                    cs-input-help-text="{{::'partnerProfile.WbxClientVersionOnlyOnNewSites' | translate}}">
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-form>
+        <div id="brandingTpl" cr-feature-toggle feature-show="atlas-branding-wording-change">
+          <div ng-include="'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'" ng-controller="BrandingCtrl as bctrl"></div>
+        </div>
+        <div id="brandingTpl" cr-feature-toggle feature-hide="atlas-branding-wording-change">
+          <div ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'" ng-controller="BrandingCtrl as bctrl"></div>
+        </div>
 
         <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
           <h4 translate="customerProfile.crashReportTitle"></h4>
@@ -158,6 +75,8 @@
         </div>
       </div>
 
+
+      <!-- this is moved any changes must go to the support section of global settings-->
       <div class="partner-profile columns small-12 large-6 xlarge-5 end">
         <!-- support title / description -->
         <div class="form-section" id="supportTitleAndDescPanel">
@@ -194,7 +113,6 @@
             </label>
           </div>
         </div>
-
         <div class="cs-radio-group" id="helpPanel">
           <h4 translate="partnerProfile.helpFaq"></h4>
           <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">

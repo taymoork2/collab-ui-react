@@ -539,6 +539,8 @@
         var funcName = "getUserWebExEntitlementFromAtlas";
         var logMsg = "";
 
+        var _self = this;
+
         Orgservice.getValidLicenses().then(
           function getOrgLicensesSuccess(orgLicenses) {
             var funcName = "getOrgLicensesSuccess()";
@@ -547,6 +549,8 @@
             logMsg = funcName + ": " + "\n" +
               "orgLicenses=" + JSON.stringify(orgLicenses);
             // $log.log(logMsg);
+
+            _self.getUserSettingsFromWebEx();
 
             var currSite = $stateParams.site;
             var userName = $stateParams.currentUser.userName;
@@ -628,6 +632,8 @@
             logMsg = funcName + ": " + "\n" +
               "response=" + JSON.stringify(response);
             $log.log(logMsg);
+
+            _self.getUserSettingsFromWebEx();
           } // getOrgLicensesError()
         ); // Orgservice.getValidLicenses().then()
       }, // getUserWebExEntitlementFromAtlas()
@@ -755,7 +761,7 @@
 
               _self.updateCenterLicenseEntitlements();
 
-              // var validLicenseEntitlements = true;
+              // var isValidLicenseEntitlement = true;
               var isValidLicenseEntitlement = (
                 (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
                 (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
@@ -764,6 +770,10 @@
               ) ? true : false;
 
               if (!isValidLicenseEntitlement) {
+                logMsg = funcName + "\n" +
+                  "entitlement mismatch detected";
+                $log.log(logMsg);
+
                 _self.setLoadingErrorDisplay(
                   "defaultDbMismatchError",
                   false,
@@ -1159,16 +1169,20 @@
         WebexUserSettingsSvc.disableCancel = false;
         WebexUserSettingsSvc.disableCancel2 = false;
 
-        Notification.notify([notificationMsg], updateStatus);
+        //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
+        if (resultJson.errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+          Notification.notifyReadOnly(resultJson.errId);
+        } else {
+          Notification.notify([notificationMsg], updateStatus);
+        }
       }, // processUpdateResponse()
 
       processNoUpdateResponse: function (result) {
         var funcName = "processNoUpdateResponse()";
         var logMsg = "";
 
-        logMsg = funcName + ": " + "result=" + "\n" +
-          result;
-        // $log.log(logMsg);
+        logMsg = funcName + ": " + "result=" + "\n" + result;
+        $log.log(logMsg);
 
         loading.saveBtn = false;
         loading.saveBtn2 = false;

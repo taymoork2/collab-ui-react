@@ -20,6 +20,7 @@
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
+      atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasTrialConversion: 'atlas-trial-conversion',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
@@ -126,7 +127,9 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
+      csdmTz: 'csdm-timezone',
       readonlyAdmin: 'atlas-read-only-admin',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'
@@ -169,7 +172,18 @@
       features: features
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);

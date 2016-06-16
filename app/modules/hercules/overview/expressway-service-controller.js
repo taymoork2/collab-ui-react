@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils, FeatureToggleService) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, FusionUtils, FeatureToggleService, $stateParams) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -53,6 +53,9 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
+        if ($stateParams.clusterId !== null) {
+          showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
+        }
       },
       columnDefs: [{
         field: 'name',
@@ -121,6 +124,7 @@
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
         templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;
@@ -155,6 +159,7 @@
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
+        type: 'small',
         resolve: {
           servicesId: function () {
             return vm.servicesId;
@@ -169,15 +174,25 @@
     function openAddResourceModal() {
       if (vm.featureToggled) {
         $modal.open({
+          resolve: {
+            connectorType: function () {
+              return vm.connectorType;
+            },
+            servicesId: function () {
+              return vm.servicesId;
+            }
+          },
           controller: 'AddResourceController',
           controllerAs: 'addResource',
-          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html'
+          templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+          type: 'small'
         });
       } else {
         $modal.open({
           controller: 'RedirectTargetController',
           controllerAs: 'redirectTarget',
-          templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+          templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+          type: 'small'
         });
       }
     }

@@ -3,8 +3,7 @@
 describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
-  var $rootScope, $scope, $q;
-  var FeatureToggleService;
+  var $rootScope, $scope;
 
   var aaUiModel = {
     openHours: {}
@@ -19,23 +18,53 @@ describe('Controller: AABuilderActionsCtrl', function () {
     actions: ['testAction']
   }];
 
+  var sortedOptions = [{
+    "title": 'autoAttendant.actionPhoneMenu',
+  }, {
+    "title": 'autoAttendant.actionRouteCall',
+  }, {
+    "title": 'autoAttendant.actionSayMessage',
+  }, {
+    "title": 'autoAttendant.phoneMenuDialExt',
+  }];
+
+  var testOptionsWithPhoneMenu = [{
+    title: 'Phone Menu',
+    controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
+    url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
+    hint: 'testHint',
+    help: 'testHelp',
+    actions: ['runActionsOnInput']
+  }];
+
+  var testOptionsWithDialByExt = [{
+    title: 'Dial By phoneMenuDialExt',
+    controller: 'AADialByExtCtrl as aaDialByExtCtrl',
+    url: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
+    hint: 'testHint',
+    help: 'testHelp',
+    type: 2,
+    actions: ['runActionsOnInput']
+  }];
+
+  function type(obj) {
+    var text = obj.constructor.toString();
+    return text.match(/function (.*)\(/)[1];
+  }
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
-    $q = _$q_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
 
-    FeatureToggleService = _FeatureToggleService_;
-
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
@@ -67,9 +96,31 @@ describe('Controller: AABuilderActionsCtrl', function () {
   });
 
   describe('selectOption', function () {
-    it('enables save when a option is selected', function () {
+    it('enables save and replaces CeMenuEntry with CeMenu when phone-menu option is selected', function () {
+      controller.option = testOptionsWithPhoneMenu[0];
+      controller.schedule = 'openHours';
+      controller.index = 0;
+      controller.ui['openHours'] = AutoAttendantCeMenuModelService.newCeMenu();
+      controller.ui['openHours'].addEntryAt(controller.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
       expect(AACommonService.isFormDirty()).toBeFalsy();
       controller.selectOption();
+      var _menuEntry = controller.ui['openHours'].getEntryAt(controller.index);
+      expect(type(_menuEntry)).toBe('CeMenu');
+      expect(AACommonService.isFormDirty()).toBeTruthy();
+    });
+
+    it('enables save and retains CeMenuEntry when dial-by-ext option is selected', function () {
+      controller.option = testOptionsWithDialByExt[0];
+      controller.schedule = 'openHours';
+      controller.index = 0;
+      controller.ui['openHours'] = AutoAttendantCeMenuModelService.newCeMenu();
+      controller.ui['openHours'].addEntryAt(controller.index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      expect(AACommonService.isFormDirty()).toBeFalsy();
+      controller.selectOption();
+      var _menuEntry = controller.ui['openHours'].getEntryAt(controller.index);
+      expect(type(_menuEntry)).toBe('CeMenuEntry');
       expect(AACommonService.isFormDirty()).toBeTruthy();
     });
   });
@@ -124,6 +175,18 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
       expect(aaUiModel['openHours']['entries'][0].getKey()).toEqual('0');
       expect(aaUiModel['openHours']['entries'][1].getKey()).toEqual('1');
+    });
+  });
+
+  /**
+   * title value is not read from properties file in unit test cases. So it will treat the key provided into vm.options for title
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].title).toEqual(sortedOptions[i].title);
+      }
     });
   });
 

@@ -2,28 +2,55 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, $q, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
-    function deferredResolve(resolved) {
-      var deferred = $q.defer();
-      deferred.resolve(resolved);
-      return deferred.promise;
+    function extractReports(res) {
+      var reports = res.data.reports;
+      _.each(reports, function (report) {
+        detectAndSetReportTimeout(report);
+      });
+      return reports;
     }
 
-    function extractReports(res) {
-      return res.data.reports;
+    function extractReport(res) {
+      return detectAndSetReportTimeout(res.data);
+    }
+
+    function detectAndSetReportTimeout(report) {
+      if (report) {
+        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
+          .getTime() > 180000;
+        if (report.state === 'FAILED' && !report.failureReason) {
+          report.failureReason = 'UNEXPECTED_FAILURE';
+        }
+      }
+      return report;
     }
 
     function extractData(res) {
       return res.data;
     }
 
+    function getAvalonServiceUrl() {
+      //TODO: Cache pr org
+      var orgId = Authinfo.getOrgId();
+      return $http
+        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
+        .then(extractData);
+    }
+
+    function getAvalonRoomInfo(url) {
+      return $http
+        .get(url)
+        .then(extractData);
+    }
+
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractData)
+        .then(extractReport)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
           //console.log("error getReports: " + data)
@@ -41,18 +68,21 @@
         });
     }
 
-    function createReport(displayName) {
+    function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
       //  TODO: Implement proper handling of error when final API is in place
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
-          "displayName": displayName
+          "displayName": displayName,
+          "roomQuery": {
+            "startDate": sd,
+            "endDate": ed,
+            "roomId": roomId
+          }
         })
         .then(extractData);
-    }
-
-    function reportsApiUrl(orgId) {
-      return urlBase + 'compliance/organizations/' + orgId + '/reports';
     }
 
     // TODO: Implement proper handling of error when final API is in place
@@ -100,14 +130,55 @@
         });
     }
 
+    function setEntitledForCompliance(orgId, userId, entitled) {
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
+        entitledForCompliance: entitled
+      });
+    }
+
+    function downloadReport(report) {
+      $http.get(report.downloadUrl, {
+        responseType: 'arraybuffer'
+      }).success(function (data) {
+        var fileName = 'report_' + report.id + '.zip';
+        var file = new $window.Blob([data], {
+          type: 'application/json'
+        });
+        if ($window.navigator.msSaveOrOpenBlob) {
+          // IE
+          $window.navigator.msSaveOrOpenBlob(file, fileName);
+        } else if (!('download' in $window.document.createElement('a'))) {
+          // Safari…
+          $window.location.href = $window.URL.createObjectURL(file);
+        } else {
+          var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+          var downloadLink = angular.element(downloadContainer.children()[0]);
+          downloadLink.attr({
+            'href': $window.URL.createObjectURL(file),
+            'download': fileName,
+            'target': '_blank'
+          });
+          $document.find('body').append(downloadContainer);
+          $timeout(function () {
+            downloadLink[0].click();
+            downloadLink.remove();
+          }, 100);
+        }
+      });
+    }
+
     return {
+      getAvalonServiceUrl: getAvalonServiceUrl,
+      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       deleteReports: deleteReports,
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,
-      deleteReport: deleteReport
+      deleteReport: deleteReport,
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport
     };
   }
 

@@ -7,6 +7,34 @@
     var ui = {};
     var aaRecord = {};
 
+    var sortedOptions = [{
+      "title": 'autoAttendant.actionPhoneMenu',
+      "label": 'AutoAttendantTestLabel'
+    }, {
+      "title": 'autoAttendant.actionRouteCall',
+      "label": 'autoAttendantTestLabel'
+    }, {
+      "title": 'autoAttendant.actionSayMessage',
+      "label": 'secondTestLabel'
+    }, {
+      "title": 'autoAttendant.phoneMenuDialExt',
+      "label": 'testLabel'
+    }];
+
+    var unSortedOptions = [{
+      "title": 'autoAttendant.actionRouteCall',
+      "label": 'testLabel'
+    }, {
+      "title": 'autoAttendant.phoneMenuDialExt',
+      "label": 'autoAttendantTestLabel'
+    }, {
+      "title": 'autoAttendant.actionSayMessage',
+      "label": 'AutoAttendantTestLabel'
+    }, {
+      "title": 'autoAttendant.actionPhoneMenu',
+      "label": 'secondTestLabel'
+    }];
+
     beforeEach(module('uc.autoattendant'));
     beforeEach(module('Huron'));
     beforeEach(inject(function (_AACommonService_, _AutoAttendantCeMenuModelService_) {
@@ -121,6 +149,24 @@
         AACommonService.saveUiModel(ui, aaRecord);
         expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalled();
       });
+    });
+
+    describe('sortByProperty', function () {
+
+      it('sort by title', function () {
+        unSortedOptions.sort(AACommonService.sortByProperty('title'));
+        for (var i = 0; i < sortedOptions.length; i++) {
+          expect(unSortedOptions[i].title).toEqual(sortedOptions[i].title);
+        }
+      });
+
+      it('sort by label', function () {
+        unSortedOptions.sort(AACommonService.sortByProperty('label'));
+        for (var i = 0; i < sortedOptions.length; i++) {
+          expect(unSortedOptions[i].label).toEqual(sortedOptions[i].label);
+        }
+      });
+
     });
 
   });

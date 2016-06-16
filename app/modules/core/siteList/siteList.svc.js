@@ -261,7 +261,7 @@
       siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteUrl);
       siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteUrl);
 
-      WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
+      WebExApiGatewayService.siteFunctions(siteUrl).then(
         function isSiteSupportsIframeSuccess(result) {
           var funcName = "isSiteSupportsIframeSuccess()";
           var logMsg = "";
@@ -327,7 +327,7 @@
             "response=" + JSON.stringify(response);
           // $log.log(logMsg);
         } // isSiteSupportsIframeError()
-      ); // WebExApiGatewayService.isSiteSupportsIframe().then
+      ); // WebExApiGatewayService.siteFunctions().then
     }; // updateWebExColumnsInRow()
 
     this.updateDisplayControlFlagsInRow = function (siteRow) {
@@ -516,7 +516,7 @@
           ); // gridData.forEach()
 
           if (!adminUserSupportCSV) {
-            vm.gridOptions.columnDefs.splice(3, 1);
+            //  vm.gridOptions.columnDefs.splice(3, 1);
           }
           // End of hiding CSV info if admin user does not have feature toggle
 
@@ -537,7 +537,7 @@
           $log.log(funcName);
 
           // don't show the CSV column
-          vm.gridOptions.columnDefs.splice(2, 1);
+          //  vm.gridOptions.columnDefs.splice(2, 1);
 
           updateGridColumns();
         } // checkWebExFeaturToggleError()

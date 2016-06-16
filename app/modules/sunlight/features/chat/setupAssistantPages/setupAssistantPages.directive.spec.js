@@ -11,7 +11,7 @@ describe('Directive: setupAssistantPages', function () {
     'ct-agent-unavailable',
     'ct-off-hours',
     'ct-chat-strings',
-    'ct-embed-code'
+    'ct-summary'
   ];
 
   beforeEach(module('Sunlight'));

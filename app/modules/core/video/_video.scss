@@ -1,21 +1,5 @@
-.video-body {
-    position: absolute;
-    min-width: 100%;
-    min-height: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 0%);    
-}
-
-.overlay-element {
-    width: 30px; 
-    position: absolute; 
-    top: 18px; 
-    right: 18px; 
-    &:hover {
-        cursor: pointer;
-        color: $brand-primary;
-    }
+.video-frame {
+  margin-top: 20px;
 }
 
 

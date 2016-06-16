@@ -19,7 +19,8 @@ describe('Service: FusionClusterService', function () {
     };
     $provide.value('Authinfo', Authinfo);
     var UrlConfig = {
-      getHerculesUrlV2: sinon.stub().returns('http://elg.no')
+      getHerculesUrlV2: sinon.stub().returns('http://elg.no'),
+      getHerculesUrl: sinon.stub().returns('http://ulv.no')
     };
     $provide.value('UrlConfig', UrlConfig);
   }
@@ -54,6 +55,39 @@ describe('Service: FusionClusterService', function () {
         });
     });
 
+    it('should add a type property to clusters', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'c_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
+          }, {
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'mf_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
+          }, {
+            state: 'fused',
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters[0].type).toBe('expressway');
+          expect(clusters[1].type).toBe('mediafusion');
+          expect(clusters[2].type).toBe(undefined);
+        });
+    });
+
     it('should add servicesStatuses property to each cluster', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
@@ -71,6 +105,14 @@ describe('Service: FusionClusterService', function () {
               runningState: 'stopped',
               hostname: 'b.elg.no'
             }]
+          }, {
+            state: 'fused',
+            connectors: [{
+              alarms: [],
+              connectorType: 'mf_mgmt',
+              runningState: 'running',
+              hostname: 'a.elg.no'
+            }]
           }]
         });
       FusionClusterService.getAll()
@@ -79,7 +121,65 @@ describe('Service: FusionClusterService', function () {
           expect(clusters[0].servicesStatuses[0].total).toBe(2);
           expect(clusters[0].servicesStatuses[1].total).toBe(0);
           expect(clusters[0].servicesStatuses[2].total).toBe(0);
+          expect(clusters[1].servicesStatuses[0].total).toBe(1);
         });
     });
+  });
+
+  describe('preregister Expressway cluster', function () {
+    it('should add the empty cluster to the FMS list of clusters and return a clusterId', function () {
+      var response = '{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/3803ded5-70d9-4e7d-bdc4-fe3dbf319e59","id":"3803ded5-70d9-4e7d-bdc4-fe3dbf319e59","name":"man.united","connectors":[],"releaseChannel":"GA","provisioning":[],"state":"preregistered"}';
+      $httpBackend
+        .expectPOST('http://elg.no/organizations/0FF1C3/clusters')
+        .respond(201, response);
+
+      var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
+      //$httpBackend.flush();
+      newExpresswayPromise.then(function (clusterId) {
+        expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
+      });
+    });
+
+    it('should provision management and calendar connectors', function () {
+
+      $httpBackend
+        .expectPOST('http://elg.no/organizations/0FF1C3/clusters/clusterId/provisioning/actions/add/invoke?connectorType=c_mgmt')
+        .respond(204, '');
+      FusionClusterService.provisionConnector("clusterId", "c_mgmt");
+
+      $httpBackend
+        .expectPOST('http://elg.no/organizations/0FF1C3/clusters/clusterId/provisioning/actions/add/invoke?connectorType=c_cal')
+        .respond(204, '');
+      FusionClusterService.provisionConnector("clusterId", "c_cal");
+    });
+
+    it('should add the new cluster to the FMS allow-list', function () {
+
+      $httpBackend
+        .expectPOST('http://ulv.no/organizations/0FF1C3/allowedRedirectTargets')
+        .respond(204, '');
+
+      FusionClusterService.addPreregisteredClusterToAllowList('ew.ree.online', 3600, 'f635d90f-d39b-4659-a983-cf13ca52a960');
+    });
+
+    it('should parse a connector list from a cluster object', function () {
+
+      var response = '{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd","id":"e33defcf-2702-11e6-9998-005056bf13dd","name":"boler.eu","connectors":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_ucmc@03C36F68","id":"c_ucmc@03C36F68","connectorType":"c_ucmc","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_mgmt@03C36F68","id":"c_mgmt@03C36F68","connectorType":"c_mgmt","upgradeState":"upgraded","state":"running","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/connectors/c_cal@03C36F68","id":"c_cal@03C36F68","connectorType":"c_cal","upgradeState":"upgraded","state":"not_configured","hostname":"cisco.boler.eu","hostSerial":"03C36F68","alarms":[],"runningVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"}],"releaseChannel":"GA","provisioning":[{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_cal","connectorType":"c_cal","provisionedVersion":"8.7-1.0.2909","availableVersion":"8.7-1.0.2909","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_mgmt","connectorType":"c_mgmt","provisionedVersion":"8.7-1.0.321154","availableVersion":"8.7-1.0.321154","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"},{"url":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/e33defcf-2702-11e6-9998-005056bf13dd/provisioning/c_ucmc","connectorType":"c_ucmc","provisionedVersion":"8.7-1.0.2094","availableVersion":"8.7-1.0.2094","packageUrl":"https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"}],"state":"fused"}';
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, response);
+      var connectorListPromise = FusionClusterService.getAllConnectorTypesForCluster("clusterId");
+      connectorListPromise.then(function (allConnectors) {
+        expect(allConnectors.length).toBe(3);
+      });
+    });
+
+    it('should call FMS to deprovision a cluster', function () {
+      $httpBackend
+        .expectPOST('http://elg.no/organizations/0FF1C3/clusters/clusterId/provisioning/actions/remove/invoke?connectorType=c_cal')
+        .respond('');
+      FusionClusterService.deprovisionConnector('clusterId', 'c_cal');
+    });
+
   });
 });

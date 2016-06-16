@@ -26,7 +26,8 @@
       getInvalid: getInvalid,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
-      saveUiModel: saveUiModel
+      saveUiModel: saveUiModel,
+      sortByProperty: sortByProperty
     };
 
     return service;
@@ -117,13 +118,24 @@
           holidays.setType('MENU_WELCOME');
         }
         AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'holidays', holidays, ui.holidaysValue);
-
       } else if (ui.isHolidays) {
         AutoAttendantCeMenuModelService.updateScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       }
+
+      AutoAttendantCeMenuModelService.updateDefaultActionSet(aaRecord, ui.hasClosedHours);
     }
 
   }
+
+  /**
+   * This will sort the string array based on the property passed.
+   */
+  var sortByProperty = function (property) {
+    return function (a, b) {
+      return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
+    };
+  };
+
 })();

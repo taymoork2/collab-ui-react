@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -8,7 +8,7 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
+      'TrialCallService', 'TrialCareService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
   });
 
   beforeEach(function () {
@@ -91,6 +91,9 @@ describe('Service: Trial Service:', function () {
         bard.mockService(TrialCallService, {
           getData: trialData.enabled.trials.callTrial
         });
+        bard.mockService(TrialCareService, {
+          getData: trialData.enabled.trials.careTrial
+        });
         bard.mockService(TrialRoomSystemService, {
           getData: trialData.enabled.trials.roomSystemTrial
         });
@@ -155,6 +158,79 @@ describe('Service: Trial Service:', function () {
 
         expect($httpBackend.flush).not.toThrow();
       });
+    });
+
+    describe('start call trial state and country check', function () {
+      var testData = trialData.enabled.trials.deviceTrial;
+      it('should get state correcty from string', function () {
+        testData.shippingInfo.state = "TX";
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var state = angular.fromJson(data).details.shippingInfo.state;
+          return state === 'TX';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get state correcty from object', function () {
+        testData.shippingInfo.state = {
+          "abbr": "IL",
+          "state": "Illinois"
+        };
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          return angular.fromJson(data).details.shippingInfo.state === 'IL';
+
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get country correcty from string', function () {
+        testData.shippingInfo.country = "Canada";
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+
+          return angular.fromJson(data).details.shippingInfo.country === 'Canada';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should get country correcty from object', function () {
+        testData.shippingInfo.country = {
+          "country": "Germany"
+        };
+        bard.mockService(TrialDeviceService, {
+          getData: testData
+        });
+        TrialService.getData();
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+
+          return angular.fromJson(data).details.shippingInfo.country === 'Germany';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
     });
 
     describe('start trial with disabled trials', function () {

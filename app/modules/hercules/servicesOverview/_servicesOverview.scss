@@ -11,6 +11,13 @@
     color: $gray-dark-2;
   }
 
+  .icon-spinner{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+  }
+
   .servicesBlock {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -24,6 +31,10 @@
     min-height: 85vh;
     width: 100%;
     width: calc(100% + 2rem);
+
+    .cluster-list.header-bar header:after {
+      border-top-color: transparent !important;
+    }
 
     h5 {
       margin-bottom: 0;

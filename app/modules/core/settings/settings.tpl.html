@@ -1,19 +1,30 @@
 <div class="settings">
 
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
-  
-  <form class="cs-form">
-    <div class="cs-form__section" ng-repeat="setting in settingsCtrl.getSettings()">
-      <div class="section__info">
-        <h4 class="section__title" translate="{{setting.title}}"></h4>
-      </div>
-      <div class="section__content">
-        <div ng-if="setting.subsectionLabel" class="sub-section">
-          <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
-          <p ng-if="setting.subsectionDescription" class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>
-        </div>
-        <article ng-include="setting.template"></article>
-      </div>
-    </div>
+
+  <form class="cs-form" action="">
+    <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
+      <domains-setting></domains-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.sipDomain" ng-if="settingsCtrl.sipDomain">
+      <sipdomain-setting show-save-button="true"></sipdomain-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
+      <authentication-setting></authentication-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
+      <support-setting></support-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.branding" ng-if="settingsCtrl.branding">
+      <branding-setting></branding-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.dataPolicy" hide-bottom-line=true ng-if="settingsCtrl.dataPolicy">
+      <datapolicy-setting></datapolicy-setting>
+    </setting-section>
   </form>
 </div>

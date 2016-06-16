@@ -1,0 +1,12 @@
+<div ng-if="vm.ssoStatusLoaded">
+  <p>
+    <i class="icon icon-circle" ng-class="vm.ssoEnabled ? 'success' : 'disabled' "></i>
+    <span translate="{{vm.ssoStatusText}}"></span>
+  </p>
+
+  <br>
+  <button class="btn btn--primary"
+          ng-click="vm.modifySSO()"
+          translate='common.modify'></button>
+
+</div>

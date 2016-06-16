@@ -1,7 +1,102 @@
 <div>
-  <div class="ct-title">
-    <i class="icon icon-circle-star ct-title-icon"></i>
-    <span class="h2" translate="careChatTpl.feedback"></span>
-  </div>
-  <div class="h4 ct-title-desc" translate="careChatTpl.feedbackDesc"></div>
+    <div class="ct-title">
+        <i class="icon icon-circle-star ct-title-icon"></i>
+        <span class="h2" translate="careChatTpl.feedback"></span>
+    </div>
+    <div class="h4 ct-title-desc" translate="careChatTpl.feedbackDesc"></div>
+
+    <div class="ct-feedback ct-sa-content">
+        <cs-card-layout block-view="true" class="cardScroll">
+            <cs-card>
+                <header class="cardHeader1 h4" translate="careChatTpl.screen"></header>
+                <article class="ct-article articleHeight">
+                    <section class="ct-attribute-section ct-flex-topleft">
+
+	            <span title=" {{careChatSA.getAttributeValue('displayText', 'feedbackQuery', 'feedback')}}"
+                      class="feedback-question-text"
+                      for="feedbackQuery">
+	              {{careChatSA.getAttributeValue('displayText', 'feedbackQuery', 'feedback')}}
+	            </span>
+
+                        <div class="feedback-radio-list">
+                            <label class="feedback-radio-outer">
+                                <div class="feedback-radio">
+                                </div>
+                            </label>
+                            <label class="feedback-radio-outer">
+                                <div class="feedback-radio">
+                                </div>
+                                </label>
+                            <label class="feedback-radio-outer">
+                                <div class="feedback-radio">
+                                    <label id="radio3" class="feedback-radio-inner feedback-radio-green"></label>
+                                </div>
+                                </label>
+                        </div>
+                        <hr class="feedback-radio-line">
+                        <div class="radio-text-div">
+                            <div id="rating1-text" class="radio-text radio-text-left">{{careChatSA.getAttributeValue('displayText',
+                                'ratings', 'feedback', 0)}}
+                            </div>
+                            <div id="rating2-text" class="radio-text radio-text-middle">{{careChatSA.getAttributeValue('displayText',
+                                'ratings', 'feedback', 1)}}
+                            </div>
+                            <div id="rating3-text" class="radio-text radio-text-right">{{careChatSA.getAttributeValue('displayText',
+                                'ratings', 'feedback', 2)}}
+                            </div>
+                        </div>
+                        <textarea class="feedback-comment-text ct-left-cs-input" id="commentarea" tabIndex="3"
+                                  placeholder=" {{careChatSA.getAttributeValue('displayText', 'comment', 'feedback')}}"></textarea>
+
+                        <div class="feedback-buttons">
+                            <button type="button" class="btn--primary feedback-btn" translate="careChatTpl.submitFeedbackBtn"></button>
+                            <button type="button" class="btn feedback-btn" translate="careChatTpl.noThanksBtn"></button>
+                        </div>
+                    </section>
+                </article>
+            </cs-card>
+
+            <cs-card>
+                <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
+                <article class="ct-article articleHeight">
+                    <section class="ct-attribute-section ct-flex-topleft">
+
+                        <div class="row ct-attribute-row labelText">
+                            <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                                   translate="careChatTpl.label">
+                            </label>
+                            <input id="label"
+                                   class="h5 inputField ct-attribute-field-textbox large-11"
+                                   type="text" maxlength="50" ng-minlength="1"
+                                   ng-model="careChatSA.template.configuration.pages.feedback.fields.feedbackQuery.displayText"/>
+                        </div>
+
+                        <div class="ct-feedback-rating">
+                            <div class="row ct-attribute-row"
+                                 ng-repeat="rating in careChatSA.template.configuration.pages.feedback.fields.ratings">
+                                <label
+                                        class="cs-input__label ct-attribute-field-label  h4 large-11"
+                                        translate="careChatTpl.rating" translate-values="{ index: $index+1 }">
+                                </label>
+
+                                <input class="h5 inputField ct-attribute-field-textbox large-11"
+                                        type="text" maxlength="15" ng-minlength="1"
+                                        ng-model="rating.displayText"/>
+                            </div>
+                        </div>
+
+                        <div class="row ct-attribute-row">
+                            <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                                   translate="careChatTpl.ratingHintText">
+                            </label>
+                            <input id="hintText"
+                                   class="h5 inputField ct-attribute-field-textbox large-11"
+                                   type="text" maxlength="100" ng-minlength="1"
+                                   ng-model="careChatSA.template.configuration.pages.feedback.fields.comment.displayText"/>
+                        </div>
+                    </section>
+                </article>
+            </cs-card>
+        </cs-card-layout>
+    </div>
 </div>

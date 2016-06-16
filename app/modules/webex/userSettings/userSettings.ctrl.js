@@ -16,12 +16,13 @@
     Notification
   ) {
     $scope.loading = WebExUserSettingsFact.loading;
+
     // Update the breadcrumb with site url
     $state.current.data.displayName = $stateParams.site;
     $rootScope.$broadcast('displayNameUpdated');
 
     $scope.initPanel = function () {
-      WebExUserSettingsFact.getUserSettingsFromWebEx();
+      WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
     }; // initPanel()
 
     $scope.getUserSettingsInfo = function (form) {
@@ -56,7 +57,6 @@
     $log.log("Show panel3");
 
     $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
-    WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
     $scope.initPanel();
   } // WebExUserSettingsCtrl()
 })();

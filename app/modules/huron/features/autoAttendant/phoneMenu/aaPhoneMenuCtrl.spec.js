@@ -24,6 +24,26 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     return _menuEntry;
   }
 
+  var sortedOptions = [{
+    "name": 'phoneMenuDialExt',
+  }, {
+    "name": 'phoneMenuRepeatMenu',
+  }, {
+    "name": 'phoneMenuRouteAA',
+  }, {
+    "name": 'phoneMenuRouteHunt',
+  }, {
+    "name": 'phoneMenuRouteMailbox',
+  }, {
+    "name": 'phoneMenuRouteQueue',
+  }, {
+    "name": 'phoneMenuRouteToExtNum',
+  }, {
+    "name": 'phoneMenuRouteUser',
+  }, {
+    "name": 'phoneMenuSayMessage',
+  }];
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -42,7 +62,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
-    aaUiModel['openHours'].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+    var menu = AutoAttendantCeMenuModelService.newCeMenu();
+    menu.type = 'MENU_OPTION';
+    aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
       $scope: $scope
@@ -168,9 +191,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   });
 
-  describe('createOptionMenu', function () {
+  describe('addButtonZero', function () {
     it('should intialize CeMenu first entry with first available key', function () {
-      controller.createOptionMenu();
+      controller.addButtonZero();
 
       var headkey = '0';
       expect(controller.entries[index].entries[0]).toBeDefined();
@@ -204,6 +227,18 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
       expect(angular.equals(controller.selectedActions[0].action.name, "")).toEqual(true);
 
+    });
+  });
+
+  /**
+   * name value is not read from properties file in unit test cases. It will treat the key provided into vm.keyActions for name
+   * as text only. Sorting is based on the key itself and not on values of title.
+   */
+  describe('Activate ', function () {
+    it('test for sorted options', function () {
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);
+      }
     });
   });
 

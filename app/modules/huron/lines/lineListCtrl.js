@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $timeout, $translate, $q, FeatureToggleService, LineListService, Log, Config, Notification) {
 
     var vm = this;
 
@@ -29,19 +29,19 @@
     // Defines Grid Filter "All"
     vm.placeholder = {
       name: $translate.instant('linesPage.allLines'),
-      filterValue: 'all',
-      count: 0
+      filterValue: 'all'
     };
 
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
-      filterValue: 'unassignedLines',
-      count: 0
+      filterValue: 'unassignedLines'
     }, {
       name: $translate.instant('linesPage.assignedLines'),
-      filterValue: 'assignedLines',
-      count: 0
+      filterValue: 'assignedLines'
+    }, {
+      name: $translate.instant('linesPage.pending'),
+      filterValue: 'pending'
     }];
 
     // Set data filter
@@ -71,27 +71,9 @@
       }, vm.timeoutVal);
     };
 
-    // Get count of line association data;
-    // total, unassigned, assigned lines
-    function getCount() {
-      LineListService.getCount(vm.searchStr)
-        .then(function (response) {
-          vm.placeholder.count = response.totalCount || 0;
-          vm.filters[0].count = response.unassignedCount || 0;
-          vm.filters[1].count = response.assignedCount || 0;
-        })
-        .catch(function (response) {
-          Log.debug('Query for line association record counts failed.');
-          Notification.errorResponse(response, 'linesPage.getCountError');
-        });
-    } // End of function getCount
-
     // Get line association data to populate the grid
     function getLineList(startAt) {
       vm.gridRefresh = true;
-
-      // Update counts when line association data needs to be refreshed
-      getCount();
 
       // Clear currentLine if a new search begins
       var startIndex = startAt || 0;
@@ -147,16 +129,18 @@
       columnDefs: [{
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '30%',
+        width: '20%',
         cellClass: 'internalNumberColumn',
         sortable: true
       }, {
         field: 'externalNumber',
-        displayName: $translate.instant('linesPage.externalNumberHeader'),
-        sortable: true
+        displayName: $translate.instant('linesPage.phoneNumbers'),
+        sortable: true,
+        cellClass: 'externalNumberColumn',
+        width: '20%'
       }, {
         field: 'userId',
-        displayName: $translate.instant('linesPage.userEmailHeader'),
+        displayName: $translate.instant('linesPage.assignedTo'),
         sortable: true,
         sort: {
           direction: 'asc',

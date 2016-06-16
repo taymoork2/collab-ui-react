@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService, FeatureToggleService;
+  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService, FeatureToggleService;
+  var Authinfo;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer;
 
   var dialPlanDetailsNorthAmerica = [{
@@ -14,8 +15,8 @@ describe('Controller: ServiceSetup', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _FeatureToggleService_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -26,6 +27,9 @@ describe('Controller: ServiceSetup', function () {
     ExternalNumberService = _ExternalNumberService_;
     ModalService = _ModalService_;
     FeatureToggleService = _FeatureToggleService_;
+    HuronConfig = _HuronConfig_;
+    $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
     modalDefer = $q.defer();
 
     customer = {
@@ -133,9 +137,22 @@ describe('Controller: ServiceSetup', function () {
     });
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-  }));
 
-  function initController() {
+    spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
+    spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
+
+    $httpBackend
+      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
+      .respond([]);
+    $httpBackend
+      .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
+      .respond([{
+        itemID: 0
+      }]);
+    $httpBackend
+      .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
+      .respond([]);
+
     controller = $controller('ServiceSetupCtrl', {
       $scope: $scope,
       $state: $state,
@@ -144,24 +161,27 @@ describe('Controller: ServiceSetup', function () {
 
     controller.form = form;
     $scope.$apply();
-  }
+    $httpBackend.flush();
+  }));
+
+  describe('auto attendants returns an array with an element', function () {
+    it('should set the disableExtensions property as true', function () {
+      expect(controller.model.disableExtensions).toEqual(true);
+    });
+  });
 
   describe('initController when is first time setup', function () {
     beforeEach(function () {
       $state.current.data.firstTimeSetup = true;
-      initController();
     });
 
-    it('should have the default site steering digit removed from the steeringDigits array', function () {
+    it('should have the default site steering digit in the steeringDigits array', function () {
       var index = _.indexOf(controller.steeringDigits, '8');
-      expect(index).toEqual(-1);
+      expect(index).toEqual(7);
     });
   });
 
   describe('initController when is not first time setup', function () {
-    beforeEach(function () {
-      initController();
-    });
 
     it('should have customer service info', function () {
       expect(controller.hasVoicemailService).toEqual(true);
@@ -178,9 +198,6 @@ describe('Controller: ServiceSetup', function () {
   });
 
   describe('deleteInternalNumberRange', function () {
-    beforeEach(function () {
-      initController();
-    });
 
     it('should remove from list and notify success', function () {
       var index = 0;
@@ -229,9 +246,6 @@ describe('Controller: ServiceSetup', function () {
   });
 
   describe('initNext', function () {
-    beforeEach(function () {
-      initController();
-    });
 
     it('customer with voicemail service should create site', function () {
       var selectedPilotNumber = {
@@ -737,9 +751,6 @@ describe('Controller: ServiceSetup', function () {
   });
 
   describe('setServiceValues', function () {
-    beforeEach(function () {
-      initController();
-    });
 
     it('should call DialPlanService()', function () {
       expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();

@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $translate, $rootScope, PartnerService, TrialService, Authinfo, Config, UrlConfig;
+  var $httpBackend, $q, $rootScope, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,17 +20,20 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _TrialService_, _Config_, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$rootScope_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    $rootScope = _$rootScope_;
     $translate = _$translate_;
+    Auth = _Auth_;
+    Authinfo = _Authinfo_;
+    Config = _Config_;
     PartnerService = _PartnerService_;
     TrialService = _TrialService_;
-    Config = _Config_;
-    Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
+    spyOn(Auth, 'getAuthorizationUrlList').and.returnValue($q.when({}));
   }));
 
   afterEach(function () {
@@ -108,6 +111,7 @@ describe('Partner Service -', function () {
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
     expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CDC)).toEqual(testData.licenses[6]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
@@ -184,7 +188,7 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true);
+    var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), true, true);
     var activeList = _.filter(returnList, {
       state: "ACTIVE"
     });
@@ -196,19 +200,20 @@ describe('Partner Service -', function () {
     expect(activeList.length).toBe(3);
     expect(expiredList.length).toBe(2);
 
-    // Two licenses converted to License List. First license has four entitlements
-    expect(returnList[0].licenseList.length).toBe(2);
+    // Three licenses converted to License List. First license has four entitlements
+    expect(returnList[0].licenseList.length).toBe(3);
     expect(returnList[0].licenseList[0].features.length).toBe(4);
     expect(returnList[0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
 
     // Verify additional properties are set to the corresponding license object and added to customer object.
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
+    expect(activeList[1].care.features.length).toBe(5);
   });
 
   it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
     var myOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
-    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false);
+    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false, true);
 
     expect(returnList[0].customerOrgId).toBe(myOrg.id);
     expect(returnList[0].customerName).toBe(myOrg.displayName);
@@ -228,13 +233,26 @@ describe('Partner Service -', function () {
 
   it('should successfully return an array of customers from calling exportCSV', function () {
     $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
-
-    var promise = PartnerService.exportCSV();
+    var promise = PartnerService.exportCSV(false);
     promise.then(function (customers) {
       expect(customers).toEqual(testData.exportCSVResult);
     });
-
     $httpBackend.flush();
+  });
+
+  it('should successfully return an array of customers with care entitlements from calling exportCSV', function () {
+    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
+    var promise = PartnerService.exportCSV(true);
+    promise.then(function (customers) {
+      expect(customers).toEqual(testData.exportCSVResultWithCare);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should successfully call modifyManagedOrgs', function () {
+    PartnerService.modifyManagedOrgs();
+
+    expect(Auth.getAuthorizationUrlList).toHaveBeenCalled();
   });
 
   describe('helper functions -', function () {
@@ -256,7 +274,7 @@ describe('Partner Service -', function () {
           offers: [{
             usageCount: 1
           }]
-        });
+        }, true);
         expect(data.usage).toBe(1);
       });
 
@@ -265,7 +283,7 @@ describe('Partner Service -', function () {
           offers: [{
             licenseCount: 10
           }]
-        });
+        }, true);
         expect(data.licenses).toBe(10);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -276,7 +294,7 @@ describe('Partner Service -', function () {
           }, {
             licenseCount: 20
           }]
-        });
+        }, true);
         expect(data.licenses).toBe(20);
       });
 
@@ -286,7 +304,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.roomSystems,
             licenseCount: 10,
           }]
-        });
+        }, true);
         expect(data.deviceLicenses).toBe(10);
       });
 
@@ -295,15 +313,33 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.spark1
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.message
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+      });
+
+      it('should return an object with its "offer.userServices" property as a comma separated list with the translated "trials.care" l10n key, if the offers "id" property matches `Config.offerTypes.care` and atlasCareTrials feature is enabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.care
+          }]
+        }, true);
+        expect(data.offer.userServices).toContain($translate.instant('trials.care'));
+      });
+
+      it('should return an object with its "offer.userServices" property without the translated "trials.care" l10n key, if atlasCareTrials feature is disabled for the org', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.care
+          }]
+        }, false);
+        expect(data.offer.userServices).toEqual('');
       });
 
       it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
@@ -311,7 +347,7 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.collab
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
       });
 
@@ -320,14 +356,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.call
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('trials.call'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('trials.call'));
       });
 
@@ -336,14 +372,14 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.call
           }]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -356,7 +392,7 @@ describe('Partner Service -', function () {
               id: Config.offerTypes.collab
             },
           ]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
       });
 
@@ -365,7 +401,7 @@ describe('Partner Service -', function () {
           licenses: [{
             licenseType: Config.licenseTypes.COMMUNICATION
           }]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -378,7 +414,7 @@ describe('Partner Service -', function () {
               licenseType: Config.licenseTypes.CONFERENCING
             }
           ]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -387,7 +423,7 @@ describe('Partner Service -', function () {
           }, {
             licenseType: Config.licenseTypes.CONFERENCING
           }]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(false);
       });
 
@@ -398,7 +434,7 @@ describe('Partner Service -', function () {
               licenseType: undefined
             }
           ]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(false);
 
         data = PartnerService.parseLicensesAndOffers({
@@ -409,23 +445,23 @@ describe('Partner Service -', function () {
             },
             undefined
           ]
-        });
+        }, true);
         expect(data.isSquaredUcOffer).toBe(true);
-      });
+      }, true);
 
       it('should return an object with its "offer.userServices" property as a comma separated with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.webex
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.meetings
           }]
-        });
+        }, true);
         expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
       });
 
@@ -434,7 +470,7 @@ describe('Partner Service -', function () {
           offers: [{
             id: Config.offerTypes.roomSystems
           }]
-        });
+        }, true);
         expect(data.offer.deviceBasedServices).toContain($translate.instant('trials.roomSystem'));
       });
     });

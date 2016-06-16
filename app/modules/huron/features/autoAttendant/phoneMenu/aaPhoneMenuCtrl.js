@@ -34,7 +34,7 @@
     vm.keyChanged = keyChanged;
     vm.keyActionChanged = keyActionChanged;
     vm.populateOptionMenu = populateOptionMenu;
-    vm.createOptionMenu = createOptionMenu;
+    vm.addButtonZero = addButtonZero;
 
     // TBD means the action isn't supported in the backend yet
     /**
@@ -224,18 +224,13 @@
       }
     }
 
-    function createOptionMenu() {
-      // we're adding a new AA so create the CeMenu
-      var menu = AutoAttendantCeMenuModelService.newCeMenu();
-      menu.type = 'MENU_OPTION';
-      vm.entries[$scope.index] = menu;
-
+    function addButtonZero() {
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
       keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
-      menu.entries.push(keyEntry);
+      vm.menuEntry.entries.push(keyEntry);
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
@@ -268,12 +263,15 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
-
       addAvailableFeatures();
+      vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
-      if (vm.menuEntry.type === '') {
-        createOptionMenu();
-      } else if (vm.menuEntry.type === 'MENU_OPTION') {
+      if (vm.menuEntry.type === 'MENU_OPTION') {
+        // If this is a new phone menu, add button zero
+        if (_.has(vm.menuEntry, 'headers.length') && vm.menuEntry.headers.length === 0 &&
+          _.has(vm.menuEntry, 'entries.length') && vm.menuEntry.entries.length === 0) {
+          addButtonZero();
+        }
         populateOptionMenu();
       }
     }

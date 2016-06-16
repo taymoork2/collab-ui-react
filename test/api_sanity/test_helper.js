@@ -1,6 +1,9 @@
+'use strict';
+
+/* global Promise */
+
 var _ = require('lodash');
 var request = require('request');
-var Promise = require('promise');
 
 var auth = {
   'sqtest-admin': {
@@ -50,7 +53,7 @@ var auth = {
   },
   'huron-e2e': {
     user: 'admin@uc.e2e.huron-alpha.com',
-    pass: 'Cisco123!',
+    pass: 'C1sco123!',
     org: '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
   },
   'huron-e2e-partner': {
@@ -60,7 +63,7 @@ var auth = {
   },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'Cisco123!!',
     org: '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
   },
   'non-trial-admin': {
@@ -100,7 +103,7 @@ var auth = {
   },
   'multiple-subscription-user': {
     user: 'int-esub-1@mailinator.com',
-    pass: 'C1sc0123!',
+    pass: 'P@ssword123',
     org: '9d173ec9-198e-430d-9363-688a333bdee7'
   },
   'selfsign-sso-admin': {

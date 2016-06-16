@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, FeatureToggleService, InternationalDialing;
+  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, $httpBackend, HuronConfig, FeatureToggleService, InternationalDialing;
   var Authinfo;
   var HuronCustomer, ServiceSetup, PstnSetupService, ModalService, modalDefer;
   var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
@@ -10,7 +10,8 @@ describe('Controller: HuronSettingsCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_, _InternationalDialing_, _Authinfo_) {
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_,
+    _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
 
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -24,6 +25,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
     InternationalDialing = _InternationalDialing_;
+    $httpBackend = _$httpBackend_;
+    HuronConfig = _HuronConfig_;
     $q = _$q_;
     modalDefer = $q.defer();
     Authinfo = _Authinfo_;
@@ -76,16 +79,32 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(Notification, 'notify');
     spyOn(Notification, 'processErrorResponse').and.returnValue('');
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
+    spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
+
+    $httpBackend
+      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
+      .respond([]);
+    $httpBackend
+      .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
+      .respond([{
+        itemID: 0
+      }]);
+    $httpBackend
+      .expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customer.uuid + '/features/huntgroups')
+      .respond([]);
 
     controller = $controller('HuronSettingsCtrl', {
       $scope: $scope
     });
     $scope.$apply();
+    $httpBackend.flush();
   }));
 
+  it('should set the disableExtensions property as true', function () {
+    expect(controller.model.disableExtensions).toEqual(true);
+  });
+
   it('should initialize the Settings page', function () {
-    controller.init();
-    $scope.$apply();
     expect(HuronCustomer.get).toHaveBeenCalled();
     expect(ServiceSetup.listVoicemailTimezone).toHaveBeenCalled();
     expect(ServiceSetup.listInternalNumberRanges).toHaveBeenCalled();
@@ -773,8 +792,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     it('should update timezone when timezone selection changes and feature toggle is ON', function () {
-      controller.init();
-      $scope.$apply();
       controller.model.site.timeZone = {
         "value": "America/Anchorage",
         "label": "(GMT-09:00) Alaska",
@@ -792,8 +809,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       /* the default "timezoneid = 4" is loaded in the beginnig
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
-      controller.init();
-      $scope.$apply();
       controller.model.site.timeZone = {
         "value": "America/Los_Angeles",
         "label": "(GMT-08:00) Pacific Time (US & Canada)",

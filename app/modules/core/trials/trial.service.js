@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -156,7 +156,11 @@
         delete details.shippingInfo;
         details.devices = [];
       } else {
-        details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+        var nestedState = _.get(details, 'shippingInfo.state.abbr');
+        // this will not be necessary after formly issue is fixed.
+        if (nestedState) {
+          details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr');
+        }
 
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service
@@ -188,7 +192,8 @@
           if (trial.type === Config.offerTypes.pstn) {
             return;
           }
-          var licenseCount = trial.type === Config.trials.roomSystems ?
+          var licenseCount =
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -204,6 +209,7 @@
       TrialMeetingService.reset();
       TrialWebexService.reset();
       TrialCallService.reset();
+      TrialCareService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
@@ -223,6 +229,7 @@
           meetingTrial: TrialMeetingService.getData(),
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
+          careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData()

@@ -6,12 +6,13 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors, UserCsvService, Localytics, addressparser) {
+  function OnboardCtrl($http, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, $window, addressparser, Authinfo, chartColors, CsvDownloadService, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, TelephoneNumberService, TrackingId, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
+    $scope.cmrLicensesForMetric = {};
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -244,6 +245,13 @@
     };
 
     $scope.editServicesSave = function () {
+      for (var licenseId in $scope.cmrLicensesForMetric) {
+        if ($scope.cmrLicensesForMetric[licenseId]) {
+          Mixpanel.trackEvent("CMR checkbox unselected", {
+            licenseId: licenseId
+          });
+        }
+      }
       if (shouldAddCallService()) {
         $scope.processing = true;
         $scope.editServicesFlow = true;
@@ -346,12 +354,14 @@
 
     var userEnts = null;
     var userLicenseIds = null;
+    var userInvites = null;
     $scope.cmrFeature = null;
     $scope.messageFeatures = [];
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     var convertSuccess = [];
     var convertFailures = [];
@@ -369,6 +379,7 @@
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
+      userInvites = $scope.currentUser.invitations;
     }
 
     function populateConf() {
@@ -396,6 +407,22 @@
       }
     }
 
+    function populateConfInvitations() {
+      if (userInvites && userInvites.cf) {
+        _.forEach($scope.allLicenses, function (siteObj) {
+          if (siteObj.siteUrl === '' && !siteObj.confModel) {
+            siteObj.confModel = siteObj.licenseId === userInvites.cf;
+          }
+          siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+            if (!conf.confModel) {
+              conf.confModel = conf.licenseId === userInvites.cf;
+            }
+            return conf;
+          });
+        });
+      }
+    }
+
     $scope.radioStates = {
       commRadio: false,
       msgRadio: false
@@ -409,6 +436,12 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         }
+      }
+    }
+
+    if (userInvites) {
+      if (userInvites.ms) {
+        $scope.radioStates.msgRadio = true;
       }
     }
 
@@ -431,11 +464,13 @@
     }
 
     $scope.checkCMR = function (confModel, cmrLics) {
-      if (!confModel) {
-        angular.forEach(cmrLics, function (cmrLic) {
-          cmrLic.cmrModel = confModel;
-        });
-      }
+      cmrLics.forEach(function (cmrLic) {
+        cmrLic.cmrModel = confModel;
+      });
+    };
+
+    $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
+      $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
     };
 
     var generateConfChk = function (confs, cmrs) {
@@ -495,6 +530,9 @@
       }
 
       populateConf();
+      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
+        populateConfInvitations();
+      }
     };
 
     $scope.isSubscribeable = function (license) {
@@ -1738,7 +1776,7 @@
       data: 'unlicensedUsersList',
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 40,
+      selectionRowHeaderWidth: 50,
       enableRowHeaderSelection: true,
       enableFullRowSelection: true,
       useExternalSorting: false,

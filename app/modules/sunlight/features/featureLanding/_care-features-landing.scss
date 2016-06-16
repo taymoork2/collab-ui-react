@@ -1,0 +1,109 @@
+.care-no-features {
+  @extend %content-header;
+}
+
+
+.care-features {
+  @extend %content-subheader;
+
+  .cs-card article {
+    height : rem-calc(170);
+  }
+
+  .cs-card article header {
+    @include vr-spacing(pt, 1);
+  }
+
+  .card-icon {
+    display : block;
+    height : 2rem;
+    width : 2rem;
+    line-height: 2rem;
+    border-radius: 50%;
+    background-color: $gray-light-4;
+    text-align: center;
+    @include vr-spacing(ml, .5);
+  }
+
+  .card-footer {
+    width : 100%;
+    display : flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    @include vr-spacing(ph, 1);
+    @include vr-spacing(pt, 4.5);
+    @include vr-spacing(pb, .5);
+
+    .embed-code-txt {
+      color: $color-primary;
+      &:hover,
+      &:focus {
+        cursor: pointer;
+      }
+    }
+
+    a {
+      font-size: rem-calc(24);
+      color: $gray-light-2;
+      top: -2px;
+      @include vr-spacing(ml, 0.5);
+      &:hover,
+      &:focus {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .card-icon-color-CT {
+    color: $color-attention-base;
+  }
+
+  .spinner-icon{
+    display : flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .features-reload {
+    display : flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    >p {
+      color: $gray-dark;
+    }
+    >div {
+      color: $gray-darker;
+    }
+  }
+}
+
+.no-features {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: $brand-white;
+
+  .icon {
+    font-size: 10rem
+  }
+  .ct-desc {
+    max-width: rem-calc(330);
+  }
+
+  .new-btn {
+    @include vr-spacing(pt, 1.5);
+  }
+
+  & div {
+    @include vr-spacing(pt, 1);
+  }
+}

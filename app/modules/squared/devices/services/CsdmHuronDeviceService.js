@@ -53,6 +53,10 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
+    function getPhoneUrl(deviceId, cisUuid) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId;
+    }
+
     function encodeHuronTags(description) {
       return (description || "").replace(/"/g, "'");
     }
@@ -116,6 +120,23 @@
         });
     }
 
+    function getTimezoneForDevice(huronDevice) {
+      return $http.get(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
+        .then(function (res) {
+          var timeZone = null;
+          if (res.data) {
+            timeZone = res.data.timeZone;
+          }
+          return timeZone;
+        });
+    }
+
+    function setTimezoneForDevice(huronDevice, timezone) {
+      return $http.put(getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid), {
+        timeZone: timezone
+      });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -146,6 +167,8 @@
       dataLoaded: dataLoaded,
       getDeviceList: getDeviceList,
       getLinesForDevice: getLinesForDevice,
+      getTimezoneForDevice: getTimezoneForDevice,
+      setTimezoneForDevice: setTimezoneForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       updateTags: updateTags

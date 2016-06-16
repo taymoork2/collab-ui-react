@@ -1,46 +1,63 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
-/// <reference path="ServicesOverview.ctrl.ts"/>
+/// <reference path="servicesOverview.ctrl.ts"/>
 namespace servicesOverview {
 
   describe('ServiceOverviewCtrl', ()=> {
 
-    let Config, $q, $rootScope, $httpBackend;
+    let Config, $controller, $q, $rootScope, $scope, $httpBackend;
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Hercules'));
-    beforeEach(inject((_$q_, _$rootScope_, _Config_)=> {
-      Config = _Config_;
+    beforeEach(inject((_$controller_, _$q_, _$rootScope_, _Config_)=> {
+      $controller = _$controller_;
       $q = _$q_;
       $rootScope = _$rootScope_;
+      Config = _Config_;
+      $scope = $rootScope.$new();
     }));
 
     let ctrl:ServicesOverviewCtrl;
-    beforeEach(inject(($injector, $controller)=> {
+    beforeEach(inject(($injector)=> {
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend.when('GET', /\/services/).respond([]);
-      ctrl = $controller('ServicesOverviewCtrl',
-        {
-          FeatureToggleService: {
-            supports: sinon.stub().returns($q.resolve(true)),
-            features: {servicesOverview: 'services-overview'}
-          }
-        });
     }));
+
+    function initController({F410=false, F288=true}) {
+      ctrl = $controller('ServicesOverviewCtrl', {
+        FeatureToggleService: {
+          features: {
+            hybridServicesResourceList: 'F410',
+            servicesOverview: 'F288'
+          },
+          supports: function (feature) {
+            if (feature === 'F410') {
+              return $q.when(F410);
+            } else if (feature === 'F288') {
+              return $q.when(F288);
+            }
+          }
+        }
+      });
+      $scope.$apply();
+    }
 
     describe('constructor', () => {
 
       it('should create the ctrl and add the cards', ()=> {
-        $rootScope.$digest();
+        initController({});
+        // $rootScope.$digest();
         expect(ctrl.cloudCards).not.toBeNull();
       });
 
       it('should create cloud cards', ()=> {
+        initController({});
         expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.message.title'}).length).toBe(1);
         expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.meeting.title'}).length).toBe(1);
         expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.call.title'}).length).toBe(1);
       });
 
       it('should default filter to show all hybrid cards', ()=> {
+        initController({});
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'}).length).toBe(1);
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.calendar.title'}).length).toBe(1);
         expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridCall.title'}).length).toBe(1);
@@ -49,14 +66,16 @@ namespace servicesOverview {
       });
     });
 
-    it('selecting filter to show only active should remove non active', ()=> {
-      ctrl.filterHybridCard('active');
-      expect(_.some(ctrl.hybridCards, {active: false})).toBeFalsy();
+    it('should show the right cards when the F410 feature is NOT active', ()=> {
+      initController({F410:false});
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'})).not.toBe(undefined);
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.clusterList.title'})).toBe(undefined);
     });
 
-    it('selecting filter to show all cards should show non active', ()=> {
-      ctrl.filterHybridCard('all');
-      expect(_.some(ctrl.hybridCards, {active: false})).toBeTruthy();
+    it('should show the right cards when the F410 feature is active', ()=> {
+      initController({F410:true});
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'})).toBe(undefined);
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.clusterList.title'})).not.toBe(undefined);
     });
   });
 }

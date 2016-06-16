@@ -4,13 +4,14 @@
     .controller('UserRolesCtrl', UserRolesCtrl);
 
   /* @ngInject */
-  function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService) {
+  function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, FeatureToggleService, EdiscoveryService) {
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = ($scope.isPartner && !Config.isProd()) || $scope.helpDeskFeatureAllowed;
+    $scope.showComplianceRole = Authinfo.getUserId() == "b78903e2-39e6-45fa-af0f-5d31de45934f";
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
@@ -98,16 +99,17 @@
       $scope.rolesObj.billingAdminValue = hasRole(Config.backend_roles.billing);
       $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
       $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
+      $scope.rolesObj.complianceValue = $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
     }
 
     function checkMainRoles() {
       if ($scope.roles) {
         if (hasRole(Config.backend_roles.full_admin)) {
           return 1;
-        } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
-          return 2;
         } else if (hasRole(Config.backend_roles.readonly_admin)) {
           return 3;
+        } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
+          return 2;
         }
       }
       return 0;
@@ -136,13 +138,29 @@
     }
 
     function updateRoles() {
+      if ($scope.showComplianceRole && $scope.rolesObj.complianceValue != isEntitledToCompliance()) {
+        EdiscoveryService.setEntitledForCompliance(Authinfo.getOrgId(), $scope.currentUser.id, $scope.rolesObj.complianceValue).then(
+          function (res) {
+            patchUserRoles();
+          },
+          function (err) {
+            var errorMessage = [];
+            errorMessage.push($translate.instant('profilePage.complianceError'));
+            Notification.notify(errorMessage, 'error');
+          });
+      } else {
+        patchUserRoles();
+      }
+    }
+
+    function patchUserRoles() {
       var choice = $scope.rolesObj.adminRadioValue;
       var roles = [];
 
       switch ($scope.rolesObj.adminRadioValue) {
       case 0: // No admin
         for (var roleName in Config.roles) {
-          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms) {
+          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms && Config.roles[roleName] !== Config.roles.compliance_user) {
             roles.push({
               'roleName': Config.roles[roleName],
               'roleState': Config.roleState.inactive
@@ -335,5 +353,8 @@
       $scope.rolesEdit.form.$dirty = true;
     }
 
+    function isEntitledToCompliance() {
+      return $scope.currentUser && _.includes($scope.currentUser.entitlements, 'compliance');
+    }
   }
 })();

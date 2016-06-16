@@ -9,22 +9,7 @@ namespace servicesOverview {
     private _buttons:Array<servicesOverview.CardButton> = [
       {
         name: 'servicesOverview.cards.clusterList.buttons.all',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.expressway',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.mediafusion',
-        link: 'services/resource',
-        buttonClass: 'btn-link'
-      },
-      {
-        name: 'servicesOverview.cards.clusterList.buttons.context',
-        link: 'services/resource',
+        link: 'services/clusters',
         buttonClass: 'btn-link'
       }
     ];
@@ -34,12 +19,17 @@ namespace servicesOverview {
       return this._buttons;
     }
 
+    public f410FeatureEventHandler(hasFeature:boolean) {
+      this._display = hasFeature;
+    }
+
     public constructor() {
       super({
         name: 'servicesOverview.cards.clusterList.title',
         description: 'servicesOverview.cards.clusterList.description',
-        cardClass: 'context',
-        cardType: CardType.hybrid
+        cardClass: 'cluster-list',
+        cardType: CardType.hybrid,
+        display : false
       });
       this._loading = false;
     }

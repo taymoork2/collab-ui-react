@@ -1,51 +1,91 @@
 <!-- Add Trial Modal -->
-<form id="addTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-  <!-- header -->
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$dismiss()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h3 class="modal-title" translate="trialModal.addTrial.title"></h3>
-  </div>
 
-  <!-- body -->
-  <section class="modal-body collapse-fields row">
-    <h5 translate="partnerHomePage.customerInformation"></h5>
-    <formly-form model="trial.details" fields="trial.custInfoFields"
-      class="small-12 columns indent">
-    </formly-form>
-  </section>
-  <section class="modal-body collapse-fields">
-    <h5 translate="partnerHomePage.trialServices"></h5>
-    <section class="row indent">
-      <h6 class="small-12 columns" translate="partnerHomePage.individualUserServices"></h6>
-      <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show"
-        class="small-12 columns indent">
-      </formly-form>
-    </section>
-    <section class="row indent" ng-if="trial.showRoomSystems">
-      <h6 class="small-12 columns" translate="partnerHomePage.deviceBasedServices"></h6>
-      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show"
-        class="small-12 columns indent">
-      </formly-form>
-    </section>
-  </section>
-  <section class="modal-body row">
-    <h5 translate="partnerHomePage.termsOfTrial"></h5>
-    <formly-form model="trial.details" fields="trial.trialTermsFields"
-      class="small-12 columns indent">
-    </formly-form>
-  </section>
+<!-- header -->
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="trialModal.addTrial.title"></h3>
+</div>
 
-  <!-- footer -->
-  <div class="modal-footer">
-    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
-      <span translate="partnerHomePage.cancel"></span>
-    </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
-        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
-        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
-    </button>
-  </div>
-</form>
+<!-- body -->
+<div class="modal-body trials">
+  <form id="addTrialForm" class="cs-form trial-modal" name="trialForm" novalidate>
+
+    <!-- customer information -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="partnerHomePage.customerInformation"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.details" fields="trial.custInfoFields"></formly-form>
+      </div>
+    </div>
+
+    <!-- trial services -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="partnerHomePage.trialServices"></h4>
+            <p class="section__description" translate="trials.supportSelectLocations"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.message"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.messageFields"></formly-form>
+        </div>
+
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.meeting"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.meetingFields"></formly-form>
+        </div>
+
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="subscriptions.call"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.callFields"></formly-form>
+        </div>
+
+        <div class="sub-section" ng-if="trial.showCare">
+          <h5 class="sub-section__label" translate="subscriptions.care"></h5>
+          <formly-form model="trial.trialData.trials" fields="trial.careFields"></formly-form>
+        </div>
+
+        <div class="sub-section" ng-if="trial.showRoomSystems">
+          <h5 class="sub-section__label" translate="subscriptions.room"></h5>
+          <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields"></formly-form>
+        </div>
+      </div>
+    </div>
+
+    <!-- license quantity -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trials.licenseQuantity"></h5>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.trialData.trials" fields="trial.licenseCountFields"></formly-form>
+      </div>
+    </div>
+
+    <!-- trial duration -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 translate="trials.trialDuration"></h5>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.details" fields="trial.trialTermsFields"></formly-form>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- footer -->
+<div class="modal-footer">
+  <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
+    <span translate="partnerHomePage.cancel"></span>
+  </button>
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+    ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+  </button>
+</div>

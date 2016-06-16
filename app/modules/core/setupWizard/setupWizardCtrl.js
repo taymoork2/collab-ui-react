@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, Authinfo, $q, FeatureToggleService) {
+  function SetupWizardCtrl($scope, Authinfo, $q, FeatureToggleService, $stateParams) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -37,6 +37,9 @@
       title: 'firstTimeWizard.enterpriseSettings',
       controller: 'EnterpriseSettingsCtrl',
       steps: [{
+        name: 'enterpriseSipUrl',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html'
+      }, {
         name: 'init',
         template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
       }, {
@@ -93,8 +96,8 @@
         }, {
           name: 'syncStatus',
           template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-        }],
-      }],
+        }]
+      }]
     }];
 
     $scope.isDirSyncEnabled = false;
@@ -109,7 +112,9 @@
     }
 
     function init() {
-      $scope.tabs = tabs;
+
+      $scope.tabs = filterTabs(tabs);
+
       setupAddUserSubTabs();
 
       if (Authinfo.isSquaredUC()) {
@@ -150,24 +155,34 @@
         });
       }
 
-      var enterpriseSipUrlStep = {
-        name: 'enterpriseSipUrl',
-        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
-      };
-
-      var enterpriseSettingsTab = _.find($scope.tabs, {
-        name: 'enterpriseSettings',
-      });
-      if (angular.isDefined(enterpriseSettingsTab)) {
-        enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
-      }
-
       // if we have any step thats is empty, we remove the tab
       _.forEach($scope.tabs, function (tab, index) {
         if (tab.steps.length === 0) {
           $scope.tabs.splice(index, 1);
         }
       });
+    }
+
+    function filterTabs(tabs) {
+      if (!($stateParams.onlyShowSingleTab && $stateParams.currentTab)) {
+        return tabs;
+      }
+
+      var filteredTabs = _.filter(tabs, function (tab) {
+        return ($stateParams.currentTab == tab.name);
+      });
+
+      if ($stateParams.currentStep && filteredTabs.length === 1 && filteredTabs[0].steps) {
+        //prevent "back" button if a step is defined in single tab mode:
+        var tab = filteredTabs[0];
+        var index = _.findIndex(tab.steps, {
+          name: $stateParams.currentStep
+        });
+        if (index > 0) {
+          tab.steps.splice(0, index);
+        }
+      }
+      return filteredTabs;
     }
 
     function setupAddUserSubTabs() {

@@ -30,6 +30,7 @@
         templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
+        type: 'small'
       }).result.then(function () {
         vm.disableMediaService(serviceId);
       });
