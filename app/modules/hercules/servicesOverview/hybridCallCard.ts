@@ -9,7 +9,7 @@ namespace servicesOverview {
     private _setupButton:CardButton = {
       name: 'servicesOverview.genericButtons.setup',
       link: 'services/call',
-      buttonClass: 'cta-btn'
+      buttonClass: 'btn'
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
@@ -19,7 +19,7 @@ namespace servicesOverview {
         link: 'services/call/settings',
         buttonClass: 'btn-link'
       }];
-    
+
     getButtons():Array<servicesOverview.CardButton> {
       if (this.active)
         return _.take(this._buttons, 3);
