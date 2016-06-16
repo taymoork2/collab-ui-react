@@ -48,7 +48,6 @@ describe('Controller: PartnerProfileCtrl', function () {
         $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
         $scope.supportUrl = 'supportUrl';
         $scope.supportText = 'this is support text';
-        $scope.allowReadOnlyAccess = false;
         $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
         $scope.helpUrl = 'helpUrl';
         $scope.validation();
@@ -58,7 +57,6 @@ describe('Controller: PartnerProfileCtrl', function () {
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
           isCiscoSupport: false,
-          allowReadOnlyAccess: false,
           allowCrashLogUpload: false
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
