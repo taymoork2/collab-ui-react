@@ -1,55 +1,61 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  angular
+    .module('Core')
     .service('WebExSiteRowService', WebExSiteRowService);
 
   /* @ngInject */
   function WebExSiteRowService($interval, $translate, Authinfo, Userservice, FeatureToggleService, WebExUtilsFact, UrlConfig, WebExApiGatewayService, WebExApiGatewayConstsService) {
+    this.initSiteRowsObj = function () {
+      _this.siteRows = {
+        gridData: [],
+        gridOptions: {},
+        showCSVIconAndResults: false,
+        allSitesWebexLicensesArray: [],
+      };
+    }; // initSiteRowsObj()
 
-    var siteRows = {};
+    this.initSiteRows = function () {
+      _this.getConferenceServices();
+      _this.configureGrid();
+    }; // initSiteRows()
 
-    siteRows.gridData = [];
-    siteRows.showGridData = true;
-    siteRows.gridOptions = {};
-    siteRows.showCSVIconAndResults = false;
-    siteRows.allSitesWebexLicensesArray = [];
-
-    siteRows.addSiteRow = function (newSiteRow) {
-      siteRows.gridData.push(newSiteRow);
+    this.addSiteRow = function (newSiteRow) {
+      _this.siteRows.gridData.push(newSiteRow);
     };
 
-    siteRows.getSiteRows = function () {
-      return siteRows.gridData;
+    this.getSiteRows = function () {
+      return _this.siteRows.gridData;
     };
 
-    siteRows.getGridOptions = function () {
-      return siteRows.gridOptions;
+    this.getGridOptions = function () {
+      return _this.siteRows.gridOptions;
     };
 
-    siteRows.getShowGridData = function () {
-      return siteRows.showGridData;
+    this.getShowGridData = function () {
+      return _this.siteRows.showGridData;
     };
 
-    siteRows.getSiteRow = function (siteUrl) {
-      var siteRow = _.findWhere(siteRows.gridData, {
+    this.getSiteRow = function (siteUrl) {
+      var siteRow = _.findWhere(_this.siteRows.gridData, {
         siteUrl: siteUrl
       });
       return siteRow;
     };
 
-    siteRows.logSiteRows = function () {
+    this.logSiteRows = function () {
       var funcName = "logSiteRows()";
-      var logMsg = funcName + "\n" + JSON.stringify(siteRows.gridData);
+      var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
       //$log.log(logMsg);
-      //$log.log("siteRows.showGridData = " + siteRows.showGridData + "\n");
-      //$log.log("siteRows.gridOptions = " + JSON.stringify(siteRows.gridOptions) + "\n");
-      //$log.log("siteRows.showCSVIconAndResults = " + siteRows.showCSVIconAndResults + "\n");
+      //$log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
+      //$log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
+      //$log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
 
     };
 
-    siteRows.stopPolling = function () {
-      siteRows.gridData.forEach(
+    this.stopPolling = function () {
+      _this.siteRows.gridData.forEach(
         function cancelCsvPollInterval(siteRow) {
           var funcName = "cancelCsvPollInterval()";
           var logMsg = "";
@@ -62,18 +68,18 @@
             $interval.cancel(siteRow.csvPollIntervalObj);
           }
         } // cancelCsvPollInterval()
-      ); // WebExSiteRowService.siteRows.gridData.forEach()
+      ); // _this.siteRows.gridData.forEach()
     };
 
-    siteRows.configureGrid = function () {
+    this.configureGrid = function () {
       var funcName = "configureGrid()";
       var logMsg = "";
       //$log.log(logMsg);
 
       // Start of grid set up
-      siteRows.gridOptions = {
+      _this.siteRows.gridOptions = {
         //data: $scope.gridData,
-        data: siteRows.gridData,
+        data: _this.siteRows.gridData,
         multiSelect: false,
         enableRowSelection: false,
         enableColumnMenus: false,
@@ -81,14 +87,14 @@
         columnDefs: [],
       };
 
-      siteRows.gridOptions.columnDefs.push({
+      _this.siteRows.gridOptions.columnDefs.push({
         field: 'license.siteUrl',
         displayName: $translate.instant('siteList.siteName'),
         sortable: false,
         width: '25%'
       });
 
-      siteRows.gridOptions.columnDefs.push({
+      _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteConfLicenses',
         displayName: $translate.instant('siteList.licenseTypes'),
         cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
@@ -96,7 +102,7 @@
         width: '17%'
       });
 
-      siteRows.gridOptions.columnDefs.push({
+      _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteActions',
         displayName: $translate.instant('siteList.siteActions'),
         cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
@@ -106,10 +112,10 @@
       //$log.log(JSON.stringify(funcName + "\n" +
       //JSON.stringify(siteRows.gridOptions)));
 
-      siteRows.updateConferenceServices();
+      _this.updateConferenceServices();
     }; //configureGrid
 
-    siteRows.getConferenceServices = function () {
+    this.getConferenceServices = function () {
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
       var funcName = "getConferenceServices()";
       var logMsg = funcName + "\n" +
@@ -121,7 +127,7 @@
           var newSiteUrl = conferenceService.license.siteUrl;
           var isNewSiteUrl = true;
 
-          siteRows.gridData.forEach(
+          _this.siteRows.gridData.forEach(
             function checkGrid(siteRow) {
               if (newSiteUrl == siteRow.license.siteUrl) {
                 isNewSiteUrl = false;
@@ -186,21 +192,20 @@
               mockFileDownload: false
             };
 
-            siteRows.addSiteRow(conferenceService);
+            _this.addSiteRow(conferenceService);
           }
         }
       );
     }; //getConferenceServices()
 
-    siteRows.updateConferenceServices = function () {
+    this.updateConferenceServices = function () {
 
       var funcName = "updateConferenceServices()";
       var logMsg = "";
       //$log.log(logMsg);
 
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        //SiteListService.updateGrid(vm);
-        siteRows.checkAndUpdateGridOptions();
+        _this.checkAndUpdateGridOptions();
       } else {
         Userservice.getUser('me', function (data, status) {
           if (
@@ -208,20 +213,19 @@
             (data.emails)
           ) {
             Authinfo.setEmails(data.emails);
-            //SiteListService.updateGrid(vm);
-            siteRows.checkAndUpdateGridOptions();
+            _this.checkAndUpdateGridOptions();
           }
         });
       }
 
     }; //updateConferenceServices()
 
-    siteRows.checkAndUpdateGridOptions = function () {
-      var funcName = "updateGrid()";
+    this.checkAndUpdateGridOptions = function () {
+      var funcName = "checkAndUpdateGridOptions()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteRows.gridData=" + JSON.stringify(siteRows.gridData);
+        "siteRows.gridData=" + JSON.stringify(_this.siteRows.gridData);
       // $log.log(logMsg);
 
       // remove grid column(s) based on feature toggles
@@ -235,7 +239,7 @@
           // $log.log(logMsg);
 
           // Start of hide CSV info if admin user does not have feature toggle
-          siteRows.gridData.forEach(
+          _this.siteRows.gridData.forEach(
             function processSiteRow(siteRow) {
               var funcName = "checkWebExFeaturToggleSuccess().processSiteRow()";
               var logMsg = "";
@@ -244,14 +248,7 @@
             } // processSiteRow()
           ); // gridData.forEach()
 
-          /*
-          // delete the Actions column if admin user does not have feature toggle
-          if (!adminUserSupportCSV) {
-            vm.gridOptions.columnDefs.splice(2, 1);
-          }
-          */
-
-          siteRows.updateGridColumns();
+          _this.updateGridColumns();
         }, // checkWebExFeaturToggleSuccess()
 
         function checkWebExFeaturToggleError(response) {
@@ -260,22 +257,22 @@
 
           //$log.log(funcName);
 
-          siteRows.updateGridColumns();
+          _this.updateGridColumns();
         } // checkWebExFeaturToggleError()
       ); // FeatureToggleService.supports().then()
 
     }; //checkAndUpdateGridOptions
 
-    siteRows.updateGridColumns = function () {
+    this.updateGridColumns = function () {
       var funcName = "updateGridColumns()";
       var logMsg = "";
       //$log.log(funcName);
 
-      siteRows.updateLicenseTypesColumn();
-      siteRows.updateWebExDataColumns();
+      _this.updateLicenseTypesColumn();
+      _this.updateWebExDataColumns();
     }; // updateGridColumns()
 
-    siteRows.updateLicenseTypesColumn = function () {
+    this.updateLicenseTypesColumn = function () {
       var funcName = "updateLicenseTypesColumn()";
       var logMsg = "";
       //$log.log(funcName);
@@ -291,7 +288,7 @@
 
           var allSitesWebexLicensesArray = allSitesLicenseInfo;
 
-          siteRows.gridData.forEach(
+          _this.siteRows.gridData.forEach(
             function processGridForLicense(siteRow) {
               var funcName = "processGridForLicense()";
               var logMsg = "";
@@ -494,23 +491,23 @@
 
     }; // updateLicenseTypesColumn
 
-    siteRows.updateWebExDataColumns = function () {
+    this.updateWebExDataColumns = function () {
       var funcName = "updateWebExDataColumns()";
       var logMsg = "";
       //$log.log(funcName);
 
-      siteRows.gridData.forEach(
+      _this.siteRows.gridData.forEach(
         function processSiteRow(siteRow) {
           var funcName = "processSiteRow()";
           var logMsg = "";
 
-          siteRows.updateWebExColumnsInRow(siteRow);
+          _this.updateWebExColumnsInRow(siteRow);
         } // processSiteRow()
       ); // gridData.forEach()
 
     }; // updateWebExDataColumns
 
-    siteRows.updateWebExColumnsInRow = function (siteRow) {
+    this.updateWebExColumnsInRow = function (siteRow) {
       var funcName = "updateWebExColumnsInRow()";
       var logMsg = "";
       //$log.log(logMsg);
@@ -555,13 +552,13 @@
             return;
           }
 
-          siteRows.updateCSVStatusInRow(siteRow.siteUrl);
+          _this.updateCSVStatusInRow(siteRow.siteUrl);
 
           // start CSV status poll
           var pollInterval = 30000; // 30sec (15000 is 15sec; 3600000 is 1hr;)
           siteRow.csvPollIntervalObj = $interval(
             function () {
-              siteRows.updateCSVStatusInRow(siteRow.siteUrl);
+              _this.updateCSVStatusInRow(siteRow.siteUrl);
             },
 
             pollInterval
@@ -589,11 +586,11 @@
       ); // WebExApiGatewayService.siteFunctions().then
     }; // updateWebExColumnsInRow()
 
-    siteRows.updateCSVStatusInRow = function (siteUrl) {
-      var funcName = "WebExSiteRowService.updateCSVStatusInRow()";
+    this.updateCSVStatusInRow = function (siteUrl) {
+      var funcName = "updateCSVStatusInRow()";
       var logMsg = "";
 
-      var siteRow = siteRows.getSiteRow(siteUrl);
+      var siteRow = _this.getSiteRow(siteUrl);
       logMsg = funcName + "\n" +
         "siteRow=" + "\n" + JSON.stringify(siteRow);
       //$log.log(logMsg);
@@ -648,7 +645,7 @@
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = false;
 
-          siteRows.updateDisplayControlFlagsInRow(siteRow);
+          _this.updateDisplayControlFlagsInRow(siteRow);
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -663,14 +660,14 @@
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
 
-          siteRows.updateDisplayControlFlagsInRow(siteRow);
+          _this.updateDisplayControlFlagsInRow(siteRow);
 
           siteRow.showCSVInfo = false;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteRow.siteUrl).then()
     }; // updateCSVStatusInRow()
 
-    siteRows.updateDisplayControlFlagsInRow = function (siteRow) {
+    this.updateDisplayControlFlagsInRow = function (siteRow) {
 
       var funcName = "updateDisplayControlFlagsInRow()";
       var logMsg = "";
@@ -747,7 +744,12 @@
       siteRow.showCSVInfo = true;
     }; //updateDisplayControlFlagsInRow()
 
-    return siteRows;
+    ////////
+
+    var _this = this;
+
+    this.siteRows = null;
+    this.initSiteRowsObj();
 
   } // WebExSiteRowService
 })();
