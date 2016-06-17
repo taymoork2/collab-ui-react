@@ -20,7 +20,7 @@
     obj.isCIEnabledSite = function (siteUrl) {
       var funcName = "isCIEnabledSite()";
       var logMsg = "";
-      
+
       var licenses = Authinfo.getLicenses();
 
       logMsg = funcName + "\n" +
