@@ -3269,12 +3269,7 @@
     "supportInfo": "Si da soporte a sus usuarios, introduzca los parámetros de soporte a continuación. Estos parámetros se muestran en Opciones de soporte dentro de la aplicación de Spark.",
     "supportAccessTitle": "Acceso del servicio de soporte",
     "supportAccessInfo": "Esta opción le conferirá al servicio de Cisco o al servicio para socios acceso de solo lectura a su organización. No se permitirá realizar ningún cambio a la información de su organización.",
-    "supportAccessCheckbox": "Permitir al servicio de soporte de Cisco o para socios acceso de solo lectura a su organización.",
-    "crashReportTitle": "Creación automática de informes por bloqueo",
-    "crashReportText": "Si se bloquea un terminal, los archivos de registro se remitirán a Cisco a fin de ayudar a mejorar la calidad del servicio.",
-    "crashReportCheckboxLabel": "Activar creación automática de informes por bloqueo",
-    "crashReportTooltipDescription": "¿Qué contienen estos informes?",
-    "crashReportTooltip": "Los informes por bloqueo pueden incluir los identificadores de los usuarios y organizaciones, las cadenas de agente de usuario, las cadenas de agente de los exploradores desinfectadas, las direcciones IP del cliente y la dirección MAC del dispositivo del usuario. Toda la información se trata de forma confidencial y se utiliza exclusivamente para mejorar la calidad del producto."
+    "supportAccessCheckbox": "Permitir al servicio de soporte de Cisco o para socios acceso de solo lectura a su organización."
   },
   "fileUpload": {
     "uploading": "Cargando archivo",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Esta opción le conferirá al servicio de soporte de Cisco o para socios acceso de solo lectura a su organización. No se permitirá realizar ningún cambio en la información de su organización.",
       "allowReadOnlyOrgAccess": "Conceder al servicio de soporte de Cisco o para socios acceso de solo lectura a su organización",
       "usageDataHeader": "Datos de uso enviados a Cisco Partner",
-      "usageDataDescription": "Comparta los datos de calidad de servicio y de compromiso con su Cisco Partner para permitir un soporte de socio de mayor nivel."
+      "usageDataDescription": "Comparta los datos de calidad de servicio y de compromiso con su Cisco Partner para permitir un soporte de socio de mayor nivel.",
+      "crashReportTitle": "Creación automática de informes por bloqueo",
+      "crashReportText": "Si se bloquea un terminal, los archivos de registro se remitirán a Cisco a fin de ayudar a mejorar la calidad del servicio.",
+      "crashReportCheckboxLabel": "Activar creación automática de informes por bloqueo",
+      "crashReportTooltipDescription": "¿Qué contienen estos informes?",
+      "crashReportTooltip": "Los informes por bloqueo pueden incluir los identificadores de los usuarios y organizaciones, las cadenas de agente de usuario, las cadenas de agente de los exploradores desinfectadas, las direcciones IP del cliente y la dirección MAC del dispositivo del usuario. Toda la información se trata de forma confidencial y se utiliza exclusivamente para mejorar la calidad del producto."
     },
     "security": {
       "title": "Seguridad",

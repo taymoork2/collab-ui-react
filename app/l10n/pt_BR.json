@@ -3269,12 +3269,7 @@
     "supportInfo": "Se você estiver fornecendo suporte aos usuários, insira seus parâmetros de suporte abaixo. Estes parâmetros serão exibidos sob as Opções de suporte no aplicativo Spark.",
     "supportAccessTitle": "Acesso ao suporte",
     "supportAccessInfo": "Essa configuração dá à Cisco ou ao Parceiro acesso somente de leitura à sua organização. Ela não permite que sejam feitas alterações aos detalhes da sua organização.",
-    "supportAccessCheckbox": "Permita à Cisco ou ao Suporte de parceiro acesso somente de leitura à sua organização.",
-    "crashReportTitle": "Relatório de travamento automático",
-    "crashReportText": "Se um terminal travar, os registros serão carregado na Cisco para ajudar a melhorar a qualidade do serviço.",
-    "crashReportCheckboxLabel": "Habilitar relatório de travamento automático",
-    "crashReportTooltipDescription": "O que esses relatórios contêm?",
-    "crashReportTooltip": "Os relatórios de falhas podem incluir identificadores de usuário e organização, sequências do agente de usuários, sequência do navegador de agente higienizado, endereços IP do cliente e endereço MAC do dispositivo do usuário. Todas as informações serão tratadas de forma confidencial e utilizadas exclusivamente para o aprimoramento da qualidade do produto."
+    "supportAccessCheckbox": "Permita à Cisco ou ao Suporte de parceiro acesso somente de leitura à sua organização."
   },
   "fileUpload": {
     "uploading": "Carregamento de arquivos",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Essa configuração dá ao Suporte da Cisco ou do Parceiro acesso somente de leitura à sua organização. Ela não permite que sejam feitas alterações aos detalhes da sua organização.",
       "allowReadOnlyOrgAccess": "Permita ao Suporte da Cisco ou do Parceiro acesso somente de leitura à sua organização",
       "usageDataHeader": "Dados de uso enviados ao parceiro Cisco",
-      "usageDataDescription": "Compartilhe a qualidade dos dados de engajamento e serviço com seu parceiro Cisco para permitir o suporte dos parceiros de nível superior."
+      "usageDataDescription": "Compartilhe a qualidade dos dados de engajamento e serviço com seu parceiro Cisco para permitir o suporte dos parceiros de nível superior.",
+      "crashReportTitle": "Relatório de travamento automático",
+      "crashReportText": "Se um terminal travar, os registros serão carregado na Cisco para ajudar a melhorar a qualidade do serviço.",
+      "crashReportCheckboxLabel": "Habilitar relatório de travamento automático",
+      "crashReportTooltipDescription": "O que esses relatórios contêm?",
+      "crashReportTooltip": "Os relatórios de falhas podem incluir identificadores de usuário e organização, sequências do agente de usuários, sequência do navegador de agente higienizado, endereços IP do cliente e endereço MAC do dispositivo do usuário. Todas as informações serão tratadas de forma confidencial e utilizadas exclusivamente para o aprimoramento da qualidade do produto."
     },
     "security": {
       "title": "Segurança",

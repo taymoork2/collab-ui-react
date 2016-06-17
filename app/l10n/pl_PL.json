@@ -3269,12 +3269,7 @@
     "supportInfo": "W przypadku świadczenia usług pomocy technicznej dla użytkowników wprowadź poniżej swoje dane dotyczące pomocy technicznej. Będą one wyświetlane w polu Opcje pomocy technicznej w aplikacji Spark.",
     "supportAccessTitle": "Dostęp dla pomocy technicznej",
     "supportAccessInfo": "To ustawienie umożliwia firmie Cisco lub jej partnerom dostęp do Twojej organizacji w trybie tylko do odczytu. Nie pozwala na zmiany szczegółowych informacji o niej.",
-    "supportAccessCheckbox": "Zezwól firmie Cisco lub jej partnerom na dostęp do Twojej organizacji w trybie tylko do odczytu.",
-    "crashReportTitle": "Automatyczne zgłaszanie awarii",
-    "crashReportText": "Jeśli punkt końcowy ulegnie awarii, dzienniki zostaną przesłane do firmy Cisco, aby pomóc w podniesieniu jakości usługi.",
-    "crashReportCheckboxLabel": "Włącz automatyczne zgłaszanie awarii",
-    "crashReportTooltipDescription": "Co zawierają te raporty?",
-    "crashReportTooltip": "Raporty z awarii mogą zawierać identyfikatory użytkownika i organizacji, ciągi agenta użytkownika, okrojone ciągi agenta przeglądarki, adresy IP klienta oraz adres MAC urządzenia użytkownika. Wszystkie informacje są traktowane jako poufne i są przeznaczone wyłącznie do poprawy jakości produktu."
+    "supportAccessCheckbox": "Zezwól firmie Cisco lub jej partnerom na dostęp do Twojej organizacji w trybie tylko do odczytu."
   },
   "fileUpload": {
     "uploading": "Przesyłanie pliku",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "To ustawienie umożliwia obsłudze technicznej firmy Cisco lub jej partnera dostęp do Twojej organizacji w trybie tylko do odczytu. Nie pozwala na zmiany szczegółowych informacji o niej.",
       "allowReadOnlyOrgAccess": "Zezwól firmie Cisco lub jej partnerom na dostęp do Twojej organizacji w trybie tylko do odczytu",
       "usageDataHeader": "Dane dotyczące użycia wysłane do partnera Cisco",
-      "usageDataDescription": "Udostępniaj dane dotyczące jakości usługi oraz zaangażowania swojemu partnerowi Cisco, aby umożliwić wsparcie na wyższym poziomie."
+      "usageDataDescription": "Udostępniaj dane dotyczące jakości usługi oraz zaangażowania swojemu partnerowi Cisco, aby umożliwić wsparcie na wyższym poziomie.",
+      "crashReportTitle": "Automatyczne zgłaszanie awarii",
+      "crashReportText": "Jeśli punkt końcowy ulegnie awarii, dzienniki zostaną przesłane do firmy Cisco, aby pomóc w podniesieniu jakości usługi.",
+      "crashReportCheckboxLabel": "Włącz automatyczne zgłaszanie awarii",
+      "crashReportTooltipDescription": "Co zawierają te raporty?",
+      "crashReportTooltip": "Raporty z awarii mogą zawierać identyfikatory użytkownika i organizacji, ciągi agenta użytkownika, okrojone ciągi agenta przeglądarki, adresy IP klienta oraz adres MAC urządzenia użytkownika. Wszystkie informacje są traktowane jako poufne i są przeznaczone wyłącznie do poprawy jakości produktu."
     },
     "security": {
       "title": "Bezpieczeństwo",

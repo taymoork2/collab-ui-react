@@ -3269,12 +3269,7 @@
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
     "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organisation. It does not allow changes to be made to your organisation's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organisation.",
-    "crashReportTitle": "Automatic Crash Reporting",
-    "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
-    "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
-    "crashReportTooltipDescription": "What do these reports contain?",
-    "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitised agent browser strings, client IP addresses and user device MAC addresses. All information will be treated confidentially and used solely for product quality enhancement."
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organisation."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organisation. It does not allow changes to be made to your organisation's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organisation",
       "usageDataHeader": "Usage Data Sent to Cisco Partner",
-      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
+      "crashReportTitle": "Automatic Crash Reporting",
+      "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
+      "crashReportTooltipDescription": "What do these reports contain?",
+      "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitised agent browser strings, client IP addresses and user device MAC addresses. All information will be treated confidentially and used solely for product quality enhancement."
     },
     "security": {
       "title": "Security",
