@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope) {
+  function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope, FeatureToggleService) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
