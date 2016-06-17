@@ -11,15 +11,7 @@
   <div class="row full">
     <div class="columns large-4 medium-5">
 
-      <h3 ng-if="helpdeskUserCtrl.supportsExtendedInformation" ng-click="helpdeskUserCtrl.openExtendedInformation('helpdesk.userDetails', helpdeskUserCtrl.userStringified)" style="cursor:pointer">
-        <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img">
-          <i class="icon icon-user"></i>
-        </span>
-        <img class="user-img" ng-if="helpdeskUserCtrl.user.photos" ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
-        {{helpdeskUserCtrl.user.displayName}}
-      </h3>
-
-      <h3 ng-if="!helpdeskUserCtrl.supportsExtendedInformation">
+      <h3 ng-class="{'pointer': helpdeskUserCtrl.supportsExtendedInformation}" ng-click="helpdeskUserCtrl.openExtendedInformation('helpdesk.userDetails', helpdeskUserCtrl.userStringified)">
         <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img">
           <i class="icon icon-user"></i>
         </span>
