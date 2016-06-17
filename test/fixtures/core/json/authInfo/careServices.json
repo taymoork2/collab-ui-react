@@ -1,22 +1,19 @@
-{
-  "careLicense": [{
-    "isCustomerPartner": false,
-    "label": "Care Digital Channel",
-    "license": {
-      "features": [
-        "contact-center-context",
-        "spark",
-        "cloud-contact-center",
-        "webex-squared",
-        "ccc_config"
-      ],
-      "isTrial": true,
-      "trialId": "cb80080b-293a-4180-91f1-60857f9a145b",
-      "licenseId": "CDC_24b7d249-d452-47e5-b484-651210e55767",
-      "licenseType": "CARE",
-      "offerName": "CDC",
-      "status": "ACTIVE",
-      "volume": 15
-    }
-  }]
-}
+[{
+  "isCustomerPartner": false,
+  "label": "Care Digital Channel",
+  "license": {
+    "features": [
+      "webex-squared",
+      "squared-call-initiation",
+      "cloud-contact-center"
+    ],
+    "isTrial": true,
+    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+    "licenseId": "CDC_da652e7d-cd34-4545-8f23-936b74359afd",
+    "licenseType": "CARE",
+    "offerName": "CDC",
+    "status": "ACTIVE",
+    "volume": 100
+  }
+}]
+

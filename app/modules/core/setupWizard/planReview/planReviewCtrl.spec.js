@@ -13,6 +13,7 @@ describe('Controller: PlanReviewCtrl', function () {
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
+    getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json')),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
   };
