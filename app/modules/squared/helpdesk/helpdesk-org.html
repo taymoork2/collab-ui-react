@@ -11,7 +11,7 @@
   <div class="row full">
     <div class="details-column columns large-4 medium-5">
 
-      <h3 ng-click="helpdeskOrgCtrl.openExtendedInformation('helpdesk.customerDetails', helpdeskOrgCtrl.orgStringified)">{{helpdeskOrgCtrl.org.displayName}}</h3>
+      <h3 ng-class="{'pointer': helpdeskOrgCtrl.supportsExtendedInformation}" ng-click="helpdeskOrgCtrl.openExtendedInformation('helpdesk.customerDetails', helpdeskOrgCtrl.orgStringified)">{{helpdeskOrgCtrl.org.displayName}}</h3>
 
       <hr>
 
