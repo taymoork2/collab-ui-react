@@ -28,6 +28,11 @@
       services: []
     };
 
+    vm.careServices = {
+      isNewTrial: false,
+      services: []
+    };
+
     vm.cmrServices = {
       isNewTrial: false,
       services: []
@@ -99,6 +104,18 @@
 
           if (service.license.status === 'PENDING') {
             vm.commServices.isNewTrial = true;
+          }
+        }
+      });
+
+      vm.careServices.services = Authinfo.getCareServices || [];
+      angular.forEach(vm.careServices.services, function (service) {
+        if (service.license.isTrial) {
+          vm.trialExists = true;
+          vm.trialId = service.license.trialId;
+
+          if (service.license.status === 'PENDING') {
+            vm.careServices.isNewTrial = true;
           }
         }
       });
