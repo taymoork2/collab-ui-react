@@ -53,6 +53,8 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows
     };
+    vm.isCareEnabled = false;
+
 
     init();
 
@@ -69,6 +71,10 @@
     }
 
     function init() {
+
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+        vm.isCareEnabled = careStatus;
+      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {

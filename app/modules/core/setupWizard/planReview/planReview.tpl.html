@@ -22,7 +22,7 @@
         <h3 translate="firstTimeWizard.call"></h3>
       </div>
     </div>
-    <div class="small-4 columns column-title">
+    <div ng-if="isCareEnabled" class="small-4 columns column-title">
       <div class="column-header">
         <i class="icon icon-circle-contact-centre"></i>
         <h3 translate="firstTimeWizard.care"></h3>
@@ -42,7 +42,7 @@
     <div class="small-4 columns column-free">
       <div class="item-free" translate="firstTimeWizard.freeCall"></div>
     </div>
-    <div class="small-4 columns column-free">
+    <div ng-if="isCareEnabled" class="small-4 columns column-free">
       <div class="item-free" translate="firstTimeWizard.freeCare"></div>
     </div>
   </div>
@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-    <div class="small-4 columns">
+    <div ng-if="isCareEnabled" class="small-4 columns">
       <div ng-if="planReview.careServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div ng-class="{'column-paid' : !planReview.careServices.isNewTrial, 'column-trial' : planReview.careServices.isNewTrial}">
         <div ng-if="planReview.careServices.services.length > 0" class="item-license">
