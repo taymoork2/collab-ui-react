@@ -1,6 +1,26 @@
 @import "plan-container";
 .wizard-plan-review {
   @extend %plan-container;
+
+  &.user-service-2 {
+    min-height:530px;
+  }
+
+  &.user-service-3 {
+    min-height:638px;
+  }
+
+  &.user-service-0.has-room-systems {
+    min-height:450px;
+  }
+
+  &.user-service-2.has-room-systems {
+    min-height:620px;
+  }
+
+   &.user-service-3.has-room-systems {
+    min-height:728px;
+  }
 }
 
 .wizard-trial-progress {
