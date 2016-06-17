@@ -3,9 +3,9 @@
 describe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation;
+  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     Config = _Config_;
@@ -17,6 +17,7 @@ describe('Auth Service', function () {
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
+    TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
 
     spyOn(WindowLocation, 'set');
@@ -102,7 +103,7 @@ describe('Auth Service', function () {
   });
 
   it('should refresh access token', function (done) {
-    Storage.get = sinon.stub().returns('fromStorage');
+    SessionStorage.get = sinon.stub().returns('fromStorage');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -115,7 +116,7 @@ describe('Auth Service', function () {
 
     Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
-      expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
+      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
       _.defer(done);
     });
@@ -200,7 +201,7 @@ describe('Auth Service', function () {
 
     Storage.clear();
     Auth.setAccessToken().then(function () {
-      expect(Storage.get('refreshToken')).toBe('refreshTokenFromAPI');
+      expect(TokenService.getRefreshToken()).toBe('refreshTokenFromAPI');
     });
 
     $httpBackend.flush();
@@ -210,7 +211,7 @@ describe('Auth Service', function () {
     var loggedOut = sinon.stub();
     Storage.clear = sinon.stub();
     OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-    Storage.get = sinon.stub().returns('accessToken');
+    SessionStorage.get = sinon.stub().returns('accessToken');
     OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
 
