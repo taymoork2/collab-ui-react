@@ -588,7 +588,7 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('updateUserLicense()', function () {
     beforeEach(initCurrentUserAndController);
 
-    beforeEach(function() {
+    beforeEach(function () {
       $scope.$dismiss = angular.noop;
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200, '')));
     });

@@ -909,21 +909,29 @@
     };
 
     $scope.updateUserLicense = function () {
-      var user = [];
+      var users = [];
       if (_.get($scope, 'usrlist.length')) {
-        user = $scope.usrlist;
+        users = $scope.usrlist;
       } else if ($scope.currentUser) {
         usersList = [];
         var userObj = {
           'address': $scope.currentUser.userName,
           'name': $scope.currentUser.name
         };
-        user.push(userObj);
-        usersList.push(user);
+        users.push(userObj);
+        usersList.push(users);
       }
       $scope.btnSaveEntLoad = true;
 
-      Userservice.onboardUsers(user, null, getAccountLicenses('patch'))
+      // make sure we have any internal extension and direct line set up for the users
+      _.forEach(users, function(user, idx) {
+        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (user.externalNumber && user.externalNumber.pattern !== 'None') {
+          user.directLine = user.externalNumber.pattern;
+        }
+      });
+
+      Userservice.onboardUsers(users, null, getAccountLicenses('patch'))
         .then(successCallback)
         .catch(errorCallback);
 
