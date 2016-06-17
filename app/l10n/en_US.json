@@ -2354,7 +2354,7 @@
       }
     },
     "finish": {
-      "title": "Congratulations!"
+      "title": "Trial Added"
     },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
