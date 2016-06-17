@@ -83,6 +83,35 @@ describe('Controller: HelpdeskOrgController', function () {
       httpBackend.verifyNoOutstandingExpectation();
     });
 
+    it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
+      sinon.stub(HelpdeskService, 'getOrg');
+      HelpdeskService.getOrg.returns(q.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+        }],
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+      }));
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        FeatureToggleService: FeatureToggleService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService,
+        Authinfo: Authinfo
+      });
+      expect(orgController.cardsAvailable).toBeFalsy();
+      expect(orgController.adminUsersAvailable).toBeFalsy();
+      httpBackend.flush();
+      expect(orgController.cardsAvailable).toBeTruthy();
+      expect(orgController.adminUsersAvailable).toBeTruthy();
+    });
+
     it('extended information feature toggle is default false', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();

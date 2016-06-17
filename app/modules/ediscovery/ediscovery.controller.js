@@ -13,9 +13,9 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.prettyPrintBytes = prettyPrintBytes;
     $scope.downloadable = downloadable;
     $scope.downloadReport = EdiscoveryService.downloadReport;
+    $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -185,24 +185,6 @@
         var n = new $window.Notification('eDiscovery Dashboard', options);
         setTimeout(n.close.bind(n), 3000);
       }
-    }
-
-    function prettyPrintBytes(bytes, precision) {
-      if (bytes === 0) {
-        return '0';
-      }
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
-        return '-';
-      }
-      if (typeof precision === 'undefined') {
-        precision = 1;
-      }
-
-      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
-        number = Math.floor(Math.log(bytes) / Math.log(1024)),
-        val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
-
-      return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
     }
   }
 

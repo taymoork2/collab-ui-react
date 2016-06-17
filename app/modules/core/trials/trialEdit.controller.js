@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice, UrlConfig) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -162,8 +162,7 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        labelClass: 'medium-4',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
         required: true,
         secondaryLabel: $translate.instant('trials.users')
@@ -191,7 +190,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         options: [30, 60, 90]
       },
     }];
@@ -226,7 +225,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },

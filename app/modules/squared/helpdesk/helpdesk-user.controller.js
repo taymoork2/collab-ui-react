@@ -29,6 +29,7 @@
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.openExtendedInformation = openExtendedInformation;
     vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
@@ -114,6 +115,7 @@
         }, angular.noop);
       }
 
+      vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
     }
 

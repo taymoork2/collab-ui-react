@@ -34,12 +34,12 @@ describe('Controller: EdiscoverySearchController', function () {
 
   describe('Search for room', function () {
     beforeEach(function () {
-      expect(ediscoverySearchController.searchInProgress).toBeFalsy();
+      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
     });
 
     afterEach(function () {
-      expect(ediscoverySearchController.searchInProgress).toBeFalsy();
+      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
     });
 
     it('search button disabled when empty roomId search input', function () {
@@ -58,7 +58,7 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchForRoom("myRoomId");
       httpBackend.flush();
 
-      expect(ediscoverySearchController.searchInProgress).toBeFalsy();
+      expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
 
       var expectedArgument = "https://whatever.com/myFancyRoomsApi" + "/" + "myRoomId";
       expect(EdiscoveryService.getAvalonRoomInfo.withArgs(expectedArgument).callCount).toBe(1);
@@ -85,7 +85,7 @@ describe('Controller: EdiscoverySearchController', function () {
       it('prepopulates search date with relevant room info data', function () {
 
         ediscoverySearchController.searchForRoom("myRoomId");
-        expect(ediscoverySearchController.searchInProgress).toBeTruthy();
+        expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
         expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
         httpBackend.flush();
 
@@ -109,7 +109,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
 
       ediscoverySearchController.searchForRoom("myRoomId");
-      expect(ediscoverySearchController.searchInProgress).toBeTruthy();
+      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
       httpBackend.flush();
 

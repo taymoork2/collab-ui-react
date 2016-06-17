@@ -6,7 +6,7 @@
     .factory('mohService', mohService);
 
   /* @ngInject */
-  function mohService($http, $q, $location, $timeout) {
+  function mohService($http, $timeout) {
     var service = {
       getPlaylists: getPlaylists,
       getPlaylist: getPlaylist

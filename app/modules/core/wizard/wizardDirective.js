@@ -48,7 +48,7 @@
 
   /* @ngInject */
   function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo,
-    SessionStorage, $stateParams, $state, FeatureToggleService, Userservice, ModalService, ServiceSetup) {
+    SessionStorage, $stateParams, $state, ModalService, ServiceSetup) {
     var vm = this;
     vm.current = {};
 

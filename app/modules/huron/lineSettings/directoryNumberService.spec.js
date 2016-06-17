@@ -49,7 +49,7 @@ describe('Service: DirectoryNumber', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, $resource, _DirectoryNumber_, _HuronConfig_) {
+      function (_$httpBackend_, _$rootScope_, _DirectoryNumber_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         DirectoryNumber = _DirectoryNumber_;

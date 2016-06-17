@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -35,6 +35,8 @@
     vm.allowLaunchAtlas = false;
     vm.openExtendedInformation = openExtendedInformation;
     vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+    vm.adminUsersAvailable = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
@@ -42,22 +44,19 @@
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-    // TODO: Replace by feature toggle !
-    function isWhitelistedOrg(orgData) {
-      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36" || orgData.id === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
-      var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
-        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36" || mb.orgId === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
-      });
-      return (isWhitelisted || managedByWhitelisted);
+    scrollToTop();
+
+    function scrollToTop() {
+      if ($location && $anchorScroll) {
+        $location.hash('helpdeskPageTop');
+        $anchorScroll();
+      }
     }
 
-    // TODO: Replace by feature toggle !
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f") {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f" && Authinfo.getOrgId() != "6f631c7b-04e5-4dfe-b359-47d5fa9f4837") {
         vm.allowLaunchAtlas = false;
       } else if (orgData.id == Authinfo.getOrgId()) {
-        vm.allowLaunchAtlas = false;
-      } else if (!isWhitelistedOrg(orgData)) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;
@@ -65,7 +64,6 @@
         var orgSettings = JSON.parse(_.last(orgData.orgSettings));
         vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
       }
-
     }
 
     function isTrials(orgSettings) {
@@ -119,6 +117,7 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.cardsAvailable = true;
     }
 
     function findManagedByOrgs(org) {
@@ -151,6 +150,7 @@
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
         });
+        vm.adminUsersAvailable = true;
       }, XhrNotificationService.notify);
     }
 

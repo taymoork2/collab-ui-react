@@ -5,7 +5,7 @@
     .controller('PstnOrderDetailCtrl', PstnOrderDetailCtrl);
 
   /* @ngInject */
-  function PstnOrderDetailCtrl($scope, $stateParams, $translate, TelephoneNumberService) {
+  function PstnOrderDetailCtrl($stateParams, $translate, TelephoneNumberService) {
     var vm = this;
     vm.currentOrder = $stateParams.currentOrder;
     vm.loading = true;

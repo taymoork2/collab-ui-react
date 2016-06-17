@@ -5,7 +5,7 @@
     .service('BillingService', BillingService);
 
   /* @ngInject */
-  function BillingService($http, UrlConfig, Log, Auth, $log, $window) {
+  function BillingService($http, UrlConfig, Log, $window) {
     var service = {
       getOrderStatus: getOrderStatus,
       resendCustomerEmail: resendCustomerEmail,

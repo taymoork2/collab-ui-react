@@ -6,7 +6,7 @@
     .service('Inviteservice', InviteService);
 
   /* @ngInject */
-  function InviteService($http, UrlConfig, Auth) {
+  function InviteService(UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {

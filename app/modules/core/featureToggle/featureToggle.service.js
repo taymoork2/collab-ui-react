@@ -7,7 +7,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
@@ -22,6 +22,7 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
+      atlasDirectCustomerBranding: 'atlas-direct-customer-branding',
       atlasTrialConversion: 'atlas-trial-conversion',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',

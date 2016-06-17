@@ -12,9 +12,8 @@
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
-      value: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles'),
-      timezoneid: '4'
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -206,7 +205,7 @@
           description: $translate.instant('serviceSetupModal.tzDescription'),
           options: [],
           labelfield: 'label',
-          valuefield: 'value',
+          valuefield: 'id',
           inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
           filter: true
         },
@@ -675,7 +674,7 @@
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.id === site.timeZone;
               });
               vm.previousTimeZone = vm.model.site.timeZone;
             });
@@ -803,7 +802,7 @@
           vm.timeZone = '' + usertemplates[0].timeZone;
           vm.objectId = usertemplates[0].objectId;
           var currentTimeZone = timezones.filter(function (timezone) {
-            return timezone.timezoneid === vm.timeZone;
+            return timezone.id === vm.timeZone;
           });
           if (currentTimeZone.length > 0) {
             vm.model.site.timeZone = currentTimeZone[0];
@@ -1011,7 +1010,7 @@
         }
 
         var currentSite = angular.copy(site);
-        currentSite.timeZone = currentSite.timeZone.value;
+        currentSite.timeZone = currentSite.timeZone.id;
 
         return ServiceSetup.createSite(currentSite)
           .catch(function (response) {
@@ -1043,8 +1042,8 @@
           var siteData = {};
           //this value is not gonna change when timezone select combo is disabled
           // so no need to check for timeZoneToggle here
-          if (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) {
-            siteData.timeZone = vm.model.site.timeZone.value;
+          if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
+            siteData.timeZone = vm.model.site.timeZone.id;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
@@ -1070,13 +1069,18 @@
         }
       }
 
-      function updateTimezone(timeZoneId) {
-        if (!timeZoneId) {
+      function updateTimezone(timeZone) {
+        if (!timeZone) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
-          return $q.reject('No timezoneid set');
+          return $q.reject('No timeZone Id set');
         }
 
-        return ServiceSetup.updateVoicemailTimezone(timeZoneId, vm.objectId)
+        if (!angular.isString(timeZone)) {
+          errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
+          return $q.reject('TimeZone Id is not a String');
+        }
+
+        return ServiceSetup.updateVoicemailTimezone(timeZone, vm.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -1084,9 +1088,9 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+        if ((_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone')) && voicemailToggleEnabled && vm.hasVoicemailService) {
 
-          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
+          return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
         }
       }
 

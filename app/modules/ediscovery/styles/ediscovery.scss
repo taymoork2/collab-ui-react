@@ -38,7 +38,7 @@
     margin-right: 2rem;
     padding-top: 4rem;
     padding-bottom: 2rem;
-    min-height: 95vh;
+    min-height: 100vh;
     a:focus {
       outline: none;
       box-shadow: none;
@@ -58,14 +58,14 @@
       top:1rem;
       font-size:3rem;
     }
-    padding-top: 1rem;
+    padding-top: 2rem;
     .ediscovery-search-bar {
-      padding-top: 1rem;
       text-align: center;
       .pointer {
         cursor: pointer;
       }
       .main-heading {
+        padding-bottom: 1rem;
         h1 {
           font-size: 2.2rem;
           color: $color-primary-base;
@@ -109,34 +109,30 @@
           };
         }
         .icon-search {
-          right: 0rem;
-          bottom: 0.15rem;
+          position: absolute;
+          right: 0;
+          bottom: 0.75rem;
           font-size: 1rem;
-          width: 2.4rem;
-          height: 2.4rem;
+          width: 2.5rem;
+          height: 2.5rem;
           z-index: 3;
+          min-width: 2.5rem;
           @media screen and (-moz-images-in-menus:0) {
             top: 0 !important;
-          };
+          }
           @media only screen and (max-width: 640px) {
-            font-size: 0.9rem;
-            bottom: 0rem;
-            width: 2.0rem;
-            height: 2.0rem;
+            font-size: 1rem;
+            width: 2rem;
+            height: 2rem;
+            min-width: 2rem;
           }
           @media only screen and (max-width: 500px) {
-            position: absolute;
-            right: 0px;
-            font-size: 0.8rem;
-            bottom: 0.70rem;
-            width: 1.7rem;
-            height: 1.7rem;
+            font-size: 0.75rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            min-width: 1.5rem;
           }
         }
-      }
-      .searchError {
-        position: relative;
-        right: 1.1rem;
       }
       .search-tip {
         color: $gray-light-1;
@@ -191,16 +187,22 @@
     }
 
     .search-result {
-      box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
-      border-radius: 2px;
       .create-form {
-        padding-top: 1rem;
+        padding-top: 2.5rem;
         padding-left: 1rem;
-        padding-right: 1rem;
-        padding-bottom: 1rem;
-        h4 {
-          font-size: 2rem;
-          width: 90%;
+        padding-right: 2.5rem;
+        padding-bottom: 5rem;
+        @media only screen and (max-width: 800px) {
+          padding-top: 1.25rem;
+          padding-bottom: 2.5rem;
+          padding-right: 1.25rem;
+        }
+        h2 {
+          padding-right: 1rem;
+          color: $gray-dark-3;
+          @media only screen and (max-width: 800px) {
+            font-size: 1.5rem;
+          }
         }
         .cancel-or-download {
           width: 50%;
@@ -209,8 +211,15 @@
             padding-top: 1rem;
           }
         }
+        .room-id {
+          color: $gray-base;
+          padding-bottom: 2.25rem;
+          @media only screen and (max-width: 800px) {
+            font-size: 1rem;
+          }
+        }
         .input-section {
-          padding-top: 0.5rem;
+          padding-bottom: 1.0rem;
           .report-name {
             width: 100%;
           }
@@ -218,38 +227,52 @@
             margin-bottom: 0;
             color: $color-negative-base;
           }
+          h6 {
+            padding-bottom: 0.25rem;
+            color: $gray-dark-2;
+          }
+        }
+        .result-section {
+          padding-bottom: 1.5rem;
+          h6 {
+            padding-bottom: 0.25rem;
+            color: $gray-base;
+            text-transform: uppercase;
+          }
+          .progressbar-info {
+            padding-top: 0.5rem;
+          }
         }
         .input-section-last {
-          padding-top: 2rem;
+          padding-top: 0.75rem;
           padding-right: 2rem;
-          padding-bottom: 1rem;
-        }
-        .buttons {
-          padding-top: 2rem;
-        }
-        .failure {
-          color: $color-negative-base;
         }
       }
       .left-side {
-        padding-left: 1.5rem;
-
+        padding-left: 1rem;
         .logo {
-          font-size: 7rem;
-          height: 8rem;
-          color: $gray-light-1;
-        }
-        .content {
-          padding-left: 0.3rem;
+          color: $gray-base;
+          font-size:11rem;
+          padding-top: 1.5rem;
+          @media only screen and (max-width: 1200px) {
+            font-size:10rem;
+          }
+          @media only screen and (max-width: 800px) {
+            font-size:8rem;
+            padding-top: 0.75rem;
+          }
+          @media only screen and (max-width: 640px) {
+            font-size:6rem;
+            height: 8rem;
+          }
         }
       }
     }
-
     .with-scroll {
-      //height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
       height: 60vh;
     }
-
+    .failure {
+      color: $color-negative-base;
+    }
   }
-
 }

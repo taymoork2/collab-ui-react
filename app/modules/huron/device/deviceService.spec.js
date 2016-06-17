@@ -18,7 +18,7 @@ describe('Service: DeviceService', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, $resource, _DeviceService_, _UserOTPService_, _HuronUser_, _HuronConfig_) {
+      function (_$httpBackend_, _$rootScope_, _DeviceService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         DeviceService = _DeviceService_;

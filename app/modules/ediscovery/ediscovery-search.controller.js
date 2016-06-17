@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -10,22 +10,17 @@
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
-    vm.progressType = progressType;
     vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
+    vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.downloadReport = EdiscoveryService.downloadReport;
     vm.createReportInProgress = false;
+    vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
-    vm.report = null;
-    vm.searchCriteria = {
-      "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": null,
-      "endDate": null,
-      "displayName": "TBD"
-    };
+    init();
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
@@ -34,6 +29,18 @@
     if ($stateParams.roomId) {
       vm.searchCriteria.roomId = $stateParams.roomId;
       searchForRoom($stateParams.roomId);
+    }
+
+    function init() {
+      vm.report = null;
+      vm.searchCriteria = {
+        "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+        "startDate": null,
+        "endDate": null,
+        "displayName": "TBD"
+      };
+      vm.error = null;
+      vm.roomInfo = null;
     }
 
     function getStartDate() {
@@ -85,9 +92,9 @@
       disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
-      vm.error = "";
+      vm.error = null;
       vm.searchCriteria.roomId = roomId;
-      vm.searchInProgress = true;
+      vm.searchingForRoom = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
@@ -99,12 +106,18 @@
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
-          vm.error = $translate.instant("ediscovery.searchError", {
-            roomId: roomId
-          });
+          if (err.status === 400) {
+            vm.error = $translate.instant("ediscovery.invalidRoomId", {
+              roomId: roomId
+            });
+          } else {
+            vm.error = $translate.instant("ediscovery.searchError", {
+              roomId: roomId
+            });
+          }
         })
         .finally(function () {
-          vm.searchInProgress = false;
+          vm.searchingForRoom = false;
         });
     }
 
@@ -142,7 +155,7 @@
     }
 
     function searchButtonDisabled() {
-      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchInProgress === true);
+      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true);
     }
 
     function pollAvalonReport() {
@@ -173,19 +186,9 @@
         });
     }
 
-    function progressType() {
-      if (vm.report) {
-        if (vm.report.state === 'FAILED' || vm.report.state === 'ABORTED') {
-          return 'danger';
-        } else {
-          return 'success';
-        }
-      }
-    }
-
     function reportProgress() {
       if (vm.report && (vm.report.state === 'RUNNING' || vm.report.state === 'COMPLETED')) {
-        return vm.report.progress;
+        return vm.report.progress || 0;
       } else {
         return 0;
       }
@@ -200,14 +203,26 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 13) {
+      var ESC = 27;
+      var ENTER = 13;
+      var activeElement = angular.element($window.document.activeElement);
+      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
+        return; // if not escape and enter, nothing to do
+      }
+      switch (event.keyCode) {
+      case ESC:
+        init();
+        break;
+
+      case ENTER:
         $timeout(function () {
           angular.element("#ediscoverySearchButton").trigger('click');
         });
+        break;
       }
     }
   }
-
   angular
     .module('Ediscovery')
     .controller('EdiscoverySearchController', EdiscoverySearchController);

@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($rootScope, $translate, $http, $q, Authinfo, Config, Notification, Log, UrlConfig, $window) {
+  function CdrService($translate, $http, $q, Authinfo, Notification, Log, UrlConfig, $window) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';

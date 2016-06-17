@@ -55,9 +55,8 @@ describe('Controller: ServiceSetup', function () {
         siteCode: '200',
         voicemailPilotNumber: "+16506679080",
         timeZone: {
-          value: 'America/Los_Angeles',
-          label: '(GMT-08:00) Pacific Time (US & Canada)',
-          timezoneid: '4'
+          id: 'America/Los_Angeles',
+          label: 'America/Los_Angeles'
         }
       },
       numberRanges: [{
@@ -73,9 +72,8 @@ describe('Controller: ServiceSetup', function () {
       }]
     };
     timeZone = [{
-      value: 'America/Los_Angeles',
-      label: '(GMT-08:00) Pacific Time (US & Canada)',
-      timezoneid: '4'
+      id: 'America/Los_Angeles',
+      label: 'America/Los_Angeles'
     }];
     voicemail = {
       name: "Simon",
@@ -83,7 +81,7 @@ describe('Controller: ServiceSetup', function () {
       label: "(650) 667-9080"
     };
     usertemplate = [{
-      timeZone: '4',
+      timeZone: 'America/Los_Angeles',
       alias: '1',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
@@ -258,8 +256,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
       controller.previousTimeZone = controller.model.site.timeZone;
 
@@ -337,8 +334,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
       controller.previousTimeZone = controller.model.site.timeZone;
 
@@ -418,8 +414,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -436,7 +431,7 @@ describe('Controller: ServiceSetup', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('customer with voicemail service should not update timezone when timezoneid is missing', function () {
+    it('customer with voicemail service should not update timezone when timezone id is missing', function () {
       var selectedPilotNumber = {
         pattern: '+19728965000',
         label: '(972) 896-5000'
@@ -447,7 +442,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus'
+        label: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -475,8 +470,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -525,8 +519,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -552,8 +545,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -579,8 +571,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = false;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -601,8 +592,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
       controller.previousTimeZone = controller.model.site.timeZone;
 
@@ -695,8 +685,7 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = false;
       controller.model.site.timeZone = {
-        value: 'bogus',
-        timezoneid: '10'
+        id: 'bogus'
       };
 
       //remove singlenumber range for it to pass
@@ -757,4 +746,55 @@ describe('Controller: ServiceSetup', function () {
     });
   });
 
+  describe('initnext.updateTimezone', function () {
+
+    it('should notify error if timeZone Id is not a string', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        id: 3
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('should pass timeZone Id to ServiceSetup.updateVoicemailTimezone', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        id: 'America/Chicago'
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(controller.model.site.timeZone.id, usertemplate[0].objectId);
+    });
+  });
 });

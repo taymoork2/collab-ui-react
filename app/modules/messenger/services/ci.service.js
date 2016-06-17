@@ -6,7 +6,7 @@
     .factory('CiService', CiService);
 
   /** @ngInject */
-  function CiService($q, $rootScope, Authinfo, Log, UserListService, Userservice) {
+  function CiService($q, Authinfo, Log, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage

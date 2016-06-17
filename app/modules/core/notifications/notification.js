@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config, Log) {
+  function NotificationFn($translate, $q, toaster, $timeout, Config, Log) {
     var NO_TIMEOUT = 0;
     var FAILURE_TIMEOUT = NO_TIMEOUT;
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;

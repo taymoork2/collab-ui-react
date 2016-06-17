@@ -34,7 +34,13 @@
         class="cloud-extension-label status-error">
       {{extension.status.description.defaultMessage}}
     </span>
+      <p
+        ng-show="isInvitePending && extension.entitled"
+        class="info-description cloud-extension-label status-warning">
+      {{localizedOnboardingWarning}}
+      </p>
     </div>
+
   </cs-sp-section>
 </cs-sp-container>
 
