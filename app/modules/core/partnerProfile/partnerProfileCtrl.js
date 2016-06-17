@@ -5,7 +5,7 @@
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
   /* @ngInject */
-  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate, FeatureToggleService) {
+  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate) {
     var orgId = Authinfo.getOrgId();
 
     // toggles api calls, show/hides divs based on customer or partner profile
