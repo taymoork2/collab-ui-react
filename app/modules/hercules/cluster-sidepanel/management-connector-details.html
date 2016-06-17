@@ -1,0 +1,79 @@
+<cs-sp-header>
+  <div class="header-image">
+    <div>
+      <i class="icon icon-4x icon-circle-data"></i>
+    </div>
+  </div>
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <div class="header-title">
+        <span>{{hostDetailsCtrl.clustername}}</span>
+      </div>
+    </div>
+  </div>
+</cs-sp-header>
+<cs-sp-container class="hercules-settings-table">
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      {{hostDetailsCtrl.localizedConnectorSectionHeader}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="common.status"></td>
+        <td>
+          <i class="fa fa-circle status-icon"
+             ng-class="'hercules-state-' + hostDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).label"></i>
+          <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
+        </td>
+      </tr>
+      <tr>
+        <td translate="hercules.connectors.version"></td>
+        <td><span>{{hostDetailsCtrl.host.runningVersion}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.connectors.serial"></td>
+        <td><span>{{hostDetailsCtrl.host.hostSerial}}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
+    <div>
+      <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
+        <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
+      </a>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
+    <div class="feature-list" ng-if="hostDetailsCtrl.host.alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in hostDetailsCtrl.host.alarms" ng-class="{'list-item': !$first}">
+          <a
+            ui-sref="cluster-details.alarm-details({alarm: alarm})">
+            <i class="icon icon-error red status-icon"></i>
+            <span class="feature-name">{{alarm.title}}</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="hostDetailsCtrl.host.alarms.length == 0" translate="hercules.alarms.noAlarms"></p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="hostDetailsCtrl.host.state === 'offline'">
+    <div class="section-title-row section-name" translate="hercules.connectors.removeSectionHeader"></div>
+    <span translate="hercules.connectors.removeSectionBody"></span>
+    <div>
+      <button class="btn btn--negative hercules-btn-deregister"
+              translate="hercules.connectors.removeButton"
+              sq-click-promise="hostDetailsCtrl.deleteHost()">
+      </button>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>

@@ -2,7 +2,7 @@
   'use strict';
 
   //Defining a MeetingListService.
-  function MediaFusionAnalyticsService($http, $rootScope, UrlConfig, Authinfo, Log, Utils, Auth) {
+  function MediaFusionAnalyticsService($http, UrlConfig, Authinfo) {
 
     //Fetching the Base url form config.js file.
     var vm = this;

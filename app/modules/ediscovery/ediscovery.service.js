@@ -10,7 +10,7 @@
       _.each(reports, function (report) {
         detectAndSetReportTimeout(report);
       });
-      return reports;
+      return res.data;
     }
 
     function extractReport(res) {
@@ -57,10 +57,11 @@
         });
     }
 
-    function getReports() {
+    function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
+      var reqParams = 'offset=' + offset + '&limit=' + limit;
       return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
         .then(extractReports)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
@@ -142,7 +143,7 @@
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/json'
+          type: 'application/zip'
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -167,6 +168,24 @@
       });
     }
 
+    function prettyPrintBytes(bytes, precision) {
+      if (bytes === 0) {
+        return '0';
+      }
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+        return '-';
+      }
+      if (typeof precision === 'undefined') {
+        precision = 1;
+      }
+
+      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
+        number = Math.floor(Math.log(bytes) / Math.log(1024)),
+        val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
+
+      return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -178,7 +197,8 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport
+      downloadReport: downloadReport,
+      prettyPrintBytes: prettyPrintBytes
     };
   }
 

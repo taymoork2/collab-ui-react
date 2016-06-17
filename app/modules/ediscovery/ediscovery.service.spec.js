@@ -180,7 +180,7 @@ describe('Service: EdiscoveryService', function () {
       httpBackend.whenGET(urlBase + 'compliance/organizations/' + orgId + '/reports/' + reportId)
         .respond(report);
 
-      httpBackend.whenGET(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+      httpBackend.whenGET(urlBase + 'compliance/organizations/' + orgId + '/reports/?offset=0&limit=10')
         .respond(reports);
 
       httpBackend.whenPOST(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
@@ -212,9 +212,9 @@ describe('Service: EdiscoveryService', function () {
     });
 
     it('can get reports', function (done) {
-      Service.getReports().then(function (result) {
-        expect(result.length).toEqual(1);
-        expect(result[0].orgId).toEqual(orgId);
+      Service.getReports(0, 10).then(function (result) {
+        expect(result.reports.length).toEqual(1);
+        expect(result.reports[0].orgId).toEqual(orgId);
         done();
       });
       httpBackend.flush();

@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, PstnServiceAddressService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();

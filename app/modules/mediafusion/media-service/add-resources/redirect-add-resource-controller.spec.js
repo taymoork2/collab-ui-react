@@ -6,7 +6,7 @@ describe('RedirectAddResourceController', function () {
   var hostname = "MFA";
   var enteredCluster = "blr-ecp-246";
 
-  beforeEach(inject(function ($controller, _RedirectTargetService_, _$q_, _XhrNotificationService_, $log, _$modal_) {
+  beforeEach(inject(function ($controller, _$q_, _XhrNotificationService_, $log, _$modal_) {
 
     redirectTargetPromise = {
       then: sinon.stub()

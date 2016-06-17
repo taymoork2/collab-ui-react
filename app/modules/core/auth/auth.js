@@ -6,7 +6,7 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, WindowLocation) {
+  function Auth($injector, $translate, $q, Log, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,

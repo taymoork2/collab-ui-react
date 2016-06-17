@@ -5,7 +5,7 @@
     .controller('UserProfileCtrl', UserProfileCtrl);
 
   /* @ngInject */
-  function UserProfileCtrl($scope, $location, $route, $stateParams, Log, Utils, $filter, Userservice, Authinfo, Notification, Config) {
+  function UserProfileCtrl($scope, $location, $stateParams, Log, $filter, Userservice, Authinfo, Notification, Config) {
 
     var userid = $stateParams.uid;
     $scope.orgName = Authinfo.getOrgName();

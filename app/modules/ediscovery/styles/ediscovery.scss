@@ -38,7 +38,7 @@
     margin-right: 2rem;
     padding-top: 4rem;
     padding-bottom: 2rem;
-    min-height: 95vh;
+    min-height: 100vh;
     a:focus {
       outline: none;
       box-shadow: none;
@@ -67,36 +67,18 @@
       }
       .main-heading {
         h1 {
-          font-size: 2.8rem;
+          font-size: 2.2rem;
           color: $color-primary-base;
           @media only screen and (max-width: 640px) {
-            font-size: 2.5rem;
+            font-size: 2.0rem;
           }
           @media only screen and (max-width: 500px) {
-            font-size: 2.2rem;
+            font-size: 1.5rem;
           }
         }
-        display: inline-block;
-        text-align: right;
-        .help {
-          color: $gray-light-1;
-          position: relative;
-          top: -1rem;
-          padding-right: 2px;
-          font-size: 1.0rem;
-          cursor: pointer;
-          i {
-            top: 2px;
-            left: 3px;
-          }
-          @media only screen and (max-width: 640px) {
-            font-size: 0.8rem;
-          }
-          @media only screen and (max-width: 500px) {
-            font-size: 0.7rem;
-          }
+        span {
+          padding-top: 1.0rem;
         }
-
       }
       .typeahead-large .input-description:before {
         display: none;
@@ -106,14 +88,12 @@
       }
       .typeahead-large {
         position: relative;
+        margin-top: 1rem;
         max-width: 100%;
-        //margin-left: auto;
-        //margin-right: auto;
         .searchInputForm {
           margin-bottom: 0px;
         }
         input {
-          //text-align: left;
           border: 0px;
           font-size:24px;
           width: 33rem;
@@ -157,7 +137,11 @@
       .searchError {
         position: relative;
         right: 1.1rem;
-        padding-top: 2rem;
+      }
+      .search-tip {
+        color: $gray-light-1;
+        font-style: italic;
+        padding: 0.5rem;
       }
     }
     .create-report {
@@ -209,7 +193,6 @@
     .search-result {
       box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
       border-radius: 2px;
-      margin-top: 3rem;
       .create-form {
         padding-top: 1rem;
         padding-left: 1rem;
@@ -226,8 +209,12 @@
             padding-top: 1rem;
           }
         }
+        .room-id {
+          color: $gray-base;
+          padding-bottom: 2.0rem;
+        }
         .input-section {
-          padding-top: 0.5rem;
+          padding-bottom: 0.75rem;
           .report-name {
             width: 100%;
           }
@@ -235,31 +222,35 @@
             margin-bottom: 0;
             color: $color-negative-base;
           }
+          h5 {
+            padding-bottom: 0.25rem;
+          }
+          .progressbar-info {
+            padding-top: 0.5rem;
+          }
         }
         .input-section-last {
-          padding-top: 2rem;
+          padding-top: 0.75rem;
           padding-right: 2rem;
-          padding-bottom: 1rem;
-        }
-        .buttons {
-          padding-top: 2rem;
+          padding-bottom: 0.75rem;
         }
         .failure {
           color: $color-negative-base;
         }
       }
       .left-side {
-        padding-left: 1.5rem;
-
+        padding-left: 1rem;
         .logo {
-          font-size: 7rem;
-          height: 8rem;
-          color: $gray-light-1;
-        }
-        .content {
-          padding-left: 0.3rem;
+          color: $gray-base;
+          font-size: 9rem;
+          height: 10rem;
         }
       }
+    }
+
+    .with-scroll {
+      //height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
+      height: 60vh;
     }
 
   }

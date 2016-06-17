@@ -9,6 +9,33 @@
   function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, $modal, $state, $translate) {
     var vm = this;
     vm.backUrl = 'cluster-list';
+    vm.usersPlaceholder = 'Default';
+    vm.usersSelected = '';
+    vm.usersOptions = ['Default'];
+    vm.enabledServices = [];
+    vm.upgradeSchedule = {
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
+      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+    };
+    vm.releasechannel = {
+      title: 'hercules.expresswayClusterSettings.releasechannelHeader',
+      description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
+    };
+    vm.deactivateServices = {
+      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
+      description: 'hercules.expresswayClusterSettings.deactivateServicesParagraph'
+    };
+    vm.deregisterClusterSection = {
+      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader',
+      description: 'hercules.expresswayClusterSettings.deregisterClusterParagraph'
+    };
+    vm.deactivateService = deactivateService;
+    vm.deregisterCluster = deregisterCluster;
+
+    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
+      .then(function (allConnectorTypes) {
+        vm.enabledServices = allConnectorTypes;
+      });
 
     loadCluster($stateParams.id);
 
@@ -27,18 +54,6 @@
           });
         }, XhrNotificationService.notify);
     }
-
-    vm.usersPlaceholder = 'Default';
-    vm.usersSelected = '';
-    vm.usersOptions = ['Default'];
-
-    vm.enabledServices = [];
-    FusionClusterService.getAllConnectorTypesForCluster($stateParams.id)
-      .then(function (allConnectorTypes) {
-        vm.enabledServices = allConnectorTypes;
-      });
-
-    vm.deactivateService = deactivateService;
 
     function deactivateService(serviceId, cluster) {
       $modal.open({
@@ -66,8 +81,6 @@
         }
       });
     }
-
-    vm.deregisterCluster = deregisterCluster;
 
     function deregisterCluster(cluster) {
       $modal.open({

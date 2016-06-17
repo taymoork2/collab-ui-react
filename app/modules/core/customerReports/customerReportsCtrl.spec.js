@@ -124,7 +124,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       };
 
       WebExApiGatewayService = {
-        isSiteSupportsIframe: function (url) {
+        siteFunctions: function (url) {
           var defer = $q.defer();
           defer.resolve({
             siteUrl: url

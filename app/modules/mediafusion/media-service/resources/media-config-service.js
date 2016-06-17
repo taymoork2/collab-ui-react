@@ -5,7 +5,7 @@
     .service('MediaConfigService', MediaConfigService);
 
   /* @ngInject */
-  function MediaConfigService($window, UrlConfig) {
+  function MediaConfigService(UrlConfig) {
 
     var baseHerculesUrl = UrlConfig.getHerculesUrl();
     var baseUssUrl = UrlConfig.getUssUrl();

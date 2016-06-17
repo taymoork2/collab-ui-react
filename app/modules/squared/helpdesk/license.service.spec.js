@@ -11,7 +11,7 @@ describe('LicenseService', function () {
   describe('Fetching data from helpdesk backend', function () {
 
     var $httpBackend, urlBase, q;
-    beforeEach(inject(function (UrlConfig, _LicenseService_, _$q_, _$httpBackend_) {
+    beforeEach(inject(function (UrlConfig, _$q_, _$httpBackend_) {
       q = _$q_;
       urlBase = UrlConfig.getAdminServiceUrl();
       $httpBackend = _$httpBackend_;

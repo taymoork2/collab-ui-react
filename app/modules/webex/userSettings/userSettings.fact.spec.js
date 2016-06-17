@@ -520,7 +520,7 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
   }));
 
   //----
-  it('Allows PMR + CMR with WebexAudio but with hybridAudio and integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
+  it('Allows PMR + CMR with WebexAudio but with hybridAudio and integratedVoIP for T31', inject(function () {
     WebexUserSettingsSvc.isT31Site = true;
     WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
     WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = true;

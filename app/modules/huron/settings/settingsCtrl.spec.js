@@ -82,10 +82,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
 
     $httpBackend
-      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/internalnumberpools')
-      .respond([{
-        directoryNumber: null
-      }]);
+      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
+      .respond([]);
     $httpBackend
       .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
       .respond([{

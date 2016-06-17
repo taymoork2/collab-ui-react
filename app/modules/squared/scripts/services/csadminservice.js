@@ -5,7 +5,7 @@
     .service('csadminservice', CsadminService);
 
   /* @ngInject */
-  function CsadminService($rootScope, $http, Storage, UrlConfig, Log, Auth, Authinfo) {
+  function CsadminService($http, UrlConfig, Authinfo) {
     var csadminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/csadmin';
 
     var service = {

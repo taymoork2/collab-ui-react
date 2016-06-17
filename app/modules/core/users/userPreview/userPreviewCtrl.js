@@ -5,7 +5,7 @@
     .controller('UserPreviewCtrl', UserPreviewCtrl);
 
   /* @ngInject */
-  function UserPreviewCtrl($scope, $state, $stateParams, $rootScope, $translate, FeatureToggleService, Userservice) {
+  function UserPreviewCtrl($scope, $state, $stateParams) {
     $scope.service = 'ALL';
 
     if ($stateParams.service) {

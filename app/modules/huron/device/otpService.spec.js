@@ -18,7 +18,7 @@ describe('Service: OtpService', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, $resource, _OtpService_, _UserOTPService_, _HuronUser_, _HuronConfig_) {
+      function (_$httpBackend_, _$rootScope_, _OtpService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         OtpService = _OtpService_;

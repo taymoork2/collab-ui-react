@@ -7,6 +7,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
   var REFRESH = 'refresh';
   var SET = 'set';
   var EMPTY = 'empty';
+  var dummydata = '';
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var callVolumeData = callVolumeData.callvolume;
@@ -53,9 +54,13 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsGraphService, 'setAvailabilityGraph').and.returnValue({
         'dataProvider': clusteravailabilityData
       });
+      spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
+        'dataProvider': dummydata
+      });
 
       spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
       spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
+      spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
 
       controller = $controller('MediaServiceMetricsContoller', {
         $stateParams: $stateParams,
@@ -79,9 +84,11 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
           expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
           expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
 
           expect(MetricsGraphService.setCallVolumeGraph).toHaveBeenCalled();
           expect(MetricsGraphService.setAvailabilityGraph).toHaveBeenCalled();
+          expect(MetricsGraphService.setUtilizationGraph).toHaveBeenCalled();
 
         }, 30);
       });
@@ -99,6 +106,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         expect(controller.timeSelected).toEqual(timeOptions[1]);
         expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'All');
         expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'All');
+        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
       });
 
@@ -108,6 +116,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
 
         expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
         expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
 
       });
     });

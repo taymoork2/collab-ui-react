@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmUnusedAccountsService($http, $q, Authinfo, CsdmConfigService, CsdmConverter, $window) {
+  function CsdmUnusedAccountsService($http, Authinfo, CsdmConfigService, CsdmConverter) {
 
     var accountsUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/nonExistingDevices';
 

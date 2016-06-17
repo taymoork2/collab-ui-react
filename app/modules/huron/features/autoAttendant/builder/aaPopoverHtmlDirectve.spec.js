@@ -6,7 +6,7 @@ describe('Directive: aaPopoverHtml', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $timeout = _$timeout_;

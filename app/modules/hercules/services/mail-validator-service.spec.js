@@ -5,7 +5,7 @@ describe('MailValidatorService', function () {
 
   var Service;
 
-  beforeEach(inject(function ($injector, MailValidatorService) {
+  beforeEach(inject(function (MailValidatorService) {
     Service = MailValidatorService;
   }));
 

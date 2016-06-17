@@ -5,7 +5,7 @@
     .service('ReportsService', ReportsService);
 
   /* @ngInject */
-  function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, Authinfo, Auth, UrlConfig) {
+  function ReportsService($http, $q, $rootScope, Log, Authinfo, UrlConfig) {
     var apiUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
     var callMetricsUrl = 'reports/stats/callUsage';
@@ -181,7 +181,7 @@
       }
     }
 
-    // For retrieving the 
+    // For retrieving the
     function getTotalPartnerCounts(useCache, customerList, countTypes) {
       if (Authinfo.isPartner() && angular.isArray(customerList) && angular.isArray(countTypes)) {
         var params = {

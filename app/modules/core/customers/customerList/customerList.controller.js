@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, FeatureToggleService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, FeatureToggleService, Localytics, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -18,7 +18,6 @@
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.getSubfields = getSubfields;
-    $scope.addCorrectMeetingColumn = addCorrectMeetingColumn;
     $scope.filterAction = filterAction;
     $scope.modifyManagedOrgs = modifyManagedOrgs;
     $scope.getTrialsList = getTrialsList;
@@ -76,22 +75,6 @@
 
     $scope.isCareEnabled = false;
 
-    $scope.conferencingColumns = [{
-      field: 'meeting',
-      displayName: $translate.instant('customerPage.meeting'),
-      width: '14%',
-      cellTemplate: multiServiceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }, {
-      field: 'conferencing',
-      displayName: $translate.instant('customerPage.meeting'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }];
-
     $scope.gridColumns = [{
       field: 'customerName',
       displayName: $translate.instant('customerPage.customerNameHeader'),
@@ -108,6 +91,13 @@
       displayName: $translate.instant('customerPage.message'),
       width: '12%',
       cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'meeting',
+      displayName: $translate.instant('customerPage.meeting'),
+      width: '14%',
+      cellTemplate: multiServiceTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
     }, {
@@ -177,7 +167,6 @@
 
     function init() {
       setNotesTextOrder();
-      addCorrectMeetingColumn();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
         if (!careStatus) {
@@ -261,13 +250,6 @@
       } else {
         return sortByName(a, b);
       }
-    }
-
-    function addCorrectMeetingColumn() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (results) {
-        var index = results ? 0 : 1;
-        $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[index]);
-      });
     }
 
     function setNotesTextOrder() {

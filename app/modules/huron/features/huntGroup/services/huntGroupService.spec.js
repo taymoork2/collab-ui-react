@@ -20,7 +20,7 @@ describe('Hunt Group Service', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _HuronConfig_, _$httpBackend_, _HuntGroupService_) {
+  beforeEach(inject(function (_$q_, _HuronConfig_, _$httpBackend_, _HuntGroupService_) {
     $q = _$q_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;

@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage) {
+  function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -70,7 +70,8 @@
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         pstn: 'PSTN',
-        care: 'CARE'
+        care: 'CARE',
+        context: 'CONTEXT'
       },
 
       //WARNING: Deprecated, use offerTypes
@@ -303,7 +304,8 @@
         'cluster-details',
         'management-service',
         'services-overview',
-        'my-company'
+        'my-company',
+        'management-connector-details'
       ],
       'spark-room-system': [
         'devices',
@@ -328,6 +330,7 @@
       ],
       'squared-fusion-media': [
         //'mediafusionconnector',
+        'media-service-v2',
         'metrics',
         'reports-metrics',
         'media-service',
@@ -356,6 +359,7 @@
         'devices',
         'fusion',
         //'mediafusionconnector',
+        'media-service-v2',
         'media-service',
         'hurondetails',
         'huronsettings',
@@ -364,7 +368,8 @@
         'mediafusion-settings',
         'calendar-service',
         'call-service',
-        'management-service'
+        'management-service',
+        'services-overview'
       ]
     };
 

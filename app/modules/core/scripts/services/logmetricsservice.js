@@ -5,7 +5,7 @@
     .service('LogMetricsService', LogMetricsService);
 
   /* @ngInject */
-  function LogMetricsService($rootScope, $http, Authinfo, Config, Log, Storage, Auth, UrlConfig) {
+  function LogMetricsService($http, Authinfo, Config, Log, UrlConfig) {
 
     function LogMetricEvent(eventAction, eventType, status, elapsedTime, units, data) {
       this.logStatus = status;

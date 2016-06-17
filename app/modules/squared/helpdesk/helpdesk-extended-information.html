@@ -2,15 +2,9 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <div class="modal-title">{{modal.title}}
-  </div>
+  <div class="modal-title">{{modal.title | translate}}</div>
 </div>
 
 <div class="modal-body">
-    <div ng-repeat="message in modal.messages">
-      <p>{{message}}</p>
-    </div>
-</div>
-
-<div class="modal-footer">
+  <p><pre>{{modal.message}}</pre></p>
 </div>

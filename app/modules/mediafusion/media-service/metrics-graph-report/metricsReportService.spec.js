@@ -56,7 +56,7 @@ describe('Service: Metrics Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Config_, _Notification_, UrlConfig) {
+  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Config_, _Notification_) {
     $httpBackend = _$httpBackend_;
     MetricsReportService = _MetricsReportService_;
     Config = _Config_;

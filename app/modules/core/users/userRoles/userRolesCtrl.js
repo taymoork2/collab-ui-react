@@ -9,7 +9,7 @@
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
     $scope.isPartner = SessionStorage.get('partnerOrgId');
-    $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
+    $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5', '6f631c7b-04e5-4dfe-b359-47d5fa9f4837'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = ($scope.isPartner && !Config.isProd()) || $scope.helpDeskFeatureAllowed;
     $scope.showComplianceRole = Authinfo.getUserId() == "b78903e2-39e6-45fa-af0f-5d31de45934f";
     $scope.updateRoles = updateRoles;

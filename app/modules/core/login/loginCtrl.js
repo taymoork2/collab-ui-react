@@ -5,7 +5,7 @@
     .controller('LoginCtrl', LoginCtrl);
 
   /* @ngInject */
-  function LoginCtrl($filter, $http, $location, $rootScope, $scope, $state, $stateParams, $timeout, $window, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $timeout, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, Storage, Utils) {
 
     var loadingDelay = 2000;
     var logoutDelay = 5000;
