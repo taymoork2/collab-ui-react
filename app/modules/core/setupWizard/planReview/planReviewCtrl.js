@@ -108,7 +108,7 @@
         }
       });
 
-      vm.careServices.services = Authinfo.getCareServices || [];
+      vm.careServices.services = Authinfo.getCareServices() || [];
       angular.forEach(vm.careServices.services, function (service) {
         if (service.license.isTrial) {
           vm.trialExists = true;

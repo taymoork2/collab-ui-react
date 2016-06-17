@@ -116,7 +116,7 @@
       </div>
     </div>
     <div class="small-4 columns">
-      <div ng-if="!planReview.careServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
+      <div ng-if="planReview.careServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div ng-class="{'column-paid' : !planReview.careServices.isNewTrial, 'column-trial' : planReview.careServices.isNewTrial}">
         <div ng-if="planReview.careServices.services.length > 0" class="item-license">
           <span translate="firstTimeWizard.care"></span>
