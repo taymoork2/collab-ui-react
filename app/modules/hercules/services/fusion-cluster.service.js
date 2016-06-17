@@ -10,7 +10,14 @@
   /* @ngInject */
   function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
-      getAll: getAll
+      preregisterCluster: preregisterCluster,
+      addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
+      provisionConnector: provisionConnector,
+      deprovisionConnector: deprovisionConnector,
+      getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
+      getAll: getAll,
+      get: get,
+      buildSidepanelConnectorList: buildSidepanelConnectorList
     };
 
     return service;
@@ -19,6 +26,12 @@
 
     // TODO: maybe cache data for the cluster list and
     // poll new data every 30 seconds
+
+    function get(clusterId) {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .then(extractDataFromResponse);
+    }
 
     function getAll() {
       return $http
@@ -35,6 +48,10 @@
 
     function onlyKeepFusedClusters(clusters) {
       return _.filter(clusters, 'state', 'fused');
+    }
+
+    function extractDataFromResponse(res) {
+      return res.data;
     }
 
     function addServicesStatuses(clusters) {
@@ -74,5 +91,79 @@
       // Could be anything but at least make it consistent between 2 page refresh
       return _.sortBy(clusters, 'type');
     }
+
+    function preregisterCluster(name, releaseChannel, managementConnectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      return $http.post(url, {
+          "name": name,
+          "releaseChannel": releaseChannel,
+          "targetType": managementConnectorType
+        }).then(extractDataFromResponse)
+        .then(function (data) {
+          return data.id;
+        });
+    }
+
+    function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
+      return $http.post(url, {
+        "hostname": hostname,
+        "ttlInSeconds": ttlInSeconds,
+        "clusterId": clusterId
+      });
+    }
+
+    function provisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function deprovisionConnector(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
+        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
+      return $http.post(url);
+    }
+
+    function getAllProvisionedConnectorTypes(clusterId) {
+      return get(clusterId)
+        .then(function (data) {
+          return _.map(data.provisioning, 'connectorType');
+        });
+    }
+
+    function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
+      var sidepanelConnectorList = {};
+      sidepanelConnectorList.hosts = [];
+      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
+      sidepanelConnectorList.name = cluster.name;
+      sidepanelConnectorList.id = cluster.id;
+
+      /* Find and populate hostnames only, and make sure that they are only there once */
+      _.forEach(cluster.connectors, function (connector) {
+        sidepanelConnectorList.hosts.push({
+          hostname: connector.hostname,
+          connectors: []
+        });
+      });
+      sidepanelConnectorList.hosts = _.uniq(sidepanelConnectorList.hosts, function (host) {
+        return host.hostname;
+      });
+
+      /* Find and add all c_mgmt connectors, plus the connectors we're really interested in  */
+      _.forEach(cluster.connectors, function (connector) {
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
+          var host = _.find(sidepanelConnectorList.hosts, function (host) {
+            return host.hostname === connector.hostname;
+          });
+          var index = _.indexOf(sidepanelConnectorList.hosts, host);
+          if (index !== -1) {
+            sidepanelConnectorList.hosts[index].connectors.push(connector);
+          }
+        }
+      });
+      return sidepanelConnectorList;
+    }
+
   }
 })();

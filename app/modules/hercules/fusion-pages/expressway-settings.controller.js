@@ -6,7 +6,7 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, $modal, $state, $translate) {
     var vm = this;
     vm.backUrl = 'cluster-list';
 
@@ -28,12 +28,32 @@
         }, XhrNotificationService.notify);
     }
 
+    vm.upgradeSchedule = {
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
+      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+    };
+
+    vm.releasechannel = {
+      title: 'hercules.expresswayClusterSettings.releasechannelHeader',
+      description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
+    };
+
+    vm.deactivateServices = {
+      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
+      description: 'hercules.expresswayClusterSettings.deactivateServicesParagraph'
+    };
+
+    vm.deregisterClusterSection = {
+      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader',
+      description: 'hercules.expresswayClusterSettings.deregisterClusterParagraph'
+    };
+
     vm.usersPlaceholder = 'Default';
     vm.usersSelected = '';
     vm.usersOptions = ['Default'];
 
     vm.enabledServices = [];
-    ClusterService.getAllConnectorTypesForCluster($stateParams.id)
+    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
       .then(function (allConnectorTypes) {
         vm.enabledServices = allConnectorTypes;
       });

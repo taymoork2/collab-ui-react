@@ -32,7 +32,6 @@
     
     <p ng-if="( 'importCompletedWithErr' == siteCSVResult.csvStatusObj.status )">
       <webex-csv-download type='webeximport'
-                          siteurl={{siteCSVResult.siteUrl}}
                           filedownloadurl={{siteCSVResult.downloadFileUrl}}
                           filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
     </p>
@@ -43,7 +42,6 @@
        class="modal-footer">
        
     <webex-csv-download type='webexexport'
-                        siteurl={{siteCSVResult.siteUrl}}
                         filedownloadurl={{siteCSVResult.downloadFileUrl}}
                         filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
   </div>

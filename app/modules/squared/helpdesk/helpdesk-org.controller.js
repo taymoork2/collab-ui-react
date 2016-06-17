@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $state, Authinfo, $window, UrlConfig) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -33,18 +33,27 @@
     vm.launchAtlasReadonly = launchAtlasReadonly;
     vm.isTrials = isTrials;
     vm.allowLaunchAtlas = false;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
+
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
+    // TODO: Replace by feature toggle !
     function isWhitelistedOrg(orgData) {
-      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36");
+      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36" || orgData.id === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
       var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
-        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36");
+        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36" || mb.orgId === "1eb65fdf-9643-417f-9974-ad72cae0e10f");
       });
       return (isWhitelisted || managedByWhitelisted);
     }
 
+    // TODO: Replace by feature toggle !
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36") {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f") {
         vm.allowLaunchAtlas = false;
       } else if (orgData.id == Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
@@ -68,8 +77,26 @@
       return eft;
     }
 
+    function openExtendedInformation(title, message) {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          resolve: {
+            title: function () {
+              return title;
+            },
+            message: function () {
+              return message;
+            }
+          }
+        });
+      }
+    }
+
     function initOrgView(org) {
       vm.org = org;
+      vm.orgStringified = JSON.stringify(org, null, 4);
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
@@ -191,7 +218,15 @@
     }
   }
 
+  /* @ngInject */
+  function HelpdeskExtendedInformationCtrl(title, message) {
+    var vm = this;
+    vm.message = message;
+    vm.title = title;
+  }
+
   angular
     .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController);
+    .controller('HelpdeskOrgController', HelpdeskOrgController)
+    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
 }());

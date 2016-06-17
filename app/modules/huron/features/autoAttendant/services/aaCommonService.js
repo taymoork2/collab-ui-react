@@ -26,7 +26,8 @@
       getInvalid: getInvalid,
       makeKey: makeKey,
       resetFormStatus: resetFormStatus,
-      saveUiModel: saveUiModel
+      saveUiModel: saveUiModel,
+      sortByProperty: sortByProperty
     };
 
     return service;
@@ -127,4 +128,14 @@
     }
 
   }
+
+  /**
+   * This will sort the string array based on the property passed.
+   */
+  var sortByProperty = function (property) {
+    return function (a, b) {
+      return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
+    };
+  };
+
 })();

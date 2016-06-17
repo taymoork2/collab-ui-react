@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
+  function ServiceSetup($q, $translate, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
 
     return {
       internalNumberRanges: [],
@@ -102,6 +102,21 @@
         }
       },
 
+      updateInternalNumberRange: function (internalNumberRange) {
+        if (angular.isDefined(internalNumberRange.uuid)) {
+          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
+          internalNumberRange.patternUsage = "Device";
+          return InternalNumberRangeService.save({
+            customerId: Authinfo.getOrgId(),
+            internalNumberRangeId: internalNumberRange.uuid
+          }, internalNumberRange, function (data, headers) {
+            internalNumberRange.uuid = headers('location').split("/").pop();
+          }).$promise;
+        } else {
+          return $q.when();
+        }
+      },
+
       deleteInternalNumberRange: function (internalNumberRange) {
         return InternalNumberRangeService.delete({
           customerId: Authinfo.getOrgId(),
@@ -119,6 +134,24 @@
 
       getTimeZones: function () {
         return TimeZoneService.query().$promise;
+      },
+
+      getTranslatedTimeZones: function (timeZones) {
+        var localizedTimeZones = _.map(timeZones, function (timeZone) {
+          if (_.has(timeZone, 'id')) {
+            // for compatibility with new jodaTimeZones.json called by cmiServices.js.
+            return _.extend(timeZone, {
+              label: $translate.instant('timeZones.' + timeZone.id),
+              value: timeZone.id
+            });
+          } else {
+            // for compatibility with old timeZones.json called by cmiServices.js.
+            return _.extend(timeZone, {
+              label: $translate.instant('timeZones.' + timeZone.value),
+            });
+          }
+        });
+        return localizedTimeZones;
       },
 
       isOverlapping: function (x1, x2, y1, y2) {

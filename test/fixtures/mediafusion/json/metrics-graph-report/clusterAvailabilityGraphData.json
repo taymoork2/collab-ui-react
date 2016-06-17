@@ -1,0 +1,233 @@
+{
+  "data": [{
+    "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
+    "period": "mm",
+    "clusterCategories": [{
+      "category": "Bangalore-Site1",
+      "segments": [{
+        "duration": 5,
+        "color": "#006600",
+        "start": 44,
+        "task": "Available</br>1 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FF0000",
+        "task": "Unavailable</br>1/1 nodes"
+      }, {
+        "duration": 1380,
+        "color": "#006600",
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MFA",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_Acano",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>3 nodes"
+      }]
+    }, {
+      "category": "MF_Auto_Corp1",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_Auto_Corp2",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>2 nodes"
+      }]
+    }, {
+      "category": "MF_DEMO",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_PROD_DEV",
+      "segments": [{
+        "duration": 745,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_TEAM",
+      "segments": [{
+        "duration": 420,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>7 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/8 nodes"
+      }, {
+        "duration": 15,
+        "color": "#006600",
+        "task": "Available</br>8 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/9 nodes"
+      }, {
+        "duration": 395,
+        "color": "#006600",
+        "task": "Available</br>9 nodes"
+      }, {
+        "duration": 40,
+        "color": "#006600",
+        "task": "Available</br>8 nodes"
+      }, {
+        "duration": 10,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/8 nodes"
+      }, {
+        "duration": 10,
+        "color": "#006600",
+        "task": "Available</br>8 nodes"
+      }, {
+        "duration": 10,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/9 nodes"
+      }, {
+        "duration": 15,
+        "color": "#006600",
+        "task": "Available</br>9 nodes"
+      }, {
+        "duration": 40,
+        "color": "#006600",
+        "task": "Available</br>8 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/9 nodes"
+      }, {
+        "duration": 10,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>2/10 nodes"
+      }, {
+        "duration": 35,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/10 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>2/11 nodes"
+      }, {
+        "duration": 360,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/11 nodes"
+      }, {
+        "duration": 5,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/10 nodes"
+      }, {
+        "duration": 45,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/11 nodes"
+      }]
+    }, {
+      "category": "MF_TEAM_SJ",
+      "segments": [{
+        "duration": 670,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }, {
+        "duration": 10,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/2 nodes"
+      }, {
+        "duration": 750,
+        "color": "#006600",
+        "task": "Available</br>2 nodes"
+      }]
+    }, {
+      "category": "MF_TEAM_SJ_2",
+      "segments": [{
+        "duration": 1165,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }, {
+        "duration": 10,
+        "color": "#FADB0F",
+        "task": "Partially Unavailable</br>1/2 nodes"
+      }, {
+        "duration": 95,
+        "color": "#006600",
+        "task": "Available</br>2 nodes"
+      }, {
+        "duration": 160,
+        "color": "#006600",
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_TEST",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "MF_TEST_AUTO1",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "PATLURI",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>2 nodes"
+      }]
+    }, {
+      "category": "SanJose-Auto1",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "prod-sx-controller",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>1 nodes"
+      }]
+    }, {
+      "category": "sx-controller",
+      "segments": [{
+        "duration": 1430,
+        "color": "#006600",
+        "start": 4,
+        "task": "Available</br>4 nodes"
+      }]
+    }],
+    "startTime": "2016-06-08T04:35:02Z",
+    "endTime": "2016-06-09T04:35:02Z"
+  }]
+}

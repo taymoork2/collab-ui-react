@@ -263,8 +263,8 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
-
       addAvailableFeatures();
+      vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
         // If this is a new phone menu, add button zero

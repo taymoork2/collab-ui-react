@@ -2,31 +2,39 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($translate, $timeout, $scope, $modal, EdiscoveryService, $window) {
-
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
+    $scope.$on('$viewContentLoaded', function () {
+      angular.element('#searchInput').focus();
+    });
     var vm = this;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;
     vm.runReport = runReport;
     vm.progressType = progressType;
-    vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
+    vm.downloadReport = EdiscoveryService.downloadReport;
+    vm.createReportInProgress = false;
+    vm.searchInProgress = false;
+    vm.currentReportId = null;
+    vm.report = null;
+    vm.searchCriteria = {
+      "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+      "startDate": null,
+      "endDate": null,
+      "displayName": "TBD"
+    };
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
     });
 
-    vm.searchInProgress = false;
-    vm.searchCriteria = {
-      "roomId": "", //36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": null, //moment(moment()).add(-7, 'days'), // week
-      "endDate": null, //moment(),
-      "displayName": "TBD"
-    };
-    vm.report = null;
+    if ($stateParams.roomId) {
+      vm.searchCriteria.roomId = $stateParams.roomId;
+      searchForRoom($stateParams.roomId);
+    }
 
     function getStartDate() {
       return vm.searchCriteria.startDate;
@@ -36,12 +44,9 @@
       return vm.searchCriteria.endDate;
     }
 
-    function setEndDate(endDate) {
-      vm.searchCriteria.endDate = endDate;
-    }
-
     function dateErrors(start, end) {
       var errors = [];
+
       if (moment(start).isAfter(moment(end))) {
         errors.push($translate.instant("ediscovery.dateError.StartDateMustBeforeEndDate"));
       }
@@ -51,26 +56,13 @@
       return errors;
     }
 
-    function openGenericModal(title, messages) {
-      $modal.open({
-        templateUrl: "modules/ediscovery/genericModal.html",
-        controller: 'EdiscoveryGenericModalCtrl as modal',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          messages: function () {
-            return messages;
-          }
-        }
-      });
-    }
-
     function validateDate() {
-      var title = "Date validation";
+      vm.dateValidationError = null;
       var errors = dateErrors(getStartDate(), getEndDate());
       if (errors.length > 0) {
-        openGenericModal(title, errors);
+        vm.dateValidationError = {
+          errors: errors
+        };
         return false;
       } else {
         return true;
@@ -82,17 +74,19 @@
     });
 
     $scope.$watch(getStartDate, function (startDate) {
-      //validateDate();
+      validateDate();
     });
 
     $scope.$watch(getEndDate, function (endDate) {
-      //validateDate();
+      validateDate();
     });
 
     function searchForRoom(roomId) {
+      disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
       vm.error = "";
+      vm.searchCriteria.roomId = roomId;
       vm.searchInProgress = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
@@ -100,9 +94,8 @@
         })
         .then(function (result) {
           vm.roomInfo = result;
-          vm.searchCriteria.id = result.id;
-          vm.searchCriteria.startDate = result.published;
-          vm.searchCriteria.endDate = result.lastReadableActivityDate;
+          vm.searchCriteria.startDate = vm.searchCriteria.startDate || $stateParams.startDate || result.published;
+          vm.searchCriteria.endDate = vm.searchCriteria.endDate || $stateParams.endDate || result.lastReadableActivityDate;
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
@@ -115,30 +108,25 @@
         });
     }
 
-    function findReportById(reports, id) {
-      return _.find(reports, function (report) {
-        return report.id === id;
-      });
-    }
-
     function createReport() {
+      vm.report = {
+        id: vm.searchCriteria.roomId,
+        displayName: vm.searchCriteria.displayName,
+        state: 'INIT',
+        progress: 0
+      };
       disableAvalonPolling();
       vm.errors = [];
-      if (!validateDate()) {
-        return;
-      }
-      // vm.report = {
-      //   "state": "CREATED"
-      // };
 
-      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.id, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
+      EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.roomId, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .then(function (res) {
-          vm.searchResult = res;
-          runReport();
+          vm.currentReportId = res.id;
+          runReport(res.runUrl, res.url);
         })
         .catch(function (err) {
           vm.errors = err.data.errors;
           vm.report = {};
+          vm.createReportInProgress = false;
         });
     }
 
@@ -154,13 +142,14 @@
     }
 
     function searchButtonDisabled() {
-      return (vm.searchCriteria.roomId === '' || vm.searchInProgress === true);
+      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchInProgress === true);
     }
 
     function pollAvalonReport() {
       // TODO: Implement proper handling of error when final API is in place
-      EdiscoveryService.getReport(vm.searchResult.id).then(function (report) {
+      EdiscoveryService.getReport(vm.currentReportId).then(function (report) {
         vm.report = report;
+        vm.createReportInProgress = false;
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 2000);
         } else {
@@ -172,9 +161,9 @@
       });
     }
 
-    function runReport() {
+    function runReport(runUrl, url) {
       // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.runReport(vm.searchResult.runUrl, vm.searchCriteria.roomId, vm.searchResult.url)
+      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url)
         .then(function (res) {
           enableAvalonPolling();
         })
@@ -202,8 +191,6 @@
       }
     }
 
-    function downloadReport() {}
-
     function cancelReport(id) {
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
@@ -219,17 +206,9 @@
         });
       }
     }
-
-  }
-
-  function EdiscoveryGenericModalCtrl($modalInstance, title, messages) {
-    var vm = this;
-    vm.messages = $.isArray(messages) ? messages : [messages];
-    vm.title = title;
   }
 
   angular
     .module('Ediscovery')
-    .controller('EdiscoverySearchController', EdiscoverySearchController)
-    .controller('EdiscoveryGenericModalCtrl', EdiscoveryGenericModalCtrl);
+    .controller('EdiscoverySearchController', EdiscoverySearchController);
 }());

@@ -498,7 +498,7 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 
 // use _searchCount = -1 for unbounded search
 exports.search = function (query, _searchCount) {
-  var spinner = element(by.css('.icon-spinner'));
+  var spinner = element.all(by.css('.icon-spinner')).get(0);
   var searchCount = _searchCount || 1;
 
   function logAndWait() {

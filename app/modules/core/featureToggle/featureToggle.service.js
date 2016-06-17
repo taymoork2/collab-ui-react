@@ -14,6 +14,7 @@
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
@@ -127,7 +128,10 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
+      csdmTz: 'csdm-timezone',
       readonlyAdmin: 'atlas-read-only-admin',
+      helpdeskExt: 'atlas-helpdesk-extended-information',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'
@@ -170,7 +174,18 @@
       features: features
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);

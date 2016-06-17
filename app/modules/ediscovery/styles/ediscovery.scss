@@ -53,6 +53,11 @@
   }
 
   .ediscovery-search {
+    .search-spinner {
+      position:relative;
+      top:1rem;
+      font-size:3rem;
+    }
     padding-top: 1rem;
     .ediscovery-search-bar {
       padding-top: 1rem;
@@ -62,36 +67,18 @@
       }
       .main-heading {
         h1 {
-          font-size: 2.8rem;
+          font-size: 2.2rem;
           color: $color-primary-base;
           @media only screen and (max-width: 640px) {
-            font-size: 2.5rem;
+            font-size: 2.0rem;
           }
           @media only screen and (max-width: 500px) {
-            font-size: 2.2rem;
+            font-size: 1.5rem;
           }
         }
-        display: inline-block;
-        text-align: right;
-        .help {
-          color: $gray-light-1;
-          position: relative;
-          top: -1rem;
-          padding-right: 2px;
-          font-size: 1.0rem;
-          cursor: pointer;
-          i {
-            top: 2px;
-            left: 3px;
-          }
-          @media only screen and (max-width: 640px) {
-            font-size: 0.8rem;
-          }
-          @media only screen and (max-width: 500px) {
-            font-size: 0.7rem;
-          }
+        span {
+          padding-top: 1.0rem;
         }
-
       }
       .typeahead-large .input-description:before {
         display: none;
@@ -101,14 +88,12 @@
       }
       .typeahead-large {
         position: relative;
+        margin-top: 1rem;
         max-width: 100%;
-        //margin-left: auto;
-        //margin-right: auto;
         .searchInputForm {
           margin-bottom: 0px;
         }
         input {
-          //text-align: left;
           border: 0px;
           font-size:24px;
           width: 33rem;
@@ -152,7 +137,11 @@
       .searchError {
         position: relative;
         right: 1.1rem;
-        padding-top: 2rem;
+      }
+      .search-tip {
+        color: $gray-light-1;
+        font-style: italic;
+        padding: 0.5rem;
       }
     }
     .create-report {
@@ -160,15 +149,14 @@
       box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
       border-radius: 2px;
       margin-top: 2rem;
-      i.room-icon {
-        font-size: 10rem;
-      }
+
       .cs-form__section .section__info {
         margin-top: 2rem;
       }
 
       .content {
         margin-left: 30px;
+        border:1px solid red;
         font-weight: bold;
       }
 
@@ -205,15 +193,14 @@
     .search-result {
       box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
       border-radius: 2px;
-      margin-top: 3rem;
       .create-form {
         padding-top: 1rem;
-        padding-left: 0.5rem;
+        padding-left: 1rem;
         padding-right: 1rem;
         padding-bottom: 1rem;
         h4 {
           font-size: 2rem;
-          width: 80%;
+          width: 90%;
         }
         .cancel-or-download {
           width: 50%;
@@ -227,30 +214,40 @@
           .report-name {
             width: 100%;
           }
+          .date-error {
+            margin-bottom: 0;
+            color: $color-negative-base;
+          }
         }
         .input-section-last {
-          padding-top: 2.5rem;
+          padding-top: 2rem;
           padding-right: 2rem;
+          padding-bottom: 1rem;
         }
         .buttons {
           padding-top: 2rem;
         }
         .failure {
           color: $color-negative-base;
-          padding-top: 1rem;
         }
       }
       .left-side {
-        padding-left: 1rem;
+        padding-left: 1.5rem;
 
         .logo {
-          font-size: 10rem;
-          height: 12rem;
+          font-size: 7rem;
+          height: 8rem;
+          color: $gray-light-1;
         }
         .content {
           padding-left: 0.3rem;
         }
       }
+    }
+
+    .with-scroll {
+      //height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
+      height: 60vh;
     }
 
   }

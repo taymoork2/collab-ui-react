@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice, UrlConfig) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -16,6 +16,7 @@
 
     vm.showWebex = false;
     vm.showRoomSystems = false;
+    vm.showContextServiceTrial = false;
 
     var _messageTemplateOptionId = 'messageTrial';
 
@@ -27,6 +28,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
@@ -37,7 +39,8 @@
       call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
       roomSystems: hasOfferType(Config.offerTypes.roomSystems),
       roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
-      licenseDuration: _.get(vm, 'currentTrial.duration', 0)
+      licenseDuration: _.get(vm, 'currentTrial.duration', 0),
+      context: false // we don't know this yet, so default to false
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
@@ -65,18 +68,105 @@
     vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
 
-    vm.individualServices = [{
+    vm.nonTrialServices = [{
+      // Context Service Trial
+      model: vm.contextTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      templateOptions: {
+        label: $translate.instant('trials.context'),
+        id: 'contextTrial'
+      },
+    }];
+
+    vm.messageFields = [{
+      // Message Trial
+      model: vm.messageTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.message'),
+        id: _messageTemplateOptionId,
+        class: '',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.message;
+        }
+      }
+    }];
+
+    vm.meetingFields = [{
+      // Meeting Trial
+      model: vm.meetingTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.meeting'),
+        id: 'meetingTrial',
+        class: '',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.meeting;
+        }
+      }
+    }, {
+      // Webex Trial
+      model: vm.webexTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.webex'),
+        id: 'webexTrial',
+        class: '',
+      },
+      'hideExpression': function () {
+        return !vm.showWebex;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.webex;
+        }
+      }
+    }];
+
+    vm.callFields = [{
+      // Call Trial
+      model: vm.callTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        label: $translate.instant('trials.call'),
+        id: 'squaredUCTrial',
+        class: '',
+      },
+      'hideExpression': function () {
+        return !vm.hasCallEntitlement;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.call;
+        }
+      }
+    }];
+
+    vm.licenseCountFields = [{
       model: vm.details,
       key: 'licenseCount',
       type: 'input',
-
-      className: 'columns medium-12 license-count',
+      className: '',
       templateOptions: {
-        label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-6',
-        inputClass: 'columns medium-3',
+        label: $translate.instant('trials.licenseQuantity'),
+        labelClass: 'medium-4',
+        inputClass: 'medium-4',
         type: 'number',
         required: true,
+        secondaryLabel: $translate.instant('trials.users')
       },
       validators: {
         count: {
@@ -86,76 +176,6 @@
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
-        },
-      },
-    }, {
-      // Message Trial
-      model: vm.messageTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12',
-      templateOptions: {
-        label: $translate.instant('trials.message'),
-        id: _messageTemplateOptionId,
-        class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.message;
-        },
-      },
-    }, {
-      // Meeting Trial
-      model: vm.meetingTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12',
-      templateOptions: {
-        label: $translate.instant('trials.meeting'),
-        id: 'meetingTrial',
-        class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.meeting;
-        },
-      },
-    }, {
-      // Webex Trial
-      model: vm.webexTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.webex'),
-        id: 'webexTrial',
-        class: 'columns medium-12',
-      },
-      'hideExpression': function () {
-        return !vm.showWebex;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.webex;
-        },
-      },
-    }, {
-      // Call Trial
-      model: vm.callTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.callUsOnly'),
-        id: 'squaredUCTrial',
-        class: 'columns medium-12',
-      },
-      'hideExpression': function () {
-        return !vm.hasCallEntitlement;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.call;
         },
       },
     }];
@@ -170,8 +190,8 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-4',
+        labelClass: '',
+        inputClass: 'medium-4',
         options: [30, 60, 90]
       },
     }];
@@ -181,11 +201,11 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-12",
+      className: '',
       templateOptions: {
-        label: $translate.instant('trials.roomSysUsOnly'),
+        label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
-        class: 'columns medium-12',
+        class: '',
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -203,10 +223,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-12 small-offset-1",
+      className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-4',
+        inputClass: 'medium-4',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -259,7 +279,9 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        TrialContextService.trialHasService(vm.currentTrial.customerOrgId)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -272,6 +294,9 @@
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
+        vm.showContextServiceTrial = results[3];
+        vm.contextTrial.enabled = results[4];
+        vm.preset.context = results[4];
         // TODO: override atlasDeviceTrials to show Ship devices to all partners
         //       and do not show to test orgs (US12063)
         //vm.canSeeDevicePage = results[2];
@@ -305,16 +330,11 @@
     // If Webex Trials are enabled, we switch out offerType Collab for Message
     // This requires changing the label it contains as well
     function updateTrialService(templateOptionsId) {
-      var index = _.findIndex(vm.individualServices, function (individualService) {
-        return individualService.templateOptions.id === templateOptionsId;
-      });
-      if (index) {
-        switch (templateOptionsId) {
-        case _messageTemplateOptionId:
-          vm.individualServices[index].model.type = Config.offerTypes.message;
-          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
-          break;
-        }
+      switch (templateOptionsId) {
+      case _messageTemplateOptionId:
+        vm.messageFields[0].model.type = Config.offerTypes.message;
+        vm.messageFields[0].templateOptions.label = $translate.instant('trials.message');
+        break;
       }
     }
 
@@ -331,8 +351,13 @@
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
 
       addRemoveStates();
-      _.forEach(vm.individualServices, function (service) {
-        service.runExpressions();
+
+      var fieldsArray = [vm.individualServices, vm.messageFields, vm.meetingFields, vm.callFields, vm.licenseCountFields];
+
+      _.forEach(fieldsArray, function (fields) {
+        _.forEach(fields, function (service) {
+          service.runExpressions();
+        });
       });
     }
 
@@ -450,6 +475,23 @@
               });
           }
         })
+        .then(function (response) {
+          if (vm.preset.context !== vm.contextTrial.enabled) {
+            if (vm.contextTrial.enabled) {
+              return TrialContextService.addService(custId).catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.editTrialContextServiceEnableError');
+                return $q.reject(response);
+              });
+            } else {
+              return TrialContextService.removeService(custId).catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.editTrialContextServiceDisableError');
+                return $q.reject(response);
+              });
+            }
+          }
+        })
         .then(function () {
           vm.loading = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
@@ -492,6 +534,7 @@
     function isProceedDisabled() {
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
+        vm.preset.context !== vm.contextTrial.enabled,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
         vm.preset.licenseDuration !== vm.details.licenseDuration,

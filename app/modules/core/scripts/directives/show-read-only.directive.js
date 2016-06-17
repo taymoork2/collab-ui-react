@@ -45,7 +45,7 @@
         if (!modalShown) {
           modalShown = true;
           vm.modal = $modal.open({
-            size: 'sm',
+            type: 'small',
             controller: ReadOnlyModalController,
             controllerAs: 'readOnlyCtrl',
             templateUrl: 'modules/core/scripts/directives/views/read-only-modal.html'

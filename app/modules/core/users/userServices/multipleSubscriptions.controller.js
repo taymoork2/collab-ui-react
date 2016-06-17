@@ -24,10 +24,12 @@
         vm.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
         vm.selectedSubscription = _.first(vm.subscriptionOptions);
         vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
+        vm.roomSystemsExist = _.some(_.flatten(_.uniq(_.pluck(subscriptions, 'licenses'))), {
+          'licenseType': 'SHARED_DEVICES'
+        });
       }).catch(function (response) {
         Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
       });
-
     }
 
     function showLicenses(billingServiceId, isTrial) {
@@ -38,12 +40,12 @@
       if (_.isArray(billingServiceId)) {
         for (var i in billingServiceId) {
           if (_.eq(billingServiceId[i], vm.selectedSubscription)) {
-            isSelected = vm.roomSystemsExist = true;
+            isSelected = true;
             break;
           }
         }
       } else {
-        isSelected = vm.roomSystemsExist = _.eq(billingServiceId, vm.selectedSubscription);
+        isSelected = _.eq(billingServiceId, vm.selectedSubscription);
       }
 
       return vm.oneBilling || isSelected || isTrialSubscription;

@@ -1,0 +1,51 @@
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="hostClusterDeregister.close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <div ng-show="hostClusterDeregister.error">
+      <h5 class="modal-title" translate="mediaFusion.clusters.deregisterErrorHeader"></h5>
+    </div> 
+    <div ng-hide="loading || hostClusterDeregister.error">
+      <h5 class="modal-title" translate="mediaFusion.clusters.deregisterHeader"></h5>
+    </div> 
+  </div>
+
+  <div class="modal-body">
+    <div ng-show="hostClusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
+      {{hostClusterDeregister.error}}
+    </div>
+
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+
+    <div ng-hide="loading || hostClusterDeregister.error">
+      <p>{{hostClusterDeregister.deregisterAreYouSure}}</p>
+      <ul>
+        <!--li>{{hostClusterDeregister.deregisterItem1}}</li-->
+        <li translate="mediaFusion.clusters.deregisterCausesListItem1"></li>
+        <!--li translate="mediaFusion.clusters.deregisterCausesListItem2"></li-->
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal-footer" ng-hide="hostClusterDeregister.error">
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--negative pull-right"
+            ng-click="hostClusterDeregister.deregister()">
+      <span ng-hide="saving" translate="mediaFusion.clusters.deregisterConfirm"></span>
+        <span ng-show="saving">
+          <i class="icon icon-spinner"/>
+        </span>
+    </button>
+    <button id="convertCancelButton" class="btn pull-right" ng-click="hostClusterDeregister.close()"
+            style="margin-right: 10px">
+      <span translate="mediaFusion.clusters.deregisterCancel"></span>
+    </button>
+  </div>
+  <div class="modal-footer" ng-show="hostClusterDeregister.error">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="hostClusterDeregister.close()"
+            style="margin-right: 10px">
+      <span translate="common.ok"></span>
+    </button>
+  </div>
+

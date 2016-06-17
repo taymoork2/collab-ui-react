@@ -137,5 +137,30 @@
           fail(errorMsg);
         });
     });
+
+    it('check old data format parsing : sync enabled', function () {
+      service.parseSyncMode('enabled');
+      expect(service.getNewDataFormat()).toEqual(false);
+    });
+
+    it('check old data format parsing : sync disabled', function () {
+      service.parseSyncMode('disabled');
+      expect(service.getNewDataFormat()).toEqual(false);
+    });
+
+    it('check new data format parsing : sync enabled', function () {
+      service.parseSyncMode('msgr_to_spark;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0');
+      expect(service.getNewDataFormat()).toEqual(true);
+    });
+
+    it('check new data format parsing : sync disabled', function () {
+      service.parseSyncMode('spark_to_msgr;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0');
+      expect(service.getNewDataFormat()).toEqual(true);
+    });
+
+    it('check new data format parsing : sync disabled 2', function () {
+      service.parseSyncMode('disabled;pwd_sync=1:spark_ent=1:usr_dis=1:usr_del=1:usr_min=0');
+      expect(service.getNewDataFormat()).toEqual(true);
+    });
   });
 })();

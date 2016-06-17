@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl:', function () {
-  var controller, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, HuronCustomer, FeatureToggleService, Orgservice;
+  var controller, $scope, $state, $q, $translate, $window, $httpBackend, Notification, TrialService, TrialContextService, HuronCustomer, FeatureToggleService, Orgservice;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
@@ -15,8 +15,9 @@ describe('Controller: TrialEditCtrl:', function () {
       }]
     }
   };
+  var addContextSpy, removeContextSpy;
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
@@ -25,6 +26,7 @@ describe('Controller: TrialEditCtrl:', function () {
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     TrialService = _TrialService_;
+    TrialContextService = _TrialContextService_;
     HuronCustomer = _HuronCustomer_;
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
@@ -37,7 +39,11 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($state, 'go');
     spyOn($state, 'href');
     spyOn($window, 'open');
+    spyOn($scope, '$watch');
     spyOn(TrialService, 'getDeviceTrialsLimit');
+    addContextSpy = spyOn(TrialContextService, 'addService').and.returnValue($q.when());
+    removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.when());
+    spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
     spyOn(FeatureToggleService, 'supports').and.callFake(function (input) {
       if (input === 'atlasTrialsShipDevices') {
         return $q.when(false);
@@ -55,6 +61,7 @@ describe('Controller: TrialEditCtrl:', function () {
       $translate: $translate,
       $stateParams: stateParams,
       TrialService: TrialService,
+      TrialContextService: TrialContextService,
       Notification: Notification,
       HuronCustomer: HuronCustomer,
       FeatureToggleService: FeatureToggleService,
@@ -79,7 +86,7 @@ describe('Controller: TrialEditCtrl:', function () {
 
     describe('Interacting with TrialService.editTrial', function () {
       beforeEach(function () {
-        spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+        spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
         controller.editTrial();
         $scope.$apply();
       });
@@ -95,7 +102,7 @@ describe('Controller: TrialEditCtrl:', function () {
 
     describe('Edit a trial with error', function () {
       beforeEach(function () {
-        spyOn(TrialService, "editTrial").and.returnValue($q.reject({
+        spyOn(TrialService, 'editTrial').and.returnValue($q.reject({
           data: {
             message: 'An error occurred'
           }
@@ -350,6 +357,68 @@ describe('Controller: TrialEditCtrl:', function () {
         controller.setDeviceModal();
         $scope.$apply();
         expect(controller.canSeeDevicePage).toBeFalsy();
+      });
+    });
+  });
+
+  describe('with context service', function () {
+    beforeEach(function () {
+      spyOn(TrialService, 'editTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+    });
+
+    describe('enabled', function () {
+      beforeEach(function () {
+        controller.preset.context = true;
+      });
+
+      it('should edit trial with no change to context service', function () {
+        controller.contextTrial.enabled = true;
+        controller.editTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).not.toHaveBeenCalled();
+        expect(TrialContextService.removeService).not.toHaveBeenCalled();
+      });
+
+      it('should disable context service', function () {
+        controller.contextTrial.enabled = false;
+        controller.editTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).not.toHaveBeenCalled();
+        expect(TrialContextService.removeService).toHaveBeenCalled();
+      });
+
+      it('should display notification if call to disable context service fails', function () {
+        removeContextSpy.and.returnValue($q.reject('rejected'));
+        controller.contextTrial.enabled = false;
+        controller.editTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).not.toHaveBeenCalled();
+        expect(TrialContextService.removeService).toHaveBeenCalled();
+        expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceDisableError');
+      });
+    });
+
+    describe('disabled', function () {
+      beforeEach(function () {
+        controller.preset.context = false;
+      });
+
+      it('should enable context service', function () {
+        controller.contextTrial.enabled = true;
+        controller.editTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).toHaveBeenCalled();
+        expect(TrialContextService.removeService).not.toHaveBeenCalled();
+      });
+
+      it('should display notification if call to enable context service fails', function () {
+        addContextSpy.and.returnValue($q.reject('rejected'));
+        controller.contextTrial.enabled = true;
+        controller.editTrial();
+        $scope.$apply();
+        expect(TrialContextService.addService).toHaveBeenCalled();
+        expect(TrialContextService.removeService).not.toHaveBeenCalled();
+        expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceEnableError');
       });
     });
   });
