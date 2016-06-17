@@ -6,18 +6,7 @@
     .service('WebExSiteRowService', WebExSiteRowService);
 
   /* @ngInject */
-  function WebExSiteRowService(
-    $log,
-    $interval,
-    $translate,
-    Authinfo,
-    Userservice,
-    FeatureToggleService,
-    WebExUtilsFact,
-    UrlConfig,
-    WebExApiGatewayService,
-    WebExApiGatewayConstsService
-  ) {
+  function WebExSiteRowService($interval, $translate, Authinfo, Userservice, FeatureToggleService, UrlConfig, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService) {
 
     this.initSiteRowsObj = function () {
       _this.siteRows = {
