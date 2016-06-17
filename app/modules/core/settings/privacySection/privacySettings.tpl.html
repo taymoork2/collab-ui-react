@@ -22,4 +22,22 @@
       ng-disabled="vm.sendUsageData===undefined">
   </div>
 
+  <div class="sub-section" cr-feature-toggle feature-show="csdm-enable-crash-logs">
+    <h5 class="sub-section__label" translate="customerProfile.crashReportTitle"></h5>
+    <p class="sub-section__description" translate="customerProfile.crashReportText"></p>
+
+    <!--<div class="form-spacing">-->
+    <input type="checkbox" id="crashReportCheckbox" ng-change='setCrashReportCheckbox(allowCrashLogUpload)'
+           ng-model="vm.allowCrashLogUpload">
+    <label for="crashReportCheckbox">
+      <span translate="customerProfile.crashReportCheckboxLabel"></span>
+    </label>
+    <!--</div>-->
+    <p>
+      <span translate="customerProfile.crashReportTooltipDescription"></span>
+      <i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="above" tooltip-animation="true"
+         tooltip="{{::'customerProfile.crashReportTooltip' | translate}}"></i>
+    </p>
+  </div>
+
 </div>
