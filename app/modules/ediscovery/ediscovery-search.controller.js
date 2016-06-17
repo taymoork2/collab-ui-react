@@ -211,15 +211,15 @@
         return; // if not escape and enter, nothing to do
       }
       switch (event.keyCode) {
-        case ESC:
-          init();
-          break;
+      case ESC:
+        init();
+        break;
 
-        case ENTER:
-          $timeout(function () {
-              angular.element("#ediscoverySearchButton").trigger('click');
-          });
-          break;
+      case ENTER:
+        $timeout(function () {
+          angular.element("#ediscoverySearchButton").trigger('click');
+        });
+        break;
       }
     }
   }
