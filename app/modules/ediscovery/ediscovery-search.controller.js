@@ -17,6 +17,7 @@
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.downloadReport = EdiscoveryService.downloadReport;
     vm.createReportInProgress = false;
+    vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
     vm.report = null;
@@ -87,7 +88,7 @@
       vm.report = null;
       vm.error = "";
       vm.searchCriteria.roomId = roomId;
-      vm.searchInProgress = true;
+      vm.searchingForRoom = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
         .then(function (result) {
           return EdiscoveryService.getAvalonRoomInfo(result.avalonRoomsUrl + '/' + roomId);
@@ -110,7 +111,7 @@
           }
         })
         .finally(function () {
-          vm.searchInProgress = false;
+          vm.searchingForRoom = false;
         });
     }
 
@@ -148,7 +149,7 @@
     }
 
     function searchButtonDisabled() {
-      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchInProgress === true);
+      return (!vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true);
     }
 
     function pollAvalonReport() {

@@ -1443,9 +1443,9 @@
     "navHeaderTitle": "Spark Activity Reports",
     "heading": "Search Spark Room Activity",
     "subheading": "Find all relevant data for a room",
-    "searchTip": "Search by Room ID",
+    "searchTip": "Search data by room ID",
     "searchError": "Your search for '{{roomId}}' returned no matches",
-    "invalidRoomId": "'{{roomId}}' is not a valid Room ID",
+    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1466,7 +1466,7 @@
       "INSUFFICIENT_STORAGE": "Insufficient storage",
       "ROOM_NOT_FOUND": "Room not found"
     },
-    "reportTimeout": "Timeout detected. <br>Please cancel the report and try again.",
+    "reportTimeout": "Timeout detected. Please cancel the report and try again.",
     "search": {
       "participants": "Participants",
       "reportName": "Report Name",
@@ -1486,7 +1486,7 @@
       "downloadReport": "Download Report",
       "failure": "Report generation failed",
       "tryAgain": "Try again or contact Customer Support",
-      "reportStatus": "Status",
+      "reportStatus": "Report Status",
       "reportSize": "Total Size"
     },
     "reportsList": {
