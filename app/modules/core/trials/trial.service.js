@@ -53,7 +53,7 @@
     }
 
     function shallowValidation(key, val) {
-      var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
+      var validationUrl = UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke';
 
       var config = {
         method: 'POST',

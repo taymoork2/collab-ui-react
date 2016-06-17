@@ -495,30 +495,61 @@ describe('Service: Trial Service:', function () {
       });
     });
 
-    fdescribe('shallow validation', function () {
+    describe('shallow validation', function () {
       var org = 'organizationName';
       var email = 'endCustomerEmail';
-      var svResponse = {
-        properties: {
-          key: org,
-          value: 'Test Name',
-          isValid: "false",
-          isExists: "false"
-        }
-      };
-      beforeEach(function () {
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond(angular.toJson(svResponse));
+      var valData;
+
+      function expectShallowVal(type, result) {
+        TrialService.shallowValidation(type, 'Test Name').then(function(response) {
+          expect(response).toEqual(result);
+        });
+      }
+
+      beforeEach(function() {
+        valData = {
+          properties: [{
+            key: org,
+            value: 'Test Name',
+            isValid: "true",
+            isExist: "false"
+          }]
+        };
+      });
+
+      afterEach(function() {
+        $httpBackend.flush();
+      });
+
+      it('should return unique', function() {
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {unique: true});
+      });
+
+      it('should return error in use', function() {
+        valData.properties[0].isExist = "true";
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {error: 'trialModal.errorInUse'});
+      });
+
+      it('should return error invalid name', function() {
+        valData.properties[0].isValid = "false";
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {error: 'trialModal.errorInvalidName'});
+      });
+
+      it('should return error invalid', function() {
+        valData.properties[0].key = email;
+        valData.properties[0].isValid = "false";
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(email, {error: 'trialModal.errorInvalid'});
       });
 
       it('should return error server down', function () {
-        svResponse = null;
-        TrialService.shallowValidation(org, 'Test').then(function(response) {
-          expect(response).toEqual({
-            error: 'trialModal.errorServerDown'
-          });
-        });
+        valData = {};
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {error: 'trialModal.errorServerDown'});
       });
-
     });
   });
 });
