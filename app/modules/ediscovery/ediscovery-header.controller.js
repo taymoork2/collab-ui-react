@@ -5,7 +5,7 @@
   function EdiscoveryHeaderController($window, $scope, $translate) {
 
     $scope.$on('$viewContentLoaded', function () {
-      $window.document.title = "Activity Reports";
+      $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
 
     var vm = this;

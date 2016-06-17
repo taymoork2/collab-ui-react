@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -20,13 +20,7 @@
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
-    vm.report = null;
-    vm.searchCriteria = {
-      "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-      "startDate": null,
-      "endDate": null,
-      "displayName": "TBD"
-    };
+    init();
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
@@ -35,6 +29,18 @@
     if ($stateParams.roomId) {
       vm.searchCriteria.roomId = $stateParams.roomId;
       searchForRoom($stateParams.roomId);
+    }
+
+    function init() {
+      vm.report = null;
+      vm.searchCriteria = {
+        "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
+        "startDate": null,
+        "endDate": null,
+        "displayName": "TBD"
+      };
+      vm.error = null;
+      vm.roomInfo = null;
     }
 
     function getStartDate() {
@@ -86,7 +92,7 @@
       disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
-      vm.error = "";
+      vm.error = null;
       vm.searchCriteria.roomId = roomId;
       vm.searchingForRoom = true;
       EdiscoveryService.getAvalonServiceUrl(roomId)
@@ -197,14 +203,26 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 13) {
-        $timeout(function () {
-          angular.element("#ediscoverySearchButton").trigger('click');
-        });
+      var ESC = 27;
+      var ENTER = 13;
+      var activeElement = angular.element($window.document.activeElement);
+      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
+        return; // if not escape and enter, nothing to do
+      }
+      switch (event.keyCode) {
+        case ESC:
+          init();
+          break;
+
+        case ENTER:
+          $timeout(function () {
+              angular.element("#ediscoverySearchButton").trigger('click');
+          });
+          break;
       }
     }
   }
-
   angular
     .module('Ediscovery')
     .controller('EdiscoverySearchController', EdiscoverySearchController);
