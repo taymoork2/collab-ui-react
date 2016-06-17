@@ -8,12 +8,9 @@
     $scope,
     $rootScope,
     $log,
-    $translate,
-    $filter,
     $state,
     $stateParams,
-    WebExUserSettingsFact,
-    Notification
+    WebExUserSettingsFact
   ) {
     $scope.loading = WebExUserSettingsFact.loading;
 

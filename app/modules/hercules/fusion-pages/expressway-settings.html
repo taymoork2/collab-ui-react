@@ -4,10 +4,10 @@
 
   <form class="cs-form" action="">
     <setting-section setting="clusterSettings.upgradeSchedule">
-      <p>Placeholder</p>
+      <upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
     </setting-section>
 
-    <setting-section setting="clusterSettings.releasechannel">
+    <setting-section setting="clusterSettings.releasechannel" ng-if="false">
       <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelUsers"></h5>
       <cs-select
         ng-model="clusterSettings.usersSelected"

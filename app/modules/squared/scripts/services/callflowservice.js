@@ -5,7 +5,7 @@
     .service('CallflowService', CallflowService);
 
   /* @ngInject */
-  function CallflowService($rootScope, $http, Storage, Config, Log, Auth, UrlConfig) {
+  function CallflowService($http, Log, UrlConfig) {
     var service = {
       getCallflowCharts: getCallflowCharts
     };

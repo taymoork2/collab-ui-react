@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, $q, FeatureToggleService, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification) {
 
     var vm = this;
 

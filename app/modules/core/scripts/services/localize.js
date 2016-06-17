@@ -5,7 +5,7 @@
     .factory('Localize', Localize);
 
   /* @ngInject */
-  function Localize($location, $filter, Utils, SessionStorage) {
+  function Localize($filter, Utils, SessionStorage) {
     return {
       varTitle: function () {
         var currentOrgName = SessionStorage.get('customerOrgName');

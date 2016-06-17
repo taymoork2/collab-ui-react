@@ -5,7 +5,7 @@
     .controller('HuronFeatureAADependsCtrl', HuronFeatureAADependsCtrl);
 
   /* @ngInject */
-  function HuronFeatureAADependsCtrl($rootScope, $scope, $stateParams) {
+  function HuronFeatureAADependsCtrl($stateParams) {
     var vm = this;
     vm.featureName = $stateParams.detailsFeatureName;
     vm.dependsNames = $stateParams.detailsDependsList;

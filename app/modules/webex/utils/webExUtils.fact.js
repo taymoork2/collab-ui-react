@@ -8,12 +8,8 @@
     $q,
     $log,
     $rootScope,
-    $http,
-    $timeout,
-    Authinfo,
     Orgservice,
-    WebExXmlApiFact,
-    WebExXmlApiInfoSvc
+    WebExXmlApiFact
   ) {
     var obj = {};
 

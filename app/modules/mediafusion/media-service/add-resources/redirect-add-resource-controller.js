@@ -6,7 +6,7 @@
     .controller("RedirectAddResourceController", RedirectAddResourceController);
 
   /* @ngInject */
-  function RedirectAddResourceController(RedirectTargetService, MediaClusterService, $modalInstance, $window, XhrNotificationService, $log, $modal) {
+  function RedirectAddResourceController(RedirectTargetService, MediaClusterService, $modalInstance, $window, XhrNotificationService, $log) {
     var vm = this;
     vm.clusterList = [];
     vm.onlineClusterList = [];

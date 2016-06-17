@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $location, $q, $rootScope, $translate, Auth, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, Storage, TelephoneNumberService, UrlConfig, Utils) {
+  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {

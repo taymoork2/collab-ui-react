@@ -9,7 +9,6 @@
     $log,
     $stateParams,
     $translate,
-    $filter,
     Authinfo,
     Notification,
     Orgservice,

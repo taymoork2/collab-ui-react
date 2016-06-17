@@ -8,7 +8,7 @@
     .directive('sqClipboard', sqClipboard);
 
   /* @ngInject */
-  function sqClipboard($timeout, Notification, $window) {
+  function sqClipboard(Notification, $window) {
     return {
       restrict: 'A',
       scope: {

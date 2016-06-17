@@ -6,7 +6,7 @@
     .controller('HybridServicesPreviewCtrl', HybridServicesPreviewCtrl);
 
   /*@ngInject*/
-  function HybridServicesPreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout) {
+  function HybridServicesPreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $timeout) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC'

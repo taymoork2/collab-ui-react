@@ -8,15 +8,12 @@
     $scope,
     $rootScope,
     $log,
-    $filter,
     $state,
     $stateParams,
     $translate,
     $sce,
     WebExUserSettingsFact,
-    Notification,
     Authinfo,
-    Config,
     UrlConfig
   ) {
     $scope.loading = WebExUserSettingsFact.loading;

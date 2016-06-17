@@ -520,52 +520,18 @@
     };
 
     $scope.downloadFlow = function (downloadUrl) {
-      $scope.callInfoActive = false;
       $scope.logPanelActive = false;
       $scope.callFlowActive = true;
       $scope.callFlowUrl = downloadUrl;
     };
 
-    $scope.showCallInfo = function (emailAddress, locusId, startTime) {
-      $scope.callInfoActive = true;
-      $scope.logPanelActive = false;
-      $scope.callFlowActive = false;
-      $scope.logInfo = [];
-      $scope.emailAddress = emailAddress;
-      if (!locusId || locusId === '-NA-' || !startTime || startTime === '-NA-') {
-        $scope.getPending = false;
-        return;
-      }
-      getLogInfo(locusId, startTime);
-    };
-
-    $scope.showCallSummary = function (locusId, startTime) {
-      ReportsService.getCallSummary(locusId, startTime, function (data, status) {
-        if (data.success) {
-          var myWindow = $window.open("", "Call Summary", "width=800, height=400");
-          setTimeout(function () {
-            myWindow.document.title = 'Call Summary';
-          }, 1000);
-          myWindow.document.write("<p><u><h3>Call Summary (locusId: " + locusId + ", callStartTime: " + startTime + ")" + "</h3></u></p>");
-          if (data.callRecords.length > 0) {
-            for (var index in data.callRecords) {
-              myWindow.document.write(data.callRecords[index] + "<br/>");
-            }
-          }
-          Log.info('Call summary: ' + data);
-        }
-      });
-    };
-
     $scope.closeCallInfo = function () {
-      $scope.callInfoActive = false;
       $scope.logPanelActive = true;
       $scope.callFlowActive = false;
     };
 
     $scope.closeCallFlow = function () {
       $scope.callFlowUrl = 'images/solid_white.png';
-      $scope.callInfoActive = true;
       $scope.logPanelActive = false;
       $scope.callFlowActive = false;
     };
@@ -600,12 +566,6 @@
       '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
     var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openDownloadCallLogModal(row.entity, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
-
-    var callInfoTemplate =
-      '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></span></a></div>';
-
-    var callSummaryTemplate =
-      '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallSummary(row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></a></div>';
 
     $scope.gridOptions = {
       data: 'userLogs',
@@ -654,22 +614,6 @@
         cellTemplate: callFlowTemplate,
         cellClass: 'call-flow',
         headerCellClass: 'header-call-flow',
-        visible: Authinfo.isCisco()
-      }, {
-        field: 'callInfo',
-        displayName: $filter('translate')('supportPage.callAction'),
-        sortable: false,
-        cellTemplate: callInfoTemplate,
-        cellClass: 'call-info',
-        headerCellClass: 'header-call-info',
-        visible: Authinfo.isCisco()
-      }, {
-        field: 'callSummary',
-        displayName: $filter('translate')('supportPage.callSummaryAction'),
-        sortable: false,
-        cellTemplate: callSummaryTemplate,
-        cellClass: 'call-summary',
-        headerCellClass: 'header-call-summary',
         visible: Authinfo.isCisco()
       }]
     };

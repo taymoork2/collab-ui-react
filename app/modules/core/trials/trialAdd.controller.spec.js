@@ -261,6 +261,34 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
+    describe('hasUserServices() ', function () {
+      beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.meetingTrial.enabled = false;
+        controller.webexTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.roomSystemTrial.enabled = true;
+        $scope.$apply();
+      });
+
+      it('should return false when only roomSystemTrial is enabled', function () {
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return false when no services are enabled', function () {
+        controller.roomSystemTrial.enabled = false;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return true when any user service is enabled', function () {
+        controller.messageTrial.enabled = true;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeTruthy();
+      });
+    });
+
     describe('with context service checked', function () {
 
       it('should enable context service', function () {

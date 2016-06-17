@@ -1,48 +1,24 @@
 (function () {
   'use strict';
 
-  angular.module('Core').controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
+  angular
+    .module('Core')
+    .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl(
-    $q,
-    $translate,
-    $log,
-    $scope,
-    $interval,
-    Authinfo,
-    Userservice,
-    WebExApiGatewayService,
-    Notification,
-    FeatureToggleService,
-    WebExSiteRowService
-  ) {
+  function WebExSiteRowCtrl($scope, WebExSiteRowService) {
 
-    var funcName = "WebExSiteRowCtrl()";
-    var logMsg = "";
-    var _this = this;
+    this.showGridData = false;
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.webexCSV)])
-      .then(function (result) {
-        WebExSiteRowService.showCSVIconAndResults = result;
-      });
+    WebExSiteRowService.initSiteRows();
+    this.gridOptions = WebExSiteRowService.getGridOptions();
 
-    init();
-
-    ////////////////
-
-    function init() {
-      WebExSiteRowService.getConferenceServices();
-      WebExSiteRowService.configureGrid();
-
-      _this.gridOptions = WebExSiteRowService.getGridOptions();
-      _this.showGridData = WebExSiteRowService.getShowGridData();
-
-    } //init()
+    this.showGridData = true;
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
       WebExSiteRowService.stopPolling();
+      WebExSiteRowService.initSiteRowsObj(); // this will allow re-entry to this page to use fresh content
     });
 
   } // WebExSiteRowCtrl()
