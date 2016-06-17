@@ -17,7 +17,7 @@
             <label for="partnerLogoRadio">
               <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
               <span ng-if="!isPartner && bctrl.isDirectCustomer" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner && bctrl.!isDirectCustomer" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
+              <span ng-if="!isPartner && !bctrl.isDirectCustomer" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
             </label>
           </div>
 
