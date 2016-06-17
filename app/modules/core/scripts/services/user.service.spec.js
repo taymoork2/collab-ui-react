@@ -5,10 +5,13 @@ describe('User Service', function () {
 
   beforeEach(function () {
     bard.appModule('Huron');
-    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
+    bard.appModule('Sunlight');
+    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig', 'SunlightConfigService');
     spyOn($rootScope, '$broadcast').and.returnValue({});
     spyOn(Authinfo, 'getOrgId').and.returnValue('abc123efg456');
   });
+
+  //beforeEach(module('Sunlight'));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -66,6 +69,26 @@ describe('User Service', function () {
     Userservice.updateUsers(users);
     $httpBackend.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
+  });
+
+  it('onboardUsers with sunlight license should send POST request to Sunlight Config', function () {
+    var usersDataArray = [{
+      "address": "vnvn@khkkk.com",
+      "name": ""
+    }];
+    var entitlements = [];
+    var licenses = [{
+      "id": "MS_deac6827-4c8b-4040-b9c4-31445fd698b0",
+      "idOperation": "ADD",
+      "properties": {}
+    }, {
+      "id": "CDC_32cd3b68-662f-41f8-b1cb-f4de77335296",
+      "idOperation": "ADD",
+      "properties": {}
+    }];
+    $httpBackend.expectPOST(UrlConfig.getSunlightConfigServiceUrl() + "/user/").respond(200);
+    Userservice.onboardUsers(usersDataArray, entitlements, licenses);
+    $httpBackend.flush();
   });
 
 });
