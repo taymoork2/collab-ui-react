@@ -40,16 +40,14 @@
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (isCareEnabled) {
       setOffers(isCareEnabled);
     }).then(function () {
-      $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
-          FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)
-        ])
+      $q.all(FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures))
         .then(function (result) {
           if (_.find(vm.currentCustomer.offers, {
               id: Config.offerTypes.roomSystems
             })) {
-            vm.showRoomSystems = result[0];
+            vm.showRoomSystems = true;
           }
-          vm.atlasPartnerAdminFeatureToggle = result[1];
+          vm.atlasPartnerAdminFeatureToggle = result[0];
         });
     });
 
