@@ -28,7 +28,7 @@
 
     span.icon {
       font-size: 20px;
-      line-height: 40px;
+      line-height: 30px;
       cursor: pointer;
     }
 
@@ -58,7 +58,20 @@
       top:1rem;
       font-size:3rem;
     }
+    
     padding-top: 2rem;
+
+    .cs-tooltip {
+      max-width: none;
+    }
+    .gridStyle {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .fit-in-cell {
+        line-height: 35px;
+    }
+
     .ediscovery-search-bar {
       text-align: center;
       .pointer {

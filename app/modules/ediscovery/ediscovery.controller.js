@@ -64,9 +64,9 @@
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
       enableRowSelection: true,
-      rowHeight: 68,
+      rowHeight: 50,
       enableRowHeaderSelection: false,
-      enableColumnResize: true,
+      enableColumnResizing: true,
       enableColumnMenus: false,
       enableHorizontalScrollbar: 0,
       infiniteScrollUp: true,
@@ -94,27 +94,32 @@
         field: 'displayName',
         displayName: $translate.instant("ediscovery.reportsList.name"),
         sortable: true,
-        cellTemplate: 'modules/ediscovery/cell-template-name.html'
+        cellTemplate: 'modules/ediscovery/cell-template-name.html',
+        width: '*'
       }, {
         field: 'createdTime',
         displayName: $translate.instant("ediscovery.reportsList.createdAt"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html'
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
+        width: '*'
       }, {
         field: 'roomQuery.roomId',
         displayName: $translate.instant("ediscovery.reportsList.roomId"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-room-id.html'
+        cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
+        width: '*'
       }, {
         field: 'roomQueryDates',
         displayName: $translate.instant("ediscovery.reportsList.dateRange"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html'
+        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
+        width: '*'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html'
+        cellTemplate: 'modules/ediscovery/cell-template-state.html',
+        width: '*'
       }, {
         field: 'actions',
         displayName: $translate.instant("ediscovery.reportsList.actions"),
