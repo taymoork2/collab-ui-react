@@ -10,7 +10,19 @@
 
   <div class="ediscovery-content-view">
 
+    <div class="menu-container">
+      <ul class="menu">
+        <li>
+          <a ui-sref="ediscovery.search" ui-sref-active="active" translate="ediscovery.tabs.search"></a>
+        </li>
+        <li ui-sref-active="current active">
+          <a ui-sref="ediscovery.reports" ui-sref-active="active" translate="ediscovery.tabs.reports"></a>
+        </li>
+      </ul>
+    </div>
+    <!--
     <cs-page-header back="false" tabs="ediscoveryHeaderCtrl.headerTabs"></cs-page-header>
+    -->
     <div ui-view></div>
 
   </div>
