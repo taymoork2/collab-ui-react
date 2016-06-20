@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, Authinfo, $q, FeatureToggleService, $stateParams) {
+  function SetupWizardCtrl($scope, Authinfo, FeatureToggleService, $stateParams) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -105,7 +105,7 @@
     $scope.isCSB = Authinfo.isCSB();
 
     if (Authinfo.isCustomerAdmin()) {
-      $q.all(FeatureToggleService.supportsDirSync())
+      FeatureToggleService.supportsDirSync()
         .then(function (result) {
           $scope.isDirSyncEnabled = result;
         }).finally(init);
