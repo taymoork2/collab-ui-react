@@ -5,7 +5,7 @@
     .controller('OrganizationAddCtrl', OrganizationAddCtrl);
 
   /* @ngInject */
-  function OrganizationAddCtrl($scope, $state, $translate, $q, Authinfo, Orgservice, HuronCustomer, Notification, Config, EmailService, ValidationService, AccountService) {
+  function OrganizationAddCtrl($scope, $translate, $q, Authinfo, Notification, Config, ValidationService, AccountService) {
     var vm = this;
 
     vm.nameError = false;

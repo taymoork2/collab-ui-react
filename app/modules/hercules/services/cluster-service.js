@@ -72,6 +72,7 @@
       case 'has_alarms':
       case 'offline':
       case 'stopped':
+      case 'not_operational':
       case 'unknown':
       default:
         label = 'error';

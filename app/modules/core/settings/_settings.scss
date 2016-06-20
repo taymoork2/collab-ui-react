@@ -1,11 +1,8 @@
 .settings {
   background-color: white;
+
   .hidden {
     display: none;
-  }
-
-  .cs-form__section{
-    border:none;
   }
 
   .setting {
@@ -17,10 +14,8 @@
         color: $gray-base;
       }
     }
-  }
-
-  .section_hr{
-    width: 100vw;
-    margin-left: -2rem;
+    .enterprise-sipDomain-page {
+      margin-top: -1.25rem;
+    }
   }
 }

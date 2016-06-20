@@ -6,7 +6,6 @@
   /* @ngInject */
   function WebExSiteSettingsCtrl(
     $scope,
-    $log,
     $stateParams,
     Authinfo,
     WebExSiteSettingsFact

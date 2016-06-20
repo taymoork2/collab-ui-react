@@ -69,31 +69,43 @@
       <div class="section__info">
         <h4 translate="partnerHomePage.termsOfTrial"></h4>
       </div>
-      <div class="section__content"><div class="sub-section">
-        <formly-form model="trial.model" fields="trial.trialTermsFields" ">
-        </formly-form>
-      </div>
-      <div class="sub-section">
-        <div class="end progress-section">
-          <div class="progress">
+      <div class="section__content">
+        <div class="sub-section">
+          <formly-form model="trial.model" fields="trial.trialTermsFields">
+          </formly-form>
+        </div>
+
+        <div class="sub-section">
+          <div class="end progress-section">
+            <div class="progress">
             <div class="progress-bar" ng-class="{'danger-bar': trial.currentTrial.daysLeft <= 5, 'warning-bar': (trial.currentTrial.daysLeft < trial.currentTrial.duration/2), 'success-bar': (trial.currentTrial.daysLeft >= trial.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{trial.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.currentTrial.duration}}" style="width: {{trial.currentTrial.percentUsed}}%;">
             </div>
         <!-- TO DO: Why does this not work in the modal? -->
             <!-- <div class="modal-bar">
             <progressbar max="currentTrial.duration" value="currentTrial.daysUsed" type="{{getProgressStatus(currentTrial)}}"></progressbar>
           </div> -->
-          </div>
-          <div class="days-left">
-            <span ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
-            <span translate="partnerHomePage.trialsEndDate"></span>
+            </div>
+            <div class="days-left">
+              <span ng-class="{'trial-danger-text': trial.currentTrial.daysLeft <= 5}">{{trial.getDaysLeft(trial.currentTrial.daysLeft)}}</span>
+              <span translate="partnerHomePage.trialsEndDate"></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- context service trial -->
+    <div class="cs-form__section" ng-if="trial.showContextServiceTrial">
+      <div class="section__info">
+        <h4 translate="partnerHomePage.nonTrialServices"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="trial.trialData.trials" fields="trial.nonTrialServices"></formly-form>
+      </div>
+    </div>
   </form>
 </div>
-<div class="modal-footer">
+<div class="modal-footer trials">
   <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
     <span translate="partnerHomePage.cancel"></span>
   </button>

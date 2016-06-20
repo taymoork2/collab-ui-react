@@ -6,7 +6,7 @@
     .factory('AutoAttendantCeService', AutoAttendantCeService);
 
   /* @ngInject */
-  function AutoAttendantCeService($q, CeService, Authinfo, AANumberAssignmentService, AACalendarService) {
+  function AutoAttendantCeService(CeService, Authinfo, AANumberAssignmentService) {
 
     var service = {
       listCes: listCes,
@@ -66,7 +66,7 @@
 
     /**
      * TODO: This method is for POC delete with ceURL
-     * and can be removed when POC code is removed 
+     * and can be removed when POC code is removed
      */
     function getCeId(ceUrl) {
       var aCeId;

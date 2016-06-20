@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Overview Reports', function () {
-  var controller, $rootScope, $scope, q, Notification, PartnerService, ReportsService, CannedDataService;
+  var controller, $rootScope, $scope, q, Notification, PartnerService, ReportsService;
   var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var REFRESH = 'refresh';
   var READY = 'ready';
@@ -71,21 +71,12 @@ describe('Controller: Overview Reports', function () {
         getTotalPartnerCounts: jasmine.createSpy('getTotalPartnerCounts').and.callFake(emptyFunction)
       };
 
-      CannedDataService = {
-        isDemoAccount: jasmine.createSpy('isDemoAccount').and.callFake(function (id) {
-          return false;
-        }),
-        getAllCustomersData: jasmine.createSpy('getAllCustomersData').and.callFake(emptyFunction),
-        getIndCustomerData: jasmine.createSpy('getIndCustomerData').and.callFake(emptyFunction)
-      };
-
       controller = $controller('OverviewReportsCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
         Notification: Notification,
         PartnerService: PartnerService,
-        ReportsService: ReportsService,
-        CannedDataService: CannedDataService
+        ReportsService: ReportsService
       });
       $scope.$apply();
     }));

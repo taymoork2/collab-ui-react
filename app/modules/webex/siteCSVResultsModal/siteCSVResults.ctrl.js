@@ -5,12 +5,9 @@
 
   /*@ngInject*/
   function SiteCSVResultsCtrl(
-    $state,
     $stateParams,
     $translate,
-    $log,
-    WebExUtilsFact,
-    WebExApiGatewayService
+    WebExUtilsFact
   ) {
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';

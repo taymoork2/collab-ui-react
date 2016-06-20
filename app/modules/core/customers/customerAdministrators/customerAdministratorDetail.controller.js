@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($http, $q, $stateParams, $log, $translate, Authinfo, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($stateParams, $log, $translate, CustomerAdministratorService, Notification, ModalService) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;

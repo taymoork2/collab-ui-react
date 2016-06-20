@@ -1,0 +1,43 @@
+<p ng-if="$ctrl.state === 'error'" class="red">{{$ctrl.errorMessage}}</p>
+<div class="upgrade-schedule-form" ng-class="{'upgrade-schedule-form-daily': $ctrl.daily}">
+  <cs-select
+    class="upgrade-schedule-time"
+    is-disabled="$ctrl.state === 'syncing'"
+    labelfield="label"
+    valuefield="value"
+    ng-model="$ctrl.data.scheduleTime"
+    options="$ctrl.timeOptions"
+    placeholder="'Select a time'"
+    >
+  </cs-select>
+  <cs-select
+    class="upgrade-schedule-day"
+    is-disabled="$ctrl.state === 'syncing'"
+    labelfield="label"
+    valuefield="value"
+    input-placeholder="sel.inputPlaceholder"
+    ng-model="$ctrl.data.scheduleDay"
+    options="$ctrl.dayOptions"
+    placeholder="'Select a day'"
+    ng-if="!$ctrl.daily"
+    >
+  </cs-select>
+  <cs-select
+    class="upgrade-schedule-timezone"
+    is-disabled="$ctrl.state === 'syncing'"
+    labelfield="label"
+    valuefield="value"
+    filter="true"
+    ng-model="$ctrl.data.scheduleTimeZone"
+    options="$ctrl.timezoneOptions"
+    placeholder="'Select a timezone'"
+    >
+  </cs-select>
+</div>
+<p ng-if="!$ctrl.isAdminAcknowledged">
+  <button class="btn btn--cta" ng-click="$ctrl.acknowledge($ctrl.data)" translate="hercules.settings.scheduleUpgrade.defaultWarning"></button>
+</p>
+<p>
+  <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
+  <strong class="upgrade-schedule-next-time">{{$ctrl.nextUpdate | date:'MMM d, y h:mm a'}}</strong> <a href="#" ng-click="$ctrl.openModal($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="$ctrl.canPostpone && !$ctrl.postponed"></a>
+</p>

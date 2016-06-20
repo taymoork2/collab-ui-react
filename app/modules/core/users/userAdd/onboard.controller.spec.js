@@ -16,6 +16,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var unlicensedUsers;
+  var allLicensesData;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -64,6 +65,7 @@ describe('OnboardCtrl: Ctrl', function () {
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
+    allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -586,15 +588,18 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('updateUserLicense()', function () {
     beforeEach(initCurrentUserAndController);
 
+    beforeEach(function () {
+      $scope.$dismiss = angular.noop;
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200, '')));
+    });
+
     describe('with a current user', function () {
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.updateUsers() with the current user', function () {
-        expect(Userservice.updateUsers).toHaveBeenCalled();
-        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
-          address: $stateParams.currentUser.userName,
-          name: undefined
-        }]);
+      it('should call Userservice.onboardUsers() with the current user', function () {
+        expect(Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual($stateParams.currentUser.userName);
       });
     });
 
@@ -602,24 +607,65 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initCustomUsrList);
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.updateUsers() with the custom user list', function () {
-        expect(Userservice.updateUsers).toHaveBeenCalled();
-        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
-          address: $scope.usrlist[0].address
-        }]);
+      it('should call Userservice.onboardUsers() with the custom user list', function () {
+        expect(Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual(this.usrlist[0].address);
       });
     });
 
     function initCustomUsrList() {
-      $scope.usrlist = [{
+      this.usrlist = [{
         address: 'customTestUser'
       }];
+      $scope.usrlist = this.usrlist;
     }
 
     function updateUserLicense() {
       $scope.updateUserLicense();
       $scope.$apply();
     }
+  });
+
+  describe('MC/CMR Checkbox logic', function () {
+    beforeEach(initCurrentUserAndController);
+
+    it('should check if CMR gets checked when CF gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
+          });
+        });
+      });
+    });
+
+    it('should check if CF gets checked when CMR gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = true; // check CMR license
+          });
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
+        });
+      });
+    });
+
+    it('should check if CF remains checked when CMR is unchecked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = false; // uncheck CMR license
+          });
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
+        });
+      });
+    });
   });
 
   function initUserShouldAddCall() {

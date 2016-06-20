@@ -1,7 +1,9 @@
 <div class="hercules typography-airy large-margin">
   <div class="row">
     <div class="large-4 columns">
-      <schedule-upgrade-configuration connector-type="exp.connectorType"></schedule-upgrade-configuration>
+      <div cr-feature-toggle feature-hide="atlas-hybrid-services-resource-list">
+        <schedule-upgrade-configuration connector-type="exp.connectorType"></schedule-upgrade-configuration>
+      </div>
       <div ng-include src="'modules/hercules/service-settings/email-notification-setting.html'"></div>
       <div ng-include src="'modules/hercules/service-settings/documentation.html'"></div>
     </div>

@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, FeatureToggleService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, FeatureToggleService, Localytics, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
@@ -18,7 +18,6 @@
     $scope.isOwnOrg = isOwnOrg;
     $scope.setFilter = setFilter;
     $scope.getSubfields = getSubfields;
-    $scope.addCorrectMeetingColumn = addCorrectMeetingColumn;
     $scope.filterAction = filterAction;
     $scope.modifyManagedOrgs = modifyManagedOrgs;
     $scope.getTrialsList = getTrialsList;
@@ -29,6 +28,7 @@
     $scope.isLicenseTypeATrial = isLicenseTypeATrial;
     $scope.isLicenseTypeActive = isLicenseTypeActive;
     $scope.isLicenseTypeFree = isLicenseTypeFree;
+    $scope.isNoLicense = isNoLicense;
     $scope.partnerClicked = partnerClicked;
     $scope.isPartnerOrg = isPartnerOrg;
     $scope.setTrial = setTrial;
@@ -71,23 +71,9 @@
       sortingAlgorithm: serviceSort
     };
 
-    $scope.isCareEnabled = false;
+    var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
 
-    $scope.conferencingColumns = [{
-      field: 'meeting',
-      displayName: $translate.instant('customerPage.meeting'),
-      width: '14%',
-      cellTemplate: multiServiceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }, {
-      field: 'conferencing',
-      displayName: $translate.instant('customerPage.meeting'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    }];
+    $scope.isCareEnabled = false;
 
     $scope.gridColumns = [{
       field: 'customerName',
@@ -105,6 +91,13 @@
       displayName: $translate.instant('customerPage.message'),
       width: '12%',
       cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    }, {
+      field: 'meeting',
+      displayName: $translate.instant('customerPage.meeting'),
+      width: '14%',
+      cellTemplate: multiServiceTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
     }, {
@@ -164,7 +157,7 @@
           tooltip: $translate.instant('customerPage.meeting')
         }, {
           columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webexCMR')
+          tooltip: $translate.instant('customerPage.webex')
         }]
       },
       columnDefs: $scope.gridColumns
@@ -174,7 +167,6 @@
 
     function init() {
       setNotesTextOrder();
-      addCorrectMeetingColumn();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
         if (!careStatus) {
@@ -260,13 +252,6 @@
       }
     }
 
-    function addCorrectMeetingColumn() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (results) {
-        var index = results ? 0 : 1;
-        $scope.gridColumns.splice(2, 0, $scope.conferencingColumns[index]);
-      });
-    }
-
     function setNotesTextOrder() {
       var textSuspended = $translate.instant('customerPage.suspended'),
         textExpiringToday = $translate.instant('customerPage.expiringToday'),
@@ -320,11 +305,32 @@
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
+        var custName = Authinfo.getOrgName();
+        var licenses = Authinfo.getLicenses();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
             var myOrg = PartnerService.loadRetrievedDataToList([data], false, $scope.isCareEnabled);
-            myOrg.customerName = Authinfo.getOrgName();
-            myOrg.customerOrgId = Authinfo.getOrgId();
+            // Not sure why this is set again, afaik it is the same as myOrg
+            myOrg[0].customerName = custName;
+            myOrg[0].customerOrgId = accountId;
+
+            myOrg[0].messaging = _.merge(myOrg[0].messaging, _.find(licenses, {
+              licenseType: "MESSAGING"
+            }));
+            myOrg[0].communications = _.merge(myOrg[0].communications, _.find(licenses, {
+              licenseType: "COMMUNICATION"
+            }));
+            myOrg[0].roomSystems = _.merge(myOrg[0].roomSystems, _.find(licenses, {
+              licenseType: "SHARED_DEVICES"
+            }));
+            myOrg[0].conferencing = _.merge(myOrg[0].conferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "CF"
+            }));
+            myOrg[0].webexEEConferencing = _.merge(myOrg[0].webexEEConferencing, _.find(licenses, {
+              licenseType: "CONFERENCING",
+              offerName: "EE"
+            }));
 
             resolve(myOrg);
           } else {
@@ -460,15 +466,21 @@
     }
 
     function isLicenseTypeATrial(rowData, licenseTypeField) {
-      return PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeActive(rowData, licenseTypeField) {
-      return PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
-      return PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField));
+      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+        !_.includes(noFreeLicense, licenseTypeField));
+    }
+
+    function isNoLicense(rowData, licenseTypeField) {
+      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+        _.includes(noFreeLicense, licenseTypeField));
     }
 
     function partnerClicked(rowData) {

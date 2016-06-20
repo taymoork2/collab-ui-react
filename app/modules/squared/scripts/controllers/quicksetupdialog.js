@@ -5,7 +5,7 @@
     .controller('quicksetupDialogCtrl', quicksetupDialogCtrl);
 
   /* @ngInject */
-  function quicksetupDialogCtrl($scope, $modalInstance, data, $rootScope, $translate, $location, Utils, $state) {
+  function quicksetupDialogCtrl($scope, $modalInstance, $rootScope, $translate, $state) {
     $scope.cancel = function () {
       $modalInstance.dismiss('canceled');
     };

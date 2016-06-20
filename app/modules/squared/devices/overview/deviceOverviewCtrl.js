@@ -21,8 +21,9 @@
     });
 
     if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZoneOptions();
-      loadDeviceTimeZone();
+      initTimeZoneOptions().then(function () {
+        loadDeviceTimeZone();
+      });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
