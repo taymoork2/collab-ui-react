@@ -90,6 +90,12 @@
       background-color: $gray-light-4;
       min-height: calc(100% - 145px);
       padding-top: 2.25rem;
+      @media only screen and (max-width: 640px) {
+        padding-top: 1rem;
+      }
+    }
+    div.search-error {
+      padding-top: 2rem;
     }
     .search-spinner {
       position: relative;
@@ -109,6 +115,9 @@
     .ediscovery-search-bar {
       text-align: center;
       padding-bottom: 3rem;
+      @media only screen and (max-width: 640px) {
+        padding-bottom: 1rem;
+      }
       .pointer {
         cursor: pointer;
       }
