@@ -247,6 +247,34 @@
       return _.sortBy(clusters, 'type');
     }
 
+    function deleteV2Cluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.post(url);
+    }
+
+    function updateV2Cluster(clusterId, clusterName, releaseChannel) {
+      var payLoad = {
+        "name": clusterName,
+        "releaseChannel": releaseChannel
+      };
+
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http
+        .post(url, payLoad);
+    }
+
+    function moveV2Host(connectorId, fromCluster, toCluster) {
+      var payLoad = {
+        "managementConnectorId": connectorId,
+        "fromClusterId": fromCluster,
+        "toClusterId": toCluster
+      };
+
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
+      return $http
+        .post(url, payLoad);
+    }
+
     var hub = CsdmHubFactory.create();
     var clusterPoller = CsdmPoller.create(fetch, hub);
 
@@ -274,7 +302,9 @@
       createClusterV2: createClusterV2,
       addRedirectTarget: addRedirectTarget,
       get: get,
-      getAll: getAll
+      getAll: getAll,
+      deleteV2Cluster: deleteV2Cluster,
+      updateV2Cluster: updateV2Cluster
     };
   }
 
