@@ -31,7 +31,10 @@
       vm.report = null;
       vm.error = null;
       if (report) {
-        vm.roomInfo = { id: report.roomQuery.roomId, displayName: report.displayName };
+        vm.roomInfo = {
+          id: report.roomQuery.roomId,
+          displayName: report.displayName
+        };
         vm.searchCriteria = {
           "roomId": report.roomQuery.roomId,
           "startDate": report.roomQuery.startDate,
