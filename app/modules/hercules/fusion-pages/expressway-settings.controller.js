@@ -14,21 +14,21 @@
     vm.usersOptions = ['Default'];
     vm.enabledServices = [];
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
-      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
     };
     vm.releasechannel = {
       title: 'hercules.expresswayClusterSettings.releasechannelHeader',
       description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
     };
     vm.deactivateServices = {
-      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
-      description: 'hercules.expresswayClusterSettings.deactivateServicesParagraph'
+      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader'
     };
     vm.deregisterClusterSection = {
-      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader',
-      description: 'hercules.expresswayClusterSettings.deregisterClusterParagraph'
+      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader'
     };
+    vm.localizedCallServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_ucmc');
+    vm.localizedCalendarServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_cal');
+
     vm.deactivateService = deactivateService;
     vm.deregisterCluster = deregisterCluster;
 
@@ -51,6 +51,9 @@
           vm.releasechannelsOptions = [vm.cluster.releaseChannel];
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
+          });
+          vm.localizedRemoveClusterHeader = $translate.instant('hercules.expresswayClusterSettings.deregisterClusterSubHeader', {
+            ClusterName: vm.cluster.name
           });
         }, XhrNotificationService.notify);
     }
@@ -87,7 +90,8 @@
           resolve: {
             cluster: function () {
               return vm.cluster;
-            }
+            },
+            isF410enabled: true
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',
