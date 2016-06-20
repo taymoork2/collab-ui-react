@@ -598,10 +598,8 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should call Userservice.onboardUsers() with the current user', function () {
         expect(Userservice.onboardUsers).toHaveBeenCalled();
-        expect(Userservice.onboardUsers.calls.mostRecent().args[0]).toEqual([{
-          address: $stateParams.currentUser.userName,
-          name: undefined
-        }]);
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual($stateParams.currentUser.userName);
       });
     });
 
@@ -611,9 +609,8 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should call Userservice.onboardUsers() with the custom user list', function () {
         expect(Userservice.onboardUsers).toHaveBeenCalled();
-        expect(Userservice.onboardUsers.calls.mostRecent().args[0]).toEqual([{
-          address: this.usrlist[0].address
-        }]);
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual(this.usrlist[0].address);
       });
     });
 
@@ -652,7 +649,7 @@ describe('OnboardCtrl: Ctrl', function () {
             cmrLic = true; // check CMR license
           });
           $scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked 
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
         });
       });
     });

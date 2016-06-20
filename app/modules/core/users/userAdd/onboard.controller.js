@@ -924,7 +924,7 @@
       $scope.btnSaveEntLoad = true;
 
       // make sure we have any internal extension and direct line set up for the users
-      _.forEach(users, function(user, idx) {
+      _.forEach(users, function (user, idx) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
         if (user.externalNumber && user.externalNumber.pattern !== 'None') {
           user.directLine = user.externalNumber.pattern;
