@@ -3,7 +3,7 @@
 describe('Controller: customerAdministratorDetailCtrl', function () {
   beforeEach(module('Core'));
   var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService;
-  var modalDefer;
+  var modalDefer, testUsers = [];
 
   beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_, _ModalService_) {
     $scope = $rootScope.$new();
@@ -19,6 +19,10 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     };
 
     modalDefer = $q.defer();
+    testUsers = [{
+      fullName: 'Frank Sinatra',
+      uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
+    }];
     spyOn(CustomerAdministratorService, 'removeCustomerSalesAdmin').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({
       userName: 'frank.sinatra+sinatrahelpdesk@gmail.com',
@@ -114,10 +118,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     beforeEach(initController);
 
     it('must push administrator into View-Model administrators array', function () {
-      controller.users = [{
-        fullName: 'Frank Sinatra',
-        uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
-      }];
+      controller.users = testUsers;
       controller.administrators = [];
       controller.addAdmin('Frank Sinatra').then(function () {
         expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
@@ -135,10 +136,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     });
 
     it('must throw Notification.error', function () {
-      controller.users = [{
-        fullName: 'Frank Sinatra',
-        uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'
-      }];
+      controller.users = testUsers;
       controller.administrators = [];
       controller.addAdmin('Frank Sinatra').catch(function () {
         expect(Notification.error()).toHaveBeenCalled();
