@@ -65,7 +65,8 @@
           resolve: {
             cluster: function () {
               return vm.cluster;
-            }
+            },
+            isF410enabled: false
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',

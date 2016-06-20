@@ -5,23 +5,30 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal) {
+      function ($stateParams, $modal, $log) {
 
         var vm = this;
         vm.displayName = null;
-        vm.clusterList = null;
+        vm.nodeList = null;
+        vm.clusterDetail = null;
 
-        if (!angular.equals($stateParams.groupName, {})) {
-          vm.displayName = $stateParams.groupName;
+        if (!angular.equals($stateParams.clusterName, {})) {
+          vm.displayName = $stateParams.clusterName;
         }
 
-        if (!angular.equals($stateParams.selectedClusters, {})) {
-          vm.clusterList = $stateParams.selectedClusters;
+        if (!angular.equals($stateParams.nodes, {})) {
+          vm.nodeList = $stateParams.nodes;
+        }
+
+        if (!angular.equals($stateParams.cluster, {})) {
+          vm.clusterDetail = $stateParams.cluster;
+          $log.log("cluster details ", vm.clusterDetail);
         }
 
         vm.alarmsSummary = function () {
           var alarms = {};
-          _.forEach(vm.clusterList, function (cluster) {
+          $log.log("cluster details ", vm.nodeList);
+          _.forEach(vm.nodeList, function (cluster) {
             _.forEach(cluster.services[0].connectors[0].alarms, function (alarm) {
               if (!alarms[alarm.id]) {
                 alarms[alarm.id] = {
@@ -50,7 +57,8 @@
           });
         };
 
-        vm.alarms = vm.alarmsSummary();
+        vm.alarms = [];
+        // vm.alarms = vm.alarmsSummary();
       }
     );
 })();

@@ -6,7 +6,18 @@
     .service('WebExSiteRowService', WebExSiteRowService);
 
   /* @ngInject */
-  function WebExSiteRowService($interval, $translate, Authinfo, Userservice, FeatureToggleService, UrlConfig, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService) {
+  function WebExSiteRowService(
+    $log,
+    $interval,
+    $translate,
+    Authinfo,
+    Userservice,
+    FeatureToggleService,
+    WebExUtilsFact,
+    UrlConfig,
+    WebExApiGatewayService,
+    WebExApiGatewayConstsService
+  ) {
 
     this.initSiteRowsObj = function () {
       _this.siteRows = {
@@ -257,7 +268,7 @@
       //$log.log(funcName);
 
       _this.updateLicenseTypesColumn();
-      _this.updateActionsColumn();
+      _this.updateActionsColumnForAllRows();
     }; // updateGridColumns()
 
     this.updateLicenseTypesColumn = function () {
@@ -500,8 +511,8 @@
 
     }; // updateLicenseTypesColumn
 
-    this.updateActionsColumn = function () {
-      var funcName = "updateActionsColumn()";
+    this.updateActionsColumnForAllRows = function () {
+      var funcName = "updateActionsColumnForAllRows()";
       var logMsg = "";
       //$log.log(funcName);
 
@@ -510,14 +521,14 @@
           var funcName = "processSiteRow()";
           var logMsg = "";
 
-          _this.updateActionsColumnForRow(siteRow);
+          _this.updateActionsColumnForOneRow(siteRow);
         } // processSiteRow()
       ); // gridData.forEach()
 
-    }; // updateActionsColumn
+    }; // updateActionsColumnForAllRows
 
-    this.updateActionsColumnForRow = function (siteRow) {
-      var funcName = "updateActionsColumnForRow()";
+    this.updateActionsColumnForOneRow = function (siteRow) {
+      var funcName = "updateActionsColumnForOneRow()";
       var logMsg = "";
       //$log.log(logMsg);
 
@@ -529,6 +540,13 @@
       siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteRow.siteUrl);
 
       var siteUrl = siteRow.siteUrl;
+
+      var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+
+      logMsg = funcName + ": " + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "isCISite=" + isCISite;
+      $log.log(logMsg);
 
       WebExApiGatewayService.siteFunctions(siteUrl).then(
         function siteFunctionsSuccess(result) {
@@ -595,7 +613,7 @@
           //$log.log(logMsg);
         } // siteFunctionsError()
       ); // WebExApiGatewayService.siteFunctions().then
-    }; // updateActionsColumnForRow()
+    }; // updateActionsColumnForOneRow()
 
     this.updateCSVStatusInRow = function (siteUrl) {
       var funcName = "updateCSVStatusInRow()";

@@ -1148,7 +1148,7 @@
       "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
     },
     "addResourceDialog": {
-      "title": "Add Resource for {{ServiceName}}",
+      "title": "{{ServiceName}} Setup",
       "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
       "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
@@ -1192,6 +1192,7 @@
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
+      "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
@@ -1322,20 +1323,21 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
-      "upgradeScheduleHeader": "Upgrade Schedule",
-      "upgradeScheduleParagraph": "Select the upgrade schedule for this cluster: the connectors will upgrade automatically in the selected time when  an upgrade is available.",
+      "upgradeScheduleHeader": "Upgrade",
+      "upgradeScheduleSubHeader": "Upgrade Schedule",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
       "releasechannelReleasechannel": "Release Channel",
       "deactivateServicesHeader": "Deactivate Services",
-      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
-      "deactivateServicesCalendarButton": "Deactivate Calendar",
-      "deactivateServicesCallButton": "Deactivate Call",
-      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterHeader": "Deregister Cluster",
-      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
-      "deregisterClusterButton": "Deregister",
+      "deactivateServicesParagraph": "Deactivating {{ServiceName}} will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarHeader": "Deactivate Calendar",
+      "deactivateServicesCallHeader": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Remove Cluster",
+      "deregisterClusterSubHeader": "Remove {{ClusterName}}",
+      "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
+      "deregisterClusterButton": "Remove",
       "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
@@ -1385,12 +1387,12 @@
         "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
-        "title": "Automatic Software Upgrades",
-        "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule",
+        "title": "Upgrade Schedule",
+        "description": "Select the upgrade schedule for this cluster. All connectors will automatically upgrade to the latest version at this time.",
+        "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
-        "postponeAction": "Postpone schedule",
-        "postponeModalTitle": "Postpone the upgrade",
+        "postponeAction": "Postpone",
+        "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
 
       }
@@ -1427,9 +1429,9 @@
     "fusion": {
       "list": {
         "title": "Clusters",
-        "empty": "No clusters to display.",
+        "empty": "No clusters found.",
         "users": "Users:",
-        "releaseChannel": "Release Channels:",
+        "releaseChannel": "Release Channel:",
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
@@ -1437,7 +1439,7 @@
         "expressway-short": "EW",
         "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "mediafusion": "Mediafusion"
+        "mediafusion": "Media Fusion"
       }
     }
   },
@@ -1494,7 +1496,7 @@
     },
     "reportsList": {
       "name": "Name",
-      "createdAt": "Created At",
+      "dateGenerated": "Date Generated",
       "roomId": "Room ID",
       "dateRange": "Date Range",
       "state": "State",
@@ -2846,13 +2848,17 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "releaseChannel": "Release channel",
+      "doYouStillWantToContinue": "Do you still want to continue ?",
+      "youHostNoAvailable": "Your host will no longer be available in future"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}."
+      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "moveHost": "Move Host"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2882,7 +2888,10 @@
       "back": "Back",
       "errorTitle": "Registration Error",
       "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again."
+      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
+      "titleV2": "Register New Hybrid Media Node",
+      "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3369,12 +3378,7 @@
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
     "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your management application. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application.",
-    "crashReportTitle": "Automatic Crash Reporting",
-    "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
-    "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
-    "crashReportTooltipDescription": "What do these reports contain?",
-    "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application."
   },
   "branding": {
     "customTitle": "Custom Branding",
@@ -4098,7 +4102,12 @@
       "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
       "usageDataHeader": "Usage Data Sent to Cisco Partner",
-      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
+      "crashReportTitle": "Automatic Crash Reporting",
+      "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
+      "crashReportTooltipDescription": "What do these reports contain?",
+      "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
     },
     "security": {
       "title": "Security",

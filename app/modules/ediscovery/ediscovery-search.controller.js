@@ -15,32 +15,41 @@
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
-    vm.downloadReport = EdiscoveryService.downloadReport;
+    vm.downloadReport = downloadReport;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
-    init();
+
+    init($stateParams.report, $stateParams.reRun);
 
     $scope.$on('$destroy', function () {
       disableAvalonPolling();
     });
 
-    if ($stateParams.roomId) {
-      vm.searchCriteria.roomId = $stateParams.roomId;
-      searchForRoom($stateParams.roomId);
-    }
-
-    function init() {
+    function init(report, reRun) {
       vm.report = null;
-      vm.searchCriteria = {
-        "roomId": null, //"36de9c50-8410-11e5-8b9b-9d7d6ad1ac82",
-        "startDate": null,
-        "endDate": null,
-        "displayName": "TBD"
-      };
       vm.error = null;
-      vm.roomInfo = null;
+      if (report) {
+        vm.roomInfo = {
+          id: report.roomQuery.roomId,
+          displayName: report.displayName
+        };
+        vm.searchCriteria = {
+          "roomId": report.roomQuery.roomId,
+          "startDate": report.roomQuery.startDate,
+          "endDate": report.roomQuery.endDate,
+          "displayName": report.displayName
+        };
+        if (!reRun) {
+          vm.report = report;
+          vm.currentReportId = report.id;
+          enableAvalonPolling();
+        }
+      } else {
+        vm.searchCriteria = {};
+        vm.roomInfo = null;
+      }
     }
 
     function getStartDate() {
@@ -101,8 +110,8 @@
         })
         .then(function (result) {
           vm.roomInfo = result;
-          vm.searchCriteria.startDate = vm.searchCriteria.startDate || $stateParams.startDate || result.published;
-          vm.searchCriteria.endDate = vm.searchCriteria.endDate || $stateParams.endDate || result.lastReadableActivityDate;
+          vm.searchCriteria.startDate = vm.searchCriteria.startDate || result.published;
+          vm.searchCriteria.endDate = vm.searchCriteria.endDate || result.lastReadableActivityDate;
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
@@ -123,7 +132,6 @@
 
     function createReport() {
       vm.report = {
-        id: vm.searchCriteria.roomId,
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
         progress: 0
@@ -221,6 +229,14 @@
         });
         break;
       }
+    }
+
+    function downloadReport(report) {
+      vm.downloadingReport = true;
+      EdiscoveryService.downloadReport(report)
+        .finally(function () {
+          vm.downloadingReport = false;
+        });
     }
   }
   angular

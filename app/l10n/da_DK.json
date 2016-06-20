@@ -3269,12 +3269,7 @@
     "supportInfo": "Hvis du yder support til dine kunders brugere, indtast dine supportparametre herunder. Disse parametre vil blive vist under Support-valgmuligheder i Spark-applikationen.",
     "supportAccessTitle": "Adgang til support",
     "supportAccessInfo": "Denne indstilling giver Cisco eller en partner skrivebeskyttet adgang til din organisation. Det gør det ikke muligt at ændre din organisations oplysninger.",
-    "supportAccessCheckbox": "Giv Cisco eller Partner Support skrivebeskyttet adgang til din organisation.",
-    "crashReportTitle": "Automatisk rapport af nedbrud",
-    "crashReportText": "Hvis et slutpunkt går ned, vil logge blive overført til Cisco for at hjælpe med at forbedre kvaliteten af tjenesten.",
-    "crashReportCheckboxLabel": "Aktiver automatisk rapport af nedbrud",
-    "crashReportTooltipDescription": "Hvad indeholder disse rapporter?",
-    "crashReportTooltip": "Nedbrudsrapporter kan inkludere bruger- og organisationsidentifikatorer, brugeragentstrenge, desinficerede agentbrowserstrenge, klient IP-adresser og brugers enheds MAC-adresse. Alle oplysninger vil blive behandlet fortroligt og vil kun blive brugt til forbedring af produktkvalitet."
+    "supportAccessCheckbox": "Giv Cisco eller Partner Support skrivebeskyttet adgang til din organisation."
   },
   "fileUpload": {
     "uploading": "Overfører fil",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Denne indstilling giver Cisco eller Partner Support skrivebeskyttet adgang til din organisation. Den tillader ikke ændringer i din organisations oplysninger.",
       "allowReadOnlyOrgAccess": "Giv Cisco eller Partner Support skrivebeskyttet adgang til din organisation",
       "usageDataHeader": "Brugsdata sendt til Cisco Partner",
-      "usageDataDescription": "Del servicekvalitet og engagementsdata med din Cisco Partner for at aktivere partnersupport på højere niveau."
+      "usageDataDescription": "Del servicekvalitet og engagementsdata med din Cisco Partner for at aktivere partnersupport på højere niveau.",
+      "crashReportTitle": "Automatisk rapport af nedbrud",
+      "crashReportText": "Hvis et slutpunkt går ned, vil logge blive overført til Cisco for at hjælpe med at forbedre kvaliteten af tjenesten.",
+      "crashReportCheckboxLabel": "Aktiver automatisk rapport af nedbrud",
+      "crashReportTooltipDescription": "Hvad indeholder disse rapporter?",
+      "crashReportTooltip": "Nedbrudsrapporter kan inkludere bruger- og organisationsidentifikatorer, brugeragentstrenge, desinficerede agentbrowserstrenge, klient IP-adresser og brugers enheds MAC-adresse. Alle oplysninger vil blive behandlet fortroligt og vil kun blive brugt til forbedring af produktkvalitet."
     },
     "security": {
       "title": "Sikkerhed",

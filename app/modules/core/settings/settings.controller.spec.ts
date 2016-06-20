@@ -42,6 +42,7 @@ namespace globalsettings {
       beforeEach(initController);
 
       it('should create the ctrl and add the partner setting sections', ()=> {
+        expect(controller.security).toBeFalsy();
         expect(controller.domains).toBeFalsy();
         expect(controller.sipDomain).toBeFalsy();
         expect(controller.authentication).toBeFalsy();
@@ -62,6 +63,7 @@ namespace globalsettings {
         beforeEach(initController);
 
         it('should create the ctrl and add the normal setting sections', ()=> {
+          expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
           expect(controller.authentication).toBeTruthy();
@@ -78,6 +80,7 @@ namespace globalsettings {
         beforeEach(initController);
 
         it('should create the ctrl and add the normal setting sections but filter out branding', ()=> {
+          expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
           expect(controller.authentication).toBeTruthy();
