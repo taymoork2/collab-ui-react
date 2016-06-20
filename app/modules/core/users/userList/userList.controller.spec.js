@@ -177,7 +177,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
-  describe('When atlasTelstraCsb is enabled and customerType is APP_DIRECT', function () {
+  describe('When Telstra CSB is true and customerType is APP_DIRECT', function () {
     beforeEach(function () {
       telstraUser = {
         "id": "111",
