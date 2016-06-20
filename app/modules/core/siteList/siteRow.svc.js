@@ -6,13 +6,24 @@
     .service('WebExSiteRowService', WebExSiteRowService);
 
   /* @ngInject */
-  function WebExSiteRowService($interval, $translate, Authinfo, Userservice, FeatureToggleService, WebExUtilsFact, UrlConfig, WebExApiGatewayService, WebExApiGatewayConstsService) {
+  function WebExSiteRowService(
+    $log,
+    $interval,
+    $translate,
+    Authinfo,
+    Userservice,
+    FeatureToggleService,
+    WebExUtilsFact,
+    UrlConfig,
+    WebExApiGatewayService,
+    WebExApiGatewayConstsService
+  ) {
+
     this.initSiteRowsObj = function () {
       _this.siteRows = {
         gridData: [],
         gridOptions: {},
         showCSVIconAndResults: false,
-        allSitesWebexLicensesArray: [],
       };
     }; // initSiteRowsObj()
 
@@ -116,11 +127,12 @@
     }; //configureGrid
 
     this.getConferenceServices = function () {
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
       var funcName = "getConferenceServices()";
       var logMsg = funcName + "\n" +
         "conferenceServices=\n" + JSON.stringify(conferenceServices);
       //$log.log(logMsg);
+
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
@@ -143,21 +155,8 @@
           if (isNewSiteUrl) {
 
             conferenceService.showCSVInfo = false;
-            conferenceService.showAsyncErr = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
-
-            conferenceService.showExportLink = false;
-            conferenceService.showExportInProgressLink = false;
-            conferenceService.grayedExportLink = false;
-            conferenceService.showExportResultsLink = false;
-            conferenceService.exportFinishedWithErrors = false;
-
-            conferenceService.showImportLink = false;
-            conferenceService.showImportInProgressLink = false;
-            conferenceService.grayedImportLink = false;
-            conferenceService.showImportResultsLink = false;
-            conferenceService.importFinishedWithErrors = false;
 
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
@@ -269,7 +268,7 @@
       //$log.log(funcName);
 
       _this.updateLicenseTypesColumn();
-      _this.updateWebExDataColumns();
+      _this.updateActionsColumnForAllRows();
     }; // updateGridColumns()
 
     this.updateLicenseTypesColumn = function () {
@@ -286,8 +285,6 @@
             "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
           //$log.log(logMsg);
 
-          var allSitesWebexLicensesArray = allSitesLicenseInfo;
-
           _this.siteRows.gridData.forEach(
             function processGridForLicense(siteRow) {
               var funcName = "processGridForLicense()";
@@ -298,12 +295,16 @@
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
-              var siteMC = _.where(allSitesWebexLicensesArray, {
+              var siteMC = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "MC"
               });
 
-              if (siteMC != null && siteMC.length > 0) {
+              if (
+                (siteMC != null) &&
+                (siteMC.length > 0)
+              ) {
+
                 siteRow.MCLicensed = true;
 
                 siteMC.forEach(
@@ -325,12 +326,16 @@
               }
 
               //EE
-              var siteEE = _.where(allSitesWebexLicensesArray, {
+              var siteEE = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "EE"
               });
 
-              if (siteEE != null && siteEE.length > 0) {
+              if (
+                (siteEE != null) &&
+                (siteEE.length > 0)
+              ) {
+
                 siteRow.EELicensed = true;
 
                 siteEE.forEach(
@@ -352,12 +357,16 @@
               }
 
               //CMR
-              var siteCMR = _.where(allSitesWebexLicensesArray, {
+              var siteCMR = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "CMR"
               });
 
-              if (siteCMR != null && siteCMR.length > 0) {
+              if (
+                (siteCMR != null) &&
+                (siteCMR.length > 0)
+              ) {
+
                 siteRow.CMRLicensed = true;
 
                 siteCMR.forEach(
@@ -379,12 +388,16 @@
               }
 
               //EC
-              var siteEC = _.where(allSitesWebexLicensesArray, {
+              var siteEC = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "EC"
               });
 
-              if (siteEC != null && siteEC.length > 0) {
+              if (
+                (siteEC != null) &&
+                (siteEC.length > 0)
+              ) {
+
                 siteRow.ECLicensed = true;
 
                 siteEC.forEach(
@@ -406,12 +419,16 @@
               }
 
               //SC
-              var siteSC = _.where(allSitesWebexLicensesArray, {
+              var siteSC = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "SC"
               });
 
-              if (siteSC != null && siteSC.length > 0) {
+              if (
+                (siteSC != null) &&
+                (siteSC.length > 0)
+              ) {
+
                 siteRow.SCLicensed = true;
 
                 siteSC.forEach(
@@ -433,12 +450,16 @@
               }
 
               //TC
-              var siteTC = _.where(allSitesWebexLicensesArray, {
+              var siteTC = _.where(allSitesLicenseInfo, {
                 webexSite: siteUrl,
                 offerCode: "TC"
               });
 
-              if (siteTC != null && siteTC.length > 0) {
+              if (
+                (siteTC != null) &&
+                (siteTC.length > 0)
+              ) {
+
                 siteRow.TCLicensed = true;
 
                 siteTC.forEach(
@@ -463,7 +484,6 @@
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
                 siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay.replace("<br>", "");
-
               } else {
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
@@ -491,8 +511,8 @@
 
     }; // updateLicenseTypesColumn
 
-    this.updateWebExDataColumns = function () {
-      var funcName = "updateWebExDataColumns()";
+    this.updateActionsColumnForAllRows = function () {
+      var funcName = "updateActionsColumnForAllRows()";
       var logMsg = "";
       //$log.log(funcName);
 
@@ -501,14 +521,14 @@
           var funcName = "processSiteRow()";
           var logMsg = "";
 
-          _this.updateWebExColumnsInRow(siteRow);
+          _this.updateActionsColumnForOneRow(siteRow);
         } // processSiteRow()
       ); // gridData.forEach()
 
-    }; // updateWebExDataColumns
+    }; // updateActionsColumnForAllRows
 
-    this.updateWebExColumnsInRow = function (siteRow) {
-      var funcName = "updateWebExColumnsInRow()";
+    this.updateActionsColumnForOneRow = function (siteRow) {
+      var funcName = "updateActionsColumnForOneRow()";
       var logMsg = "";
       //$log.log(logMsg);
 
@@ -519,9 +539,18 @@
       siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteRow.siteUrl);
       siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteRow.siteUrl);
 
-      WebExApiGatewayService.siteFunctions(siteRow.siteUrl).then(
-        function isSiteSupportsIframeSuccess(result) {
-          var funcName = "isSiteSupportsIframeSuccess()";
+      var siteUrl = siteRow.siteUrl;
+
+      var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+
+      logMsg = funcName + ": " + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "isCISite=" + isCISite;
+      $log.log(logMsg);
+
+      WebExApiGatewayService.siteFunctions(siteUrl).then(
+        function siteFunctionsSuccess(result) {
+          var funcName = "siteFunctionsSuccess()";
           var logMsg = "";
 
           logMsg = funcName + ": " + "\n" +
@@ -535,7 +564,7 @@
           siteRow.showSiteLinks = true;
 
           logMsg = funcName + ": " + "\n" +
-            "siteUrl=" + siteRow.siteUrl + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
             "siteRow.isCSVSupported=" + siteRow.isCSVSupported + "\n" +
             "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
             "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
@@ -563,10 +592,10 @@
 
             pollInterval
           );
-        }, // isSiteSupportsIframeSuccess()
+        }, // siteFunctionsSuccess()
 
-        function isSiteSupportsIframeError(response) {
-          var funcName = "isSiteSupportsIframeError()";
+        function siteFunctionsError(response) {
+          var funcName = "siteFunctionsError()";
           var logMsg = "";
 
           siteRow.isIframeSupported = false;
@@ -582,9 +611,9 @@
           logMsg = funcName + ": " + "\n" +
             "response=" + JSON.stringify(response);
           //$log.log(logMsg);
-        } // isSiteSupportsIframeError()
+        } // siteFunctionsError()
       ); // WebExApiGatewayService.siteFunctions().then
-    }; // updateWebExColumnsInRow()
+    }; // updateActionsColumnForOneRow()
 
     this.updateCSVStatusInRow = function (siteUrl) {
       var funcName = "updateCSVStatusInRow()";
@@ -675,71 +704,6 @@
       logMsg = funcName + "\n" +
         "siteRow.csvStatusObj=" + "\n" + JSON.stringify(siteRow.csvStatusObj);
       // $log.log(logMsg);
-
-      //initialize display control flags
-      siteRow.showCSVInfo = true;
-
-      siteRow.showExportLink = false;
-      siteRow.showExportInProgressLink = false;
-      siteRow.grayedExportLink = false;
-      siteRow.showExportResultsLink = false;
-      siteRow.exportFinishedWithErrors = false;
-
-      siteRow.showImportLink = false;
-      siteRow.showImportInProgressLink = false;
-      siteRow.grayedImportLink = false;
-      siteRow.showImportResultsLink = false;
-      siteRow.importFinishedWithErrors = false;
-
-      if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
-
-        siteRow.showExportLink = true;
-
-        siteRow.showImportLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
-
-        siteRow.showExportInProgressLink = true;
-
-        siteRow.grayedImportLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
-
-        siteRow.showExportLink = true;
-        siteRow.showExportResultsLink = true;
-
-        siteRow.showImportLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
-
-        siteRow.showExportLink = true;
-        siteRow.showExportResultsLink = true;
-        siteRow.exportFinishedWithErrors = true;
-
-        siteRow.showImportLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
-
-        siteRow.showImportInProgressLink = true;
-
-        siteRow.grayedExportLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
-
-        siteRow.showExportLink = true;
-
-        siteRow.showImportLink = true;
-        siteRow.showImportResultsLink = true;
-
-      } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
-
-        siteRow.showExportLink = true;
-
-        siteRow.showImportLink = true;
-        siteRow.showImportResultsLink = true;
-        siteRow.importFinishedWithErrors = true;
-
-      }
 
       siteRow.showCSVInfo = true;
     }; //updateDisplayControlFlagsInRow()

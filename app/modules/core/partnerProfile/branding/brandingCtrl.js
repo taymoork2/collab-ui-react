@@ -4,17 +4,16 @@
   angular.module('Core')
     .controller('BrandingCtrl', BrandingCtrl);
 
-  function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
+  function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, FeatureToggleService, Orgservice) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
 
     brand.isPartner = Authinfo.isPartner();
     brand.usePartnerLogo = true;
     brand.allowCustomerLogos = false;
-    brand.allowCustomerLogos = false;
     brand.progress = 0;
     brand.modalType = $state.params.modalType;
-
+    brand.isDirectCustomer = false;
     brand.logoCriteria = {
       'pattern': '.png',
       'width': {
@@ -28,6 +27,10 @@
     brand.wbxNoClientSelected = true;
     brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
     brand.showClientVersions = true;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasDirectCustomerBranding).then(function (result) {
+      brand.isDirectCustomer = result;
+    });
 
     brand.init = function () {
       Log.debug('branding init');

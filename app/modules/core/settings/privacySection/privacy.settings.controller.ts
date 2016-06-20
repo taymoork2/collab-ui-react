@@ -1,10 +1,10 @@
 namespace globalsettings {
   export class PrivacySettingController {
-
     private _allowReadOnlyAccess:boolean = undefined;
     sendUsageData:boolean = undefined;
     showAllowReadOnlyAccessCheckbox:boolean = true;
     private orgId;
+    private _allowCrashLogUpload = false;
 
     /* @ngInject */
     constructor(private Orgservice, Authinfo, private Notification) {
@@ -23,6 +23,12 @@ namespace globalsettings {
         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
           this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
         }
+
+        if (!_.isUndefined(settings.allowCrashLogUpload)) {
+          this._allowCrashLogUpload = settings.allowCrashLogUpload;
+        } else {
+          this._allowCrashLogUpload = false;
+        }
       }
     }
 
@@ -35,12 +41,29 @@ namespace globalsettings {
       this.updateAllowReadOnlyOrgAccess();
     }
 
+    get allowCrashLogUpload():boolean {
+      return this._allowCrashLogUpload;
+    }
+
+    set allowCrashLogUpload(value:boolean) {
+      this._allowCrashLogUpload = value;
+      this.updateAllowCrashLogUpload();
+    }
+
     updateAllowReadOnlyOrgAccess() {
       let settings = {
         allowReadOnlyAccess: this.allowReadOnlyAccess,
       };
       this.updateOrgSettings(this.orgId, settings);
     }
+
+    updateAllowCrashLogUpload() {
+      let settings = {
+        allowCrashLogUpload: this.allowCrashLogUpload,
+      };
+      this.updateOrgSettings(this.orgId, settings);
+    }
+
 
     private updateOrgSettings(orgId, settings) {
       this.Orgservice.setOrgSettings(orgId, settings)

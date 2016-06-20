@@ -3269,12 +3269,7 @@
     "supportInfo": "ユーザーにサポートを提供している場合、以下にサポートパラメータを入力してください。このパラメータは Spark アプリケーション中のサポートオプションの下に表示されます。",
     "supportAccessTitle": "サポートアクセス",
     "supportAccessInfo": "この設定は、Cisco またはパートナーにあなたの組織に対する読み取り専用アクセスを与えます。あなたの組織の詳細を変更することは許可しません。",
-    "supportAccessCheckbox": "Cisco またはパートナーサポートにあなたの組織への読み取り専用アクセスを許可します。",
-    "crashReportTitle": "自動クラッシュレポート",
-    "crashReportText": "エンドポイントがクラッシュした場合、Cisco にログがアップロードされ、サービスの質の向上を支援します。",
-    "crashReportCheckboxLabel": "自動クラッシュレポートを有効にする",
-    "crashReportTooltipDescription": "これらのレポートは何を含みますか？",
-    "crashReportTooltip": "クラッシュレポートは、ユーザーと組織の Id、ユーザーエージェントのストリング、サニタイズされたエージェントブラウザのストリング、クライアント IP アドレスとユーザーのデバイス MAC アドレスを含むことができます。すべての情報は機密に処理され、製品の質の向上のためだけに使用されます。"
+    "supportAccessCheckbox": "Cisco またはパートナーサポートにあなたの組織への読み取り専用アクセスを許可します。"
   },
   "fileUpload": {
     "uploading": "ファイルのアップロード",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "この設定は、Cisco またはパートナーサポートにあなたの組織に対する読み取り専用アクセスを与えます。あなたの組織の詳細を変更することは許可しません。",
       "allowReadOnlyOrgAccess": "Cisco またはパートナーサポートにあなたの組織への読み取り専用アクセスを許可します。",
       "usageDataHeader": "使用状況データが Cisco Partner に送信されました",
-      "usageDataDescription": "サービス品質と契約のデータを Cisco Partner と共有することで、パートナーを高次元でサポートします。"
+      "usageDataDescription": "サービス品質と契約のデータを Cisco Partner と共有することで、パートナーを高次元でサポートします。",
+      "crashReportTitle": "自動クラッシュレポート",
+      "crashReportText": "エンドポイントがクラッシュした場合、Cisco にログがアップロードされ、サービスの質の向上を支援します。",
+      "crashReportCheckboxLabel": "自動クラッシュレポートを有効にする",
+      "crashReportTooltipDescription": "これらのレポートは何を含みますか？",
+      "crashReportTooltip": "クラッシュレポートは、ユーザーと組織の Id、ユーザーエージェントのストリング、サニタイズされたエージェントブラウザのストリング、クライアント IP アドレスとユーザーのデバイス MAC アドレスを含むことができます。すべての情報は機密に処理され、製品の質の向上のためだけに使用されます。"
     },
     "security": {
       "title": "セキュリティ",

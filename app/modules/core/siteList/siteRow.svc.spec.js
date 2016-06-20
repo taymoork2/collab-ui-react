@@ -22,19 +22,8 @@ describe('Service: WebExSiteRowService', function () {
     },
     "isCustomerPartner": false,
     "showCSVInfo": true,
-    "showAsyncErr": false,
     "csvStatusObj": null,
     "csvPollIntervalObj": null,
-    "showExportLink": false,
-    "showExportInProgressLink": false,
-    "grayedExportLink": false,
-    "showExportResultsLink": false,
-    "exportFinishedWithErrors": false,
-    "showImportLink": false,
-    "showImportInProgressLink": false,
-    "grayedImportLink": false,
-    "showImportResultsLink": false,
-    "importFinishedWithErrors": false,
     "isIframeSupported": false,
     "isAdminReportEnabled": false,
     "showSiteLinks": true,
@@ -86,7 +75,6 @@ describe('Service: WebExSiteRowService', function () {
     },
     "isCustomerPartner": false,
     "showCSVInfo": true,
-    "showAsyncErr": false,
     "csvStatusObj": {
       "siteUrl": "sjsite04.webex.com",
       "isMockResult": false,
@@ -111,16 +99,6 @@ describe('Service: WebExSiteRowService', function () {
       },
       "$$intervalId": 90
     },
-    "showExportLink": true,
-    "showExportInProgressLink": false,
-    "grayedExportLink": false,
-    "showExportResultsLink": false,
-    "exportFinishedWithErrors": false,
-    "showImportLink": true,
-    "showImportInProgressLink": false,
-    "grayedImportLink": false,
-    "showImportResultsLink": true,
-    "importFinishedWithErrors": true,
     "isIframeSupported": true,
     "isAdminReportEnabled": true,
     "showSiteLinks": true,
@@ -440,18 +418,6 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
 
-    expect(searchResult.showExportLink).toEqual(true);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(false);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(true);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(false);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
-
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
@@ -480,18 +446,6 @@ describe('Service: WebExSiteRowService', function () {
 
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
-
-    expect(searchResult.showExportLink).toEqual(false);
-    expect(searchResult.showExportInProgressLink).toEqual(true);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(false);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(false);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(true);
-    expect(searchResult.showImportResultsLink).toEqual(false);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
@@ -522,18 +476,6 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
-    expect(searchResult.showExportLink).toEqual(true);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(true);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(true);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(false);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
-
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
@@ -562,18 +504,6 @@ describe('Service: WebExSiteRowService', function () {
 
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
-
-    expect(searchResult.showExportLink).toEqual(true);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(true);
-    expect(searchResult.exportFinishedWithErrors).toEqual(true);
-
-    expect(searchResult.showImportLink).toEqual(true);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(false);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
@@ -604,18 +534,6 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
 
-    expect(searchResult.showExportLink).toEqual(false);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(true);
-    expect(searchResult.showExportResultsLink).toEqual(false);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(false);
-    expect(searchResult.showImportInProgressLink).toEqual(true);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(false);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
-
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
@@ -645,18 +563,6 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
-    expect(searchResult.showExportLink).toEqual(true);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(false);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(true);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(true);
-    expect(searchResult.importFinishedWithErrors).toEqual(false);
-
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
@@ -685,18 +591,6 @@ describe('Service: WebExSiteRowService', function () {
 
     expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
-
-    expect(searchResult.showExportLink).toEqual(true);
-    expect(searchResult.showExportInProgressLink).toEqual(false);
-    expect(searchResult.grayedExportLink).toEqual(false);
-    expect(searchResult.showExportResultsLink).toEqual(false);
-    expect(searchResult.exportFinishedWithErrors).toEqual(false);
-
-    expect(searchResult.showImportLink).toEqual(true);
-    expect(searchResult.showImportInProgressLink).toEqual(false);
-    expect(searchResult.grayedImportLink).toEqual(false);
-    expect(searchResult.showImportResultsLink).toEqual(true);
-    expect(searchResult.importFinishedWithErrors).toEqual(true);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });

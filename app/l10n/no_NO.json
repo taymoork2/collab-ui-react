@@ -3269,12 +3269,7 @@
     "supportInfo": "Hvis du gir brukerstøtte til dine kunders brukere, oppgi dine parametere for brukerstøtte under. Disse parametrene vil vises under alternativer for support i Spark-applikasjonene.",
     "supportAccessTitle": "Tilgang til brukerstøtte",
     "supportAccessInfo": "Denne innstillingen gir Cisco eller Partner skrivebeskyttet tilgang til din organisasjon. Den tillater ikke lagring av endringer for din organisasjon.",
-    "supportAccessCheckbox": "Gir Cisco eller Partner-brukerstøtte skrivebeskyttet tilgang til din organisasjon.",
-    "crashReportTitle": "Automatisk krasjrapportering",
-    "crashReportText": "Hvis et endepunkt krasjer, vil loggene lastes opp til Cisco for å bidra til å forbedre kvaliteten på tjenesten.",
-    "crashReportCheckboxLabel": "Aktiver automatisk krasjrapportering",
-    "crashReportTooltipDescription": "Hva inneholder disse rapportene?",
-    "crashReportTooltip": "Krasjrapporter kan inkludere bruker- og organisasjonsidentifikatorer, bruker-agent-strenger, rensede agent-nettleserstrenger, kundes IP-adresser og brukerens enhets MAC-adresse. All informasjon vil bli behandlet konfidensielt og brukes kun til forbedring av produktkvaliteten."
+    "supportAccessCheckbox": "Gir Cisco eller Partner-brukerstøtte skrivebeskyttet tilgang til din organisasjon."
   },
   "fileUpload": {
     "uploading": "Laster opp fil",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Denne innstillingen gir Cisco eller Partner-brukerstøtte skrivebeskyttet tilgang til din organisasjon. Den tillater ikke lagring av endringer for din organisasjon.",
       "allowReadOnlyOrgAccess": "Gir Cisco eller Partner-brukerstøtte skrivebeskyttet tilgang til din organisasjon",
       "usageDataHeader": "Bruksdata sendt til Cisco-partner",
-      "usageDataDescription": "Del tjenestekvalitet og engasjementsdata med din Cisco-partner for å få adgang til det høyere brukerstøttenivået for partnere."
+      "usageDataDescription": "Del tjenestekvalitet og engasjementsdata med din Cisco-partner for å få adgang til det høyere brukerstøttenivået for partnere.",
+      "crashReportTitle": "Automatisk krasjrapportering",
+      "crashReportText": "Hvis et endepunkt krasjer, vil loggene lastes opp til Cisco for å bidra til å forbedre kvaliteten på tjenesten.",
+      "crashReportCheckboxLabel": "Aktiver automatisk krasjrapportering",
+      "crashReportTooltipDescription": "Hva inneholder disse rapportene?",
+      "crashReportTooltip": "Krasjrapporter kan inkludere bruker- og organisasjonsidentifikatorer, bruker-agent-strenger, rensede agent-nettleserstrenger, kundes IP-adresser og brukerens enhets MAC-adresse. All informasjon vil bli behandlet konfidensielt og brukes kun til forbedring av produktkvaliteten."
     },
     "security": {
       "title": "Sikkerhet",
