@@ -110,8 +110,8 @@
         })
         .then(function (result) {
           vm.roomInfo = result;
-          vm.searchCriteria.startDate = vm.searchCriteria.startDate || $stateParams.startDate || result.published;
-          vm.searchCriteria.endDate = vm.searchCriteria.endDate || $stateParams.endDate || result.lastReadableActivityDate;
+          vm.searchCriteria.startDate = vm.searchCriteria.startDate || result.published;
+          vm.searchCriteria.endDate = vm.searchCriteria.endDate || result.lastReadableActivityDate;
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
@@ -132,7 +132,6 @@
 
     function createReport() {
       vm.report = {
-        id: vm.searchCriteria.roomId,
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
         progress: 0
