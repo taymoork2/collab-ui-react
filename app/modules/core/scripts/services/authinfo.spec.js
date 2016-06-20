@@ -232,166 +232,165 @@ describe('Authinfo:', function () {
     });
   });
 
-  describe('initializeTabs', function () {
-    var tabConfig;
-    var states;
-    beforeEach(function () {
-      tabConfig = [{
-        tab: 'tab1',
-        icon: 'tab1.icon',
-        title: 'tab1.title',
-        state: 'tab1',
-        link: '/tab1'
-      }, {
-        tab: 'tabMenu',
-        icon: 'tabMenu.icon',
-        title: 'tabMenu.title',
-        subPages: [{
-          tab: 'subTab1',
-          icon: 'subTab1.icon',
-          title: 'subTab1.title',
-          desc: 'subTab1.desc',
-          state: 'subTab1',
-          link: '/subTab1'
-        }, {
-          tab: 'subTab2',
-          icon: 'subTab2.icon',
-          title: 'subTab2.title',
-          desc: 'subTab2.desc',
-          state: 'subTab2',
-          link: '/subTab2'
+  // describe('initializeTabs', function () {
+  //   var tabConfig;
+  //   var states;
+  //   beforeEach(function () {
+  //     tabConfig = [{
+  //       tab: 'tab1',
+  //       icon: 'tab1.icon',
+  //       title: 'tab1.title',
+  //       state: 'tab1',
+  //       link: '/tab1'
+  //     }, {
+  //       tab: 'tabMenu',
+  //       icon: 'tabMenu.icon',
+  //       title: 'tabMenu.title',
+  //       subPages: [{
+  //         tab: 'subTab1',
+  //         icon: 'subTab1.icon',
+  //         title: 'subTab1.title',
+  //         desc: 'subTab1.desc',
+  //         state: 'subTab1',
+  //         link: '/subTab1'
+  //       }, {
+  //         tab: 'subTab2',
+  //         icon: 'subTab2.icon',
+  //         title: 'subTab2.title',
+  //         desc: 'subTab2.desc',
+  //         state: 'subTab2',
+  //         link: '/subTab2'
+  //       }]
+  //     }, {
+  //       tab: 'devTab',
+  //       icon: 'devTab.icon',
+  //       title: 'devTab.title',
+  //       desc: 'devTab.desc',
+  //       state: 'devTab',
+  //       link: '/devTab',
+  //       hideProd: true
+  //     }, {
+  //       tab: 'devMenu',
+  //       icon: 'devMenu.icon',
+  //       title: 'devMenu.title',
+  //       hideProd: true,
+  //       subPages: [{
+  //         tab: 'subDevTab',
+  //         icon: 'subDevTab.icon',
+  //         title: 'subDevTab.title',
+  //         desc: 'subDevTab.desc',
+  //         state: 'subDevTab',
+  //         link: '/subDevTab'
+  //       }]
+  //     }];
+  //     provide.value('tabConfig', tabConfig);
+  //     states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
+  //   });
+
+  // it('should remove all tabs not allowed', function () {
+  //   var Authinfo = setupUser();
+  //
+  //   Authinfo.initializeTabs();
+  //   expect(Authinfo.getTabs()).toEqual([]);
+  // });
+  //
+  // it('should remove a single tab that is not allowed', function () {
+  //   setupConfig({
+  //     publicStates: _.difference(states, ['tab1'])
+  //   });
+  //   var Authinfo = setupUser();
+  //
+  //   Authinfo.initializeTabs();
+  //   _.remove(tabConfig, {
+  //     state: 'tab1'
+  //   });
+  //   expect(Authinfo.getTabs()).toEqual(tabConfig);
+  // });
+  //
+  // it('should remove a single subPage that is not allowed', function () {
+  //   setupConfig({
+  //     publicStates: _.difference(states, ['subTab1'])
+  //   });
+  //   var Authinfo = setupUser();
+  //
+  //   Authinfo.initializeTabs();
+  //   _.remove(tabConfig[1].subPages, {
+  //     state: 'subTab1'
+  //   });
+  //   expect(Authinfo.getTabs()).toEqual(tabConfig);
+  // });
+  //
+  // it('should remove a subPage parent if all subPages are not allowed', function () {
+  //   setupConfig({
+  //     publicStates: _.difference(states, ['subTab1', 'subTab2'])
+  //   });
+  //   var Authinfo = setupUser();
+  //
+  //   Authinfo.initializeTabs();
+  //   _.remove(tabConfig, {
+  //     tab: 'tabMenu'
+  //   });
+  //   expect(Authinfo.getTabs()).toEqual(tabConfig);
+  // });
+  //
+  // it('should keep tab structure if all pages are allowed', function () {
+  //   setupConfig({
+  //     publicStates: states
+  //   });
+  //   var Authinfo = setupUser();
+  //
+  //   Authinfo.initializeTabs();
+  //   expect(Authinfo.getTabs()).toEqual(tabConfig);
+  // });
+  //
+  // it('should remove hideProd tabs and subPages of hideProd tabs if in production', function () {
+  //   setupConfig({
+  //     publicStates: states,
+  //     isProd: function () {
+  //       return true;
+  //     }
+  //   });
+  //   var Authinfo = setupUser();
+  //   _.remove(tabConfig, {
+  //     tab: 'devTab'
+  //   });
+  //   _.remove(tabConfig, {
+  //     tab: 'devMenu'
+  //   });
+  //
+  //   Authinfo.initializeTabs();
+  //   expect(Authinfo.getTabs()).toEqual(tabConfig);
+  // });
+// });
+  describe('customer with CONFERENCING license', function () {
+    var accountData = {
+      "customers": [{
+        "customerId": "1",
+        "customerName": "Atlas_Test_1",
+        "licenses": [{
+          "licenseType": "CONFERENCING",
+          "siteUrl": "whatever"
         }]
-      }, {
-        tab: 'devTab',
-        icon: 'devTab.icon',
-        title: 'devTab.title',
-        desc: 'devTab.desc',
-        state: 'devTab',
-        link: '/devTab',
-        hideProd: true
-      }, {
-        tab: 'devMenu',
-        icon: 'devMenu.icon',
-        title: 'devMenu.title',
-        hideProd: true,
-        subPages: [{
-          tab: 'subDevTab',
-          icon: 'subDevTab.icon',
-          title: 'subDevTab.title',
-          desc: 'subDevTab.desc',
-          state: 'subDevTab',
-          link: '/subDevTab'
-        }]
-      }];
-      provide.value('tabConfig', tabConfig);
-      states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
+      }]
+    };
+
+    it('is patched with Site_Admin role if customer has full admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Full_Admin']
+      });
+      var a = Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
     });
 
-    it('should remove all tabs not allowed', function () {
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      expect(Authinfo.getTabs()).toEqual([]);
+    it('is patched with Site_Admin role if customer has read only admin role.', function () {
+      var Authinfo = setupUser({
+        roles: ['Readonly_Admin']
+      });
+      var a = Authinfo.updateAccountInfo(accountData);
+      expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
     });
-
-    it('should remove a single tab that is not allowed', function () {
-      setupConfig({
-        publicStates: _.difference(states, ['tab1'])
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig, {
-        state: 'tab1'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should remove a single subPage that is not allowed', function () {
-      setupConfig({
-        publicStates: _.difference(states, ['subTab1'])
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig[1].subPages, {
-        state: 'subTab1'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should remove a subPage parent if all subPages are not allowed', function () {
-      setupConfig({
-        publicStates: _.difference(states, ['subTab1', 'subTab2'])
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      _.remove(tabConfig, {
-        tab: 'tabMenu'
-      });
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should keep tab structure if all pages are allowed', function () {
-      setupConfig({
-        publicStates: states
-      });
-      var Authinfo = setupUser();
-
-      Authinfo.initializeTabs();
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    it('should remove hideProd tabs and subPages of hideProd tabs if in production', function () {
-      setupConfig({
-        publicStates: states,
-        isProd: function () {
-          return true;
-        }
-      });
-      var Authinfo = setupUser();
-      _.remove(tabConfig, {
-        tab: 'devTab'
-      });
-      _.remove(tabConfig, {
-        tab: 'devMenu'
-      });
-
-      Authinfo.initializeTabs();
-      expect(Authinfo.getTabs()).toEqual(tabConfig);
-    });
-
-    describe('customer with CONFERENCING license', function () {
-      var accountData = {
-        "customers": [{
-          "customerId": "1",
-          "customerName": "Atlas_Test_1",
-          "licenses": [{
-            "licenseType": "CONFERENCING",
-            "siteUrl": "whatever"
-          }]
-        }]
-      };
-
-      it('is patched with Site_Admin role if customer has full admin role.', function () {
-        var Authinfo = setupUser({
-          roles: ['Full_Admin']
-        });
-        var a = Authinfo.updateAccountInfo(accountData);
-        expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
-      });
-
-      it('is patched with Site_Admin role if customer has read only admin role.', function () {
-        var Authinfo = setupUser({
-          roles: ['Readonly_Admin']
-        });
-        var a = Authinfo.updateAccountInfo(accountData);
-        expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
-      });
-    });
-
   });
+
 
   function setupConfig(override) {
     override = override || {};

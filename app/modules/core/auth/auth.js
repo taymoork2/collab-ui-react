@@ -190,10 +190,10 @@
         return getCustomerAccount(Authinfo.getOrgId())
           .then(function (res) {
             Authinfo.updateAccountInfo(res.data);
-            Authinfo.initializeTabs();
+            // Authinfo.initializeTabs();
           });
       } else {
-        Authinfo.initializeTabs();
+        // Authinfo.initializeTabs();
         return authData;
       }
     }

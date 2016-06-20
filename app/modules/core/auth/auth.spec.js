@@ -336,7 +336,6 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
         Authinfo.initialize = sinon.stub();
-        Authinfo.initializeTabs = sinon.stub();
       });
 
       it('massaged services are used and webex api should be called', function (done) {
@@ -355,15 +354,15 @@ describe('Auth Service', function () {
         expect(result.services[0].sqService).toBe(undefined);
       });
 
-      it('will initialize tabs if not admin', function (done) {
-        Auth.authorize().then(function () {
-          _.defer(done);
-        });
-
-        $httpBackend.flush();
-
-        expect(Authinfo.initializeTabs.callCount).toBe(1);
-      });
+      // it('will initialize tabs if not admin', function (done) {
+      //   Auth.authorize().then(function () {
+      //     _.defer(done);
+      //   });
+      //
+      //   $httpBackend.flush();
+      //
+      //   expect(Authinfo.initializeTabs.callCount).toBe(1);
+      // });
 
       it('will fetch account info if admin', function (done) {
         Authinfo.isAdmin = sinon.stub().returns(true);
@@ -379,8 +378,7 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-
-        expect(Authinfo.initializeTabs.callCount).toBe(1);
+        // expect(Authinfo.initializers.callCount).toBe(1);
         expect(Authinfo.updateAccountInfo.callCount).toBe(1);
       });
 
@@ -403,7 +401,6 @@ describe('Auth Service', function () {
           .expectGET('msn/orgs/1337/cisync/')
           .respond(200, {});
         Authinfo.initialize = sinon.stub();
-        Authinfo.initializeTabs = sinon.stub();
       });
 
       it('will update account info and initialize tabs', function (done) {
@@ -420,7 +417,6 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        expect(Authinfo.initializeTabs.callCount).toBe(1);
         expect(Authinfo.updateAccountInfo.callCount).toBe(1);
       });
 

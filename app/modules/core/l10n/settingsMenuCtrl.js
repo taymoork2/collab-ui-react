@@ -21,7 +21,7 @@
 
     vm.updateLanguage = function () {
       $translate.use(vm.selected.value).then(function () {
-        Authinfo.initializeTabs();
+        // Authinfo.initializeTabs();
         $state.go('login');
         $rootScope.$broadcast('TABS_UPDATED');
       });

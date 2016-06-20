@@ -5,29 +5,39 @@
     .controller('TabsCtrl', TabsCtrl);
 
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $location, $q, Utils, Authinfo, FeatureToggleService) {
+  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
     initTabs();
 
+    console.log('after init', $scope.ttt, $scope.tykk, 'root', $rootScope.ttt, $rootScope.tykk, 'config',tabConfig,'tabs',vm.tabs);
     $scope.$on('AuthinfoUpdated', initTabs);
     $rootScope.$on('TABS_UPDATED', initTabs);
-    $rootScope.$on('$stateChangeSuccess', setActiveTab);
+    $rootScope.$on('$stateChangeSuccess', stateChangeSuccess);
+
+    function stateChangeSuccess() {
+      console.log("state change success");
+      setActiveTab();
+    }
 
     function setActiveTab() {
+      console.log('setActiveTab','location',$location.path());
       resetActiveTabState();
-
-      var tab = _.find($scope.tabs, function (tab) {
+      var tab = _.find(vm.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-          return matchesLocationPath(subTab.link);
-        });
+            return matchesLocationPath(subTab.link);
+          });
       });
 
       if (tab) {
         tab.isActive = true;
       }
     }
+
+    vm.showLeftNav = function showLeftNav() {
+      return Utils.isAdminPage();
+    };
 
     function matchesLocationPath(path) {
       return Utils.comparePaths(path, $location.path());
@@ -40,23 +50,53 @@
     }
 
     function updateScopeTabs() {
-      $scope.tabs = filterFeatureToggledTabs(vm.tabs, vm.features);
+      vm.tabs = filterFeatureToggledTabs(vm.unfilteredTabs, vm.features);
       setActiveTab();
     }
 
     function initTabs() {
-      vm.tabs = Authinfo.getTabs();
-      vm.features = getUpdatedFeatureTogglesFromTabs(vm.tabs, vm.features);
+      console.log('init tab');
+      vm.unfilteredTabs = initializeTabs();
+      vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
       getFeatureToggles(vm.features);
       updateScopeTabs();
+    }
+
+    function initializeTabs() {
+      var tabs = angular.copy(tabConfig);
+      return _.chain(tabs)
+        .filter(function (tab) {
+          // Remove subPages whose parent tab is hideProd or states that aren't allowed
+          _.remove(tab.subPages, function (subTab) {
+            return isHideProdTab(tab) || !isAllowedTab(subTab);
+          });
+          // Filter allowed states or tabs with subPages
+          return isAllowedTab(tab) || _.size(tab.subPages);
+        })
+        .forEach(function (tab) {
+          tab.title = $translate.instant(tab.title);
+          _.forEach(tab.subPages, function (subTab) {
+            subTab.title = $translate.instant(subTab.title);
+            subTab.desc = $translate.instant(subTab.desc);
+          });
+        })
+        .value();
+    }
+
+    function isAllowedTab(tab) {
+      return Authinfo.isAllowedState(tab.state) && !isHideProdTab(tab);
+    }
+
+    function isHideProdTab(tab) {
+      return tab.hideProd && Config.isProd();
     }
 
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
-          feature: tab.feature.replace(/^!/, ''),
-          enabled: !/^!/.test(tab.feature)
-        });
+            feature: tab.feature.replace(/^!/, ''),
+            enabled: !/^!/.test(tab.feature)
+          });
       });
     }
 
