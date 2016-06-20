@@ -20,25 +20,22 @@
   </div>
 
   <div ng-hide="loading || hostDeregister.error">
-    <p>{{hostDeregister.deregisterAreYouSure}}</p>
-    <ul>
-      <li translate="mediaFusion.clusters.deregisterCausesListItem1"></li>
-      <!--li translate="mediaFusion.clusters.deregisterCausesListItem2"></li-->
-    </ul>
+    <p translate="mediaFusion.clusters.doYouStillWantToContinue"></p>
+    <p translate="mediaFusion.clusters.youHostNoAvailable"></p>
   </div>
 </div>
 
 <div class="modal-footer" ng-hide="hostDeregister.error">
-  <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--negative pull-right"
-          ng-click="hostDeregister.deregister()">
-    <span ng-hide="saving" translate="mediaFusion.clusters.deregisterConfirm"></span>
+  <button id="convertCancelButton" class="btn pull-right" ng-click="hostClusterDeregister.close()"
+          style="margin-right: 10px">
+    <span translate="common.no"></span>
+  </button>
+  <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--primary"
+          ng-click="hostClusterDeregister.deregister()">
+    <span ng-hide="saving" translate="common.yes"></span>
       <span ng-show="saving">
         <i class="icon icon-spinner"/>
       </span>
-  </button>
-  <button id="convertCancelButton" class="btn pull-right" ng-click="hostDeregister.close()"
-          style="margin-right: 10px">
-    <span translate="mediaFusion.clusters.deregisterCancel"></span>
   </button>
 </div>
 <div class="modal-footer" ng-show="hostDeregister.error">
