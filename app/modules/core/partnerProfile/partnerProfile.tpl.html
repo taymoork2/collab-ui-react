@@ -7,19 +7,21 @@
     <div class="save-section" ng-class="{invisible: !partnerProfileForm.$dirty}">
       <p translate="callerIdPanel.saveConfirmation"></p>
       <button type="button" translate="common.cancel" ng-click="init()" id="orgProfileCancelBtn"></button>
-      <button type="button" class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="partnerProfileForm.$invalid" id="orgProfileSaveBtn">
+      <button type="button" class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()"
+              ng-disabled="partnerProfileForm.$invalid" id="orgProfileSaveBtn">
         <span translate="common.save"></span>
       </button>
     </div>
     <div class="profile-content-container row collapse-both" cs-scroll>
       <div class="partner-profile columns small-12 large-6 xlarge-5">
         <!-- company name / account number -->
-        <div  id="companyInfoPanel" class="columns small-7 form-section">
+        <div id="companyInfoPanel" class="columns small-7 form-section">
           <h4 translate="partnerProfile.companyInfo"></h4>
           <div class="form-group">
             <!-- <div class="columns small-4"> -->
             <label for="company-name" translate="partnerProfile.name"></label>
-            <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
+            <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true"
+                   id="company-name">
             <!-- </div> -->
           </div>
           <div class="form-group">
@@ -30,48 +32,40 @@
           </div>
         </div>
         <!-- cisco rep -->
-        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel" ng-hide="rep == null || partner == null">
+        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel"
+             ng-hide="rep == null || partner == null">
           <h4 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h4>
           <h4 ng-if="!isPartner" translate="customerProfile.supportContacts"></h4>
-            <div ng-show="rep !== null" class="form-spacing">
-              <h4 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h4>
-              <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-              <span class="rep-info" translate="rep.displayName"></span>
-              <span class="rep-info" translate="rep.userName"></span>
-              <!-- grant cisco access checkbox -->
-              <div class="row grant-row" ng-show="false">
-                <div class="columns small-12">
-                  <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
-                </div>
+          <div ng-show="rep !== null" class="form-spacing">
+            <h4 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h4>
+            <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
+            <span class="rep-info" translate="rep.displayName"></span>
+            <span class="rep-info" translate="rep.userName"></span>
+            <!-- grant cisco access checkbox -->
+            <div class="row grant-row" ng-show="false">
+              <div class="columns small-12">
+                <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
               </div>
             </div>
-            <div ng-if="!isPartner && partner !== null">
-              <h4 translate="customerProfile.partnerAdmin"></h4>
-              <span class="rep-info">{{partner.displayName}}</span>
-              <span class="rep-info">{{partner.userName}}</span>
-            </div>
-        </div>
-        <div id="brandingTpl" cr-feature-toggle feature-show="atlas-branding-wording-change">
-          <div ng-include="'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'" ng-controller="BrandingCtrl as bctrl"></div>
-        </div>
-        <div id="brandingTpl" cr-feature-toggle feature-hide="atlas-branding-wording-change">
-          <div ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'" ng-controller="BrandingCtrl as bctrl"></div>
-        </div>
-
-        <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
-          <h4 translate="customerProfile.crashReportTitle"></h4>
-          <div class="form-spacing">
-            <span translate="customerProfile.crashReportText"></span>
           </div>
-          <div class="form-spacing">
-            <input type="checkbox" id="crashReportCheckbox" ng-change='setCrashReportCheckbox(allowCrashLogUpload)' ng-model="allowCrashLogUpload">
-            <label for="crashReportCheckbox">
-              <span translate="customerProfile.crashReportCheckboxLabel"></span>
-            </label>
+          <div ng-if="!isPartner && partner !== null">
+            <h4 translate="customerProfile.partnerAdmin"></h4>
+            <span class="rep-info">{{partner.displayName}}</span>
+            <span class="rep-info">{{partner.userName}}</span>
           </div>
-          <p>
-            <span translate="customerProfile.crashReportTooltipDescription"></span><i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="above" tooltip-animation="true" tooltip="{{::'customerProfile.crashReportTooltip' | translate}}"></i>
-          </p>
+        </div>
+        <div class="columns small-12 form-section">
+          <div cr-feature-toggle feature-show="atlas-branding-wording-change">
+            <div ng-include="'modules/core/partnerProfile/branding/brandingWordingChange.tpl.html'"
+                 ng-controller="BrandingCtrl as bctrl"></div>
+          </div>
+          <div cr-feature-toggle feature-hide="atlas-branding-wording-change">
+            <div ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'"
+                 ng-controller="BrandingCtrl as bctrl"></div>
+          </div>
+        </div>
+        <div class="columns small-12 form-section">
+          <privacy-setting hide-usage-part="true"></privacy-setting>
         </div>
       </div>
 
@@ -91,7 +85,8 @@
           <h4 translate="partnerProfile.supportSetup"></h4>
           <!-- partner problem reporting site form -->
           <div class="cs-input-group cs-input-radio" id="troubleReportingCiscoPanel" ng-click="setProblemRadio(0)">
-            <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0" ng-model="problemSiteRadioValue">
+            <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0"
+                   ng-model="problemSiteRadioValue">
             <label for="problemSiteRadio0">
               <a href="" ng-click="sendFeedback()">
                 <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
@@ -101,11 +96,15 @@
             </label>
           </div>
           <div class="cs-input-group cs-input-radio">
-            <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1" ng-model="problemSiteRadioValue">
-            <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanelRadio">
+            <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1"
+                   ng-model="problemSiteRadioValue">
+            <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)"
+                   id="troubleReportingPartnerPanelRadio">
               <div class="radio-input-flex">
-                <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
-                <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
+                <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}"
+                       ng-model="supportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
+                          placeholder="{{troubleText | translate}}" ng-model="supportText">
                 </textarea>
                 <h6 translate="partnerProfile.matchingTix"></h6>
                 <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
@@ -128,22 +127,11 @@
           <div class="cs-input-group cs-input-radio" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
             <input type="radio" id="helpSiteRadio1" name="helpSiteRadio" ng-value="1" ng-model="helpSiteRadioValue">
             <label for="helpSiteRadio1" class="radio-input-spacing" id="helpPartnerPanelRadio">
-              <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl">
+              <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
+                     placeholder="{{helpUrlText | translate}}" ng-model="helpUrl">
             </label>
           </div>
         </div>
-
-        <div ng-show="showAllowReadOnlyAccessCheckbox">
-          <h4 translate="customerProfile.supportAccessTitle"></h4>
-          <div class="form-spacing">
-            <span translate="customerProfile.supportAccessInfo"></span>
-          </div>
-          <input id="profileSettingsAllowReadOnlyAccess" type="checkbox" ng-model="allowReadOnlyAccess">
-          <label class="cs-checkbox" for="profileSettingsAllowReadOnlyAccess">
-            <span translate="customerProfile.supportAccessCheckbox"></span>
-          </label>
-        </div>
-
       </div>
     </div>
   </form>

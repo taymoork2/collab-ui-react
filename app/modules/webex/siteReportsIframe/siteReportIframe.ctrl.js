@@ -9,15 +9,11 @@
     $rootScope,
     $log,
     $translate,
-    $filter,
-    $state,
     $stateParams,
     $sce,
     $timeout,
     $window,
     Authinfo,
-    Notification,
-    Config,
     Storage,
     WebExUtilsFact
   ) {

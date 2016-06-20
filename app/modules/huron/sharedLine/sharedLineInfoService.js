@@ -6,8 +6,8 @@
     .factory('SharedLineInfoService', SharedLineInfoService);
 
   /* @ngInject */
-  function SharedLineInfoService($rootScope, $q, Authinfo, UserServiceCommon,
-    UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
+  function SharedLineInfoService($q, Authinfo, UserServiceCommon,
+    UserDirectoryNumberService, DirectoryNumberUserService,
     SipEndpointDirectoryNumberService, UserEndpointService, SipEndpointService) {
 
     var sharedLineUsers = [];

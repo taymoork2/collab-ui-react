@@ -3,6 +3,14 @@
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
 
   <form class="cs-form" action="">
+    <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
+      <security-setting></security-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
+      <privacy-setting></privacy-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
       <domains-setting></domains-setting>
     </setting-section>

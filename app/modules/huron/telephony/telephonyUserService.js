@@ -6,7 +6,7 @@
     .factory('HuronUser', HuronUser);
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronAssignedLine, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, $q, LogMetricsService, Notification, CallerId) {
+  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, UserOTPService, LogMetricsService, Notification, CallerId) {
 
     function deleteUser(uuid) {
       return UserServiceCommon.remove({

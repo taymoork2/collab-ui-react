@@ -11,7 +11,7 @@
   <div class="row full">
     <div class="details-column columns large-4 medium-5">
 
-      <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
+      <h3 ng-class="{'pointer': helpdeskOrgCtrl.supportsExtendedInformation}" ng-click="helpdeskOrgCtrl.openExtendedInformation('helpdesk.customerDetails', helpdeskOrgCtrl.orgStringified)">{{helpdeskOrgCtrl.org.displayName}}</h3>
 
       <hr>
 
@@ -124,45 +124,62 @@
         </div>
       </div>
 
-      <div class="row" ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
+      <div class="row" ng-if="!helpdeskOrgCtrl.adminUsersAvailable">
         <div class="medium-12 columns">
-
           <hr>
+          <h4 translate="helpdesk.adminUsers" class="light"></h4>
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+      </div>
 
+
+      <div class="row" ng-if="helpdeskOrgCtrl.adminUsersAvailable">
+        <div class="medium-12 columns">
+          <hr>
           <h4 translate="helpdesk.adminUsers"></h4>
 
-          <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
-            <span>
-              <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
-                {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
-              </a>
-            </span>
+          <div ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
+            <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
+              <span>
+                <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
+                  {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
+                </a>
+              </span>
+            </div>
+
+            <div ng-if="helpdeskOrgCtrl.adminUsers.length > helpdeskOrgCtrl.adminUserLimit" style="margin-top: 1.0rem;">
+              <span><a href
+                       ng-click="helpdeskOrgCtrl.showAllAdminUsers()">{{helpdeskOrgCtrl.showAllAdminUsersText}}</a></span>
+            </div>
+
+            <div ng-if="helpdeskOrgCtrl.adminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
+                 style="margin-top: 1.0rem;">
+              <span><a href
+                       ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
+                       translate="helpdesk.hideAllAdminUsers"></a></span>
+            </div>
           </div>
 
-          <div ng-if="helpdeskOrgCtrl.adminUsers.length > helpdeskOrgCtrl.adminUserLimit" style="margin-top: 1.0rem;">
-            <span><a href
-                     ng-click="helpdeskOrgCtrl.showAllAdminUsers()">{{helpdeskOrgCtrl.showAllAdminUsersText}}</a></span>
-          </div>
-
-          <div ng-if="helpdeskOrgCtrl.adminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
-               style="margin-top: 1.0rem;">
-            <span><a href
-                     ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
-                     translate="helpdesk.hideAllAdminUsers"></a></span>
+          <div ng-if="!helpdeskOrgCtrl.adminUsers || helpdeskOrgCtrl.adminUsers.length === 0">
+            {{'helpdesk.none'| translate}}
           </div>
 
         </div>
       </div>
 
+
       <hr>
 
-      <div class="row" ng-if="helpdeskOrgCtrl.allowLaunchAtlas">
+      <div class="row">
         <div class="medium-12 columns">
           <h4 translate="helpdesk.customerPortalViewHeading"></h4>
           <div class="details-value">
-            <span>{{'helpdesk.customerPortalViewDetails' | translate}}</span>
+            <span ng-if="helpdeskOrgCtrl.allowLaunchAtlas">{{'helpdesk.customerPortalViewDetails' | translate}}</span>
+            <span ng-if="!helpdeskOrgCtrl.allowLaunchAtlas">{{'helpdesk.customerDoesNotAllowReadOnlyAccess' | translate}}</span>
           </div>
+
           <button cs-btn class="btn btn--people centered launch-button"
+                  ng-disabled="!helpdeskOrgCtrl.allowLaunchAtlas"
                   type="button"
                   ng-click="helpdeskOrgCtrl.launchAtlasReadonly()"
                   loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.view' | translate}} {{helpdeskOrgCtrl.org.displayName}}</button>
@@ -171,8 +188,14 @@
 
     </div>
 
-    <div class="columns large-8 medium-7 card-panel" ng-include
-         src="'modules/squared/helpdesk/org-cards.html'">
+    <div class="columns large-8 medium-7 card-panel"
+         ng-if="helpdeskOrgCtrl.cardsAvailable"
+         ng-include src="'modules/squared/helpdesk/org-cards.html'">
+    </div>
+
+    <div class="columns large-8 medium-7"
+         ng-if="!helpdeskOrgCtrl.cardsAvailable">
+      <div cs-loader class="helpdesk-cards-loading"></div>
     </div>
 
   </div>

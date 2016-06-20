@@ -5,7 +5,7 @@
     .controller('setupDirSyncDialogCtrl', setupDirSyncDialogCtrl);
 
   /* @ngInject */
-  function setupDirSyncDialogCtrl($scope, $modalInstance, DirSyncService, Authinfo, Log, Notification, $translate, $window, Config, UserListService) {
+  function setupDirSyncDialogCtrl($scope, $modalInstance, DirSyncService, Log, Notification, $translate, UserListService) {
 
     $scope.numUsersInSync = '0';
     $scope.domainExists = true;

@@ -7,13 +7,14 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
@@ -21,6 +22,7 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
+      atlasDirectCustomerBranding: 'atlas-direct-customer-branding',
       atlasTrialConversion: 'atlas-trial-conversion',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
@@ -129,6 +131,7 @@
       enableCrashLogs: 'csdm-enable-crash-logs',
       csdmTz: 'csdm-timezone',
       readonlyAdmin: 'atlas-read-only-admin',
+      helpdeskExt: 'atlas-helpdesk-extended-information',
       brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',

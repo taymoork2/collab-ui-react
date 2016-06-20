@@ -1,0 +1,10 @@
+<div class="setting">
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="secCtrl.requireProtectedDevices"
+    name="requireProtectedDevices"
+    cs-input-label="{{'globalSettings.security.requireProtectedDevices'|translate}}"
+    ng-change="secCtrl.requireProtectedDevicesUpdate()"
+    ng-disabled="!secCtrl.requireProtectedDevicesIsLoaded">
+</div>

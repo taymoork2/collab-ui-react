@@ -8,14 +8,19 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, $q, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
       provisionConnector: provisionConnector,
       deprovisionConnector: deprovisionConnector,
-      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
-      getAll: getAll
+      getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
+      getAll: getAll,
+      get: get,
+      buildSidepanelConnectorList: buildSidepanelConnectorList,
+      getUpgradeSchedule: getUpgradeSchedule,
+      setUpgradeSchedule: setUpgradeSchedule,
+      postponeUpgradeSchedule: postponeUpgradeSchedule
     };
 
     return service;
@@ -24,6 +29,12 @@
 
     // TODO: maybe cache data for the cluster list and
     // poll new data every 30 seconds
+
+    function get(clusterId) {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .then(extractDataFromResponse);
+    }
 
     function getAll() {
       return $http
@@ -34,8 +45,27 @@
         .then(sort);
     }
 
+    function getUpgradeSchedule(id) {
+      var orgId = Authinfo.getOrgId();
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
+        .then(extractData);
+    }
+
+    function setUpgradeSchedule(id, params) {
+      var orgId = Authinfo.getOrgId();
+      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params);
+    }
+
+    function postponeUpgradeSchedule(id) {
+      return $q.reject('Not Implemented');
+    }
+
+    function extractData(response) {
+      return response.data;
+    }
+
     function extractClustersFromResponse(response) {
-      return response.data.clusters;
+      return extractData(response).clusters;
     }
 
     function onlyKeepFusedClusters(clusters) {
@@ -117,12 +147,44 @@
       return $http.post(url);
     }
 
-    function getAllConnectorTypesForCluster(clusterId) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
-      return $http.get(url)
-        .then(function (response) {
-          return _.map(response.data.provisioning, 'connectorType');
+    function getAllProvisionedConnectorTypes(clusterId) {
+      return get(clusterId)
+        .then(function (data) {
+          return _.map(data.provisioning, 'connectorType');
         });
+    }
+
+    function buildSidepanelConnectorList(cluster, connectorTypeToKeep) {
+      var sidepanelConnectorList = {};
+      sidepanelConnectorList.hosts = [];
+      sidepanelConnectorList.servicesStatuses = cluster.servicesStatuses;
+      sidepanelConnectorList.name = cluster.name;
+      sidepanelConnectorList.id = cluster.id;
+
+      /* Find and populate hostnames only, and make sure that they are only there once */
+      _.forEach(cluster.connectors, function (connector) {
+        sidepanelConnectorList.hosts.push({
+          hostname: connector.hostname,
+          connectors: []
+        });
+      });
+      sidepanelConnectorList.hosts = _.uniq(sidepanelConnectorList.hosts, function (host) {
+        return host.hostname;
+      });
+
+      /* Find and add all c_mgmt connectors, plus the connectors we're really interested in  */
+      _.forEach(cluster.connectors, function (connector) {
+        if (connector.connectorType === 'c_mgmt' || connector.connectorType === connectorTypeToKeep) {
+          var host = _.find(sidepanelConnectorList.hosts, function (host) {
+            return host.hostname === connector.hostname;
+          });
+          var index = _.indexOf(sidepanelConnectorList.hosts, host);
+          if (index !== -1) {
+            sidepanelConnectorList.hosts[index].connectors.push(connector);
+          }
+        }
+      });
+      return sidepanelConnectorList;
     }
 
   }

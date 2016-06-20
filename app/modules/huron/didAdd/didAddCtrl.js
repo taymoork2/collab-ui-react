@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, LogMetricsService, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = !!$stateParams.editMode;

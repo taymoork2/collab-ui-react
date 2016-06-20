@@ -1,5 +1,5 @@
 <div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents" ng-switch on="row.entity.state">
-  <span ng-switch-when="RUNNING">
+  <span class="fit-in-cell" ng-switch-when="RUNNING">
     {{'ediscovery.reportStates.RUNNING' | translate}}...
     <span ng-if="row.entity.progress > 0">
       {{row.entity.progress}}%
@@ -9,20 +9,19 @@
     </span>
   </span>
 
-  <span ng-switch-when="FAILED" class="red" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
+  <span ng-switch-when="FAILED" class="failure" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
     {{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}
   </span>
 
-  <span ng-switch-default>
+  <span class="fit-in-cell" ng-switch-default>
     {{'ediscovery.reportStates.' + row.entity.state | translate}}
   </span>
-  <span ng-switch-when="COMPLETED">
-    {{'ediscovery.reportStates.' + row.entity.state | translate}}
-    <br>
+  <span class="fit-in-cell" ng-switch-when="COMPLETED">
+    {{'ediscovery.reportStates.' + row.entity.state | translate}},
     {{grid.appScope.prettyPrintBytes(row.entity.sizeInBytes)}}
   </span>
 </div>
 
 <div ng-if="row.entity.timeoutDetected" class="ui-grid-cell-contents" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
-  <span ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
+  <span class="fit-in-cell" ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
 </div>

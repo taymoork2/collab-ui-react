@@ -186,8 +186,8 @@
 
   angular
     .module('Squared')
-    .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
-      function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -819,7 +819,7 @@
               site: {}
             }
           })
-          .state('user-overview.conferencing.webex.webex2', {
+          .state('user-overview.conferencing.webex2', {
             templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
             controller: 'WebExUserSettings2Ctrl',
             data: {
@@ -958,13 +958,6 @@
               currentOrg: {}
             }
           })
-          /**.state('site-list', {
-            url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteListCtrl',
-            controllerAs: 'siteList',
-            parent: 'main'
-          })**/
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
@@ -2068,6 +2061,29 @@
             params: {
               clusterId: null,
               connectorType: null
+            },
+            resolve: {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('management-connector-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                controller: 'ExpresswayHostDetailsController',
+                controllerAs: 'hostDetailsCtrl'
+              }
+            },
+            data: {
+              displayName: 'Management Connector'
+            },
+            params: {
+              host: null,
+              clusterId: null,
+              connectorType: 'c_mgmt'
             }
           })
           .state('cluster-details.alarm-details', {
@@ -2135,17 +2151,8 @@
               }
             }
           })
-          /*.state('media-service.metrics', {
-            url: '/mediaservice/metrics',
-            views: {
-              'fullPane': {
-                controllerAs: 'GraphUtilCtrl',
-                controller: 'AnalyticsUtilizationGraphController',
-                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
-              }
-            }
-          })*/
-          .state('connector-details', {
+
+        .state('connector-details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
@@ -2202,6 +2209,91 @@
               clusterList: null,
               dispName: null
             }
+          })
+
+        //V2 API changes
+        .state('media-service-v2', {
+            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            controller: 'MediaServiceControllerV2',
+            controllerAs: 'med',
+            parent: 'main'
+          })
+          .state('media-service-v2.list', {
+            url: '/mediaserviceV2',
+            views: {
+              'fullPane': {
+                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+              }
+            }
+          })
+          .state('media-service-v2.settings', {
+            url: '/mediaserviceV2/settings',
+            views: {
+              'fullPane': {
+                controllerAs: 'mediaServiceSettings',
+                controller: 'MediaServiceSettingsControllerV2',
+                templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html'
+              }
+            }
+          })
+
+        .state('connector-details-v2', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'groupDetails',
+                controller: 'GroupDetailsControllerV2',
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
+              },
+              'header@connector-details-v2': {
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterName: {},
+              nodes: {},
+              cluster: {}
+            }
+          })
+          .state('connector-details-v2.alarm-details', {
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
+          .state('connector-details-v2.host-details', {
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-details.html',
+            controller: 'HostDetailsControllerV2',
+            controllerAs: 'hostDetails',
+            data: {
+              displayName: 'Host'
+            },
+            params: {
+              clusterId: null,
+              connector: null,
+              hostLength: null
+            }
+          })
+          .state('connector-details-v2.group-settings', {
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-settings.html',
+            controller: 'GroupSettingsControllerV2',
+            controllerAs: 'groupClusterSettingsCtrl',
+            data: {
+              displayName: 'Settings'
+            },
+            params: {
+              clusterList: null,
+              dispName: null
+            }
           });
       }
     ]);
@@ -2215,8 +2307,6 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryHeaderController',
-              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2235,9 +2325,8 @@
             controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html',
             params: {
-              roomId: null,
-              startDate: null,
-              endDate: null
+              report: null,
+              reRun: false,
             }
           })
           .state('ediscovery.reports', {

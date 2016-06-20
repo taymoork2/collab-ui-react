@@ -42,7 +42,7 @@ describe('Features Controller', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;

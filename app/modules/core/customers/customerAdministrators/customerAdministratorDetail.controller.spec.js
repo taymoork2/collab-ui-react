@@ -5,7 +5,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService;
   var modalDefer;
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _$state_, _Authinfo_, _Notification_, _CustomerAdministratorService_, _ModalService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_, _ModalService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;

@@ -1,18 +1,16 @@
-<div class="ediscovery-search">
+<div class="ediscovery-reports">
   <div class="center" ng-if="ediscoveryCtrl.readingReports">
-      <span class="search-spinner">
-        <i class="icon icon-spinner"></i>
-      </span>
+    <span class="search-spinner">
+      <i class="icon icon-spinner"></i>
+    </span>
   </div>
-  <div ng-if="!ediscoveryCtrl.readingReports">
-    <div class="row grid" ng-if="ediscoveryCtrl.reports.length > 0">
-      <div gridscrollbar class="gridStyle" ui-grid="ediscoveryCtrl.gridOptions"></div>
-    </div>
+  <div ng-if="!ediscoveryCtrl.readingReports" class="column-air">
+    <div ng-if="ediscoveryCtrl.reports.length > 0" gridscrollbar ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns class="gridStyle with-scroll" ui-grid="ediscoveryCtrl.gridOptions"></div>
     <div class="cs-input-group columns large-2" ng-if="ediscoveryCtrl.reports.length > 0">
-      <button type="button" class="button btn align" ng-click="ediscoveryCtrl.deleteReports()">Delete All Reports</button>
+      <button type="button" style="position:fixed;bottom:10px; font-size:12px" ng-click="ediscoveryCtrl.deleteReports()">Development: Delete All Reports</button>
     </div>
     <div class="center" ng-if="ediscoveryCtrl.reports.length == 0" style="padding-top: 1rem;">
-      <h2 translate="ediscovery.reportsList.noReportsFound"></h2>
+      <h3 translate="ediscovery.reportsList.noReportsFound"></h3>
       <p translate="ediscovery.reportsList.noReportsTip"></p>
     </div>
   </div>

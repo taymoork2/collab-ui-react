@@ -41,6 +41,7 @@
     angular/definedundefined: 0
     angular/empty-controller: 2
     angular/document-service: 0
+    angular/di-unused: 2
     angular/json-functions: 0
     angular/module-getter: 0
     angular/no-private-call: 0

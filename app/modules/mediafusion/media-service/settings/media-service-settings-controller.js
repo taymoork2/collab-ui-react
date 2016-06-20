@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, ServiceDescriptor, $log, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";

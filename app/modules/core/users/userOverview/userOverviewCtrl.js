@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, $resource, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;

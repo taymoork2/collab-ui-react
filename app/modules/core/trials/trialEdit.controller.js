@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService, Orgservice) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -16,6 +16,7 @@
 
     vm.showWebex = false;
     vm.showRoomSystems = false;
+    vm.showContextServiceTrial = false;
 
     var _messageTemplateOptionId = 'messageTrial';
 
@@ -27,6 +28,7 @@
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.setDeviceModal = setDeviceModal;
 
     vm.preset = {
@@ -37,7 +39,8 @@
       call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
       roomSystems: hasOfferType(Config.offerTypes.roomSystems),
       roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
-      licenseDuration: _.get(vm, 'currentTrial.duration', 0)
+      licenseDuration: _.get(vm, 'currentTrial.duration', 0),
+      context: false // we don't know this yet, so default to false
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
@@ -64,6 +67,17 @@
     // Navigate trial modal in this order
     vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
+
+    vm.nonTrialServices = [{
+      // Context Service Trial
+      model: vm.contextTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      templateOptions: {
+        label: $translate.instant('trials.context'),
+        id: 'contextTrial'
+      },
+    }];
 
     vm.messageFields = [{
       // Message Trial
@@ -148,8 +162,7 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        labelClass: 'medium-4',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
         required: true,
         secondaryLabel: $translate.instant('trials.users')
@@ -177,7 +190,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         options: [30, 60, 90]
       },
     }];
@@ -212,7 +225,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -265,7 +278,9 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        TrialContextService.trialHasService(vm.currentTrial.customerOrgId)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -278,6 +293,9 @@
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
+        vm.showContextServiceTrial = results[3];
+        vm.contextTrial.enabled = results[4];
+        vm.preset.context = results[4];
         // TODO: override atlasDeviceTrials to show Ship devices to all partners
         //       and do not show to test orgs (US12063)
         //vm.canSeeDevicePage = results[2];
@@ -456,6 +474,23 @@
               });
           }
         })
+        .then(function (response) {
+          if (vm.preset.context !== vm.contextTrial.enabled) {
+            if (vm.contextTrial.enabled) {
+              return TrialContextService.addService(custId).catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.editTrialContextServiceEnableError');
+                return $q.reject(response);
+              });
+            } else {
+              return TrialContextService.removeService(custId).catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.editTrialContextServiceDisableError');
+                return $q.reject(response);
+              });
+            }
+          }
+        })
         .then(function () {
           vm.loading = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
@@ -498,6 +533,7 @@
     function isProceedDisabled() {
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
+        vm.preset.context !== vm.contextTrial.enabled,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
         vm.preset.licenseDuration !== vm.details.licenseDuration,

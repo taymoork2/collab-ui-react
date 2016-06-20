@@ -13,7 +13,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
   var Authinfo;
   var UrlConfig;
   var WebExApiGatewayService;
-  var SiteListService;
   var WebExSiteRowService;
   var SiteCSVModalCtrl;
   var Notification;
@@ -31,7 +30,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     _Authinfo_,
     _UrlConfig_,
     _WebExApiGatewayService_,
-    _SiteListService_,
     _WebExSiteRowService_,
     _Notification_,
     _WebExApiGatewayConstsService_
@@ -45,7 +43,6 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     WebExApiGatewayService = _WebExApiGatewayService_;
-    SiteListService = _SiteListService_;
     WebExSiteRowService = _WebExSiteRowService_;
     Notification = _Notification_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
@@ -201,4 +198,75 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     expect($scope.$close).toHaveBeenCalled();
   });
 
+}); // describe()
+
+describe('SiteCSVModalCtrl read only', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+
+  var $rootScope;
+  var $scope;
+
+  var SiteCSVModalCtrl;
+  var Notification;
+
+  var fakeSiteRow;
+  var fakeCSVImportFileContents;
+  var deferredCSVImport;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$controller_,
+    _$rootScope_,
+    _Authinfo_,
+    _WebExApiGatewayService_,
+    _WebExSiteRowService_,
+    _Notification_
+  ) {
+
+    $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
+
+    Notification = _Notification_;
+
+    deferredCSVImport = _$q_.defer();
+
+    fakeCSVImportFileContents = "contents";
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      }
+    };
+
+    SiteCSVModalCtrl = _$controller_('SiteCSVModalCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        siteRow: fakeSiteRow
+      }
+    });
+
+    $scope.$apply();
+
+    //Create spies
+    spyOn(_WebExApiGatewayService_, 'csvImport').and.returnValue(deferredCSVImport.promise);
+    spyOn(_WebExSiteRowService_, 'updateCSVStatusInRow');
+    spyOn(_Notification_, 'notifyReadOnly');
+    spyOn(_Authinfo_, "isReadOnlyAdmin").and.returnValue(true);
+  })); // beforeEach(inject())
+
+  it('shows orange toast for import in read only mode', function () {
+    SiteCSVModalCtrl.modal.file = fakeCSVImportFileContents;
+    SiteCSVModalCtrl.startImport();
+
+    deferredCSVImport.reject({
+      "errorCode": "000001",
+      "errorMessage": "Insufficient privileges."
+    });
+
+    $rootScope.$apply();
+
+    expect(Notification.notifyReadOnly).toHaveBeenCalled();
+  });
 }); // describe()

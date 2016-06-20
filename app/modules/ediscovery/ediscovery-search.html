@@ -1,23 +1,23 @@
 <div class="ediscovery-search">
   <div class="ediscovery-search-bar">
-    <div class="main-heading">
-      <h1>Search Activities</h1>
-      <span class="help" ng-click="ediscoverySearchCtrl.showSearchHelp()"></span>
+    <div class="main-heading" ng-if="!ediscoverySearchCtrl.roomInfo">
+      <h1 translate="ediscovery.heading"></h1>
+      <span translate="ediscovery.subheading"></span>
     </div>
 
     <div class="typeahead-large">
-      <input spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" placeholder="{{'ediscovery.searchWatermark' | translate}}" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
+      <input spellcheck="false" class="fit" id="searchInput" type="search" tabindex="1" autocomplete="off" ng-model="ediscoverySearchCtrl.searchCriteria.roomId" autofocus="true" ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)"/>
       <button type="submit" id="ediscoverySearchButton" class="btn btn--circle btn--primary icon icon-search" ng-click="ediscoverySearchCtrl.searchForRoom(ediscoverySearchCtrl.searchCriteria.roomId);" ng-disabled="ediscoverySearchCtrl.searchButtonDisabled()"></button>
       <div class="input-description"></div>
     </div>
 
-    <div class="searchError" ng-show="ediscoverySearchCtrl.error">
-      {{ediscoverySearchCtrl.error}}
-    </div>
+    <p class="search-tip" translate="ediscovery.searchTip"></p>
 
-    <div ng-show="ediscoverySearchCtrl.searchInProgress">
+    <span ng-if="ediscoverySearchCtrl.error">{{ediscoverySearchCtrl.error}}</span>
+
+    <div ng-show="ediscoverySearchCtrl.searchingForRoom">
       <span class="search-spinner">
-        <i class="icon icon-spinner" style="top: 1rem;"></i>
+        <i class="icon icon-spinner"></i>
       </span>
     </div>
   </div>

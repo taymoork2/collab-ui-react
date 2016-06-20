@@ -2,12 +2,13 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
-  function MetricsReportService($http, $translate, $q, Config, Authinfo, Notification, $log, Log, chartColors, UrlConfig) {
+  function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     //var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';
     var topn = 'topn';
     var timechart = 'timeCharts';
+    var utilizationUrl = '/cpu_utilization';
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';
 
@@ -20,8 +21,9 @@
     // Promise Tracking
     var ABORT = 'ABORT';
     var TIMEOUT = 'TIMEOUT';
-    var activePromse = null;
-    var activePromseForAvailability = null;
+    var activePromise = null;
+    var activePromiseForAvailability = null;
+    var activePromiseForUtilization = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;
     var oneToOneCancelPromise = null;
@@ -32,21 +34,42 @@
     var mediaCancelPromise = null;
     var deviceCancelPromise = null;
     return {
+      getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getAvailabilityData: getAvailabilityData
     };
 
-    function getCallVolumeData(time, cluster) {
-      // cancel any currently running jobs
-      if (activePromse !== null && angular.isDefined(activePromse)) {
-        activePromse.resolve(ABORT);
+    function getUtilizationData(time, cluster) {
+      if (activePromise !== null && angular.isDefined(activePromise)) {
+        activePromise.resolve(ABORT);
       }
-      activePromse = $q.defer();
+      activePromise = $q.defer();
       var returnData = {
         graphData: []
       };
-      return getService(urlBase + callVolumeUrl + getQuery(cluster, time), activePromse).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
+      return getService(urlBase + utilizationUrl + getQuery(cluster, time), activePromiseForUtilization).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].cpuUtilValues) && angular.isArray(response.data[0].cpuUtilValues) && angular.isDefined(response.data[0])) {
+          returnData.graphData.push(response.data[0].cpuUtilValues);
+          return adjustUtilizationData(response.data[0].cpuUtilValues, returnData);
+        } else {
+          return returnData;
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+      });
+    }
+
+    function getCallVolumeData(time, cluster) {
+      // cancel any currently running jobs
+      if (activePromise !== null && angular.isDefined(activePromise)) {
+        activePromise.resolve(ABORT);
+      }
+      activePromise = $q.defer();
+      var returnData = {
+        graphData: []
+      };
+      return getService(urlBase + callVolumeUrl + getQuery(cluster, time), activePromise).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
           return adjustCallVolumeData(response.data[0].values, returnData);
         } else {
@@ -59,12 +82,12 @@
 
     function getAvailabilityData(time, cluster) {
       // cancel any currently running jobs
-      if (activePromseForAvailability !== null && angular.isDefined(activePromseForAvailability)) {
-        activePromseForAvailability.resolve(ABORT);
+      if (activePromiseForAvailability !== null && angular.isDefined(activePromiseForAvailability)) {
+        activePromiseForAvailability.resolve(ABORT);
       }
-      activePromseForAvailability = $q.defer();
+      activePromiseForAvailability = $q.defer();
       var returnData = [];
-      return getService(urlBase + clusterAvailability + getQuery(cluster, time), activePromseForAvailability).then(function (response) {
+      return getService(urlBase + clusterAvailability + getQuery(cluster, time), activePromiseForAvailability).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
           return response;
         } else {
@@ -90,6 +113,28 @@
         var tmpItem = angular.copy(graphItem);
         tmpItem.call_reject = activeData[i].call_reject;
         tmpItem.active_calls = activeData[i].active_calls;
+        tmpItem.timestamp = activeData[i].timestamp;
+        returnDataArray.push(tmpItem);
+      }
+      returnData.graphData = returnDataArray;
+      return returnData;
+    }
+
+    function adjustUtilizationData(activeData, returnData) {
+      var emptyGraph = true;
+      var returnDataArray = [];
+      var graphItem = {
+        colorOne: chartColors.colorPurple,
+        colorTwo: chartColors.colorPurple,
+        balloon: true,
+        average_cpu: 0.0,
+        peak_cpu: 0.0,
+        timestamp: null
+      };
+      for (var i = 0; i < activeData.length; i++) {
+        var tmpItem = angular.copy(graphItem);
+        tmpItem.average_cpu = activeData[i].average_cpu;
+        tmpItem.peak_cpu = activeData[i].peak_cpu;
         tmpItem.timestamp = activeData[i].timestamp;
         returnDataArray.push(tmpItem);
       }

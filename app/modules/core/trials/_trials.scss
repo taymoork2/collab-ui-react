@@ -140,6 +140,24 @@
   padding: 0;
 }
 
+.modal-footer.trials {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .btn {
+    margin-left: 8px;
+  }
+
+  .alt-btn-link {
+    color: $gray-dark-1;
+
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
+}
+
 .trials {
   // TODO: rip this out once we can rip out 'label' definition in '_temp.scss'
   label {

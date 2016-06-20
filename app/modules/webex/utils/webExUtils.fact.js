@@ -1,21 +1,63 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').factory('WebExUtilsFact', WebExUtilsFact);
+  angular
+    .module('WebExApp')
+    .factory('WebExUtilsFact', WebExUtilsFact);
 
   /* @ngInject */
   function WebExUtilsFact(
     $q,
     $log,
     $rootScope,
-    $http,
-    $timeout,
     Authinfo,
     Orgservice,
-    WebExXmlApiFact,
-    WebExXmlApiInfoSvc
+    WebExXmlApiFact
   ) {
+
     var obj = {};
+
+    obj.isCIEnabledSite = function (siteUrl) {
+      var funcName = "isCIEnabledSite()";
+      var logMsg = "";
+
+      var licenses = Authinfo.getLicenses();
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "licenses=" + JSON.stringify(licenses);
+      // $log.log(logMsg);
+
+      var result = true;
+
+      licenses.forEach(
+        function checkLicense(license) {
+          var funcName = "checkLicense()";
+          var logMsg = "";
+
+          if (
+            ("CONFERENCING" == license.licenseType) ||
+            ("CMR" == license.licenseType)
+          ) {
+
+            if (siteUrl == license.siteUrl) {
+              logMsg = funcName + "\n" +
+                "siteUrl=" + siteUrl + "\n" +
+                "license.licenseType=" + license.licenseType + "\n" +
+                "license.siteUrl=" + license.siteUrl + "\n" +
+                "license.isCI=" + license.isCI;
+              // $log.log(logMsg);
+
+              if (null != license.isCI) {
+                result = license.isCI;
+              }
+            }
+          }
+        } // checkLicense()
+      ); // licenses.forEach()
+
+      return result;
+    }; // isCIEnabledSite()
 
     obj.getSiteName = function (siteUrl) {
       var funcName = "getSiteName()";
@@ -271,7 +313,7 @@
                 var licenseInfo = {
                   'webexSite': webexSite,
                   'offerCode': offerCode,
-                  'capacity': capacity
+                  'capacity': capacity,
                 };
 
                 allSitesLicenseInfo.push(licenseInfo);

@@ -16,7 +16,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
     sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t31Info.siteUrl;
   }
 
-  describe(sitesettings.testInfo.describeText, function () {
+  xdescribe(sitesettings.testInfo.describeText, function () {
     var setup = false;
 
     if (sitesettings.testInfo.testType == "T31") {

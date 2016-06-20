@@ -8,8 +8,8 @@
         <span ng-if="bctrl.isPartner"  translate="branding.partnerInfo"></span>
       </div>
     </div>
-    <div class="row form-spacing collapse-both">
-      <div class="small-12 columns form-group">
+    <div class="small-12 columns form-spacing collapse-both">
+      <div class="form-group">
         <div class="cs-radio-group">
           <div class="cs-input-group cs-input-radio">
             <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
@@ -39,14 +39,14 @@
                 </button> -->
               </div>
             </label>
-            <p translate="branding.logoUploadNote" class="body-small radio-input-spacing"></p>
+            <p translate="branding.logoUploadNote" class="columns small-10 body-small radio-input-spacing"></p>
           </div>
         </div>
       </div>
     </div>
-    <div class="row form-spacing" ng-if="bctrl.isPartner">
+    <div class="small-12 columns form-spacing" ng-if="bctrl.isPartner">
       <h4 translate="branding.tenantTitle"></h4>
-      <div class="small-12 columns cs-checkbox-group">
+      <div class="cs-checkbox-group">
         <input
           type="checkbox"
           id="allowCustomerLogo"

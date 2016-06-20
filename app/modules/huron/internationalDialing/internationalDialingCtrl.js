@@ -6,7 +6,7 @@
     .controller('InternationalDialingInfoCtrl', InternationalDialingInfoCtrl);
 
   /* @ngInject */
-  function InternationalDialingInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, Notification, InternationalDialing) {
+  function InternationalDialingInfoCtrl($stateParams, $translate, Notification, InternationalDialing) {
     var vm = this;
 
     var cbUseGlobal = {
