@@ -1496,7 +1496,7 @@
     },
     "reportsList": {
       "name": "Name",
-      "createdAt": "Created At",
+      "dateGenerated": "Date Generated",
       "roomId": "Room ID",
       "dateRange": "Date Range",
       "state": "State",

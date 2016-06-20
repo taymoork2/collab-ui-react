@@ -98,7 +98,7 @@
         width: '*'
       }, {
         field: 'createdTime',
-        displayName: $translate.instant("ediscovery.reportsList.createdAt"),
+        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '*'
