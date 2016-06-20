@@ -18,6 +18,7 @@
     vm.skipDevices = _trialDeviceData.skipDevices;
     vm.deviceTrialTip = $translate.instant('trialModal.call.deviceTrialTip');
     vm.limitsError = false;
+    vm.activeDeviceLink = $translate.instant('trialModal.call.activeDeviceTrial');
 
     vm.isEditing = _.get($stateParams, 'isEditing');
     vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
@@ -463,7 +464,6 @@
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
-
       if (!_.isUndefined(limitsPromise)) {
         limitsPromise.then(function (data) {
             vm.activeTrials = data.activeDeviceTrials;

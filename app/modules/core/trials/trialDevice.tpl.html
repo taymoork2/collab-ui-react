@@ -10,8 +10,7 @@
 
 <!-- body -->
 <div class="modal-body trials">
-  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
-  <!-- error state - cannot add more devices -->
+<!-- error state - cannot add more devices -->
   <div class="messagebox-backdrop" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
     <div class="message-box splash-msg">
       <div class="splash-msg__title">
@@ -23,12 +22,21 @@
         </div>
         <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
         <div ng-if="!callTrial.limitsError">
-          <p translate="trialModal.call.deviceTrialLimitReached" translate-values="{number: callTrial.maxTrials}"></p>
-          <p translate="trialModal.call.deviceTrialLimitHelp"></p>
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitReachedA"></span>
+            <span>
+              <a ng-href translate="trialModal.call.activeDeviceTrial" tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false"></a>
+            </span>
+            <span translate="trialModal.call.deviceTrialLimitReachedB" translate-values="{number: callTrial.maxTrials}"></span>
+          </p>
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitHelp"></span>
+          </p>
         </div>
       </div>
     </div>
   </div>
+  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
     <!-- normal state -->
   <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
     <!-- select devices -->
@@ -75,10 +83,21 @@
     ng-disabled="trial.loading"
     translate="common.back">
   </button>
+    <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
     ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid || !callTrial.getTotalQuantity()>0">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>
   </button>
+  </div>
+
+  <div ng-if="!callTrial.canAddMoreDevices && callTrial.limitReached">
+  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+    ng-click="callTrial.skip(true); trial.nextStep()" >
+      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+  </button>
+  </div>
+  </div>
 </div>
