@@ -235,7 +235,7 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _FeatureToggleService_, _Authinfo_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _Authinfo_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -243,7 +243,6 @@ describe('Controller: OverviewCtrl', function () {
     $state = _$state_;
     Log = _Log_;
     Config = _Config_;
-    FeatureToggleService = _FeatureToggleService_;
     Authinfo = _Authinfo_;
 
     ServiceDescriptor = {
@@ -275,7 +274,6 @@ describe('Controller: OverviewCtrl', function () {
       healthMonitor: function (eventHandler) {}
     };
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
         siteUrl: 'fakesite1'

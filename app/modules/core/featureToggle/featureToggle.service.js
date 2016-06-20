@@ -24,7 +24,6 @@
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasDirectCustomerBranding: 'atlas-direct-customer-branding',
       atlasTrialConversion: 'atlas-trial-conversion',
-      atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronAASchedules: 'huronAASchedules',

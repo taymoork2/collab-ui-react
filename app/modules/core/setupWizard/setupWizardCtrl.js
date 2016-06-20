@@ -102,12 +102,12 @@
 
     $scope.isDirSyncEnabled = false;
     $scope.isTelstraCsbEnabled = false;
+    $scope.isCSB = Authinfo.isCSB();
 
     if (Authinfo.isCustomerAdmin()) {
-      $q.all([FeatureToggleService.supportsDirSync(), FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)])
+      $q.all(FeatureToggleService.supportsDirSync())
         .then(function (result) {
-          $scope.isDirSyncEnabled = result[0];
-          $scope.isCSB = Authinfo.isCSB() && result[1];
+          $scope.isDirSyncEnabled = result;
         }).finally(init);
     }
 

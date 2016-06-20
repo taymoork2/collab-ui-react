@@ -20,7 +20,7 @@
     vm.atlasInvitePendingStatusToggle = false;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
-    vm.isCSB = false;
+    vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -60,12 +60,9 @@
       userId: '@userId'
     });
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
-      ])
+    $q.all(FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus))
       .then(function (result) {
-        vm.isCSB = Authinfo.isCSB() && result[0];
-        vm.atlasInvitePendingStatusToggle = result[1];
+        vm.atlasInvitePendingStatusToggle = result;
       }).finally(init);
 
     function init() {
