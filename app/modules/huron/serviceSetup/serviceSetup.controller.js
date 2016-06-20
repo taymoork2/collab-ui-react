@@ -25,17 +25,6 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
 
-    var mohOptions = [{
-      label: $translate.instant('serviceSetupModal.ciscoDefault'),
-      value: 'ciscoDefault'
-    }, {
-      label: $translate.instant('serviceSetupModal.fall'),
-      value: 'fall'
-    }, {
-      label: $translate.instant('serviceSetupModal.winter'),
-      value: 'winter'
-    }];
-
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -63,7 +52,6 @@
       previousLength: DEFAULT_EXT_LEN,
       //var to hold ranges in view display
       displayNumberRanges: [],
-      globalMOH: mohOptions[0],
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
@@ -589,22 +577,6 @@
             });
           }
         }]
-      }
-    }, {
-      key: 'globalMOH',
-      type: 'select',
-      className: 'service-setup',
-      templateOptions: {
-        inputClass: 'service-setup-moh',
-        label: $translate.instant('serviceSetupModal.globalMOH'),
-        description: $translate.instant('serviceSetupModal.mohDescription'),
-        options: mohOptions,
-        labelfield: 'label',
-        valuefield: 'value',
-        disabled: true
-      },
-      hideExpression: function ($viewValue, $modelValue, scope) {
-        return !vm.firstTimeSetup;
       }
     }];
 
