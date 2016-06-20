@@ -21,6 +21,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
 
   beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {

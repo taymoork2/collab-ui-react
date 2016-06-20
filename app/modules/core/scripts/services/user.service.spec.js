@@ -3,15 +3,13 @@
 
 describe('User Service', function () {
 
+  beforeEach(module('Sunlight'));
   beforeEach(function () {
     bard.appModule('Huron');
-    bard.appModule('Sunlight');
-    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig', 'SunlightConfigService');
+    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
     spyOn($rootScope, '$broadcast').and.returnValue({});
     spyOn(Authinfo, 'getOrgId').and.returnValue('abc123efg456');
   });
-
-  //beforeEach(module('Sunlight'));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();

@@ -14,6 +14,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
   beforeEach(inject(dependencies));
   beforeEach(initDependencySpies);

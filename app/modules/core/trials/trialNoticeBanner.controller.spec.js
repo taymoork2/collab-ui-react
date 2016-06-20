@@ -44,6 +44,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   /* @ngInject */
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _Authinfo_, _EmailService_,

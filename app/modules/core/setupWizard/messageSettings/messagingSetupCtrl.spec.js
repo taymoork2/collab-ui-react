@@ -3,6 +3,7 @@
 describe('Controller: messagingSetupCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification;
 

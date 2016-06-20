@@ -8,6 +8,7 @@
     var SEARCH_FILTER = '#searchFilter';
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
+    beforeEach(module('Sunlight'));
 
     beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
       $scope = $rootScope.$new();

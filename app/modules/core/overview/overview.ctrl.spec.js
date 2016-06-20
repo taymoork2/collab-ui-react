@@ -5,6 +5,7 @@ describe('Controller: OverviewCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo, FeatureToggleService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');

@@ -12,6 +12,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _InternationalDialing_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();

@@ -16,6 +16,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Huron'));
 
+  beforeEach(module('Sunlight'));
+
   beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {

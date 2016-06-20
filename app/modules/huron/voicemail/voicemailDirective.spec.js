@@ -5,6 +5,7 @@ describe('Directive: ucVoicemail', function () {
   var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _TelephonyInfoService_) {
     $compile = _$compile_;

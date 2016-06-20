@@ -14,6 +14,7 @@ describe('UserListCtrl: Ctrl', function () {
   getOrgJson = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();

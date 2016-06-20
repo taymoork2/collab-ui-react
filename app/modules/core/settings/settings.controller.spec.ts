@@ -8,6 +8,7 @@ namespace globalsettings {
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     function dependencies(_$controller_, $rootScope, _Authinfo_, _FeatureToggleService_, _Orgservice_, _$q_) {
       $controller = _$controller_;
