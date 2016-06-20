@@ -54,7 +54,6 @@
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       preregisterCluster(vm.hostname)
-        .then(_.partial(provisionConnector, 'c_mgmt'))
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(pregistrationSucceeded)

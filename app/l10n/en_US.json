@@ -1148,7 +1148,7 @@
       "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
     },
     "addResourceDialog": {
-      "title": "Add Resource for {{ServiceName}}",
+      "title": "{{ServiceName}} Setup",
       "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
       "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
@@ -1192,6 +1192,7 @@
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
+      "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
@@ -1319,20 +1320,21 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
-      "upgradeScheduleHeader": "Upgrade Schedule",
-      "upgradeScheduleParagraph": "Select the upgrade schedule for this cluster: the connectors will upgrade automatically in the selected time when  an upgrade is available.",
+      "upgradeScheduleHeader": "Upgrade",
+      "upgradeScheduleSubHeader": "Upgrade Schedule",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
       "releasechannelReleasechannel": "Release Channel",
       "deactivateServicesHeader": "Deactivate Services",
-      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
-      "deactivateServicesCalendarButton": "Deactivate Calendar",
-      "deactivateServicesCallButton": "Deactivate Call",
-      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterHeader": "Deregister Cluster",
-      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
-      "deregisterClusterButton": "Deregister",
+      "deactivateServicesParagraph": "Deactivating {{ServiceName}} will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarHeader": "Deactivate Calendar",
+      "deactivateServicesCallHeader": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Remove Cluster",
+      "deregisterClusterSubHeader": "Remove {{ClusterName}}",
+      "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
+      "deregisterClusterButton": "Remove",
       "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
@@ -1382,12 +1384,12 @@
         "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
-        "title": "Automatic Software Upgrades",
-        "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule",
+        "title": "Upgrade Schedule",
+        "description": "Select the upgrade schedule for this cluster. All connectors will automatically upgrade to the latest version at this time.",
+        "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
-        "postponeAction": "Postpone schedule",
-        "postponeModalTitle": "Postpone the upgrade",
+        "postponeAction": "Postpone",
+        "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
 
       }
