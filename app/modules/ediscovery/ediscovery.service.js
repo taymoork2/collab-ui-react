@@ -140,7 +140,7 @@
     function downloadReport(report) {
       return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer'
-      }).then(function (data) {
+      }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
           type: 'application/zip'
