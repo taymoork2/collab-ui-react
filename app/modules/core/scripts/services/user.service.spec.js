@@ -2,7 +2,6 @@
 'use strict';
 
 describe('User Service', function () {
-
   beforeEach(module('Sunlight'));
   beforeEach(function () {
     bard.appModule('Huron');
@@ -84,7 +83,18 @@ describe('User Service', function () {
       "idOperation": "ADD",
       "properties": {}
     }];
-    $httpBackend.expectPOST(UrlConfig.getSunlightConfigServiceUrl() + "/user/").respond(200);
+    var onboardResponse = {
+      "userResponse": [{
+        "uuid": "f0b91ac9-8ba4-4607-afab-03fbc89b25fd",
+        "email": "vnvn@khkkk.com",
+        "displayName": "",
+        "status": 200,
+        "httpStatus": 201
+      }],
+      "status": 200
+    };
+    $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard').respond(200, onboardResponse);
+    $httpBackend.expectPOST(UrlConfig.getSunlightConfigServiceUrl() + '/user').respond(200);
     Userservice.onboardUsers(usersDataArray, entitlements, licenses);
     $httpBackend.flush();
   });
