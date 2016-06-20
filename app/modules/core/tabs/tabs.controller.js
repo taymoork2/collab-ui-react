@@ -37,12 +37,12 @@
     }
 
     function resetActiveTabState() {
-      _.forEach($scope.tabs, function (tab) {
+      _.forEach(vm.tabs, function (tab) {
         tab.isActive = false;
       });
     }
 
-    function updateScopeTabs() {
+    function filterTabsOnFeaturesAndSetActiveTab() {
       vm.tabs = filterFeatureToggledTabs(vm.unfilteredTabs, vm.features);
       setActiveTab();
     }
@@ -51,7 +51,7 @@
       vm.unfilteredTabs = initializeTabs();
       vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
       getFeatureToggles(vm.features);
-      updateScopeTabs();
+      filterTabsOnFeaturesAndSetActiveTab();
     }
 
     function initializeTabs() {
@@ -65,7 +65,7 @@
           // Filter allowed states or tabs with subPages
           return isAllowedTab(tab) || _.size(tab.subPages);
         })
-        .forEach(function (tab) {
+        .forEach(function (tab) { 
           tab.title = $translate.instant(tab.title);
           _.forEach(tab.subPages, function (subTab) {
             subTab.title = $translate.instant(subTab.title);
@@ -119,7 +119,7 @@
             });
         });
       $q.all(toggles).then(function () {
-        updateScopeTabs();
+        filterTabsOnFeaturesAndSetActiveTab();
       });
     }
   }

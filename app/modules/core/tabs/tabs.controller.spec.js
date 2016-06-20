@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  describe('Controller: TabsCtrl', function () {
+  fdescribe('Controller: TabsCtrl', function () {
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $httpBackend, $provide, $injector;
     var userService = {};
     // var AuthinfoService;
@@ -41,8 +41,6 @@
     beforeEach(module(function (_$provide_) {
       $provide = _$provide_;
       $provide.value("FeatureToggleService", featureToggleService);
-
-      //$provide.value("HuronCustomerFeatureToggleService", huronFeature);
     }));
 
     beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$httpBackend_, _$injector_) {
@@ -57,13 +55,6 @@
       UrlConfig = _UrlConfig_;
       $httpBackend = _$httpBackend_;
       $injector = _$injector_;
-      // Authinfo = function () {
-      //   return injector.get('Authinfo');
-      // };
-
-      // AuthinfoService = function () {
-      //   return $injector.get('Authinfo');
-      // };
 
       tabConfig = [{
         tab: 'tab1',
@@ -93,9 +84,6 @@
       }];
 
       spyOn($location, 'path');
-      // spyOn(Authinfo, 'getTabs').and.returnValue(tabConfig);
-
-      // initTabsController();
       $provide.value('tabConfig', tabConfig);
       states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
     }));
@@ -135,17 +123,16 @@
                 ciService: 'foo',
                 sqService: 'bar',
               }],
-              roles: ['User','WX2_User']
+              roles: ['User', 'WX2_User']
             });
           $httpBackend
             .expectGET('msn/orgs/1337/cisync/')
             .respond(200, {});
-          // Authinfo.initialize = sinon.stub();
         });
         it('will initialize tabs if not admin', function (done) {
           tabConfig.push({
             tab: 'tabbover',
-            state:'overview'
+            state: 'overview'
           });
           Auth.authorize().then(function () {
 
@@ -187,7 +174,7 @@
             .respond(200, {});
 
           Auth.authorize().then(function () {
-            initTabsController({},true);
+            initTabsController({}, true);
             _.defer(done);
           });
 
@@ -215,8 +202,9 @@
         _.remove(tabConfig, {
           state: 'tab1'
         });
+
         initTabsController({Authinfo: Authinfo});
-        expect(tabsController.tabs).toEqual(tabConfig);
+        expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should remove a single subPage that is not allowed', function () {
@@ -229,7 +217,7 @@
           state: 'subTab1'
         });
         initTabsController({Authinfo: Authinfo});
-        expect(tabsController.tabs).toEqual(tabConfig);
+        expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should remove a subPage parent if all subPages are not allowed', function () {
@@ -242,7 +230,7 @@
           tab: 'tabMenu'
         });
         initTabsController({Authinfo: Authinfo});
-        expect(tabsController.tabs).toEqual(tabConfig);
+        expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should keep tab structure if all pages are allowed', function () {
@@ -252,7 +240,7 @@
         var Authinfo = setupUser();
 
         initTabsController({Authinfo: Authinfo});
-        expect(tabsController.tabs).toEqual(tabConfig);
+        expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
       it('should remove hideProd tabs and subPages of hideProd tabs if in production', function () {
@@ -271,16 +259,15 @@
         });
 
         initTabsController({Authinfo: Authinfo});
-        expect(tabsController.tabs).toEqual(tabConfig);
+        expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
     });
 
     //end from authinfo
-
     it('should initialize with tabs', function () {
       spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
       initTabsController();
-      expect(tabsController.tabs).toEqual(tabConfig);
+      expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
     });
 
     it('should not have active tabs without a location', function () {
@@ -299,12 +286,29 @@
       expect(hasActiveTab('tabMenu')).toBeFalsy();
     });
 
-    it('should update active subPage tab on state change location match', function () {
+    it('should clear active tab on state change ', function () {
       spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
-      $location.path.and.returnValue('subTab1Path');
+      $location.path.and.returnValue('tab1Path');
       initTabsController();
       broadcastEvent('$stateChangeSuccess');
-      
+
+      expect(hasActiveTab('tab1')).toBeTruthy();
+      expect(hasActiveTab('tabMenu')).toBeFalsy();
+
+
+      $location.path.and.returnValue('unknown-tab-path');
+      broadcastEvent('$stateChangeSuccess');
+      expect(hasActiveTab('tab1')).toBeFalsy();
+      expect(hasActiveTab('tabMenu')).toBeFalsy();
+    });
+
+    it('should update active subPage tab on state change location match', function () {
+      spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+      $location.path.and.returnValue('dummy-path');
+      initTabsController();
+
+      $location.path.and.returnValue('subTab1Path');
+      broadcastEvent('$stateChangeSuccess');
       expect(hasActiveTab('tab1')).toBeFalsy();
       expect(hasActiveTab('tabMenu')).toBeTruthy();
     });
@@ -399,6 +403,13 @@
       override = override || {};
       var Config = $injector.get('Config');
       angular.extend(Config, defaultConfig, override);
+    }
+
+    function setAllTabsActive(tabs, activeState) {
+      return _.map(tabs, function (tab) {
+        tab.isActive = activeState;
+        return tab;
+      });
     }
   });
 })();
