@@ -69,7 +69,6 @@
         ftswCompanyVoicemailNumber: undefined
       },
       ftswSteeringDigit: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -307,11 +306,6 @@
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.model.disableExtensions;
-        },
-        // hide function added to expressionProperties because hideExpression does not dependably hide
-        // the element on load, and will evaluate only after the model updates after first load
-        'hideExpression': function () {
-          return vm.model.hideExtensionLength;
         }
       }
     }, {
@@ -643,9 +637,6 @@
         // Get the timezone feature toggle setting
         return enableTimeZoneFeatureToggle();
       }).then(function () {
-        // Get the extemsion length feature toggle setting
-        return enableExtensionLengthFeatureToggle();
-      }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
       }).then(function () {
@@ -739,14 +730,6 @@
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
       });
     }
 

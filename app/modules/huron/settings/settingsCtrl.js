@@ -93,7 +93,6 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -284,9 +283,6 @@
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
         }
-      },
-      hideExpression: function () {
-        return vm.model.hideExtensionLength;
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -1266,7 +1262,6 @@
 
       var promises = [];
       promises.push(enableTimeZoneFeatureToggle());
-      promises.push(enableExtensionLengthFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1538,14 +1533,6 @@
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
       });
     }
 
