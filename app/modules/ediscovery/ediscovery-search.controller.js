@@ -15,7 +15,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
-    vm.downloadReport = EdiscoveryService.downloadReport;
+    vm.downloadReport = downloadReport;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
@@ -229,6 +229,14 @@
         });
         break;
       }
+    }
+
+    function downloadReport(report) {
+      vm.downloadingReport = true;
+      EdiscoveryService.downloadReport(report)
+        .finally(function () {
+          vm.downloadingReport = false;
+        });
     }
   }
   angular

@@ -334,7 +334,8 @@
         'metrics',
         'reports-metrics',
         'media-service',
-        'connector-details'
+        'connector-details',
+        'connector-details-v2'
       ],
       'webex-messenger': [
         'messenger'

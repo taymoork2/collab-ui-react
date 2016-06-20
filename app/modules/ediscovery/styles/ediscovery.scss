@@ -32,15 +32,9 @@
         a {
           color: #AEAEAF;
           font-size: 1.0625rem;
-          //border-bottom: 3px solid transparent;
-          //padding-bottom: 0.5rem;
         }
         a.active {
-          //border-bottom-color: $page-header-nav-active-border-bottom-color;
           color: $page-header-nav-active-color;
-        }
-        a:hover {
-          //border-bottom-color: #AEAEAF;
         }
         a:focus {
           box-shadow: inset 0 0 0 0;
@@ -73,12 +67,6 @@
       padding-left: 1rem;
     }
 
-    span.icon {
-      font-size: 20px;
-      line-height: 30px;
-      cursor: pointer;
-    }
-
     font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     a:focus {
@@ -92,14 +80,26 @@
   }
 
   .ediscovery-search {
+    height: 100vh;
     background-color: $brand-white;
     padding-top: 9rem;
     @media only screen and (max-height: 800px) {
       padding-top: 7rem;
     }
+    div.search-result-area {
+      background-color: $gray-light-4;
+      min-height: calc(100% - 145px);
+      padding-top: 2.25rem;
+      @media only screen and (max-width: 640px) {
+        padding-top: 1rem;
+      }
+    }
+    div.search-error {
+      padding-top: 2rem;
+    }
     .search-spinner {
       position: relative;
-      top: 1rem;
+      top: 2rem;
       font-size: 3rem;
     }
     .cs-tooltip {
@@ -114,6 +114,10 @@
     }
     .ediscovery-search-bar {
       text-align: center;
+      padding-bottom: 3rem;
+      @media only screen and (max-width: 640px) {
+        padding-bottom: 1rem;
+      }
       .pointer {
         cursor: pointer;
       }
@@ -190,7 +194,7 @@
       .search-tip {
         color: $gray-light-1;
         font-style: italic;
-        padding: 0.5rem;
+        padding-top: 0.5rem;
       }
     }
     .create-report {

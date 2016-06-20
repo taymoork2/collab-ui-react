@@ -138,7 +138,7 @@
     }
 
     function downloadReport(report) {
-      $http.get(report.downloadUrl, {
+      return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer'
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';

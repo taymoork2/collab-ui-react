@@ -13,7 +13,9 @@
 
     <p class="search-tip" translate="ediscovery.searchTip"></p>
 
-    <span ng-if="ediscoverySearchCtrl.error">{{ediscoverySearchCtrl.error}}</span>
+    <div class="search-error" ng-if="ediscoverySearchCtrl.error">
+      <span>{{ediscoverySearchCtrl.error}}</span>
+    </div>
 
     <div ng-show="ediscoverySearchCtrl.searchingForRoom">
       <span class="search-spinner">
@@ -22,6 +24,6 @@
     </div>
   </div>
 
-  <div ng-show="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
+  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
 
 </div>

@@ -1,5 +1,5 @@
 <div class="row" ng-if="ediscoverySearchCtrl.roomInfo">
-  <div class="columns small-12 centered">
+  <div class="columns small-12 small-centered">
     <cs-card class="full">
       <article>
         <div class="row search-result">
@@ -116,9 +116,12 @@
               <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state === 'COMPLETED'">
                 <div class="columns small-12 medium-12 large-6">
                   <div class="input-section-last">
-                    <button ng-cloak type="button" class="btn btn--primary"
-                            translate="ediscovery.search.downloadReport"
-                            ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)"></button>
+                    <button cs-btn
+                            class="btn btn--primary"
+                            loading="ediscoverySearchCtrl.downloadingReport"
+                            ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
+                      <span translate="ediscovery.search.downloadReport"></span>
+                    </button>
                   </div>
                 </div>
               </div>
