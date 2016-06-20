@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+  function UserListCtrl($rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -83,7 +83,7 @@
 
     $scope.getUserList = getUserList;
 
-    $q.all(FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement))
+    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
       .then(function (result) {
         $scope.isCsvEnhancementToggled = result;
       });
