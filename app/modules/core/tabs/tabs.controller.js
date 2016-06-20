@@ -10,19 +10,12 @@
     vm.features = [];
     vm.tabs = [];
     initTabs();
-
-    console.log('after init', $scope.ttt, $scope.tykk, 'root', $rootScope.ttt, $rootScope.tykk, 'config',tabConfig,'tabs',vm.tabs);
+    
     $scope.$on('AuthinfoUpdated', initTabs);
     $rootScope.$on('TABS_UPDATED', initTabs);
-    $rootScope.$on('$stateChangeSuccess', stateChangeSuccess);
-
-    function stateChangeSuccess() {
-      console.log("state change success");
-      setActiveTab();
-    }
+    $rootScope.$on('$stateChangeSuccess', setActiveTab);
 
     function setActiveTab() {
-      console.log('setActiveTab','location',$location.path());
       resetActiveTabState();
       var tab = _.find(vm.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
@@ -55,7 +48,6 @@
     }
 
     function initTabs() {
-      console.log('init tab');
       vm.unfilteredTabs = initializeTabs();
       vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
       getFeatureToggles(vm.features);

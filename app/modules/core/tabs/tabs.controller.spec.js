@@ -107,8 +107,6 @@
         $scope: $scope,
         $rootScope: injectedRootScope
       }, args ? args : {});
-      console.log('init con', v.$scope.ttt, v.$scope.tykk, 'root', v.$rootScope.ttt, v.$rootScope.tykk);
-      // console.log('init con',v);
       tabsController = $controller('TabsCtrl',
         v
       );
@@ -152,7 +150,6 @@
           Auth.authorize().then(function () {
 
             initTabsController({}, true);
-            console.log(tabsController.tabs);
             expect(tabsController.tabs).toBeDefined();
             expect(tabsController.tabs.length).toBeGreaterThan(0);
             _.defer(done);
@@ -283,14 +280,12 @@
     it('should initialize with tabs', function () {
       spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
       initTabsController();
-      console.log(tabsController.tabs);
       expect(tabsController.tabs).toEqual(tabConfig);
     });
 
     it('should not have active tabs without a location', function () {
       spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
       initTabsController();
-      console.log(tabsController.tabs);
       expect(hasActiveTab()).toBeFalsy();
     });
 
@@ -309,8 +304,7 @@
       $location.path.and.returnValue('subTab1Path');
       initTabsController();
       broadcastEvent('$stateChangeSuccess');
-
-      console.log(tabsController.tabs);
+      
       expect(hasActiveTab('tab1')).toBeFalsy();
       expect(hasActiveTab('tabMenu')).toBeTruthy();
     });
@@ -356,7 +350,6 @@
         initTabsController();
         broadcastEvent('TABS_UPDATED');
         $scope.$apply();
-        console.log(tabsController.tabs);
         expect(_.some(tabsController.tabs, {
           tab: tab
         })).toBe(expectedResult);
@@ -379,14 +372,11 @@
     });
 
     function broadcastEvent(event) {
-
-      console.log("broadcast", event, $scope.ttt, $scope.tykk, 'root', injectedRootScope.ttt, injectedRootScope.tykk);
       injectedRootScope.$broadcast(event);
       injectedRootScope.$apply();
     }
 
     function hasActiveTab(name) {
-      console.log('has active', name, tabsController.tabs);
       if (name) {
         return _.some(tabsController.tabs, {
           tab: name,
