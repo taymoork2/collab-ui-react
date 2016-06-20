@@ -178,7 +178,7 @@
 
         'model.licenseCount': function ($viewValue, $modelValue) {
           if (hasUserServices()) {
-            return ($viewValue > 0) ? $viewValue : vm.preset.licenseCount;
+            return ($viewValue === 0) ? vm.preset.licenseCount : $viewValue;
           } else {
             return 0;
           }
