@@ -233,22 +233,20 @@
   }
 
   .state-dropdown div.dropdown-menu {
-    max-height: 12rem;
+    max-height: vr-adjust(192px);
   }
   
   .did-input .tokenfield {
-    min-height: rem(144px);
+    min-height: vr-adjust(144px);
   }
   
   .inline-row {
-    > div {
-      display: inline-block;
-    }
+    display: inline-block;
   }
   
   .skip_numbers {
     color: $gray-dark-1;
-    padding-right: 1rem;
+    @include vr-spacing(p, 1);
     &:hover {
       color: $color-primary-base;
     }

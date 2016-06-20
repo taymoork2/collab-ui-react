@@ -124,48 +124,45 @@
     }];
 
     vm.pstnStateAreaFields = [{
-      className: 'inline-row',
-      fieldGroup: [{
-        model: vm.trialData.details.pstnNumberInfo,
-        key: 'state',
-        type: 'select',
-        className: 'medium-8 state-dropdown',
-        templateOptions: {
-          inputClass: 'medium-11',
-          label: $translate.instant('pstnSetup.state'),
-          labelfield: 'name',
-          valuefield: 'abbreviation',
-          onChangeFn: getStateInventory,
-          options: [],
-          filter: true
-        },
-        controller: /* @ngInject */ function ($scope) {
-          TerminusStateService.query().$promise.then(function (states) {
-            $scope.to.options = states;
-          });
-        }
-      }, {
-        model: vm.trialData.details.pstnNumberInfo,
-        key: 'areaCode',
-        id: 'areaCode',
-        type: 'select',
-        className: 'medium-4',
-        templateOptions: {
-          label: $translate.instant('pstnSetup.areaCode'),
-          labelfield: 'code',
-          valuefield: 'code',
-          options: [],
-          onChangeFn: searchCarrierInventory
-        },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.$watchCollection(function () {
-            return vm.areaCodeOptions;
-          }, function (newAreaCodes) {
-            newAreaCodes = newAreaCodes || [];
-            $scope.to.options = _.sortBy(newAreaCodes, 'code');
-          });
-        }
-      }]
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 state-dropdown inline-row left',
+      templateOptions: {
+        inputClass: 'medium-11',
+        label: $translate.instant('pstnSetup.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        onChangeFn: getStateInventory,
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      }
+    }, {
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'areaCode',
+      id: 'areaCode',
+      type: 'select',
+      className: 'medium-4 inline-row left',
+      templateOptions: {
+        label: $translate.instant('pstnSetup.areaCode'),
+        labelfield: 'code',
+        valuefield: 'code',
+        options: [],
+        onChangeFn: searchCarrierInventory
+      },
+      controller: /* @ngInject */ function ($scope) {
+        $scope.$watchCollection(function () {
+          return vm.areaCodeOptions;
+        }, function (newAreaCodes) {
+          newAreaCodes = newAreaCodes || [];
+          $scope.to.options = _.sortBy(newAreaCodes, 'code');
+        });
+      }
     }];
 
     init();

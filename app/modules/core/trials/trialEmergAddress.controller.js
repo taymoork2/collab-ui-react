@@ -19,27 +19,24 @@
     vm.skip = skip;
 
     vm.emergencyAddressFields = [{
-      className: 'inline-row',
-      fieldGroup: [{
-        model: vm.trial.details.emergAddr,
-        key: 'streetAddress',
-        type: 'input',
-        className: 'medium-9',
-        templateOptions: {
-          labelfield: 'label',
-          label: $translate.instant('trialModal.pstn.address'),
-          inputClass: 'medium-11'
-        }
-      }, {
-        model: vm.trial.details.emergAddr,
-        key: 'unit',
-        type: 'input',
-        className: 'medium-3',
-        templateOptions: {
-          labelfield: 'label',
-          label: $translate.instant('trialModal.pstn.unit')
-        }
-      }]
+      model: vm.trial.details.emergAddr,
+      key: 'streetAddress',
+      type: 'input',
+      className: 'medium-9 inline-row',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.address'),
+        inputClass: 'medium-11'
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'unit',
+      type: 'input',
+      className: 'medium-3 inline-row',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.unit')
+      }
     }, {
       model: vm.trial.details.emergAddr,
       key: 'city',
@@ -50,36 +47,33 @@
         label: $translate.instant('trialModal.pstn.city'),
       }
     }, {
-      className: 'inline-row',
-      fieldGroup: [{
-        model: vm.trial.details.emergAddr,
-        key: 'state',
-        type: 'select',
-        className: 'medium-8',
-        templateOptions: {
-          label: $translate.instant('trialModal.pstn.state'),
-          labelfield: 'name',
-          valuefield: 'abbreviation',
-          inputClass: 'medium-11',
-          options: [],
-          filter: true
-        },
-        controller: /* @ngInject */ function ($scope) {
-          TerminusStateService.query().$promise.then(function (states) {
-            $scope.to.options = states;
-          });
-        }
-      }, {
-        model: vm.trial.details.emergAddr,
-        key: 'zip',
-        type: 'input',
-        className: 'medium-4',
-        templateOptions: {
-          labelfield: 'label',
-          label: $translate.instant('trialModal.pstn.zip'),
-          onBlur: validateAddress
-        }
-      }]
+      model: vm.trial.details.emergAddr,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 inline-row left',
+      templateOptions: {
+        label: $translate.instant('trialModal.pstn.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        inputClass: 'medium-11',
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'zip',
+      type: 'input',
+      className: 'medium-4 inline-row',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.zip'),
+        onBlur: validateAddress
+      }
     }];
 
     function validateAddress() {
