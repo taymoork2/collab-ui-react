@@ -3269,12 +3269,7 @@
     "supportInfo": "Se si fornisce supporto agli utenti, inserire i parametri di supporto di seguito. Questi parametri verranno visualizzati nella sezione Opzioni di supporto dell'applicazione Spark.",
     "supportAccessTitle": "Accesso supporto",
     "supportAccessInfo": "Questa impostazione fornisce a Cisco o al partner l'accesso in sola lettura alla propria organizzazione. Non consente modifiche ai dettagli dell'organizzazione.",
-    "supportAccessCheckbox": "Consentire al supporto di Cisco o del partner l'accesso in sola lettura alla propria organizzazione.",
-    "crashReportTitle": "Report arresto anomalo automatico",
-    "crashReportText": "In caso di arresto anomalo di un endpoint, i log verranno caricati in Cisco per aiutare a migliorare la qualità del servizio.",
-    "crashReportCheckboxLabel": "Abilita report Arresto anomalo automatico",
-    "crashReportTooltipDescription": "Cosa contengono questi report?",
-    "crashReportTooltip": "I report di arresto anomalo possono includere identificativi di utente e organizzazione, stringhe di agenti utente, stringhe di browser di agenti puri, indirizzi IP client e indirizzo MAC dispositivo utente. Tutte le informazioni verranno considerate riservate e utilizzate esclusivamente per il miglioramento della qualità dei prodotti."
+    "supportAccessCheckbox": "Consentire al supporto di Cisco o del partner l'accesso in sola lettura alla propria organizzazione."
   },
   "fileUpload": {
     "uploading": "Caricamento file",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Questa impostazione fornisce al supporto Cisco o del partner l'accesso in sola lettura all'organizzazione. Non consente modifiche ai dettagli dell'organizzazione.",
       "allowReadOnlyOrgAccess": "Consenti a supporto di Cisco o del partner l'accesso in sola lettura all'organizzazione",
       "usageDataHeader": "Dati d'uso inviati a Partner Cisco",
-      "usageDataDescription": "Condividere dati su qualità di servizio e partecipazione con il Partner Cisco per consentire un supporto del partner di livello superiore."
+      "usageDataDescription": "Condividere dati su qualità di servizio e partecipazione con il Partner Cisco per consentire un supporto del partner di livello superiore.",
+      "crashReportTitle": "Report arresto anomalo automatico",
+      "crashReportText": "In caso di arresto anomalo di un endpoint, i log verranno caricati in Cisco per aiutare a migliorare la qualità del servizio.",
+      "crashReportCheckboxLabel": "Abilita report Arresto anomalo automatico",
+      "crashReportTooltipDescription": "Cosa contengono questi report?",
+      "crashReportTooltip": "I report di arresto anomalo possono includere identificativi di utente e organizzazione, stringhe di agenti utente, stringhe di browser di agenti puri, indirizzi IP client e indirizzo MAC dispositivo utente. Tutte le informazioni verranno considerate riservate e utilizzate esclusivamente per il miglioramento della qualità dei prodotti."
     },
     "security": {
       "title": "Sicurezza",

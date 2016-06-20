@@ -3269,12 +3269,7 @@
     "supportInfo": "Jika Anda memberikan dukungan untuk pengguna Anda, masukkan parameter dukungan di bawah ini. Paramater tersebut akan ditampilkan di bagian Opsi Dukungan di aplikasi Spark;",
     "supportAccessTitle": "Akses Dukungan",
     "supportAccessInfo": "Pengaturan memberikan Cisco atau Mitra akses baca saja ke organisasi Anda. Tidak mengizinkan pengubahan pada perincian organisasi Anda.",
-    "supportAccessCheckbox": "Izinkan akses baca saja untuk Cisco atau Dukungan Mitra ke organisasi Anda.",
-    "crashReportTitle": "Pelaporan Kerusakan Otomatis",
-    "crashReportText": "Jika titik ujung mengalami kerusakan, log akan diunggah ke Cisco untuk membantu meningkatkan kualitas layanan.",
-    "crashReportCheckboxLabel": "Aktifkan pelaporan Kerusakan Otomatis",
-    "crashReportTooltipDescription": "Apa isi laporan ini?",
-    "crashReportTooltip": "Laporan kerusakan dapat berisi identitas pengguna dan organisasi, string agen pengguna, string browser agen dibersihkan, alamat IP klien dan alamat MAC perangkat pengguna. Semua informasi akan ditangani secara rahasia dan digunakan semata-mata untuk peningkatan kualitas produk."
+    "supportAccessCheckbox": "Izinkan akses baca saja untuk Cisco atau Dukungan Mitra ke organisasi Anda."
   },
   "fileUpload": {
     "uploading": "Mengunggah File",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Pengaturan ini memberikan Cisco atau Dukungan Mitra akses baca saja ke organisasi Anda. Tidak diizinkan pengubahan pada perincian organisasi Anda.",
       "allowReadOnlyOrgAccess": "Izinkan akses baca saja untuk Cisco atau Dukungan Mitra ke organisasi Anda",
       "usageDataHeader": "Data Penggunaan Dikirim ke Mitra Cisco",
-      "usageDataDescription": "Bagikan kualitas layanan dan data keterlibatan dengan Mitra Cisco untuk mendapatkan tingkat dukungan mitra yang lebih tinggi."
+      "usageDataDescription": "Bagikan kualitas layanan dan data keterlibatan dengan Mitra Cisco untuk mendapatkan tingkat dukungan mitra yang lebih tinggi.",
+      "crashReportTitle": "Pelaporan Kerusakan Otomatis",
+      "crashReportText": "Jika titik ujung mengalami kerusakan, log akan diunggah ke Cisco untuk membantu meningkatkan kualitas layanan.",
+      "crashReportCheckboxLabel": "Aktifkan pelaporan Kerusakan Otomatis",
+      "crashReportTooltipDescription": "Apa isi laporan ini?",
+      "crashReportTooltip": "Laporan kerusakan dapat berisi identitas pengguna dan organisasi, string agen pengguna, string browser agen dibersihkan, alamat IP klien dan alamat MAC perangkat pengguna. Semua informasi akan ditangani secara rahasia dan digunakan semata-mata untuk peningkatan kualitas produk."
     },
     "security": {
       "title": "Keamanan",

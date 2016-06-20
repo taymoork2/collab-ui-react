@@ -3269,12 +3269,7 @@
     "supportInfo": "Si vous fournissez une assistance à vos utilisateurs, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés dans Options d'assistance dans l'applications Spark.",
     "supportAccessTitle": "Accès à l'assistance",
     "supportAccessInfo": "Ce paramètre donne à Cisco ou son partenaire l'accès en lecture seule uniquement à votre organisation. Il n'autorise pas les modifications effectuées dans les détails de votre organisation.",
-    "supportAccessCheckbox": "Autoriser l'accès en lecture seule à Cisco ou son partenaire à votre organisation.",
-    "crashReportTitle": "Rapport automatique de panne",
-    "crashReportText": "Si un point de destination tombe en panne, les journaux sont chargés vers Cisco pour faciliter l'amélioration de la qualité du service.",
-    "crashReportCheckboxLabel": "Activer les rapports de panne automatiques",
-    "crashReportTooltipDescription": "Que contiennent ces rapports ?",
-    "crashReportTooltip": "Les rapports de pannes peuvent inclure les identificateurs de l'utilisateur et de l'organisation, les chaines de caractères de l'agent de l'utilisateur, les chaines de caractères du navigateur de l'agent, les adresses IP du client et l'adresse MAC du périphérique du client. Toutes les informations seront traitées confidentiellement et utilisées uniquement pour l'amélioration de la qualité du produit."
+    "supportAccessCheckbox": "Autoriser l'accès en lecture seule à Cisco ou son partenaire à votre organisation."
   },
   "fileUpload": {
     "uploading": "Chargement du fichier",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Ce paramètre donne à Cisco ou son partenaire d'assistance l'accès en lecture seule à votre organisation. Il n'autorise aucune modification dans les détails de votre organisation.",
       "allowReadOnlyOrgAccess": "Autoriser l'accès en lecture seule à Cisco ou son partenaire d'assistance à votre organisation.",
       "usageDataHeader": "Données d'utilisation envoyées au partenaire Cisco",
-      "usageDataDescription": "Partagez la qualité de service et les données d'engagement avec votre partenaire Cisco pour permettre un plus haut niveau d'assistance du partenaire."
+      "usageDataDescription": "Partagez la qualité de service et les données d'engagement avec votre partenaire Cisco pour permettre un plus haut niveau d'assistance du partenaire.",
+      "crashReportTitle": "Rapport automatique de panne",
+      "crashReportText": "Si un point de destination tombe en panne, les journaux sont chargés vers Cisco pour faciliter l'amélioration de la qualité du service.",
+      "crashReportCheckboxLabel": "Activer les rapports de panne automatiques",
+      "crashReportTooltipDescription": "Que contiennent ces rapports ?",
+      "crashReportTooltip": "Les rapports de pannes peuvent inclure les identificateurs de l'utilisateur et de l'organisation, les chaines de caractères de l'agent de l'utilisateur, les chaines de caractères du navigateur de l'agent, les adresses IP du client et l'adresse MAC du périphérique du client. Toutes les informations seront traitées confidentiellement et utilisées uniquement pour l'amélioration de la qualité du produit."
     },
     "security": {
       "title": "Sécurité",
