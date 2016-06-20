@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: customerAdministratorDetailCtrl', function () {
+fdescribe('Controller: customerAdministratorDetailCtrl', function () {
   beforeEach(module('Core'));
   var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService;
   var modalDefer;
@@ -20,8 +20,25 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
 
     modalDefer = $q.defer();
     spyOn(CustomerAdministratorService, 'removeCustomerSalesAdmin').and.returnValue($q.when({}));
-    spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({}));
+    spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.when({  
+      userName:'frank.sinatra+sinatrahelpdesk@gmail.com',
+      emails:[  
+        {  
+           primary: true,
+           type: 'work',
+           value: 'frank.sinatra+sinatrahelpdesk@gmail.com'
+        }
+      ],
+      name:{  
+        givenName: 'Frank',
+        familyName: 'Sinatra'
+      },
+      displayName:'Frank Sinatra',
+      id:'d3434d78-26452-445a2-845d8-4c1816565b3f0a',
+      avatarSyncEnabled:false
+    }));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
+    spyOn(CustomerAdministratorService, 'patchSalesAdminRole').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
       data: {
         Resources: [{
@@ -92,6 +109,36 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       $scope.$apply();
 
       expect(controller.administrators.length).toEqual(2);
+    });
+  });
+
+  describe('addAdmin', function () {
+    beforeEach(initController);
+
+    it('must push administrator into View-Model administrators array', function () {
+      controller.users = [{fullName: 'Frank Sinatra', uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'}];
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').then(function() {
+        expect(controller.administrators[0].uuid).toEqual('d3434d78-26452-445a2-845d8-4c1816565b3f0a');
+        expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
+        expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
+        expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('addAdmin call failed', function () {
+    beforeEach(function () {
+      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.reject());
+      initController();
+    });
+
+    it('must throw Notification.error', function () {
+      controller.users = [{fullName: 'Frank Sinatra', uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a'}];
+      controller.administrators = [];
+      controller.addAdmin('Frank Sinatra').catch(function() {
+        expect(Notification.error()).toHaveBeenCalled();
+      });
     });
   });
 });

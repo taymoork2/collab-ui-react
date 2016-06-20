@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($http, $q, $stateParams, $log, $timeout, $translate, Authinfo, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($http, $q, $stateParams, $timeout, $translate, Authinfo, CustomerAdministratorService, Notification, ModalService) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;
@@ -20,7 +20,8 @@
     vm.administrators = [];
     vm.addAdmin = addAdmin;
     vm.removeSalesAdmin = removeSalesAdmin;
-    vm.filterList = filterList;
+    vm.timeoutVal = 500;
+    vm.filterList = _.debounce(filterList, vm.timeoutVal);
 
     init();
 
@@ -38,7 +39,7 @@
         fullName: fullName
       });
       if (_.has(user, 'uuid')) {
-        CustomerAdministratorService.addCustomerAdmin(customerOrgId, user.uuid)
+        return CustomerAdministratorService.addCustomerAdmin(customerOrgId, user.uuid)
           .then(addCustomerAdminToList)
           .catch(function () {
             Notification.error('customerAdminPanel.customerAdministratorAddFailure');
@@ -79,18 +80,11 @@
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
     }
 
-    function filterList(str) {
-      if (vm.timer) {
-        $timeout.cancel(vm.timer);
-        vm.timer = 0;
+    function filterList(newValue, oldValue) {
+      if (newValue.length > 0 && (newValue !== oldValue)) {
+        vm.selected = newValue;
+        getPartnerUsers(newValue);
       }
-
-      vm.timer = $timeout(function () {
-        if (str.length > 0) {
-          vm.selected = str;
-          getPartnerUsers(str);
-        }
-      }, 500);
     }
 
     function patchSalesAdminRole(email) {
