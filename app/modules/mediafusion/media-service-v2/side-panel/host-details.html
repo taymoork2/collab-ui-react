@@ -2,7 +2,7 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name">
-      {{hostDetails.connector.host.host_name}}
+      {{hostDetails.connector.hostname}}
     </div>
 
     <table>
@@ -20,11 +20,11 @@
       </tr>
       <tr>
         <td translate="mediaFusion.ipAddr"></td>
-        <td><span>{{hostDetails.connector.host.host_name}}</span></td>
+        <td><span>{{hostDetails.connector.hostname}}</span></td>
       </tr>
       <tr>
         <td translate="mediaFusion.connectors.software"></td>
-        <td><span>{{hostDetails.connector.version}}</span></td>
+        <td><span>{{hostDetails.connector.runningVersion}}</span></td>
       </tr>
       <!--tr>
         <td translate="mediaFusion.connectors.serial"></td>
@@ -72,7 +72,7 @@
     <div>
       <button id="btn--primary"
               ng-disabled="saving"
-              class="btn btn--primary"
+              class="btn btn--link"
               style="margin-top: 15px;"
               ng-click="sp.close(); hostDetails.reassignCluster();"
               translate="mediaFusion.moveHost">
@@ -103,7 +103,7 @@
     <div>
       <button id="btn--primary"
               ng-disabled="saving"
-              class="btn btn--negative"
+              class="btn btn--link"
               style="margin-top: 15px;"
               ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"
               translate="mediaFusion.connectors.deregister_host">
