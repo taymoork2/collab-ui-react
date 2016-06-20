@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage) {
+  function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -69,7 +69,9 @@
         meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
-        pstn: 'PSTN'
+        pstn: 'PSTN',
+        care: 'CARE',
+        context: 'CONTEXT'
       },
 
       //WARNING: Deprecated, use offerTypes
@@ -141,6 +143,7 @@
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
+        CDC: 'CDC' // Care Digital Channel
       },
 
       licenseTypes: {
@@ -149,7 +152,8 @@
         COMMUNICATION: 'COMMUNICATION',
         STORAGE: 'STORAGE',
         SHARED_DEVICES: 'SHARED_DEVICES',
-        CMR: 'CMR'
+        CMR: 'CMR',
+        CARE: 'CARE'
       },
 
       defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -248,7 +252,7 @@
         'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
+      WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
@@ -300,7 +304,8 @@
         'cluster-details',
         'management-service',
         'services-overview',
-        'my-company'
+        'my-company',
+        'management-connector-details'
       ],
       'spark-room-system': [
         'devices',
@@ -325,6 +330,7 @@
       ],
       'squared-fusion-media': [
         //'mediafusionconnector',
+        'media-service-v2',
         'metrics',
         'reports-metrics',
         'media-service',
@@ -353,6 +359,7 @@
         'devices',
         'fusion',
         //'mediafusionconnector',
+        'media-service-v2',
         'media-service',
         'hurondetails',
         'huronsettings',
@@ -361,7 +368,8 @@
         'mediafusion-settings',
         'calendar-service',
         'call-service',
-        'management-service'
+        'management-service',
+        'services-overview'
       ]
     };
 

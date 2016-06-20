@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory) {
+  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory) {
 
     var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 

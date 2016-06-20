@@ -58,7 +58,7 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('AADialByExt', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = '0';
 
@@ -131,7 +131,7 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
@@ -204,7 +204,7 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 

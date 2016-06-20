@@ -175,10 +175,6 @@ describe('Partner flow', function () {
 
   }, LONG_TIMEOUT);
 
-  afterAll(function () {
-    deleteTrialUtils.deleteOrg(orgId, accessToken);
-  });
-
   describe('Partner launches its orgs portal', function () {
 
     it('should launch partners org view', function () {
@@ -208,6 +204,32 @@ describe('Partner flow', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
       utils.expectIsDisplayed(partner.entitlementsCount);
+    });
+  });
+
+  describe("Delete the test customer", function () {
+    it('should login navigate to the test customer', function () {
+      navigation.clickCustomers();
+      utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.expectIsDisplayed(partner.newTrialRow);
+    });
+
+    it('should click the Delete Customer button', function () {
+      utils.click(partner.newTrialRow);
+      utils.expectIsDisplayed(partner.previewPanel);
+
+      var webElement = partner.deleteCustomerButton.getWebElement();
+      browser.executeScript(function (e) {
+        e.scrollIntoView()
+      }, webElement);
+
+      utils.click(partner.deleteCustomerButton);
+      utils.waitForModal().then(function () {
+        utils.click(partner.deleteCustomerOrgConfirm).then(function () {
+          notifications.assertSuccess(partner.newTrial.customerName, 'was successfully deleted');
+        });
+      });
     });
   });
 });

@@ -3,6 +3,132 @@
  */
 'use strict';
 
+describe('WebExUtilsFact: isCIEnabledSite() test', function () {
+  beforeEach(module('WebExApp'));
+
+  var WebExUtilsFact;
+  var Authinfo;
+
+  var fakeLicenses = [{
+    "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_fakeConferencingIsCITrue.fake.com",
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "1446768353",
+    "features": ["cloudmeetings"],
+    "volume": 25,
+    "isTrial": false,
+    "isCI": true,
+    "status": "ACTIVE",
+    "capacity": 200,
+    "siteUrl": "fakeConferencingIsCITrue.fake.com"
+  }, {
+    "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_fakeConferencingIsCIFalse.fake.com",
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "1446768353",
+    "features": ["cloudmeetings"],
+    "volume": 25,
+    "isTrial": false,
+    "isCI": false,
+    "status": "ACTIVE",
+    "capacity": 200,
+    "siteUrl": "fakeConferencingIsCIFalse.fake.com"
+  }, {
+    "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_fakeConferencing.fake.com",
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "1446768353",
+    "features": ["cloudmeetings"],
+    "volume": 25,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "capacity": 200,
+    "siteUrl": "fakeConferencing.fake.com"
+  }, {
+    "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMRIsCITrue.fake.com",
+    "offerName": "CMR",
+    "licenseType": "CMR",
+    "billingServiceId": "SubCt30test201582703",
+    "features": [],
+    "volume": 100,
+    "isTrial": false,
+    "isCI": true,
+    "status": "ACTIVE",
+    "capacity": 100,
+    "siteUrl": "fakeCMRIsCITrue.fake.com"
+  }, {
+    "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMRIsCIFalse.fake.com",
+    "offerName": "CMR",
+    "licenseType": "CMR",
+    "billingServiceId": "SubCt30test201582703",
+    "features": [],
+    "volume": 100,
+    "isTrial": false,
+    "isCI": false,
+    "status": "ACTIVE",
+    "capacity": 100,
+    "siteUrl": "fakeCMRIsCIFalse.fake.com"
+  }, {
+    "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_fakeCMR.fake.com",
+    "offerName": "CMR",
+    "licenseType": "CMR",
+    "billingServiceId": "SubCt30test201582703",
+    "features": [],
+    "volume": 100,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "capacity": 100,
+    "siteUrl": "fakeCMR.fake.com"
+  }];
+
+  beforeEach(inject(function (
+    _Authinfo_,
+    _WebExUtilsFact_
+  ) {
+
+    Authinfo = _Authinfo_;
+    WebExUtilsFact = _WebExUtilsFact_;
+
+    spyOn(Authinfo, 'getLicenses').and.returnValue(fakeLicenses);
+  })); // beforeEach(inject())
+
+  it('can correct return true for CONFERENCING', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencing.fake.com");
+
+    expect(isCISite).toEqual(true);
+  });
+
+  it('can correct return true for CONFERENCING and isCI=true', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencingIsCITrue.fake.com");
+
+    expect(isCISite).toEqual(true);
+  });
+
+  it('can correct return false for CONFERENCING and isCI=false', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencingIsCIFalse.fake.com");
+
+    expect(isCISite).toEqual(false);
+  });
+
+  it('can correct return true for CMR', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMR.fake.com");
+
+    expect(isCISite).toEqual(true);
+  });
+
+  it('can correct return true for CMR and isCI=true', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMRIsCITrue.fake.com");
+
+    expect(isCISite).toEqual(true);
+  });
+
+  it('can correct return false for CMR and isCI=false', function () {
+    var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMRIsCIFalse.fake.com");
+
+    expect(isCISite).toEqual(false);
+  });
+}); // describe()
+
 describe('WebExUtilsFact: utf8ToUtf16le() test', function () {
   beforeEach(module('WebExApp'));
 

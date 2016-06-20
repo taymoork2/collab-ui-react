@@ -5,7 +5,7 @@ describe('MediafusionConnectorMock', function () {
 
   var Service;
 
-  beforeEach(inject(function ($injector, _MediafusionConnectorMock_) {
+  beforeEach(inject(function (_MediafusionConnectorMock_) {
     Service = _MediafusionConnectorMock_;
   }));
 

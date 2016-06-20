@@ -6,7 +6,7 @@
     .controller('CommunicationsCtrl', CommunicationsCtrl);
 
   /* @ngInject */
-  function CommunicationsCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification, Orgservice) {
+  function CommunicationsCtrl($scope, $translate, AccountOrgService, Authinfo, Notification) {
     var vm = this;
     vm.cloudSipFlag = false;
 

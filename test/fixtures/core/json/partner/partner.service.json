@@ -37,6 +37,20 @@
           "isTrial": true,
           "trialId": "a592abe4-0fc7-4dff-9ab8-1ad5642c4ac9",
           "status": "PENDING"
+        }, {
+          "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CDC",
+          "licenseType": "CARE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "webex-squared", "ccc_config"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "a592abe4-0fc7-4dff-9ab8-1ad5642c4ac9",
+          "status": "PENDING"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -172,6 +186,21 @@
           "isTrial": true,
           "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
           "status": "PENDING"
+        }, {
+          "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CDC",
+          "licenseType": "CARE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "webex-squared",
+            "ccc_config"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
+          "status": "PENDING"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -216,6 +245,21 @@
           "isTrial": true,
           "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
           "status": "PENDING"
+        }, {
+          "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CDC",
+          "licenseType": "CARE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "webex-squared",
+            "ccc_config"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
+          "status": "PENDING"
         }],
         "state": "ACTIVE",
         "createdBy": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
@@ -255,6 +299,21 @@
             "webex-squared",
             "squared-call-initiation",
             "squared-syncup"
+          ],
+          "volume": 100,
+          "isTrial": true,
+          "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
+          "status": "PENDING"
+        }, {
+          "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+          "offerName": "CDC",
+          "licenseType": "CARE",
+          "features": [
+            "contact-center-context",
+            "spark",
+            "cloud-contact-center",
+            "webex-squared",
+            "ccc_config"
           ],
           "volume": 100,
           "isTrial": true,
@@ -414,6 +473,21 @@
     "daysLeft": 9,
     "customerName": "Atlas_Test_Trial_my7x4y1k91",
     "isTrial": false
+  }, {
+    "licenseId": "CDC_237397c1-7aa0-4f46-8803-98a3a80a81e2",
+    "offerName": "CDC",
+    "licenseType": "CARE",
+    "features": [
+      "contact-center-context",
+      "spark",
+      "cloud-contact-center",
+      "webex-squared",
+      "ccc_config"
+    ],
+    "volume": 100,
+    "isTrial": true,
+    "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
+    "status": "PENDING"
   }],
   "customers": [{
     "customerOrgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
@@ -720,6 +794,53 @@
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
     "communicationsEntitlements": "",
     "roomSystemsEntitlements": ""
+  }, {
+    "customerName": "Atlas_Test_Trial_0cjwm62e20",
+    "adminEmail": "collabctg+Atlas_Test_Trial_0cjwm62e20@gmail.com",
+    "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
+    "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
+  }, {
+    "customerName": "Atlas_Test_Trial_u1j5gzrz5g",
+    "adminEmail": "collabctg+Atlas_Test_Trial_u1j5gzrz5g@gmail.com",
+    "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
+    "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
+  }],
+  "exportCSVResultWithCare": [{
+    "customerName": "customerPage.csvHeaderCustomerName",
+    "adminEmail": "customerPage.csvHeaderAdminEmail",
+    "messagingEntitlements": "customerPage.csvHeaderMessagingEntitlements",
+    "conferencingEntitlements": "customerPage.csvHeaderConferencingEntitlements",
+    "communicationsEntitlements": "customerPage.csvHeaderCommunicationsEntitlements",
+    "roomSystemsEntitlements": "customerPage.csvHeaderRoomSystemsEntitlements",
+    "careEntitlements": "customerPage.csvHeaderCareEntitlements"
+  }, {
+    "customerName": "Atlas_Test_Trial_vt453w4p8d",
+    "adminEmail": "collabctg+Atlas_Test_Trial_vt453w4p8d@gmail.com",
+    "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
+    "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": "",
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
+  }, {
+    "customerName": "Atlas_Test_Trial_t81tts9by9",
+    "adminEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
+    "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
+    "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": "",
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
+  }, {
+    "customerName": "Atlas_Test_Trial_jpgjhf6or",
+    "adminEmail": "collabctg+Atlas_Test_Trial_jpgjhf6or@gmail.com",
+    "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
+    "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": "",
+    "careEntitlements": "contact-center-context spark cloud-contact-center webex-squared ccc_config"
   }, {
     "customerName": "Atlas_Test_Trial_0cjwm62e20",
     "adminEmail": "collabctg+Atlas_Test_Trial_0cjwm62e20@gmail.com",

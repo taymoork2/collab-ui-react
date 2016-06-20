@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractReports(res) {
@@ -10,7 +10,7 @@
       _.each(reports, function (report) {
         detectAndSetReportTimeout(report);
       });
-      return reports;
+      return res.data;
     }
 
     function extractReport(res) {
@@ -20,7 +20,10 @@
     function detectAndSetReportTimeout(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 300000;
+          .getTime() > 180000;
+        if (report.state === 'FAILED' && !report.failureReason) {
+          report.failureReason = 'UNEXPECTED_FAILURE';
+        }
       }
       return report;
     }
@@ -54,10 +57,11 @@
         });
     }
 
-    function getReports() {
+    function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
+      var reqParams = 'offset=' + offset + '&limit=' + limit;
       return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
+        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
         .then(extractReports)
         .catch(function (data) {
           //  TODO: Implement proper handling of error when final API is in place
@@ -133,6 +137,55 @@
       });
     }
 
+    function downloadReport(report) {
+      $http.get(report.downloadUrl, {
+        responseType: 'arraybuffer'
+      }).success(function (data) {
+        var fileName = 'report_' + report.id + '.zip';
+        var file = new $window.Blob([data], {
+          type: 'application/zip'
+        });
+        if ($window.navigator.msSaveOrOpenBlob) {
+          // IE
+          $window.navigator.msSaveOrOpenBlob(file, fileName);
+        } else if (!('download' in $window.document.createElement('a'))) {
+          // Safari…
+          $window.location.href = $window.URL.createObjectURL(file);
+        } else {
+          var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+          var downloadLink = angular.element(downloadContainer.children()[0]);
+          downloadLink.attr({
+            'href': $window.URL.createObjectURL(file),
+            'download': fileName,
+            'target': '_blank'
+          });
+          $document.find('body').append(downloadContainer);
+          $timeout(function () {
+            downloadLink[0].click();
+            downloadLink.remove();
+          }, 100);
+        }
+      });
+    }
+
+    function prettyPrintBytes(bytes, precision) {
+      if (bytes === 0) {
+        return '0';
+      }
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+        return '-';
+      }
+      if (typeof precision === 'undefined') {
+        precision = 1;
+      }
+
+      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
+        number = Math.floor(Math.log(bytes) / Math.log(1024)),
+        val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
+
+      return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -143,7 +196,9 @@
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
-      setEntitledForCompliance: setEntitledForCompliance
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport,
+      prettyPrintBytes: prettyPrintBytes
     };
   }
 

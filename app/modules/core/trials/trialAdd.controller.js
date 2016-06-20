@@ -5,9 +5,11 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
+    var _careDefaultQuantity = 15;
+    var _licenseCountDefaultQuantity = 0;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
@@ -20,13 +22,17 @@
     vm.emailError = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
+    vm.showCare = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
+    vm.careTrial = vm.trialData.trials.careTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
+    vm.contextTrial = vm.trialData.trials.contextTrial;
+    _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -76,6 +82,17 @@
       },
     }];
 
+    vm.nonTrialServices = [{
+      // Context Service Trial
+      model: vm.contextTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      templateOptions: {
+        label: $translate.instant('trials.context'),
+        id: 'contextTrial'
+      }
+    }];
+
     vm.messageFields = [{
       // Message Trial
       model: vm.messageTrial,
@@ -121,7 +138,7 @@
       className: '',
       templateOptions: {
         id: callTemplateOptionId,
-        label: $translate.instant('trials.callUsOnly')
+        label: $translate.instant('trials.call')
       },
       hideExpression: function () {
         return !vm.hasCallEntitlement;
@@ -136,7 +153,7 @@
       className: '',
       templateOptions: {
         id: roomSystemsTemplateOptionId,
-        label: $translate.instant('trials.roomSysUsOnly')
+        label: $translate.instant('trials.roomSystem')
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -176,6 +193,58 @@
       }
     }];
 
+    // Care Trial
+    vm.careFields = [{
+      model: vm.careTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        id: 'careTrial',
+        label: $translate.instant('trials.care')
+      },
+      hideExpression: function () {
+        return !vm.showCare;
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+        },
+        'templateOptions.disabled': function () {
+          return vm.messageOfferDisabledExpression();
+        }
+      }
+    }, {
+      model: vm.careTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: '',
+      templateOptions: {
+        id: 'trialCareLicenseCount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.careTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return vm.careLicenseInputDisabledExpression();
+        }
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return vm.validateCareLicense($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          }
+        }
+      }
+    }];
+
     vm.licenseCountFields = [{
       model: vm.details,
       key: 'licenseCount',
@@ -183,21 +252,44 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
-        required: true,
         secondaryLabel: $translate.instant('trials.users'),
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return hasUserServices();
+        },
+        'templateOptions.disabled': function () {
+          return !hasUserServices();
+        },
+
+        'model.licenseCount': function ($viewValue, $modelValue) {
+          if (hasUserServices()) {
+            return ($viewValue > 0) ? $viewValue : _licenseCountDefaultQuantity;
+          } else {
+            return 0;
+          }
+        }
       },
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !vm.licenseCountFields.enabled || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
         },
-      },
+        countWithCare: {
+          expression: function () {
+            return vm.careLicenseCountLessThanTotalCount();
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -225,7 +317,12 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm.getNextState = getNextState;
+    vm.hasUserServices = hasUserServices;
 
+    vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
+    vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
+    vm.validateCareLicense = validateCareLicense;
+    vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
     init();
 
     ///////////////////////
@@ -234,7 +331,9 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials)
       ]).then(function (results) {
         // TODO: override atlasCloudberryTrials globally to true for now (US11974)
         //vm.showRoomSystems = results[0];
@@ -246,10 +345,15 @@
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
+        vm.showContextServiceTrial = results[4];
+
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
         }
+
+        vm.showCare = results[3];
+        vm.careTrial.enabled = results[3];
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {
@@ -289,8 +393,48 @@
         }
 
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+
         toggleTrial();
       });
+    }
+
+    function messageOfferDisabledExpression() {
+      if (!vm.messageTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.messageTrial.enabled;
+    }
+
+    function careLicenseInputDisabledExpression() {
+      if (vm.careTrial.enabled) {
+        resetToDefaultIfNeeded();
+      } else {
+        vm.careTrial.details.quantity = 0;
+      }
+      return !vm.careTrial.enabled;
+    }
+
+    function resetToDefaultIfNeeded() {
+      if (vm.careTrial.details.quantity === 0) {
+        vm.careTrial.details.quantity = _careDefaultQuantity;
+      }
+    }
+
+    function validateCareLicense($viewValue, $modelValue) {
+      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
+        $viewValue, $modelValue, vm.details.licenseCount);
+    }
+
+    function careLicenseCountLessThanTotalCount() {
+      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
+    }
+
+    function hasUserServices() {
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var result = _.some(services, {
+        enabled: true
+      });
+      return result;
     }
 
     // Update offer and label for Meetings/WebEx trial.
@@ -332,8 +476,10 @@
     }
 
     function hasTrial() {
-      return _.some(vm.trialData.trials, {
-        enabled: true
+      // Context is a non-trial service. We don't want the Next/Start
+      // Trial button to be enabled if only Context is checked
+      return _.some(vm.trialData.trials, function (service) {
+        return service.enabled && service.type !== Config.offerTypes.context;
       });
     }
 
@@ -444,6 +590,16 @@
                 if (vm.pstnTrial.enabled) {
                   return TrialPstnService.createPstnEntity(vm.customerOrgId);
                 }
+              });
+          }
+        })
+        .then(function (response) {
+          if (vm.contextTrial.enabled) {
+            return TrialContextService.addService(vm.customerOrgId)
+              .catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.startTrialContextServiceError');
+                return $q.reject(response);
               });
           }
         })

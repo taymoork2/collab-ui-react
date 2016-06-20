@@ -9,7 +9,7 @@ namespace servicesOverview {
     private _setupButton:CardButton = {
       name: 'servicesOverview.genericButtons.setup',
       link: 'services/expressway-management',
-      buttonClass: 'cta-btn'
+      buttonClass: 'btn'
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [

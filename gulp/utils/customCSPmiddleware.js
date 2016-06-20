@@ -12,10 +12,51 @@ module.exports = csp({
   reportOnly: false,
   browserSniff: false,
   directives: {
-    defaultSrc: ['\'self\'', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.localytics.com', '*.webexconnect.com'],
-    connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000'],
-    imgSrc: ['\'self\'', 'data:', '*.localytics.com', '*.rackcdn.com', '*.clouddrive.com'],
-    scriptSrc: ['\'self\'', onlyForDev, '\'unsafe-eval\'', '*.webex.com', '*.localytics.com', 'cdn.mxpnl.com', 'api.mixpanel.com'],
-    styleSrc: ['\'self\'', '\'unsafe-inline\'']
+    defaultSrc: [
+      '\'self\'',
+      '*.localytics.com',
+      '*.statuspage.io',
+      '*.wbx2.com',
+      '*.webex.com',
+      '*.webexconnect.com'
+    ],
+    connectSrc: [
+      '\'self\'',
+      '*.cisco.com',
+      '*.ciscoccservice.com',
+      '*.huron-dev.com',
+      '*.huron-int.com',
+      '*.huron.uno',
+      '*.statuspage.io',
+      '*.wbx2.com',
+      '*.webex.com',
+      '*.webexconnect.com',
+      'api.mixpanel.com',
+      'cdn.mxpnl.com',
+      'http://127.0.0.1:8080',
+      'http://localhost:8080',
+      'ws://127.0.0.1:8000',
+      'ws://localhost:8000'
+    ],
+    imgSrc: [
+      '\'self\'',
+      'data:',
+      '*.clouddrive.com',
+      '*.localytics.com',
+      '*.rackcdn.com'
+    ],
+    scriptSrc: [
+      '\'self\'',
+      onlyForDev,
+      '\'unsafe-eval\'',
+      '*.localytics.com',
+      '*.webex.com',
+      'api.mixpanel.com',
+      'cdn.mxpnl.com'
+    ],
+    styleSrc: [
+      '\'self\'',
+      '\'unsafe-inline\''
+    ]
   }
 });

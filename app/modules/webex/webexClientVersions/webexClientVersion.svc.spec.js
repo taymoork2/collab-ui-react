@@ -10,7 +10,7 @@ describe('WebexClientVersion Test', function () {
   var WebexClientVersion, httpBackend, $translate, UrlConfig;
   var clientVersions1;
 
-  beforeEach(inject(function ($injector, _$httpBackend_, _UrlConfig_, _WebexClientVersion_) {
+  beforeEach(inject(function (_$httpBackend_, _UrlConfig_, _WebexClientVersion_) {
 
     httpBackend = _$httpBackend_;
 

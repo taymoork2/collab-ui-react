@@ -77,6 +77,7 @@
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully; in some cases it may take up to 24 hours before the user is removed from their Spark Rooms",
     "deleteUserError": "Error deleting user.",
+    "deleteUserDnFallbackError": "Error deleting user. The user's directory number is used as the fallback destination for Hunt Group(s).",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
@@ -107,7 +108,7 @@
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
-    "notSetupForManUserAddError": "{{email}} cannot be added. This organization is not set up for adding users manually.",
+    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is On.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
@@ -235,7 +236,7 @@
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
     "mediaOnHoldTabDesc": "Media On Hold Development Example",
-    "metricsDetailsTab": "Metrics",
+    "metricsDetailsTab": "Media Service V2 Page",
     "metricsDetailsTabDesc": "Metrics Management",
     "thresholdDetailsTab": "Threshold",
     "thresholdDetailsTabDesc": "Threshold Management",
@@ -407,9 +408,9 @@
     "user": "User",
     "users": "Users",
     "search": "Search",
-    "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
-    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app. In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
   "avgRooms": {
@@ -515,12 +516,9 @@
     "logAction": "Client Logs",
     "callflowLogsAction": "Call Logs",
     "callflowAction": "Callflow Charts",
-    "callAction": "Call Info",
-    "callSummaryAction": "Call Summary",
     "errEmptyinput": "Search input cannot be empty.",
     "errLogQuery": "Failed to retrieve logs. Status: {{status}}",
     "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)",
-    "subTitleCallInfo": "Call Info records for",
     "locusId": "locusId",
     "locusCallStartTimeH": "Locus Call Start Time",
     "attributes": "Attributes",
@@ -957,6 +955,7 @@
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
+    "extensionUpdateError": "Failed to update extension {{extension}}.",
     "greaterThan": "{{endNumber}} must be greater than or equal to {{beginNumber}}.",
     "lessThan": "{{beginNumber}} must be less than or equal to {{endNumber}}.",
     "rangeOverlap": "Extension Ranges must not overlap.",
@@ -1113,7 +1112,9 @@
       "goToHost": "Go to Host",
       "removeButton": "Remove",
       "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud."
+      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud.",
+      "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
+      "actions": "Actions"
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1147,17 +1148,21 @@
       "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
     },
     "addResourceDialog": {
-      "title": "Add Resource for {{ServiceName}}",
+      "title": "{{ServiceName}} Setup",
       "registerNewExpressway": "Register new Expressway cluster and install {{ConnectorName}}",
       "addToExistingExpressway": "Install {{ConnectorName}} on existing Expressway cluster",
       "enterHostname": "Enter the hostname of the Expressway you want to register with Cisco Collaboration Cloud",
       "enterHostnamePlaceholder": "Enter Expressway hostname",
       "willBeInstalled": "{{ConnectorName}} will be installed as soon as you finish registration, enabling the Expressway for {{ServiceName}}.",
-      "selectExisting": "Select one or more existing Expressway clusters",
-      "selectClusterPlaceholder": "Select one or more Expressway clusters…",
+      "selectExisting": "Select an existing Expressway clusters",
+      "selectClusterPlaceholder": "Select an Expressway cluster…",
+      "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
-      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists."
+      "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
+      "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
+      "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -1187,6 +1192,7 @@
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
+      "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
@@ -1214,7 +1220,11 @@
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
-      "initializing": "Initializing"
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
+    },
+    "userSidepanel": {
+      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded."
     },
     "setup": {
       "label": "Connector Management",
@@ -1313,18 +1323,21 @@
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
+      "upgradeScheduleHeader": "Upgrade",
+      "upgradeScheduleSubHeader": "Upgrade Schedule",
       "releasechannelHeader": "Users and Release Channel",
       "releasechannelParagraph": "Assign a specific subset of your users to this cluster, and select a release channel for it.",
       "releasechannelUsers": "Users",
       "releasechannelReleasechannel": "Release Channel",
       "deactivateServicesHeader": "Deactivate Services",
-      "deactivateServicesParagraph": "Deactivating a service will remove any service related functionality from this cluster.",
-      "deactivateServicesCalendarButton": "Deactivate Calendar",
-      "deactivateServicesCallButton": "Deactivate Call",
-      "noHybridServicesProvisioned": "No Hybrid Services are provisioned on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterHeader": "Deregister Cluster",
-      "deregisterClusterParagraph": "Deactivate all services on this Expressway cluster before deregistring it.",
-      "deregisterClusterButton": "Deregister",
+      "deactivateServicesParagraph": "Deactivating {{ServiceName}} will remove any service related functionality from this cluster.",
+      "deactivateServicesCalendarHeader": "Deactivate Calendar",
+      "deactivateServicesCallHeader": "Deactivate Call",
+      "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
+      "deregisterClusterHeader": "Remove Cluster",
+      "deregisterClusterSubHeader": "Remove {{ClusterName}}",
+      "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
+      "deregisterClusterButton": "Remove",
       "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "settings": {
@@ -1374,12 +1387,12 @@
         "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
-        "title": "Automatic Software Upgrades",
-        "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule",
+        "title": "Upgrade Schedule",
+        "description": "Select the upgrade schedule for this cluster. All connectors will automatically upgrade to the latest version at this time.",
+        "defaultWarning": "Confirm Default Schedule",
         "postponeLabel": "The next available upgrade is scheduled to begin:",
-        "postponeAction": "Postpone schedule",
-        "postponeModalTitle": "Postpone the upgrade",
+        "postponeAction": "Postpone",
+        "postponeModalTitle": "Postpone Upgrade",
         "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
 
       }
@@ -1416,9 +1429,9 @@
     "fusion": {
       "list": {
         "title": "Clusters",
-        "empty": "No clusters to display.",
+        "empty": "No clusters found.",
         "users": "Users:",
-        "releaseChannel": "Release Channels:",
+        "releaseChannel": "Release Channel:",
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
@@ -1426,30 +1439,31 @@
         "expressway-short": "EW",
         "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "mediafusion": "Mediafusion"
+        "mediafusion": "Media Fusion"
       }
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Activity Reports",
-    "navHeaderTitle": "Activity Reports",
-    "searchHelp": "Search Help",
-    "searchError": "Your search for '{{roomId}}' returned 0 matches",
+    "browserTabHeaderTitle": "Spark Activity Reports",
+    "navHeaderTitle": "Spark Activity Reports",
+    "heading": "Search Spark Room Activity",
+    "subheading": "Find all relevant data for a room",
+    "searchTip": "Search data by room ID",
+    "searchError": "Your search for '{{roomId}}' returned no matches",
+    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
     },
     "searchingPleaseWait": "Finding information, please wait...",
-    "help": {
-      "title": "Activity Reports Help"
-    },
     "reportStates": {
       "COMPLETED": "Completed",
       "FAILED": "Failed",
       "RUNNING": "Running",
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
-      "ABORTED": "Aborted"
+      "ABORTED": "Aborted",
+      "INIT": "Initializing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1465,17 +1479,34 @@
       "reportNameNotEmpty": "Report Name can not be empty",
       "startDate": "Start Date",
       "dateTo": "to",
-      "startDatePlaceholder": "Choose a start Day",
+      "startDatePlaceholder": "Choose a Start Date",
       "endDate": "End Date",
       "endDateUntil": "until",
       "endDateOnward": "onward",
-      "endDatePlaceholder": "Choose an end Day",
-      "reportDateRange": "Report Date Range",
-      "noRangeSpecified": "No range specified",
+      "endDatePlaceholder": "Choose an End Date",
+      "reportDateRange": "Date Range",
+      "noRangeSpecified": "No date range specified",
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failure: {{failure}}"
+      "failure": "Report generation failed",
+      "tryAgain": "Try again or contact Customer Support",
+      "reportStatus": "Report Status",
+      "reportSize": "Total Size"
+    },
+    "reportsList": {
+      "name": "Name",
+      "dateGenerated": "Date Generated",
+      "roomId": "Room ID",
+      "dateRange": "Date Range",
+      "state": "State",
+      "actions": "Actions",
+      "noReportsFound": "No Reports Found",
+      "noReportsTip": "Click the Search tab to search activities and create reports"
+    },
+    "tabs": {
+      "search": "Search",
+      "reports": "Reports"
     }
   },
   "firstTimeWizard": {
@@ -1519,7 +1550,6 @@
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
     "bulk401And403Error": "Customer is not authorized to add or update this user.",
-    "bulk403AndNotSetupManUserAddError": "User {{email}} not found. This organization is not set up for adding users manually.",
     "bulk404Error": "Server is unable to respond at this time. Please try again at a later time.",
     "bulk408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
@@ -2199,6 +2229,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "nonTrialServices": "Non Trial Services",
     "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Start Trial",
@@ -2216,6 +2247,8 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
+    "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
+    "careLicenseCountExceedsTotalCount": "Care license requested is more than the total license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -2256,7 +2289,6 @@
       "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
-      "skipAddDevices": "Skip adding devices",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
@@ -2272,7 +2304,7 @@
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
       "partner": "Partner",
-      "name": "Name",
+      "name": "Recipient Name",
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
@@ -2280,7 +2312,8 @@
       "city": "City",
       "state": "State",
       "zip": "Zip",
-      "dealId": "Deal ID"
+      "dealId": "Deal ID",
+      "usOnly": "Currently U.S. only"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2323,17 +2356,21 @@
       }
     },
     "finish": {
-      "title": "Congratulations!"
+      "title": "Trial Added"
     },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
+    "skip": "Skip",
     "finishTrialAdded": "Your trial has been added",
     "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}}.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}}."
+    "editSuccess": "You have successfully edited a trial for {{customerName}}.",
+    "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
+    "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
+    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -2346,7 +2383,10 @@
     "meeting": "Meeting 25 Party",
     "webex": "WebEx Enterprise Edition 200 with CMR",
     "call": "Call",
+    "care": "Care",
     "callUsOnly": "Call (Currently U.S. only)",
+    "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
+    "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2356,7 +2396,8 @@
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
-    "trialDuration": "Trial Duration"
+    "trialDuration": "Trial Duration",
+    "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
 
   "status": {
@@ -2371,8 +2412,10 @@
     "service": "Service",
     "message": "Message",
     "call": "Call",
+    "care": "Care",
+    "webex": "WebEx",
     "adminManagement": "Administrator Management",
-    "administrators": "Administrators",
+    "administrators": "Partner Administrators",
     "meeting": "Meeting",
     "roomSystems": "Room Systems",
     "notes": "Notes",
@@ -2398,6 +2441,7 @@
     "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
     "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
     "csvHeaderRoomSystemsEntitlements": "Room Systems Entitlements",
+    "csvHeaderCareEntitlements": "Care Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -2449,8 +2493,15 @@
     "addNumbers": "Add Numbers"
   },
   "customerAdminPanel": {
-    "addAdministrators": "Add Adminsitrators",
-    "assignedAdministrators": "Assigned Administrators"
+    "addAdministrators": "Add Administrators",
+    "administrators": "Administrators",
+    "customerAdministratorServiceError": "Customer Organization ID needed",
+    "customerAdministratorAddSuccess": "The Administrator was successfully assigned",
+    "customerAdministratorAddFailure": "Unable to assign Administrator privileges",
+    "customerAdministratorRemoveSuccess": "The Administrator was successfully unassigned",
+    "customerAdministratorRemoveFailure": "Unable to unassigned Administrator privileges",
+    "deleteAdministrator": "Remove Sales Administrator?",
+    "deleteConfirmation": "Are you sure you want to remove {{pattern}}'s Administrator Privileges?"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2575,7 +2626,7 @@
     "cloudOpDescription": "This user can also be enabled as a Cloud Operations Administrator. This role includes special permissions to view and operate the Spark system from this portal.",
     "cloudOpAdmin": "Cloud Operations Administrator",
     "fullAdmin": "Full administrator privileges",
-    "readonlyAdmin": "Read only administrator privileges",
+    "readonlyAdmin": "Read-only administrator privileges",
     "partialAdmin": "Some administrator privileges",
     "noAdmin": "No administrator privileges",
     "salesAdmin": "Sales Administrator",
@@ -2719,6 +2770,16 @@
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "metrics": {
+      "today": "Last 24 Hours",
+      "today2": "Last 24 Hours",
+      "yesterday": "Yesterday",
+      "yesterday2": "Yesterday",
+      "week": "Last Week",
+      "week2": "last week",
+      "month": "Last Month",
+      "month2": "last month",
+      "threeMonths": "Last Three Months",
+      "threeMonths2": "last three months",
       "cluster": "Cluster :",
       "ecp": "ECP :",
       "fromDate": "From :",
@@ -2728,7 +2789,24 @@
       "callVolume": "Linus Call Volume for",
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
-      "node": "Node"
+      "node": "Node",
+      "callVolumes": "Total Number of Calls",
+      "callVolumesDescription": "",
+      "callLocal": "Calls local to cluster",
+      "callReject": "Calls rejected by cluster",
+      "availabilityOfCluster": "Cluster Availability",
+      "availabilityOfHost": "Host Availability",
+      "availabilityOfClusterDescription": "Availability of cluster to host calls",
+      "availabilityOfHostDescription": "Availability of host to take calls",
+      "clusterAvailableTitle": "Available",
+      "clusterUnavailableTitle": "Unavailable",
+      "clusterPartialTitle": "Partial Availability",
+      "hostAvailableTitle": "Available",
+      "hostUnavailableTitle": "Unavailable",
+      "utilizationTitle": "Percentage Utilization",
+      "utilizationDescription": "Description text for Percentage utilization should be displayed here.",
+      "peakutilization": "Peak Utilization",
+      "averageutilization": "Average Utilization"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -3201,7 +3279,7 @@
     "csvRecordsReturned": "Records returned:",
     "csvRecordsUpdated": "Records updated:",
     "csvRecordsFailed": "Errors:",
-    "csvDownloadImportErr": "Download import error log"
+    "csvDownloadImportErr": "Download the import error log"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3245,7 +3323,6 @@
     "allowCustomerLogo": "Enable all customers to use their own logo",
     "useCiscoLogo": "Use Cisco Spark logo",
     "logoPlaceholder": "Drag and drop your logo here",
-    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3293,13 +3370,25 @@
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
-    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization.",
-    "crashReportTitle": "Automatic Crash Reporting",
-    "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
-    "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
-    "crashReportTooltipDescription": "What do these reports contain?",
-    "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
+    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your management application. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your management application."
+  },
+  "branding": {
+    "customTitle": "Custom Branding",
+    "tenantTitle": "Tenant Branding",
+    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "exampleLink": "&nbsp;(see example)",
+    "useCiscoLogo": "Use default Cisco logos",
+    "usePartnerLogo": "Use {{partner}} logo",
+    "useOwnLogo": "Use your own logo",
+    "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
+    "customBrandingExample": "Custom Branding Examples",
+    "companyLogo": "{{partner}} Company Logos",
+    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
+    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3309,10 +3398,6 @@
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
     "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
-  },
-  "brandingEample": {
-    "title": "Examples of Custom Branding",
-    "note": "Logo Placement Examples: After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -3388,8 +3473,8 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
-    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
-    "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
+    "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
+    "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
     "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file.",
     "siteCsvExportLinkLabel": "Export",
@@ -3403,26 +3488,26 @@
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
     "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
-    "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportInProgressTooltip": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors.",
     "exportFailedTooltip": "Export failed.",
-    "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportStartedToast": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
     "exportRejectedToast": "Export failed. Try again.",
     "importButton": "Import",
     "importStartModalTitle": "Import WebEx User Attributes",
     "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select Import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for your Export to complete.",
-    "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importInProgressTooltip": "This import may take a while. The import process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site.",
     "importFinishedWithErrorsTooltip": "Import finished with errors.",
     "importFailedTooltip": "Import failed.",
-    "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importStartedToast": "This import may take a while. The import process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site.",
     "importRejectedToast": "Import failed. Try again.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
-    "siteCSVNotAvailableTooltip": "You must upgrade this site to access the Bulk Modify User Attributes feature",
+    "siteCSVNotAvailableTooltip": "Upgrade this site to access the Bulk Modify User Attributes feature.",
     "authError": "You are not entitled to access this site.",
-    "systemError": "Unable to connect to site.",
+    "systemError": "Unable to connect to this site.",
     "multipleLicenses": "Multiple...",
     "checkingServices": "Checking services..."
   },
@@ -4010,7 +4095,12 @@
       "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
       "usageDataHeader": "Usage Data Sent to Cisco Partner",
-      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support."
+      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
+      "crashReportTitle": "Automatic Crash Reporting",
+      "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+      "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
+      "crashReportTooltipDescription": "What do these reports contain?",
+      "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
     },
     "security": {
       "title": "Security",
@@ -4037,6 +4127,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription: ",
@@ -4097,6 +4188,8 @@
     "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
+    "customerDetails": "Customer Details",
+    "userDetails": "User Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
     "cancelled": "Search was cancelled",
@@ -4124,6 +4217,7 @@
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",
+    "none": "None",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -4230,8 +4324,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
     "view": "View"
   },
   "activation": {
@@ -4330,8 +4425,8 @@
   },
   "servicesOverview": {
     "title": "Services",
-    "cloudServices": "Cloud services",
-    "hybridServices": "Hybrid services",
+    "cloudServices": "Cloud Services",
+    "hybridServices": "Hybrid Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
     "cards": {
@@ -4364,7 +4459,7 @@
         }
       },
       "clusterList": {
-        "title": "Cluster List",
+        "title": "Clusters",
         "description": "On-prem clusters and configuration for your organization.",
         "buttons": {
           "all": "All Clusters",
@@ -4855,54 +4950,6 @@
     "Pacific/Enderbury": "Pacific/Enderbury",
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
-    "Pacific/Kiritimati": "Pacific/Kiritimati",
-
-    "##########": "Remove the time zones below when timeZones.json is replaced with jodaTimeZones.json",
-    "America/Creston": "America/Creston",
-    "Africa/Juba": "Africa/Juba",
-    "America/Kralendijk": "America/Kralendijk",
-    "America/Lower_Princes": "America/Lower Princes",
-    "America/Marigot": "America/Marigot",
-    "America/Metlakatla": "America/Metlakatla",
-    "America/North_Dakota/Beulah": "America/North Dakota/Beulah",
-    "America/Shiprock": "America/Shiprock",
-    "America/Sitka": "America/Sitka",
-    "America/St_Barthelemy": "America/St Barthelemy",
-    "America/South_Pole": "America/South Pole",
-    "Arctic/Longyearbyen": "Arctic/Longyearbyen",
-    "Asia/Hebron": "Asia/Hebron",
-    "Asia/Istanbul": "Asia/Istanbul",
-    "Asia/Khandyga": "Asia/Khandyga",
-    "Asia/Riyadh87": "Asia/Riyadh87",
-    "Asia/Riyadh88": "Asia/Riyadh88",
-    "Asia/Riyadh89": "Asia/Riyadh89",
-    "Asia/Ust-Nera": "Asia/Ust-Nera",
-    "Etc/GMT0": "Etc/GMT0",
-    "Etc/GMT-0": "Etc/GMT-0",
-    "Etc/GMT+0": "Etc/GMT+0",
-    "Etc/Greenwich": "Etc/Greenwich",
-    "Etc/Universal": "Etc/Universal",
-    "Etc/Zulu": "Etc/Zulu",
-    "Europe/Bratislava": "Europe/Bratislava",
-    "Europe/Busingen": "Europe/Busingen",
-    "Europe/Guernsey": "Europe/Guernsey",
-    "Europe/Isle_of_Man": "Europe/Isle of Man",
-    "Europe/Jersey": "Europe/Jersey",
-    "Europe/Llju": "Europe/Llju",
-    "Antarctica/South_Pole": "Antarctica/South Pole",
-    "Etc/GMT+1": "Etc/GMT+1",
-    "Europe/Ljubljana": "Europe/Ljubljana",
-    "Europe/Mariehamn": "Europe/Mariehamn",
-    "Europe/Nicosia": "Europe/Nicosia",
-    "Europe/Podgorica": "Europe/Podgorica",
-    "Europe/San_Marino": "Europe/San_Marino",
-    "Europe/Sarajevo": "Europe/Sarajevo",
-    "Europe/Skopje": "Europe/Skopje",
-    "Europe/Vatican": "Europe/Vatican",
-    "Europe/Zagreb": "Europe/Zagreb",
-    "Mideast/Riyadh87": "Mideast/Riyadh87",
-    "Mideast/Riyadh88": "Mideast/Riyadh88",
-    "Mideast/Riyadh89": "Mideast/Riyadh89",
-    "US/Pacific-New": "US/Pacific-New"
+    "Pacific/Kiritimati": "Pacific/Kiritimati"
   }
 }

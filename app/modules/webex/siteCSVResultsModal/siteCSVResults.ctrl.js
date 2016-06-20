@@ -5,12 +5,9 @@
 
   /*@ngInject*/
   function SiteCSVResultsCtrl(
-    $state,
     $stateParams,
     $translate,
-    $log,
-    WebExUtilsFact,
-    WebExApiGatewayService
+    WebExUtilsFact
   ) {
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
@@ -31,6 +28,9 @@
     vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
+    var finishedTime = new Date(vm.csvStatusObj.details.finished);
+    var formattedFinishedTime = finishedTime.toUTCString();
+
     if (
       ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
       ("exportCompletedWithErr" === vm.csvStatusObj.status)
@@ -42,7 +42,7 @@
       vm.gridRows.push({
         id: 'export-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: vm.csvStatusObj.details.finished,
+        value: formattedFinishedTime
       });
 
       vm.gridRows.push({
@@ -82,7 +82,7 @@
       vm.gridRows.push({
         id: 'import-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: vm.csvStatusObj.details.finished,
+        value: formattedFinishedTime
       });
 
       vm.gridRows.push({

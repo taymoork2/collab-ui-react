@@ -5,7 +5,7 @@
     .controller('ResetDeviceController',
 
       /* @ngInject */
-      function ($scope, $modalInstance, CsdmHuronDeviceService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmHuronDeviceService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
         rdc.resetDevice = function () {

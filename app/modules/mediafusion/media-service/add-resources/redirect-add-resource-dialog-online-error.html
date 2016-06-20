@@ -1,0 +1,18 @@
+<div class="redirect-add-resource">
+	<div class="modal-header" popover="">
+    <button type="button" class="close" ng-click="$close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title"><span translate="mediaFusion.add-resource-dialog.errorTitle"></span></h5>
+  </div>
+  <div class="modal-body">
+  	<span translate="mediaFusion.add-resource-dialog.errorOnlineText"></span>
+  </div>	
+  <div class="modal-footer">
+  	<button class="btn" 
+            ng-hide="redirectResource.enableRedirectToTarget"
+            ng-click="$close()">
+      <span translate="common.close"></span>
+    </button>
+  </div>
+</div>	

@@ -8,7 +8,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $q, $state, Config, $modal, $timeout, $translate,
+  function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout, $translate,
     Authinfo, Notification, HuntGroupService,
     HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;

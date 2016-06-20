@@ -58,6 +58,13 @@
         class="cloud-extension-label status-error">
       {{callServiceAware.status.description.defaultMessage}}
     </span>
+
+      <p
+        ng-show="isInvitePending && callServiceAware.entitled"
+        class="info-description cloud-extension-label status-warning">
+        {{localizedOnboardingWarning}}
+      </p>
+
     </div>
 
   </cs-sp-section>

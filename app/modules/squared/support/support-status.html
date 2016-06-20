@@ -8,8 +8,8 @@
           <div>
             <div ng-repeat="health in healthMetrics">
               <a ng-href="{{statusPageUrl}}" target="_blank">
-                <div class="monitoring-cell" id="{{health.name}}" ng-class="{unknown:  'gray', error: 'red', major_outage: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[health.status]">
-                  <i class="fa fa-circle"></i>&nbsp;&nbsp;
+                <div id="{{health.name}}">
+                  <i class="fa fa-circle" ng-class="{unknown:  'grey', error: 'error', major_outage: 'error', warning: 'warning', partial_outage: 'yellow', operational: 'ok', degraded_performance:'yellow'}[health.status]"></i>
                   <span>{{health.name}}</span>
                 </div>
               </a>

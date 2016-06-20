@@ -2,7 +2,7 @@
 
 describe('Controller: PartnerProfileCtrl', function () {
   var $scope, $controller, controller, $q;
-  var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion;
+  var Notification, Orgservice, UserListService, FeatureToggleService;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -11,16 +11,14 @@ describe('Controller: PartnerProfileCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_) {
+  function dependencies($rootScope, _$controller_, _$q_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     Notification = _Notification_;
     Orgservice = _Orgservice_;
     UserListService = _UserListService_;
-    BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
-    WebexClientVersion = _WebexClientVersion_;
   }
 
   function initSpies() {
@@ -30,11 +28,7 @@ describe('Controller: PartnerProfileCtrl', function () {
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
     spyOn(UserListService, 'listPartners');
     spyOn(Orgservice, 'getOrg');
-    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when('logoUrl'));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
   }
 
   function initController() {
@@ -54,7 +48,6 @@ describe('Controller: PartnerProfileCtrl', function () {
         $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
         $scope.supportUrl = 'supportUrl';
         $scope.supportText = 'this is support text';
-        $scope.allowReadOnlyAccess = false;
         $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
         $scope.helpUrl = 'helpUrl';
         $scope.validation();
@@ -63,9 +56,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
-          isCiscoSupport: false,
-          allowReadOnlyAccess: false,
-          allowCrashLogUpload: false
+          isCiscoSupport: false
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });
