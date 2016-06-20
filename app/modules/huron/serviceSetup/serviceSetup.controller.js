@@ -604,7 +604,7 @@
         disabled: true
       },
       hideExpression: function ($viewValue, $modelValue, scope) {
-        return vm.firstTimeSetup;
+        return !vm.firstTimeSetup;
       }
     }];
 
