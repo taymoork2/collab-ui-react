@@ -600,15 +600,11 @@
         description: $translate.instant('serviceSetupModal.mohDescription'),
         options: mohOptions,
         labelfield: 'label',
-        valuefield: 'value'
+        valuefield: 'value',
+        disabled: true
       },
       hideExpression: function ($viewValue, $modelValue, scope) {
         return vm.firstTimeSetup;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return !vm.firstTimeSetup;
-        }
       }
     }];
 

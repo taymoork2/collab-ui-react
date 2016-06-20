@@ -934,7 +934,7 @@
     "to": "to",
     "addMoreExtensionRanges": "Add more extension ranges",
     "globalMOH": "Global Media On Hold (MOH)",
-    "mohDescription": "Provide callers with music, announcements, or video when they are placed on hold. You can change the MOH settings at the group or user level.",
+    "mohDescription": "Provide callers with music, announcements, or video when they are placed on hold.",
     "ciscoDefault": "Cisco Default",
     "fall": "Fall",
     "winter": "Winter",
