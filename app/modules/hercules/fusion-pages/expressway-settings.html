@@ -6,7 +6,7 @@
     <setting-section setting="clusterSettings.upgradeSchedule">
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
-        <p translate="hercules.settings.scheduleUpgrade.description"></p>
+        <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
         <upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
       </div>
     </setting-section>
@@ -34,18 +34,18 @@
         <div ng-repeat="service in clusterSettings.enabledServices">
           <div ng-if="service === 'c_cal'" class="sub-section">
             <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarHeader"></h5>
-            <p translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCalendarServiceName }"></p>
+            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCalendarServiceName }"></p>
             <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="clusterSettings.deactivateService('c_cal', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
           </div>
           <div ng-if="service === 'c_ucmc'" class="sub-section">
             <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCallHeader"></h5>
-            <p translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCallServiceName }"></p>
+            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCallServiceName }"></p>
             <button type="button" class="btn btn--alert" ng-click="clusterSettings.deactivateService('c_ucmc', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
           </div>
         </div>
       </div>
       <div ng-if="clusterSettings.enabledServices.length < 2">
-        <p translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
       </div>
     </setting-section>
 
@@ -53,10 +53,10 @@
 
       <div class="sub-section">
         <h5 class="sub-section__label">{{clusterSettings.localizedRemoveClusterHeader}}</h5>
-        <p translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
         <div ng-if="clusterSettings.enabledServices.length > 1">
           <button type="button" class="btn btn--alert" disabled="disabled" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
-          <p translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
+          <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
         </div>
         <div ng-if="clusterSettings.enabledServices.length < 2">
           <button type="button" class="btn btn--alert" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
