@@ -236,7 +236,7 @@
       EdiscoveryService.downloadReport(report)
         .finally(function () {
           vm.downloadingReport = false;
-      });
+        });
     }
   }
   angular
