@@ -184,14 +184,13 @@ describe('Controller: AddResourceController', function () {
       expect(controller.hostname).toBe('old_hostname');
     });
 
-    it('should provision management connector and the new connector, but nothing else', function () {
+    it('should provision the new connector, but nothing else', function () {
       spyOn(fusionClusterServiceMock, 'provisionConnector');
       fusionClusterServiceMock.provisionConnector.and.returnValue($q.when());
       controller.preregisterAndProvisionExpressway(newConnectorType);
       $scope.$apply();
       expect(fusionClusterServiceMock.provisionConnector).toHaveBeenCalledWith(clusterIdOfNewCluster, newConnectorType);
-      expect(fusionClusterServiceMock.provisionConnector).toHaveBeenCalledWith(clusterIdOfNewCluster, 'c_mgmt');
-      expect(fusionClusterServiceMock.provisionConnector).toHaveBeenCalledTimes(2);
+      expect(fusionClusterServiceMock.provisionConnector).toHaveBeenCalledTimes(1);
     });
 
     it('should add the new cluster to the FMS allow-list exactly once, and with the correct clusterId', function () {

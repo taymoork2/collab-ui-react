@@ -47,13 +47,13 @@
 
     function getUpgradeSchedule(id) {
       var orgId = Authinfo.getOrgId();
-      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgrade_schedule')
+      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
         .then(extractData);
     }
 
     function setUpgradeSchedule(id, params) {
       var orgId = Authinfo.getOrgId();
-      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgrade_schedule', params);
+      return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params);
     }
 
     function postponeUpgradeSchedule(id) {
