@@ -310,7 +310,8 @@
       getAll: getAll,
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
-      defuseV2Connector: defuseV2Connector
+      defuseV2Connector: defuseV2Connector,
+      moveV2Host: moveV2Host
     };
   }
 
