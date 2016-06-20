@@ -215,6 +215,38 @@
         .post(url, payLoad);
     };
 
+    function get(clusterId) {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .then(extractDataFromResponse);
+    }
+
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractClustersFromResponse)
+        .then(onlyKeepFusedClusters)
+        //.then(addServicesStatuses)
+        .then(sort);
+    }
+
+    function extractClustersFromResponse(response) {
+      return response.data.clusters;
+    }
+
+    function onlyKeepFusedClusters(clusters) {
+      return _.filter(clusters, 'state', 'fused');
+    }
+
+    function extractDataFromResponse(res) {
+      return res.data;
+    }
+
+    function sort(clusters) {
+      // Could be anything but at least make it consistent between 2 page refresh
+      return _.sortBy(clusters, 'type');
+    }
+
     var hub = CsdmHubFactory.create();
     var clusterPoller = CsdmPoller.create(fetch, hub);
 
@@ -240,7 +272,9 @@
       getClusterList: getClusterList,
       getClustersV2: getClustersV2,
       createClusterV2: createClusterV2,
-      addRedirectTarget: addRedirectTarget
+      addRedirectTarget: addRedirectTarget,
+      get: get,
+      getAll: getAll
     };
   }
 

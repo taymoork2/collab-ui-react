@@ -2253,8 +2253,9 @@
               displayName: 'Overview'
             },
             params: {
-              groupName: {},
-              selectedClusters: {}
+              clusterName: {},
+              nodes: {},
+              cluster: {}
             }
           })
           .state('connector-details-v2.alarm-details', {
@@ -2278,7 +2279,6 @@
             },
             params: {
               clusterId: null,
-              properties: null,
               connector: null,
               hostLength: null
             }
