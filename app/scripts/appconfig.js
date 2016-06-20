@@ -2327,9 +2327,8 @@
             controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html',
             params: {
-              roomId: null,
-              startDate: null,
-              endDate: null
+              report: null,
+              reRun: false,
             }
           })
           .state('ediscovery.reports', {

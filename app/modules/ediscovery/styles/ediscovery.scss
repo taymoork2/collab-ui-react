@@ -79,14 +79,15 @@
   }
 
   .ediscovery-search {
+    padding-top: 2rem;
+    @media only screen and (max-height: 700px) {
+      padding-top:  2rem;
+    }
     .search-spinner {
       position: relative;
       top: 1rem;
       font-size: 3rem;
     }
-
-    padding-top: 2rem;
-
     .cs-tooltip {
       max-width: none;
     }
@@ -97,7 +98,6 @@
     .fit-in-cell {
       line-height: 35px;
     }
-
     .ediscovery-search-bar {
       text-align: center;
       .pointer {
@@ -105,6 +105,7 @@
       }
       .main-heading {
         padding-bottom: 1rem;
+        padding-top: 2.75rem;
         h1 {
           font-size: 2.2rem;
           color: $color-primary-base;
@@ -227,11 +228,12 @@
 
     .search-result {
       .create-form {
-        padding: 2.5rem 2.5rem 5rem 1rem;
+        padding: 2.5rem 2.5rem 5rem 0;
         @media only screen and (max-width: 800px) {
-          padding-top: 1.25rem;
-          padding-bottom: 2.5rem;
-          padding-right: 1.25rem;
+          padding: 1.25rem 1.25rem 2.5rem 0;
+        }
+        @media only screen and (max-width: 640px) {
+          padding-left: 1rem;
         }
         h2 {
           padding-right: 1rem;
@@ -272,7 +274,7 @@
           padding-bottom: 1.5rem;
           h6 {
             padding-bottom: 0.25rem;
-            color: $gray-base;
+            color: $gray-light-1;
             text-transform: uppercase;
           }
           .progressbar-info {
@@ -284,23 +286,23 @@
           padding-right: 2rem;
         }
       }
-      .left-side {
-        padding-left: 1rem;
-        .logo {
-          color: $gray-base;
-          font-size: 11rem;
-          padding-top: 1.5rem;
-          @media only screen and (max-width: 1200px) {
-            font-size: 10rem;
-          }
-          @media only screen and (max-width: 800px) {
-            font-size: 8rem;
-            padding-top: 0.75rem;
-          }
-          @media only screen and (max-width: 640px) {
-            font-size: 6rem;
-            height: 8rem;
-          }
+      .report-logo-column {
+        max-width:406px;
+        @media only screen and (max-width: 640px) {
+          max-width:100%;
+        }
+      }
+      .report-logo {
+        color: $gray-base;
+        font-size: 210px;
+        padding-top: 1.5rem;
+        @media only screen and (max-width: 800px) {
+          font-size:10rem;
+          padding-top: 0.75rem;
+        }
+        @media only screen and (max-width: 640px) {
+          font-size:4rem;
+          height: 5rem;
         }
       }
     }
