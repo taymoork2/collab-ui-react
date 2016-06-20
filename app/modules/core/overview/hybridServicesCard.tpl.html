@@ -67,7 +67,7 @@
 <section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
 </section>
-<footer ng-if="!card.enabled" class="disabled-footer">
+<footer ng-if="!card.enabled" class="disabled-footer hybrid-disabled-footer">
   <div ng-if="!card.isCSB">
     <p>{{card.notEnabledFooter| translate}}</p>
   </div>

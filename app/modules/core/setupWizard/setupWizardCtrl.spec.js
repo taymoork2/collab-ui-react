@@ -234,6 +234,18 @@ describe('SetupWizardCtrl', function () {
 
   });
 
+  describe('When Authinfo.isCSB is disabled', function () {
+    beforeEach(function () {
+      Authinfo.isCSB.and.returnValue(false);
+      initController();
+    });
+
+    it('the wizard should have 5 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    });
+
+  });
+
   describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {

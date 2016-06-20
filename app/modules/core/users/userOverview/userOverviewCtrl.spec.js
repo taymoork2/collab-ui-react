@@ -45,7 +45,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Authinfo, 'isCSB').and.returnValue(false);
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Notification, 'success');
 
     // eww
@@ -223,7 +223,7 @@ describe('Controller: UserOverviewCtrl', function () {
   describe('When Authinfo.isCSB returns false', function () {
     it('should set the controller.isCSB to false', function () {
       $httpBackend.flush();
-      expect(controller.isCSB).toBe(false);
+      expect(controller.isCSB).toBe(true);
     });
   });
 });
