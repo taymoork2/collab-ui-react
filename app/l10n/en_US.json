@@ -1429,9 +1429,9 @@
     "fusion": {
       "list": {
         "title": "Clusters",
-        "empty": "No clusters to display.",
+        "empty": "No clusters found.",
         "users": "Users:",
-        "releaseChannel": "Release Channels:",
+        "releaseChannel": "Release Channel:",
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
@@ -1439,7 +1439,7 @@
         "expressway-short": "EW",
         "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "mediafusion": "Mediafusion"
+        "mediafusion": "Media Fusion"
       }
     }
   },
