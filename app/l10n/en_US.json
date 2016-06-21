@@ -1429,9 +1429,9 @@
     "fusion": {
       "list": {
         "title": "Clusters",
-        "empty": "No clusters to display.",
+        "empty": "No clusters found.",
         "users": "Users:",
-        "releaseChannel": "Release Channels:",
+        "releaseChannel": "Release Channel:",
         "upgradeTime": "Upgrade Time:",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
@@ -1439,7 +1439,7 @@
         "expressway-short": "EW",
         "mediafusion-short": "MS",
         "expressway": "Expressway",
-        "mediafusion": "Mediafusion"
+        "mediafusion": "Media Fusion"
       }
     }
   },
@@ -2848,13 +2848,17 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "releaseChannel": "Release channel",
+      "doYouStillWantToContinue": "Do you still want to continue ?",
+      "youHostNoAvailable": "Your host will no longer be available in future"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}."
+      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "moveHost": "Move Host"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2884,7 +2888,10 @@
       "back": "Back",
       "errorTitle": "Registration Error",
       "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again."
+      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
+      "titleV2": "Register New Hybrid Media Node",
+      "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3492,7 +3499,7 @@
     "exportFinishedWithErrorsTooltip": "Export finished with errors.",
     "exportFailedTooltip": "Export failed.",
     "exportStartedToast": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
-    "exportRejectedToast": "Export failed. Try again.",
+    "exportRejectedToast": "Export failed. Check the status of your connection to the site and then start the export process again. If the problem persists, contact WebEx support.",
     "importButton": "Import",
     "importStartModalTitle": "Import WebEx User Attributes",
     "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select Import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
@@ -3501,7 +3508,7 @@
     "importFinishedWithErrorsTooltip": "Import finished with errors.",
     "importFailedTooltip": "Import failed.",
     "importStartedToast": "This import may take a while. The import process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site.",
-    "importRejectedToast": "Import failed. Try again.",
+    "importRejectedToast": "Import failed. Check the status of your connection to the site and then start the import process again. If the problem persists, contact WebEx support.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",

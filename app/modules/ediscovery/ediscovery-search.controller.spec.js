@@ -192,36 +192,60 @@ describe('Controller: EdiscoverySearchController', function () {
       httpBackend
         .when('GET', 'l10n/en_US.json')
         .respond({});
+    }));
 
+    it('inits a rerun using stateParams content', function () {
       ediscoverySearchController = $controller('EdiscoverySearchController', {
         $translate: $translate,
         $scope: $scope,
         EdiscoveryService: EdiscoveryService,
         $stateParams: {
-          startDate: "startDateFromStateParam",
-          endDate: "endDateFromStateParam",
-          roomId: "roomIdFromStateParam"
+          report: {
+            id: '1234',
+            displayName: 'whatever',
+            roomQuery: {
+              roomId: 'roomIdFromStateParam',
+              startDate: 'startDateFromStateParam',
+              endDate: 'endDateFromStateParam'
+            }
+          },
+          reRun: true
         }
       });
-    }));
 
-    it('automatically performs a search using stateParams content', function () {
+      expect(ediscoverySearchController.searchCriteria.roomId).toEqual('roomIdFromStateParam');
+      expect(ediscoverySearchController.searchCriteria.displayName).toEqual('whatever');
+      expect(ediscoverySearchController.searchCriteria.startDate).toEqual('startDateFromStateParam');
+      expect(ediscoverySearchController.searchCriteria.endDate).toEqual('endDateFromStateParam');
+      expect(ediscoverySearchController.report).toBe(null);
+      expect(ediscoverySearchController.currentReportId).toBe(null);
+    });
 
-      sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
-      var promise = $q.resolve({
-        "id": "1234",
-        "displayName": "whatever",
-        "lastReadableActivityDate": "irrelevant",
-        "published": "irrelevent"
+    it('shows a report and starts polling when stateParams rerun is false', function () {
+      ediscoverySearchController = $controller('EdiscoverySearchController', {
+        $translate: $translate,
+        $scope: $scope,
+        EdiscoveryService: EdiscoveryService,
+        $stateParams: {
+          report: {
+            id: '4567',
+            displayName: 'whatever',
+            roomQuery: {
+              roomId: 'roomIdFromStateParam',
+              startDate: 'startDateFromStateParam',
+              endDate: 'endDateFromStateParam',
+            }
+          },
+          reRun: false
+        }
       });
-      EdiscoveryService.getAvalonRoomInfo.returns(promise);
-
-      httpBackend.flush();
-
-      expect(ediscoverySearchController.searchCriteria.roomId).toEqual("roomIdFromStateParam");
-      expect(ediscoverySearchController.searchCriteria.displayName).toEqual("whatever");
-      expect(ediscoverySearchController.searchCriteria.startDate).toEqual("startDateFromStateParam");
-      expect(ediscoverySearchController.searchCriteria.endDate).toEqual("endDateFromStateParam");
+      expect(ediscoverySearchController.searchCriteria.roomId).toEqual('roomIdFromStateParam');
+      expect(ediscoverySearchController.searchCriteria.displayName).toEqual('whatever');
+      expect(ediscoverySearchController.searchCriteria.startDate).toEqual('startDateFromStateParam');
+      expect(ediscoverySearchController.searchCriteria.endDate).toEqual('endDateFromStateParam');
+      expect(ediscoverySearchController.report.id).toEqual('4567');
+      expect(ediscoverySearchController.report.displayName).toEqual('whatever');
+      expect(ediscoverySearchController.currentReportId).toBe('4567');
     });
 
   });

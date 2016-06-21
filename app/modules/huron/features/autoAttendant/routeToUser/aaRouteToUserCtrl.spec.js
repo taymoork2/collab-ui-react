@@ -355,6 +355,24 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl3).respond(200, userListEmptyCISResponse);
 
+    var listUsersUrl4 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+      '?' + '&' + listUsersProps.attributes +
+      '&' + listUsersProps.filter +
+      '&startIndex=10' +
+      '&count=1' +
+      '&sortBy=' + listUsersProps.sortBy +
+      '&sortOrder=' + listUsersProps.sortOrder;
+    $httpBackend.whenGET(listUsersUrl4).respond(200, userListCISResponse2);
+
+    var listUsersUrl5 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+      '?' + '&' + listUsersProps.attributes +
+      '&' + listUsersProps.filter +
+      '&startIndex=10' +
+      '&count=9' +
+      '&sortBy=' + listUsersProps.sortBy +
+      '&sortOrder=' + listUsersProps.sortOrder;
+    $httpBackend.whenGET(listUsersUrl5).respond(200, userListCISResponse2);
+
     // user with all props including display name and extension
     var userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
     $httpBackend.whenGET(userCisUrl).respond(200, completeUserCisResponse);
@@ -417,7 +435,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       var nameNumber1 = users[0].displayName.concat(' (')
         .concat(users[0].extension).concat(')');
 
-      controller.sort.minOffered = 1;
+      controller.sort.fullLoad = 1;
 
       controller.getUsers();
 
@@ -436,6 +454,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         $scope: $scope
       });
 
+      controller.sort.fullLoad = 2;
       controller.getUsers();
 
       $httpBackend.flush();
@@ -453,6 +472,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       });
 
       $scope.voicemail = true;
+      controller.sort.fullLoad = 2;
 
       controller.getUsers();
 
@@ -495,7 +515,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       // just the display name when it's unclear if user has extension due to CMI error (non-404)
       var nameNumber = users[0].displayName;
 
-      controller.sort.minOffered = 1;
+      controller.sort.fullLoad = 1;
 
       controller.getUsers();
 
@@ -515,7 +535,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         $scope: $scope
       });
 
-      controller.sort.minOffered = 0;
+      controller.sort.fullLoad = 0;
 
       controller.getUsers();
 

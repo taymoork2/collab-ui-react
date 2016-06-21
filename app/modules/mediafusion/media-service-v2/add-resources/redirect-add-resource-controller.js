@@ -36,6 +36,7 @@
             vm.clusterList.push(cluster.name);
           }
         });
+        $log.log("clusterList", vm.clusterList);
       });
     }
     vm.getV2Clusters();

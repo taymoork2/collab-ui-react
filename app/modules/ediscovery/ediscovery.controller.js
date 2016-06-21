@@ -139,11 +139,7 @@
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
         var paging = res.paging;
-        if (paging.next) {
-          vm.moreReports = true;
-        } else {
-          vm.moreReports = false;
-        }
+        vm.moreReports = !!paging.next;
         if (vm.concat) {
           vm.reports = vm.reports.concat(reports);
         } else {
@@ -152,11 +148,8 @@
         if (vm.gridApi) {
           vm.gridApi.infiniteScroll.dataLoaded(false, true);
         }
-
       }).finally(function (res) {
         vm.readingReports = false;
-        //$timeout.cancel(avalonPoller);
-        //avalonPoller = $timeout(pollAvalonReport, 5000);
       });
     }
 
@@ -166,11 +159,10 @@
       }
     }
 
-    function rerunReport(roomId, startDate, endDate) {
+    function rerunReport(report) {
       $state.go('ediscovery.search', {
-        roomId: roomId,
-        startDate: startDate,
-        endDate: endDate
+        report: report,
+        reRun: true
       });
     }
 

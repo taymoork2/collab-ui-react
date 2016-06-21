@@ -266,7 +266,7 @@
 
         'model.licenseCount': function ($viewValue, $modelValue) {
           if (hasUserServices()) {
-            return ($viewValue > 0) ? $viewValue : _licenseCountDefaultQuantity;
+            return ($viewValue === 0) ? _licenseCountDefaultQuantity : $viewValue;
           } else {
             return 0;
           }
