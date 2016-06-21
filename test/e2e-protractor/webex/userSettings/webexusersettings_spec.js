@@ -115,13 +115,13 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
     it('should display WebEx user basic settigns page (panel 3)', function () {
       if (setup) {
-        expect(webExUserSettings.userSettingsPanel.isPresent()).toBeTruthy();
+        utils.wait(webExUserSettings.userSettingsPanel);
         expect(webExUserSettings.userSettingsPanel.isDisplayed()).toBeTruthy();
       }
     });
 
-    it('should allow click on privileges in panel 3', function () {
-      expect(webExUserSettings.userPrivilegesLink.isPresent()).toBeTruthy();
+    it('should click on privileges link in panel 3', function () {
+      utils.wait(webExUserSettings.userPrivilegesLink);
       utils.click(webExUserSettings.userPrivilegesLink);
     });
 
@@ -132,6 +132,27 @@ while (1 >= webExCommon.testInfo.describeCount) {
         expect(webExUserSettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
       }
     });
+
+    it('should allow navigation back to the 3rd panel', function () {
+      if (setup) {
+        utils.clickLastBreadcrumb();
+        utils.wait(webExUserSettings.userSettingsPanel);
+      }
+    });
+
+    if (webExCommon.testInfo.testType == "T30") {
+      it('should allow edit and save in panel 3', function () {
+        if (setup) {
+          utils.wait(webExUserSettings.mcAuoCheckbox);
+          webExUserSettings.mcAuo.click();
+
+          expect(element(by.id('saveBtn')).isPresent()).toBeTruthy();
+          utils.click(element(by.id('saveBtn')));
+
+          utils.wait(webExUserSettings.alertSuccess);
+        }
+      });
+    }
 
     // it('should pause', function () {
     //   browser.pause();

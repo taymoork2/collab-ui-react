@@ -6,6 +6,9 @@ var WebExUserSettingsPage = function () {
   this.errorPanel = element(by.id('errSection'));
   this.userPrivilegesLink = element(by.id('webex-user-privs'));
 
+  this.alertSuccess = element(by.css('.toast-success'));
+  this.alertError = element(by.css('.toast-error'));
+
   this.mc = element(by.id('MC'));
   this.ec = element(by.id('EC'));
   this.tc = element(by.id('TC'));
@@ -34,13 +37,6 @@ var WebExUserSettingsPage = function () {
 
   this.callInTeleconf = element(by.model('WebExUserSettings.userPrivileges.general.callInTeleconf.value'));
   this.callInTeleconfCheckbox = this.callInTeleconf.element(by.className('checkboxValue'));
-
-  //this.saveButton = element(by.css('[ng-click="WebExUserSettings.btnSave(userSettingsView.form)"]'));
-  this.saveButton = element(by.id('saveBtn'));
-
-  //alertify-log-error
-  this.alertSuccess = element(by.css('.toast-success'));
-  this.alertError = element(by.css('.toast-error'));
 
   this.t30TestUser = {
     username: 'prov9usr@mailinator.com',
