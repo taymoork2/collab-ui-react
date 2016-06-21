@@ -1,12 +1,17 @@
 <div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents" ng-switch on="row.entity.state">
-  <span class="fit-in-cell" ng-switch-when="RUNNING">
-    {{'ediscovery.reportStates.RUNNING' | translate}}...
-    <span ng-if="row.entity.progress > 0">
-      {{row.entity.progress}}%
-    </span>
-    <span class="spinner-example--small">
-      <i class="icon icon-spinner" style="top:4px"></i>
-    </span>
+  <span class="fit-in-cell" ng-switch-when="RUNNING" >
+     <div class="progressbar-info">
+       <span>{{'ediscovery.reportStates.RUNNING' | translate}}...</span>
+       <span class="progressbar-progress">{{row.entity.progress}}%</span>
+     </div>
+     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
+  </span>
+  <span class="fit-in-cell" ng-switch-when="CREATED" >
+     <div class="progressbar-info">
+       <span>{{'ediscovery.reportStates.CREATED' | translate}}...</span>
+       <span class="progressbar-progress">0</span>
+     </div>
+     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
   </span>
 
   <span ng-switch-when="FAILED" class="failure" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
