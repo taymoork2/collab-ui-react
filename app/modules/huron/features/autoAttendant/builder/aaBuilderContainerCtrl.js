@@ -39,7 +39,7 @@
         vm.ui = AAUiModelService.getUiModel();
         $scope.$broadcast('ScheduleChanged');
         setUpStyle();
-        AAScrollBar.resizeBuilderScrollBar(100); // delay for transitions to finish
+        AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.SHORT); // delay for transitions to finish
       });
     }
 

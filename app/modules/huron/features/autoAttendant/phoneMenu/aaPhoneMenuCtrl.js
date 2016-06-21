@@ -237,7 +237,7 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
 
-      AAScrollBar.resizeBuilderScrollBar(1000); // delay resize for all transitions to finish (from action change)
+      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.LONG); // delay resize for all transitions to finish (from action change)
     }
 
     function setPhonemenuFormDirty() {

@@ -69,11 +69,11 @@
       });
 
       it('handle a valid target that does not need scrolling, return after given delay', function () {
-        AAScrollBar.scrollBuilderToTarget("#testTarget0", 1000);
+        AAScrollBar.scrollBuilderToTarget("#testTarget0", AAScrollBar.delay.LONG);
         expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
 
-        $timeout.flush(999);
+        $timeout.flush(AAScrollBar.delay.LONG - 1);
         expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();
 
@@ -83,7 +83,7 @@
       });
 
       it('handle valid target that needs scrolling', function () {
-        spyOn($.fn, 'outerHeight').and.returnValue(100);
+        spyOn($.fn, 'outerHeight').and.returnValue(AAScrollBar.delay.SHORT);
 
         expect(container.getNiceScroll).not.toHaveBeenCalled();
         expect(container.animate).not.toHaveBeenCalled();

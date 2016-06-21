@@ -8,13 +8,21 @@
   /* @ngInject */
   function AAScrollBar($timeout) {
 
+    var delay = {
+      NONE: 0,
+      SHORT: 400,
+      MEDIUM: 800,
+      LONG: 1000
+    };
+
     var containerId = "#builderScrollContainer";
-    var timeoutDelayDefault = 0;
-    var positionOffset = 90; //additional px for the vertical lane x2 and the +
+    var timeoutDelayDefault = delay.NONE;
+    var positionOffset = 90; //additional pixels for the vertical line x2 and the (+)
 
     var service = {
       resizeBuilderScrollBar: resizeBuilderScrollBar,
-      scrollBuilderToTarget: scrollBuilderToTarget
+      scrollBuilderToTarget: scrollBuilderToTarget,
+      delay: delay
     };
 
     return service;
