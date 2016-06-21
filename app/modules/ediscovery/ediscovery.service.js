@@ -88,7 +88,7 @@
 
     function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
-      var ed = (endDate !== null) ? moment.utc(endDate).add('days', 1).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
       return $http.post(runUrl, {
         "roomId": roomId,
         "responseUrl": responseUrl,
