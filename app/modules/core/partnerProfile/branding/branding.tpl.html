@@ -1,11 +1,11 @@
 <ng-form name="brandingForm" isolate-form="partnerProfileForm"  class="branding">
 
   <!-- branding logo upload -->
-  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos">
+  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos || bctrl.isDirectCustomer">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">
       <h4 translate="partnerProfile.brandingTitle"></h4>
       <div class="form-spacing form-group">
-        <span ng-if="!bctrl.isPartner"  translate="customerProfile.brandingInfo"></span>
+        <span ng-if="!bctrl.isPartner" translate="customerProfile.brandingInfo"></span>
         <span ng-if="bctrl.isPartner"  translate="partnerProfile.brandingInfo"></span>
       </div>
     </div>
@@ -16,7 +16,8 @@
             <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="partnerLogoRadio">
               <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
+              <span ng-if="!isPartner && bctrl.isDirectCustomer" translate="partnerProfile.useCiscoLogo"></span>
+              <span ng-if="!isPartner && !bctrl.isDirectCustomer" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
             </label>
           </div>
 

@@ -30,6 +30,7 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.setDeviceModal = setDeviceModal;
+    vm.hasUserServices = hasUserServices;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -162,12 +163,28 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        labelClass: 'medium-4',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
-        required: true,
+
         secondaryLabel: $translate.instant('trials.users')
       },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return hasUserServices();
+        },
+        'templateOptions.disabled': function () {
+          return !hasUserServices();
+        },
+
+        'model.licenseCount': function ($viewValue, $modelValue) {
+          if (hasUserServices()) {
+            return ($viewValue === 0) ? vm.preset.licenseCount : $viewValue;
+          } else {
+            return 0;
+          }
+        }
+      },
+
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
@@ -191,7 +208,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         options: [30, 60, 90]
       },
     }];
@@ -226,7 +243,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -325,6 +342,14 @@
 
         toggleTrial();
       });
+    }
+
+    function hasUserServices() {
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var result = _.some(services, {
+        enabled: true
+      });
+      return result;
     }
 
     // If Webex Trials are enabled, we switch out offerType Collab for Message

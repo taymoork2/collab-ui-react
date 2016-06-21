@@ -30,8 +30,8 @@ describe('Service: CustomerAdministratorService', function () {
           expect(response).toBe('A Customer Organization Id must be passed');
         });
     });
-    it(' should verify that a valid ID is passed to unassignCustomerSalesAdmin', function () {
-      CustomerAdministratorService.unassignCustomerSalesAdmin()
+    it(' should verify that a valid ID is passed to removeCustomerSalesAdmin', function () {
+      CustomerAdministratorService.removeCustomerSalesAdmin()
         .catch(function (response) {
           expect(response).toBe('A Customer Organization Id must be passed');
         });
@@ -53,11 +53,11 @@ describe('Service: CustomerAdministratorService', function () {
     });
   });
 
-  describe('unassignCustomerSalesAdmin', function () {
+  describe('removeCustomerSalesAdmin', function () {
     it('should patch Org data to User', function () {
       $httpBackend.whenPATCH(userUuidRegex).respond([200, {}]);
 
-      CustomerAdministratorService.unassignCustomerSalesAdmin(customerId, userUuid).then(function (response) {
+      CustomerAdministratorService.removeCustomerSalesAdmin(customerId, userUuid).then(function (response) {
         expect(response.status).toEqual(200);
       });
       $httpBackend.flush();

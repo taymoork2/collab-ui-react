@@ -2,7 +2,8 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h4 class="modal-title" translate="hercules.clusters.deregisterHeader"></h4>
+  <h4 class="modal-title" translate="hercules.clusters.deregisterHeader" ng-if="!clusterDeregister.isF410enabled"></h4>
+  <h4 class="modal-title" translate="hercules.clusters.deregisterConfirmRemoval" ng-if="clusterDeregister.isF410enabled"></h4>
 </div>
 <div class="modal-body">
   <div ng-show="clusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
@@ -12,7 +13,7 @@
     <p>{{clusterDeregister.deregisterAreYouSure}}</p>
     <ul>
       <li translate="hercules.clusters.deregisterCausesListItem1"></li>
-      <li>{{clusterDeregister.deregisterCausesListItem2}}</li>
+      <li ng-if="!clusterDeregister.isF410enabled">{{clusterDeregister.deregisterCausesListItem2}}</li>
       <li translate="hercules.clusters.deregisterCausesListItem3"></li>
     </ul>
   </div>
@@ -28,6 +29,7 @@
           type="button"
           ng-disabled="vm.deregistering"
           ng-click="clusterDeregister.deregister()">
-    <span translate="hercules.clusters.deregisterConfirm"></span>
+    <span translate="hercules.clusters.deregisterConfirm" ng-if="!clusterDeregister.isF410enabled"></span>
+    <span translate="hercules.clusters.deregisterConfirmRemoval" ng-if="clusterDeregister.isF410enabled"></span>
   </button>
 </div>

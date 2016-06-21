@@ -261,6 +261,34 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
+    describe('hasUserServices() ', function () {
+      beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.meetingTrial.enabled = false;
+        controller.webexTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.roomSystemTrial.enabled = true;
+        $scope.$apply();
+      });
+
+      it('should return false when only roomSystemTrial is enabled', function () {
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return false when no services are enabled', function () {
+        controller.roomSystemTrial.enabled = false;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return true when any user service is enabled', function () {
+        controller.messageTrial.enabled = true;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeTruthy();
+      });
+    });
+
     describe('with context service checked', function () {
 
       it('should enable context service', function () {
@@ -281,6 +309,14 @@ describe('Controller: TrialAddCtrl', function () {
         expect(TrialContextService.addService).toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
       });
+
+      it('should not be able to proceed if no other trial services are checked', function () {
+        // uncheck all services except for Context Service
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'contextTrial';
+        });
+        expect(controller.hasTrial()).toBeFalsy();
+      });
     });
 
     describe('without context service checked', function () {
@@ -293,6 +329,14 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should not enable context service', function () {
         expect(TrialContextService.addService).not.toHaveBeenCalled();
+      });
+
+      it('should be able to proceed with trial services enabled', function () {
+        // uncheck Context Service and all other services except for Message
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'messageTrial';
+        });
+        expect(controller.hasTrial()).toBeTruthy();
       });
     });
   });

@@ -4,6 +4,10 @@
     color: $brand-danger;
   }
 
+  .status-warning {
+    color: $brand-warning-dark;
+  }
+
   .status-notActivated {
     color: $gray-dark;
   }
@@ -35,6 +39,12 @@
     .toggle-switch {
       margin-bottom: 0;
     }
+  }
+
+  .info-description {
+    font-family: $brand-font-light;
+    letter-spacing: 0.02em;
+    line-height: inherit;
   }
 
   .extension-description {

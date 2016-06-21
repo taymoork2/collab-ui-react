@@ -1,0 +1,41 @@
+<cs-card-layout class="three-fourths">
+  <!--cs-card class="medium menu-card header-bar orange overview-card">
+    <article>
+        <header>
+            <div class="metrics-header" translate ='mediaFusion.metrics.peakutilization'></div>
+        </header>
+        <section>
+            <div class="metrics-info">
+             <p translate ='mediaFusion.metrics.peakUtilizationDescription'></p> 
+                <div class="percentage-count">{{(nav.peakUtilization) || 'N/A'}}</div>
+            </div>
+        </section>
+    </article>
+  </cs-card-->
+ <cs-card class="medium menu-card header-bar green overview-card">
+    <article>
+        <header>
+            <div class="metrics-header" translate ='mediaFusion.metrics.averageutilization'></div>
+        </header>
+        <section>
+            <div class="metrics-info">
+             <p translate ='mediaFusion.metrics.avgerageUtilizationDescription'></p> 
+                <div class="metrics-count">{{(nav.averageUtilization) || 'N/A'}}</div>
+            </div>
+        </section>
+    </article>
+ </cs-card>
+ <cs-card class="medium menu-card header-bar green overview-card">
+    <article>
+        <header>
+            <div class="metrics-header" translate ='mediaFusion.metrics.clusteravailability'></div>
+        </header>
+        <section>
+            <div class="metrics-info">
+                <p translate ='mediaFusion.metrics.clusterAvailabilityDescription'></p> 
+                <div class="metrics-count">{{(nav.clusterAvailability) || 'N/A'}}</div>
+            </div>
+        </section>
+    </article>
+  </cs-card>
+</cs-card-layout>

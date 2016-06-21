@@ -1,6 +1,6 @@
 <div class="ediscovery-search">
   <div class="ediscovery-search-bar">
-    <div class="main-heading">
+    <div class="main-heading" ng-if="!ediscoverySearchCtrl.roomInfo">
       <h1 translate="ediscovery.heading"></h1>
       <span translate="ediscovery.subheading"></span>
     </div>
@@ -13,17 +13,17 @@
 
     <p class="search-tip" translate="ediscovery.searchTip"></p>
 
-    <div class="searchError" ng-show="ediscoverySearchCtrl.error">
-      {{ediscoverySearchCtrl.error}}
+    <div class="search-error" ng-if="ediscoverySearchCtrl.error">
+      <span>{{ediscoverySearchCtrl.error}}</span>
     </div>
 
-    <div ng-show="ediscoverySearchCtrl.searchInProgress">
+    <div ng-show="ediscoverySearchCtrl.searchingForRoom">
       <span class="search-spinner">
         <i class="icon icon-spinner"></i>
       </span>
     </div>
   </div>
 
-  <div ng-show="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
+  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
 
 </div>

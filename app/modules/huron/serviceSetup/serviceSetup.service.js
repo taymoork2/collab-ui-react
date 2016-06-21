@@ -72,7 +72,7 @@
           customerId: Authinfo.getOrgId(),
           objectId: objectId
         }, {
-          timeZone: timeZone
+          timeZoneName: timeZone
         }).$promise;
       },
 
@@ -138,18 +138,9 @@
 
       getTranslatedTimeZones: function (timeZones) {
         var localizedTimeZones = _.map(timeZones, function (timeZone) {
-          if (_.has(timeZone, 'id')) {
-            // for compatibility with new jodaTimeZones.json called by cmiServices.js.
-            return _.extend(timeZone, {
-              label: $translate.instant('timeZones.' + timeZone.id),
-              value: timeZone.id
-            });
-          } else {
-            // for compatibility with old timeZones.json called by cmiServices.js.
-            return _.extend(timeZone, {
-              label: $translate.instant('timeZones.' + timeZone.value),
-            });
-          }
+          return _.extend(timeZone, {
+            label: $translate.instant('timeZones.' + timeZone.id)
+          });
         });
         return localizedTimeZones;
       },

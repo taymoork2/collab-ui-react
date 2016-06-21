@@ -29,22 +29,6 @@
     <div gridscrollbar id="supportTable" class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
   </div>
 
-  <!-- Call Info Panel -->
-  <div class="panel panel-default call-info-panel" id="call-info-panel" ng-show="callInfoActive">
-    <div class="panel-heading panel-heading-default">
-      <div class="panel-title panel-title-default">
-        <strong id="subTitleCallInfo" translate="supportPage.subTitleCallInfo"></strong>
-        <strong>{{emailAddress}}</strong>
-        <i id="closeCallInfo" ng-click="closeCallInfo()" class="fa fa-times add-user-close pull-right"></i>
-      </div>
-    </div>
-
-    <!-- No Results -->
-    <div class="panel-body">
-      <label ng-show="!getPending && (logInfo.length === 0 || !logInfo)"><span id="noResults" translate="supportPage.noResults"></span></label>
-    </div>
-  </div>
-
   <!-- Call Flow Panel -->
   <div class="panel panel-default call-info-panel" id="call-flow-panel" ng-show="callFlowActive">
     <div class="panel-heading panel-heading-default">
