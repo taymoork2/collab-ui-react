@@ -456,4 +456,41 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(false);
     });
   });
+
+  describe('areAdditionalDevicesAllowed  function ', function () {
+    it('should return false when limit is reached', function () {
+
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 20,
+          maxDeviceTrials: 20
+        })
+      });
+
+      controller = $controller('TrialDeviceController');
+      controller.canAddMoreDevices = false;
+      $rootScope.$apply();
+
+      var result = controller.areAdditionalDevicesAllowed();
+      expect(result).toBe(false);
+    });
+
+    it('should return true when the limit is not reached', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 15,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      controller.canAddMoreDevices = false;
+      $rootScope.$apply();
+
+      var result = controller.areAdditionalDevicesAllowed();
+      expect(result).toBe(true);
+    });
+
+  });
 });

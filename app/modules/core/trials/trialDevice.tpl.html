@@ -11,7 +11,7 @@
 <!-- body -->
 <div class="modal-body trials">
 <!-- error state - cannot add more devices -->
-  <div class="messagebox-backdrop" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
+  <div class="messagebox-backdrop" ng-if="!callTrial.areAdditionalDevicesAllowed()">
     <div class="message-box splash-msg">
       <div class="splash-msg__title">
         <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
@@ -38,7 +38,7 @@
   </div>
   <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
     <!-- normal state -->
-  <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+  <div ng-if="callTrial.areAdditionalDevicesAllowed()">
     <!-- select devices -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -74,7 +74,7 @@
 <!-- footer -->
 <div class="modal-footer trials">
   <a class="alt-btn-link"
-    ng-if="callTrial.canAddDevice || !callTrial.limitReached"
+    ng-hide="!callTrial.areAdditionalDevicesAllowed()"
     ng-click="callTrial.skip(true); trial.nextStep()"
     translate="trialModal.skip">
   </a>
@@ -83,21 +83,11 @@
     ng-disabled="trial.loading"
     translate="common.back">
   </button>
-    <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid || !callTrial.getTotalQuantity()>0">
+      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || !callTrial.getTotalQuantity()>0)">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>
   </button>
-  </div>
-
-  <div ng-if="!callTrial.canAddMoreDevices && callTrial.limitReached">
-  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="callTrial.skip(true); trial.nextStep()" >
-      <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
-      <span ng-if="trial.hasNextStep()" translate="common.next"></span>
-  </button>
-  </div>
   </div>
 </div>
