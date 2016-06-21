@@ -2,13 +2,15 @@
 describe('Controller: EdiscoverySearchController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var ediscoverySearchController, EdiscoveryService, $q, $controller, httpBackend, $translate, $scope;
+  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, httpBackend, $translate, $scope;
 
-  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _$q_, _$rootScope_, $httpBackend, _$controller_) {
+  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend,
+    _$controller_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     httpBackend = $httpBackend;
     EdiscoveryService = _EdiscoveryService_;
+    EdiscoveryNotificationService = _EdiscoveryNotificationService_;
     $translate = _$translate_;
     $q = _$q_;
 
@@ -19,7 +21,8 @@ describe('Controller: EdiscoverySearchController', function () {
     ediscoverySearchController = $controller('EdiscoverySearchController', {
       $translate: $translate,
       $scope: $scope,
-      EdiscoveryService: EdiscoveryService
+      EdiscoveryService: EdiscoveryService,
+      EdiscoveryNotificationService: EdiscoveryNotificationService
     });
 
   }));
@@ -30,6 +33,7 @@ describe('Controller: EdiscoverySearchController', function () {
       "avalonRoomsUrl": "https://whatever.com/myFancyRoomsApi"
     });
     EdiscoveryService.getAvalonServiceUrl.returns(promise);
+    sinon.stub(EdiscoveryNotificationService, 'notify', function () {});
   });
 
   describe('Search for room', function () {

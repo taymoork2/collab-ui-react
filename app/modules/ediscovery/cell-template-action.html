@@ -13,7 +13,7 @@
         tooltip-append-to-body="true"
         class="icon icon-exit action-icons"
         ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
-  <span ng-if="grid.appScope.downloadable(row.entity.id) || row.entity.state === 'FAILED'"
+  <span ng-if="grid.appScope.downloadable(row.entity.id) || row.entity.state === 'FAILED' || row.entity.state === 'ABORTED'"
         tooltip-placement="left"
         cs-tooltip="Create new report with same query parameters"
         tooltip-animation="false"

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -177,6 +177,7 @@
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
           avalonPoller = $timeout(pollAvalonReport, 2000);
         } else {
+          EdiscoveryNotificationService.notify(report);
           disableAvalonPolling();
         }
       }).catch(function (err) {
