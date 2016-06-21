@@ -2,9 +2,9 @@
 describe('Controller: EdiscoverySearchController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, httpBackend, $translate, $scope;
+  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, httpBackend, $translate, $scope, Notification;
 
-  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend, _$controller_, Notification) {
+  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend, _$controller_, _Notification_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     httpBackend = $httpBackend;
