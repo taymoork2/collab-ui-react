@@ -190,7 +190,7 @@
           });
         }).finally(function () {
           enableAvalonPolling();
-      });
+        });
     }
 
     function reportProgress() {
