@@ -6,6 +6,13 @@
      </div>
      <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
   </span>
+  <span class="fit-in-cell" ng-switch-when="CREATED" >
+     <div class="progressbar-info">
+       <span>{{'ediscovery.reportStates.CREATED' | translate}}...</span>
+       <span class="progressbar-progress">0</span>
+     </div>
+     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
+  </span>
 
   <span ng-switch-when="FAILED" class="failure" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
     {{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}

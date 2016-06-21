@@ -36,7 +36,11 @@
         alive = true;
       } else {
         _.each(reports, function (report) {
-          report.progress = report.progress + (Math.floor(Math.random() * 10));
+          console.log(report.progress)
+          report.progress = report.progress + (Math.floor(Math.random() * 20));
+          if (report.progress > 0) {
+            report.state = "RUNNING";
+          }
           if (report.progress >= 100) {
             report.progress = 100;
             report.state = "COMPLETED";
@@ -59,11 +63,18 @@
       var reports = [];
       for (var i = 0; i < nrOfReports; i++) {
         report.displayName = "Mock report #" + i;
-        report.progress = Math.floor(Math.random() * 101);
         report.roomQuery.startDate = moment().subtract(24, 'hours').format();
         report.roomQuery.endDate = moment().format();
         report.lastUpdatedTime = moment();
-        report.state = "RUNNING";
+        if (Math.floor(Math.random() > 0.5)) {
+          report.progress = 0;
+          report.state = "CREATED";
+        } else {
+          report.progress = Math.floor(Math.random() * 90) + 1;
+          report.state = "RUNNING";
+        }
+
+
         reports.push(_.cloneDeep(report));
       }
       return reports;
