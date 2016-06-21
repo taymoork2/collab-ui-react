@@ -50,11 +50,7 @@
       var orgId = Authinfo.getOrgId();
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractReport)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+        .then(extractReport);
     }
 
     function getReports(offset, limit) {
@@ -62,20 +58,15 @@
       var reqParams = 'offset=' + offset + '&limit=' + limit;
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
-        .then(extractReports)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+        .then(extractReports);
     }
 
     function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
-      //  TODO: Implement proper handling of error when final API is in place
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
-        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
+        .post(urlBase + 'compliance/organization/' + orgId + '/reports/', {
           "displayName": displayName,
           "roomQuery": {
             "startDate": sd,
@@ -86,49 +77,30 @@
         .then(extractData);
     }
 
-    // TODO: Implement proper handling of error when final API is in place
-    function runReport(runUrl, roomId, responseUrl) {
+    function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http.post(runUrl, {
         "roomId": roomId,
-        "responseUrl": responseUrl
+        "responseUrl": responseUrl,
+        "startDate": sd,
+        "endDate": ed
       });
     }
 
     function patchReport(id, patchData) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("patching", res);
-        })
-        .catch(function (data) {
-          //console.log("error createReport: " + data)
-        });
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData);
     }
 
     function deleteReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("deleted", res);
-        })
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error createReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id);
     }
 
     function deleteReports() {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/')
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error deleteReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/');
     }
 
     function setEntitledForCompliance(orgId, userId, entitled) {

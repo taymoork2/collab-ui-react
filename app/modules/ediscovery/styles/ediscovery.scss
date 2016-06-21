@@ -197,36 +197,6 @@
         padding-top: 0.5rem;
       }
     }
-    .create-report {
-      padding-left: 9rem;
-      box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
-      border-radius: 2px;
-      margin-top: 2rem;
-
-      .cs-form__section .section__info {
-        margin-top: 2rem;
-      }
-
-      .content {
-        margin-left: 30px;
-        border:1px solid red;
-        font-weight: bold;
-      }
-
-      .progress-container {
-        width: 80%;
-        margin-top: 3.1rem;
-        button {
-          margin-top: 1rem;
-          margin-left: 3rem;
-        }
-      }
-
-      .fit {
-        margin-left: 0;
-      }
-    }
-
     .cs-form__section .section__content .sub-section {
       margin-bottom: 0.5rem;
       h5.large {
@@ -236,13 +206,11 @@
         margin-top: 1rem;
       }
     }
-
     .cs-form__section .section__content .sub-section__label {
       line-height: 0.5rem;
       margin-bottom: 0.5rem;
       margin-top: 1rem;
     }
-
     .search-result {
       .create-form {
         padding: 2.5rem 2.5rem 5rem 0;
@@ -321,6 +289,13 @@
           font-size:4rem;
           height: 5rem;
         }
+      }
+      span.cancel-icon {
+        position: relative;
+        top: 2rem;
+        font-size: 2rem;
+        color: $gray-light-1;
+        cursor: pointer;
       }
     }
   }
