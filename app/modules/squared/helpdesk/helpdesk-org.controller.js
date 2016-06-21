@@ -75,17 +75,18 @@
       return eft;
     }
 
-    function openExtendedInformation(title, message) {
+    function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
+        var orgStringified = JSON.stringify(vm.org, null, 4);
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
           controller: 'HelpdeskExtendedInformationCtrl as modal',
           resolve: {
             title: function () {
-              return title;
+              return 'helpdesk.customerDetails';
             },
             message: function () {
-              return message;
+              return orgStringified;
             }
           }
         });
@@ -94,7 +95,6 @@
 
     function initOrgView(org) {
       vm.org = org;
-      vm.orgStringified = JSON.stringify(org, null, 4);
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
