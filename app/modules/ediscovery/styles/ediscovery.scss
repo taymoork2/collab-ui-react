@@ -3,7 +3,9 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
-
+  a:focus {
+    box-shadow: none;
+  }
   .header-tabs {
     position: fixed;
     left: 0px;
@@ -16,33 +18,31 @@
     width: 100%;
     background: $brand-white;
     border-bottom: 1px solid $gray-light-3;
-    .active {
-      color: $color-primary-light !important;
-    }
-  }
-
-  div.menu-container {
-    padding-bottom: 5px;
-    ul.menu {
-      margin-left: 0;
-      padding: 0;
-      li {
-        display: inline;
-        margin-right: 1rem;
-        a {
-          color: #AEAEAF;
-          font-size: 1.0625rem;
-        }
-        a.active {
-          color: $page-header-nav-active-color;
-        }
-        a:focus {
-          box-shadow: inset 0 0 0 0;
+    .menu-container {
+      padding-bottom: 5px;
+      ul.menu {
+        margin-left: 0;
+        padding: 0;
+        li {
+          display: inline;
+          margin-right: 1rem;
+          a {
+            color: #AEAEAF;
+            font-size: 1.0625rem;
+            //border-bottom: 3px solid transparent;
+            //padding-bottom: 0.5rem;
+          }
+          a.active {
+            //border-bottom-color: $page-header-nav-active-border-bottom-color;
+            color: $page-header-nav-active-color;
+          }
+          a:hover {
+            //border-bottom-color: #AEAEAF;
+          }
         }
       }
     }
   }
-
 
   .ediscovery-content-view {
 
@@ -102,16 +102,7 @@
       top: 2rem;
       font-size: 3rem;
     }
-    .cs-tooltip {
-      max-width: none;
-    }
-    .gridStyle {
-      max-width: 100%;
-      margin: 0 auto;
-    }
-    .fit-in-cell {
-      line-height: 35px;
-    }
+
     .ediscovery-search-bar {
       text-align: center;
       padding-bottom: 3rem;
@@ -311,6 +302,13 @@
       vertical-align: middle;
       padding-right:0.3rem;
     }
+    .action-icons {
+      font-size: 1.1rem;
+      vertical-align: middle;
+    }
+    .action-icons:hover {
+      color: $color-primary-base;
+    }
     .column-air {
       margin-left:2rem;
       margin-right:2rem;
@@ -328,6 +326,16 @@
     .ui-grid-header-cell-primary-focus:first-child {
       background-color: $gray-light-3;
       margin-right: -2rem;
+    }
+    .cs-tooltip {
+      max-width: none;
+    }
+    .gridStyle {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .fit-in-cell {
+      line-height: 35px;
     }
 
   }

@@ -6,6 +6,9 @@
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
+    $scope.$on('$viewContentLoaded', function () {
+      $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
+    });
     var vm = this;
     vm.searchForRoom = searchForRoom;
     vm.createReport = createReport;

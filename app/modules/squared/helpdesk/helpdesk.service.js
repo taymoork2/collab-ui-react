@@ -243,7 +243,7 @@
       var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
