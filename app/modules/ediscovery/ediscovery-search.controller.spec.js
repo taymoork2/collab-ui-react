@@ -4,8 +4,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, httpBackend, $translate, $scope;
 
-  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend,
-    _$controller_) {
+  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend, _$controller_, Notification) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     httpBackend = $httpBackend;
