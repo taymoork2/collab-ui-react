@@ -4,7 +4,7 @@
   }
   .barchart {
     position: relative;
-    top: rem-calc(-35);
+    top: rem-calc(-5);
   }
   .carousel-control {
     padding: 9px 16px;
@@ -39,11 +39,6 @@
   .carousel-btn:hover, .btn--none:focus, .btn--none:hover {
     border-color: transparent;
   }
-   .utilizationdiv {
-  width   : 100%;
-  height    : 400px;
-  font-size : 11px;
-}
   .table-spinner {
     height: 100px;
     position: relative;

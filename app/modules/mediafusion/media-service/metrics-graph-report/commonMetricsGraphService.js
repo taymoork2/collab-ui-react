@@ -65,7 +65,7 @@
       'markerType': 'square',
       'markerSize': 10,
       'position': 'absolute',
-      'left': 300,
+      'left': 350,
       'equalWidths': false,
       'horizontalGap': 5,
       'valueAlign': 'left',

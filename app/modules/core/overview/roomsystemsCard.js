@@ -6,7 +6,7 @@
     .factory('OverviewRoomSystemsCard', OverviewRoomSystemsCard);
 
   /* @ngInject */
-  function OverviewRoomSystemsCard(OverviewHelper, Authinfo, FeatureToggleService) {
+  function OverviewRoomSystemsCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
 
@@ -25,11 +25,7 @@
         card.settingsUrl = '#/devices';
         card.helper = OverviewHelper;
         card.showHealth = true;
-        card.isCSB = false;
-
-        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-          card.isCSB = Authinfo.isCSB() && result;
-        });
+        card.isCSB = Authinfo.isCSB();
 
         card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {

@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+  function UserListCtrl($rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -54,7 +54,7 @@
       count: 0
     }];
     $scope.dirsyncEnabled = false;
-    $scope.isCSB = false;
+    $scope.isCSB = Authinfo.isCSB();
 
     $scope.exportType = $rootScope.typeOfExport.USER;
     $scope.USER_EXPORT_THRESHOLD = 10000;
@@ -83,12 +83,9 @@
 
     $scope.getUserList = getUserList;
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)
-      ])
+    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
       .then(function (result) {
-        $scope.isCsvEnhancementToggled = result[0];
-        $scope.isCSB = Authinfo.isCSB() && result[1];
+        $scope.isCsvEnhancementToggled = result;
       });
 
     init();

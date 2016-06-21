@@ -156,8 +156,8 @@
 
     function populateTrialData(trial) {
       vm.trial = trial;
-      var now = moment();
-      var start = moment(vm.trial.startDate);
+      var now = moment().startOf('day');
+      var start = moment(vm.trial.startDate).startOf('day');
       var daysUsed = moment(now).diff(start, 'days');
       vm.trialDaysRemaining = (vm.trial.trialPeriod - daysUsed);
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);

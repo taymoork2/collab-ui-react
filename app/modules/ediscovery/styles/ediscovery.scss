@@ -3,7 +3,9 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
   min-height: 100vh;
-
+  a:focus {
+    box-shadow: none;
+  }
   .header-tabs {
     position: fixed;
     left: 0px;
@@ -16,39 +18,31 @@
     width: 100%;
     background: $brand-white;
     border-bottom: 1px solid $gray-light-3;
-    .active {
-      color: $color-primary-light !important;
-    }
-  }
-
-  div.menu-container {
-    padding-bottom: 5px;
-    ul.menu {
-      margin-left: 0;
-      padding: 0;
-      li {
-        display: inline;
-        margin-right: 1rem;
-        a {
-          color: #AEAEAF;
-          font-size: 1.0625rem;
-          //border-bottom: 3px solid transparent;
-          //padding-bottom: 0.5rem;
-        }
-        a.active {
-          //border-bottom-color: $page-header-nav-active-border-bottom-color;
-          color: $page-header-nav-active-color;
-        }
-        a:hover {
-          //border-bottom-color: #AEAEAF;
-        }
-        a:focus {
-          box-shadow: inset 0 0 0 0;
+    .menu-container {
+      padding-bottom: 5px;
+      ul.menu {
+        margin-left: 0;
+        padding: 0;
+        li {
+          display: inline;
+          margin-right: 1rem;
+          a {
+            color: #AEAEAF;
+            font-size: 1.0625rem;
+            //border-bottom: 3px solid transparent;
+            //padding-bottom: 0.5rem;
+          }
+          a.active {
+            //border-bottom-color: $page-header-nav-active-border-bottom-color;
+            color: $page-header-nav-active-color;
+          }
+          a:hover {
+            //border-bottom-color: #AEAEAF;
+          }
         }
       }
     }
   }
-
 
   .ediscovery-content-view {
 
@@ -86,28 +80,36 @@
   }
 
   .ediscovery-search {
+    height: 100vh;
     background-color: $brand-white;
     padding-top: 9rem;
-    @media only screen and (max-height: 800px) {
+    @media only screen and (max-height: 850px) {
       padding-top: 7rem;
+    }
+    div.search-result-area {
+      background-color: $gray-light-4;
+      min-height: calc(100% - 145px);
+      padding-top: 2.25rem;
+      @media only screen and (max-height: 850px) {
+        padding-top: 1rem;
+        min-height: calc(100% - 113px);
+      }
+    }
+    div.search-error {
+      padding-top: 2rem;
     }
     .search-spinner {
       position: relative;
-      top: 1rem;
+      top: 2rem;
       font-size: 3rem;
     }
-    .cs-tooltip {
-      max-width: none;
-    }
-    .gridStyle {
-      max-width: 100%;
-      margin: 0 auto;
-    }
-    .fit-in-cell {
-      line-height: 35px;
-    }
+
     .ediscovery-search-bar {
       text-align: center;
+      padding-bottom: 3rem;
+      @media only screen and (max-height: 850px) {
+        padding-bottom: 1rem;
+      }
       .pointer {
         cursor: pointer;
       }
@@ -137,6 +139,9 @@
         position: relative;
         margin-top: 1rem;
         max-width: 100%;
+        @media only screen and (max-width: 640px) {
+          max-width: 90%;
+        };
         .searchInputForm {
           margin-bottom: 0;
         }
@@ -184,39 +189,9 @@
       .search-tip {
         color: $gray-light-1;
         font-style: italic;
-        padding: 0.5rem;
+        padding-top: 0.5rem;
       }
     }
-    .create-report {
-      padding-left: 9rem;
-      box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
-      border-radius: 2px;
-      margin-top: 2rem;
-
-      .cs-form__section .section__info {
-        margin-top: 2rem;
-      }
-
-      .content {
-        margin-left: 30px;
-        border:1px solid red;
-        font-weight: bold;
-      }
-
-      .progress-container {
-        width: 80%;
-        margin-top: 3.1rem;
-        button {
-          margin-top: 1rem;
-          margin-left: 3rem;
-        }
-      }
-
-      .fit {
-        margin-left: 0;
-      }
-    }
-
     .cs-form__section .section__content .sub-section {
       margin-bottom: 0.5rem;
       h5.large {
@@ -226,18 +201,21 @@
         margin-top: 1rem;
       }
     }
-
     .cs-form__section .section__content .sub-section__label {
       line-height: 0.5rem;
       margin-bottom: 0.5rem;
       margin-top: 1rem;
     }
-
     .search-result {
       .create-form {
         padding: 2.5rem 2.5rem 5rem 0;
         @media only screen and (max-width: 800px) {
-          padding: 1.25rem 1.25rem 2.5rem 0;
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+        @media only screen and (max-height: 850px) {
+          padding-top: 1.25rem;
+          padding-bottom: 2.5rem;
         }
         @media only screen and (max-width: 640px) {
           padding-left: 1rem;
@@ -312,6 +290,13 @@
           height: 5rem;
         }
       }
+      span.cancel-icon {
+        position: relative;
+        top: 2rem;
+        font-size: 2rem;
+        color: $gray-light-1;
+        cursor: pointer;
+      }
     }
   }
   .failure {
@@ -325,6 +310,14 @@
       font-size:1.5rem;
       vertical-align: middle;
       padding-right:0.3rem;
+    }
+    .action-icons {
+      font-size: 1.1rem;
+      vertical-align: middle;
+      top: 5px;
+    }
+    .action-icons:hover {
+      color: $color-primary-base;
     }
     .column-air {
       margin-left:2rem;
@@ -343,6 +336,19 @@
     .ui-grid-header-cell-primary-focus:first-child {
       background-color: $gray-light-3;
       margin-right: -2rem;
+    }
+    .cs-tooltip {
+      max-width: none;
+    }
+    .gridStyle {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .fit-in-cell {
+      line-height: 35px;
+    }
+    .progressbar-info {
+      padding-top: 0.5rem;
     }
 
   }

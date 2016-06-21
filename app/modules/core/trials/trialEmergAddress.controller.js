@@ -19,95 +19,73 @@
     vm.skip = skip;
 
     vm.emergencyAddressFields = [{
-      type: 'inline',
-      className: 'medium-12 columns no-pad',
+      model: vm.trial.details.emergAddr,
+      key: 'streetAddress',
+      type: 'input',
+      className: 'medium-9 inline-row',
       templateOptions: {
-        fields: [{
-          model: vm.trial.details.emergAddr,
-          key: 'streetAddress',
-          type: 'input',
-          className: 'medium-9 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.address'),
-            labelClass: 'columns medium-2 text-right',
-            inputClass: 'columns medium-9'
-          }
-        }, {
-          model: vm.trial.details.emergAddr,
-          key: 'unit',
-          type: 'input',
-          className: 'medium-3 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.unit'),
-            labelClass: 'columns medium-3 text-right',
-            inputClass: 'columns medium-9',
-
-          }
-        }]
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.address'),
+        inputClass: 'medium-11'
       }
     }, {
-      type: 'inline',
-      className: 'medium-12 columns no-pad',
+      model: vm.trial.details.emergAddr,
+      key: 'unit',
+      type: 'input',
+      className: 'medium-3 inline-row',
       templateOptions: {
-        fields: [{
-          model: vm.trial.details.emergAddr,
-          key: 'city',
-          type: 'input',
-          className: 'medium-9 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.city'),
-            labelClass: 'columns medium-2 text-right',
-            inputClass: 'columns medium-9',
-          }
-        }]
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.unit')
       }
     }, {
-      type: 'inline',
-      className: 'medium-9 columns state-zip-wrapper no-pad',
+      model: vm.trial.details.emergAddr,
+      key: 'city',
+      type: 'input',
+      className: 'medium-12',
       templateOptions: {
-        fields: [{
-          model: vm.trial.details.emergAddr,
-          key: 'state',
-          type: 'select',
-          className: 'medium-5 columns max-width no-flex',
-          templateOptions: {
-            label: $translate.instant('trialModal.pstn.state'),
-            labelfield: 'abbreviation',
-            valuefield: 'abbreviation',
-            labelClass: 'columns medium-5 text-right',
-            inputClass: 'columns medium-7',
-            options: [],
-            filter: true
-
-          },
-          controller: /* @ngInject */ function ($scope) {
-            TerminusStateService.query().$promise.then(function (states) {
-              $scope.to.options = _.map(states, 'abbreviation');
-            });
-          }
-        }, {
-          model: vm.trial.details.emergAddr,
-          key: 'zip',
-          type: 'input',
-          className: 'medium-6 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.zip'),
-            labelClass: 'columns medium-6 text-right',
-            inputClass: 'columns medium-7',
-            onBlur: validateAddress
-          }
-        }]
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.city'),
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 inline-row left',
+      templateOptions: {
+        label: $translate.instant('trialModal.pstn.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        inputClass: 'medium-11',
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      }
+    }, {
+      model: vm.trial.details.emergAddr,
+      key: 'zip',
+      type: 'input',
+      className: 'medium-4 inline-row',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.zip'),
+        onBlur: validateAddress
       }
     }];
 
     function validateAddress() {
       vm.validation = true;
       vm.addressLoading = true;
-      return PstnServiceAddressService.lookupAddress(vm.trial.details.emergAddr)
+      return PstnServiceAddressService.lookupAddress({
+          streetAddress: vm.trial.details.emergAddr.streetAddress,
+          unit: vm.trial.details.emergAddr.unit,
+          city: vm.trial.details.emergAddr.city,
+          state: vm.trial.details.emergAddr.state.abbreviation,
+          zip: vm.trial.details.emergAddr.zip
+        })
         .then(function (response) {
           if (angular.isDefined(response)) {
             _.extend(vm.trial.details.emergAddr, response);
