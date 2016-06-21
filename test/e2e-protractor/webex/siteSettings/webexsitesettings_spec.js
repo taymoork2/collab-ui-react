@@ -2,18 +2,19 @@
 
 /* global sitesettings */
 /* global webEx */
+/* global webExCommon */
 
 sitesettings.testInfo.describeCount = 0;
 while (1 >= sitesettings.testInfo.describeCount) {
   switch (sitesettings.testInfo.describeCount) {
   case 1:
     sitesettings.testInfo.testType = 'T30';
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t30Info.siteUrl;
+    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
     break;
 
   default:
     sitesettings.testInfo.testType = 'T31';
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t31Info.siteUrl;
+    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
   }
 
   xdescribe(sitesettings.testInfo.describeText, function () {
@@ -21,16 +22,12 @@ while (1 >= sitesettings.testInfo.describeCount) {
 
     if (sitesettings.testInfo.testType == "T31") {
       beforeAll(function () {
-        /*
-        login.loginUsingIntegrationBackend('t31RegressionTestAdmin');
-        setup = true;
-        */
         var promise = webEx.setup(
           1,
-          't31RegressionTestAdmin',
-          sitesettings.t31Info.testAdminUsername,
-          sitesettings.t31Info.testAdminPassword,
-          sitesettings.t31Info.siteUrl
+          'wbx-t31RegressionTestAdmin',
+          webExCommon.t31Info.testAdminUsername,
+          webExCommon.t31Info.testAdminPassword,
+          webExCommon.t31Info.siteUrl
         );
 
         promise.then(
@@ -45,16 +42,12 @@ while (1 >= sitesettings.testInfo.describeCount) {
       });
     } else {
       beforeAll(function () {
-        /*
-        login.loginUsingIntegrationBackend('t30RegressionTestAdmin');
-        setup = true;
-        */
         var promise = webEx.setup(
           1,
-          't30RegressionTestAdmin',
-          sitesettings.t30Info.testAdminUsername,
-          sitesettings.t30Info.testAdminPassword,
-          sitesettings.t30Info.siteUrl
+          'wbx-t30RegressionTestAdmin',
+          webExCommon.t30Info.testAdminUsername,
+          webExCommon.t30Info.testAdminPassword,
+          webExCommon.t30Info.siteUrl
         );
 
         promise.then(
@@ -70,33 +63,33 @@ while (1 >= sitesettings.testInfo.describeCount) {
     }
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('shsetupould sign in as ' + sitesettings.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('shsetupould sign in as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(sitesettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.t31Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t31ConfigureCog);
+          utils.click(webExCommon.t31ConfigureCog);
           utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t31CardsSectionId);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should sign in as ' + sitesettings.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(sitesettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.t30Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t30ConfigureCog);
+          utils.click(webExCommon.t30ConfigureCog);
           utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t30CardsSectionId);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }
@@ -108,19 +101,19 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+      it('should click on configure site cog for ' + webExCommon.t31Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t31ConfigureCog);
+          utils.click(webExCommon.t31ConfigureCog);
           utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t31CardsSectionId);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site cog for ' + webExCommon.t30Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t30ConfigureCog);
+          utils.click(webExCommon.t30ConfigureCog);
           utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t30CardsSectionId);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }
@@ -348,14 +341,14 @@ while (1 >= sitesettings.testInfo.describeCount) {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
           utils.click(sitesettings.siteListCrumb);
-          utils.wait(sitesettings.t31ConfigureCog);
+          utils.wait(webExCommon.t31ConfigureCog);
         }
       });
     } else {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
           utils.click(sitesettings.siteListCrumb);
-          utils.wait(sitesettings.t30ConfigureCog);
+          utils.wait(webExCommon.t30ConfigureCog);
         }
       });
     }

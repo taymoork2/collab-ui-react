@@ -2,21 +2,18 @@
 
 /* global usersettings */
 /* global webEx */
+/* global webExCommon */
 
 xdescribe('WebEx user settings', function () {
   var setup = false;
 
   beforeAll(function () {
-    /*
-    login.loginUsingIntegrationBackend('wbxUserSettingsTestAdmin');
-    setup = true;
-    */
     var promise = webEx.setup(
       1,
-      'wbxUserSettingsTestAdmin',
-      usersettings.testAdmin.username,
-      usersettings.testAdmin.password,
-      usersettings.testSiteUrl
+      'wbx-t30RegressionTestAdmin',
+      webExCommon.t30Info.testAdminUsername,
+      webExCommon.t30Info.testAdminPassword,
+      webExCommon.t30Info.siteUrl
     );
 
     promise.then(
@@ -30,7 +27,7 @@ xdescribe('WebEx user settings', function () {
     );
   }); // beforeAll()
 
-  it('should login as ' + usersettings.testAdmin.username + ' and navigate to Users page', function () {
+  it('should login as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to Users page', function () {
     navigation.clickUsers();
   });
 
@@ -44,11 +41,11 @@ xdescribe('WebEx user settings', function () {
     utils.click(users.conferencingService);
   });
 
-  it('should allow click on site name ' + usersettings.testSiteElement, function () {
+  it('should allow click on site name ' + webExCommon.testSiteElement, function () {
     if (setup) {
-      utils.wait(usersettings.testSiteElement);
-      expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
-      utils.click(usersettings.testSiteElement);
+      utils.wait(webExCommon.testSiteElement);
+      expect(webExCommon.testSiteElement.isPresent()).toBeTruthy();
+      utils.click(webExCommon.testSiteElement);
     }
   });
 
@@ -148,7 +145,7 @@ xdescribe('WebEx user settings', function () {
   //   browser.pause();
   // });
 
-  it('should allow log out', function () {
+  it('should log out', function () {
     navigation.logout();
   });
 });

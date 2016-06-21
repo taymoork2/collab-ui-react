@@ -2,36 +2,33 @@
 
 /* global sitereports */
 /* global webEx */
+/* global webExCommon */
 
 sitereports.testInfo.describeCount = 0;
+
 while (1 >= sitereports.testInfo.describeCount) {
   switch (sitereports.testInfo.describeCount) {
   case 1:
     sitereports.testInfo.testType = 'T30';
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t30Info.siteUrl;
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
     break;
 
   default:
     sitereports.testInfo.testType = 'T31';
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t31Info.siteUrl;
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
   }
 
   xdescribe(sitereports.testInfo.describeText, function () {
     var setup = false;
 
     if (sitereports.testInfo.testType == "T31") {
-      /*
-      beforeAll(function () {
-        login.loginUsingIntegrationBackend('t31RegressionTestAdmin');
-      });
-      */
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          't31RegressionTestAdmin',
-          sitereports.t31Info.testAdminUsername,
-          sitereports.t31Info.testAdminPassword,
-          sitereports.t31Info.siteUrl
+          'wbx-t31RegressionTestAdmin',
+          webExCommon.t31Info.testAdminUsername,
+          webExCommon.t31Info.testAdminPassword,
+          webExCommon.t31Info.siteUrl
         );
 
         promise.then(
@@ -45,18 +42,13 @@ while (1 >= sitereports.testInfo.describeCount) {
         );
       });
     } else {
-      /*
-      beforeAll(function () {
-        login.loginUsingIntegrationBackend('t30RegressionTestAdmin');
-      });
-      */
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          't30RegressionTestAdmin',
-          sitereports.t30Info.testAdminUsername,
-          sitereports.t30Info.testAdminPassword,
-          sitereports.t30Info.siteUrl
+          'wbx-t30RegressionTestAdmin',
+          webExCommon.t30Info.testAdminUsername,
+          webExCommon.t30Info.testAdminPassword,
+          webExCommon.t30Info.siteUrl
         );
 
         promise.then(
@@ -72,33 +64,33 @@ while (1 >= sitereports.testInfo.describeCount) {
     }
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should sign in as ' + sitereports.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(sitereports.conferencing);
         }
       });
 
-      it('should click on reports icon for ' + sitereports.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + webExCommon.t31Info.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(sitereports.T31ReportsCog);
+          utils.click(webExCommon.T31ReportsCog);
           utils.wait(sitereports.webexSiteReportsPanel);
-          utils.wait(sitereports.t31CardsSectionId);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should sign in as ' + sitereports.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(sitereports.conferencing);
         }
       });
 
-      it('should click on reports icon for ' + sitereports.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + webExCommon.t30Info.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(sitereports.T30ReportsCog);
+          utils.click(webExCommon.T30ReportsCog);
           utils.wait(sitereports.webexSiteReportsPanel);
-          utils.wait(sitereports.t30CardsSectionId);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }
@@ -114,7 +106,7 @@ while (1 >= sitereports.testInfo.describeCount) {
         if (setup) {
           utils.click(sitereports.webexReportsLink);
           utils.wait(sitereports.webexSiteReportsPanel);
-          utils.wait(sitereports.t31CardsSectionId);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
@@ -122,7 +114,7 @@ while (1 >= sitereports.testInfo.describeCount) {
         if (setup) {
           utils.click(sitereports.webexReportsLink);
           utils.wait(sitereports.webexSiteReportsPanel);
-          utils.wait(sitereports.t30CardsSectionId);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }

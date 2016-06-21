@@ -42,18 +42,10 @@ var BasicSettigsPage = function () {
   this.alertSuccess = element(by.css('.toast-success'));
   this.alertError = element(by.css('.toast-error'));
 
-  this.testAdmin = {
-    username: 't30citestprov9@mailinator.com',
-    password: 'Cisco!23',
-  };
-
   this.testUser = {
     username: 'prov9usr@mailinator.com',
     password: 'Cisco!23',
   };
-
-  this.testSiteUrl = 't30citestprov9.webex.com';
-  this.testSiteElement = element(by.id(this.testSiteUrl));
 
   this.save = function () {
     utils.click(this.saveButton);
