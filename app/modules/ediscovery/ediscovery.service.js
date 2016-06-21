@@ -2,8 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location) {
     var urlBase = UrlConfig.getAdminServiceUrl();
+
+    function useMock() {
+      return $location.absUrl().match(/reports-backend=mock/);
+    }
 
     function extractReports(res) {
       var reports = res.data.reports;
@@ -48,25 +52,33 @@
 
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractReport)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      if (useMock()) {
+        //TODO: return single mock report based on id
+        //return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
+      } else {
+        return $http
+          .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
+          .then(extractReport)
+          .catch(function (data) {
+            //  TODO: Implement proper handling of error when final API is in place
+            //console.log("error getReports: " + data)
+          });
+      }
     }
 
     function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
       var reqParams = 'offset=' + offset + '&limit=' + limit;
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
-        .then(extractReports)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      if (useMock()) {
+        return $q.resolve(extractReports(EdiscoveryMockData.getReports()));
+      } else
+        return $http
+          .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams)
+          .then(extractReports)
+          .catch(function (data) {
+            //  TODO: Implement proper handling of error when final API is in place
+            //console.log("error getReports: " + data)
+          });
     }
 
     function createReport(displayName, roomId, startDate, endDate) {
