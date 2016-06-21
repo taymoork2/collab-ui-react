@@ -1,11 +1,11 @@
 'use strict';
 
-/* global sitelist */
+/* global webExSiteList */
 /* global webEx */
 /* global webExCommon */
 
 // Start of Licenses column tests
-xdescribe('WebEx Sitelist: License Types - Single : ', function () {
+xdescribe('WebEx Sitelist: License - Single: ', function () {
   var setup = false;
 
   beforeAll(function () {
@@ -31,20 +31,20 @@ xdescribe('WebEx Sitelist: License Types - Single : ', function () {
   it('should allow login as admin user ' + webExCommon.singleCenterLicenseInfo.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
-      utils.click(sitelist.conferencingLink);
-      utils.wait(sitelist.siteListPageId);
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
     }
   });
 
   it('should detect the license column', function () {
     if (setup) {
-      utils.wait(sitelist.licenseTypesColumnId);
+      utils.wait(webExSiteList.licenseTypesColumnId);
     }
   });
 
-  it('should detect text ' + sitelist.license_MC200, function () {
+  it('should detect text ' + webExSiteList.license_MC200, function () {
     if (setup) {
-      utils.expectText(webExCommon.singleLicenseSiteId, sitelist.license_MC200);
+      utils.expectText(webExCommon.singleLicenseSiteId, webExSiteList.license_MC200);
     }
   });
 
@@ -53,7 +53,7 @@ xdescribe('WebEx Sitelist: License Types - Single : ', function () {
   });
 });
 
-xdescribe('WebEx Sitelist: License Types - Multiple : ', function () {
+xdescribe('WebEx Sitelist: License - Multiple: ', function () {
   var setup = false;
 
   beforeAll(function () {
@@ -79,20 +79,20 @@ xdescribe('WebEx Sitelist: License Types - Multiple : ', function () {
   it('should allow login as admin user ' + webExCommon.multiCenterLicenseInfo.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
-      utils.click(sitelist.conferencingLink);
-      utils.wait(sitelist.siteListPageId);
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
     }
   });
 
   it('should detect the license column', function () {
     if (setup) {
-      utils.wait(sitelist.licenseTypesColumnId);
+      utils.wait(webExSiteList.licenseTypesColumnId);
     }
   });
 
-  it('should detect text ' + sitelist.license_Multiple, function () {
+  it('should detect text ' + webExSiteList.license_Multiple, function () {
     if (setup) {
-      utils.expectText(webExCommon.multiLicenseSiteId, sitelist.license_Multiple);
+      utils.expectText(webExCommon.multiLicenseSiteId, webExSiteList.license_Multiple);
     }
   });
 

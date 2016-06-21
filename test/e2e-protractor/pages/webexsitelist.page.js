@@ -1,4 +1,4 @@
-var SiteListPage = function () {
+var WebExSiteListPage = function () {
   this.siteListPageId = element(by.id('site-list'));
   this.conferencingLink = element(by.css('a[href="#site-list"]'));
   this.licenseTypesColumnId = element(by.id('site-license-types'));
@@ -6,4 +6,4 @@ var SiteListPage = function () {
   this.license_Multiple = "Multiple...";
 };
 
-module.exports = SiteListPage;
+module.exports = WebExSiteListPage;

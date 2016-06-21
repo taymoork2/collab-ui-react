@@ -1,12 +1,6 @@
 'use strict';
 
-var SiteSettigsPage = function () {
-  this.testInfo = {
-    describeCount: 0,
-    testType: null,
-    describeText: null
-  };
-
+var WebExSiteSettigsPage = function () {
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
@@ -58,4 +52,4 @@ var SiteSettigsPage = function () {
   this.xLaunchSiteReportsT30CITEST = element(by.id('t30citest.webex.com_xlaunch-webex-site-reports'));
 };
 
-module.exports = SiteSettigsPage;
+module.exports = WebExSiteSettigsPage;

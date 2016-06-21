@@ -1,12 +1,6 @@
 'use strict';
 
-var SiteReportsPage = function () {
-  this.testInfo = {
-    describeCount: 0,
-    testType: null,
-    describeText: null
-  };
-
+var WebExSiteReportsPage = function () {
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
   this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
@@ -33,4 +27,4 @@ var SiteReportsPage = function () {
   this.lastSyncElement = element(by.id('reportsRefreshData'));
 };
 
-module.exports = SiteReportsPage;
+module.exports = WebExSiteReportsPage;
