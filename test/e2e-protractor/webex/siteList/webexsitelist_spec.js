@@ -5,7 +5,7 @@
 /* global webExCommon */
 
 // Start of Licenses column tests
-xdescribe('WebEx Sitelist: License - Single: ', function () {
+describe('WebEx Sitelist: License - Single: ', function () {
   var setup = false;
 
   beforeAll(function () {
@@ -53,7 +53,7 @@ xdescribe('WebEx Sitelist: License - Single: ', function () {
   });
 });
 
-xdescribe('WebEx Sitelist: License - Multiple: ', function () {
+describe('WebEx Sitelist: License - Multiple: ', function () {
   var setup = false;
 
   beforeAll(function () {
