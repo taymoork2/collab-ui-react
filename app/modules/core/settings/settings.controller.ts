@@ -1,7 +1,7 @@
 /// <reference path="authenticationSetting.component.ts"/>
 /// <reference path="securitySetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
-/// <reference path="dataPolicySetting.component.ts"/>
+/// <reference path="retentionSetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
@@ -17,7 +17,7 @@ namespace globalsettings {
     public authentication:SettingSection;
     public branding:SettingSection;
     public support:SettingSection;
-    public dataPolicy:SettingSection;
+    public retention:SettingSection;
 
     /* @ngInject */
     constructor(Authinfo, private Orgservice, private FeatureToggleService) {
@@ -32,7 +32,7 @@ namespace globalsettings {
         this.support = new SupportSetting();
         this.initBrandingForNonPartner();
         this.privacy = new PrivacySetting();
-        this.dataPolicy = new DataPolicySetting();
+        this.retention = new RetentionSetting();
       }
     }
 
