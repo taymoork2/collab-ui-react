@@ -75,7 +75,7 @@
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
-        .post(urlBase + 'compliance/organization/' + orgId + '/reports/', {
+        .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', {
           "displayName": displayName,
           "roomQuery": {
             "startDate": sd,
@@ -88,7 +88,7 @@
 
     function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
-      var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add('days', 1).toISOString() : null;
       return $http.post(runUrl, {
         "roomId": roomId,
         "responseUrl": responseUrl,
