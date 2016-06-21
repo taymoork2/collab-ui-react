@@ -36,7 +36,6 @@
         alive = true;
       } else {
         _.each(reports, function (report) {
-          console.log(report.progress)
           report.progress = report.progress + (Math.floor(Math.random() * 20));
           if (report.progress > 0) {
             report.state = "RUNNING";
@@ -73,7 +72,6 @@
           report.progress = Math.floor(Math.random() * 90) + 1;
           report.state = "RUNNING";
         }
-
 
         reports.push(_.cloneDeep(report));
       }
