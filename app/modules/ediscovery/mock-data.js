@@ -36,7 +36,7 @@
         alive = true;
       } else {
         _.each(reports, function (report) {
-          report.progress++;
+          report.progress = report.progress + (Math.floor(Math.random() * 10));
           if (report.progress >= 100) {
             report.progress = 100;
             report.state = "COMPLETED";
