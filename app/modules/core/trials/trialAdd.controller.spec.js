@@ -410,4 +410,86 @@ describe('Controller: TrialAddCtrl', function () {
       expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
     });
   });
+
+  describe('Input validators', function () {
+    var orgInput;
+    var emailInput;
+    var testCase = [{
+      retVal: {
+        unique: true
+      },
+      targetVal: true
+    }, {
+      retVal: {
+        error: 'trialModal.errorInUse'
+      },
+      targetVal: false
+    }, {
+      retVal: {
+        error: 'trialModal.errorInvalidName'
+      },
+      targetVal: false
+    }, {
+      retVal: {
+        error: 'trialModal.errorInvalid'
+      },
+      targetVal: false
+    }, {
+      retVal: {
+        error: 'trialModal.errorServerDown'
+      },
+      targetVal: false
+    }, {
+      retVal: {
+        bad: 'bad'
+      },
+      targetVal: false
+    }];
+    var i = 0;
+
+    beforeEach(function () {
+      orgInput = controller.custInfoFields[0];
+      emailInput = controller.custInfoFields[1];
+      orgInput.options = {
+        validation: {
+          show: null
+        }
+      };
+      emailInput.options = {
+        validation: {
+          show: null
+        }
+      };
+    });
+
+    function doTestCase(index) {
+      spyOn(TrialService, 'shallowValidation').and.returnValue($q.when(testCase[index].retVal));
+
+      orgInput.asyncValidators.uniqueName.expression('test', 'test', orgInput);
+      emailInput.asyncValidators.uniqueEmail.expression('test', 'test', emailInput);
+      $scope.$apply();
+
+      expect(controller.uniqueName).toBe(testCase[index].targetVal);
+      expect(controller.uniqueEmail).toBe(testCase[index].targetVal);
+    }
+
+    it('should pass testCase #0', function () {
+      doTestCase(i++);
+    });
+    it('should pass testCase #1', function () {
+      doTestCase(i++);
+    });
+    it('should pass testCase #2', function () {
+      doTestCase(i++);
+    });
+    it('should pass testCase #3', function () {
+      doTestCase(i++);
+    });
+    it('should pass testCase #4', function () {
+      doTestCase(i++);
+    });
+    it('should pass testCase #5', function () {
+      doTestCase(i++);
+    });
+  });
 });

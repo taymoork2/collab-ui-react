@@ -101,7 +101,8 @@
         }
       }).catch(function (response) {
         return {
-          error: 'trialModal.errorServerDown'
+          error: 'trialModal.errorServerDown',
+          status: response.status
         };
       });
     }

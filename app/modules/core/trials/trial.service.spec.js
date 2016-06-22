@@ -501,12 +501,12 @@ describe('Service: Trial Service:', function () {
       var valData;
 
       function expectShallowVal(type, result) {
-        TrialService.shallowValidation(type, 'Test Name').then(function(response) {
+        TrialService.shallowValidation(type, 'Test Name').then(function (response) {
           expect(response).toEqual(result);
         });
       }
 
-      beforeEach(function() {
+      beforeEach(function () {
         valData = {
           properties: [{
             key: org,
@@ -517,38 +517,58 @@ describe('Service: Trial Service:', function () {
         };
       });
 
-      afterEach(function() {
+      afterEach(function () {
         $httpBackend.flush();
       });
 
-      it('should return unique', function() {
+      it('should return unique', function () {
         $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
-        expectShallowVal(org, {unique: true});
+        expectShallowVal(org, {
+          unique: true
+        });
       });
 
-      it('should return error in use', function() {
+      it('should return error in use', function () {
         valData.properties[0].isExist = "true";
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
-        expectShallowVal(org, {error: 'trialModal.errorInUse'});
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorInUse'
+        });
       });
 
-      it('should return error invalid name', function() {
+      it('should return error invalid name', function () {
         valData.properties[0].isValid = "false";
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
-        expectShallowVal(org, {error: 'trialModal.errorInvalidName'});
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorInvalidName'
+        });
       });
 
-      it('should return error invalid', function() {
+      it('should return error invalid', function () {
         valData.properties[0].key = email;
         valData.properties[0].isValid = "false";
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
-        expectShallowVal(email, {error: 'trialModal.errorInvalid'});
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(email, {
+          error: 'trialModal.errorInvalid'
+        });
       });
 
       it('should return error server down', function () {
         valData = {};
-        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
-        expectShallowVal(org, {error: 'trialModal.errorServerDown'});
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorServerDown'
+        });
+      });
+
+      it('should return error server down (501)', function () {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke', function (data) {
+          return valData;
+        }).respond(501);
+        expectShallowVal(org, {
+          error: 'trialModal.errorServerDown',
+          status: 501
+        });
       });
     });
   });
