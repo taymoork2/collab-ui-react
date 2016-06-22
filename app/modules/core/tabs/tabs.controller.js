@@ -65,12 +65,16 @@
           // Filter allowed states or tabs with subPages
           return isAllowedTab(tab) || _.size(tab.subPages);
         })
-        .forEach(function (tab) {
+        .map(function (tab) {
           tab.title = $translate.instant(tab.title);
-          _.forEach(tab.subPages, function (subTab) {
-            subTab.title = $translate.instant(subTab.title);
-            subTab.desc = $translate.instant(subTab.desc);
-          });
+          if (tab.subPages) {
+            tab.subPages = _.map(tab.subPages, function (subTab) {
+              subTab.title = $translate.instant(subTab.title);
+              subTab.desc = $translate.instant(subTab.desc);
+              return subTab;
+            });
+          }
+          return tab;
         })
         .value();
     }
