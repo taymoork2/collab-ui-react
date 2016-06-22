@@ -33,7 +33,7 @@
      * we need to call for resize upon the add or remove of dynamic content in the builder containter.
      */
     function resizeBuilderScrollBar(delay) {
-      var timeoutDelay = (delay > 0) ? delay : timeoutDelayDefault;
+      var timeoutDelay = (delay >= 0) ? delay : timeoutDelayDefault;
 
       $timeout(function () {
         resize();
@@ -53,7 +53,7 @@
         return;
       }
 
-      var timeoutDelay = (delay > 0) ? delay : timeoutDelayDefault;
+      var timeoutDelay = (delay >= 0) ? delay : timeoutDelayDefault;
 
       $timeout(function () {
         var $target = $(targetId);
