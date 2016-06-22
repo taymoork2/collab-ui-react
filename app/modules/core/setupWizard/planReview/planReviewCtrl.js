@@ -9,8 +9,8 @@
   function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope) {
     var vm = this;
     var classes = {
-      user_service: 'user-service-',
-      has_room_sys: 'has-room-systems'
+      userService: 'user-service-',
+      hasRoomSys: 'has-room-systems'
     };
 
     vm.messagingServices = {
@@ -44,16 +44,23 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
-    vm.userServiceRows = userServiceRows;
+    vm.getUserServiceRowClass = getUserServiceRowClass;
+    vm._helpers = {
+      maxServiceRows: maxServiceRows
+    };
 
     init();
 
-    function userServiceRows(hasRoomSystem) {
+    function getUserServiceRowClass(hasRoomSystem) {
       //determine how many vertical entrees there is going to be
-      var returnClass = (hasRoomSystem) ? classes.has_room_sys + " " + classes.user_service : classes.user_service;
-      var confLength = vm.confServices.services.length + (vm.cmrServices.services ? vm.cmrServices.services.length : 0);
-      var serviceRows = _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
+      var returnClass = (hasRoomSystem) ? classes.hasRoomSys + ' ' + classes.userService : classes.userService;
+      var serviceRows = vm._helpers.maxServiceRows();
       return returnClass + serviceRows;
+    }
+
+    function maxServiceRows() {
+      var confLength = _.get(vm.confServices, 'services.length', 0) + _.get(vm.cmrServices, 'services.length', 0);
+      return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
     }
 
     function init() {
