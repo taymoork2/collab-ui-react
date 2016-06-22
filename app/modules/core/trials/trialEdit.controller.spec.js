@@ -412,6 +412,7 @@ describe('Controller: TrialEditCtrl:', function () {
 
       describe('messageOfferDisabledExpression:', function () {
         it('should be disabled if message is disabled.', function () {
+          controller.careTrial.enabled = true;
           controller.messageTrial.enabled = false;
           expect(helpers.messageOfferDisabledExpression()).toBeTruthy();
           expect(controller.careTrial.enabled).toBeFalsy();
@@ -424,7 +425,7 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       describe('careLicenseInputDisabledExpression:', function () {
-        it('care license count disabled expression works correctly.', function () {
+        it('care license count disabled expression returns false in happy scenario.', function () {
           controller.careTrial.enabled = true;
           controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
           expect(helpers.careLicenseInputDisabledExpression()).toBeFalsy();
@@ -447,21 +448,25 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       describe('validateCareLicense:', function () {
-        it('care license validation is not used when care is not selected.', function () {
+        it('care license validation succeeds when care is not selected.', function () {
           controller.careTrial.enabled = false;
           expect(helpers.validateCareLicense()).toBeTruthy();
         });
 
-        it('care license validation allows value between 1 and 50.', function () {
+        it('care license validation allows value between 0 and 50.', function () {
           controller.details.licenseCount = 100;
           controller.careTrial.enabled = true;
-          expect(helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
+
+          expect(helpers.validateCareLicense(-1, -1)).toBeFalsy();
+          expect(helpers.validateCareLicense(1, 1)).toBeTruthy();
+          expect(helpers.validateCareLicense(50, 50)).toBeTruthy();
+          expect(helpers.validateCareLicense(51, 51)).toBeFalsy();
         });
 
-        it('care license validation disallows value greater than total users.', function () {
-          controller.details.licenseCount = 10;
+        it('care license validation disallows value greater than details.licenseCount', function () {
+          controller.details.licenseCount = CARE_LICENSE_COUNT - 1;
           controller.careTrial.enabled = true;
-          expect(helpers.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+          expect(helpers.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeFalsy();
         });
       });
 
@@ -473,7 +478,7 @@ describe('Controller: TrialEditCtrl:', function () {
           expect(helpers.careLicenseCountLessThanTotalCount()).toBeFalsy();
         });
 
-        it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
+        it('Total license validation with Care succeeds when careTrial is not enabled.', function () {
           controller.details.licenseCount = 10;
           controller.careTrial.enabled = false;
           controller.careTrial.details.quantity = 20;
