@@ -1501,7 +1501,10 @@
       "state": "State",
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
-      "noReportsTip": "Click the Search tab to search activities and create reports"
+      "noReportsTip": "Click the Search tab to search activities and create reports",
+      "size": "Size",
+      "viewDetails": "View Details",
+      "createNew": "Create new report with same query parameters"
     },
     "tabs": {
       "search": "Search",

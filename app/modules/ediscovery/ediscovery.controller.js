@@ -19,21 +19,19 @@
     $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
+    $scope.viewReport = viewReport;
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
 
-    //var avalonPoller = $timeout(pollAvalonReport, 0);
     var avalonPoller = $interval(pollAvalonReport, 5000);
 
     $scope.$on('$destroy', function () {
-      //$timeout.cancel(avalonPoller);
       $interval.cancel(avalonPoller);
     });
 
     vm.reports = [];
 
-    //grantNotification();
     pollAvalonReport();
 
     function cancable(id) {
@@ -97,23 +95,23 @@
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '*'
       }, {
-        field: 'createdTime',
-        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
-        width: '*'
-      }, {
         field: 'roomQuery.roomId',
         displayName: $translate.instant("ediscovery.reportsList.roomId"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
         width: '*'
       }, {
-        field: 'roomQueryDates',
-        displayName: $translate.instant("ediscovery.reportsList.dateRange"),
+        field: 'createdTime',
+        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '*'
+      }, {
+        field: 'size',
+        displayName: $translate.instant("ediscovery.reportsList.size"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-size.html',
+        width: '100'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
@@ -125,7 +123,7 @@
         displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
-        width: '85'
+        width: '160'
       }]
     };
 
@@ -153,12 +151,6 @@
       });
     }
 
-    function grantNotification() {
-      if ($window.Notification) {
-        $window.Notification.requestPermission().then(function (result) {});
-      }
-    }
-
     function rerunReport(report) {
       $state.go('ediscovery.search', {
         report: report,
@@ -166,22 +158,10 @@
       });
     }
 
-    function notifyOnEvent(reports) {
-      if (!$window.Notification || $window.Notification.permission != 'granted') {
-        return;
-      }
-      var completedReports = _.filter(reports, function (r) {
-        return r.state == 'COMPLETED';
+    function viewReport(report) {
+      $state.go('ediscovery.search', {
+        report: report
       });
-      if (completedReports && completedReports.length > 0) {
-        var options = {
-          body: 'You have ' + completedReports.length + ' completed reports',
-          icon: 'images/cisco_logo.png',
-          tag: 'ediscovery'
-        };
-        var n = new $window.Notification('eDiscovery Dashboard', options);
-        setTimeout(n.close.bind(n), 3000);
-      }
     }
   }
 

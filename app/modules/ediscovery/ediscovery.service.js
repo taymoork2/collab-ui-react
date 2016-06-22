@@ -12,22 +12,23 @@
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
-        detectAndSetReportTimeout(report);
+        tweakReport(report);
       });
       return res.data;
     }
 
     function extractReport(res) {
-      return detectAndSetReportTimeout(res.data);
+      return tweakReport(res.data);
     }
 
-    function detectAndSetReportTimeout(report) {
+    function tweakReport(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
           .getTime() > 180000;
         if (report.state === 'FAILED' && !report.failureReason) {
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
+        report.isDone = report.state === 'COMPLETED' || report.state === 'FAILED' || report.state === 'ABORTED';
       }
       return report;
     }
@@ -154,7 +155,7 @@
         return '0';
       }
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
-        return '-';
+        return '';
       }
       if (typeof precision === 'undefined') {
         precision = 1;
