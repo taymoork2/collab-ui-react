@@ -323,13 +323,18 @@
       vertical-align: middle;
       top: 5px;
       padding-right: 1rem;
+      color: $gray-light-1
     }
     .action-icons:hover {
       color: $color-primary-base;
     }
     .column-air {
-      margin-left:2rem;
-      margin-right:2rem;
+      margin-left: 6.3rem;
+      margin-right: 6.3rem;
+      @media only screen and (max-width: 1280px) {
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
     }
     .search-spinner {
       position:relative;
@@ -358,6 +363,11 @@
     .progressbar-info {
       padding-top: 0.5rem;
     }
-
+    i.icon-warning {
+      font-size: 1.0rem;
+      color: $color-attention-base;
+      vertical-align: middle;
+      padding-right: 0.5rem;
+    }
   }
 }

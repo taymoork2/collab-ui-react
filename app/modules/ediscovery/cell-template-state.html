@@ -14,9 +14,9 @@
      <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
   </span>
 
-  <span ng-switch-when="FAILED" class="failure fit-in-cell" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
-    {{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}
-  </span>
+  <div ng-switch-when="FAILED" class="fit-in-cell"  tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
+    <i class="icon icon-warning"></i> <span translate="ediscovery.reportsList.failed"></span>
+  </div>
 
   <span class="fit-in-cell" ng-switch-default>
     {{'ediscovery.reportStates.' + row.entity.state | translate}}

@@ -1504,7 +1504,8 @@
       "noReportsTip": "Click the Search tab to search activities and create reports",
       "size": "Size",
       "viewDetails": "View Details",
-      "createNew": "Create new report with same query parameters"
+      "createNew": "Create new report with same query parameters",
+      "failed": "Report failed"
     },
     "tabs": {
       "search": "Search",
