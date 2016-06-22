@@ -24,5 +24,9 @@
 </div>
 
 <div ng-if="row.entity.timeoutDetected" class="ui-grid-cell-contents" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
-  <span class="fit-in-cell" ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
+  <div class="progressbar-info">
+    <span>{{'ediscovery.timeout' | translate}}</span>
+    <span class="progressbar-progress">{{row.entity.progress}}%</span>
+  </div>
+  <progressbar type="danger" class="progress-striped" value="row.entity.progress"></progressbar>
 </div>

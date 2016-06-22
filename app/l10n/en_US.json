@@ -1467,6 +1467,7 @@
       "ROOM_NOT_FOUND": "Room not found"
     },
     "reportTimeout": "Timeout detected. Please cancel the report and try again.",
+    "timeout": "Timeout",
     "search": {
       "participants": "Participants",
       "reportName": "Report Name",
