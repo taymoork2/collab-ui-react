@@ -5,8 +5,8 @@
     </div>
     <div class="drop">
       <i class="fa fa-bars burger"></i>
-      <ul class="main-tab">
-        <li ng-repeat="tab in menu.tabs">
+      <ul class="main-tab" ng-controller="TabsCtrl as tabs">
+        <li ng-repeat="tab in tabs.tabs">
 
           <span ng-if="!tab.subPages">
             <a ui-sref="{{tab.state}}" ui-sref-active="active">
