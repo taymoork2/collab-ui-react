@@ -93,7 +93,7 @@
         displayName: $translate.instant("ediscovery.reportsList.size"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-size.html',
-        width: '120'
+        width: '110'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
