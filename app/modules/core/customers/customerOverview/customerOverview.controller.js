@@ -37,18 +37,16 @@
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (isCareEnabled) {
-      setOffers(isCareEnabled);
-    }).then(function () {
-      $q.all(FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures))
-        .then(function (result) {
-          if (_.find(vm.currentCustomer.offers, {
-              id: Config.offerTypes.roomSystems
-            })) {
-            vm.showRoomSystems = true;
-          }
-          vm.atlasPartnerAdminFeatureToggle = result[0];
-        });
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures),
+      FeatureToggleService.atlasCareTrialsGetStatus()
+    ]).then(function (result) {
+      if (_.find(vm.currentCustomer.offers, {
+          id: Config.offerTypes.roomSystems
+        })) {
+        vm.showRoomSystems = true;
+      }
+      vm.atlasPartnerAdminFeatureToggle = result[0];
+      setOffers(result[1]);
     });
 
     function setOffers(isCareEnabled) {

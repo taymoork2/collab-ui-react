@@ -42,7 +42,7 @@
     }
 
     function canShow() {
-      return Authinfo.isUserAdmin() && (TrialService.getTrialIds().length > 0);
+      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length;
     }
 
     function sendRequest() {
