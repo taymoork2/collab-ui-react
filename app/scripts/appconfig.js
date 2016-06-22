@@ -186,8 +186,8 @@
 
   angular
     .module('Squared')
-    .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
-      function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -819,7 +819,7 @@
               site: {}
             }
           })
-          .state('user-overview.conferencing.webex2', {
+          .state('user-overview.conferencing.webex.webex2', {
             templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
             controller: 'WebExUserSettings2Ctrl',
             data: {
@@ -958,13 +958,6 @@
               currentOrg: {}
             }
           })
-          /**.state('site-list', {
-            url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteListCtrl',
-            controllerAs: 'siteList',
-            parent: 'main'
-          })**/
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
@@ -1168,51 +1161,6 @@
               }
             }
           })
-
-        /*
-         devices
-         prototypes
-        */
-        .state('main-redux', {
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/mainRedux/main-redux.html'
-              }
-            },
-            abstract: true,
-            sticky: true
-          })
-          .state('devices-redux', {
-            abstract: true,
-            templateUrl: 'modules/squared/devicesRedux/devices.html',
-            controller: 'DevicesReduxCtrl',
-            controllerAs: 'devices',
-            parent: 'main-redux'
-          })
-          .state('devices-redux.search', {
-            url: '/devices-redux',
-            views: {
-              'leftPanel': {
-                templateUrl: 'modules/squared/devicesRedux/list.html'
-              }
-            }
-          })
-          .state('devices-redux.details', {
-            url: '/devices-redux/details',
-            views: {
-              'leftPanel': {
-                controllerAs: 'deviceDetails',
-                controller: 'DevicesReduxDetailsCtrl',
-                templateUrl: 'modules/squared/devicesRedux/details.html'
-              }
-            },
-            params: {
-              device: null
-            }
-          })
-          /*
-            end: devices redux prototypes
-          */
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
@@ -2260,8 +2208,9 @@
               displayName: 'Overview'
             },
             params: {
-              groupName: {},
-              selectedClusters: {}
+              clusterName: {},
+              nodes: {},
+              cluster: {}
             }
           })
           .state('connector-details-v2.alarm-details', {
@@ -2285,9 +2234,9 @@
             },
             params: {
               clusterId: null,
-              properties: null,
               connector: null,
-              hostLength: null
+              hostLength: null,
+              selectedCluster: null
             }
           })
           .state('connector-details-v2.group-settings', {
@@ -2314,8 +2263,6 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryHeaderController',
-              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2334,9 +2281,8 @@
             controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html',
             params: {
-              roomId: null,
-              startDate: null,
-              endDate: null
+              report: null,
+              reRun: false,
             }
           })
           .state('ediscovery.reports', {

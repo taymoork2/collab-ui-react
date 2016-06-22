@@ -9,6 +9,7 @@
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
+    var _licenseCountDefaultQuantity = 0;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
     var webexTemplateOptionId = 'webexTrial';
@@ -34,6 +35,7 @@
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
+    _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
     vm.trialStates = [{
       name: 'trialAdd.webex',
       trials: [vm.webexTrial],
@@ -302,7 +304,7 @@
           return vm.messageTrial.enabled; // Since, it depends on Message Offer
         },
         'templateOptions.disabled': function () {
-          return messageOfferDisabledExpression();
+          return vm.messageOfferDisabledExpression();
         }
       }
     }, {
@@ -321,13 +323,13 @@
           return vm.careTrial.enabled;
         },
         'templateOptions.disabled': function () {
-          return careLicenseInputDisabledExpression();
+          return vm.careLicenseInputDisabledExpression();
         }
       },
       validators: {
         quantity: {
           expression: function ($viewValue, $modelValue) {
-            return validateCareLicense($viewValue, $modelValue);
+            return vm.validateCareLicense($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
@@ -343,21 +345,44 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
-        required: true,
         secondaryLabel: $translate.instant('trials.users'),
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return hasUserServices();
+        },
+        'templateOptions.disabled': function () {
+          return !hasUserServices();
+        },
+
+        'model.licenseCount': function ($viewValue, $modelValue) {
+          if (hasUserServices()) {
+            return ($viewValue === 0) ? _licenseCountDefaultQuantity : $viewValue;
+          } else {
+            return 0;
+          }
+        }
       },
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
-            return ValidationService.trialLicenseCount($viewValue, $modelValue);
+            return !vm.licenseCountFields.enabled || ValidationService.trialLicenseCount($viewValue, $modelValue);
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
         },
-      },
+        countWithCare: {
+          expression: function () {
+            return vm.careLicenseCountLessThanTotalCount();
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -385,41 +410,38 @@
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm.getNextState = getNextState;
+    vm.hasUserServices = hasUserServices;
 
     vm.messageOfferDisabledExpression = messageOfferDisabledExpression;
     vm.careLicenseInputDisabledExpression = careLicenseInputDisabledExpression;
     vm.validateCareLicense = validateCareLicense;
+    vm.careLicenseCountLessThanTotalCount = careLicenseCountLessThanTotalCount;
     init();
 
     ///////////////////////
 
     function init() {
       $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials)
       ]).then(function (results) {
-        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
-        //vm.showRoomSystems = results[0];
-        //vm.roomSystemTrial.enabled = results[0];
         vm.showRoomSystems = true;
         vm.roomSystemTrial.enabled = true;
-        vm.webexTrial.enabled = results[1];
+        vm.webexTrial.enabled = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = results[4];
+        vm.showContextServiceTrial = results[2];
 
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
         }
 
-        vm.showCare = results[3];
-        vm.careTrial.enabled = results[3];
+        vm.showCare = results[1];
+        vm.careTrial.enabled = results[1];
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {
@@ -437,10 +459,7 @@
 
         pstnModal.enabled = vm.pstnTrial.enabled;
         emergAddressModal.enabled = vm.pstnTrial.enabled;
-        meetingModal.enabled = results[1];
-        // TODO: override atlasDeviceTrials to show Ship devices to all partners
-        //       and only test orgs that have feature toggle enabled (US12063)
-        //devicesModal.enabled = results[2];
+        meetingModal.enabled = results[0];
         setDeviceModal();
       }).finally(function () {
         $scope.$watch(function () {
@@ -459,6 +478,7 @@
         }
 
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+
         toggleTrial();
       });
     }
@@ -488,6 +508,18 @@
     function validateCareLicense($viewValue, $modelValue) {
       return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
         $viewValue, $modelValue, vm.details.licenseCount);
+    }
+
+    function careLicenseCountLessThanTotalCount() {
+      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
+    }
+
+    function hasUserServices() {
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var result = _.some(services, {
+        enabled: true
+      });
+      return result;
     }
 
     // Update offer and label for Meetings/WebEx trial.
@@ -529,8 +561,10 @@
     }
 
     function hasTrial() {
-      return _.some(vm.trialData.trials, {
-        enabled: true
+      // Context is a non-trial service. We don't want the Next/Start
+      // Trial button to be enabled if only Context is checked
+      return _.some(vm.trialData.trials, function (service) {
+        return service.enabled && service.type !== Config.offerTypes.context;
       });
     }
 

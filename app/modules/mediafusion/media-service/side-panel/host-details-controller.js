@@ -5,7 +5,7 @@
     .controller('HostDetailsController',
 
       /* @ngInject */
-      function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate, $modal, $log) {
+      function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.role = $stateParams.properties["mf.role"];

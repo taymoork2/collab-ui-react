@@ -6,7 +6,7 @@ describe('Directive: aaBuilderActions', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_, _$q_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $q = _$q_;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMockV2, MediaConverterServiceV2, MediaConfigServiceV2, Authinfo, CsdmHubFactory, Notification, Config, UrlConfig) {
+  function MediaClusterServiceV2($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMockV2, MediaConverterServiceV2, MediaConfigServiceV2, Authinfo, CsdmHubFactory, Notification, UrlConfig) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -215,6 +215,72 @@
         .post(url, payLoad);
     };
 
+    function get(clusterId) {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '?fields=@wide')
+        .then(extractDataFromResponse);
+    }
+
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractClustersFromResponse)
+        .then(onlyKeepFusedClusters)
+        //.then(addServicesStatuses)
+        .then(sort);
+    }
+
+    function extractClustersFromResponse(response) {
+      return response.data.clusters;
+    }
+
+    function onlyKeepFusedClusters(clusters) {
+      return _.filter(clusters, 'state', 'fused');
+    }
+
+    function extractDataFromResponse(res) {
+      return res.data;
+    }
+
+    function sort(clusters) {
+      // Could be anything but at least make it consistent between 2 page refresh
+      return _.sortBy(clusters, 'type');
+    }
+
+    function deleteV2Cluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.delete(url);
+    }
+
+    function updateV2Cluster(clusterId, clusterName, releaseChannel) {
+      var payLoad = {
+        "name": clusterName,
+        "releaseChannel": releaseChannel
+      };
+
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http
+        .post(url, payLoad);
+    }
+
+    function moveV2Host(connectorId, fromCluster, toCluster) {
+      var payLoad = {
+        "managementConnectorId": connectorId,
+        "fromClusterId": fromCluster,
+        "toClusterId": toCluster
+      };
+
+      //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
+      return $http
+        .post(url);
+    }
+
+    function defuseV2Connector(connectorId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregister/invoke?managementConnectorId=' + connectorId;
+      return $http.post(url);
+    }
+
     var hub = CsdmHubFactory.create();
     var clusterPoller = CsdmPoller.create(fetch, hub);
 
@@ -240,7 +306,13 @@
       getClusterList: getClusterList,
       getClustersV2: getClustersV2,
       createClusterV2: createClusterV2,
-      addRedirectTarget: addRedirectTarget
+      addRedirectTarget: addRedirectTarget,
+      get: get,
+      getAll: getAll,
+      deleteV2Cluster: deleteV2Cluster,
+      updateV2Cluster: updateV2Cluster,
+      defuseV2Connector: defuseV2Connector,
+      moveV2Host: moveV2Host
     };
   }
 

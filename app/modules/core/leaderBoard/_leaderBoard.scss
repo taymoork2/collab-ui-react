@@ -193,10 +193,6 @@
   }
   .leader-board {
     margin-top: 20px; // gain 20px
-    // except customer admins with 'atlas-trial-conversion' feature-toggle enabled
-    &.is-customer-admin.ft-atlas-trial-conversion {
-      margin-top: 12px; // we only need 12px
-    }
     &.has-active-trial {
       .subscription:first-of-type {
         .subscriptionId.has-active-trial {

@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage) {
+  function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -297,7 +297,6 @@
         'huntgroupedit',
         'devices',
         'device-overview',
-        'devices-redux',
         'services-overview'
       ],
       'squared-fusion-mgmt': [
@@ -309,8 +308,7 @@
       ],
       'spark-room-system': [
         'devices',
-        'device-overview',
-        'devices-redux'
+        'device-overview'
       ],
       'squared-fusion-uc': [
         'cluster-list',
@@ -334,7 +332,8 @@
         'metrics',
         'reports-metrics',
         'media-service',
-        'connector-details'
+        'connector-details',
+        'connector-details-v2'
       ],
       'webex-messenger': [
         'messenger'
@@ -368,7 +367,8 @@
         'mediafusion-settings',
         'calendar-service',
         'call-service',
-        'management-service'
+        'management-service',
+        'services-overview'
       ]
     };
 

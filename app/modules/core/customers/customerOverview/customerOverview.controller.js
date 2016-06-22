@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -37,20 +37,16 @@
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (isCareEnabled) {
-      setOffers(isCareEnabled);
-    }).then(function () {
-      $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
-          FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)
-        ])
-        .then(function (result) {
-          if (_.find(vm.currentCustomer.offers, {
-              id: Config.offerTypes.roomSystems
-            })) {
-            vm.showRoomSystems = result[0];
-          }
-          vm.atlasPartnerAdminFeatureToggle = result[1];
-        });
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures),
+      FeatureToggleService.atlasCareTrialsGetStatus()
+    ]).then(function (result) {
+      if (_.find(vm.currentCustomer.offers, {
+          id: Config.offerTypes.roomSystems
+        })) {
+        vm.showRoomSystems = true;
+      }
+      vm.atlasPartnerAdminFeatureToggle = result[0];
+      setOffers(result[1]);
     });
 
     function setOffers(isCareEnabled) {

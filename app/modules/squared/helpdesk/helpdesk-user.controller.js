@@ -29,6 +29,7 @@
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.openExtendedInformation = openExtendedInformation;
     vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
@@ -47,17 +48,18 @@
       }, XhrNotificationService.notify);
     }
 
-    function openExtendedInformation(title, message) {
+    function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
+        var userStringified = JSON.stringify(vm.user, null, 4);
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
           controller: 'HelpdeskExtendedInformationCtrl as modal',
           resolve: {
             title: function () {
-              return title;
+              return 'helpdesk.userDetails';
             },
             message: function () {
-              return message;
+              return userStringified;
             }
           }
         });
@@ -66,7 +68,6 @@
 
     function initUserView(user) {
       vm.user = user;
-      vm.userStringified = JSON.stringify(user, null, 4);
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
@@ -114,6 +115,7 @@
         }, angular.noop);
       }
 
+      vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
     }
 

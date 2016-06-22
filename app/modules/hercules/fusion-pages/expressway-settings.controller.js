@@ -9,6 +9,33 @@
   function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, $modal, $state, $translate) {
     var vm = this;
     vm.backUrl = 'cluster-list';
+    vm.usersPlaceholder = 'Default';
+    vm.usersSelected = '';
+    vm.usersOptions = ['Default'];
+    vm.enabledServices = [];
+    vm.upgradeSchedule = {
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+    };
+    vm.releasechannel = {
+      title: 'hercules.expresswayClusterSettings.releasechannelHeader',
+      description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
+    };
+    vm.deactivateServices = {
+      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader'
+    };
+    vm.deregisterClusterSection = {
+      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader'
+    };
+    vm.localizedCallServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_ucmc');
+    vm.localizedCalendarServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_cal');
+
+    vm.deactivateService = deactivateService;
+    vm.deregisterCluster = deregisterCluster;
+
+    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
+      .then(function (allConnectorTypes) {
+        vm.enabledServices = allConnectorTypes;
+      });
 
     loadCluster($stateParams.id);
 
@@ -25,40 +52,11 @@
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });
+          vm.localizedRemoveClusterHeader = $translate.instant('hercules.expresswayClusterSettings.deregisterClusterSubHeader', {
+            ClusterName: vm.cluster.name
+          });
         }, XhrNotificationService.notify);
     }
-
-    vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
-      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
-    };
-
-    vm.releasechannel = {
-      title: 'hercules.expresswayClusterSettings.releasechannelHeader',
-      description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
-    };
-
-    vm.deactivateServices = {
-      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader',
-      description: 'hercules.expresswayClusterSettings.deactivateServicesParagraph'
-    };
-
-    vm.deregisterClusterSection = {
-      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader',
-      description: 'hercules.expresswayClusterSettings.deregisterClusterParagraph'
-    };
-
-    vm.usersPlaceholder = 'Default';
-    vm.usersSelected = '';
-    vm.usersOptions = ['Default'];
-
-    vm.enabledServices = [];
-    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
-      .then(function (allConnectorTypes) {
-        vm.enabledServices = allConnectorTypes;
-      });
-
-    vm.deactivateService = deactivateService;
 
     function deactivateService(serviceId, cluster) {
       $modal.open({
@@ -87,14 +85,13 @@
       });
     }
 
-    vm.deregisterCluster = deregisterCluster;
-
     function deregisterCluster(cluster) {
       $modal.open({
           resolve: {
             cluster: function () {
               return vm.cluster;
-            }
+            },
+            isF410enabled: true
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',

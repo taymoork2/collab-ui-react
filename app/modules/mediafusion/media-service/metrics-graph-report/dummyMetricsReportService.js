@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
   /* @ngInject */
-  function DummyMetricsReportService($translate, chartColors) {
+  function DummyMetricsReportService(chartColors) {
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
@@ -88,8 +88,8 @@
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            call_reject: Math.floor((Math.random() * 100) + 1),
-            active_calls: Math.floor((Math.random() * 100) + 1),
+            call_reject: Math.floor((Math.random() * 1) + 1),
+            active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -99,8 +99,8 @@
         for (var i = 168; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i, 'hours').format(timeFormat),
-            call_reject: Math.floor((Math.random() * 100) + 1),
-            active_calls: Math.floor((Math.random() * 100) + 1),
+            call_reject: Math.floor((Math.random() * 1) + 1),
+            active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -110,8 +110,8 @@
         for (var i = 180; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
-            call_reject: Math.floor((Math.random() * 100) + 1),
-            active_calls: Math.floor((Math.random() * 100) + 1),
+            call_reject: Math.floor((Math.random() * 1) + 1),
+            active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -121,8 +121,8 @@
         for (var i = 270; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
-            call_reject: Math.floor((Math.random() * 100) + 1),
-            active_calls: Math.floor((Math.random() * 100) + 1),
+            call_reject: Math.floor((Math.random() * 1) + 1),
+            active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -139,8 +139,8 @@
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 5, 'minutes').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 10) + 1),
-            peak_cpu: Math.floor((Math.random() * 10) + 1),
+            average_cpu: Math.floor((Math.random() * 1) + 1),
+            peak_cpu: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -150,8 +150,8 @@
         for (var i = 168; i >= 1; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 10) + 1),
-            peak_cpu: Math.floor((Math.random() * 10) + 1),
+            average_cpu: Math.floor((Math.random() * 1) + 1),
+            peak_cpu: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -161,8 +161,8 @@
         for (var i = 180; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 3, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 10) + 1),
-            peak_cpu: Math.floor((Math.random() * 10) + 1),
+            average_cpu: Math.floor((Math.random() * 1) + 1),
+            peak_cpu: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray
@@ -172,8 +172,8 @@
         for (var i = 270; i >= 0; i--) {
           dummyGraphVal.push({
             timestamp: moment().subtract(i * 8, 'hours').format(timeFormat),
-            average_cpu: Math.floor((Math.random() * 10) + 1),
-            peak_cpu: Math.floor((Math.random() * 10) + 1),
+            average_cpu: Math.floor((Math.random() * 1) + 1),
+            peak_cpu: Math.floor((Math.random() * 1) + 1),
             balloon: false,
             colorOne: chartColors.dummyGrayLight,
             colorTwo: chartColors.dummyGray

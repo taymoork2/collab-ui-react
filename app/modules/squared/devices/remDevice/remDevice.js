@@ -5,7 +5,7 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($scope, $modalInstance, CsdmCodeService, CsdmDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
+      function ($modalInstance, CsdmCodeService, CsdmDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
         rdc.deleteDeviceOrCode = function () {

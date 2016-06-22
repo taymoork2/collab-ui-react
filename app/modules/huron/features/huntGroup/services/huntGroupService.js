@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
+  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo) {
 
     var customerId = Authinfo.getOrgId();
     var service = {

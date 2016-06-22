@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($http, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, $window, addressparser, Authinfo, chartColors, CsvDownloadService, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, TelephoneNumberService, TrackingId, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -909,21 +909,47 @@
     };
 
     $scope.updateUserLicense = function () {
-      var user = [];
+      var users = [];
       if (_.get($scope, 'usrlist.length')) {
-        user = $scope.usrlist;
+        users = $scope.usrlist;
       } else if ($scope.currentUser) {
         usersList = [];
         var userObj = {
           'address': $scope.currentUser.userName,
           'name': $scope.currentUser.name
         };
-        user.push(userObj);
-        usersList.push(user);
+        users.push(userObj);
+        usersList.push(users);
       }
       $scope.btnSaveEntLoad = true;
 
-      Userservice.updateUsers(user, getAccountLicenses('patch'), null, 'updateUserLicense', entitleUserCallback);
+      // make sure we have any internal extension and direct line set up for the users
+      _.forEach(users, function (user, idx) {
+        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (user.externalNumber && user.externalNumber.pattern !== 'None') {
+          user.directLine = user.externalNumber.pattern;
+        }
+      });
+
+      Userservice.onboardUsers(users, null, getAccountLicenses('patch'))
+        .then(successCallback)
+        .catch(errorCallback);
+
+      function successCallback(response) {
+        // adapt response to call existing entitleUserCallback
+        var rdata = response.data || {};
+        rdata.success = true;
+        $rootScope.$broadcast('Userservice::updateUsers');
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
+      function errorCallback(response) {
+        var rdata = response || {};
+        rdata.success = false;
+        rdata.status = response.status || false;
+        entitleUserCallback(rdata, response.status, 'updateUserLicense', response.headers);
+      }
+
     };
 
     //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************

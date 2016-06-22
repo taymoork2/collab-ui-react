@@ -261,6 +261,34 @@ describe('Controller: TrialAddCtrl', function () {
       });
     });
 
+    describe('hasUserServices() ', function () {
+      beforeEach(function () {
+        controller.callTrial.enabled = false;
+        controller.meetingTrial.enabled = false;
+        controller.webexTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.messageTrial.enabled = false;
+        controller.roomSystemTrial.enabled = true;
+        $scope.$apply();
+      });
+
+      it('should return false when only roomSystemTrial is enabled', function () {
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return false when no services are enabled', function () {
+        controller.roomSystemTrial.enabled = false;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeFalsy();
+      });
+
+      it('should return true when any user service is enabled', function () {
+        controller.messageTrial.enabled = true;
+        $scope.$apply();
+        expect(controller.hasUserServices()).toBeTruthy();
+      });
+    });
+
     describe('with context service checked', function () {
 
       it('should enable context service', function () {
@@ -281,6 +309,14 @@ describe('Controller: TrialAddCtrl', function () {
         expect(TrialContextService.addService).toHaveBeenCalled();
         expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
       });
+
+      it('should not be able to proceed if no other trial services are checked', function () {
+        // uncheck all services except for Context Service
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'contextTrial';
+        });
+        expect(controller.hasTrial()).toBeFalsy();
+      });
     });
 
     describe('without context service checked', function () {
@@ -293,6 +329,14 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should not enable context service', function () {
         expect(TrialContextService.addService).not.toHaveBeenCalled();
+      });
+
+      it('should be able to proceed with trial services enabled', function () {
+        // uncheck Context Service and all other services except for Message
+        Object.keys(controller.trialData.trials).forEach(function (service) {
+          controller.trialData.trials[service].enabled = service === 'messageTrial';
+        });
+        expect(controller.hasTrial()).toBeTruthy();
       });
     });
   });
@@ -355,59 +399,88 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   describe('Care offer trial', function () {
-    var CARE_LICENSE_COUNT_DEFAULT = 15;
-    var CARE_LICENSE_COUNT = CARE_LICENSE_COUNT_DEFAULT * 2;
 
-    it('should be disabled if message is disabled.', function () {
-      expect(controller.messageTrial.enabled).toBeTruthy();
-      expect(controller.careTrial.enabled).toBeTruthy();
-
-      controller.messageTrial.enabled = false;
-      expect(controller.messageOfferDisabledExpression()).toBeTruthy();
-      expect(controller.careTrial.enabled).toBeFalsy();
-
-      controller.messageTrial.enabled = true;
-      expect(controller.messageOfferDisabledExpression()).toBeFalsy();
-      //Care is a choice to enable/disable when Message is enabled.
-      expect(controller.careTrial.enabled).toBeFalsy();
+    describe('primary behaviors:', function () {
+      it('Message and Care are enabled by default', function () {
+        expect(controller.messageTrial.enabled).toBeTruthy();
+        expect(controller.careTrial.enabled).toBeTruthy();
+      });
     });
 
-    it('care license count disabled expression works correctly.', function () {
-      controller.careTrial.enabled = true;
-      controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
-      expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
-      expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT);
-    });
+    describe('helper functions:', function () {
+      var CARE_LICENSE_COUNT_DEFAULT = 15;
+      var CARE_LICENSE_COUNT = CARE_LICENSE_COUNT_DEFAULT * 2;
 
-    it('care license count resets to 0 when disabled.', function () {
-      controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
-      controller.careTrial.enabled = false;
-      expect(controller.careLicenseInputDisabledExpression()).toBeTruthy();
-      expect(controller.careTrial.details.quantity).toEqual(0);
-    });
+      describe('messageOfferDisabledExpression:', function () {
+        it('should be disabled if message is disabled.', function () {
+          controller.messageTrial.enabled = false;
+          expect(controller.messageOfferDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.enabled).toBeFalsy();
 
-    it('care license count shows default value when enabled.', function () {
-      controller.careTrial.details.quantity = 0;
-      controller.careTrial.enabled = true;
-      expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
-      expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT_DEFAULT);
-    });
+          controller.messageTrial.enabled = true;
+          expect(controller.messageOfferDisabledExpression()).toBeFalsy();
+          //Care is a choice to enable/disable when Message is enabled.
+          expect(controller.careTrial.enabled).toBeFalsy();
+        });
+      });
 
-    it('care license validation is not used when care is not selected.', function () {
-      controller.careTrial.enabled = false;
-      expect(controller.validateCareLicense()).toBeTruthy();
-    });
+      describe('careLicenseInputDisabledExpression:', function () {
+        it('care license count disabled expression works correctly.', function () {
+          controller.careTrial.enabled = true;
+          controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
+          expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
+          expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT);
+        });
 
-    it('care license validation allows value between 1 and 50.', function () {
-      controller.details.licenseCount = 100;
-      controller.careTrial.enabled = true;
-      expect(controller.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
-    });
+        it('care license count resets to 0 when disabled.', function () {
+          controller.careTrial.details.quantity = CARE_LICENSE_COUNT;
+          controller.careTrial.enabled = false;
+          expect(controller.careLicenseInputDisabledExpression()).toBeTruthy();
+          expect(controller.careTrial.details.quantity).toEqual(0);
+        });
 
-    it('care license validation disallows value greater than total users.', function () {
-      controller.details.licenseCount = 10;
-      controller.careTrial.enabled = true;
-      expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+        it('care license count shows default value when enabled.', function () {
+          controller.careTrial.details.quantity = 0;
+          controller.careTrial.enabled = true;
+          expect(controller.careLicenseInputDisabledExpression()).toBeFalsy();
+          expect(controller.careTrial.details.quantity).toEqual(CARE_LICENSE_COUNT_DEFAULT);
+        });
+      });
+
+      describe('validateCareLicense:', function () {
+        it('care license validation is not used when care is not selected.', function () {
+          controller.careTrial.enabled = false;
+          expect(controller.validateCareLicense()).toBeTruthy();
+        });
+
+        it('care license validation allows value between 1 and 50.', function () {
+          controller.details.licenseCount = 100;
+          controller.careTrial.enabled = true;
+          expect(controller.validateCareLicense(CARE_LICENSE_COUNT, CARE_LICENSE_COUNT)).toBeTruthy();
+        });
+
+        it('care license validation disallows value greater than total users.', function () {
+          controller.details.licenseCount = 10;
+          controller.careTrial.enabled = true;
+          expect(controller.validateCareLicense(CARE_LICENSE_COUNT + 1, CARE_LICENSE_COUNT + 1)).toBeFalsy();
+        });
+      });
+
+      describe('careLicenseCountLessThanTotalCount:', function () {
+        it('Total license count cannot be lesser than Care license count.', function () {
+          controller.details.licenseCount = 10;
+          controller.careTrial.enabled = true;
+          controller.careTrial.details.quantity = 20;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeFalsy();
+        });
+
+        it('Total license validation with Care is applicable only when careTrial is enabled.', function () {
+          controller.details.licenseCount = 10;
+          controller.careTrial.enabled = false;
+          controller.careTrial.details.quantity = 20;
+          expect(controller.careLicenseCountLessThanTotalCount()).toBeTruthy();
+        });
+      });
     });
   });
 

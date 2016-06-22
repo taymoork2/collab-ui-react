@@ -194,7 +194,9 @@ describe('Service: EdiscoveryService', function () {
 
       httpBackend.whenPOST(avalonRunUrl, {
         'roomId': roomId,
-        'responseUrl': responseUrl
+        'responseUrl': responseUrl,
+        'startDate': null,
+        'endDate': null
       }).respond(202, '');
 
       httpBackend.whenPATCH(urlBase + 'compliance/organizations/' + orgId + '/reports/' + reportId, {
@@ -233,7 +235,7 @@ describe('Service: EdiscoveryService', function () {
     });
 
     it('can run a report', function (done) {
-      Service.runReport(avalonRunUrl, roomId, responseUrl).then(function (result) {
+      Service.runReport(avalonRunUrl, roomId, responseUrl, null, null).then(function (result) {
         expect(result.status).toEqual(202);
         done();
       });

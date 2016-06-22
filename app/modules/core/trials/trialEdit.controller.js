@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice, UrlConfig) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialContextService, TrialDeviceService, TrialPstnService, Orgservice) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -30,6 +30,7 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.setDeviceModal = setDeviceModal;
+    vm.hasUserServices = hasUserServices;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -162,12 +163,28 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.licenseQuantity'),
-        labelClass: 'medium-4',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         type: 'number',
-        required: true,
+
         secondaryLabel: $translate.instant('trials.users')
       },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return hasUserServices();
+        },
+        'templateOptions.disabled': function () {
+          return !hasUserServices();
+        },
+
+        'model.licenseCount': function ($viewValue, $modelValue) {
+          if (hasUserServices()) {
+            return ($viewValue === 0) ? vm.preset.licenseCount : $viewValue;
+          } else {
+            return 0;
+          }
+        }
+      },
+
       validators: {
         count: {
           expression: function ($viewValue, $modelValue) {
@@ -191,7 +208,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         options: [30, 60, 90]
       },
     }];
@@ -226,7 +243,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-4',
+        inputClass: 'medium-5',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -277,29 +294,21 @@
 
     function init() {
       $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
         TrialContextService.trialHasService(vm.currentTrial.customerOrgId)
       ]).then(function (results) {
-        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
-        //vm.showRoomSystems = results[0];
-        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
         vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[1] && vm.preset.webex;
+        vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+        vm.webexTrial.enabled = results[0] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[1];
+        vm.showWebex = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.showContextServiceTrial = results[3];
-        vm.contextTrial.enabled = results[4];
-        vm.preset.context = results[4];
-        // TODO: override atlasDeviceTrials to show Ship devices to all partners
-        //       and do not show to test orgs (US12063)
-        //vm.canSeeDevicePage = results[2];
+        vm.showContextServiceTrial = results[1];
+        vm.contextTrial.enabled = results[2];
+        vm.preset.context = results[2];
         setDeviceModal();
 
         if (vm.showWebex) {
@@ -325,6 +334,14 @@
 
         toggleTrial();
       });
+    }
+
+    function hasUserServices() {
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var result = _.some(services, {
+        enabled: true
+      });
+      return result;
     }
 
     // If Webex Trials are enabled, we switch out offerType Collab for Message

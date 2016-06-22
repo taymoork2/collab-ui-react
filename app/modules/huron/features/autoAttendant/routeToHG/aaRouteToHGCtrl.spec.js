@@ -18,17 +18,52 @@ describe('Controller: AARouteToHGCtrl', function () {
     }
   };
 
-  var huntGroupName = 'Olegs Hunt Group';
-  var huntGroupNumber = '987654321';
-
   var huntGroups = [{
-    name: huntGroupName,
+    name: 'Olegs Hunt Group',
     numbers: [{
       'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
-      'number': huntGroupNumber,
+      'number': '987654321',
       'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
     }],
+    number: '987654321',
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+  }, {
+    name: 'Test Hunt Group',
+    numbers: [{
+      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
+      'number': '987654321',
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+    }],
+    number: '987654321',
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+  }, {
+    name: 'AA Hunt Group',
+    numbers: [{
+      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
+      'number': '987654321',
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+    }],
+    number: '987654321',
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+  }, {
+    name: 'Super Hunt Group',
+    numbers: [{
+      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
+      'number': '987654321',
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+    }],
+    number: '987654321',
+    uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
+  }];
+
+  var sortedOptions = [{
+    'description': huntGroups[2].name.concat(' (').concat(huntGroups[2].number).concat(')'),
+  }, {
+    'description': huntGroups[0].name.concat(' (').concat(huntGroups[0].number).concat(')'),
+  }, {
+    'description': huntGroups[3].name.concat(' (').concat(huntGroups[3].number).concat(')'),
+  }, {
+    'description': huntGroups[1].name.concat(' (').concat(huntGroups[1].number).concat(')'),
   }];
 
   var schedule = 'openHours';
@@ -193,19 +228,18 @@ describe('Controller: AARouteToHGCtrl', function () {
 
     });
 
-    it('should initialize the options list', function () {
+    it('should initialize the options list and check for sorted list', function () {
 
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope
       });
 
-      var nameNumber = huntGroupName.concat(' (').concat(huntGroupNumber).concat(')');
-
       $scope.$apply();
 
-      expect(controller.huntGroups.length).toEqual(1);
-
-      expect(controller.huntGroups[0].description).toEqual(nameNumber);
+      expect(controller.huntGroups.length).toEqual(4);
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.huntGroups[i].description).toEqual(sortedOptions[i].description);
+      }
 
     });
 

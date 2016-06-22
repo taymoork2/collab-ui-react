@@ -2,8 +2,8 @@
   'use strict';
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
-  function MetricsReportService($http, $translate, $q, Config, Authinfo, Notification, $log, Log, chartColors, UrlConfig) {
-    //var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+  function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
+    var urlTemp = 'http://10.196.5.245:8080/athena/api/v1/' + 'organizations/' + Authinfo.getOrgId();
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';
     var topn = 'topn';
@@ -11,6 +11,8 @@
     var utilizationUrl = '/cpu_utilization';
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';
+    var agg_availability = '/agg_availability';
+    var agg_cpu_utilization = '/agg_cpu_utilization';
 
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -24,19 +26,15 @@
     var activePromise = null;
     var activePromiseForAvailability = null;
     var activePromiseForUtilization = null;
-    var mostActivePromise = null;
-    var groupCancelPromise = null;
-    var oneToOneCancelPromise = null;
-    var avgCancelPromise = null;
-    var contentSharedCancelPromise = null;
-    var contentShareSizesCancelPromise = null;
-    var metricsCancelPromise = null;
-    var mediaCancelPromise = null;
-    var deviceCancelPromise = null;
+    var activePromiseForClusterAvailability = null;
+    var activePromiseForCPUUtilization = null;
+
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
-      getAvailabilityData: getAvailabilityData
+      getAvailabilityData: getAvailabilityData,
+      getClusterAvailabilityData: getClusterAvailabilityData,
+      getCPUUtilizationData: getCPUUtilizationData
     };
 
     function getUtilizationData(time, cluster) {
@@ -50,12 +48,12 @@
       return getService(urlBase + utilizationUrl + getQuery(cluster, time), activePromiseForUtilization).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].cpuUtilValues) && angular.isArray(response.data[0].cpuUtilValues) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].cpuUtilValues);
-          return adjustUtilizationData(response.data[0].cpuUtilValues, returnData);
+          return adjustUtilizationData(response.data[0].cpuUtilValues, returnData, response.data[0].startTime, response.data[0].endTime);
         } else {
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+        return returnErrorCheck(response, 'Utilization data not returned for customer.', $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
       });
     }
 
@@ -71,12 +69,12 @@
       return getService(urlBase + callVolumeUrl + getQuery(cluster, time), activePromise).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
-          return adjustCallVolumeData(response.data[0].values, returnData);
+          return adjustCallVolumeData(response.data[0].values, returnData, response.data[0].startTime, response.data[0].endTime);
         } else {
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+        return returnErrorCheck(response, 'Total Number of Calls data not returned for customer.', $translate.instant('mediaFusion.metrics.overallCallVolumeGraphError'), returnData);
       });
     }
 
@@ -94,11 +92,47 @@
           return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
+        return returnErrorCheck(response, 'Availability data not returned for customer.', $translate.instant('mediaFusion.metrics.overallAvailabilityGraphError'), returnData);
       });
     }
 
-    function adjustCallVolumeData(activeData, returnData) {
+    function getClusterAvailabilityData(time, cluster) {
+      // cancel any currently running jobs
+      if (activePromiseForClusterAvailability !== null && angular.isDefined(activePromiseForClusterAvailability)) {
+        activePromiseForClusterAvailability.resolve(ABORT);
+      }
+      activePromiseForClusterAvailability = $q.defer();
+      var returnData = [];
+      return getService(urlBase + agg_availability + getQuery(cluster, time), activePromiseForClusterAvailability).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Aggeregated Cluster Availability data not returned for customer.', $translate.instant('mediaFusion.metrics.overallClusterAvailabilityGraphError'), returnData);
+      });
+    }
+
+    function getCPUUtilizationData(time, cluster) {
+      // cancel any currently running jobs
+      if (activePromiseForCPUUtilization !== null && angular.isDefined(activePromiseForCPUUtilization)) {
+        activePromiseForCPUUtilization.resolve(ABORT);
+      }
+      activePromiseForCPUUtilization = $q.defer();
+      var returnData = [];
+      return getService(urlBase + agg_cpu_utilization + getQuery(cluster, time), activePromiseForCPUUtilization).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Aggeregated CPU Utilization data not returned for customer.', $translate.instant('mediaFusion.metrics.overallAverageUtilizationGraphError'), returnData);
+      });
+    }
+
+    function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
@@ -109,6 +143,10 @@
         active_calls: 0,
         timestamp: null
       };
+      var startDate = {
+        timestamp: startTime
+      };
+      activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
         var tmpItem = angular.copy(graphItem);
         tmpItem.call_reject = activeData[i].call_reject;
@@ -116,11 +154,17 @@
         tmpItem.timestamp = activeData[i].timestamp;
         returnDataArray.push(tmpItem);
       }
+      var endDate = {
+        colorOne: chartColors.brandRoyalBlue,
+        colorTwo: chartColors.brandSkyBlue,
+        timestamp: endTime
+      };
+      returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
     }
 
-    function adjustUtilizationData(activeData, returnData) {
+    function adjustUtilizationData(activeData, returnData, startTime, endTime) {
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
@@ -131,6 +175,12 @@
         peak_cpu: 0.0,
         timestamp: null
       };
+      var startDate = {
+        colorOne: chartColors.colorPurple,
+        colorTwo: chartColors.colorPurple,
+        timestamp: startTime
+      };
+      activeData.unshift(startDate);
       for (var i = 0; i < activeData.length; i++) {
         var tmpItem = angular.copy(graphItem);
         tmpItem.average_cpu = activeData[i].average_cpu;
@@ -138,6 +188,12 @@
         tmpItem.timestamp = activeData[i].timestamp;
         returnDataArray.push(tmpItem);
       }
+      var endDate = {
+        colorOne: chartColors.colorPurple,
+        colorTwo: chartColors.colorPurple,
+        timestamp: endTime
+      };
+      returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
     }

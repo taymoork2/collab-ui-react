@@ -67,7 +67,7 @@ describe('Template: branding', function () {
     compileView();
   }
 
-  describe('Regular Admin', function () {
+  xdescribe('Regular Admin', function () {
     beforeEach(compileView);
 
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));
