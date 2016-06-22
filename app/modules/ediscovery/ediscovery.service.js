@@ -29,6 +29,8 @@
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
         report.isDone = report.state === 'COMPLETED' || report.state === 'FAILED' || report.state === 'ABORTED';
+        report.canBeCancelled = report.state === 'ACCEPTED' || report.state === 'RUNNING';
+        report.canBeDownloaded = report.state === "COMPLETED" && (!report.expiryTime || new Date().getTime() < new Date(report.expiryTime).getTime());
       }
       return report;
     }

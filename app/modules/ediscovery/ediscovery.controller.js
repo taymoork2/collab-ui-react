@@ -13,10 +13,8 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.downloadable = downloadable;
     $scope.downloadReport = EdiscoveryService.downloadReport;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
-    $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
@@ -34,27 +32,11 @@
 
     pollAvalonReport();
 
-    function cancable(id) {
-      var r = findReportById(id);
-      return r && (r.state === "RUNNING" || r.timeoutDetected);
-    }
-
     function cancelReport(id) {
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
         pollAvalonReport();
-      });
-    }
-
-    function downloadable(id) {
-      var r = findReportById(id);
-      return r && r.state === "COMPLETED";
-    }
-
-    function findReportById(id) {
-      return _.find(vm.reports, function (report) {
-        return report.id === id;
       });
     }
 
@@ -111,7 +93,7 @@
         displayName: $translate.instant("ediscovery.reportsList.size"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-size.html',
-        width: '100'
+        width: '120'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
