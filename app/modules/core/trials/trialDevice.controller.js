@@ -102,8 +102,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 2,
+        max: 3,
+        min: 1,
         disabled: true,
       },
       modelOptions: {
@@ -121,7 +121,7 @@
           return !vm.sx10.enabled || vm.sx10.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.sx10, 2);
+          return vm.getQuantityInputDefault(vm.sx10, 1);
         }
 
       },
@@ -518,12 +518,16 @@
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems);
+      var min = 1;
+      var max = 3;
+      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems, min, max);
 
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      return _validateTypeQuantity(scope, _trialCallData.details.phones);
+      var min = 1;
+      var max = 5;
+      return _validateTypeQuantity(scope, _trialCallData.details.phones, min, max);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -532,7 +536,7 @@
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity < 2 || quantity > 7);
+        return !(quantity < 1 || quantity > 7);
       }
     }
 
@@ -571,13 +575,13 @@
       }
     }
 
-    function _validateTypeQuantity(scope, deviceType) {
+    function _validateTypeQuantity(scope, deviceType, min, max) {
       var quantity = vm.calcQuantity(deviceType);
       var device = scope.model;
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity < 2 || quantity > 5);
+        return !(quantity < min || quantity > max);
       }
     }
 

@@ -9,6 +9,12 @@
       return $location.absUrl().match(/reports-backend=mock/);
     }
 
+    if (useMock()) {
+      var REPORT_TIMEOUT_SECONDS = 30;
+    } else {
+      var REPORT_TIMEOUT_SECONDS = 180;
+    }
+
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
@@ -24,7 +30,7 @@
     function tweakReport(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 180000;
+          .getTime() > REPORT_TIMEOUT_SECONDS * 1000;
         if (report.state === 'FAILED' && !report.failureReason) {
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
@@ -56,8 +62,7 @@
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       if (useMock()) {
-        //TODO: return single mock report based on id
-        //return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
+        return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
       } else {
         return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id).then(extractReport);
       }
@@ -67,7 +72,7 @@
       var orgId = Authinfo.getOrgId();
       var reqParams = 'offset=' + offset + '&limit=' + limit;
       if (useMock()) {
-        return $q.resolve(extractReports(EdiscoveryMockData.getReports()));
+        return $q.resolve(extractReports(EdiscoveryMockData.getReports(offset, limit)));
       } else {
         return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams).then(extractReports);
       }

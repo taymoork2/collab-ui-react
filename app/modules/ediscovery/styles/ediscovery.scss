@@ -325,6 +325,11 @@
       padding-right: 1rem;
       color: $gray-light-1
     }
+    .ui-grid-row-selected {
+      .action-icons:hover {
+        color: $color-primary-lighter;
+      }
+    }
     .action-icons:hover {
       color: $color-primary-base;
     }
