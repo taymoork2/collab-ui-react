@@ -49,7 +49,7 @@ namespace globalsettings {
         expect(controller.support).toBeFalsy();
         expect(controller.branding).toBeTruthy();
         expect(controller.privacy).toBeFalsy();
-        expect(controller.dataPolicy).toBeFalsy();
+        expect(controller.retention).toBeFalsy();
       });
     });
 
@@ -70,7 +70,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeTruthy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
 
@@ -87,7 +87,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeFalsy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
     });
