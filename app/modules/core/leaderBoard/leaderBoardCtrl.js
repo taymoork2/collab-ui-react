@@ -50,13 +50,14 @@
                 subscription[bucket].unlimited = true;
               });
             } else {
-              licenses.forEach(function (license) {
+              licenses.forEach(function (license, licenseIndex) {
                 var bucket = license.licenseType.toLowerCase();
                 if (!(bucket === 'cmr' || bucket === 'conferencing')) {
                   subscription[bucket] = {};
                   var a = subscription[bucket];
                   a['services'] = [];
                 }
+                license.id = bucket + index + licenseIndex;
                 if (license.offerName !== 'CF') {
                   if (license.siteUrl) {
                     if (!subscription['sites']) {
