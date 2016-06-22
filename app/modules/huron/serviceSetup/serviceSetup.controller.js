@@ -25,17 +25,6 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
 
-    var mohOptions = [{
-      label: $translate.instant('serviceSetupModal.ciscoDefault'),
-      value: 'ciscoDefault'
-    }, {
-      label: $translate.instant('serviceSetupModal.fall'),
-      value: 'fall'
-    }, {
-      label: $translate.instant('serviceSetupModal.winter'),
-      value: 'winter'
-    }];
-
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -63,13 +52,11 @@
       previousLength: DEFAULT_EXT_LEN,
       //var to hold ranges in view display
       displayNumberRanges: [],
-      globalMOH: mohOptions[0],
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
       },
       ftswSteeringDigit: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -307,11 +294,6 @@
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.model.disableExtensions;
-        },
-        // hide function added to expressionProperties because hideExpression does not dependably hide
-        // the element on load, and will evaluate only after the model updates after first load
-        'hideExpression': function () {
-          return vm.model.hideExtensionLength;
         }
       }
     }, {
@@ -590,26 +572,6 @@
           }
         }]
       }
-    }, {
-      key: 'globalMOH',
-      type: 'select',
-      className: 'service-setup',
-      templateOptions: {
-        inputClass: 'service-setup-moh',
-        label: $translate.instant('serviceSetupModal.globalMOH'),
-        description: $translate.instant('serviceSetupModal.mohDescription'),
-        options: mohOptions,
-        labelfield: 'label',
-        valuefield: 'value'
-      },
-      hideExpression: function ($viewValue, $modelValue, scope) {
-        return vm.firstTimeSetup;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return !vm.firstTimeSetup;
-        }
-      }
     }];
 
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -642,9 +604,6 @@
       }).then(function () {
         // Get the timezone feature toggle setting
         return enableTimeZoneFeatureToggle();
-      }).then(function () {
-        // Get the extemsion length feature toggle setting
-        return enableExtensionLengthFeatureToggle();
       }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
@@ -739,14 +698,6 @@
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
       });
     }
 
