@@ -59,7 +59,7 @@
       "squared-call-initiation",
       "cloud-contact-center"
     ],
-    "volume": 100,
+    "volume": 30,
     "isTrial": true,
     "status": "ACTIVE"
   }],

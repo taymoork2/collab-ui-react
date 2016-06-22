@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope, FeatureToggleService) {
+  function PlanReviewCtrl($scope, $translate, Authinfo, FeatureToggleService, TrialService) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -30,7 +30,7 @@
 
     vm.careServices = {
       isNewTrial: false,
-      services: []
+      services: Authinfo.getCareServices() || []
     };
 
     vm.cmrServices = {
@@ -54,7 +54,6 @@
       maxServiceRows: maxServiceRows
     };
     vm.isCareEnabled = false;
-
 
     init();
 
@@ -114,17 +113,23 @@
         }
       });
 
-      vm.careServices.services = Authinfo.getCareServices() || [];
-      angular.forEach(vm.careServices.services, function (service) {
-        if (service.license.isTrial) {
-          vm.trialExists = true;
-          vm.trialId = service.license.trialId;
-
-          if (service.license.status === 'PENDING') {
-            vm.careServices.isNewTrial = true;
+      var isNewCareTrial = _.chain(vm.careServices.services)
+        .map('license')
+        .filter(function (license) {
+          if (license.isTrial) {
+            vm.trialExists = true;
+            vm.trialId = license.trialId;
+            return true;
           }
-        }
-      });
+          return false;
+        }).filter(function (license) {
+          return license.status === 'PENDING';
+        })
+        .value();
+
+      if (isNewCareTrial.length) {
+        vm.careServices.isNewTrial = true;
+      }
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {

@@ -13,7 +13,7 @@ describe('Controller: PlanReviewCtrl', function () {
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
-    getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json')),
+    getCareServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
   };
@@ -22,7 +22,7 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _UrlConfig_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
@@ -72,6 +72,17 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(controller.trialUsedPercentage).toEqual(56);
     });
 
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+      expect(controller.isCareEnabled).toEqual(true);
+    });
+
+    it('should have Care service info populated', function () {
+      expect(controller.careServices.services).toBeDefined();
+      expect(controller.trialExists).toEqual(true);
+      expect(controller.trialId).toEqual("33e66606-b1b8-4794-a7c5-5bfc5046380f");
+      expect(controller.careServices.isNewTrial).toEqual(false);
+    });
   });
 
   describe('getUserServiceRowClass should return the correct class names', function () {
