@@ -43,7 +43,7 @@
     vm.sortByProperty = sortByProperty;
     vm.addResourceButtonClicked = addResourceButtonClicked;
     vm.clusterList = [];
-
+    vm.clustersUpdated = clustersUpdated;
     var clustersCache = [];
 
     vm.clusterListGridOptions = {
