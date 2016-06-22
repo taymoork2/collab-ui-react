@@ -47,7 +47,7 @@
       $controller = _$controller_;
       $rootScope = _$rootScope_;
       $scope = $rootScope.$new();
-      injectedRootScope = _$rootScope_;// $rootScope.$new();
+      injectedRootScope = _$rootScope_;
       $location = _$location_;
       Authinfo = _Authinfo_;
       Auth = _Auth_;
@@ -188,7 +188,9 @@
       it('should remove all tabs not allowed', function () {
         var Authinfo = setupUser();
 
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual([]);
       });
 
@@ -202,7 +204,9 @@
           state: 'tab1'
         });
 
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
@@ -215,7 +219,9 @@
         _.remove(tabConfig[1].subPages, {
           state: 'subTab1'
         });
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
@@ -228,7 +234,9 @@
         _.remove(tabConfig, {
           tab: 'tabMenu'
         });
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
@@ -238,7 +246,9 @@
         });
         var Authinfo = setupUser();
 
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
 
@@ -257,7 +267,9 @@
           tab: 'devMenu'
         });
 
-        initTabsController({Authinfo: Authinfo});
+        initTabsController({
+          Authinfo: Authinfo
+        });
         expect(tabsController.tabs).toEqual(setAllTabsActive(tabConfig, false));
       });
     });
@@ -293,7 +305,6 @@
 
       expect(hasActiveTab('tab1')).toBeTruthy();
       expect(hasActiveTab('tabMenu')).toBeFalsy();
-
 
       $location.path.and.returnValue('unknown-tab-path');
       broadcastEvent('$stateChangeSuccess');

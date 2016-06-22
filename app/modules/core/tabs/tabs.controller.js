@@ -10,7 +10,7 @@
     vm.features = [];
     vm.tabs = [];
     initTabs();
-    
+
     $scope.$on('AuthinfoUpdated', initTabs);
     $rootScope.$on('TABS_UPDATED', initTabs);
     $rootScope.$on('$stateChangeSuccess', setActiveTab);
@@ -19,8 +19,8 @@
       resetActiveTabState();
       var tab = _.find(vm.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-            return matchesLocationPath(subTab.link);
-          });
+          return matchesLocationPath(subTab.link);
+        });
       });
 
       if (tab) {
@@ -65,7 +65,7 @@
           // Filter allowed states or tabs with subPages
           return isAllowedTab(tab) || _.size(tab.subPages);
         })
-        .forEach(function (tab) { 
+        .forEach(function (tab) {
           tab.title = $translate.instant(tab.title);
           _.forEach(tab.subPages, function (subTab) {
             subTab.title = $translate.instant(subTab.title);
@@ -86,9 +86,9 @@
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.some(features, {
-            feature: tab.feature.replace(/^!/, ''),
-            enabled: !/^!/.test(tab.feature)
-          });
+          feature: tab.feature.replace(/^!/, ''),
+          enabled: !/^!/.test(tab.feature)
+        });
       });
     }
 

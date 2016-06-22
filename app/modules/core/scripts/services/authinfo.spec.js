@@ -231,7 +231,7 @@ describe('Authinfo:', function () {
       expect(Authinfo.isCiscoMock()).toBe(true);
     });
   });
-  
+
   describe('customer with CONFERENCING license', function () {
     var accountData = {
       "customers": [{
@@ -260,7 +260,6 @@ describe('Authinfo:', function () {
       expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
     });
   });
-
 
   function setupConfig(override) {
     override = override || {};

@@ -368,7 +368,6 @@ describe('Auth Service', function () {
         });
 
         $httpBackend.flush();
-        // expect(Authinfo.initializers.callCount).toBe(1);
         expect(Authinfo.updateAccountInfo.callCount).toBe(1);
       });
 
