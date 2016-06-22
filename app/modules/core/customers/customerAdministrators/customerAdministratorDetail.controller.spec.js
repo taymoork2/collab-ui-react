@@ -2,16 +2,17 @@
 
 describe('Controller: customerAdministratorDetailCtrl', function () {
   beforeEach(module('Core'));
-  var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService;
+  var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService, Mixpanel;
   var modalDefer, testUsers = [];
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_, _ModalService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_, _ModalService_, _Mixpanel_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     CustomerAdministratorService = _CustomerAdministratorService_;
     Notification = _Notification_;
     ModalService = _ModalService_;
+    Mixpanel = _Mixpanel_;
     $q = _$q_;
 
     $stateParams.currentCustomer = {
@@ -63,6 +64,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
+    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
   }));
@@ -125,6 +127,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
         expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
         expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+        expect(Mixpanel.trackEvent()).toHaveBeenCalled();
       });
     });
   });

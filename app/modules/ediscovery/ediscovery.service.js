@@ -9,25 +9,34 @@
       return $location.absUrl().match(/reports-backend=mock/);
     }
 
+    if (useMock()) {
+      var REPORT_TIMEOUT_SECONDS = 30;
+    } else {
+      var REPORT_TIMEOUT_SECONDS = 180;
+    }
+
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
-        detectAndSetReportTimeout(report);
+        tweakReport(report);
       });
       return res.data;
     }
 
     function extractReport(res) {
-      return detectAndSetReportTimeout(res.data);
+      return tweakReport(res.data);
     }
 
-    function detectAndSetReportTimeout(report) {
+    function tweakReport(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 180000;
+          .getTime() > REPORT_TIMEOUT_SECONDS * 1000;
         if (report.state === 'FAILED' && !report.failureReason) {
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
+        report.isDone = report.state === 'COMPLETED' || report.state === 'FAILED' || report.state === 'ABORTED';
+        report.canBeCancelled = report.state === 'ACCEPTED' || report.state === 'RUNNING';
+        report.canBeDownloaded = report.state === "COMPLETED" && (!report.expiryTime || new Date().getTime() < new Date(report.expiryTime).getTime());
       }
       return report;
     }
@@ -53,8 +62,7 @@
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
       if (useMock()) {
-        //TODO: return single mock report based on id
-        //return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
+        return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
       } else {
         return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id).then(extractReport);
       }
@@ -64,7 +72,7 @@
       var orgId = Authinfo.getOrgId();
       var reqParams = 'offset=' + offset + '&limit=' + limit;
       if (useMock()) {
-        return $q.resolve(extractReports(EdiscoveryMockData.getReports()));
+        return $q.resolve(extractReports(EdiscoveryMockData.getReports(offset, limit)));
       } else {
         return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams).then(extractReports);
       }
@@ -154,7 +162,7 @@
         return '0';
       }
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
-        return '-';
+        return '';
       }
       if (typeof precision === 'undefined') {
         precision = 1;

@@ -1457,7 +1457,7 @@
       "RUNNING": "Running",
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
-      "ABORTED": "Aborted",
+      "ABORTED": "Cancelled",
       "INIT": "Initializing"
     },
     "reportFailureReasons": {
@@ -1467,6 +1467,7 @@
       "ROOM_NOT_FOUND": "Room not found"
     },
     "reportTimeout": "Timeout detected. Please cancel the report and try again.",
+    "timeout": "Timeout",
     "search": {
       "participants": "Participants",
       "reportName": "Report Name",
@@ -1487,9 +1488,8 @@
       "failure": "Report generation failed",
       "tryAgain": "Try again or contact Customer Support",
       "reportStatus": "Report Status",
-      "reportSize": "Total Size",
+      "reportSize": "Report Size",
       "takeMeToReports": "Take Me to Reports",
-      "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
       "runFailed": "Failed to start report",
       "createReportFailed": "Failed to initialize the report"
@@ -1502,7 +1502,11 @@
       "state": "State",
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
-      "noReportsTip": "Click the Search tab to search activities and create reports"
+      "noReportsTip": "Click the Search tab to search activities and create reports",
+      "size": "Size",
+      "viewDetails": "View Details",
+      "createNew": "Create new report with same query parameters",
+      "failed": "Report failed"
     },
     "tabs": {
       "search": "Search",
@@ -2289,9 +2293,9 @@
       "deviceTrialTip": "Ongoing trial with devices shipped",
       "deviceTrialUnavailable": "The system is temporarily unable to add devices, please try later.",
       "selectDevicesHeader": "Select Devices",
-      "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
-      "meetingRoomCamera": "Spark Room System",
-      "deskPhones": "Personal and Shared Desk Phones",
+      "deviceLimitDescription": "Choose up to 7 total devices",
+      "meetingRoomCamera": "Spark Room System &nbsp;<span class='small-hint'>(Any mix up to 3 devices)</span>",
+      "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to 5 devices)</span>",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
@@ -2299,8 +2303,8 @@
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between 1 and 5",
-      "invalidTotalQuantity": "Entire order must have between 2 and 7 devices",
-      "invalidRoomSystemsQuantity": "Limited to 5 Spark Room Systems",
+      "invalidTotalQuantity": "Entire order must have between 1 and 7 devices",
+      "invalidRoomSystemsQuantity": "Limited to 3 Spark Room Systems",
       "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",

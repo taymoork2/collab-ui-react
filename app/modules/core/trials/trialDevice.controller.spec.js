@@ -296,7 +296,7 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should not validate when quantity is less than 2 or greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 1);
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 0);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
       var valid2 = controller.validateTotalQuantity(null, null, model);
@@ -322,8 +322,8 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is 5 or less', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(5);
+    it('should validate when quantity is 3 or less', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(3);
 
       var valid = controller.validateRoomSystemsQuantity(null, null, model);
 
@@ -338,8 +338,8 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(false);
     });
 
-    it('should not validate when quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(1);
+    it('should not validate when quantity is less than 1', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(0);
 
       var valid = controller.validateRoomSystemsQuantity(null, null, model);
 
@@ -379,8 +379,8 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(false);
     });
 
-    it('should not validate when phone quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(1);
+    it('should not validate when phone quantity is less than 1', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(0);
 
       var valid = controller.validatePhonesQuantity(null, null, model);
 
