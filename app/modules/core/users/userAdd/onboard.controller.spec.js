@@ -451,8 +451,32 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd', function () {
+    it('checkUnauthorizedToAdd - 400096', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400096')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExistsOrDomainClaimed', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400108')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUnableToMigrate', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400109')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUnauthorizedToAdd - 400110', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400110')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkInsufficientEntitlements', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400111')));
       $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
