@@ -2235,7 +2235,8 @@
             params: {
               clusterId: null,
               connector: null,
-              hostLength: null
+              hostLength: null,
+              selectedCluster: null
             }
           })
           .state('connector-details-v2.group-settings', {

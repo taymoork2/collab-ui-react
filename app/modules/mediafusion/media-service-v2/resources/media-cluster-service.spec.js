@@ -118,7 +118,7 @@ describe('Service: MediaClusterServiceV2', function () {
     expect(callback.callCount).toBe(1);
   });
   it('should delete v2 cluster', function () {
-    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    $httpBackend.when('DELETE', /^\w+.*/).respond(204);
     var callback = sinon.stub();
     Service.deleteV2Cluster('connectorId').then(callback);
     $httpBackend.flush();
