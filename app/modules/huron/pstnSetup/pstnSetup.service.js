@@ -55,6 +55,7 @@
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       getFormattedNumberOrders: getFormattedNumberOrders,
+      translateStatusMessage: translateStatusMessage,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
@@ -286,7 +287,7 @@
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 response: _.get(order, 'response'),
                 operation: _.get(order, 'operation'),
-                statusMessage: _.get(order, 'statusMessage')
+                statusMessage: translateStatusMessage(order)
               };
               //translate order status
               if (order.status === PROVISIONED) {
@@ -313,6 +314,29 @@
           .compact()
           .value();
       });
+    }
+
+    function translateStatusMessage(order) {
+      var translations = {
+        'Account Number and PIN Required': 'Customer needs to sign PSTN Contract.',
+        'Address Mismatch': 'Emergency or Billing Address needs to be submitted. Contact Inteleepeer.',
+        'BTN Mismatch': 'Billing Telephone Number needs to be submitted. Contact Inteleepeer.',
+        'Customer has Trial Status': 'Order cannot be fulfilled for trials',
+        'FOC Received': 'Scheduled transfer date received from previous carrier for number porting.',
+        'Invalid Authorization Signature': 'Invalid Signature in Letter of Authorization for number porting.',
+        'LOA Not Signed': 'Customer needs to sign Letter of Authorization for number porting.',
+        'Master Service Agreement not signed': 'Customer needs to sign PSTN Contract.',
+        'Pending FOC from Vendor': 'Scheduled transfer date requested from previous carrier for number porting.',
+        'Rejected': 'Order has been rejected. Contact Inteleepeer.'
+      };
+
+      if (angular.isDefined(translations[order.statusMessage])) {
+        return translations[order.statusMessage];
+      } else if (order.statusMessage !== 'None') {
+        return order.statusMessage;
+      } else {
+        return;
+      }
     }
 
     function listPendingNumbers(customerId) {

@@ -66,6 +66,7 @@
                 try {
                   var parsedResponse = JSON.parse(order.response);
                   var numbers = parsedResponse[order.carrierOrderId];
+                  order.statusMessage = PstnSetupService.translateStatusMessage(order);
                 } catch (error) {
                   return;
                 }
@@ -74,12 +75,12 @@
                     return (number.e164 && number.e164 === line.externalNumber);
                   });
                   if (lineFound) {
-                    lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                    lineFound.userId = order.statusMessage ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
                     pendingLines.push(lineFound);
                   } else {
                     nonProvisionedPendingLines.push({
                       externalNumber: number.e164,
-                      userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                      userId: order.statusMessage ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress')
                     });
                   }
                 });

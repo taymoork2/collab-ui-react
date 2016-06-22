@@ -34,6 +34,7 @@ describe('Service: LineListService', function () {
     PstnSetupService = _PstnSetupService_;
 
     spyOn(PstnSetupService, 'listPendingOrders').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'translateStatusMessage');
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
   }));
 
@@ -81,6 +82,7 @@ describe('Service: LineListService', function () {
 
     it('should set search criteria pending and return pending orders', function () {
       PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'pending').then(function (response) {
@@ -90,6 +92,7 @@ describe('Service: LineListService', function () {
 
     it('should set search criteria all and include pending orders', function () {
       PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       $scope.$apply();
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
