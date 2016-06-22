@@ -19,7 +19,7 @@
       "progress": 100,
       "type": "ROOM_QUERY",
       "roomQuery": {
-        "startDate": "2016-06-14T00:00:00.000Z",
+        "startDate": "2016-06-13T00:00:00.000Z",
         "endDate": "2016-06-14T00:00:00.000Z",
         "roomId": "396dbfb0-3238-11e6-9f82-c97e9d5e622d"
       },
@@ -49,7 +49,7 @@
       var staleIndex = 0;
       _.each(reports, function (report) {
         if (staleIndex++ % 5) {
-          report.progress = report.progress + Math.floor(Math.random() * 5) + 1;
+          report.progress = report.progress + Math.floor(Math.random() * 3) + 1;
           report.lastUpdatedTime = moment().format();
         }
         if (report.progress > 0) {
@@ -87,9 +87,8 @@
     function createAllMockReports(nrOfReports) {
       var reports = [];
       for (var i = 0; i < nrOfReports; i++) {
+        report.id = "e882dd0e-b86c-4d93-9246-" + i;
         report.displayName = "Mock report #" + i;
-        report.roomQuery.startDate = moment().utc().subtract(24, 'hours').format();
-        report.roomQuery.endDate = moment().utc();
         report.lastUpdatedTime = new Date().getTime();
         if (Math.floor(Math.random() > 0.5)) {
           report.progress = 0;
