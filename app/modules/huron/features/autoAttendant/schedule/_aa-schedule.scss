@@ -39,6 +39,13 @@
       color: $aa-builder-icon-click-color;
     }
   }
+
+  .aa-help-icon {
+   color:$color-primary-lighter;
+   &:hover {
+     color:$white;
+   }
+  }
   .down {
     color: $aa-builder-icon-click-color;
     transform: rotate(90deg);

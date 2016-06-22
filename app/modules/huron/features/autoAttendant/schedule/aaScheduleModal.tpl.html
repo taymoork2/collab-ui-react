@@ -2,8 +2,8 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only">Close</span>
   </button>
-  <p class="modal-title"
-      translate="autoAttendant.schedule"></p>
+  <p><span class="modal-title" translate="autoAttendant.schedule"> </span>
+      <span class="aa-help-icon" popover="{{ :: 'autoAttendant.scheduleInfoPopover'| translate }}" popover-placement="right" popover-animation="true" popover-trigger="mouseenter" popover-append-to-body="false"> </span>  </p>
 </div>
 <div class="modal-body">
   <div class="modal-body-gray">
@@ -88,7 +88,7 @@
                   {{holiday.rank.labelTranslate}} {{holiday.day.label}} in {{holiday.month.label}}{{holiday.recurAnnually ? '' : holiday.date | date: 'yyyy'}}<span ng-if="!holiday.allDay">, {{holiday.starttime}} - {{holiday.endtime}}
                   </span>
                 </div>
-                <i class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
+              <i class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
               </div>
             </cs-accordion-heading>
             <i class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
