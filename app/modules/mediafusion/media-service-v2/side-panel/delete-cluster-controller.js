@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterControllerV2(groupName, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance) {
+  function DeleteClusterControllerV2(groupName, clusterId, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance) {
     var vm = this;
 
     vm.groupDetail = null;
@@ -15,13 +15,10 @@
 
     vm.delete = function () {
       vm.saving = true;
-      MediaClusterServiceV2.getGroups().then(function (group) {
-        _.each(group, function (group) {
-          if (group.name == groupName) {
-            vm.groupDetail = group;
-          }
-        });
-        vm.deleteCluster();
+
+      MediaClusterServiceV2.deleteV2Cluster(clusterId).then(function () {
+        $modalInstance.close();
+        vm.saving = false;
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
           groupName: groupName,
@@ -29,22 +26,6 @@
         });
         vm.saving = false;
       });
-      return false;
-    };
-
-    vm.deleteCluster = function () {
-      MediaClusterServiceV2
-        .deleteGroup(vm.groupDetail.id)
-        .then(function () {
-          $modalInstance.close();
-          vm.saving = false;
-        }, function (err) {
-          vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
-            groupName: groupName,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
-          });
-          vm.saving = false;
-        });
       return false;
     };
 

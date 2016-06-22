@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HostClusterDeregisterControllerV2(cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, $modal) {
+  function HostClusterDeregisterControllerV2(cluster, orgName, connector, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, $modal) {
     var vm = this;
 
     vm.deregisterAreYouSure = $translate.instant(
@@ -11,38 +11,19 @@
         organizationName: orgName
       });
 
-    vm.deregisterItem1 = $translate.instant(
-      'mediaFusion.clusters.defuseCausesListItem1', {
-        groupName: cluster.properties["mf.group.displayName"]
-      });
-    vm.saving = false;
-
-    /*vm.deleteCluster = function () {
-      MediaClusterServiceV2
-        .deleteGroup(cluster.assigned_property_sets)
-        .then(function () {
-          $modalInstance.close();
-          vm.saving = false;
-        }, function (err) {
-          vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
-          });
-          vm.saving = false;
-        });
-      return false;
-    };*/
-
     vm.deregister = function () {
       vm.saving = true;
       MediaClusterServiceV2
-        .deleteCluster(cluster.id)
+        .defuseV2Connector(connector.id)
         .then(function () {
           $modalInstance.close();
           $modal.open({
             resolve: {
               groupName: function () {
-                return cluster.properties["mf.group.displayName"];
+                return cluster.name;
+              },
+              clusterId: function () {
+                return cluster.id;
               }
             },
             controller: 'DeleteClusterControllerV2',

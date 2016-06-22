@@ -5,12 +5,12 @@
     .controller('HostDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $state, MediaClusterServiceV2, XhrNotificationService, $modal) {
+      function ($stateParams, $state, $log, MediaClusterServiceV2, XhrNotificationService, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.connector = $stateParams.connector;
         vm.hostscount = $stateParams.hostLength;
-        vm.cluster = MediaClusterServiceV2.getClusters()[vm.clusterId];
+        vm.cluster = $stateParams.selectedCluster;
         vm.options = ["Switching", "Transcoding"];
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
@@ -26,6 +26,9 @@
             resolve: {
               cluster: function () {
                 return vm.cluster;
+              },
+              connector: function () {
+                return vm.connector;
               }
             },
             controller: 'ReassignClusterControllerV2',
@@ -48,6 +51,7 @@
 
         vm.showDeregisterHostDialog = function () {
           if (vm.hostscount == 1) {
+            $log.log("cluster details ", vm.cluster);
             $modal.open({
               resolve: {
                 orgName: function () {
@@ -55,8 +59,10 @@
                 },
                 cluster: function () {
                   return vm.cluster;
-                }
-
+                },
+                connector: function () {
+                  return vm.connector;
+                },
               },
               type: 'dialog',
               controller: 'HostClusterDeregisterControllerV2',
