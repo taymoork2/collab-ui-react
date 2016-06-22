@@ -51,6 +51,10 @@ module.exports = function () {
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
       ],
+      notJsSpec: [
+        '!' + app + '/modules/**/*.spec.js',
+        '!' + app + '/scripts/**/*.spec.js'
+      ],
       notTs: [
         '!' + app + '/modules/**/*.ts.js',
         '!' + app + '/scripts/**/*.js'

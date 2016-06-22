@@ -16,6 +16,7 @@ var path = require('path');
 var reload = browserSync.reload;
 var typeScriptUtil = require('../utils/typeScript.gulp.js');
 var series = require('stream-series');
+var filter = require('gulp-filter');
 
 var changedFiles;
 var testFiles;
@@ -180,12 +181,15 @@ gulp.task('karma-config-watch', function () {
 
 gulp.task('copy:changed-files', function () {
   messageLogger('Copying changed files', changedFiles);
+  var f = filter(['*'].concat(config.appFiles.notJsSpec),{restore:true});
   return gulp
     .src(changedFiles, {
       base: config.app
     })
+    .pipe(f)
     .pipe($.if(args.verbose, $.print()))
     .pipe(gulp.dest(config.build))
+    .pipe(f.restore)
     .pipe(reload({
       stream: true
     }));
