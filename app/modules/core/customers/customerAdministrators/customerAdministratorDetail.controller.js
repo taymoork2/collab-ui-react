@@ -78,8 +78,8 @@
       vm.administrators.push(adminProfile);
       patchSalesAdminRole(email);
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
-      Mixpanel.trackEvent('CustomerOrg Administrators assigning - PartnerAdmin view', {
-        by: uuid
+      Mixpanel.trackEvent('Partner Admin assigning', {
+        uuid: uuid
       });
     }
 
@@ -122,8 +122,8 @@
             var index = vm.administrators.indexOf(someUser);
             vm.administrators.splice(index, 1);
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
-            Mixpanel.trackEvent('CustomerOrg Administrators removal - PartnerAdmin view', {
-              by: uuid
+            Mixpanel.trackEvent('Partner Admin removal', {
+              uuid: uuid
             });
           })
           .catch(function () {

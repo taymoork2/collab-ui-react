@@ -6,7 +6,7 @@
       .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
     /* @ngInject */
-    function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
+    function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification, Mixpanel) {
       var msgIntFlag = false;
       var currentDataRetentionPeriod = null;
       var orgId = Authinfo.getOrgId();
@@ -123,6 +123,9 @@
               AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
                 .then(function (response) {
                   Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
+                  Mixpanel.trackEvent('Device enforceClientSecurity', {
+                    orgId: orgId
+                  });
                 })
                 .catch(function (response) {
                   Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
