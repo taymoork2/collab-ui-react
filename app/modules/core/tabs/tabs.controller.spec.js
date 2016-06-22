@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  fdescribe('Controller: TabsCtrl', function () {
+  describe('Controller: TabsCtrl', function () {
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $httpBackend, $provide, $injector;
     var userService = {};
     // var AuthinfoService;
@@ -37,7 +37,6 @@
     var states;
 
     beforeEach(module('Core'));
-
     beforeEach(module(function (_$provide_) {
       $provide = _$provide_;
       $provide.value("FeatureToggleService", featureToggleService);
