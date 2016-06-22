@@ -64,7 +64,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-    spyOn(Mixpanel, 'trackEvent');
+    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
   }));
@@ -127,6 +127,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
         expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
         expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
+        expect(Mixpanel.trackEvent()).toHaveBeenCalled();
       });
     });
   });

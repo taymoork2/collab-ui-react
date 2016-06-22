@@ -35,7 +35,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Mixpanel, 'trackEvent');
+    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'notify');
   }));
 
