@@ -2,7 +2,7 @@
 
 <cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
 
-  <cs-sp-section ng-if="groupDetails.clusterList.length > 0">
+  <cs-sp-section ng-if="groupDetails.nodeList.length > 0">
     <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
     <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
       <ul>
@@ -19,6 +19,18 @@
   </cs-sp-section>
 
   <cs-sp-section>
+    <strong>
+      <div class="section-title-row section-name" translate="mediaFusion.clusters.releaseChannel">
+      </div>
+    </strong>
+    <div>
+      <span>
+          {{groupDetails.clusterDetail.releaseChannel}}
+      </span>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section>
     <table>
       <thead>
         <tr>
@@ -31,12 +43,10 @@
 
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">
-
+        <li class="feature" ng-repeat="ecp in groupDetails.nodeList" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details.host-details({clusterId: ecp.id, properties: ecp.properties, connector: ecp.services[0].connectors[0], hostLength: groupDetails.clusterList.length})">
-
-            <span class="feature-name">{{ecp.hosts[0].host_name}}</span>
+            ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length})">
+            <span class="feature-name">{{ecp.hostname}}</span>
 
             <!--span class="feature-name">{{ecp.properties["mf.role"]}} {{ecp.hosts[0].state}} {{ecp.hosts[0].offline}} {{ecp.needs_attention}} {{ecp.needs_attention &&  ecp.host[0].state == 'offline' && ecp.host[0].offline}}</span-->
 

@@ -6,7 +6,7 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
@@ -85,11 +85,6 @@
     };
 
     function init() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion)
-        .then(function (enabled) {
-          $scope.isAtlasTrialConversion = enabled;
-        });
-
       getLicenses();
     }
 

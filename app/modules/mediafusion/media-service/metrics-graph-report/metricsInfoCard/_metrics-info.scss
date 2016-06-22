@@ -1,0 +1,62 @@
+.cs-card.header-bar.orange {
+       header:after { 
+	  border-top: 5px solid #EF824F;
+     }      
+  } 
+.cs-card.header-bar.green {
+       header:after { 
+	  border-top: 5px solid #7BAF5D;
+     }      
+  } 
+
+.metrics-header {
+        display: -webkit-box;
+        display: -ms-flexbox; 
+        display: flex; 
+        -webkit-box-align: center; 
+        -ms-flex-align: center;
+        align-items: center; 
+       -webkit-box-pack: center;
+       -ms-flex-pack: center;
+       justify-content: center;
+       color: #343537;
+       font-size: 1.625rem; 
+       font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+ }
+
+.metrics-header span { 
+      font-size: inherit;
+       line-height: 1; 
+ }
+
+.metrics-header i { 
+      color: #4F5051; 
+      font-size: 2rem;
+      margin-right: .5rem; 
+ }
+
+.metrics-paragraph { 
+      font-size: 1rem; 
+      color: #4F5051;
+ }
+
+.metrics-info { 
+      font-size: 1rem; 
+      color: #858688; 
+      font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+
+.percentage-count { 
+    	font-size: 3rem; 
+    	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    	color: #EF824F; 
+    	margin-bottom: .5rem; 
+ }
+
+.metrics-count { 
+    	font-size: 3rem; 
+    	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    	color: #7BAF5D; 
+    	margin-bottom: .5rem; 
+ }

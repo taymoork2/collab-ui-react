@@ -3269,12 +3269,7 @@
     "supportInfo": "Kullanıcılarınız için destek sağlıyorsanız, destek parametrelerinizi aşağıya girin. Bu parametreler, Spark uygulamasında Destek Seçenekleri altında görüntülenecektir.",
     "supportAccessTitle": "Erişimi Destekleme",
     "supportAccessInfo": "Bu ayar, kuruluşunuza Cisco veya Ortak salt okunur erişimi verir. Kuruluşunuzun ayrıntılarına değişiklik yapılmasına izin vermez.",
-    "supportAccessCheckbox": "Kuruluşunuza Cisco veya Ortak Desteği salt okunur erişimine izin verin",
-    "crashReportTitle": "Otomatik Çökme Raporlama",
-    "crashReportText": "Bir uç noktası çökerse hizmet kalitesini iyileştirmeye yardımcı olmak amacıyla günlükler Cisco'ya yüklenecek.",
-    "crashReportCheckboxLabel": "Otomatik Çökme Raporlamayı Etkinleştir",
-    "crashReportTooltipDescription": "Bu raporlar ne içerir?",
-    "crashReportTooltip": "Çökme raporlarında kullanıcı ve kuruluş tanımlayıcıları, kullanıcı aracı dizeleri, ayıklanmış aracı tarayıcı dizeleri, istemci IP adresleri ve kullanıcının cihaz MAC adresi bulunabilir. Tüm bilgiler gizli tutulacak ve yalnızca ürün kalitesinin geliştirilmesi için kullanılacak."
+    "supportAccessCheckbox": "Kuruluşunuza Cisco veya Ortak Desteği salt okunur erişimine izin verin"
   },
   "fileUpload": {
     "uploading": "Dosya Yükleniyor",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Bu ayar, Cisco veya İş Ortağı Desteğine kuruluşunuz için salt okunur erişim verir. Kuruluşunuzun ayrıntılarında değişiklik yapılmasına izin vermez.",
       "allowReadOnlyOrgAccess": "Kuruluşunuza Cisco veya Ortak Desteği salt okunur erişimine izin verin",
       "usageDataHeader": "Kullanım Verileri Cisco İş Ortağına Gönderildi",
-      "usageDataDescription": "Daha yüksek düzeyli iş ortağı desteği sağlamak için, hizmet kalitesi ve etkileşim verilerini Cisco İş Ortağınızla paylaşın."
+      "usageDataDescription": "Daha yüksek düzeyli iş ortağı desteği sağlamak için, hizmet kalitesi ve etkileşim verilerini Cisco İş Ortağınızla paylaşın.",
+      "crashReportTitle": "Otomatik Çökme Raporlama",
+      "crashReportText": "Bir uç noktası çökerse hizmet kalitesini iyileştirmeye yardımcı olmak amacıyla günlükler Cisco'ya yüklenecek.",
+      "crashReportCheckboxLabel": "Otomatik Çökme Raporlamayı Etkinleştir",
+      "crashReportTooltipDescription": "Bu raporlar ne içerir?",
+      "crashReportTooltip": "Çökme raporlarında kullanıcı ve kuruluş tanımlayıcıları, kullanıcı aracı dizeleri, ayıklanmış aracı tarayıcı dizeleri, istemci IP adresleri ve kullanıcının cihaz MAC adresi bulunabilir. Tüm bilgiler gizli tutulacak ve yalnızca ürün kalitesinin geliştirilmesi için kullanılacak."
     },
     "security": {
       "title": "Güvenlik",

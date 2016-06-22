@@ -3269,12 +3269,7 @@
     "supportInfo": "Indien u ondersteuning biedt voor uw gebruikers, voert u uw ondersteuningsparameters hieronder in. Deze parameters worden weergegeven onder Ondersteuningsopties in de Spark-toepassing.",
     "supportAccessTitle": "Toegang ondersteunen",
     "supportAccessInfo": "Met deze instelling krijgt Cisco of een partner alleen-lezentoegang tot uw organisatie en kunnen er geen wijzigingen worden aangebracht aan de gegevens van uw organisatie.",
-    "supportAccessCheckbox": "Geef de afdeling Ondersteuning van Cisco of een partner alleen-lezentoegang tot uw organisatie.",
-    "crashReportTitle": "Automatische crashrapportering",
-    "crashReportText": "Als er een eindpunt crasht, worden de logboeken geüpload naar Cisco om de kwaliteit van de service te verbeteren.",
-    "crashReportCheckboxLabel": "Automatische crashrapportering inschakelen.",
-    "crashReportTooltipDescription": "Wat staat er in deze rapporten?",
-    "crashReportTooltip": "Crashrapporten kunnen gebruikers- en organisatie-identificatoren, user agent strings, gesaneerde agent browser strings, IP-adressen van klanten en het MAC-adres van gebruikers bevatten. Alle informatie zal vertrouwelijk worden behandeld en enkel worden gebruikt voor de verbetering van de productkwaliteit."
+    "supportAccessCheckbox": "Geef de afdeling Ondersteuning van Cisco of een partner alleen-lezentoegang tot uw organisatie."
   },
   "fileUpload": {
     "uploading": "Bestand uploaden",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Met deze instelling krijgt Cisco of een partner alleen-lezentoegang tot uw organisatie. Er kunnen geen wijzigingen worden aangebracht aan de gegevens van uw organisatie.",
       "allowReadOnlyOrgAccess": "Geef de afdeling Ondersteuning van Cisco of een partner alleen-lezentoegang tot uw organisatie",
       "usageDataHeader": "Gebruiksgegevens verzonden naar Cisco-partner",
-      "usageDataDescription": "Deel gegevens over de kwaliteit van de service en de interactie met uw Cisco-partner om partnerondersteuning van een hoger niveau mogelijk te maken."
+      "usageDataDescription": "Deel gegevens over de kwaliteit van de service en de interactie met uw Cisco-partner om partnerondersteuning van een hoger niveau mogelijk te maken.",
+      "crashReportTitle": "Automatische crashrapportering",
+      "crashReportText": "Als er een eindpunt crasht, worden de logboeken geüpload naar Cisco om de kwaliteit van de service te verbeteren.",
+      "crashReportCheckboxLabel": "Automatische crashrapportering inschakelen.",
+      "crashReportTooltipDescription": "Wat staat er in deze rapporten?",
+      "crashReportTooltip": "Crashrapporten kunnen gebruikers- en organisatie-identificatoren, user agent strings, gesaneerde agent browser strings, IP-adressen van klanten en het MAC-adres van gebruikers bevatten. Alle informatie zal vertrouwelijk worden behandeld en enkel worden gebruikt voor de verbetering van de productkwaliteit."
     },
     "security": {
       "title": "Beveiliging",

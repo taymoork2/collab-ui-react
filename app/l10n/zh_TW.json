@@ -3269,12 +3269,7 @@
     "supportInfo": "如果要提供支援給使用者，請在下面輸入您的支援參數。這些參數將顯示在 Spark 應用程式中「支援選項」下方。",
     "supportAccessTitle": "支援存取權",
     "supportAccessInfo": "此設定將 Cisco 或合作夥伴唯讀存取權授予組織。它不允許變更組織詳細資料。",
-    "supportAccessCheckbox": "允許將 Cisco 或合作夥伴支援唯讀存取權授予組織。",
-    "crashReportTitle": "自動毀損報告",
-    "crashReportText": "如果端點毀損，則將日誌上傳至 Cisco，以助於改進服務品質。",
-    "crashReportCheckboxLabel": "啟用自動毀損報告",
-    "crashReportTooltipDescription": "這些報告包含什麼內容？",
-    "crashReportTooltip": "毀損報告可以包含使用者及組織的身分、使用者代理設定、經整理的代理程式瀏覽器字串、用戶端 IP 位址和使用者裝置的 MAC 位址。所有資訊將視為機密，且只能用於產品品質加強。"
+    "supportAccessCheckbox": "允許將 Cisco 或合作夥伴支援唯讀存取權授予組織。"
   },
   "fileUpload": {
     "uploading": "正在上傳檔案",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "此設定將 Cisco 或合作夥伴支援唯讀存取權授予組織。它不允許變更組織詳細資料。",
       "allowReadOnlyOrgAccess": "允許將 Cisco 或合作夥伴支援唯讀存取權授予組織",
       "usageDataHeader": "將使用資料傳送至 Cisco 合作夥伴",
-      "usageDataDescription": "與 Cisco 合作夥伴分享服務和參與度資料的品質，以實現更高層次的合作夥伴支援。"
+      "usageDataDescription": "與 Cisco 合作夥伴分享服務和參與度資料的品質，以實現更高層次的合作夥伴支援。",
+      "crashReportTitle": "自動毀損報告",
+      "crashReportText": "如果端點毀損，則將日誌上傳至 Cisco，以助於改進服務品質。",
+      "crashReportCheckboxLabel": "啟用自動毀損報告",
+      "crashReportTooltipDescription": "這些報告包含什麼內容？",
+      "crashReportTooltip": "毀損報告可以包含使用者及組織的身分、使用者代理設定、經整理的代理程式瀏覽器字串、用戶端 IP 位址和使用者裝置的 MAC 位址。所有資訊將視為機密，且只能用於產品品質加強。"
     },
     "security": {
       "title": "安全性",

@@ -819,7 +819,7 @@
               site: {}
             }
           })
-          .state('user-overview.conferencing.webex2', {
+          .state('user-overview.conferencing.webex.webex2', {
             templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
             controller: 'WebExUserSettings2Ctrl',
             data: {
@@ -1161,51 +1161,6 @@
               }
             }
           })
-
-        /*
-         devices
-         prototypes
-        */
-        .state('main-redux', {
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/mainRedux/main-redux.html'
-              }
-            },
-            abstract: true,
-            sticky: true
-          })
-          .state('devices-redux', {
-            abstract: true,
-            templateUrl: 'modules/squared/devicesRedux/devices.html',
-            controller: 'DevicesReduxCtrl',
-            controllerAs: 'devices',
-            parent: 'main-redux'
-          })
-          .state('devices-redux.search', {
-            url: '/devices-redux',
-            views: {
-              'leftPanel': {
-                templateUrl: 'modules/squared/devicesRedux/list.html'
-              }
-            }
-          })
-          .state('devices-redux.details', {
-            url: '/devices-redux/details',
-            views: {
-              'leftPanel': {
-                controllerAs: 'deviceDetails',
-                controller: 'DevicesReduxDetailsCtrl',
-                templateUrl: 'modules/squared/devicesRedux/details.html'
-              }
-            },
-            params: {
-              device: null
-            }
-          })
-          /*
-            end: devices redux prototypes
-          */
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
@@ -2253,8 +2208,9 @@
               displayName: 'Overview'
             },
             params: {
-              groupName: {},
-              selectedClusters: {}
+              clusterName: {},
+              nodes: {},
+              cluster: {}
             }
           })
           .state('connector-details-v2.alarm-details', {
@@ -2278,7 +2234,6 @@
             },
             params: {
               clusterId: null,
-              properties: null,
               connector: null,
               hostLength: null
             }
@@ -2307,8 +2262,6 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryHeaderController',
-              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2327,9 +2280,8 @@
             controllerAs: 'ediscoverySearchCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-search.html',
             params: {
-              roomId: null,
-              startDate: null,
-              endDate: null
+              report: null,
+              reRun: false,
             }
           })
           .state('ediscovery.reports', {

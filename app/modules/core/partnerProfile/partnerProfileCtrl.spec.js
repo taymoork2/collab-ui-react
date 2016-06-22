@@ -56,8 +56,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           reportingSiteDesc: 'this is support text',
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
-          isCiscoSupport: false,
-          allowCrashLogUpload: false
+          isCiscoSupport: false
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });

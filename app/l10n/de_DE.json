@@ -3269,12 +3269,7 @@
     "supportInfo": "Wenn Sie Support für Ihre Benutzer leisten, geben Sie unten Ihre Supportparameter ein. Diese Parameter werden in den Spark-Anwendungen unter den Support-Optionen angezeigt.",
     "supportAccessTitle": "Supportzugriff",
     "supportAccessInfo": "Über diese Einstellung erhält Cisco oder ein Partner Lesezugriff auf Ihre Organisation. Änderungen an den Detailinformationen Ihrer Organisation sind nicht zulässig.",
-    "supportAccessCheckbox": "Ermöglichen Sie dem Cisco- oder einem Partner-Support den Lesezugriff auf Ihre Organisation.",
-    "crashReportTitle": "Automatischer Absturzbericht",
-    "crashReportText": "Wenn ein Endpunkt abstürzt, wird ein Protokoll an Cisco gesendet, um die Servicequalität zu verbessern.",
-    "crashReportCheckboxLabel": "Automatischen Absturzbericht aktivieren",
-    "crashReportTooltipDescription": "Welche Informationen sind in den Berichten enthalten?",
-    "crashReportTooltip": "Absturzberichte können Benutzer- und Organisationsidentifikatoren, Benutzer-Agent-Strings, bereinigte Agent-Browser-Strings, IP-Adressen der Clients und MAC-Adressen der Benutzer enthalten. Alle Informationen werden vertraulich behandelt und nur zur Verbesserung der Produktqualität verwendet."
+    "supportAccessCheckbox": "Ermöglichen Sie dem Cisco- oder einem Partner-Support den Lesezugriff auf Ihre Organisation."
   },
   "fileUpload": {
     "uploading": "Datei wird hochgeladen",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Über diese Einstellung erhält Cisco oder ein Partner-Support Lesezugriff auf Ihre Organisation. Änderungen an den Detailinformationen Ihrer Organisation sind nicht zulässig.",
       "allowReadOnlyOrgAccess": "Ermöglichen Sie dem Cisco- oder einem Partner-Support den Lesezugriff auf Ihre Organisation",
       "usageDataHeader": "An Cisco-Partner gesendete Nutzungsdaten",
-      "usageDataDescription": "Teilen Sie Dienstqualitäts- und Nutzungsdaten mit Ihrem Cisco-Partner, um eine bessere Unterstützung durch Ihren Partner zu ermöglichen."
+      "usageDataDescription": "Teilen Sie Dienstqualitäts- und Nutzungsdaten mit Ihrem Cisco-Partner, um eine bessere Unterstützung durch Ihren Partner zu ermöglichen.",
+      "crashReportTitle": "Automatischer Absturzbericht",
+      "crashReportText": "Wenn ein Endpunkt abstürzt, wird ein Protokoll an Cisco gesendet, um die Servicequalität zu verbessern.",
+      "crashReportCheckboxLabel": "Automatischen Absturzbericht aktivieren",
+      "crashReportTooltipDescription": "Welche Informationen sind in den Berichten enthalten?",
+      "crashReportTooltip": "Absturzberichte können Benutzer- und Organisationsidentifikatoren, Benutzer-Agent-Strings, bereinigte Agent-Browser-Strings, IP-Adressen der Clients und MAC-Adressen der Benutzer enthalten. Alle Informationen werden vertraulich behandelt und nur zur Verbesserung der Produktqualität verwendet."
     },
     "security": {
       "title": "Sicherheit",

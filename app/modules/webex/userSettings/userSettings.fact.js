@@ -1211,6 +1211,7 @@
           errMsg = $translate.instant('webexUserSettingsAccessErrors.defaultAccessError');
         } else if (
           ("000000" === errId) ||
+          ("000029" === errId) ||
           ("000035" === errId) ||
           ("999999" === errId)
         ) {

@@ -24,7 +24,7 @@ describe('Template: partnerProfile', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _$log_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _$log_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_, _Authinfo_, _BrandService_, _WebexClientVersion_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -33,6 +33,8 @@ describe('Template: partnerProfile', function () {
     $compile = _$compile_;
     Notification = _Notification_;
     Orgservice = _Orgservice_;
+    BrandService = _BrandService_;
+    WebexClientVersion = _WebexClientVersion_;
     UserListService = _UserListService_;
     FeatureToggleService = _FeatureToggleService_;
     Authinfo = _Authinfo_;
@@ -44,6 +46,10 @@ describe('Template: partnerProfile', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(Orgservice, 'setOrgSettings').and.returnValue($q.when());
     spyOn(UserListService, 'listPartners');
+    spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,

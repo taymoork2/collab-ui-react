@@ -5,13 +5,12 @@
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
   /* @ngInject */
-  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate, FeatureToggleService) {
+  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate) {
     var orgId = Authinfo.getOrgId();
 
     // toggles api calls, show/hides divs based on customer or partner profile
     $scope.isPartner = Authinfo.isPartner();
     $scope.appType = 'Squared';
-    $scope.allowCrashLogUpload = false;
 
     $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
@@ -106,21 +105,11 @@
             $scope.isCiscoHelp = settings.isCiscoHelp;
           }
 
-          if (!_.isUndefined(settings.allowCrashLogUpload)) {
-            $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
-          } else {
-            $scope.allowCrashLogUpload = false;
-          }
-
           resetForm();
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
       }, orgId, true);
-
-      FeatureToggleService.supports(FeatureToggleService.features.enableCrashLogs).then(function (toggle) {
-        $scope.showCrashLogUpload = toggle;
-      });
     };
 
     $scope.init();
@@ -146,7 +135,6 @@
           helpUrl: $scope.helpUrl || null,
           isCiscoHelp: isCiscoHelp,
           isCiscoSupport: isCiscoSupport,
-          allowCrashLogUpload: $scope.allowCrashLogUpload
         };
 
         updateOrgSettings(orgId, settings);
@@ -161,11 +149,6 @@
         $scope.supportText = '';
       }
       $scope.problemSiteRadioValue = value;
-      touchForm();
-    };
-
-    $scope.setCrashReportCheckbox = function (value) {
-      $scope.allowCrashLogUpload = value;
       touchForm();
     };
 

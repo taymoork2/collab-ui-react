@@ -67,15 +67,48 @@ namespace globalsettings {
         expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
         expect(controller.allowReadOnlyAccess).toBeUndefined()
       });
+
+      it('should query org service and set allowCrashLogUpload to true from orgData', ()=> {
+        initController({success: true, orgSettings: {allowCrashLogUpload: true}});
+
+        expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
+        expect(controller.allowCrashLogUpload).toBeTruthy();
+      });
+
+      it('should query org service and set allowCrashLogUpload to false from orgData', ()=> {
+        initController({success: true, orgSettings: {allowCrashLogUpload: false}});
+
+        expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
+        expect(controller.allowCrashLogUpload).toBeFalsy();
+        expect(controller.allowCrashLogUpload).toBeDefined();
+      });
+
+      it('should query org service and keep allowCrashLogUpload false if not set in orgData', ()=> {
+        initController({success: true, orgSettings: {}});
+
+        expect(Orgservice.getOrg).toHaveBeenCalledWith(jasmine.any(Function), orgId, jasmine.any(Boolean));
+        expect(controller.allowCrashLogUpload).not.toBeUndefined();
+        expect(controller.allowCrashLogUpload).toBeFalsy();
+      });
     });
 
     describe('saving allowReadOnlyAccess', ()=> {
       beforeEach(()=>initController({}));
 
-      it('should call setOrgSetting on orgService with only one setting specified', ()=> {
+      it('should call setOrgSetting on orgService with only allowReadOnlyAccess setting specified', ()=> {
         controller.allowReadOnlyAccess = true;
         $scope.$digest();
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(orgId, {allowReadOnlyAccess: true});
+      });
+    });
+
+    describe('saving allowCrashLogUpload', ()=> {
+      beforeEach(()=>initController({}));
+
+      it('should call setOrgSetting on orgService with only allowCrashLogUpload setting specified', ()=> {
+        controller.allowCrashLogUpload = true;
+        $scope.$digest();
+        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(orgId, {allowCrashLogUpload: true});
       });
     });
   });

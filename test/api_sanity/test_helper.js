@@ -126,40 +126,25 @@ var auth = {
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539'
   },
-  't31CSVToggleUser': {
-    user: 't31r1-csvtoggle-adm@mailinator.com',
-    pass: 'Cisco!23',
-    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
-  },
-  't30csvWbxNotEntitledUser': {
-    user: 't30citestprov9_csvadm2@mailinator.com',
-    pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
-  },
-  't30csvNotAvailableUser': {
-    user: 't30citestprov9_csvadm3@mailinator.com',
-    pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
-  },
-  't31RegressionTestAdmin': {
+  'wbx-t31RegressionTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e'
   },
-  't30RegressionTestAdmin': {
+  'wbx-t30RegressionTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
   },
-  'wbxUserSettingsTestAdmin': {
-    user: 't30citestprov9@mailinator.com',
+  'wbx-singleCenterLicenseTestAdmin': {
+    user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
   },
-  'wbxUserSettingsTestUser': {
-    user: 'prov9usr@mailinator.com',
+  'wbx-multipleCenterLicenseTestAdmin': {
+    user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
   }
 };
 

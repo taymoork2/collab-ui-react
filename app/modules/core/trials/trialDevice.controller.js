@@ -18,6 +18,7 @@
     vm.skipDevices = _trialDeviceData.skipDevices;
     vm.deviceTrialTip = $translate.instant('trialModal.call.deviceTrialTip');
     vm.limitsError = false;
+    vm.activeDeviceLink = $translate.instant('trialModal.call.activeDeviceTrial');
 
     vm.isEditing = _.get($stateParams, 'isEditing');
     vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
@@ -37,6 +38,7 @@
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
     vm.getQuantityInputDefault = _getQuantityInputDefault;
+    vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -463,7 +465,6 @@
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
-
       if (!_.isUndefined(limitsPromise)) {
         limitsPromise.then(function (data) {
             vm.activeTrials = data.activeDeviceTrials;
@@ -490,6 +491,11 @@
           number: remainingTrials
         });
       }
+    }
+
+    function areAdditionalDevicesAllowed() {
+      var result = vm.canAddMoreDevices || !vm.limitReached;
+      return result;
     }
 
     function skip(skipped) {

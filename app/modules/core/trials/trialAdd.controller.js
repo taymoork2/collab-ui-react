@@ -266,7 +266,7 @@
 
         'model.licenseCount': function ($viewValue, $modelValue) {
           if (hasUserServices()) {
-            return ($viewValue > 0) ? $viewValue : _licenseCountDefaultQuantity;
+            return ($viewValue === 0) ? _licenseCountDefaultQuantity : $viewValue;
           } else {
             return 0;
           }
@@ -329,31 +329,26 @@
 
     function init() {
       $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials)
       ]).then(function (results) {
-        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
-        //vm.showRoomSystems = results[0];
-        //vm.roomSystemTrial.enabled = results[0];
         vm.showRoomSystems = true;
         vm.roomSystemTrial.enabled = true;
-        vm.webexTrial.enabled = results[1];
+        vm.webexTrial.enabled = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = results[4];
+        vm.showContextServiceTrial = results[2];
 
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
         }
 
-        vm.showCare = results[3];
-        vm.careTrial.enabled = results[3];
+        vm.showCare = results[1];
+        vm.careTrial.enabled = results[1];
 
         // TODO: US12063 overrides using this var but requests code to be left in for now
         //var devicesModal = _.find(vm.trialStates, {
@@ -371,10 +366,7 @@
 
         pstnModal.enabled = vm.pstnTrial.enabled;
         emergAddressModal.enabled = vm.pstnTrial.enabled;
-        meetingModal.enabled = results[1];
-        // TODO: override atlasDeviceTrials to show Ship devices to all partners
-        //       and only test orgs that have feature toggle enabled (US12063)
-        //devicesModal.enabled = results[2];
+        meetingModal.enabled = results[0];
         setDeviceModal();
       }).finally(function () {
         $scope.$watch(function () {
@@ -476,8 +468,10 @@
     }
 
     function hasTrial() {
-      return _.some(vm.trialData.trials, {
-        enabled: true
+      // Context is a non-trial service. We don't want the Next/Start
+      // Trial button to be enabled if only Context is checked
+      return _.some(vm.trialData.trials, function (service) {
+        return service.enabled && service.type !== Config.offerTypes.context;
       });
     }
 

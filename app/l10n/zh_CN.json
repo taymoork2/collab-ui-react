@@ -3269,12 +3269,7 @@
     "supportInfo": "如果您向您的用户提供支持，请在下面输入支持参数。这些参数将显示在 Spark 应用程序中的“支持选项”下。",
     "supportAccessTitle": "支持访问",
     "supportAccessInfo": "此项设置给予 Cisco 或合作伙伴对您的组织的只读访问权。不会允许对您的组织详情进行修改。",
-    "supportAccessCheckbox": "允许 Cisco 或合作伙伴支持部门对您的组织进行只读访问。",
-    "crashReportTitle": "自动崩溃报告",
-    "crashReportText": "如果终端崩溃，将会向 Cisco 上传日志来帮助提高服务质量。",
-    "crashReportCheckboxLabel": "启用自动崩溃报告",
-    "crashReportTooltipDescription": "这些报告内容包括什么？",
-    "crashReportTooltip": "崩溃报告可能包括用户和组织的识别符、用户代理字符串、净化过的代理浏览器字符串、客户 IP 地址和用户的设备 MAC 地址。所有信息将作保密处理，并仅用于产品质量提升。"
+    "supportAccessCheckbox": "允许 Cisco 或合作伙伴支持部门对您的组织进行只读访问。"
   },
   "fileUpload": {
     "uploading": "上传文件",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "此项设置给予 Cisco 或合作伙伴支持对您的组织的只读访问权。不会允许对您的组织详情进行修改。",
       "allowReadOnlyOrgAccess": "允许 Cisco 或合作伙伴支持部门对您的组织进行只读访问",
       "usageDataHeader": "发送至 Cisco 合作伙伴的使用数据",
-      "usageDataDescription": "与您的 Cisco 合作伙伴共享服务质量和参与度数据，以启用更高级别的合作伙伴支持。"
+      "usageDataDescription": "与您的 Cisco 合作伙伴共享服务质量和参与度数据，以启用更高级别的合作伙伴支持。",
+      "crashReportTitle": "自动崩溃报告",
+      "crashReportText": "如果终端崩溃，将会向 Cisco 上传日志来帮助提高服务质量。",
+      "crashReportCheckboxLabel": "启用自动崩溃报告",
+      "crashReportTooltipDescription": "这些报告内容包括什么？",
+      "crashReportTooltip": "崩溃报告可能包括用户和组织的识别符、用户代理字符串、净化过的代理浏览器字符串、客户 IP 地址和用户的设备 MAC 地址。所有信息将作保密处理，并仅用于产品质量提升。"
     },
     "security": {
       "title": "安全性",

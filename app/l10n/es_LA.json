@@ -3269,12 +3269,7 @@
     "supportInfo": "Si proporciona soporte a sus usuarios, introduzca los parámetros de soporte a continuación. Estos parámetros se visualizarán en Opciones de soporte en la aplicación de Spark.",
     "supportAccessTitle": "Acceso al soporte",
     "supportAccessInfo": "Esta configuración le otorga a Cisco o al socio acceso de solo lectura a la organización. No permite realizar cambios en los detalles de la organización.",
-    "supportAccessCheckbox": "Permitir acceso de solo lectura a Cisco o al soporte del socio a la organización.",
-    "crashReportTitle": "Informes automáticos de caídas",
-    "crashReportText": "Si un extremo se bloquea, se cargarán registros en Cisco para ayudar a mejorar la calidad del servicio.",
-    "crashReportCheckboxLabel": "Habilitar informes automáticos de caídas",
-    "crashReportTooltipDescription": "¿Qué contienen estos informes?",
-    "crashReportTooltip": "Los informes de caídas pueden incluir identificadores de usuarios y de la organización, cadenas de agente de usuario, cadenas de explorador de agente desinfectado, direcciones IP del cliente y la dirección MAC del dispositivo del usuario. Toda la información será tratada de forma confidencial y se utilizará exclusivamente para la mejora de la calidad de los productos."
+    "supportAccessCheckbox": "Permitir acceso de solo lectura a Cisco o al soporte del socio a la organización."
   },
   "fileUpload": {
     "uploading": "Cargando archivo",
@@ -3985,7 +3980,12 @@
       "supportAccessDescription": "Esta configuración le otorga a Cisco o al soporte de socio acceso de solo lectura a la organización. No permite realizar cambios en los detalles de la organización.",
       "allowReadOnlyOrgAccess": "Permitir acceso de solo lectura a Cisco o al soporte del socio a la organización",
       "usageDataHeader": "Datos de uso enviados a un socio de Cisco",
-      "usageDataDescription": "Comparta la calidad de servicio y los datos de participación con su socio de Cisco para permitir un soporte al socio de mayor nivel."
+      "usageDataDescription": "Comparta la calidad de servicio y los datos de participación con su socio de Cisco para permitir un soporte al socio de mayor nivel.",
+      "crashReportTitle": "Informes automáticos de caídas",
+      "crashReportText": "Si un extremo se bloquea, se cargarán registros en Cisco para ayudar a mejorar la calidad del servicio.",
+      "crashReportCheckboxLabel": "Habilitar informes automáticos de caídas",
+      "crashReportTooltipDescription": "¿Qué contienen estos informes?",
+      "crashReportTooltip": "Los informes de caídas pueden incluir identificadores de usuarios y de la organización, cadenas de agente de usuario, cadenas de explorador de agente desinfectado, direcciones IP del cliente y la dirección MAC del dispositivo del usuario. Toda la información será tratada de forma confidencial y se utilizará exclusivamente para la mejora de la calidad de los productos."
     },
     "security": {
       "title": "Seguridad",
