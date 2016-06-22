@@ -19,7 +19,7 @@
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.redirectPopUpAndClose = redirectPopUpAndClose;
     vm.back = back;
-    vm.getV2Clusters = getV2Clusters;
+    //vm.getV2Clusters = getV2Clusters;
     vm.whiteListHost = whiteListHost;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
@@ -28,18 +28,17 @@
     vm.createNewCluster = false;
     vm.selectedClusterId = '';
 
-    function getV2Clusters() {
-      vm.clusters = MediaClusterServiceV2.getClustersV2().then(function (cluster) {
-        vm.clusters = cluster.clusters;
-        _.each(cluster.clusters, function (cluster) {
+    // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
+    MediaClusterServiceV2.getAll()
+      .then(function (clusters) {
+        vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+        _.each(clusters, function (cluster) {
           if (cluster.targetType === "mf_mgmt") {
             vm.clusterList.push(cluster.name);
           }
         });
-        $log.log("clusterList", vm.clusterList);
-      });
-    }
-    vm.getV2Clusters();
+        vm.clusterList.sort();
+      }, XhrNotificationService.notify);
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
 
@@ -49,10 +48,8 @@
           vm.clusterDetail = cluster;
         }
       });
-      $log.log("the value of clusterDetail is ", vm.clusterDetail);
       if (vm.clusterDetail == null) {
         MediaClusterServiceV2.createClusterV2(enteredCluster, 'GA').then(function (resp) {
-          $log.log("Reponse is ", resp);
           vm.selectedClusterId = resp.data.id;
           vm.whiteListHost(hostName, vm.selectedClusterId);
           //vm.redirectPopUpAndClose(hostName, enteredCluster, resp.data.id);
@@ -62,19 +59,6 @@
         vm.whiteListHost(hostName, vm.selectedClusterId);
         //vm.redirectPopUpAndClose(hostName, enteredCluster, vm.clusterDetail.id);
       }
-
-      /*RedirectTargetService.addRedirectTarget(hostName).then(function () {
-
-        vm.enableRedirectToTarget = true;
-        _.each(vm.clusters, function (cluster) {
-          if (cluster.name == vm.selectedCluster) {
-            vm.clusterDetail = cluster;
-          }
-        });
-        if (vm.clusterDetail == null) {
-          vm.createNewCluster = true;
-        }
-      }, XhrNotificationService.notify);*/
     }
 
     function whiteListHost(hostName, clusterId) {

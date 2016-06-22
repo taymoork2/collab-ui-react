@@ -49,6 +49,9 @@
             resolve: {
               groupName: function () {
                 return vm.displayName;
+              },
+              clusterId: function () {
+                return vm.clusterDetail.id;
               }
             },
             controller: 'DeleteClusterControllerV2',

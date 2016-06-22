@@ -40,6 +40,7 @@
     vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters());
     vm.clusterLength = clusterLength;
     vm.showClusterDetails = showClusterDetails;
+    vm.sortByProperty = sortByProperty;
     vm.addResourceButtonClicked = addResourceButtonClicked;
     vm.clusterList = [];
 
@@ -84,12 +85,23 @@
       return _.size(vm.clusters);
     }
 
+    /**
+     * This will sort the string array based on the property passed.
+     */
+    function sortByProperty(property) {
+      return function (a, b) {
+        return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
+      };
+    }
+
     function clustersUpdated() {
 
       MediaClusterServiceV2.getAll()
         .then(function (clusters) {
           clustersCache = clusters;
           vm.clusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
+          vm.clusters.sort(sortByProperty('name'));
+          //_.sortBy(vm.clusters, 'name');
           vm.aggregatedClusters = vm.clusters;
           $log.log("Clusters is using getall", clustersCache);
           $log.log("aggregatedClusters is using getall", vm.aggregatedClusters);
