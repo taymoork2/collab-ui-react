@@ -1462,7 +1462,7 @@
       "RUNNING": "Running",
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
-      "ABORTED": "Aborted",
+      "ABORTED": "Cancelled",
       "INIT": "Initializing"
     },
     "reportFailureReasons": {
@@ -1492,9 +1492,8 @@
       "failure": "Report generation failed",
       "tryAgain": "Try again or contact Customer Support",
       "reportStatus": "Report Status",
-      "reportSize": "Total Size",
+      "reportSize": "Report Size",
       "takeMeToReports": "Take Me to Reports",
-      "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
       "runFailed": "Failed to start report",
       "createReportFailed": "Failed to initialize the report"

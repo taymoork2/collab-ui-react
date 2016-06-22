@@ -18,6 +18,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.downloadReport = downloadReport;
+    vm.retrySearch = retrySearch;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
@@ -206,7 +207,9 @@
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
-        Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
@@ -244,6 +247,10 @@
         .finally(function () {
           vm.downloadingReport = false;
         });
+    }
+
+    function retrySearch() {
+      vm.report = null;
     }
   }
   angular
