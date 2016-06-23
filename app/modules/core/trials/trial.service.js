@@ -65,7 +65,7 @@
           isTrial: true,
           properties: [{
             key: key,
-            value: val.toString()
+            value: val
           }]
         }
       };
