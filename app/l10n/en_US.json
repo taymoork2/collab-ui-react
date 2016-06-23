@@ -1515,7 +1515,7 @@
       "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownload": "Waiting for download, please wait."
+      "waitingForDownload": "Downloading, please wait..."
     },
     "tabs": {
       "search": "Search",
