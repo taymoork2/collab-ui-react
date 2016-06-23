@@ -331,14 +331,6 @@
     .action-icons:hover {
       color: $color-primary-base;
     }
-    .ui-grid-row-selected {
-      .action-icons:hover {
-        color: $color-primary-lighter;
-      }
-      .action-icons.light {
-        color: $color-primary-darker;
-      }
-    }
     .download-wait {
       position: relative;
       .icon-download {
@@ -349,7 +341,6 @@
         top: -3px;
         left: -7px;
         font-size: 1.8rem;
-        color:red;
       }
     }
     .cancel-wait {
