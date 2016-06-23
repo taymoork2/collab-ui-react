@@ -3,7 +3,9 @@
 <cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
 
   <cs-sp-section ng-if="groupDetails.nodeList.length > 0">
-    <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
+    <strong>
+      <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
+    </strong>
     <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
       <ul>
         <li class="feature" ng-repeat="alarm in groupDetails.alarms">
@@ -42,16 +44,9 @@
   </cs-sp-section>
 
   <cs-sp-section>
-    <table>
-      <thead>
-        <tr>
-          <td class="col-md-4 bold pointer" translate="mediaFusion.connectors.hosts"></td>
-          <!--td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td-->
-          <td></td>
-        </tr>
-      </thead>
-    </table> 
-
+    <strong>
+      <div class="section-title-row section-name" translate="mediaFusion.connectors.hosts"></div>
+    </strong>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.nodeList" ng-class="{'list-item': !$first}">
@@ -63,16 +58,16 @@
 
             {{cluster.needs_attention}}{{cluster.alarms_present}}
             <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count > 0 && !ecp.hosts[0].offline" class="yellow">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
+              <i class="fa fa-circle mediafusion-state-alarm" />
+              <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
             </span>
             <span ng-if="ecp.needs_attention &&  ecp.hosts[0].state == 'offline' && ecp.hosts[0].offline" class="red">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
+              <i class="fa fa-circle mediafusion-state-offline" />
+              <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
             </span>
             <span ng-if="!ecp.needs_attention &&  !ecp.alarms_present" class="green">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
+              <i class="fa fa-circle mediafusion-state-running" />
+              <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
             </span>
 
             <i class="feature-arrow"></i>
