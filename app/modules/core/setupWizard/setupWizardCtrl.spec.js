@@ -3,6 +3,7 @@
 describe('SetupWizardCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
 

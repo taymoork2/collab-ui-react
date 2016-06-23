@@ -3,6 +3,7 @@
 describe('SiteCSVModalCtrl: initiate export', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   var $q;
@@ -203,6 +204,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
 describe('SiteCSVModalCtrl read only', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   var $rootScope;

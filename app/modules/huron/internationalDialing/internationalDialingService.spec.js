@@ -6,6 +6,7 @@ describe('Service: InternationalDialing', function () {
   var cosRestrictions;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _InternationalDialing_) {
     $q = _$q_;

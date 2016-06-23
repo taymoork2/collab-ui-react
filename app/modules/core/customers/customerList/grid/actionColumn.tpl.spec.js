@@ -8,6 +8,7 @@
 
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
+    beforeEach(module('Sunlight'));
     beforeEach(inject(dependencies));
 
     // TODO: refactor this once we have a way of sharing code in karma unit tests (dupe code of
