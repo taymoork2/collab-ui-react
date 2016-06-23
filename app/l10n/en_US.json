@@ -108,7 +108,10 @@
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
-    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is On.",
+    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is on.",
+    "userExistsDomainClaimError": "{{email}} cannot be added.  Either the user already exists in another organization or would end up in another organization due to a pre-existing domain claim.  User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
+    "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
+    "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
@@ -3495,6 +3498,7 @@
     "catalan": "Català"
   },
   "siteList": {
+    "nonCIWebExSiteAccess": "<a href='https://{{siteUrl}}' target='_blank' ng-click='{{click}}'>Sign in to manage</a>",
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
@@ -3506,7 +3510,7 @@
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
-    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file.",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a CSV file.",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",

@@ -1228,8 +1228,20 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && user.message === '400096') {
+          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400110')) {
             userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400108') {
+            userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400109') {
+            userResult.message = $translate.instant('usersPage.unableToMigrateError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400111') {
+            userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
               email: userResult.email
             });
           } else if (userStatus === 400 && user.message === '400087') {
