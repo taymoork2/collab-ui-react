@@ -8,6 +8,10 @@
   /* @ngInject */
   function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope) {
     var vm = this;
+    var classes = {
+      userService: 'user-service-',
+      hasRoomSys: 'has-room-systems'
+    };
 
     vm.messagingServices = {
       isNewTrial: false,
@@ -40,8 +44,24 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
+    vm.getUserServiceRowClass = getUserServiceRowClass;
+    vm._helpers = {
+      maxServiceRows: maxServiceRows
+    };
 
     init();
+
+    function getUserServiceRowClass(hasRoomSystem) {
+      //determine how many vertical entrees there is going to be
+      var returnClass = (hasRoomSystem) ? classes.hasRoomSys + ' ' + classes.userService : classes.userService;
+      var serviceRows = vm._helpers.maxServiceRows();
+      return returnClass + serviceRows;
+    }
+
+    function maxServiceRows() {
+      var confLength = _.get(vm.confServices, 'services.length', 0) + _.get(vm.cmrServices, 'services.length', 0);
+      return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
+    }
 
     function init() {
 

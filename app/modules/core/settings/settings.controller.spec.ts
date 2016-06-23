@@ -8,6 +8,7 @@ namespace globalsettings {
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     function dependencies(_$controller_, $rootScope, _Authinfo_, _FeatureToggleService_, _Orgservice_, _$q_) {
       $controller = _$controller_;
@@ -49,7 +50,7 @@ namespace globalsettings {
         expect(controller.support).toBeFalsy();
         expect(controller.branding).toBeTruthy();
         expect(controller.privacy).toBeFalsy();
-        expect(controller.dataPolicy).toBeFalsy();
+        expect(controller.retention).toBeFalsy();
       });
     });
 
@@ -70,7 +71,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeTruthy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
 
@@ -87,7 +88,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeFalsy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
     });

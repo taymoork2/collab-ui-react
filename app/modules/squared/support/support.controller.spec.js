@@ -3,6 +3,7 @@
 describe('Controller: SupportCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config, $scope;

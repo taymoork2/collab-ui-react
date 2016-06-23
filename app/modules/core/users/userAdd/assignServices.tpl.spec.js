@@ -30,6 +30,7 @@ describe('assignServices', function () {
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,

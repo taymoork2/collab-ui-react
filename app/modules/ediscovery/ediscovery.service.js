@@ -2,15 +2,22 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location, CacheFactory) {
     var urlBase = UrlConfig.getAdminServiceUrl();
+    var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
+    if (!avalonRoomsUrlCache) {
+      avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
+        maxAge: 300 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
 
     function useMock() {
       return $location.absUrl().match(/reports-backend=mock/);
     }
 
     if (useMock()) {
-      var REPORT_TIMEOUT_SECONDS = 30;
+      var REPORT_TIMEOUT_SECONDS = 10;
     } else {
       var REPORT_TIMEOUT_SECONDS = 180;
     }
@@ -46,17 +53,25 @@
     }
 
     function getAvalonServiceUrl() {
-      //TODO: Cache pr org
       var orgId = Authinfo.getOrgId();
+      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
+      if (cachedAvalonRoomsUrl) {
+        var deferred = $q.defer();
+        deferred.resolve(cachedAvalonRoomsUrl);
+        return deferred.promise;
+      }
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
-        .then(extractData);
+        .then(function (res) {
+          if (res.data && res.data.avalonRoomsUrl) {
+            avalonRoomsUrlCache.put(orgId, res.data);
+          }
+          return res.data;
+        });
     }
 
     function getAvalonRoomInfo(url) {
-      return $http
-        .get(url)
-        .then(extractData);
+      return $http.get(url).then(extractData);
     }
 
     function getReport(id) {
@@ -157,24 +172,6 @@
       });
     }
 
-    function prettyPrintBytes(bytes, precision) {
-      if (bytes === 0) {
-        return '0';
-      }
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
-        return '';
-      }
-      if (typeof precision === 'undefined') {
-        precision = 1;
-      }
-
-      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
-        number = Math.floor(Math.log(bytes) / Math.log(1024)),
-        val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
-
-      return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
-    }
-
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -186,8 +183,7 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport,
-      prettyPrintBytes: prettyPrintBytes
+      downloadReport: downloadReport
     };
   }
 
