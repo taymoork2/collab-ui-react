@@ -121,22 +121,22 @@
         .catch(function (err) {
           var status = err && err.status ? err.status : 500;
           switch (status) {
-            case 400:
-              vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
-                roomId: roomId
-              });
-              break;
-            case 404:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
-              });
-              break;
-            default:
-              vm.error = $translate.instant("ediscovery.search.roomNotFound", {
-                roomId: roomId
-              });
-              Notification.error($translate.instant("ediscovery.search.roomLookupError"));
-              break;
+          case 400:
+            vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
+              roomId: roomId
+            });
+            break;
+          case 404:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              roomId: roomId
+            });
+            break;
+          default:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              roomId: roomId
+            });
+            Notification.error($translate.instant("ediscovery.search.roomLookupError"));
+            break;
           }
         })
         .finally(function () {
