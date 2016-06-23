@@ -11,7 +11,7 @@ describe('Controller: HuronSettingsCtrl', function () {
   beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_,
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _PstnSetupService_, _ModalService_,
     _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
 
     $scope = $rootScope.$new();
@@ -22,7 +22,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
-    FeatureToggleService = _FeatureToggleService_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
     InternationalDialing = _InternationalDialing_;
@@ -60,7 +59,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       return $q.when();
     });
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
