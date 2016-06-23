@@ -7,6 +7,7 @@ describe('Controller: LineListCtrl', function () {
   var count = getJSONFixture('huron/json/lines/count.json');
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _FeatureToggleService_, _LineListService_, _Notification_) {
     $q = _$q_;

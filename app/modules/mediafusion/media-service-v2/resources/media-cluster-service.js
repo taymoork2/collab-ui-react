@@ -249,7 +249,7 @@
 
     function deleteV2Cluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      return $http.post(url);
+      return $http.delete(url);
     }
 
     function updateV2Cluster(clusterId, clusterName, releaseChannel) {
@@ -270,9 +270,10 @@
         "toClusterId": toCluster
       };
 
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
+      //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http
-        .post(url, payLoad);
+        .post(url);
     }
 
     function defuseV2Connector(connectorId) {

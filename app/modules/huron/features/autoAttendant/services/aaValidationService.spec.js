@@ -36,6 +36,7 @@ describe('Service: AAValidationService', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_, _AACommonService_) {
     AAModelService = _AAModelService_;

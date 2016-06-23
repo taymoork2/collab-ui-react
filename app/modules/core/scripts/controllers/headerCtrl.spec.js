@@ -4,6 +4,7 @@ describe('Controller: HeaderCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   function dependencies($rootScope, _$controller_, _$q_, _FeatureToggleService_, _Utils_) {
     $scope = $rootScope.$new();

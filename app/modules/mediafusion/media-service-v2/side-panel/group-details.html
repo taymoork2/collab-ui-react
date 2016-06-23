@@ -45,7 +45,7 @@
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.nodeList" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length})">
+            ui-sref="connector-details-v2.host-details({clusterId: groupDetails.clusterDetail.id, connector: ecp, hostLength: groupDetails.nodeList.length, selectedCluster: groupDetails.clusterDetail})">
             <span class="feature-name">{{ecp.hostname}}</span>
 
             <!--span class="feature-name">{{ecp.properties["mf.role"]}} {{ecp.hosts[0].state}} {{ecp.hosts[0].offline}} {{ecp.needs_attention}} {{ecp.needs_attention &&  ecp.host[0].state == 'offline' && ecp.host[0].offline}}</span-->
@@ -69,10 +69,10 @@
         </li>
       </ul>
     </div>
-    <p ng-if="groupDetails.clusterList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
+    <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="groupDetails.clusterList.length == 0">
+  <cs-sp-section ng-if="groupDetails.nodeList.length == 0">
     <div>
       <button id="btn--primary"
               ng-disabled="saving"

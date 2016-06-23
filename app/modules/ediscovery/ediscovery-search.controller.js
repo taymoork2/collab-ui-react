@@ -18,6 +18,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
     vm.downloadReport = downloadReport;
+    vm.retrySearch = retrySearch;
     vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
@@ -118,14 +119,24 @@
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
-          if (err.status === 400) {
-            vm.error = $translate.instant("ediscovery.invalidRoomId", {
+          var status = err && err.status ? err.status : 500;
+          switch (status) {
+          case 400:
+            vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
               roomId: roomId
             });
-          } else {
-            vm.error = $translate.instant("ediscovery.searchError", {
+            break;
+          case 404:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
               roomId: roomId
             });
+            break;
+          default:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              roomId: roomId
+            });
+            Notification.error($translate.instant("ediscovery.search.roomLookupError"));
+            break;
           }
         })
         .finally(function () {
@@ -206,7 +217,9 @@
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
-        Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
@@ -241,9 +254,16 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
         .finally(function () {
           vm.downloadingReport = false;
         });
+    }
+
+    function retrySearch() {
+      vm.report = null;
     }
   }
   angular

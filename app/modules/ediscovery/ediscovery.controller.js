@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -13,57 +13,71 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.downloadable = downloadable;
-    $scope.downloadReport = EdiscoveryService.downloadReport;
+    $scope.downloadReport = downloadReport;
+    $scope.downloadReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
-    $scope.cancable = cancable;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
+    $scope.viewReport = viewReport;
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+    $scope.reportsBeingCancelled = [];
 
-    //var avalonPoller = $timeout(pollAvalonReport, 0);
     var avalonPoller = $interval(pollAvalonReport, 5000);
+    var avalonPollerCancelled = false;
+    var avalonRefreshPoller = null;
+
+    function cancelAvalonPoller() {
+      $interval.cancel(avalonPoller);
+      avalonPollerCancelled = true;
+    }
 
     $scope.$on('$destroy', function () {
-      //$timeout.cancel(avalonPoller);
       $interval.cancel(avalonPoller);
+      $interval.cancel(avalonRefreshPoller);
     });
 
     vm.reports = [];
 
-    //grantNotification();
     pollAvalonReport();
 
-    function cancable(id) {
-      var r = findReportById(id);
-      return r && (r.state === "RUNNING" || r.timeoutDetected);
+    function downloadReport(report) {
+      $scope.downloadReportId = report.id;
+      EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
+        .finally(function (res) {
+          $scope.downloadReportId = undefined;
+        });
     }
 
     function cancelReport(id) {
+      if ($scope.reportsBeingCancelled[id]) {
+        return;
+      }
+      $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
-      });
-    }
-
-    function downloadable(id) {
-      var r = findReportById(id);
-      return r && r.state === "COMPLETED";
-    }
-
-    function findReportById(id) {
-      return _.find(vm.reports, function (report) {
-        return report.id === id;
+      }, function (err) {
+        if (err.status !== 410) {
+          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+        }
+      }).finally(function () {
+        delete $scope.reportsBeingCancelled[id];
       });
     }
 
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       rowHeight: 50,
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
@@ -75,18 +89,29 @@
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          $interval.cancel(avalonPoller);
+          //$interval.cancel(avalonPoller);
+          cancelAvalonPoller();
           if (vm.moreReports) {
             $scope.offset = $scope.offset + $scope.limit;
             vm.concat = true;
             pollAvalonReport();
           }
         });
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-            EdiscoveryService.getReport(row.entity.id).then(function (report) {
-              row.entity = report;
-            });
+        gridApi.core.on.rowsRendered($scope, function () {
+          if (avalonPollerCancelled) {
+            if (!avalonRefreshPoller) {
+              avalonRefreshPoller = $interval(function () {
+                _.each(vm.reports, function (r, index) {
+                  if (r.state === 'RUNNING') {
+                    EdiscoveryService.getReport(r.id).then(function (updatedReport) {
+                      r = updatedReport;
+                      vm.reports[index] = updatedReport;
+                      gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
+                    });
+                  }
+                });
+              }, 3000);
+            }
           }
         });
       },
@@ -97,23 +122,23 @@
         cellTemplate: 'modules/ediscovery/cell-template-name.html',
         width: '*'
       }, {
-        field: 'createdTime',
-        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
-        sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
-        width: '*'
-      }, {
         field: 'roomQuery.roomId',
         displayName: $translate.instant("ediscovery.reportsList.roomId"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-room-id.html',
         width: '*'
       }, {
-        field: 'roomQueryDates',
-        displayName: $translate.instant("ediscovery.reportsList.dateRange"),
+        field: 'createdTime',
+        displayName: $translate.instant("ediscovery.reportsList.dateGenerated"),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-query-from-to-dates.html',
+        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
         width: '*'
+      }, {
+        field: 'size',
+        displayName: $translate.instant("ediscovery.reportsList.size"),
+        sortable: false,
+        cellTemplate: 'modules/ediscovery/cell-template-size.html',
+        width: '110'
       }, {
         field: 'state',
         displayName: $translate.instant("ediscovery.reportsList.state"),
@@ -125,7 +150,7 @@
         displayName: $translate.instant("ediscovery.reportsList.actions"),
         sortable: false,
         cellTemplate: 'modules/ediscovery/cell-template-action.html',
-        width: '85'
+        width: '160'
       }]
     };
 
@@ -153,12 +178,6 @@
       });
     }
 
-    function grantNotification() {
-      if ($window.Notification) {
-        $window.Notification.requestPermission().then(function (result) {});
-      }
-    }
-
     function rerunReport(report) {
       $state.go('ediscovery.search', {
         report: report,
@@ -166,22 +185,10 @@
       });
     }
 
-    function notifyOnEvent(reports) {
-      if (!$window.Notification || $window.Notification.permission != 'granted') {
-        return;
-      }
-      var completedReports = _.filter(reports, function (r) {
-        return r.state == 'COMPLETED';
+    function viewReport(report) {
+      $state.go('ediscovery.search', {
+        report: report
       });
-      if (completedReports && completedReports.length > 0) {
-        var options = {
-          body: 'You have ' + completedReports.length + ' completed reports',
-          icon: 'images/cisco_logo.png',
-          tag: 'ediscovery'
-        };
-        var n = new $window.Notification('eDiscovery Dashboard', options);
-        setTimeout(n.close.bind(n), 3000);
-      }
     }
   }
 

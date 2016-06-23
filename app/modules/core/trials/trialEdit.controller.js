@@ -294,29 +294,21 @@
 
     function init() {
       $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
         TrialContextService.trialHasService(vm.currentTrial.customerOrgId)
       ]).then(function (results) {
-        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
-        //vm.showRoomSystems = results[0];
-        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
         vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[1] && vm.preset.webex;
+        vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+        vm.webexTrial.enabled = results[0] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[1];
+        vm.showWebex = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.showContextServiceTrial = results[3];
-        vm.contextTrial.enabled = results[4];
-        vm.preset.context = results[4];
-        // TODO: override atlasDeviceTrials to show Ship devices to all partners
-        //       and do not show to test orgs (US12063)
-        //vm.canSeeDevicePage = results[2];
+        vm.showContextServiceTrial = results[1];
+        vm.contextTrial.enabled = results[2];
+        vm.preset.context = results[2];
         setDeviceModal();
 
         if (vm.showWebex) {

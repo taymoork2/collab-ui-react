@@ -3,6 +3,7 @@
 describe('FeatureToggleService', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
   var forOrg = false;
