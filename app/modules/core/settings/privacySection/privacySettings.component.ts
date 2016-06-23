@@ -10,9 +10,6 @@ namespace globalsettings {
     }
   }
   angular.module('Core').component('privacySetting', {
-    bindings: {
-      hideUsagePart: '<'
-    },
     controller: 'PrivacySettingController as vm',
     templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html'
   });

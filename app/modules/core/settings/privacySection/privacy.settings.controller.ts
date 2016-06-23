@@ -1,7 +1,6 @@
 namespace globalsettings {
   export class PrivacySettingController {
     private _allowReadOnlyAccess:boolean = undefined;
-    sendUsageData:boolean = undefined;
     showAllowReadOnlyAccessCheckbox:boolean = true;
     private orgId;
     private _allowCrashLogUpload = false;
