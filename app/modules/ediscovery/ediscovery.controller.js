@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController(XhrNotificationService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -45,7 +45,7 @@
       $scope.downloadReportId = report.id;
       EdiscoveryService.downloadReport(report)
         .catch(function (err) {
-          XhrNotificationService.notify($translate.instant("ediscovery.unableToDownloadFile"), err);
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
         })
         .finally(function (res) {
           $scope.downloadReportId = undefined;
