@@ -42,7 +42,8 @@
         vm.daily = changes.daily.currentValue;
       }
       if (changes.clusterId) {
-        if (changes.clusterId.previousValue !== changes.clusterId.currentValue) {
+        if (changes.clusterId.currentValue &&
+            changes.clusterId.previousValue !== changes.clusterId.currentValue) {
           init();
         }
         vm.clusterId = changes.clusterId.currentValue;
