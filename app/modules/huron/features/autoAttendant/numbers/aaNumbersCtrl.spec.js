@@ -70,6 +70,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),

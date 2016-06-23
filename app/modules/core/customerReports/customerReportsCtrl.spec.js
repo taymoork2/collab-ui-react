@@ -60,8 +60,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   }];
 
   beforeEach(module('Core'));
-
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_) {

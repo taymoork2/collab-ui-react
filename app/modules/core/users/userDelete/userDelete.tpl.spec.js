@@ -8,6 +8,7 @@ describe('Template: userDelete', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(dependencies));
   beforeEach(compileView);

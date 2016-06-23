@@ -6,6 +6,7 @@ describe('Controller: TrialEditCtrl:', function () {
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   var stateParams = {
     currentTrial: {
       offers: [{

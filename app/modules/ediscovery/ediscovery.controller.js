@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, EdiscoveryNotificationService, Notification) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -25,9 +25,17 @@
     $scope.reportsBeingCancelled = [];
 
     var avalonPoller = $interval(pollAvalonReport, 5000);
+    var avalonPollerCancelled = false;
+    var avalonRefreshPoller = null;
+
+    function cancelAvalonPoller() {
+      $interval.cancel(avalonPoller);
+      avalonPollerCancelled = true;
+    }
 
     $scope.$on('$destroy', function () {
       $interval.cancel(avalonPoller);
+      $interval.cancel(avalonRefreshPoller);
     });
 
     vm.reports = [];
@@ -77,18 +85,36 @@
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          $interval.cancel(avalonPoller);
+          //$interval.cancel(avalonPoller);
+          cancelAvalonPoller();
           if (vm.moreReports) {
             $scope.offset = $scope.offset + $scope.limit;
             vm.concat = true;
             pollAvalonReport();
           }
         });
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-            EdiscoveryService.getReport(row.entity.id).then(function (report) {
-              row.entity = report;
-            });
+        // gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+        //   if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
+        //     EdiscoveryService.getReport(row.entity.id).then(function (report) {
+        //       row.entity = report;
+        //     });
+        //   }
+        // });
+        gridApi.core.on.rowsRendered($scope, function () {
+          if (avalonPollerCancelled) {
+            if (!avalonRefreshPoller) {
+              avalonRefreshPoller = $interval(function () {
+                _.each(vm.reports, function (r, index) {
+                  if (r.state === 'RUNNING') {
+                    EdiscoveryService.getReport(r.id).then(function (updatedReport) {
+                      r = updatedReport;
+                      vm.reports[index] = updatedReport;
+                      gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
+                    });
+                  }
+                });
+              }, 3000);
+            }
           }
         });
       },

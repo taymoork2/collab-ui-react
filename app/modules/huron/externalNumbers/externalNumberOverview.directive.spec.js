@@ -4,6 +4,7 @@ describe('Directive: ucExternalNumberOverview', function () {
   var $compile, $rootScope, $q, ExternalNumberService, FeatureToggleService;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _ExternalNumberService_, _FeatureToggleService_) {
     $compile = _$compile_;

@@ -5,6 +5,7 @@ describe('Controller: LineExportCtrl', function () {
 
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$q_, $rootScope, _$controller_, _$timeout_, _LineListService_, _Notification_) {
     $q = _$q_;
