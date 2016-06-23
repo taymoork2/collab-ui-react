@@ -1450,6 +1450,7 @@
     "searchTip": "Search data by room ID",
     "searchError": "Your search for '{{roomId}}' returned no matches",
     "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+    "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1513,7 +1514,7 @@
       "createNew": "Create new report with same query parameters",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownloadDialog": "Waiting for download dialog"
+      "waitingForDownload": "Waiting for download, please wait."
     },
     "tabs": {
       "search": "Search",

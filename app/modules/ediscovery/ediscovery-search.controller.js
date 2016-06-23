@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService, Notification) {
+  function EdiscoverySearchController(XhrNotificationService, $stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -244,6 +244,9 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          XhrNotificationService.notify($translate.instant("ediscovery.unableToDownloadFile"), err);
+        })
         .finally(function () {
           vm.downloadingReport = false;
         });

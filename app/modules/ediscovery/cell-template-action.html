@@ -16,14 +16,12 @@
           ng-click="grid.appScope.downloadReport(row.entity);$event.stopPropagation();"></span>
     <span ng-if="grid.appScope.downloadReportId === row.entity.id"
           class="download-wait">
-            <i class="icon icon-download action-icons"
-               ng-click="grid.appScope.downloadReport(row.entity)"></i>
+            <i class="icon icon-download action-icons"></i>
             <i class="icon icon-spinner action-icons"
-               cs-tooltip="{{'ediscovery.reportsList.waitingForDownloadDialog' | translate}}"
+               cs-tooltip="{{'ediscovery.reportsList.waitingForDownload' | translate}}"
                tooltip-placement="top"
                tooltip-animation="false"
-               tooltip-append-to-body="true"
-               ng-click="grid.appScope.downloadReport(row.entity)"></i>
+               tooltip-append-to-body="true"></i>
     </span>
     <span ng-if="grid.appScope.downloadReportId && grid.appScope.downloadReportId !== row.entity.id"
           tooltip-placement="top"
