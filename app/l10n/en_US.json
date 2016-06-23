@@ -1448,8 +1448,6 @@
     "heading": "Search Spark Room Activity",
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search data by room ID",
-    "searchError": "Your search for '{{roomId}}' returned no matches",
-    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1497,7 +1495,10 @@
       "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
       "runFailed": "Failed to start report",
-      "createReportFailed": "Failed to initialize the report"
+      "createReportFailed": "Failed to initialize the report",
+      "roomNotFound": "Your search for '{{roomId}}' returned no matches",
+      "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+      "roomLookupError": "An unexpected error occurred when searching for the room"
     },
     "reportsList": {
       "name": "Name",
