@@ -72,7 +72,7 @@ describe(' sunlightConfigService', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPUT(sunlightUserConfigUrl + '/' + userId).respond(500, errorData);
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function (response) {}, function (response) {
-      expect(JSON.stringify(response.data)).toBe(JSON.stringify(errorData));
+      expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
@@ -91,7 +91,7 @@ describe(' sunlightConfigService', function () {
     var chatTemplate = angular.copy(getJSONFixture('sunlight/json/sunlightTestTemplate.json'));
     $httpBackend.whenPOST(sunlightChatConfigUrl).respond(500, errorData);
     sunlightConfigService.createChatTemplate(chatTemplate).then(function (response) {
-      expect(JSON.stringify(response.data)).toBe(JSON.stringify(errorData));
+      expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
@@ -112,7 +112,7 @@ describe(' sunlightConfigService', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPOST(sunlightUserConfigUrl).respond(500, errorData);
     sunlightConfigService.createUserInfo(userInfo).then(function (response) {}, function (response) {
-      expect(JSON.stringify(response.data)).toBe(JSON.stringify(errorData));
+      expect(response.data).toEqual(errorData);
       expect(response.status).toBe(500);
     });
     $httpBackend.flush();
