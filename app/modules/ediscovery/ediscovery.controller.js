@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
+  function EdiscoveryController(Notification, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
