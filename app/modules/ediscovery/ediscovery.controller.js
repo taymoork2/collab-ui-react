@@ -13,7 +13,8 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.downloadReport = EdiscoveryService.downloadReport;
+    $scope.downloadReport = downloadReport;
+    $scope.downloadReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -39,6 +40,13 @@
     vm.reports = [];
 
     pollAvalonReport();
+
+    function downloadReport(report) {
+      $scope.downloadReportId = report.id;
+      EdiscoveryService.downloadReport(report).then(function (res) {}).finally(function (res) {
+        $scope.downloadReportId = undefined;
+      });
+    }
 
     function cancelReport(id) {
       EdiscoveryService.patchReport(id, {
