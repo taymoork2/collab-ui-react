@@ -126,7 +126,7 @@ describe('Service: MediaClusterServiceV2', function () {
   });
 
   it('should update v2 cluster', function () {
-    $httpBackend.when('POST', /^\w+.*/).respond(204);
+    $httpBackend.when('PATCH', /^\w+.*/).respond(204);
     var callback = sinon.stub();
     Service.updateV2Cluster('clusterId', 'clusterName', 'releaseChannel').then(callback);
     $httpBackend.flush();

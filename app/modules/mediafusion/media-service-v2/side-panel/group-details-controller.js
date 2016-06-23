@@ -36,7 +36,7 @@
 
         vm.changeReleaseChanel = function () {
           if (vm.selected != vm.clusterDetail.releaseChannel) {
-            MediaClusterServiceV2.updateV2Cluster(vm.clusterDetail.id, vm.displayName, vm.selected); 
+            MediaClusterServiceV2.updateV2Cluster(vm.clusterDetail.id, vm.displayName, vm.selected);
           }
         };
 
