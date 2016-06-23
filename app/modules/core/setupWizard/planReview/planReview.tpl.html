@@ -1,7 +1,7 @@
 <div class="loading" ng-if="!planReview.isInitialized">
   <i class="icon icon-spinner"></i>
 </div>
-<div class="wizard-plan-review" ng-if="planReview.isInitialized">
+<div class="wizard-plan-review" ng-if="planReview.isInitialized" ng-class="planReview.getUserServiceRowClass(multipleSubscriptions.roomSystemsExist)">
   <multiple-subscriptions></multiple-subscriptions>
   <div class="flex-row">
     <div class="small-4 columns column-title">
@@ -72,7 +72,7 @@
             </div>
           </div>
         </div>
-          <div class="item-mtg" 
+          <div class="item-mtg"
           ng-show="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial)"
           ng-repeat="(siteUrl,services) in planReview.sites">
           <div class="sub-line"></div>
@@ -116,7 +116,7 @@
       <div class="room-systems small-6 columns">
         <div class="item-sparkRoom" translate="firstTimeWizard.sparkRoomSystem"></div>
         <div ng-repeat="service in planReview.roomServices.services" ng-hide="service.licenseType !== 'SHARED_DEVICES'">
-          <div ng-show="multipleSubscriptions.showLicenses(service.billingServiceId, service.isTrial)"> 
+          <div ng-show="multipleSubscriptions.showLicenses(service.billingServiceId, service.isTrial)">
             <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
             <div class="spark-quantity">
               <span translate="firstTimeWizard.quantity"></span>
