@@ -1421,8 +1421,8 @@
         "hosts": "{count, plural, one{# Organizador} other{# Organizadores}}",
         "settings": "Configurações",
         "all": "Todos",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }
