@@ -2,28 +2,41 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document) {
+  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location) {
     var urlBase = UrlConfig.getAdminServiceUrl();
+
+    function useMock() {
+      return $location.absUrl().match(/reports-backend=mock/);
+    }
+
+    if (useMock()) {
+      var REPORT_TIMEOUT_SECONDS = 30;
+    } else {
+      var REPORT_TIMEOUT_SECONDS = 180;
+    }
 
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
-        detectAndSetReportTimeout(report);
+        tweakReport(report);
       });
-      return reports;
+      return res.data;
     }
 
     function extractReport(res) {
-      return detectAndSetReportTimeout(res.data);
+      return tweakReport(res.data);
     }
 
-    function detectAndSetReportTimeout(report) {
+    function tweakReport(report) {
       if (report) {
         report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 180000;
+          .getTime() > REPORT_TIMEOUT_SECONDS * 1000;
         if (report.state === 'FAILED' && !report.failureReason) {
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
+        report.isDone = report.state === 'COMPLETED' || report.state === 'FAILED' || report.state === 'ABORTED';
+        report.canBeCancelled = report.state === 'ACCEPTED' || report.state === 'RUNNING';
+        report.canBeDownloaded = report.state === "COMPLETED" && (!report.expiryTime || new Date().getTime() < new Date(report.expiryTime).getTime());
       }
       return report;
     }
@@ -48,29 +61,25 @@
 
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractReport)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      if (useMock()) {
+        return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
+      } else {
+        return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id).then(extractReport);
+      }
     }
 
-    function getReports() {
+    function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
-        .then(extractReports)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      var reqParams = 'offset=' + offset + '&limit=' + limit;
+      if (useMock()) {
+        return $q.resolve(extractReports(EdiscoveryMockData.getReports(offset, limit)));
+      } else {
+        return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams).then(extractReports);
+      }
     }
 
     function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
-      //  TODO: Implement proper handling of error when final API is in place
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
@@ -85,49 +94,30 @@
         .then(extractData);
     }
 
-    // TODO: Implement proper handling of error when final API is in place
-    function runReport(runUrl, roomId, responseUrl) {
+    function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
       return $http.post(runUrl, {
         "roomId": roomId,
-        "responseUrl": responseUrl
+        "responseUrl": responseUrl,
+        "startDate": sd,
+        "endDate": ed
       });
     }
 
     function patchReport(id, patchData) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("patching", res);
-        })
-        .catch(function (data) {
-          //console.log("error createReport: " + data)
-        });
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData);
     }
 
     function deleteReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("deleted", res);
-        })
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error createReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id);
     }
 
     function deleteReports() {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/')
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error deleteReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/');
     }
 
     function setEntitledForCompliance(orgId, userId, entitled) {
@@ -137,12 +127,12 @@
     }
 
     function downloadReport(report) {
-      $http.get(report.downloadUrl, {
+      return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer'
       }).success(function (data) {
         var fileName = 'report_' + report.id + '.zip';
         var file = new $window.Blob([data], {
-          type: 'application/json'
+          type: 'application/zip'
         });
         if ($window.navigator.msSaveOrOpenBlob) {
           // IE
@@ -167,6 +157,24 @@
       });
     }
 
+    function prettyPrintBytes(bytes, precision) {
+      if (bytes === 0) {
+        return '0';
+      }
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+        return '';
+      }
+      if (typeof precision === 'undefined') {
+        precision = 1;
+      }
+
+      var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'],
+        number = Math.floor(Math.log(bytes) / Math.log(1024)),
+        val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
+
+      return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
+    }
+
     return {
       getAvalonServiceUrl: getAvalonServiceUrl,
       getAvalonRoomInfo: getAvalonRoomInfo,
@@ -178,7 +186,8 @@
       patchReport: patchReport,
       deleteReport: deleteReport,
       setEntitledForCompliance: setEntitledForCompliance,
-      downloadReport: downloadReport
+      downloadReport: downloadReport,
+      prettyPrintBytes: prettyPrintBytes
     };
   }
 

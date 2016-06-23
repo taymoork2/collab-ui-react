@@ -39,6 +39,7 @@
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
     vm.enableService = enableService;
+    vm.featureToggled = false;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -53,7 +54,7 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
-        if ($stateParams.clusterId !== null) {
+        if (angular.isDefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
           showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
         }
       },
@@ -100,7 +101,7 @@
         error: 0,
         notActivated: 0,
         notEntitled: 0,
-        total: 0,
+        total: 0
       };
       vm.userStatusSummary = _.chain(USSService2.getStatusesSummary())
         .filter(function (summary) {
@@ -196,8 +197,6 @@
         });
       }
     }
-
-    vm.featureToggled = false;
 
     function isFeatureToggled() {
       return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);

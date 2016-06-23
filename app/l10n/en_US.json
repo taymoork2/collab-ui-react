@@ -516,12 +516,9 @@
     "logAction": "Client Logs",
     "callflowLogsAction": "Call Logs",
     "callflowAction": "Callflow Charts",
-    "callAction": "Call Info",
-    "callSummaryAction": "Call Summary",
     "errEmptyinput": "Search input cannot be empty.",
     "errLogQuery": "Failed to retrieve logs. Status: {{status}}",
     "inputPlaceholder": "Enter search term (Email address, user ID, Locus ID, etc.)",
-    "subTitleCallInfo": "Call Info records for",
     "locusId": "locusId",
     "locusCallStartTimeH": "Locus Call Start Time",
     "attributes": "Attributes",
@@ -724,6 +721,7 @@
     "last": "Last"
   },
   "common": {
+    "update": "Update",
     "delete": "Delete",
     "disable": "Disable",
     "cancel": "Cancel",
@@ -1115,7 +1113,9 @@
       "goToHost": "Go to Host",
       "removeButton": "Remove",
       "removeSectionHeader": "Remove",
-      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud."
+      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud.",
+      "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
+      "actions": "Actions"
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1220,7 +1220,11 @@
       "upgrading": "Upgrading",
       "upgraded": "Upgraded",
       "pending": "Pending",
-      "initializing": "Initializing"
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
+    },
+    "userSidepanel": {
+      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded."
     },
     "setup": {
       "label": "Connector Management",
@@ -1439,19 +1443,18 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Activity Reports",
-    "navHeaderTitle": "Activity Reports",
-    "searchWatermark": "Enter a Room ID",
-    "searchHelp": "Search Help",
-    "searchError": "Your search for '{{roomId}}' returned 0 matches",
+    "browserTabHeaderTitle": "Spark Activity Reports",
+    "navHeaderTitle": "Spark Activity Reports",
+    "heading": "Search Spark Room Activity",
+    "subheading": "Find all relevant data for a room",
+    "searchTip": "Search data by room ID",
+    "searchError": "Your search for '{{roomId}}' returned no matches",
+    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
     },
     "searchingPleaseWait": "Finding information, please wait...",
-    "help": {
-      "title": "Activity Reports Help"
-    },
     "reportStates": {
       "COMPLETED": "Completed",
       "FAILED": "Failed",
@@ -1485,7 +1488,10 @@
       "generateReport": "Generate Report",
       "cancelReport": "Cancel Report",
       "downloadReport": "Download Report",
-      "failure": "Failed to generate report:"
+      "failure": "Report generation failed",
+      "tryAgain": "Try again or contact Customer Support",
+      "reportStatus": "Report Status",
+      "reportSize": "Total Size"
     },
     "reportsList": {
       "name": "Name",
@@ -1496,6 +1502,10 @@
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
       "noReportsTip": "Click the Search tab to search activities and create reports"
+    },
+    "tabs": {
+      "search": "Search",
+      "reports": "Reports"
     }
   },
   "firstTimeWizard": {
@@ -2218,6 +2228,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "nonTrialServices": "Non Trial Services",
     "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Start Trial",
@@ -2236,6 +2247,7 @@
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "invalidTrialCareQuantity": "Number of Licenses must be between 1 and total users or maximum 50.",
+    "careLicenseCountExceedsTotalCount": "Care license requested is more than the total license quantity.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -2354,7 +2366,10 @@
     "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}}.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}}."
+    "editSuccess": "You have successfully edited a trial for {{customerName}}.",
+    "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
+    "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
+    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -2370,6 +2385,7 @@
     "care": "Care",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Spark is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
+    "context": "Enable Context Service for Cisco Unified Contact Center.",
     "roomSystem": "Spark Room System",
     "roomSysUsOnly": "Spark Room System (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -3262,7 +3278,7 @@
     "csvRecordsReturned": "Records returned:",
     "csvRecordsUpdated": "Records updated:",
     "csvRecordsFailed": "Errors:",
-    "csvDownloadImportErr": "Download import error log"
+    "csvDownloadImportErr": "Download the import error log"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3461,10 +3477,10 @@
     "siteReports": "Reports",
     "siteActions": "Actions",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
-    "siteCsvModalText": "Export user attributes, edit .csv file and import the edited version. For details about read-only columns and other CSV-related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
-    "siteCsvModalImportText": "Drag and Drop CSV file here or click to browse.",
+    "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
+    "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
-    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file.",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a CSV file.",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -3476,26 +3492,26 @@
     "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "csvRejectedToast-060100": "Request failed, there is already an export/import request in process.",
     "exportBlockedTooltip": "In order to Export, you must wait for your Import to complete.",
-    "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportInProgressTooltip": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors.",
     "exportFailedTooltip": "Export failed.",
-    "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportStartedToast": "This export may take a while. The export process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site. A download link appears on this page after the export is complete.",
     "exportRejectedToast": "Export failed. Try again.",
     "importButton": "Import",
     "importStartModalTitle": "Import WebEx User Attributes",
     "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select Import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for your Export to complete.",
-    "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importInProgressTooltip": "This import may take a while. The import process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site.",
     "importFinishedWithErrorsTooltip": "Import finished with errors.",
     "importFailedTooltip": "Import failed.",
-    "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importStartedToast": "This import may take a while. The import process continues until it is complete, even if you sign out or begin an export or import of user attributes for another site.",
     "importRejectedToast": "Import failed. Try again.",
     "importInvalidFileToast": "Choose a file for import.",
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
-    "siteCSVNotAvailableTooltip": "You must upgrade this site to access the Bulk Modify User Attributes feature",
+    "siteCSVNotAvailableTooltip": "Upgrade this site to access the Bulk Modify User Attributes feature.",
     "authError": "You are not entitled to access this site.",
-    "systemError": "Unable to connect to site.",
+    "systemError": "Unable to connect to this site.",
     "multipleLicenses": "Multiple...",
     "checkingServices": "Checking services..."
   },
@@ -4069,13 +4085,20 @@
       "title": "Authentication",
       "subsectionLabel": "Single Sign-On"
     },
-    "dataPolicy": {
-      "title": "Data Policy",
-      "subsectionLabel": "Data Retention (after deletion of org)",
-      "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
-      "retentionOption1": "Delete immediately",
-      "retentionOption2": "Keep for 1 year",
-      "retentionOption3": "Keep forever"
+    "retention": {
+      "title": "Retention",
+      "subsectionLabel": "Spark Message Data",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system.",
+      "retentionOption1": "90 days",
+      "retentionOption2": "180 days",
+      "retentionOption3": "1 year",
+      "retentionOption4": "2 years",
+      "retentionOption5": "Keep until storage is full (Oldest will be deleted first)",
+      "modalTitle": "Update Retention Time",
+      "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
+      "modalBody2": "Any additional data older than the new time period will be deleted.",
+      "notificationSuccess": "Settings successfully updated.",
+      "notificationFailure": "Failed to change retention period setting."
     },
     "privacy": {
       "title": "Privacy",
@@ -4171,6 +4194,8 @@
     "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
+    "customerDetails": "Customer Details",
+    "userDetails": "User Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
     "cancelled": "Search was cancelled",
@@ -4198,6 +4223,7 @@
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",
+    "none": "None",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -4304,8 +4330,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewHeading": "Customer Portal View",
     "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "customerDoesNotAllowReadOnlyAccess": "The customer does not allow Cisco or Partner Support read-only access to the management application.",
     "view": "View"
   },
   "activation": {
@@ -4404,8 +4431,8 @@
   },
   "servicesOverview": {
     "title": "Services",
-    "cloudServices": "Cloud services",
-    "hybridServices": "Hybrid services",
+    "cloudServices": "Cloud Services",
+    "hybridServices": "Hybrid Services",
     "showAllCards": "Show all cards",
     "showActiveCards": "Show active cards only",
     "cards": {

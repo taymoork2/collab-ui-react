@@ -15,7 +15,7 @@
       getAssignedSalesAdministrators: getAssignedSalesAdministrators,
       getPartnerUsers: getPartnerUsers,
       addCustomerAdmin: addCustomerAdmin,
-      unassignCustomerSalesAdmin: unassignCustomerSalesAdmin,
+      removeCustomerSalesAdmin: removeCustomerSalesAdmin,
       patchSalesAdminRole: patchSalesAdminRole
     };
 
@@ -30,8 +30,8 @@
       return $http.get(url);
     }
 
-    function getPartnerUsers() {
-      var url = partnerScimUrl + encodeURI('?filter=active eq true');
+    function getPartnerUsers(str) {
+      var url = partnerScimUrl + encodeURI('?filter=active eq true and userName sw "') + str + encodeURI('" or name.givenName sw "') + str + encodeURI('" or name.familyName sw "') + str + encodeURI('" or displayName sw "') + str + encodeURI('"&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID&count=8&sortBy=name&sortOrder=ascending');
 
       return $http.get(url);
     }
@@ -43,28 +43,28 @@
       var url = partnerScimUrl + '/' + uuid;
 
       var request = {
-        'schemas': ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
-        'managedOrgs': [{
-          'orgId': customerOrgId,
-          'role': 'ID_Full_Admin'
+        schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+        managedOrgs: [{
+          orgId: customerOrgId,
+          role: 'ID_Full_Admin'
         }]
       };
 
       return $http.patch(url, request);
     }
 
-    function unassignCustomerSalesAdmin(customerOrgId, uuid) {
+    function removeCustomerSalesAdmin(customerOrgId, uuid) {
       if (!customerOrgId || customerOrgId === '') {
         return $q.reject('A Customer Organization Id must be passed');
       }
       var url = partnerScimUrl + '/' + uuid;
 
       var request = {
-        'schemas': ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
-        'managedOrgs': [{
-          'orgId': customerOrgId,
-          'role': 'ID_Full_Admin',
-          'operation': 'delete'
+        schemas: ['urn:scim:schemas:core:1.0', 'urn:scim:schemas:extension:cisco:commonidentity:1.0'],
+        managedOrgs: [{
+          orgId: customerOrgId,
+          role: 'ID_Full_Admin',
+          operation: 'delete'
         }]
       };
 
@@ -75,12 +75,12 @@
       var url = partnerAdminServiceUrl + 'organization/' + partnerOrgId + '/users/roles';
 
       var request = {
-        'users': [{
-          'userRoles': {
-            'roleName': 'Sales_Admin',
-            'roleState': 'ACTIVE'
+        users: [{
+          userRoles: {
+            roleName: 'Sales_Admin',
+            roleState: 'ACTIVE'
           },
-          'email': email
+          email: email
         }]
       };
 

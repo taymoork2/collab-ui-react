@@ -58,7 +58,7 @@ describe('Service: AAUiScheduleService', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _Notification_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
     AANotificationService = _AANotificationService_;
     AAUiScheduleService = _AAUiScheduleService_;
     AAICalService = _AAICalService_;

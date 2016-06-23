@@ -3,10 +3,14 @@
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
 
   <form class="cs-form" action="">
+    <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
+      <security-setting></security-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
       <privacy-setting></privacy-setting>
     </setting-section>
-  
+
     <setting-section setting="settingsCtrl.domains" ng-if="settingsCtrl.domains">
       <domains-setting></domains-setting>
     </setting-section>
@@ -27,8 +31,8 @@
       <branding-setting></branding-setting>
     </setting-section>
 
-    <setting-section setting="settingsCtrl.dataPolicy" hide-bottom-line=true ng-if="settingsCtrl.dataPolicy">
-      <datapolicy-setting></datapolicy-setting>
+    <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
+      <retention-setting></retention-setting>
     </setting-section>
   </form>
 </div>

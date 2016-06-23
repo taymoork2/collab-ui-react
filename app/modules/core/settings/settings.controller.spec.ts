@@ -42,13 +42,14 @@ namespace globalsettings {
       beforeEach(initController);
 
       it('should create the ctrl and add the partner setting sections', ()=> {
+        expect(controller.security).toBeFalsy();
         expect(controller.domains).toBeFalsy();
         expect(controller.sipDomain).toBeFalsy();
         expect(controller.authentication).toBeFalsy();
         expect(controller.support).toBeFalsy();
         expect(controller.branding).toBeTruthy();
         expect(controller.privacy).toBeFalsy();
-        expect(controller.dataPolicy).toBeFalsy();
+        expect(controller.retention).toBeFalsy();
       });
     });
 
@@ -62,13 +63,14 @@ namespace globalsettings {
         beforeEach(initController);
 
         it('should create the ctrl and add the normal setting sections', ()=> {
+          expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
           expect(controller.authentication).toBeTruthy();
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeTruthy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
 
@@ -78,13 +80,14 @@ namespace globalsettings {
         beforeEach(initController);
 
         it('should create the ctrl and add the normal setting sections but filter out branding', ()=> {
+          expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
           expect(controller.authentication).toBeTruthy();
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeFalsy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
     });

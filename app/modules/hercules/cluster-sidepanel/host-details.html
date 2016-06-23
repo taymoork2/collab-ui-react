@@ -1,19 +1,10 @@
 <cs-sp-container class="hercules-settings-table">
   <cs-sp-section>
+    <div class="section-title-row section-name">
+      {{hostDetailsCtrl.localizedConnectorSectionHeader}}
+    </div>
     <table>
       <tbody>
-      <tr>
-        <td translate="hercules.connectors.host_name"></td>
-        <td><span>{{hostDetailsCtrl.host.hostname}}</span></td>
-      </tr>
-      <tr>
-        <td translate="hercules.connectors.serial"></td>
-        <td><span>{{hostDetailsCtrl.host.hostSerial}}</span></td>
-      </tr>
-      <tr>
-        <td translate="hercules.connectors.version"></td>
-        <td><span>{{hostDetailsCtrl.host.runningVersion}}</span></td>
-      </tr>
       <tr>
         <td translate="common.status"></td>
         <td>
@@ -22,14 +13,27 @@
           <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>
       </tr>
+      <tr>
+        <td translate="hercules.connectors.version"></td>
+        <td><span>{{hostDetailsCtrl.host.runningVersion}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.connectors.serial"></td>
+        <td><span>{{hostDetailsCtrl.host.hostSerial}}</span></td>
+      </tr>
       </tbody>
     </table>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
     <div>
       <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
         <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
       </a>
     </div>
   </cs-sp-section>
+
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
     <div class="feature-list" ng-if="hostDetailsCtrl.host.alarms.length > 0">

@@ -106,6 +106,7 @@
       }
 
       getHuntGroups().then(function () {
+        vm.huntGroups.sort(AACommonService.sortByProperty('description'));
         populateUiModel();
       });
 

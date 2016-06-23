@@ -5,7 +5,7 @@
     .controller('RemoteSupportController',
 
       /* @ngInject */
-      function ($scope, $q, $timeout, Notification, $translate, Utils, Authinfo, CsdmDeviceService, currentDevice) {
+      function ($q, $timeout, Utils, Authinfo, CsdmDeviceService, currentDevice) {
         var rs = this;
 
         rs.currentDevice = currentDevice;

@@ -5,13 +5,12 @@
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
   /* @ngInject */
-  function PartnerProfileCtrl($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, FeatureToggleService) {
+  function PartnerProfileCtrl($scope, Authinfo, Notification, UserListService, Orgservice, Log, $window, Utils, FeedbackService, $translate) {
     var orgId = Authinfo.getOrgId();
 
     // toggles api calls, show/hides divs based on customer or partner profile
     $scope.isPartner = Authinfo.isPartner();
     $scope.appType = 'Squared';
-    $scope.allowCrashLogUpload = false;
 
     $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
@@ -106,44 +105,12 @@
             $scope.isCiscoHelp = settings.isCiscoHelp;
           }
 
-          if (!_.isUndefined(settings.allowCrashLogUpload)) {
-            $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
-          } else {
-            $scope.allowCrashLogUpload = false;
-          }
-
-          if (!_.isUndefined(settings.allowReadOnlyAccess)) {
-            $scope.allowReadOnlyAccess = settings.allowReadOnlyAccess;
-          }
-
           resetForm();
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }
-        readOnlyAccessCheckboxVisibility(data);
       }, orgId, true);
-
-      FeatureToggleService.supports(FeatureToggleService.features.enableCrashLogs).then(function (toggle) {
-        $scope.showCrashLogUpload = toggle;
-      });
     };
-
-    // Currently only allow Marvel & Cisco related orgs to show read only access checkbox
-    // TODO: Replace by feature toggle !
-    function readOnlyAccessCheckboxVisibility(org) {
-      var marvelOrgId = "ce8d17f8-1734-4a54-8510-fae65acc505e";
-      var isMarvelOrg = (orgId == marvelOrgId);
-      var managedByMarvel = _.find(org.managedBy, function (managedBy) {
-        return managedBy.orgId == marvelOrgId;
-      });
-      var ciscoOrgId = "1eb65fdf-9643-417f-9974-ad72cae0e10f";
-      var isCiscoOrg = (orgId == ciscoOrgId);
-      var managedByCisco = _.find(org.managedBy, function (managedBy) {
-        return managedBy.orgId == ciscoOrgId;
-      });
-
-      $scope.showAllowReadOnlyAccessCheckbox = (isMarvelOrg || managedByMarvel || isCiscoOrg || managedByCisco);
-    }
 
     $scope.init();
 
@@ -168,8 +135,6 @@
           helpUrl: $scope.helpUrl || null,
           isCiscoHelp: isCiscoHelp,
           isCiscoSupport: isCiscoSupport,
-          allowReadOnlyAccess: $scope.allowReadOnlyAccess,
-          allowCrashLogUpload: $scope.allowCrashLogUpload
         };
 
         updateOrgSettings(orgId, settings);
@@ -184,11 +149,6 @@
         $scope.supportText = '';
       }
       $scope.problemSiteRadioValue = value;
-      touchForm();
-    };
-
-    $scope.setCrashReportCheckbox = function (value) {
-      $scope.allowCrashLogUpload = value;
       touchForm();
     };
 

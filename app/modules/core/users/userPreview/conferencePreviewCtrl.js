@@ -6,7 +6,7 @@
     .controller('ConferencePreviewCtrl', ConferencePreviewCtrl);
 
   /* @ngInject */
-  function ConferencePreviewCtrl($scope, $state, $stateParams, $rootScope, $translate, Authinfo, FeatureToggleService, Userservice) {
+  function ConferencePreviewCtrl($scope, $state, $stateParams, Authinfo) {
     var vm = this;
 
     vm.service = '';

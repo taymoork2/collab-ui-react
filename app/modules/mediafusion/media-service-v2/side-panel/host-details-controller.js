@@ -5,13 +5,12 @@
     .controller('HostDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $state, MediaClusterServiceV2, XhrNotificationService, Notification, $translate, $modal, $log) {
+      function ($stateParams, $state, $log, MediaClusterServiceV2, XhrNotificationService, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
-        vm.role = $stateParams.properties["mf.role"];
         vm.connector = $stateParams.connector;
         vm.hostscount = $stateParams.hostLength;
-        vm.cluster = MediaClusterServiceV2.getClusters()[vm.clusterId];
+        vm.cluster = $stateParams.selectedCluster;
         vm.options = ["Switching", "Transcoding"];
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
@@ -27,9 +26,12 @@
             resolve: {
               cluster: function () {
                 return vm.cluster;
+              },
+              connector: function () {
+                return vm.connector;
               }
             },
-            controller: 'ReassignClusterController',
+            controller: 'ReassignClusterControllerV2',
             controllerAs: "reassignClust",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-cluster-dialog.html'
           });
@@ -47,20 +49,9 @@
           }, XhrNotificationService.notify);
         };
 
-        vm.changeRole = function ($selectedRole, $clusterId) {
-          MediaClusterServiceV2.changeRole($selectedRole, $clusterId)
-            .success(function (data) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
-            })
-            .error(function (data, status) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
-                failureMessage: data.message
-              })], 'error');
-            });
-        };
-
         vm.showDeregisterHostDialog = function () {
           if (vm.hostscount == 1) {
+            $log.log("cluster details ", vm.cluster);
             $modal.open({
               resolve: {
                 orgName: function () {
@@ -68,12 +59,15 @@
                 },
                 cluster: function () {
                   return vm.cluster;
-                }
-
+                },
+                connector: function () {
+                  return vm.connector;
+                },
               },
-              controller: 'HostClusterDeregisterController',
+              type: 'dialog',
+              controller: 'HostClusterDeregisterControllerV2',
               controllerAs: "hostClusterDeregister",
-              templateUrl: 'modules/mediafusion/media-service/side-panel/host-deregister-cluster-delete-dialog.html'
+              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-cluster-delete-dialog.html'
             });
           } else {
             $modal.open({
@@ -85,9 +79,10 @@
                   return vm.organization.displayName;
                 }
               },
-              controller: 'HostDeregisterController',
+              type: 'dialog',
+              controller: 'HostDeregisterControllerV2',
               controllerAs: "hostDeregister",
-              templateUrl: 'modules/mediafusion/media-service/side-panel/host-deregister-dialog.html'
+              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'
             });
           }
 

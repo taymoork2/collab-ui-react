@@ -1,6 +1,7 @@
 /// <reference path="authenticationSetting.component.ts"/>
+/// <reference path="securitySetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
-/// <reference path="dataPolicySetting.component.ts"/>
+/// <reference path="retentionSetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
@@ -16,7 +17,7 @@ namespace globalsettings {
     public authentication:SettingSection;
     public branding:SettingSection;
     public support:SettingSection;
-    public dataPolicy:SettingSection;
+    public retention:SettingSection;
 
     /* @ngInject */
     constructor(Authinfo, private Orgservice, private FeatureToggleService) {
@@ -24,13 +25,14 @@ namespace globalsettings {
         //Add setting sections for partner admins here.
         this.initBranding();
       } else {
+        this.initSecurity();
         this.domains = new DomainsSetting();
         this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
         this.support = new SupportSetting();
         this.initBrandingForNonPartner();
         this.privacy = new PrivacySetting();
-        this.dataPolicy = new DataPolicySetting();
+        this.retention = new RetentionSetting();
       }
     }
 
@@ -43,9 +45,17 @@ namespace globalsettings {
     }
 
     private initBranding() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(toggle=> {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(() => {
         //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
         this.branding = new BrandingSetting();
+      });
+    }
+
+    private initSecurity() {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then(toggle=> {
+        if (toggle) {
+          this.security = new SecuritySetting();
+        }
       });
     }
   }

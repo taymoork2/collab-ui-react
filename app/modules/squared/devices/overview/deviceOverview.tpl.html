@@ -160,14 +160,14 @@
       <div class="form-group" ng-show="deviceOverview.timeZone && deviceOverview.csdmTz">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
-        <div class="col-sm-3">
+        <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
           <cs-select
               ng-model="deviceOverview.selectedTimeZone"
               class="timeZoneSelector"
               options="deviceOverview.timeZoneOptions"
               is-disabled="deviceOverview.updatingTimeZone"
               labelfield="label"
-              valuefield="value"
+              valuefield="id"
               on-change-fn="deviceOverview.saveTimeZoneAndWait()"
               input-placeholder="deviceOverview.searchTimeZonePlaceholder"
               filter="true">

@@ -5,11 +5,8 @@
     .controller('TrialNoticeBannerCtrl', TrialNoticeBannerCtrl);
 
   /* @ngInject */
-  function TrialNoticeBannerCtrl($q, Authinfo, EmailService, FeatureToggleService, Notification, TrialService, UserListService) {
+  function TrialNoticeBannerCtrl($q, Authinfo, EmailService, Notification, TrialService, UserListService) {
     var vm = this;
-    var ft = {
-      atlasTrialConversion: false
-    };
 
     vm.canShow = canShow;
     vm.daysLeft = null;
@@ -30,18 +27,12 @@
 
     function init() {
       return $q.all([
-          FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion),
           getDaysLeft(),
           getPrimaryPartnerInfo()
         ])
         .then(function (results) {
-          var enabled = results[0],
-            daysLeft = results[1],
-            partnerInfo = results[2];
-          ft.atlasTrialConversion = enabled;
-
-          // TODO: override globally to true for now, remove this and respective feature-toggle logic after 2016-04-09
-          ft.atlasTrialConversion = true;
+          var daysLeft = results[0],
+            partnerInfo = results[1];
 
           vm.daysLeft = daysLeft;
 
@@ -51,7 +42,7 @@
     }
 
     function canShow() {
-      return ft.atlasTrialConversion && Authinfo.isUserAdmin() && (TrialService.getTrialIds().length > 0);
+      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length;
     }
 
     function sendRequest() {

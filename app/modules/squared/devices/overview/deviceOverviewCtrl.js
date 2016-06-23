@@ -21,8 +21,9 @@
     });
 
     if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZoneOptions();
-      loadDeviceTimeZone();
+      initTimeZoneOptions().then(function () {
+        loadDeviceTimeZone();
+      });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
@@ -33,14 +34,14 @@
     function loadDeviceTimeZone() {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
-        deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+        deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
       });
     }
 
-    function getTimeZoneFromValue(value) {
+    function getTimeZoneFromId(id) {
       return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.value == value;
+        return o.id == id;
       });
     }
 
@@ -77,7 +78,7 @@
     }
 
     deviceOverview.saveTimeZoneAndWait = function () {
-      var newValue = deviceOverview.selectedTimeZone.value;
+      var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
         setTimeZone(newValue)
