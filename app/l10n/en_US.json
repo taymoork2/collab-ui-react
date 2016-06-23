@@ -1448,6 +1448,7 @@
     "heading": "Search Spark Room Activity",
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search data by room ID",
+    "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1514,7 +1515,7 @@
       "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownloadDialog": "Waiting for download dialog"
+      "waitingForDownload": "Waiting for download, please wait."
     },
     "tabs": {
       "search": "Search",

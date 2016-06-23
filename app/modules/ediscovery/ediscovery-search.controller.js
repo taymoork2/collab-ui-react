@@ -254,6 +254,9 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
         .finally(function () {
           vm.downloadingReport = false;
         });

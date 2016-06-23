@@ -44,9 +44,13 @@
 
     function downloadReport(report) {
       $scope.downloadReportId = report.id;
-      EdiscoveryService.downloadReport(report).then(function (res) {}).finally(function (res) {
-        $scope.downloadReportId = undefined;
-      });
+      EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
+        .finally(function (res) {
+          $scope.downloadReportId = undefined;
+        });
     }
 
     function cancelReport(id) {
@@ -73,7 +77,7 @@
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       rowHeight: 50,
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
@@ -93,13 +97,6 @@
             pollAvalonReport();
           }
         });
-        // gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-        //   if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-        //     EdiscoveryService.getReport(row.entity.id).then(function (report) {
-        //       row.entity = report;
-        //     });
-        //   }
-        // });
         gridApi.core.on.rowsRendered($scope, function () {
           if (avalonPollerCancelled) {
             if (!avalonRefreshPoller) {
