@@ -181,7 +181,7 @@ gulp.task('karma-config-watch', function () {
 
 gulp.task('copy:changed-files', function () {
   messageLogger('Copying changed files', changedFiles);
-  var f = filter(['*'].concat(config.appFiles.notJsSpec),{restore:true});
+  var f = filter(['*','**/*'].concat(config.appFiles.notJsSpec),{restore:true});
   return gulp
     .src(changedFiles, {
       base: config.app
