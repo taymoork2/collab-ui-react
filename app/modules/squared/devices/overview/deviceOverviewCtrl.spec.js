@@ -46,7 +46,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     expect(controller).toBeDefined();
   });
 
-  fdescribe('Tags', function () {
+  describe('Tags', function () {
     it('should ignore only whitespace tags', function () {
       controller.newTag = ' ';
       controller.addTag();
