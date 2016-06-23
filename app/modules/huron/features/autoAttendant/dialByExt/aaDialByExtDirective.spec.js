@@ -14,6 +14,7 @@ describe('Directive: aaDialByExt', function () {
   var schedule = 'schedule';
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;

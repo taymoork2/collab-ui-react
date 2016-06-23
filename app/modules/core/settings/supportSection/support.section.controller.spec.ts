@@ -6,6 +6,7 @@ namespace globalsettings {
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
     beforeEach(angular.mock.module('WebExApp'));
     beforeEach(inject(dependencies));
     beforeEach(initSpies);

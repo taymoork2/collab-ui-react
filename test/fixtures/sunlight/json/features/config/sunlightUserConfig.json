@@ -1,0 +1,41 @@
+{
+  "usersDataArray": [{
+    "address": "vnvn@khkkk.com",
+    "name": ""
+  }],
+
+  "entitlements": [],
+
+  "non_sunlight_license": {
+    "id": "MS_deac6827-4c8b-4040-b9c4-31445fd698b0",
+    "idOperation": "ADD",
+    "properties": {}
+  },
+
+  "sunlight_license": {
+    "id": "CDC_32cd3b68-662f-41f8-b1cb-f4de77335296",
+    "idOperation": "ADD",
+    "properties": {}
+  },
+
+  "onboard_success_response": {
+    "userResponse": [{
+      "uuid": "f0b91ac9-8ba4-4607-afab-03fbc89b25fd",
+      "email": "vnvn@khkkk.com",
+      "displayName": "",
+      "status": 200,
+      "httpStatus": 201
+    }],
+    "status": 200
+  },
+
+  "onboard_failure_response": {
+    "userResponse": [{
+      "email": "vnvn@khkkk.com",
+      "status": 403,
+      "message": "400081",
+      "httpStatus": 403
+    }],
+    "status": 200
+  }
+}

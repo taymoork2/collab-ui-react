@@ -14,6 +14,7 @@ describe('Controller: ServiceSetup', function () {
   }];
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _FeatureToggleService_, _Authinfo_) {

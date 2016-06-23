@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -13,7 +13,8 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.downloadReport = EdiscoveryService.downloadReport;
+    $scope.downloadReport = downloadReport;
+    $scope.downloadReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -23,14 +24,29 @@
     $scope.limit = 10;
 
     var avalonPoller = $interval(pollAvalonReport, 5000);
+    var avalonPollerCancelled = false;
+    var avalonRefreshPoller = null;
+
+    function cancelAvalonPoller() {
+      $interval.cancel(avalonPoller);
+      avalonPollerCancelled = true;
+    }
 
     $scope.$on('$destroy', function () {
       $interval.cancel(avalonPoller);
+      $interval.cancel(avalonRefreshPoller);
     });
 
     vm.reports = [];
 
     pollAvalonReport();
+
+    function downloadReport(report) {
+      $scope.downloadReportId = report.id;
+      EdiscoveryService.downloadReport(report).then(function (res) {}).finally(function (res) {
+        $scope.downloadReportId = undefined;
+      });
+    }
 
     function cancelReport(id) {
       EdiscoveryService.patchReport(id, {
@@ -55,18 +71,36 @@
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          $interval.cancel(avalonPoller);
+          //$interval.cancel(avalonPoller);
+          cancelAvalonPoller();
           if (vm.moreReports) {
             $scope.offset = $scope.offset + $scope.limit;
             vm.concat = true;
             pollAvalonReport();
           }
         });
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-            EdiscoveryService.getReport(row.entity.id).then(function (report) {
-              row.entity = report;
-            });
+        // gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+        //   if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
+        //     EdiscoveryService.getReport(row.entity.id).then(function (report) {
+        //       row.entity = report;
+        //     });
+        //   }
+        // });
+        gridApi.core.on.rowsRendered($scope, function () {
+          if (avalonPollerCancelled) {
+            if (!avalonRefreshPoller) {
+              avalonRefreshPoller = $interval(function () {
+                _.each(vm.reports, function (r, index) {
+                  if (r.state === 'RUNNING') {
+                    EdiscoveryService.getReport(r.id).then(function (updatedReport) {
+                      r = updatedReport;
+                      vm.reports[index] = updatedReport;
+                      gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
+                    });
+                  }
+                });
+              }, 3000);
+            }
           }
         });
       },

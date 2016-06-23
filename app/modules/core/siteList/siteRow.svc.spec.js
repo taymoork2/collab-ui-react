@@ -192,6 +192,7 @@ describe('Service: WebExSiteRowService', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {

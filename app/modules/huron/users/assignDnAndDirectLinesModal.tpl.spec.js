@@ -14,6 +14,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
   beforeEach(inject(dependencies));
   beforeEach(initDependencySpies);
@@ -69,6 +70,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
     spyOn(Userservice, 'onboardUsers');
