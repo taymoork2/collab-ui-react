@@ -344,7 +344,7 @@ describe('Controller: TrialAddCtrl', function () {
   describe('Start a new trial with error', function () {
     var startTrialSpy;
     beforeEach(function () {
-      startTrialSpy = spyOn(TrialService, "startTrial").and.returnValue($q.reject({
+      startTrialSpy = spyOn(TrialService, 'startTrial').and.returnValue($q.reject({
         data: {
           message: 'An error occurred'
         }

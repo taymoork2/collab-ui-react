@@ -80,12 +80,12 @@
             error: 'trialModal.errorServerDown'
           };
         } else {
-          if (obj.isExist === "true") {
+          if (obj.isExist === 'true') {
             return {
               error: 'trialModal.errorInUse'
             };
-          } else if (obj.isValid === "false") {
-            if (key === "organizationName") {
+          } else if (obj.isValid === 'false') {
+            if (key === 'organizationName') {
               return {
                 error: 'trialModal.errorInvalidName'
               };

@@ -85,7 +85,7 @@
     }
 
     function errorMessage(key) {
-      if (angular.isUndefined(vm[key]) || vm[key] === "") {
+      if (angular.isUndefined(vm[key]) || vm[key] === '') {
         vm[key] = 'trialModal.errorFailSafe';
       }
       return $translate.instant(vm[key]);
