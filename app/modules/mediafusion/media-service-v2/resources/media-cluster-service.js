@@ -260,7 +260,7 @@
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http
-        .post(url, payLoad);
+        .patch(url, payLoad);
     }
 
     function moveV2Host(connectorId, fromCluster, toCluster) {
