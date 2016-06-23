@@ -18,6 +18,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var unlicensedUsers;
   var allLicensesData;
   var $controller;
+  var getCareServices;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
@@ -67,6 +68,7 @@ describe('OnboardCtrl: Ctrl', function () {
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
+    getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -648,7 +650,7 @@ describe('OnboardCtrl: Ctrl', function () {
             cmrLic = true; // check CMR license
           });
           $scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked 
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
         });
       });
     });
@@ -663,6 +665,45 @@ describe('OnboardCtrl: Ctrl', function () {
           });
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
         });
+      });
+    });
+  });
+
+  describe('With assigning care licenses', function () {
+    describe('Check if single licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
+        $stateParams.currentUser = {
+          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767']
+        };
+        initController();
+      });
+
+      it('should have care license', function () {
+        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect($scope.radioStates.careRadio).toEqual(false);
+      });
+    });
+
+    describe('Check if multiple licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
+        $stateParams.currentUser = {
+          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767'],
+          entitlements: ['cloud-contact-center']
+        };
+        initController();
+      });
+
+      it('should call getAccountLicenses correctly', function () {
+        var licenseFeatures = $scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('CDC_24b7d249-d452-47e5-b484-651210e55767');
+        expect(licenseFeatures[0].idOperation).toEqual('ADD');
+        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect($scope.radioStates.careRadio).toEqual(true);
       });
     });
   });

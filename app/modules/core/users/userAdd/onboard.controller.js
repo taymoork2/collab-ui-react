@@ -885,10 +885,14 @@
         // Care: straightforward license, for now
         var careIndex = $scope.radioStates.careRadio ? 1 : 0;
         var selCareService = $scope.careFeatures[careIndex];
-        if ('licenseId' in selCareService.license) {
-          licenseList.push(new LicenseFeature(selCareService.license.licenseId, true));
-        } else if ((action === 'patch') && ($scope.careFeatures.length > 1) && ('licenseId' in $scope.careFeatures[1].license)) {
-          licenseList.push(new LicenseFeature($scope.careFeatures[1].license.licenseId, false));
+        var licenseId = _.get(selCareService, 'license.licenseId', null);
+        if (licenseId) {
+          licenseList.push(new LicenseFeature(licenseId, true));
+        } else if (action === 'patch') {
+          licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
+          if (licenseId) {
+            licenseList.push(new LicenseFeature(licenseId, false));
+          }
         }
       }
 

@@ -92,9 +92,9 @@
       <div id="communication" class="small-4 columns column-paid">
         <div class="item-license" translate="onboardModal.call"></div>
         <div class="entitle-check-grp"
-        ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)"
-        ng-repeat="commFeature in communicationFeatures"
-        ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
+             ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)"
+             ng-repeat="commFeature in communicationFeatures"
+             ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
           <div class="ckbx">
             <cs-checkbox ckid="{{commFeature.license.licenseId}}" ng-if="!disableCommFeatureAssignment()" ng-model="radioStates.commRadio" label="{{commFeature.label}}" isDisabled="hybridCallServiceAware"></cs-checkbox>
             <div ng-if="disableCommFeatureAssignment()">

@@ -13,9 +13,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
   beforeEach(module('Core'));
-
   beforeEach(module('Huron'));
-
   beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {

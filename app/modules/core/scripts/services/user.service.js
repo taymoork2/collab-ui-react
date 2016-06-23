@@ -25,6 +25,11 @@
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       isInvitePending: isInvitePending
     };
+    var _helpers = {
+      isSunlightUser: isSunlightUser,
+      getUserLicence: getUserLicence,
+      createUserData: createUserData
+    };
 
     return service;
 
@@ -414,8 +419,6 @@
         });
         onboardUsersPromise.then(function (response) {
           checkAndOnboardSunlightUser(response.data.userResponse, userPayload.users);
-        }, function (reason) {
-          Log.debug("onboardUsersPromise reason :" + JSON.stringify(reason));
         });
         return onboardUsersPromise;
       } else {
@@ -428,9 +431,9 @@
         return response.status === 200;
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
-        var userLicenses = getUserLicence(userResponseSuccess.email, users);
-        if (isSunlightUser(userLicenses)) {
-          var userData = createUserData(userResponseSuccess);
+        var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
+        if (_helpers.isSunlightUser(userLicenses)) {
+          var userData = _helpers.createUserData(userResponseSuccess);
           SunlightConfigService.createUserInfo(userData)
             .then(function (response) {
               Log.debug("SunlightConfigService.createUserInfo success response :" + JSON.stringify(response));
@@ -448,7 +451,7 @@
       userData.alias = userResponse.displayName;
       userData.teamId = Authinfo.getOrgId();
       userData.attributes = [];
-      userData.media = ["chat"];
+      userData.media = ['chat'];
       userData.role = 'user';
       return userData;
     }

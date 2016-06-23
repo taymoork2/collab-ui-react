@@ -60,9 +60,7 @@ describe('Controller: Customer Reports Ctrl', function () {
   }];
 
   beforeEach(module('Core'));
-
   beforeEach(module('Huron'));
-
   beforeEach(module('Sunlight'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {

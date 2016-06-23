@@ -10,8 +10,8 @@
 
   /* @ngInject */
   function sunlightConfigService($http, UrlConfig, Authinfo) {
-    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/user";
-    var sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/organization/" + Authinfo.getOrgId() + "/template";
+    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/user';
+    var sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/template';
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo,
