@@ -1193,6 +1193,7 @@
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
+      "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
@@ -2805,7 +2806,16 @@
       "utilizationTitle": "Percentage Utilization",
       "utilizationDescription": "Description text for Percentage utilization should be displayed here.",
       "peakutilization": "Peak Utilization",
-      "averageutilization": "Average Utilization"
+      "averageutilization": "Average Utilization",
+      "clusteravailability": "Cluster Availability",
+      "peakUtilizationDescription": "Proportion of time spent over utilization high-watermark",
+      "avgerageUtilizationDescription": "Description for percentage capacity/ average utilization should come here",
+      "clusterAvailabilityDescription": "Description for percentage availability for clusters should come here",
+      "overallUtilizationGraphError": "There was an error while loading detailed utilization data",
+      "overallCallVolumeGraphError": "There was an error while loading total number of calls",
+      "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
+      "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
+      "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -2847,13 +2857,17 @@
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
-      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "releaseChannel": "Release channel",
+      "doYouStillWantToContinue": "Do you still want to continue ?",
+      "youHostNoAvailable": "Your host will no longer be available in future"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}."
+      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "moveHost": "Move Host"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2883,7 +2897,10 @@
       "back": "Back",
       "errorTitle": "Registration Error",
       "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again."
+      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
+      "titleV2": "Register New Hybrid Media Node",
+      "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
