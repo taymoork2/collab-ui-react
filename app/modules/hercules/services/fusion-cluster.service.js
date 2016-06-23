@@ -69,7 +69,9 @@
     }
 
     function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, 'state', 'fused');
+      return _.filter(clusters, function (cluster) {
+        return cluster.state ? cluster.state === 'fused' : true;
+      });
     }
 
     function extractDataFromResponse(res) {
