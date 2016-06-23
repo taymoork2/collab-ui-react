@@ -2,7 +2,7 @@
 
   <cs-page-header title="globalSettings.pageTitle"></cs-page-header>
 
-  <form class="cs-form" action="">
+  <div class="cs-form">
     <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
       <security-setting></security-setting>
     </setting-section>
@@ -34,5 +34,5 @@
     <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
       <retention-setting></retention-setting>
     </setting-section>
-  </form>
+  </div>
 </div>
