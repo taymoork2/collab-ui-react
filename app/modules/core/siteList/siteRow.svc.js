@@ -155,7 +155,7 @@
           if (isNewSiteUrl) {
 
             conferenceService.isCI = true;
-            
+
             conferenceService.showCSVInfo = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
