@@ -1508,7 +1508,9 @@
       "size": "Size",
       "viewDetails": "View Details",
       "createNew": "Create new report with same query parameters",
-      "failed": "Report failed"
+      "failed": "Report failed",
+      "anotherDownloadInProgress": "Another download is in progress",
+      "waitingForDownloadDialog": "Waiting for download dialog"
     },
     "tabs": {
       "search": "Search",
