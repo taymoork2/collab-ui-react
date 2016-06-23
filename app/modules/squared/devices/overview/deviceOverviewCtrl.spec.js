@@ -127,16 +127,20 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
     });
 
-    it('should ignore keys other than Enter', function() {
+    it('should ignore keys other than Enter', function () {
       spyOn(controller, 'addTag');
-      controller.addTagOnEnter({keyCode: 12});
+      controller.addTagOnEnter({
+        keyCode: 12
+      });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
     });
 
-    it('should call addTag on Enter', function() {
+    it('should call addTag on Enter', function () {
       spyOn(controller, 'addTag');
-      controller.addTagOnEnter({keyCode: 13});
+      controller.addTagOnEnter({
+        keyCode: 13
+      });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
     });
