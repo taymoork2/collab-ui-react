@@ -1492,7 +1492,7 @@
       "failure": "Report generation failed",
       "tryAgain": "Try again or contact Customer Support",
       "reportStatus": "Report Status",
-      "reportSize": "Total Size",
+      "reportSize": "Report Size",
       "takeMeToReports": "Take Me to Reports",
       "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
@@ -1507,7 +1507,11 @@
       "state": "State",
       "actions": "Actions",
       "noReportsFound": "No Reports Found",
-      "noReportsTip": "Click the Search tab to search activities and create reports"
+      "noReportsTip": "Click the Search tab to search activities and create reports",
+      "size": "Size",
+      "viewDetails": "View Details",
+      "createNew": "Create new report with same query parameters",
+      "failed": "Report failed"
     },
     "tabs": {
       "search": "Search",
