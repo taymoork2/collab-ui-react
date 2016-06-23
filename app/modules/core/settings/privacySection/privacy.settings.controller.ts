@@ -1,8 +1,7 @@
 namespace globalsettings {
   export class PrivacySettingController {
     private _allowReadOnlyAccess:boolean = undefined;
-    sendUsageData:boolean = undefined;
-    showAllowReadOnlyAccessCheckbox:boolean = true;
+    disableAllowReadOnlyAccessCheckbox:boolean = true;
     private orgId;
     private _allowCrashLogUpload = false;
 
@@ -22,6 +21,7 @@ namespace globalsettings {
       if (success) {
         if (!_.isUndefined(settings.allowReadOnlyAccess)) {
           this._allowReadOnlyAccess = settings.allowReadOnlyAccess;
+          this.disableAllowReadOnlyAccessCheckbox = false;
         }
 
         if (!_.isUndefined(settings.allowCrashLogUpload)) {

@@ -6,6 +6,7 @@
 
     beforeEach(module('Squared'));
     beforeEach(module('Huron'));
+    beforeEach(module('Sunlight'));
 
     beforeEach(inject(function (_$rootScope_, _$controller_, _Userservice_, _Authinfo_) {
       $rootScope = _$rootScope_;

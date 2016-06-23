@@ -323,15 +323,37 @@
       vertical-align: middle;
       top: 5px;
       padding-right: 1rem;
-      color: $gray-light-1
+      color: $gray-light-1;
     }
-    .ui-grid-row-selected {
-      .action-icons:hover {
-        color: $color-primary-lighter;
-      }
+    .action-icons.light {
+      color: $gray-light-3;
     }
     .action-icons:hover {
       color: $color-primary-base;
+    }
+    .download-wait {
+      position: relative;
+      .icon-download {
+        color: $color-primary-darker;
+      }
+      .icon-spinner {
+        position: absolute;
+        top: -3px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
+    }
+    .cancel-wait {
+      position: relative;
+      .icon-exit {
+        color: $color-primary-darker;
+      }
+      .icon-spinner {
+        position: absolute;
+        top: -5px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
     }
     .column-air {
       margin-left: 6.3rem;
@@ -372,7 +394,10 @@
       font-size: 1.0rem;
       color: $color-attention-base;
       vertical-align: middle;
-      padding-right: 0.5rem;
+      padding-right: 0.3rem;
+    }
+    span.progressbar-progress {
+      color: $gray-dark-1
     }
   }
 }

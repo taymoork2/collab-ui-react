@@ -125,7 +125,7 @@
                 <div class="columns small-12 medium-12 large-8">
                   <div class="result-section">
                     <h6 translate="ediscovery.search.reportSize"></h6>
-                    <span>{{ediscoverySearchCtrl.prettyPrintBytes(ediscoverySearchCtrl.report.sizeInBytes)}}</span>
+                    <span>{{ediscoverySearchCtrl.report.sizeInBytes | bytesFilter : 2 }}</span>
                   </div>
                 </div>
               </div>

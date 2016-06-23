@@ -62,8 +62,8 @@
               ng-model="deviceOverview.newTag"
               ng-show="deviceOverview.isAddingTag"
               focus-on="deviceOverview.isAddingTag"
-              ng-blur="deviceOverview.isAddingTag = false"
-              ng-keyup="deviceOverview.addTag($event)" />
+              ng-blur="deviceOverview.addTag()"
+              ng-keyup="deviceOverview.addTagOnEnter($event)" />
         </div>
       </div>
     </cs-sp-section>
@@ -167,7 +167,7 @@
               options="deviceOverview.timeZoneOptions"
               is-disabled="deviceOverview.updatingTimeZone"
               labelfield="label"
-              valuefield="value"
+              valuefield="id"
               on-change-fn="deviceOverview.saveTimeZoneAndWait()"
               input-placeholder="deviceOverview.searchTimeZonePlaceholder"
               filter="true">

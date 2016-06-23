@@ -29,6 +29,7 @@ describe('Controller: AASayMessageCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
     $rootScope = _$rootScope_;

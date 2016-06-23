@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -13,7 +13,8 @@
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.downloadReport = EdiscoveryService.downloadReport;
+    $scope.downloadReport = downloadReport;
+    $scope.downloadReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -21,29 +22,62 @@
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+    $scope.reportsBeingCancelled = [];
 
     var avalonPoller = $interval(pollAvalonReport, 5000);
+    var avalonPollerCancelled = false;
+    var avalonRefreshPoller = null;
+
+    function cancelAvalonPoller() {
+      $interval.cancel(avalonPoller);
+      avalonPollerCancelled = true;
+    }
 
     $scope.$on('$destroy', function () {
       $interval.cancel(avalonPoller);
+      $interval.cancel(avalonRefreshPoller);
     });
 
     vm.reports = [];
 
     pollAvalonReport();
 
+    function downloadReport(report) {
+      $scope.downloadReportId = report.id;
+      EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
+        .finally(function (res) {
+          $scope.downloadReportId = undefined;
+        });
+    }
+
     function cancelReport(id) {
+      if ($scope.reportsBeingCancelled[id]) {
+        return;
+      }
+      $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
+      }, function (err) {
+        if (err.status !== 410) {
+          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+        }
+      }).finally(function () {
+        delete $scope.reportsBeingCancelled[id];
       });
     }
 
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       rowHeight: 50,
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
@@ -55,18 +89,29 @@
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          $interval.cancel(avalonPoller);
+          //$interval.cancel(avalonPoller);
+          cancelAvalonPoller();
           if (vm.moreReports) {
             $scope.offset = $scope.offset + $scope.limit;
             vm.concat = true;
             pollAvalonReport();
           }
         });
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-            EdiscoveryService.getReport(row.entity.id).then(function (report) {
-              row.entity = report;
-            });
+        gridApi.core.on.rowsRendered($scope, function () {
+          if (avalonPollerCancelled) {
+            if (!avalonRefreshPoller) {
+              avalonRefreshPoller = $interval(function () {
+                _.each(vm.reports, function (r, index) {
+                  if (r.state === 'RUNNING') {
+                    EdiscoveryService.getReport(r.id).then(function (updatedReport) {
+                      r = updatedReport;
+                      vm.reports[index] = updatedReport;
+                      gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
+                    });
+                  }
+                });
+              }, 3000);
+            }
           }
         });
       },

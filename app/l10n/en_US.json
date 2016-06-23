@@ -155,11 +155,14 @@
     "msgFree": "Message Free",
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
+    "careFree": "Care Free",
+    "none": "None",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Call",
+    "paidCare": "Care Digital Channel",
     "paidContactCenter": "Chat, Email, Voice",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
@@ -724,6 +727,7 @@
     "last": "Last"
   },
   "common": {
+    "update": "Update",
     "delete": "Delete",
     "disable": "Disable",
     "cancel": "Cancel",
@@ -1447,8 +1451,7 @@
     "heading": "Search Spark Room Activity",
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search data by room ID",
-    "searchError": "Your search for '{{roomId}}' returned no matches",
-    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+    "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1493,9 +1496,13 @@
       "reportStatus": "Report Status",
       "reportSize": "Report Size",
       "takeMeToReports": "Take Me to Reports",
+      "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
       "runFailed": "Failed to start report",
-      "createReportFailed": "Failed to initialize the report"
+      "createReportFailed": "Failed to initialize the report",
+      "roomNotFound": "Your search for '{{roomId}}' returned no matches",
+      "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+      "roomLookupError": "An unexpected error occurred when searching for the room"
     },
     "reportsList": {
       "name": "Name",
@@ -1508,8 +1515,10 @@
       "noReportsTip": "Click the Search tab to search activities and create reports",
       "size": "Size",
       "viewDetails": "View Details",
-      "createNew": "Create new report with same query parameters",
-      "failed": "Report failed"
+      "createNew": "Create New Report",
+      "failed": "Report failed",
+      "anotherDownloadInProgress": "Another download is in progress",
+      "waitingForDownload": "Downloading, please wait..."
     },
     "tabs": {
       "search": "Search",
@@ -3502,7 +3511,7 @@
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
-    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file.",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a CSV file.",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -4107,21 +4116,26 @@
       "title": "Authentication",
       "subsectionLabel": "Single Sign-On"
     },
-    "dataPolicy": {
-      "title": "Data Policy",
-      "subsectionLabel": "Data Retention (after deletion of org)",
-      "subsectionDescription": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
-      "retentionOption1": "Delete immediately",
-      "retentionOption2": "Keep for 1 year",
-      "retentionOption3": "Keep forever"
+    "retention": {
+      "title": "Retention",
+      "subsectionLabel": "Spark Message Data",
+      "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system.",
+      "retentionOption1": "90 days",
+      "retentionOption2": "180 days",
+      "retentionOption3": "1 year",
+      "retentionOption4": "2 years",
+      "retentionOption5": "Keep until storage is full (Oldest will be deleted first)",
+      "modalTitle": "Update Retention Time",
+      "modalBody1": "Are you sure you want to update the retention time for Spark Message to a shorter period?",
+      "modalBody2": "Any additional data older than the new time period will be deleted.",
+      "notificationSuccess": "Settings successfully updated.",
+      "notificationFailure": "Failed to change retention period setting."
     },
     "privacy": {
       "title": "Privacy",
       "supportAccessHeader": "Support Access",
       "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
-      "usageDataHeader": "Usage Data Sent to Cisco Partner",
-      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
       "crashReportTitle": "Automatic Crash Reporting",
       "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",

@@ -6,7 +6,7 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
+  function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService, AAScrollBar) {
 
     var vm = this;
     vm.aaModel = {};
@@ -39,6 +39,7 @@
         vm.ui = AAUiModelService.getUiModel();
         $scope.$broadcast('ScheduleChanged');
         setUpStyle();
+        AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.SHORT); // delay for transitions to finish
       });
     }
 

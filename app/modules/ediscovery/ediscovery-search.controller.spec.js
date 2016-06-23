@@ -105,7 +105,7 @@ describe('Controller: EdiscoverySearchController', function () {
     it('found no room', function () {
       sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
       var promise = $q.reject({
-        "status": "404"
+        "status": 404
       });
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
 
@@ -115,8 +115,46 @@ describe('Controller: EdiscoverySearchController', function () {
       httpBackend.flush();
 
       expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
-      expect(ediscoverySearchController.error).toEqual("ediscovery.searchError");
+      expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
       expect(ediscoverySearchController.roomInfo).toBeNull();
+
+    });
+
+    it('invalid room id', function () {
+      sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
+      var promise = $q.reject({
+        "status": 400
+      });
+      EdiscoveryService.getAvalonRoomInfo.returns(promise);
+
+      ediscoverySearchController.searchForRoom("myRoomId");
+      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+      httpBackend.flush();
+
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
+      expect(ediscoverySearchController.error).toEqual("ediscovery.search.invalidRoomId");
+      expect(ediscoverySearchController.roomInfo).toBeNull();
+
+    });
+
+    it('failed with an unexpected error', function () {
+      sinon.stub(Notification, "error");
+      sinon.stub(EdiscoveryService, 'getAvalonRoomInfo');
+      var promise = $q.reject({
+        "status": 500
+      });
+      EdiscoveryService.getAvalonRoomInfo.returns(promise);
+
+      ediscoverySearchController.searchForRoom("myRoomId");
+      expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
+      httpBackend.flush();
+
+      expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
+      expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
+      expect(ediscoverySearchController.roomInfo).toBeNull();
+      expect(Notification.error.callCount).toBe(1);
 
     });
   });

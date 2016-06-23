@@ -1,31 +1,30 @@
-<div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents" ng-switch on="row.entity.state">
-  <span class="fit-in-cell" ng-switch-when="RUNNING" >
+<div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents">
+  <span class="fit-in-cell" ng-if="!row.entity.isDone">
      <div class="progressbar-info">
-       <span>{{'ediscovery.reportStates.RUNNING' | translate}}...</span>
+       <span>{{'ediscovery.reportStates.' + row.entity.state | translate}}...</span>
        <span class="progressbar-progress">{{row.entity.progress}}%</span>
      </div>
      <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
   </span>
-  <span class="fit-in-cell" ng-switch-when="CREATED" >
-     <div class="progressbar-info">
-       <span>{{'ediscovery.reportStates.CREATED' | translate}}...</span>
-       <span class="progressbar-progress">0</span>
-     </div>
-     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
-  </span>
-
-  <div ng-switch-when="FAILED" class="fit-in-cell"  tooltip-placement="left" cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
-    <i class="icon icon-warning"></i> <span translate="ediscovery.reportsList.failed"></span>
+  <div ng-if="row.entity.isDone" ng-switch on="row.entity.state">
+    <div ng-switch-when="FAILED"
+         class="fit-in-cell"
+         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+         cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
+      <i class="icon icon-warning"></i> <span translate="ediscovery.reportsList.failed"></span>
+    </div>
+    <span ng-switch-default class="fit-in-cell">
+      {{'ediscovery.reportStates.' + row.entity.state | translate}}
+    </span>
   </div>
-
-  <span class="fit-in-cell" ng-switch-default>
-    {{'ediscovery.reportStates.' + row.entity.state | translate}}
-  </span>
 </div>
 
-<div ng-if="row.entity.timeoutDetected" class="ui-grid-cell-contents" tooltip-placement="left" cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
+<div ng-if="row.entity.timeoutDetected"
+     class="ui-grid-cell-contents"
+     tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+     cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
   <div class="progressbar-info">
-    <span>{{'ediscovery.timeout' | translate}}</span>
+    <i class="icon icon-warning"></i> <span>{{'ediscovery.timeout' | translate}}</span>
     <span class="progressbar-progress">{{row.entity.progress}}%</span>
   </div>
   <progressbar type="danger" class="progress-striped" value="row.entity.progress"></progressbar>
