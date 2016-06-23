@@ -14,6 +14,6 @@ namespace globalsettings {
       hideUsagePart: '<'
     },
     controller: 'PrivacySettingController as vm',
-    templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html',
+    templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html'
   });
 }

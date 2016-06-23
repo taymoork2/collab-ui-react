@@ -11,7 +11,6 @@
     left: 0px;
     top: 3.3rem;
     height: 3rem;
-    z-index: 9999;
     text-align: left;
     font-size: 1rem;
     padding-left: 6.3rem;
@@ -83,15 +82,16 @@
     height: 100vh;
     background-color: $brand-white;
     padding-top: 9rem;
-    @media only screen and (max-height: 800px) {
+    @media only screen and (max-height: 850px) {
       padding-top: 7rem;
     }
     div.search-result-area {
       background-color: $gray-light-4;
       min-height: calc(100% - 145px);
       padding-top: 2.25rem;
-      @media only screen and (max-width: 640px) {
+      @media only screen and (max-height: 850px) {
         padding-top: 1rem;
+        min-height: calc(100% - 113px);
       }
     }
     div.search-error {
@@ -106,7 +106,7 @@
     .ediscovery-search-bar {
       text-align: center;
       padding-bottom: 3rem;
-      @media only screen and (max-width: 640px) {
+      @media only screen and (max-height: 850px) {
         padding-bottom: 1rem;
       }
       .pointer {
@@ -138,6 +138,9 @@
         position: relative;
         margin-top: 1rem;
         max-width: 100%;
+        @media only screen and (max-width: 640px) {
+          max-width: 90%;
+        };
         .searchInputForm {
           margin-bottom: 0;
         }
@@ -206,7 +209,12 @@
       .create-form {
         padding: 2.5rem 2.5rem 5rem 0;
         @media only screen and (max-width: 800px) {
-          padding: 1.25rem 1.25rem 2.5rem 0;
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+        @media only screen and (max-height: 850px) {
+          padding-top: 1.25rem;
+          padding-bottom: 2.5rem;
         }
         @media only screen and (max-width: 640px) {
           padding-left: 1rem;
@@ -249,12 +257,23 @@
         .result-section {
           padding-bottom: 1.5rem;
           h6 {
+            font-size: 14px;
             padding-bottom: 0.25rem;
-            color: $gray-light-1;
-            text-transform: uppercase;
+            color: $gray-base;
           }
           .progressbar-info {
             padding-top: 0.5rem;
+          }
+          i.icon-warning {
+            color: $color-attention-base
+          }
+          .report-timeout {
+            padding-top: 1rem;
+          }
+          .failure {
+            color: $gray-base;
+            font-size: 14px;
+            padding: 0;
           }
         }
         .input-section-last {
@@ -290,9 +309,6 @@
       }
     }
   }
-  .failure {
-    color: $color-negative-base;
-  }
   .ediscovery-reports {
     padding-top: 9.5rem;
     background-color: $gray-light-4;
@@ -306,13 +322,24 @@
       font-size: 1.1rem;
       vertical-align: middle;
       top: 5px;
+      padding-right: 1rem;
+      color: $gray-light-1
+    }
+    .ui-grid-row-selected {
+      .action-icons:hover {
+        color: $color-primary-lighter;
+      }
     }
     .action-icons:hover {
       color: $color-primary-base;
     }
     .column-air {
-      margin-left:2rem;
-      margin-right:2rem;
+      margin-left: 6.3rem;
+      margin-right: 6.3rem;
+      @media only screen and (max-width: 1280px) {
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
     }
     .search-spinner {
       position:relative;
@@ -341,6 +368,11 @@
     .progressbar-info {
       padding-top: 0.5rem;
     }
-
+    i.icon-warning {
+      font-size: 1.0rem;
+      color: $color-attention-base;
+      vertical-align: middle;
+      padding-right: 0.5rem;
+    }
   }
 }

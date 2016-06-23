@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function EdiscoveryMockData() {
+  function EdiscoveryMockData($interval) {
     var alive = false;
     var reports = [];
 
@@ -19,55 +19,80 @@
       "progress": 100,
       "type": "ROOM_QUERY",
       "roomQuery": {
-        "startDate": "2016-06-14T00:00:00.000Z",
+        "startDate": "2016-06-13T00:00:00.000Z",
         "endDate": "2016-06-14T00:00:00.000Z",
         "roomId": "396dbfb0-3238-11e6-9f82-c97e9d5e622d"
       },
       "runUrl": "https://avalon-integration.wbx2.com/avalon/api/v1/compliance/report/room",
       "url": "https://atlas-integration.wbx2.com/admin/api/v1/compliance/organizations/1eb65fdf-9643-417f-9974-ad72cae0e10f/reports/e882dd0e-b86c-4d93-9246-dd6d11ac3452",
-      "timeoutDetected": false,
-      "$$hashKey": "uiGrid-000B"
+      "timeoutDetected": false
     };
 
-    //TODO: Paging
-    function getReports(from, to) {
-      if (!alive) {
-        reports = createAllMockReports(10);
-        alive = true;
+    function getReport(id) {
+      var report = _.find(reports, function (report) {
+        return report.id === id;
+      });
+      if (report) {
+        return {
+          data: report,
+          status: 200
+        };
       } else {
-        _.each(reports, function (report) {
-          report.progress = report.progress + (Math.floor(Math.random() * 20));
-          if (report.progress > 0) {
-            report.state = "RUNNING";
-          }
-          if (report.progress >= 100) {
-            report.progress = 100;
-            report.state = "COMPLETED";
-          }
-        });
+        //TODO: Fix.
+        //console.log("Report not found is not handled.");
       }
-      return {
+    }
+
+    var totalNrOfReports = 100;
+
+    function updateReportsProgress() {
+      var staleIndex = 0;
+      _.each(reports, function (report) {
+        if (staleIndex++ % 5) {
+          report.progress = report.progress + Math.floor(Math.random() * 3) + 1;
+          report.lastUpdatedTime = moment().format();
+        }
+        if (report.progress > 0) {
+          report.state = "RUNNING";
+        }
+        if (report.progress >= 100) {
+          report.progress = 100;
+          report.state = "COMPLETED";
+        }
+      });
+    }
+
+    function getReports(offset, limit) {
+      if (!alive) {
+        reports = createAllMockReports(totalNrOfReports);
+        $interval(updateReportsProgress, 1000);
+        alive = true;
+      }
+      var reportSubset = reports.slice(offset, offset + limit);
+      var response = {
         data: {
-          reports: reports,
+          reports: _.cloneDeep(reportSubset),
           paging: {
-            count: 10,
-            limit: 10
+            count: totalNrOfReports,
+            limit: limit,
+            next: "n.a", // not applicable for mock
+            offset: offset
           }
         },
         status: 200
       };
+      return response;
     }
 
     function createAllMockReports(nrOfReports) {
       var reports = [];
       for (var i = 0; i < nrOfReports; i++) {
+        report.id = "e882dd0e-b86c-4d93-9246-" + i;
         report.displayName = "Mock report #" + i;
-        report.roomQuery.startDate = moment().subtract(24, 'hours').format();
-        report.roomQuery.endDate = moment().format();
-        report.lastUpdatedTime = moment();
+        report.lastUpdatedTime = new Date().getTime();
         if (Math.floor(Math.random() > 0.5)) {
           report.progress = 0;
-          report.state = "CREATED";
+          report.state = "ACCEPTED";
         } else {
           report.progress = Math.floor(Math.random() * 90) + 1;
           report.state = "RUNNING";
@@ -80,6 +105,7 @@
 
     return {
       getReports: getReports,
+      getReport: getReport
     };
   }
 
