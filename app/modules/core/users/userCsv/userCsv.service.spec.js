@@ -6,7 +6,7 @@ describe('Controller: UserCsvService', function () {
   var errorMsg = 'Error message.';
   var trackingId = ' TrackingID: ';
   var dummyId = 'TrackingID';
-  var email = 'dummyEmail@fakeAccount.com'
+  var email = 'dummyEmail@fakeAccount.com';
   var headerFuncOne = function (id) {
     return null;
   };
@@ -167,7 +167,7 @@ describe('Controller: UserCsvService', function () {
       var noResponseAndHeader = UserCsvService.addErrorWithTrackingID(errorMsg, null, headerFuncTwo);
 
       expect(responseWithHeader).toEqual(errorMsg + trackingId + dummyId);
-      expect(noResponseAndHeader).toEqual(errorMsg + trackingId  + dummyId);
+      expect(noResponseAndHeader).toEqual(errorMsg + trackingId + dummyId);
     });
   });
 });
