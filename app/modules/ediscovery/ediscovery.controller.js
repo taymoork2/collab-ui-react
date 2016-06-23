@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController(Notification, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -22,6 +22,7 @@
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+    $scope.reportsBeingCancelled = [];
 
     var avalonPoller = $interval(pollAvalonReport, 5000);
     var avalonPollerCancelled = false;
@@ -53,10 +54,23 @@
     }
 
     function cancelReport(id) {
+      if ($scope.reportsBeingCancelled[id]) {
+        return;
+      }
+      $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
+      }, function (err) {
+        if (err.status !== 410) {
+          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+        }
+      }).finally(function () {
+        delete $scope.reportsBeingCancelled[id];
       });
     }
 

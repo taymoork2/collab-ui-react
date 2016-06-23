@@ -1511,7 +1511,7 @@
       "noReportsTip": "Click the Search tab to search activities and create reports",
       "size": "Size",
       "viewDetails": "View Details",
-      "createNew": "Create new report with same query parameters",
+      "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
       "waitingForDownload": "Waiting for download, please wait."
