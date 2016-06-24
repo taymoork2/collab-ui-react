@@ -1421,8 +1421,8 @@
         "hosts": "{count, plural, one{# 個主機} other{# 個主機}}",
         "settings": "設定",
         "all": "全部",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }

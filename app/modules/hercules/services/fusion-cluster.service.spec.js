@@ -56,6 +56,24 @@ describe('Service: FusionClusterService', function () {
         });
     });
 
+    // state (fused, defused, etc.) will soon be removed from the API reponse!
+    // the API will only return fused clusters
+    it('should not crash if clusters do not have a state', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            connectors: []
+          }, {
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(2);
+        });
+    });
+
     it('should add a type property to clusters', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
