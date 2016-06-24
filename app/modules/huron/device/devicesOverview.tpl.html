@@ -8,11 +8,10 @@
 
 <div class="feature-list">
   <ul>
-
     <li class="feature" ng-repeat="device in ucDevices.devices">
         <a ng-click="ucDevices.showDeviceDetails(device)">
         <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
-        <span class="feature-name">{{device.product}}</span>
+        <span class="feature-name">{{device.product}}</span> <span class="feature-status" ng-if="device.kem.addonModule.length > 0">{{ :: 'deviceOverviewPage.kemAbbreviation' | translate }}: {{device.kem.addonModule.length}}</span>
         <i class="feature-arrow"></i>
       </a>
     </li>

@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService, KemService, CmiKemService) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -15,6 +15,15 @@
     deviceOverview.csdmTz = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
+    deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+    if (deviceOverview.isKEMAvailable) {
+      if (!_.has(deviceOverview.currentDevice, 'kem')) {
+        deviceOverview.currentDevice.kem = [];
+      }
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.addonModule.length);
+      deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+    }
+    deviceOverview.saveInProcess = false;
 
     FeatureToggleService.supports(FeatureToggleService.features.csdmTz).then(function (result) {
       deviceOverview.csdmTz = result;
@@ -247,5 +256,47 @@
         }, 1000);
       });
     }
+
+    deviceOverview.save = function () {
+      deviceOverview.saveInProcess = true;
+      var device = deviceOverview.currentDevice;
+      var previousKemNumber = device.kem.addonModule.length;
+      var newKemNumber = deviceOverview.kemNumber.value;
+      var diff = newKemNumber - previousKemNumber;
+      var promiseList = [];
+      if (diff > 0) {
+        _.times(diff, function (n) {
+          promiseList.push(CmiKemService.createKEM(device.cisUuid, device.huronId, previousKemNumber + 1 + n));
+        });
+      } else {
+        _.times(-diff, function (n) {
+          var module = _.findWhere(device.kem.addonModule, {
+            index: (previousKemNumber - n)
+          });
+          promiseList.push(CmiKemService.deleteKEM(device.cisUuid, device.huronId, module.id));
+        });
+      }
+      promiseList.push(CmiKemService.getKEM(device.cisUuid, device.huronId));
+      $q.all(promiseList).then(
+        function (data) {
+          device.kem = data[data.length - 1];
+          deviceOverview.saveInProcess = false;
+        },
+        function () {
+          deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
+          Notification.error($translate.instant('deviceOverviewPage.deviceChangesFailed'));
+          deviceOverview.saveInProcess = false;
+        }
+      );
+      deviceOverview.saveInProcess = false;
+      deviceOverview.form.$setPristine();
+      deviceOverview.form.$setUntouched();
+    };
+
+    deviceOverview.reset = function () {
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem);
+      deviceOverview.form.$setPristine();
+      deviceOverview.form.$setUntouched();
+    };
   }
 })();

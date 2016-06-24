@@ -30,7 +30,7 @@
     };
   }
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
@@ -69,7 +69,19 @@
         return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
-        }, function (err) {
+          _.forEach(deviceList, function (device) {
+            if (KemService.isKEMAvailable(device.product)) {
+              CmiKemService.getKEM(device.cisUuid, device.huronId).then(
+                function (data) {
+                  device.kem = data;
+                },
+                function () {
+                  //TODO: getKem fail
+                }
+              );
+            }
+          });
+        }, function () {
           loadedData = true;
         });
       });
