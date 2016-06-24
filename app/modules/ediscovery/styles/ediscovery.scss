@@ -331,14 +331,6 @@
     .action-icons:hover {
       color: $color-primary-base;
     }
-    .ui-grid-row-selected {
-      .action-icons:hover {
-        color: $color-primary-lighter;
-      }
-      .action-icons.light {
-        color: $color-primary-darker;
-      }
-    }
     .download-wait {
       position: relative;
       .icon-download {
@@ -349,7 +341,18 @@
         top: -3px;
         left: -7px;
         font-size: 1.8rem;
-        color:red;
+      }
+    }
+    .cancel-wait {
+      position: relative;
+      .icon-exit {
+        color: $color-primary-darker;
+      }
+      .icon-spinner {
+        position: absolute;
+        top: -5px;
+        left: -7px;
+        font-size: 1.8rem;
       }
     }
     .column-air {
@@ -391,7 +394,10 @@
       font-size: 1.0rem;
       color: $color-attention-base;
       vertical-align: middle;
-      padding-right: 0.5rem;
+      padding-right: 0.3rem;
+    }
+    span.progressbar-progress {
+      color: $gray-dark-1
     }
   }
 }

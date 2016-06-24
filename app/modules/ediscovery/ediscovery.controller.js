@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants) {
+  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -22,6 +22,7 @@
     $scope.oldOffset = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+    $scope.reportsBeingCancelled = [];
 
     var avalonPoller = $interval(pollAvalonReport, 5000);
     var avalonPollerCancelled = false;
@@ -43,23 +44,40 @@
 
     function downloadReport(report) {
       $scope.downloadReportId = report.id;
-      EdiscoveryService.downloadReport(report).then(function (res) {}).finally(function (res) {
-        $scope.downloadReportId = undefined;
-      });
+      EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
+        .finally(function (res) {
+          $scope.downloadReportId = undefined;
+        });
     }
 
     function cancelReport(id) {
+      if ($scope.reportsBeingCancelled[id]) {
+        return;
+      }
+      $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
+      }, function (err) {
+        if (err.status !== 410) {
+          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+        }
+      }).finally(function () {
+        delete $scope.reportsBeingCancelled[id];
       });
     }
 
     vm.gridOptions = {
       data: 'ediscoveryCtrl.reports',
       multiSelect: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       rowHeight: 50,
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
@@ -79,13 +97,6 @@
             pollAvalonReport();
           }
         });
-        // gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-        //   if (row.entity.state != 'COMPLETED' && row.entity.state != 'FAILED' && row.entity.state != 'ABORTED') {
-        //     EdiscoveryService.getReport(row.entity.id).then(function (report) {
-        //       row.entity = report;
-        //     });
-        //   }
-        // });
         gridApi.core.on.rowsRendered($scope, function () {
           if (avalonPollerCancelled) {
             if (!avalonRefreshPoller) {

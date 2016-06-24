@@ -108,7 +108,10 @@
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
     "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
-    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is On.",
+    "notSetupForManUserAddError": "{{email}} cannot be added. Unable to add users through this method because directory sync feature is on.",
+    "userExistsDomainClaimError": "{{email}} cannot be added.  Either the user already exists in another organization or would end up in another organization due to a pre-existing domain claim.  User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
+    "unableToMigrateError": "Unable to migrate user {{email}}.  This user's domain is not available for conversion; please submit a problem report.",
+    "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace"
   },
   "groupsPage": {
@@ -950,7 +953,6 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
-    "errorGettingTimeZoneToggle": "Failed to get atlasHuronDeviceTimeZone feature toggle",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
@@ -1448,8 +1450,7 @@
     "heading": "Search Spark Room Activity",
     "subheading": "Find all relevant data for a room",
     "searchTip": "Search data by room ID",
-    "searchError": "Your search for '{{roomId}}' returned no matches",
-    "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+    "unableToDownloadFile": "Unable to download file",
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future"
@@ -1497,7 +1498,10 @@
       "reportCancelled": "Report cancelled",
       "reportCancelFailed": "Unable to cancel report",
       "runFailed": "Failed to start report",
-      "createReportFailed": "Failed to initialize the report"
+      "createReportFailed": "Failed to initialize the report",
+      "roomNotFound": "Your search for '{{roomId}}' returned no matches",
+      "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
+      "roomLookupError": "An unexpected error occurred when searching for the room"
     },
     "reportsList": {
       "name": "Name",
@@ -1510,10 +1514,10 @@
       "noReportsTip": "Click the Search tab to search activities and create reports",
       "size": "Size",
       "viewDetails": "View Details",
-      "createNew": "Create new report with same query parameters",
+      "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownloadDialog": "Waiting for download dialog"
+      "waitingForDownload": "Downloading, please wait..."
     },
     "tabs": {
       "search": "Search",
@@ -2535,8 +2539,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3495,6 +3498,7 @@
     "catalan": "Català"
   },
   "siteList": {
+    "nonCIWebExSiteAccess": "<a href='https://{{siteUrl}}' target='_blank' ng-click='{{click}}'>Sign in to manage</a>",
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
@@ -3506,7 +3510,7 @@
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
     "siteCsvModalExportText": "Export user attributes for {{siteUrl}}",
-    "siteCsvModalExportTextShort": "Click to export user attributes into a downloadable CSV file.",
+    "siteCsvModalExportTextShort": "Click to export user attributes into a CSV file.",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
     "siteCsvExportResultsLinkLabel": "Export Results",
@@ -4131,8 +4135,6 @@
       "supportAccessHeader": "Support Access",
       "supportAccessDescription": "This setting gives Cisco or Partner Support read-only access to your organization. It does not allow changes to be made to your organization's details.",
       "allowReadOnlyOrgAccess": "Allow Cisco or Partner Support read-only access to your organization",
-      "usageDataHeader": "Usage Data Sent to Cisco Partner",
-      "usageDataDescription": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
       "crashReportTitle": "Automatic Crash Reporting",
       "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
       "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
