@@ -147,3 +147,89 @@ describe('Controller: DeviceOverviewCtrl', function () {
     });
   });
 });
+
+describe('Huron Device', function () {
+  var $scope, $controller, controller, $httpBackend;
+  var $q, CsdmConfigService;
+  var $stateParams, ServiceSetup, timeZone, newTimeZone;
+
+  beforeEach(module('Hercules'));
+  beforeEach(module('Squared'));
+  beforeEach(module('Huron'));
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+  beforeEach(initController);
+
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _$stateParams_, _ServiceSetup_) {
+    $scope = $rootScope.$new();
+    $controller = _$controller_;
+    $httpBackend = _$httpBackend_;
+    $q = _$q_;
+    CsdmConfigService = _CsdmConfigService_;
+    ServiceSetup = _ServiceSetup_;
+    $stateParams = _$stateParams_;
+    $stateParams = {
+      currentDevice: {
+        isHuronDevice: true
+      },
+      huronDeviceService: CsdmHuronDeviceService($q)
+    };
+  }
+
+  newTimeZone = {
+    "id": "America/Anchorage",
+    "label": "America/Anchorage"
+  };
+
+  function CsdmHuronDeviceService(q) {
+
+    function setTimezoneForDevice(huronDevice, timezone) {
+      return q.resolve(true);
+    }
+
+    function getTimezoneForDevice(huronDevice) {
+      return q.resolve('America/Los_Angeles');
+    }
+
+    function getLinesForDevice(huronDevice) {
+      return q.resolve([]);
+    }
+
+    return {
+      setTimezoneForDevice: setTimezoneForDevice,
+      getTimezoneForDevice: getTimezoneForDevice,
+      getLinesForDevice: getLinesForDevice
+    };
+  }
+
+  function initSpies() {
+    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkOnline=true&checkDisplayName=false').respond(200);
+    $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn($stateParams.huronDeviceService, 'setTimezoneForDevice').and.returnValue($q.when(true));
+  }
+
+  function initController() {
+    controller = $controller('DeviceOverviewCtrl', {
+      $scope: $scope,
+      channels: {},
+      $stateParams: $stateParams
+    });
+
+    $scope.$apply();
+  }
+
+  it('should init controller', function () {
+    expect(controller).toBeDefined();
+  });
+
+  it('should update timezone id', function () {
+    controller.selectedTimeZone = newTimeZone;
+    controller.saveTimeZoneAndWait();
+    $scope.$apply();
+
+    expect($stateParams.huronDeviceService.setTimezoneForDevice).toHaveBeenCalledWith(jasmine.any(Object), newTimeZone.id);
+  });
+});
