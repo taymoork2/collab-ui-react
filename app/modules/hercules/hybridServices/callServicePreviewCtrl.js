@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, FeatureToggleService, UriVerificationService, DomainManagementService) {
+  function CallServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, UriVerificationService, DomainManagementService, $translate) {
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
@@ -21,6 +21,12 @@
 
     var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {
       type: "work"
+    });
+
+    $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
+    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
+    $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
+      ServiceName: $scope.localizedServiceName
     });
 
     $scope.callServiceAware = {

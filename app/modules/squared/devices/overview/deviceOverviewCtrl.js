@@ -6,13 +6,12 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService, KemService, CmiKemService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
-    deviceOverview.csdmTz = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
@@ -25,13 +24,10 @@
     }
     deviceOverview.saveInProcess = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.csdmTz).then(function (result) {
-      deviceOverview.csdmTz = result;
-    });
-
     if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZoneOptions();
-      loadDeviceTimeZone();
+      initTimeZoneOptions().then(function () {
+        loadDeviceTimeZone();
+      });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
@@ -42,14 +38,14 @@
     function loadDeviceTimeZone() {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
-        deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+        deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
       });
     }
 
-    function getTimeZoneFromValue(value) {
+    function getTimeZoneFromId(id) {
       return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.value == value;
+        return o.id == id;
       });
     }
 
@@ -86,7 +82,7 @@
     }
 
     deviceOverview.saveTimeZoneAndWait = function () {
-      var newValue = deviceOverview.selectedTimeZone.value;
+      var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
         setTimeZone(newValue)
@@ -174,14 +170,23 @@
       RemoteSupportModal.open(deviceOverview.currentDevice);
     };
 
-    deviceOverview.addTag = function ($event) {
+    deviceOverview.addTag = function () {
       var tag = _.trim(deviceOverview.newTag);
-      if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
+      if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
         var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
         return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
+      } else {
+        deviceOverview.isAddingTag = false;
+        deviceOverview.newTag = undefined;
+      }
+    };
+
+    deviceOverview.addTagOnEnter = function ($event) {
+      if ($event.keyCode == 13) {
+        deviceOverview.addTag();
       }
     };
 

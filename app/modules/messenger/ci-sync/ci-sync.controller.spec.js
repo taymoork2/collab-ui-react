@@ -6,6 +6,7 @@
 
     beforeEach(function () {
       module('Huron');
+      module('Sunlight');
       module('Messenger');
 
       inject(function ($controller) {

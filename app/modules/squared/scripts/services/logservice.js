@@ -5,7 +5,7 @@
     .service('LogService', LogService);
 
   /* @ngInject */
-  function LogService($rootScope, $http, Storage, UrlConfig, Log, Auth, $window) {
+  function LogService($http, UrlConfig, Log, $window) {
     var service = {
       listLogs: listLogs,
       searchLogs: searchLogs,

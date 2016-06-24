@@ -1,4 +1,4 @@
-  <div ng-if="( 'webexexport' == webexCsvDownload.type )">
+   <div ng-if="( 'webexexport' == webexCsvDownload.type )">
     <a id="download-csv-{{webexCsvDownload.type}}" 
        href="" 
        ng-click="webexCsvDownload.downloadCsv()">
@@ -18,10 +18,11 @@
        id="download-csv-{{webexCsvDownload.type}}" 
        href="" 
        ng-click="webexCsvDownload.downloadCsv()">
-       
       <span translate="webexCSVResultsModal.csvDownloadImportErr"></span>
-    </a>
+	</a>
     
+	<span ng-show="webexCsvDownload.downloading" 
+	   translate="webexCSVResultsModal.csvDownloadImportErr"></span>
     <i ng-show="webexCsvDownload.downloading" 
        class="icon icon-spinner grid-vcenter">
     </i>

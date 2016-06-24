@@ -7,11 +7,8 @@
   function WebexClientVersion(
     $q,
     $log,
-    $filter,
     $http,
-    Authinfo,
-    UrlConfig,
-    Notification
+    UrlConfig
   ) {
 
     var self = this;

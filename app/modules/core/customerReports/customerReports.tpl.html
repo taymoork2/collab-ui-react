@@ -2,7 +2,7 @@
 <div class="customer-reports">
   <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
   <div ng-if='nav.showMFMetrics'>
-    <div ng-controller="AnalyticsUtilizationGraphController as GraphUtilCtrl" ng-include="'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'"></div>
+    <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
   </div>
   <cs-page-sub-header ng-if="nav.showEngagement">
     <cs-page-sub-header-left>
@@ -36,6 +36,7 @@
       <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
+ <div ng-if='!nav.showMFMetrics'>  
   <div class="content-container">
     <div class="row" ng-if='nav.showEngagement'>
       <cs-card-layout>
@@ -60,4 +61,5 @@
       <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
     </div>
   </div>
+ </div>  
 </div>

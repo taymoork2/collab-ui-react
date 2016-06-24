@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Log, Userservice, Notification, Config, $translate, HuronUser) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Userservice, Notification, Config, $translate, HuronUser) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
@@ -88,7 +88,12 @@
     }
 
     function deleteError(response) {
-      Notification.errorResponse(response, 'usersPage.deleteUserError');
+      var messageKey = 'usersPage.deleteUserError';
+      var errorCode = _.get(response, 'data.details[0].productErrorCode');
+      if (!_.isUndefined(errorCode) && errorCode === 'DN_IS_FALLBACK') {
+        messageKey = 'usersPage.deleteUserDnFallbackError';
+      }
+      Notification.errorResponse(response, messageKey);
     }
 
     function stopLoading() {

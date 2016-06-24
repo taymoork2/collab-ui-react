@@ -20,7 +20,7 @@ describe('Directive: aaScheduleInfo', function () {
   var openHours = [];
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
 
-  beforeEach(inject(function (_$q_, $injector, _$compile_, _$rootScope_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AACalendarService_, _AAICalService_) {
+  beforeEach(inject(function (_$q_, _$compile_, _$rootScope_, _AAModelService_, _AACalendarService_, _AAICalService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;

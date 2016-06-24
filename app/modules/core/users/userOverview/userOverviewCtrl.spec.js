@@ -7,6 +7,7 @@ describe('Controller: UserOverviewCtrl', function () {
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();
@@ -45,7 +46,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Authinfo, 'isCSB').and.returnValue(true);
+    spyOn(Authinfo, 'isCSB').and.returnValue(false);
     spyOn(Notification, 'success');
 
     // eww
@@ -220,10 +221,10 @@ describe('Controller: UserOverviewCtrl', function () {
     });
   });
 
-  describe('When atlasTelstraCsb is enabled', function () {
-    it('should set the isCSB flag to true', function () {
+  describe('When Authinfo.isCSB returns false', function () {
+    it('should set the controller.isCSB to false', function () {
       $httpBackend.flush();
-      expect(controller.isCSB).toBe(true);
+      expect(controller.isCSB).toBe(false);
     });
   });
 });

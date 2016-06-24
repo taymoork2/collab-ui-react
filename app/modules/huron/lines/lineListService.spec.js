@@ -14,6 +14,7 @@ describe('Service: LineListService', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')

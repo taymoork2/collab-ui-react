@@ -1,5 +1,6 @@
 .settings {
   background-color: white;
+
   .hidden {
     display: none;
   }
@@ -11,6 +12,25 @@
       }
       &.disabled {
         color: $gray-base;
+      }
+    }
+    .enterprise-sipDomain-page {
+      margin-top: -1.25rem;
+    }
+    #domainManagement{
+      .verify-btn{
+        top:0;
+      }
+    }
+    #brandingLogoPanel{
+      h4{
+        font-size: 1rem;
+        font-family: $brand-font-light;
+        margin-bottom: 0.5rem;
+      }
+      span{
+        font-family: $brand-font-light;
+        margin-left: 0.05rem;
       }
     }
   }

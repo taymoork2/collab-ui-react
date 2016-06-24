@@ -2,27 +2,34 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig) {
+  function EdiscoveryService(ReportUtilService, Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location, CacheFactory) {
     var urlBase = UrlConfig.getAdminServiceUrl();
+    var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
+    if (!avalonRoomsUrlCache) {
+      avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
+        maxAge: 300 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+
+    function useMock() {
+      return $location.absUrl().match(/reports-backend=mock/);
+    }
+
+    if (useMock()) {
+      ReportUtilService.setTimeoutInSeconds(30);
+    }
 
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
-        detectAndSetReportTimeout(report);
+        ReportUtilService.tweakReport(report);
       });
-      return reports;
+      return res.data;
     }
 
     function extractReport(res) {
-      return detectAndSetReportTimeout(res.data);
-    }
-
-    function detectAndSetReportTimeout(report) {
-      if (report) {
-        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > 300000;
-      }
-      return report;
+      return ReportUtilService.tweakReport(res.data);
     }
 
     function extractData(res) {
@@ -30,44 +37,48 @@
     }
 
     function getAvalonServiceUrl() {
-      //TODO: Cache pr org
       var orgId = Authinfo.getOrgId();
+      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
+      if (cachedAvalonRoomsUrl) {
+        var deferred = $q.defer();
+        deferred.resolve(cachedAvalonRoomsUrl);
+        return deferred.promise;
+      }
       return $http
         .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
-        .then(extractData);
+        .then(function (res) {
+          if (res.data && res.data.avalonRoomsUrl) {
+            avalonRoomsUrlCache.put(orgId, res.data);
+          }
+          return res.data;
+        });
     }
 
     function getAvalonRoomInfo(url) {
-      return $http
-        .get(url)
-        .then(extractData);
+      return $http.get(url).then(extractData);
     }
 
     function getReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(extractReport)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      if (useMock()) {
+        return $q.resolve(extractReport(EdiscoveryMockData.getReport(id)));
+      } else {
+        return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id).then(extractReport);
+      }
     }
 
-    function getReports() {
+    function getReports(offset, limit) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/reports/?limit=10')
-        .then(extractReports)
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error getReports: " + data)
-        });
+      var reqParams = 'offset=' + offset + '&limit=' + limit;
+      if (useMock()) {
+        return $q.resolve(extractReports(EdiscoveryMockData.getReports(offset, limit)));
+      } else {
+        return $http.get(urlBase + 'compliance/organizations/' + orgId + '/reports/?' + reqParams).then(extractReports);
+      }
     }
 
     function createReport(displayName, roomId, startDate, endDate) {
       var orgId = Authinfo.getOrgId();
-      //  TODO: Implement proper handling of error when final API is in place
       var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
       var ed = (endDate !== null) ? moment.utc(endDate).toISOString() : null;
       return $http
@@ -82,54 +93,66 @@
         .then(extractData);
     }
 
-    // TODO: Implement proper handling of error when final API is in place
-    function runReport(runUrl, roomId, responseUrl) {
+    function runReport(runUrl, roomId, responseUrl, startDate, endDate) {
+      var sd = (startDate !== null) ? moment.utc(startDate).toISOString() : null;
+      var ed = (endDate !== null) ? moment.utc(endDate).add(1, 'days').toISOString() : null;
       return $http.post(runUrl, {
         "roomId": roomId,
-        "responseUrl": responseUrl
+        "responseUrl": responseUrl,
+        "startDate": sd,
+        "endDate": ed
       });
     }
 
     function patchReport(id, patchData) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("patching", res);
-        })
-        .catch(function (data) {
-          //console.log("error createReport: " + data)
-        });
+      return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id, patchData);
     }
 
     function deleteReport(id) {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id)
-        .then(function (res) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("deleted", res);
-        })
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error createReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id);
     }
 
     function deleteReports() {
       var orgId = Authinfo.getOrgId();
-      return $http
-        .delete(urlBase + 'compliance/organizations/' + orgId + '/reports/')
-        .catch(function (data) {
-          //  TODO: Implement proper handling of error when final API is in place
-          //console.log("error deleteReport: " + data)
-        });
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/');
     }
 
     function setEntitledForCompliance(orgId, userId, entitled) {
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
         entitledForCompliance: entitled
+      });
+    }
+
+    function downloadReport(report) {
+      return $http.get(report.downloadUrl, {
+        responseType: 'arraybuffer'
+      }).success(function (data) {
+        var fileName = 'report_' + report.id + '.zip';
+        var file = new $window.Blob([data], {
+          type: 'application/zip'
+        });
+        if ($window.navigator.msSaveOrOpenBlob) {
+          // IE
+          $window.navigator.msSaveOrOpenBlob(file, fileName);
+        } else if (!('download' in $window.document.createElement('a'))) {
+          // Safari…
+          $window.location.href = $window.URL.createObjectURL(file);
+        } else {
+          var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+          var downloadLink = angular.element(downloadContainer.children()[0]);
+          downloadLink.attr({
+            'href': $window.URL.createObjectURL(file),
+            'download': fileName,
+            'target': '_blank'
+          });
+          $document.find('body').append(downloadContainer);
+          $timeout(function () {
+            downloadLink[0].click();
+            downloadLink.remove();
+          }, 100);
+        }
       });
     }
 
@@ -143,7 +166,8 @@
       runReport: runReport,
       patchReport: patchReport,
       deleteReport: deleteReport,
-      setEntitledForCompliance: setEntitledForCompliance
+      setEntitledForCompliance: setEntitledForCompliance,
+      downloadReport: downloadReport
     };
   }
 

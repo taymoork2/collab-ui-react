@@ -11,6 +11,7 @@
     var allowedList = [
       '/api/v1/metrics',
       '/api/v1/compliance/',
+      '/api/v1/logs/',
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
       '/resendinvitation/invoke',

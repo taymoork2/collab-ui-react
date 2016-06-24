@@ -8,6 +8,7 @@ describe('Controller: UserRolesCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Squared'));
   beforeEach(module('Ediscovery'));
 

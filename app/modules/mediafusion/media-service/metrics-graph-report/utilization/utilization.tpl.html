@@ -1,0 +1,22 @@
+<cs-card id='utilization-card' class="full report-card">
+  <article>
+    <graphheader>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></h4>
+    </graphheader>
+    <section>
+      <div class="metrics-utilization">
+        <p class="report-description" translate='mediaFusion.metrics.utilizationDescription'></p>
+        <div id="utilizationdiv" class="barchart" ng-class="{'utilization-chart': !nav.isEmpty(nav.utilizationStatus) && !nav.isRefresh(nav.utilizationStatus)}"></div>
+        <div class="spinner-position" ng-if="nav.isRefresh(nav.utilizationStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="nav.isEmpty(nav.utilizationStatus)">
+          <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='reportsPage.noCustomerData'></span>
+          </h3>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

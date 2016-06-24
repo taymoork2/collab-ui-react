@@ -5,7 +5,7 @@
     .controller('CsAdminCtrl', CsAdminCtrl);
 
   /* @ngInject */
-  function CsAdminCtrl($scope, $location, $http, Log, csadminservice) {
+  function CsAdminCtrl($scope, $location, Log, csadminservice) {
 
     //initialize ng-show variables
     $scope.result = {

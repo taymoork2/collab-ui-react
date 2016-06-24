@@ -6,12 +6,19 @@
     .controller('HybridServicesPreviewCtrl', HybridServicesPreviewCtrl);
 
   /*@ngInject*/
-  function HybridServicesPreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout) {
+  function HybridServicesPreviewCtrl($scope, $state, $stateParams, Userservice, Notification, USSService, ClusterService, $timeout, $translate) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC'
     };
+
     $scope.currentUser = $stateParams.currentUser;
+    $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
+    $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
+    $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
+      ServiceName: $scope.localizedServiceName
+    });
+
     var isEntitled = function () {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1 ? true : false;
     };
@@ -111,5 +118,6 @@
     $scope.getStatus = function (status) {
       return USSService.decorateWithStatus(status);
     };
+
   }
 }());

@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="readOnlyCtrl.ok()">
-    <span class="sr-only">Close</span>
+    <span class="sr-only" translate="common.close"></span>
   </button>
   <h3 class="modal-title">
     <b translate="readOnlyModal.title"></b>
@@ -11,5 +11,7 @@
   </p>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="readOnlyCtrl.ok()">OK</button>
+  <button class="btn btn--primary" ng-click="readOnlyCtrl.ok()" focus-on>
+    <span translate="common.ok"></span>
+  </button>
 </div>

@@ -1,0 +1,54 @@
+.metrics-call-volume {
+  .report-sides {
+    margin: 0 rem-calc(25);
+  }
+  .barchart {
+    position: relative;
+    top: rem-calc(-5);
+  }
+  .carousel-control {
+    padding: 9px 16px;
+    background-color: $white;
+    i {
+      color: $color-primary-base;
+    }
+  }
+  .carousel-control:focus {
+    box-shadow: none;
+  }
+  .carousel-control:hover {
+    background-color: $color-primary-base;
+    i {
+      color: $white;
+    }
+  }
+  .carousel-control[disabled] {
+    background-color: $gray-light-2;
+    i {
+      color: $gray-base;
+    }
+  }
+  .active-carousel {
+    position: relative;
+    top: rem-calc(-10);
+  }
+  .carousel-btn {
+    border: rem-calc(1) solid $gray-dark-1;
+    color: $gray-dark-1;
+  }
+  .carousel-btn:hover, .btn--none:focus, .btn--none:hover {
+    border-color: transparent;
+  }
+  .table-spinner {
+    height: 100px;
+    position: relative;
+    top: 40px;
+    width: 100%;
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

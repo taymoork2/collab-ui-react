@@ -31,6 +31,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
     $scope = _$rootScope_;

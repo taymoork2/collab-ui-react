@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterController(groupName, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
+  function DeleteClusterController(groupName, MediaClusterService, XhrNotificationService, $translate, $modalInstance) {
     var vm = this;
 
     vm.groupDetail = null;

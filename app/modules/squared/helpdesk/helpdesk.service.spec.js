@@ -296,4 +296,11 @@ describe('HelpdeskService', function () {
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
   });
+
+  it('finds cloudberry devices by cisUuid', function () {
+    var result = Service.filterDevices('f50d76ed-b6d3-49fb-9b40-8cf4d993b7f6', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
+    expect(result[0].displayName).toEqual('Testing DR');
+  });
 });

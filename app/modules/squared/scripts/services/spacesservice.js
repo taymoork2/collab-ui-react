@@ -5,7 +5,7 @@
     .service('SpacesService', SpacesService);
 
   /* @ngInject */
-  function SpacesService($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
+  function SpacesService($http, Authinfo, UrlConfig) {
     var deviceUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
 
     var service = {

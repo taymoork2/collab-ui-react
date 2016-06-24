@@ -6,7 +6,7 @@ describe('Controller: PstnContractInfoCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _$stateParams_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _ExternalNumberPool_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;

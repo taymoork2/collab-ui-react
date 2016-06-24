@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusCarrierService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -61,13 +61,11 @@
       model: vm.trialData.details,
       key: 'pstnProvider',
       type: 'select',
-      className: 'medium-10 columns',
+      className: 'medium-8',
       templateOptions: {
-        required: true,
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-7',
-        label: $translate.instant('trialModal.pstn.provider'),
         labelfield: 'vendor',
+        required: true,
+        label: $translate.instant('trialModal.pstn.provider'),
         options: [],
         onChangeFn: function () {
           vm.showOrdering = vm.trialData.details.pstnProvider.apiExists;
@@ -82,106 +80,88 @@
     vm.contractInfoFields = [{
       model: vm.trialData.details.pstnContractInfo,
       key: 'companyName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.company'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'signeeFirstName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.firstName'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'signeeLastName',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.lastName'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'text',
       },
     }, {
       model: vm.trialData.details.pstnContractInfo,
       key: 'email',
-      type: 'input',
-      className: 'no-pad',
+      type: 'cs-input',
+      className: 'medium-12',
       templateOptions: {
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.email'),
-        labelClass: 'columns medium-5 text-right',
-        inputClass: 'columns medium-8',
         type: 'email',
       },
     }];
 
     vm.pstnStateAreaFields = [{
-      type: 'inline',
-      className: 'row full',
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'state',
+      type: 'select',
+      className: 'medium-8 state-dropdown inline-row left',
       templateOptions: {
-        fields: [{
-          model: vm.trialData.details.pstnNumberInfo,
-          key: 'state',
-          type: 'select',
-          className: 'medium-6 columns max-width',
-          templateOptions: {
-            labelClass: 'columns medium-4 text-right',
-            inputClass: 'columns medium-7',
-            label: $translate.instant('pstnSetup.state'),
-            labelfield: 'name',
-            valuefield: 'abbreviation',
-            onChangeFn: getStateInventory,
-            options: [],
-            filter: true
-
-          },
-          controller: /* @ngInject */ function ($scope) {
-            TerminusStateService.query().$promise.then(function (states) {
-              $scope.to.options = states;
-            });
-          }
-        }, {
-          model: vm.trialData.details.pstnNumberInfo,
-          key: 'areaCode',
-          id: 'areaCode',
-          type: 'select',
-          className: 'medium-6 columns max-width',
-          templateOptions: {
-            labelClass: 'columns medium-5 text-right',
-            inputClass: 'columns medium-7',
-            label: $translate.instant('pstnSetup.areaCode'),
-            labelfield: 'code',
-            valuefield: 'code',
-            options: [],
-            onChangeFn: searchCarrierInventory
-          },
-          controller: /* @ngInject */ function ($scope) {
-            $scope.$watchCollection(function () {
-              return vm.areaCodeOptions;
-            }, function (newAreaCodes) {
-              newAreaCodes = newAreaCodes || [];
-              $scope.to.options = _.sortBy(newAreaCodes, 'code');
-            });
-          }
-        }]
+        inputClass: 'medium-11',
+        label: $translate.instant('pstnSetup.state'),
+        labelfield: 'name',
+        valuefield: 'abbreviation',
+        onChangeFn: getStateInventory,
+        options: [],
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        TerminusStateService.query().$promise.then(function (states) {
+          $scope.to.options = states;
+        });
+      }
+    }, {
+      model: vm.trialData.details.pstnNumberInfo,
+      key: 'areaCode',
+      id: 'areaCode',
+      type: 'select',
+      className: 'medium-4 inline-row left',
+      templateOptions: {
+        label: $translate.instant('pstnSetup.areaCode'),
+        labelfield: 'code',
+        valuefield: 'code',
+        options: [],
+        onChangeFn: searchCarrierInventory
+      },
+      controller: /* @ngInject */ function ($scope) {
+        $scope.$watchCollection(function () {
+          return vm.areaCodeOptions;
+        }, function (newAreaCodes) {
+          newAreaCodes = newAreaCodes || [];
+          $scope.to.options = _.sortBy(newAreaCodes, 'code');
+        });
       }
     }];
 

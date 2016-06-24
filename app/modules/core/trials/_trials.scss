@@ -89,13 +89,6 @@
     }
     padding: rem(6px);
   }
-  .no-pad {
-    padding-bottom: 0;
-  }
-  .no-flex {
-    flex: none;
-    -webkit-flex: none;
-  }
   .state-zip-wrapper {
     /* nested form grid fix */
     @include vr-spacing(pl, 0.75, 2px);
@@ -138,6 +131,24 @@
 // see: https://app.zeplin.io/project.html#pid=566240ac4cc082c97dccdfb1&dashboard
 .reveal-modal.full .modal-body.trials {
   padding: 0;
+}
+
+.modal-footer.trials {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .btn {
+    margin-left: 8px;
+  }
+
+  .alt-btn-link {
+    color: $gray-dark-1;
+
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
 }
 
 .trials {
@@ -221,9 +232,32 @@
     max-height:13rem;
   }
 
-  #callTrialForm div[name="state"] div.dropdown-menu {
-    max-height:5.25rem;
+  .state-dropdown div.dropdown-menu {
+    max-height: vr-adjust(192px);
   }
+  
+  .did-input .tokenfield {
+    min-height: vr-adjust(144px);
+  }
+  
+  .inline-row {
+    display: inline-block;
+  }
+  
+  .skip_numbers {
+    color: $gray-dark-1;
+    @include vr-spacing(p, 1);
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
+}
+
+.small-hint
+{
+  color: $gray-base;
+  font-size: 13px;
+  vertical-align: baseline;
 }
 
 .modal-title-wrap {

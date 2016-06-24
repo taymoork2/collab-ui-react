@@ -14,13 +14,14 @@ describe('Template: assignDnAndDirectLinesModal', function () {
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
   beforeEach(inject(dependencies));
   beforeEach(initDependencySpies);
   beforeEach(compileView);
   beforeEach(initSpies);
 
-  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
+  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _CsvDownloadService_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
     $templateCache = _$templateCache_;
@@ -69,6 +70,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
     spyOn(Userservice, 'onboardUsers');

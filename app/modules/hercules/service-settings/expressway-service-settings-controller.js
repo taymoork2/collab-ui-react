@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
