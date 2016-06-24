@@ -34,7 +34,7 @@
       });
       if (report) {
         return {
-          data: report,
+          data: _.cloneDeep(report),
           status: 200
         };
       } else {
@@ -43,22 +43,29 @@
       }
     }
 
-    var totalNrOfReports = 100;
+    var totalNrOfReports = 1000;
 
     function updateReportsProgress() {
       var staleIndex = 0;
       _.each(reports, function (report) {
         if (staleIndex++ % 5) {
-          report.progress = report.progress + Math.floor(Math.random() * 3) + 1;
+          if (report.progress === 100 && report.state != "COMPLETED") {
+            report.state = "COMPLETED";
+            var now = moment();
+            report.expiryTime = moment(now).add(2, 'minutes').utc().format();
+          }
+          if (report.progress === 100) {
+            report.state = "COMPLETED";
+          } else {
+            report.state = "RUNNING";
+            report.progress = report.progress + Math.floor(Math.random() * 5) + 1;
+            if (report.progress > 100) {
+              report.progress = 100;
+            }
+          }
           report.lastUpdatedTime = moment().format();
         }
-        if (report.progress > 0) {
-          report.state = "RUNNING";
-        }
-        if (report.progress >= 100) {
-          report.progress = 100;
-          report.state = "COMPLETED";
-        }
+
       });
     }
 
@@ -90,6 +97,9 @@
         report.id = "e882dd0e-b86c-4d93-9246-" + i;
         report.displayName = "Mock report #" + i;
         report.lastUpdatedTime = new Date().getTime();
+        report.roomQuery.startDate = moment(moment()).subtract(2 + i, 'day').utc().format();
+        report.roomQuery.endDate = moment(moment()).add(1 + i, 'day').utc().format();
+
         if (Math.floor(Math.random() > 0.5)) {
           report.progress = 0;
           report.state = "ACCEPTED";

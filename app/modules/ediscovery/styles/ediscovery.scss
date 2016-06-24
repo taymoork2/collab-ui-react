@@ -325,7 +325,10 @@
       padding-right: 1rem;
       color: $gray-light-1;
     }
-    .action-icons.light {
+    .action-icons.disabled {
+      color: $gray-light-3;
+    }
+    .action-icons.disabled:hover {
       color: $gray-light-3;
     }
     .action-icons:hover {
