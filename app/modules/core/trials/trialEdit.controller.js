@@ -700,18 +700,12 @@
     }
 
     function careLicenseInputDisabledExpression() {
-      if (vm.careTrial.enabled) {
-        resetToDefaultIfNeeded();
-      } else {
+      if (!vm.careTrial.enabled) {
         vm.careTrial.details.quantity = 0;
+      } else {
+        vm.careTrial.details.quantity = vm.careTrial.details.quantity || _careDefaultQuantity;
       }
       return !vm.careTrial.enabled;
-    }
-
-    function resetToDefaultIfNeeded() {
-      if (vm.careTrial.details.quantity === 0) {
-        vm.careTrial.details.quantity = _careDefaultQuantity;
-      }
     }
 
     function validateCareLicense($viewValue, $modelValue) {

@@ -471,14 +471,14 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       describe('careLicenseCountLessThanTotalCount:', function () {
-        it('Total license count cannot be lesser than Care license count.', function () {
+        it('total license count cannot be lesser than Care license count.', function () {
           controller.details.licenseCount = 10;
           controller.careTrial.enabled = true;
           controller.careTrial.details.quantity = 20;
           expect(helpers.careLicenseCountLessThanTotalCount()).toBeFalsy();
         });
 
-        it('Total license validation with Care succeeds when careTrial is not enabled.', function () {
+        it('total license validation with Care succeeds when careTrial is not enabled.', function () {
           controller.details.licenseCount = 10;
           controller.careTrial.enabled = false;
           controller.careTrial.details.quantity = 20;
