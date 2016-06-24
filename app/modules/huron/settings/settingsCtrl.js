@@ -7,8 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService,
-    InternationalDialing) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing) {
 
     var vm = this;
     vm.loading = true;
@@ -32,7 +31,6 @@
 
     var savedModel = null;
     var errors = [];
-    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -230,14 +228,6 @@
       },
       controller: /* @ngInject */ function ($scope) {
         _buildTimeZoneOptions($scope);
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.timeZoneToggleEnabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.timeZoneToggleEnabled;
-        }
       }
 
     }, {
@@ -1261,7 +1251,6 @@
       errors = [];
 
       var promises = [];
-      promises.push(enableTimeZoneFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1523,16 +1512,6 @@
         } else {
           vm.model.callerId.callerIdNumber = '';
         }
-      });
-    }
-
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
       });
     }
 

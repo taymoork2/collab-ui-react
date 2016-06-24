@@ -379,7 +379,7 @@
         return this.hasRole('Full_Admin');
       },
       isCSB: function () {
-        return authData.customerType === 'APP_DIRECT';
+        return (_.contains(authData.customerType, ['APP_DIRECT', 'CSB']));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

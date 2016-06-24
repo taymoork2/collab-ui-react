@@ -5,12 +5,15 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $log) {
+      function ($stateParams, $modal, $log, MediaClusterServiceV2) {
 
         var vm = this;
         vm.displayName = null;
         vm.nodeList = null;
         vm.clusterDetail = null;
+        vm.options = [];
+        vm.selectPlaceholder = 'Select One';
+        vm.selected = '';
 
         if (!angular.equals($stateParams.clusterName, {})) {
           vm.displayName = $stateParams.clusterName;
@@ -24,6 +27,18 @@
           vm.clusterDetail = $stateParams.cluster;
           $log.log("cluster details ", vm.clusterDetail);
         }
+
+        vm.options = [
+          'GA',
+          'DEV',
+          'ALPHA'
+        ];
+
+        vm.changeReleaseChanel = function () {
+          if (vm.selected != vm.clusterDetail.releaseChannel) {
+            MediaClusterServiceV2.updateV2Cluster(vm.clusterDetail.id, vm.displayName, vm.selected);
+          }
+        };
 
         vm.alarmsSummary = function () {
           var alarms = {};

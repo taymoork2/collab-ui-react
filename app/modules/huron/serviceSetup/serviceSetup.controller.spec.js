@@ -17,7 +17,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _FeatureToggleService_, _Authinfo_) {
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -27,7 +27,6 @@ describe('Controller: ServiceSetup', function () {
     DialPlanService = _DialPlanService_;
     ExternalNumberService = _ExternalNumberService_;
     ModalService = _ModalService_;
-    FeatureToggleService = _FeatureToggleService_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
@@ -134,8 +133,6 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
