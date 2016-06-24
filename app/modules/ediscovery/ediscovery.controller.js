@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
+  function EdiscoveryController(ReportUtilService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
@@ -82,6 +82,7 @@
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
       enableColumnMenus: false,
+      enableSorting: false,
       enableHorizontalScrollbar: 0,
       infiniteScrollUp: true,
       infiniteScrollDown: true,
@@ -108,6 +109,8 @@
                       vm.reports[index] = updatedReport;
                       gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
                     });
+                  } else {
+                    ReportUtilService.tweakReport(r);
                   }
                 });
               }, 3000);

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryService(Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location, CacheFactory) {
+  function EdiscoveryService(ReportUtilService, Authinfo, $http, UrlConfig, $window, $timeout, $document, EdiscoveryMockData, $q, $location, CacheFactory) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
     if (!avalonRoomsUrlCache) {
@@ -17,35 +17,19 @@
     }
 
     if (useMock()) {
-      var REPORT_TIMEOUT_SECONDS = 10;
-    } else {
-      var REPORT_TIMEOUT_SECONDS = 180;
+      ReportUtilService.setTimeoutInSeconds(30);
     }
 
     function extractReports(res) {
       var reports = res.data.reports;
       _.each(reports, function (report) {
-        tweakReport(report);
+        ReportUtilService.tweakReport(report);
       });
       return res.data;
     }
 
     function extractReport(res) {
-      return tweakReport(res.data);
-    }
-
-    function tweakReport(report) {
-      if (report) {
-        report.timeoutDetected = (report.state === 'ACCEPTED' || report.state === 'RUNNING') && new Date().getTime() - new Date(report.lastUpdatedTime)
-          .getTime() > REPORT_TIMEOUT_SECONDS * 1000;
-        if (report.state === 'FAILED' && !report.failureReason) {
-          report.failureReason = 'UNEXPECTED_FAILURE';
-        }
-        report.isDone = report.state === 'COMPLETED' || report.state === 'FAILED' || report.state === 'ABORTED';
-        report.canBeCancelled = report.state === 'ACCEPTED' || report.state === 'RUNNING';
-        report.canBeDownloaded = report.state === "COMPLETED" && (!report.expiryTime || new Date().getTime() < new Date(report.expiryTime).getTime());
-      }
-      return report;
+      return ReportUtilService.tweakReport(res.data);
     }
 
     function extractData(res) {
