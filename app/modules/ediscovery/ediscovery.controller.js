@@ -8,7 +8,6 @@
     });
     var vm = this;
 
-    vm.deleteReports = deleteReports;
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
