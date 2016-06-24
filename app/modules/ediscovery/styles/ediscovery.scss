@@ -82,14 +82,14 @@
     height: 100vh;
     background-color: $brand-white;
     padding-top: 9rem;
-    @media only screen and (max-height: 850px) {
+    @media only screen and (max-height: 950px) {
       padding-top: 7rem;
     }
     div.search-result-area {
       background-color: $gray-light-4;
       min-height: calc(100% - 145px);
       padding-top: 2.25rem;
-      @media only screen and (max-height: 850px) {
+      @media only screen and (max-height: 950px) {
         padding-top: 1rem;
         min-height: calc(100% - 113px);
       }
@@ -106,7 +106,7 @@
     .ediscovery-search-bar {
       text-align: center;
       padding-bottom: 3rem;
-      @media only screen and (max-height: 850px) {
+      @media only screen and (max-height: 950px) {
         padding-bottom: 1rem;
       }
       .pointer {
@@ -212,7 +212,7 @@
           padding-left: 1.25rem;
           padding-right: 1.25rem;
         }
-        @media only screen and (max-height: 850px) {
+        @media only screen and (max-height: 950px) {
           padding-top: 1.25rem;
           padding-bottom: 2.5rem;
         }
@@ -272,13 +272,15 @@
           }
           .failure {
             color: $gray-base;
-            font-size: 14px;
+            font-size: 16px;
             padding: 0;
           }
         }
-        .input-section-last {
-          padding-top: 0.75rem;
-          padding-right: 2rem;
+        .expiry-info {
+          padding-top: 1.5rem;
+        }
+        .last-input-row {
+          padding-bottom: 0.75rem;
         }
       }
       .report-logo-column {

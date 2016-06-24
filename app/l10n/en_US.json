@@ -1501,7 +1501,9 @@
       "createReportFailed": "Failed to initialize the report",
       "roomNotFound": "Your search for '{{roomId}}' returned no matches",
       "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
-      "roomLookupError": "An unexpected error occurred when searching for the room"
+      "roomLookupError": "An unexpected error occurred when searching for the room",
+      "generatedAt": "Generated Today at {{time}}",
+      "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
     "reportsList": {
       "name": "Name",
