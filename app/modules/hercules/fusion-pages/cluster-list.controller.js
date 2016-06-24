@@ -67,13 +67,11 @@
     }
 
     function addMissingUpgradeScheduleToClusters(clusters) {
-      console.log('addMissingUpgradeScheduleToClusters', clusters);
       // .clusterUpgradeSchedule is populated when getting the list of clusters
       // only when the upgrade schedule has been explicitely set by the admin.
       // Otherwise it's not there but we can get it by fetching directly the
       // cluster data…
       var promises = clusters.map(function (cluster) {
-        console.log('cluster.clusterUpgradeSchedule?', cluster.clusterUpgradeSchedule);
         if (cluster.clusterUpgradeSchedule) {
           return cluster;
         } else {
