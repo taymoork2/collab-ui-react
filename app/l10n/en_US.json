@@ -1438,7 +1438,10 @@
         "expressway-short": "E",
         "mediafusion-short": "M",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion"
+        "mediafusion": "Media Fusion",
+        "no-services": "No services",
+        "upgrade-schedule": "Upgrade Schedule:",
+        "no-upgrade-schedule": "Defaulting on some random value defined by Torgeir Johansen."
       }
     }
   },
