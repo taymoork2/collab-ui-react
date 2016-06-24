@@ -157,12 +157,6 @@
       }]
     };
 
-    function deleteReports() {
-      EdiscoveryService.deleteReports().then(function (res) {
-        pollAvalonReport();
-      });
-    }
-
     function pollAvalonReport() {
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
