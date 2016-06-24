@@ -1,6 +1,6 @@
 'use strict';
 
-describe('orgService', function () {
+fdescribe('orgService', function () {
   beforeEach(module('Core'));
 
   var q, deferred;
@@ -236,6 +236,121 @@ describe('orgService', function () {
     var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), payload);
     httpBackend.flush();
     expect(promise).toBeResolved();
+  });
+
+  describe('orgService caching', function () {
+    var baseTime;
+    beforeEach(function () {
+      baseTime = moment().toDate();
+      jasmine.clock().install();
+      jasmine.clock().mockDate(baseTime);
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it('should successfully set sum of orgsetting across multiple saves', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        allowCrashLogUpload: true
+      };
+
+
+      var payload = _.clone(save1);
+      var payload2 = _.merge(_.clone(save1), _.clone(save2));
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload2).respond(200, {});
+      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
+      var promise2 = Orgservice.setOrgSettings(Authinfo.getOrgId(), save2);
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+      expect(promise2).toBeResolved();
+    });
+
+    it('should only use the last org settings on save when previous save was more than five minutes since', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        allowCrashLogUpload: true
+      };
+
+
+      var payload = _.clone(save1);
+      var payload2 = _.clone(save2);
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
+
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload2).respond(200, {});
+      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
+      jasmine.clock().mockDate(moment(baseTime).add(5,'minutes').toDate());
+      var promise2 = Orgservice.setOrgSettings(Authinfo.getOrgId(), save2);
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+      expect(promise2).toBeResolved();
+    });
+
+    it('a new save should ovveride same keys as in cache', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        isCiscoSupport: true
+      };
+
+
+      var payload = _.clone(save1);
+      var payload2 = _.merge(_.clone(save1), _.clone(save2));
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
+
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload2).respond(200, {});
+      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
+      jasmine.clock().mockDate(baseTime);
+      jasmine.clock().mockDate(moment(baseTime).add(2,'seconds').toDate());
+      var promise2 = Orgservice.setOrgSettings(Authinfo.getOrgId(), save2);
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+      expect(promise2).toBeResolved();
+    });
+
+    it('a new save should with same value as in cache should override the cached value', function () {
+      var payload = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
+      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), payload);
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
+
   });
 
   it('should fail to set organization settings', function () {
