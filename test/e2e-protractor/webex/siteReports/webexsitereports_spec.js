@@ -73,7 +73,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
       it('should click on reports icon for ' + webExCommon.t31Info.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.T31ReportsCog);
+          utils.click(webExCommon.t31ReportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.t31CardsSectionId);
         }
@@ -88,7 +88,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
       it('should click on reports icon for ' + webExCommon.t30Info.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.T30ReportsCog);
+          utils.click(webExCommon.t30ReportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.t30CardsSectionId);
         }
