@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Administración de colaboración en la nube",
+    "title": "Administración de Cloud Collaboration",
     "login": "Iniciar sesión",
     "loading": "Cargando",
     "license": "Al utilizar los servicios de Cisco Spark usted acepta las Condiciones del servicio y la Declaración de privacidad."
@@ -17,13 +17,13 @@
     "add": "Agregar usuarios",
     "entitle": "Autorizar",
     "invitePending": "Invitación pendiente",
-    "inviteMsg": "Los servicios de usuarios están pendientes y aparecerán aquí cuando el usuario active su cuenta",
+    "inviteMsg": "Este usuario todavía no ha establecido su contraseña",
     "resendInvitation": "Volver a enviar invitación",
     "firstnameHeader": "Nombre",
     "lastnameHeader": "Apellido",
     "displayNameHeader": "Nombre para mostrar",
     "emailHeader": "Correo electrónico",
-    "sipUri": "Dirección SIP de Spark",
+    "sipDomain": "Dirección SIP de Spark",
     "actionHeader": "Acciones",
     "invite": "Enviar invitaciones",
     "addedHeader": "AGREGADO",
@@ -75,7 +75,7 @@
     "yes": "SÍ",
     "resend": "Volver a enviar invitación",
     "resendActivation": "Volver a enviar la activación",
-    "deleteUserSuccess": "El {{email}} del usuario se eliminó correctamente",
+    "deleteUserSuccess": "{{email}} del usuario eliminado correctamente; en algunos casos, puede tomar hasta 24 horas antes de que el usuario sea eliminado de sus salas de Spark",
     "deleteUserError": "Error al eliminar el usuario.",
     "onboardSuccess": "{{email}} incorporado correctamente",
     "onboardError": "{{email}} no incorporado. Estado: {{status}}",
@@ -90,6 +90,7 @@
     "emailError": "Error al enviar el correo electrónico.",
     "convertUserSuccess": "correctamente convertido.",
     "convertUserError": "No se pudo convertir",
+    "convertUserSearch": "Introducir el nombre o la dirección de correo electrónico del cliente",
     "addtionalServiceSetupText": "Se requiere una configuración adicional antes de que se pueda activar este servicio.",
     "addtionalServiceSetupConfirmation": "¿Está seguro de que desea abandonar esta ventana? Perderá los datos.",
     "setUpThisService": "Configurar este servicio",
@@ -104,7 +105,10 @@
     "tooManyResultsError": "La búsqueda mostró demasiados resultados. Restrinja los criterios de búsqueda.",
     "userExistsError": "El usuario {{email}} ya existe. Utilice la opción Convertir en la página Descripción general para traer al usuario a su organización. Si este usuario no está disponible para conversión, envíe un informe de problema.",
     "claimedDomainError": "{{email}} no se puede agregar. Los dominios de usuario deben ser iguales a uno de los dominios reclamados de su organización o no deben ser reclamados por otra organización, si su organización no ha reclamado un dominio.",
-    "userExistsInDiffOrgError": "No se puede agregar {{email}}. El usuario ya existe en otra organización."
+    "userExistsInDiffOrgError": "No se puede agregar {{email}}. El usuario ya existe en otra organización.",
+    "unauthorizedError": "No se puede agregar {{email}}. No está autorizado a invitar a este usuario.",
+    "notSetupForManUserAddError": "No se puede agregar {{email}}. Esta organización no está configurada para agregar usuarios manualmente.",
+    "telstraAppRedirect": "Conectando a Telstra Apps Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Grupos",
@@ -165,6 +169,7 @@
       "200": "se otorgaron los derechos correctamente",
       "404": "no existe",
       "409": "derechos actualizados previamente",
+      "400094": "ya tiene el servicio de llamadas en los servicios híbridos habilitados; tener tanto el servicio de llamadas como las llamadas de Spark habilitados para un usuario no es compatible. Para habilitar las llamadas de Spark, desactive el servicio de llamadas para este usuario e inténtelo nuevamente.",
       "other": "sin derechos, estado: {{status}}"
     }
   },
@@ -209,11 +214,12 @@
     "supportTab": "Soporte",
     "logsTab": "Registros",
     "logsTabDesc": "Ver registros del usuario",
-    "cdrTab": "Flujo de llamadas de CDR",
+    "cdrTab": "Flujo de la llamada de CDR",
     "cdrLogsTabDesc": "Ver flujo de llamadas de CDR",
     "billingTab": "Aprovisionamiento de pedidos",
     "billingTabDesc": "Operaciones/Soporte de Ingeniería",
     "accountTab": "Cuenta",
+    "settingsTab": "Configuración",
     "developmentTab": "Desarrollo",
     "organizationTab": "Administrar organizaciones",
     "organizationTabDesc": "Administre los detalles de la organización, vea los servicios asignados y obtenga acceso a las herramientas.",
@@ -258,14 +264,16 @@
     "callServiceTabDesc": "Servicio de llamadas",
     "expresswayManagementServiceTab": "Servicios híbridos: administración",
     "expresswayManagementServiceTabDesc": "Servicio de administración de Expressway",
-    "helpdesk": "Mesa de ayuda"
+    "helpdesk": "Mesa de ayuda",
+    "careTab": "Atención",
+    "careTabDesc": "Centro de contacto en la nube"
   },
   "index": {
     "welcome": "¡Bienvenido!",
     "feedback": "Comentarios",
     "support": "Ayuda",
     "logout": "Cerrar sesión",
-    "appTitle": "Administración de colaboración en la nube",
+    "appTitle": "Administración de Cloud Collaboration",
     "genericTitle": "Spark",
     "search": "Buscar usuarios por nombre o correo electrónico",
     "greeting": "Hola, {{name}}",
@@ -491,7 +499,8 @@
     "success": "Usuario correctamente actualizado.",
     "rolesSuccess": "Funciones del usuario actualizadas correctamente.",
     "error": "Error al actualizar el usuario.",
-    "rolesError": "Error al actualizar las funciones del usuario."
+    "rolesError": "Error al actualizar las funciones del usuario.",
+    "complianceError": "Error al actualizar el derecho de cumplimiento"
   },
   "supportPage": {
     "title": "Soporte",
@@ -573,14 +582,17 @@
         "helpdeskSupport": "Soporte de mesa de ayuda",
         "viewHelpdeskSupport": "Ver Soporte de mesa de ayuda",
         "launchHelpdeskDesc": "Abra el portal de Mesa de ayuda en una nueva pestaña",
-        "cdrLogs": "Flujo de llamadas de CDR",
+        "cdrLogs": "Flujo de la llamada de CDR",
         "viewCdrCallFlow": "Ver flujo de llamadas de CDR",
-        "viewCdrCallFlowDesc": "Abrir la herramienta en una ficha nueva"
+        "viewCdrCallFlowDesc": "Abrir la herramienta en una ficha nueva",
+        "ediscovery": "Informes de actividades",
+        "launchEdicoveryDesc": "Abrir la consola Informes de actividades en una ficha nueva",
+        "viewEdiscovery": "Ver informes de actividades"
       }
     }
   },
   "cdrLogs": {
-    "title": "Flujo de llamadas de CDR",
+    "title": "Flujo de la llamada de CDR",
     "searchForm": "Formulario de búsqueda",
     "noData": "Ningún dato CDR coincide con los parámetros de búsqueda. Ajuste sus criterios y vuelva a intentarlo.",
     "nonexistentUser": "{{calltype}} El ID de usuario es incorrecto o no existe para este cliente. Compruebe el campo y vuelva a intentarlo.",
@@ -647,10 +659,11 @@
     "cdrSave": "Guardar llamada",
     "element": "Elemento",
     "value": "Valor",
-    "sparkCall": "(Llamada de Spark)"
+    "sparkCall": "(Llamada de Spark)",
+    "callingCustomer": "Cliente que llama"
   },
   "cdrLadderDiagram": {
-    "title": "Diagrama de escalera del flujo de llamadas",
+    "title": "Diagrama de escalera del flujo de la llamada",
     "downLoadOptions": "Opciones de descarga",
     "filterOptions": "Opciones de filtro",
     "filterBy": "Filtrar por",
@@ -674,7 +687,10 @@
     "404Error": "Diagnostic Service no puede responder en este momento. Vuelva a intentarlo más tarde.",
     "408Error": "Se agotó el tiempo de la solicitud mientras se esperaba una respuesta de Diagnostic Service. Vuelva a intentarlo más tarde.",
     "500Error": "Diagnostic Service encontró un error interno.",
-    "502And503Error": "Diagnostic Service no está disponible temporalmente. Vuelva a intentarlo más tarde."
+    "502And503Error": "Diagnostic Service no está disponible temporalmente. Vuelva a intentarlo más tarde.",
+    "huronNodes": "Nodos de Huron",
+    "sparkNodes": "Nodos de Spark",
+    "enabledSparkNodes": "Nodos de Spark habilitados"
   },
   "billingPage": {
     "title": "Aprovisionamiento de pedidos",
@@ -760,6 +776,7 @@
     "users": "Usuarios",
     "settings": "Configuración",
     "resources": "Recursos",
+    "metrics": "Métricas",
     "download": "Descargar",
     "quantity": "Cant.",
     "modify": "Modificar",
@@ -772,7 +789,8 @@
     "ipAddress": "Dirección IP",
     "tryAgain": "Intente nuevamente",
     "postpone": "Posponer",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "warning": "Advertencia"
   },
   "notifications": {
     "success": "Notificaciones de éxito",
@@ -831,7 +849,7 @@
     "spark": "Spark",
     "sso": "Inicio de sesión único (SSO)",
     "goSetupCloudSipUri": "Vaya aquí para finalizar esta configuración",
-    "setupCloudSipUriMessage": "El dominio SIP de su organización no está definido. Se requiere este valor para que algunas funcionalidades de llamadas funcionen correctamente.",
+    "setupCloudSipUriMessage": "La dirección SIP de Spark de su organización no está definida. Se requiere este valor para que algunas funcionalidades de llamadas funcionen correctamente.",
     "dirsync": "Sincronización de directorios",
     "setUpCalendarService": "El servicio de calendario no está disponible. Use @spark y @webex en las invitaciones a reuniones para agregar automáticamente los detalles de la sala de la reunión.",
     "setUpCallAwareService": "La alerta del servicio de llamadas está disponible. Los usuarios pueden compartir instantáneamente su escritorio de sus clientes de Cisco Spark durante una llamada.",
@@ -884,7 +902,14 @@
     "finalDisableSSO": "La prueba fue exitosa. Desactive el inicio de sesión único.",
     "disableFailed": "No se pudo desactivar el inicio de sesión único.",
     "disableSuccess": "El inicio de sesión único (SSO) se desactivó correctamente para todos los usuarios.",
-    "enableSSOFailure": "No se pudo activar el inicio de sesión único (SSO)."
+    "enableSSOFailure": "No se pudo activar el inicio de sesión único (SSO).",
+    "modifySSOLabel": "Modificar",
+    "ssoEnabledStatus": "El inicio de sesión único está habilitado",
+    "ssoNotEnabledStatus": "El inicio de sesión único no está habilitado",
+    "ssoModifyWarning": "El SSO está habilitado <br/> La modificación de la configuración podría invalidar la conexión.",
+    "idpOverwriteWarning": "¿Está seguro? Actualmente, el inicio de sesión único está habilitado. La importación de un nuevo archivo de metadatos invalidará su configuración existente. Si continúa, no podrá volver a su configuración de SSO anterior. ¿Desea continuar?",
+    "disableSSOByRadioWarning": "¿Está seguro? Su configuración de SSO existente se desactivará. Todos los usuarios ahora comenzarán a utilizar la autenticación integrada en Spark y es posible que necesiten ayuda para establecer o restablecer las contraseñas. Usted no podrá deshacer esta selección, pero podrá volver a habilitar el SSO desde Configuración de la empresa. ¿Desea continuar? ",
+    "ssoDisableSuccessNotification": "El SSO está desactivado <br/> La configuración de la autenticación de usuario ahora utiliza el servicio de identidad incorporado simple."
   },
   "serviceSetupModal": {
     "timeZone": "Zona horaria",
@@ -892,13 +917,17 @@
     "tzDescription": "Especifique la zona horaria que debe usarse para enrutar llamadas en función de una planificación. Por ejemplo, esta zona horaria se aplica a todas las llamadas enrutadas en función del horario de trabajo y los calendarios de vacaciones.",
     "steeringDigit": "Dígito de marcado de salida",
     "steeringDigitDescription": "Especifique el número que los usuarios deben marcar antes de realizar una llamada externa.",
+    "extensionLength": "Longitud de la extensión interna",
+    "extensionLengthDescription": "Especifique la longitud de los números internos.",
+    "extensionLengthChangeWarning": "La modificación de la longitud de la extensión modificará todas las extensiones del sistema.",
     "siteSteeringDigit": "Dígito de marcado de un sitio a otro",
     "siteSteeringDigitDescription": "Especifique el número que los usuarios deben marcar antes de hacer una llamada a otro sitio.",
     "siteCode": "Código del sitio",
     "steeringDigitChangeWarning": "Si cambia el dígito de marcado saliente provocará que las extensiones que comiencen con el mismo número experimenten demoras de marcado. Asegúrese de que las extensiones no comiencen con el mismo número que el dígito de marcado saliente.",
+    "extensionRangeChangeWarning": "Si cambia el dígito de marcado saliente provocará que las extensiones que comiencen con el mismo número experimenten demoras de marcado. Asegúrese de que las extensiones no comiencen con el mismo número que el dígito de marcado saliente.",
     "siteCodeDescription": "Especifique un número único para identificar un sitio específico.",
     "internalExtensionRange": "Intervalo de extensiones internas",
-    "internalNumberRangeDescription": "Especifique el intervalo de números internos. Debe tener 4 dígitos.",
+    "internalNumberRangeDescription": "Especifique el intervalo de números internos. La longitud debe tener {{length}} dígitos.",
     "extensionError": "Extensión no válida: ",
     "companyVoicemail": "Correo de voz de la empresa",
     "companyVoicemailDescription": "Seleccione un número al que los usuarios puedan llamar para revisar su correo de voz.",
@@ -922,7 +951,8 @@
     "voicemailUpdateError": "No se pudo actualizar el número de correo de voz de la empresa.",
     "voicemailNoExternalNumbersError": "Debe tener líneas directas no asignadas para activar el correo de voz. Comuníquese con su socio o su administrador.",
     "timezoneUpdateError": "No se pudo actualizar la zona horaria de la empresa.",
-    "extensionDeleteSuccess": "La extensión se eliminó correctamente {{extension}}.",
+    "errorGettingTimeZoneToggle": "No se pudo obtener el conmutador de características atlasHuronDeviceTimeZone",
+    "extensionDeleteSuccess": "La extensión {{extension}} se eliminó correctamente.",
     "extensionDeleteError": "No se pudo eliminar la extensión {{extension}}.",
     "extensionAddError": "No se pudo crear la extensión {{extension}}.",
     "greaterThan": "{{endNumber}} debe ser mayor o igual que {{beginNumber}}.",
@@ -1089,18 +1119,19 @@
       "modalText2": "Seleccione el tipo de información que desea incluir en este informe:",
       "modalNote": "Nota: Mientras más usuarios incluya, mayor será el tiempo que tarde el informe en generarse.",
       "modalCTA": "Exportar a CSV",
-      "csvFilename": "user_status_report.csv"
+      "guesstimate": "Selección estimada en {{minutes}}min {{seconds}}s"
     },
     "overview": {
       "activated": "{{number}} activado",
       "pending": "{{number}} pendiente",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Cargando, espere…",
+      "report": "Informe",
       "clusters-title": "Grupos de Expressway",
       "status-title": "Estado del servicio",
-      "add-resource-button": "Agregar un recurso",
+      "add-resource-button": "Agregar recurso",
       "add-resource-button-information": " para iniciar el registro y la configuración de sus Expressways.",
-      "setupCloudSipUriHeader": "Definir dominio SIP"
+      "setupCloudSipUriHeader": "Definir dirección SIP de Spark"
     },
     "redirect-target-dialog": {
       "title": "Registrar el nuevo Expressway",
@@ -1109,7 +1140,22 @@
       "activate-resource-button": "Siguiente",
       "register-resource-button": "Ir a Expressway",
       "grant-registration-success-header": "Ahora puede registrar el {{hostname}} de Expressway con Cisco Collaboration Cloud.",
-      "grant-success-information": "Vaya a su Expressway en el plazo de una hora para finalizar el registro."
+      "grant-success-information": "Vaya a su Expressway en el plazo de una hora para finalizar la inscripción.",
+      "register-error-400": "No se pudo inscribir en Expressway. El nombre de organizador no es válido.",
+      "register-error-500": "No se pudo registrar Expressway. Inténtelo nuevamente más tarde, o si el problema continúa, comuníquese con su representante de soporte técnico de Cisco."
+    },
+    "addResourceDialog": {
+      "title": "Agregar recurso para {{ServiceName}}",
+      "registerNewExpressway": "Registrar el nuevo grupo de Expressway e instalar {{ConnectorName}}",
+      "addToExistingExpressway": "Instalar {{ConnectorName}} en el grupo existente de Expressway",
+      "enterHostname": "Introducir el nombre del organizador del Expressway que desea registrar con Cisco Collaboration Cloud",
+      "enterHostnamePlaceholder": "Introducir el nombre del organizador de Expressway",
+      "willBeInstalled": "{{ConnectorName}} se instalará tan pronto como termine con el registro, lo que permitirá el Expressway para {{ServiceName}}.",
+      "selectExisting": "Seleccionar uno o más grupos existentes de Expressway",
+      "selectClusterPlaceholder": "Seleccionar uno o más grupos de Expressway…",
+      "cannotCreateCluster": "No se pudo crear el grupo. Inténtelo nuevamente más tarde, o si el problema continúa, comuníquese con su representante de soporte técnico de Cisco.",
+      "cannotProvisionConnector": "No se pudo aprovisionar {{ConnectorName}}. Inténtelo nuevamente más tarde, o si el problema continúa, comuníquese con su representante de soporte técnico de Cisco.",
+      "cannotFinalizeAllowlisting": "No se pudo finalizar el aprovisionamiento del grupo. Inténtelo nuevamente más tarde, o si el problema continúa, comuníquese con su representante de soporte técnico de Cisco."
     },
     "activateService": {
       "ingress": "Extender la nube a su entorno en las instalaciones",
@@ -1123,9 +1169,17 @@
       },
       "label": "ACTIVAR Y COMENZAR LA CONFIGURACIÓN"
     },
+    "deactivateServiceSingleCluster": {
+      "title": "Desactivar {{serviceName}}",
+      "intro": "Está por eliminar el siguiente servicio híbrido:",
+      "fromCluster": "del grupo de Expressway {{clusterName}}.",
+      "wipeSettingsWarning": "Esta acción eliminará {{connectorName}} de {{clusterName}} y toda la configuración local del conector.",
+      "notDeregistered": "No se cancelará el registro de {{clusterName}} de Cisco Collaboration Cloud, y el grupo de Expressway se puede seguir utilizando para alojar servicios híbridos.",
+      "confirmButton": "Confirmar desactivación"
+    },
     "clusters": {
       "listing": {
-        "no_clusters_heading": "No hay grupos de Cisco Expressway inscriptos",
+        "no_clusters_heading": "No hay grupos de Cisco Expressway registrados",
         "no_clusters_text": "Consulte cuáles son las acciones necesarias arriba y la documentación para comenzar."
       },
       "deregister": "Cancelar registro",
@@ -1157,7 +1211,8 @@
       "has_alarms": "Alarmas",
       "upgrading": "Mejorando",
       "upgraded": "Mejorado",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "initializing": "Inicializando"
     },
     "setup": {
       "label": "Administración de conectores",
@@ -1187,6 +1242,16 @@
       "contact-center-context": "Servicio de centro contextual",
       "squared-fusion-ec": "Conector de llamadas",
       "squared-fusion-mgmt": "Conector de administración"
+    },
+    "connectorNameFromConnectorType": {
+      "c_cal": "Conector de calendarios",
+      "c_ucmc": "Conector de llamadas",
+      "c_mgmt": "Conector de administración"
+    },
+    "serviceNameFromConnectorType": {
+      "c_cal": "Servicio de calendario",
+      "c_ucmc": "Servicio de llamadas",
+      "c_mgmt": "Servicio de administración"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "La alerta del servicio de llamadas permite a los usuarios compartir en forma instantánea sus escritorios desde sus clientes de Cisco Spark mientras están en una llamada. La conexión del servicio de llamadas permite a los usuarios responder llamadas de sus teléfonos laborales y realizar llamadas a otros teléfonos laborales desde el cliente de Cisco Spark.",
@@ -1233,14 +1298,32 @@
       "softwareUpgrade": "Mejora de software",
       "currentVersion": "Versión actual",
       "newVersion": "Versión nueva",
-      "explanation": "Está a punto de mejorar {{connectorType}} en todos los host del grupo de Cisco Expressway seleccionado:",
+      "explanation": "Está por mejorar {{connectorType}} a la versión {{newVersion}} en todos los organizadores de su grupo de Expressway",
+      "releaseNotes": "Notas de la versión",
       "pending": "Pendiente",
       "upgrade": "Mejorar",
       "upgradeNow": "Mejorar ahora",
       "upgradingHost": "Mejorando {{host}} a {{version}}",
       "upgradeDone": "Mejora completada.",
       "upToDate": "{{connectorType}} está actualizado en este grupo.",
-      "upgradeImpossible": "{{connectorType}} no está configurado en este grupo. Configure e inícielo antes de iniciar una mejora."
+      "upgradePossible": "Hay una versión nueva disponible para {{connectorType}}: {{availableVersion}}.",
+      "upgradeImpossible": "{{connectorType}} no está configurado en este grupo. Configúrelo e inícielo antes de iniciar una mejora."
+    },
+    "expresswayClusterSettings": {
+      "pageTitle": "Configuración de {{clusterName}}",
+      "releasechannelHeader": "Usuarios y canal de lanzamiento",
+      "releasechannelParagraph": "Asigne un subconjunto específico de sus usuarios a este grupo, y seleccione un canal de lanzamiento para este.",
+      "releasechannelUsers": "Usuarios",
+      "releasechannelReleasechannel": "Canal de lanzamiento",
+      "deactivateServicesHeader": "Desactivar servicios",
+      "deactivateServicesParagraph": "La desactivación de un servicio eliminará cualquier funcionalidad relacionada con el servicio de este grupo.",
+      "deactivateServicesCalendarButton": "Desactivar calendario",
+      "deactivateServicesCallButton": "Desactivar llamada",
+      "noHybridServicesProvisioned": "No hay servicios híbridos aprovisionados en este Expressway. Para habilitar un servicio híbrido, vaya a la página de servicio relevante.",
+      "deregisterClusterHeader": "Cancelar registro del grupo",
+      "deregisterClusterParagraph": "Desactivar todos los servicios en este grupo de Expressway antes de cancelar el registro.",
+      "deregisterClusterButton": "Cancelar registro",
+      "deregisterClusterExplanation": "Desconecte este grupo de Cisco Collaboration Cloud y elimine todos los conectores y configuraciones relacionadas."
     },
     "settings": {
       "deactivateServiceHeading": "Desactivar servicio",
@@ -1263,8 +1346,17 @@
         "connectSettingsHeading": "Configuración para conectar",
         "connectSettings": "Configuración necesaria para la característica Conectar.",
         "connect": "Las llamadas entrantes de los usuarios sonarán en los teléfonos laborales y la aplicación Cisco Spark. Los usuarios también pueden llamar a sus colegas desde sus teléfonos o la aplicación.",
-        "certificatesHeading": "Certificados",
-        "certificates": "Utilice los certificados de la lista de confianza predeterminada de Cisco Collaboration para las llamadas a SIP cifradas o cargue sus propios certificados.",
+        "certificatesHeading": "Certificados para las llamadas a SIP cifradas",
+        "certificates": "Utilice los certificados proporcionados en la lista de confianza predeterminada de colaboración de Cisco o cargue su propia lista. Si utiliza su propia lista, asegúrese de que los nombres de organizador estén en un dominio verificado. Para obtener ayuda, haga clic <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">aquí.</a>",
+        "certificatesEmailAddress": "Dirección de correo electrónico",
+        "certificatesCommonName": "Nombre común",
+        "certificatesOrganizationalUnit": "Unidad de organización",
+        "certificatesOrganization": "Organización",
+        "certificatesLocality": "Localidad",
+        "certificatesStateOrProvince": "Estado/Provincia",
+        "certificatesCountry": "País",
+        "certificatesCreated": "Creado",
+        "certificatesExpires": "Caduca",
         "certificatesUpload": "Cargar",
         "certificatesModalHeading": "Eliminar certificado",
         "certificatesModalText": "¿Está seguro de que desea eliminar el siguiente certificado?",
@@ -1318,7 +1410,52 @@
         "title": "Verificar un dominio",
         "description": "Necesita al menos un dominio verificado para usar los servicios de llamadas. Agregue dominios en la configuración."
       }
+    },
+    "fusion": {
+      "list": {
+        "title": "Grupos",
+        "empty": "No hay grupos para mostrar.",
+        "users": "Usuarios:",
+        "releaseChannel": "Canales de lanzamiento:",
+        "upgradeTime": "Hora de la mejora:",
+        "hosts": "{count, plural, one{# organizador} other{# organizadores}}",
+        "settings": "Configuración",
+        "all": "Todos",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
+        "expressway": "Expressway",
+        "mediafusion": "Mediafusion"
+      }
     }
+  },
+  "ediscovery": {
+    "browserTabHeaderTitle": "Informes de actividades",
+    "navHeaderTitle": "Informes de actividades",
+    "searchHelp": "Buscar ayuda",
+    "searchError": "La búsqueda de '{{roomId}}' arrojó 0 coincidencias",
+    "dateError": {
+      "StartDateMustBeforeEndDate": "La fecha de inicio debe ser anterior a la fecha de finalización",
+      "StartDateCannotBeInTheFuture": "La fecha de inicio no puede ser una fecha futura"
+    },
+    "searchingPleaseWait": "Buscando información; espere…",
+    "help": {
+      "title": "Ayuda de los informes de actividades"
+    },
+    "reportStates": {
+      "COMPLETED": "Finalizado",
+      "FAILED": "Error",
+      "RUNNING": "Ejecutando",
+      "CREATED": "Creado",
+      "ACCEPTED": "Aceptado",
+      "ABORTED": "Anulado"
+    },
+    "reportFailureReasons": {
+      "UNEXPECTED_FAILURE": "Error inesperado",
+      "BUSY": "Ocupado",
+      "INSUFFICIENT_STORAGE": "Almacenamiento insuficiente",
+      "ROOM_NOT_FOUND": "No se encontró la sala"
+    },
+    "reportTimeout": "Tiempo de espera detectado. Cancele el informe y vuelva a intentarlo."
   },
   "firstTimeWizard": {
     "termsAndConditions": "Términos y condiciones",
@@ -1361,12 +1498,14 @@
     "processBulkError": "Error no identificado al procesar el usuario. Vuelva a intentarlo.",
     "bulk400Error": "Error sin identificar en la lista de usuarios. Verifique la lista de usuarios y vuelva a intentarlo.",
     "bulk401And403Error": "El cliente no está autorizado para agregar o actualizar a este usuario.",
+    "bulk403AndNotSetupManUserAddError": "No se encontró {{email}} del usuario. Esta organización no está configurada para agregar usuarios manualmente.",
     "bulk404Error": "El servidor no puede responder en este momento. Vuelva a intentarlo más tarde.",
     "bulk408Error": "Se agotó el tiempo de la solicitud mientras se esperaba una respuesta. Vuelva a intentarlo más tarde.",
     "bulk409Error": "La solicitud falló por un conflicto de procesamiento. Verifique la lista de usuarios y vuelva a intentarlo.",
     "bulk500Error": "La solicitud falló debido a un error en el servidor. Vuelva a intentarlo.",
     "bulk502And503Error": "El servidor no está disponible temporalmente. Vuelva a intentarlo más tarde.",
-    "bulkCancelledError": "Se omitió debido a una solicitud cancelada.",
+    "bulkCancelledErrorByUser": "{{email}} no procesado debido a una solicitud cancelada por el usuario.",
+    "bulkCancelledErrorByServer": "{{email}} no procesado debido a una desconexión del servidor.",
     "resultRowHeader": "Número de fila",
     "resultErrorHeader": "Mensaje de error",
     "uploadDirSyncEmpty": "Cargue usuarios desde el servidor del directorio.",
@@ -1399,25 +1538,16 @@
     "freeMtg": "Reunión gratuita de 3 integrantes",
     "freeCall": "Llamada gratuita",
     "communicationsSub": "Configurar servicio de llamadas",
-    "claimSipUrl": "Personalizar dominio SIP URI",
-    "claimSipUriTitle": "Personalice el nombre de dominio SIP URI de su empresa. Este dominio se utilizará para crear un URI de alcance universal para cada usuario de su empresa.",
-    "claimSipUriDesc": "Este URI se utiliza para recibir llamadas de cualquier servicio de llamadas SIP basadas en estándares (p. ej.: myuser@mycompany.ciscospark.com).",
-    "claimSipUriWarning": "Esto no se puede editar más adelante.",
-    "claimSipUriDomainTitle": "Dominio SIP URI",
-    "claimSipUriDomain": ".ciscospark.com",
-    "claimSipUriTestOrg": "Esta característica está disponible actualmente solo para organizaciones de prueba. Continúe con el siguiente paso.",
-    "setSipUriDescPartOne": "Cree un dominio SIP personalizado para su organización. Una vez creado, se generará una dirección SIP de Spark para cada usuario de la organización, que permitirá las llamadas entre dispositivos con SIP y sus usuarios.",
-    "setSipUriDescPartTwo": "Por ejemplo, John Smith trabaja en la empresa Ejemplo. Su colega podía comunicarse con él al ingresar a jsmith@ejemplo.call.ciscospark.com desde un dispositivo SIP estándar.",
-    "setSipUriDescPartThree": "Hemos proporcionado un nombre de sugerencia según el nombre de su organización. Si lo desea, ingrese un nombre distinto y veremos si está disponible para su empresa.",
-    "setSipUriDescPartFour": "Si lo prefiere, introduzca su propio valor y veremos si está disponible para su empresa:",
-    "setSipUriDomainMsg": "Introduzca un prefijo para el dominio SIP",
-    "setSipUriDomainTitle": "Dominio SIP",
-    "setSipUriDomainCompNames": "Los dominios SIP de su organización:",
-    "setSipUriDomainCheckAvailability": "Verificar disponibilidad",
-    "setSipUriPlaceholder": "entrada de un dominio único",
-    "setSipUriErrorMessage": "No disponible. Pruebe otro nombre",
-    "setSipUriErrorMessageInvalidDomain": "Dominio no válido, intente con otro nombre",
-    "setSipUriDomainSuccessMessage": "El dominio SIP se ha guardado correctamente",
+    "setSipDomainDescription": "Seleccione un subdominio que identifique su empresa y que se utilizará para crear direcciones SIP de Spark.",
+    "setSipDomainMsg": "Introducir un subdominio",
+    "setSipDomainTitle": "Dirección SIP de Spark",
+    "setSipDomainCompNames": "Estos subdominios pueden reservarse para usted:",
+    "setSipDomainCheckAvailability": "Verificar disponibilidad",
+    "setSipDomainPlaceholder": "introducir un subdominio",
+    "setSipDomainErrorMessage": "No disponible. Intente con otro nombre",
+    "setSipDomainErrorMessageInvalidDomain": "Dominio no válido; intente con otro nombre",
+    "setSipDomainSuccessMessage": "La dirección SIP de Spark se ha guardado correctamente",
+    "setSipDomainConfirmText": "Reconozco que se trata de una configuración de una sola vez que no se puede cambiar más adelante.",
     "sparkDomainManagementServiceErrorMessage": "No se pudo alcanzar el servicio de administración de dominio de Spark",
     "messageSettings": "Configuración de mensajes",
     "callSettings": "Configuración de llamadas",
@@ -1455,20 +1585,22 @@
     "defaultPlaceholder": "Predeterminado",
     "installStep1": "1. <a href='{{download}}' download> Descargue </a> e instale el conector de directorios de Cisco en su empresa.",
     "installStep2": "2. Configure el acuerdo de sincronización de Active Directory.",
-    "installStep3": "3. Pruebe el acuerdo de sincronización.",
+    "installStep3": "3. Pruebe el acuerdo de sincronización. Esta operación puede llevar algo de tiempo según la cantidad de usuarios que se sincronicen.",
     "installWarning": "Advertencia:",
     "installWarningDescription": "Si ya agregó usuarios manualmente, llevar a cabo una sincronización de Active Directory puede provocar la eliminación de los usuarios agregados previamente. Revise los Informes de ensayos de conectores del directorio de Cisco para verificar que estén presentes todos los usuarios esperados.",
     "nextSteps": "Presione Siguiente cuando esté listo para comprobar que se esté sincronizando la información de identidad.",
     "results": "Resultados",
     "syncNotConfigured": "La sincronización de directorios no está habilitada. Vea el paso anterior para obtener las instrucciones de configuración.",
     "syncAgreementText": "usuarios en un acuerdo de sincronización",
-    "cloudSipSuccess": "Se agregó correctamente SIP URI en la nube.",
-    "cloudSipError": "Se produjo un error de SIP URI en la nube.",
+    "cloudSipSuccess": "La dirección SIP de Cloud Spark se agregó correctamente.",
+    "cloudSipError": "Se produjo un error al agregar la dirección SIP de Cloud Spark.",
     "messengerRetentionSuccess": "Se agregó correctamente la configuración del período de retención.",
     "messengerRetentionError": "Se produjo un error al agregar la configuración del período de retención.",
     "messengerRetentionEditSuccess": "Se cambió correctamente la configuración del período de retención.",
     "messengerRetentionEditError": "Se produjo un error al cambiar la configuración del período de retención.",
-    "messengerEnableWebexSuccess": "Se habilitó correctamente la integración de mensajería de Webex.",
+    "messengerAppSecuritySuccess": "Se cambió correctamente la configuración de seguridad del dispositivo.",
+    "messengerAppsecurityError": "Se produjo un error al cambiar la configuración de seguridad del dispositivo.",
+    "messengerEnableWebexSuccess": "Se habilitó correctamente la integración de Webex Messenger.",
     "messengerEnableWebexError": "Se produjo un error al habilitar la integración de mensajería de Webex.",
     "messengerDisableWebexSuccess": "Se deshabilitó correctamente la integración de mensajería de Webex.",
     "messengerDisableWebexError": "Se produjo un error al deshabilitar la integración de mensajería de Webex.",
@@ -1479,6 +1611,8 @@
     "dataRetentionDesc": "Al eliminar un usuario (o una prueba) del sistema, ¿cuánto tiempo debe retener el sistema las salas de equipo del usuario?",
     "dataShareTitle": "Datos de uso enviados a un socio de Cisco",
     "dataShareLabel": "Comparta la calidad de servicio y los datos de participación con su socio de Cisco para permitir un soporte al socio de mayor nivel.",
+    "appSecurity": "Seguridad de la aplicación",
+    "appSecurityLabel": "Los usuarios pueden iniciar la aplicación Cisco Spark solo en los dispositivos protegidos",
     "setupSSOSub": "Inicio de sesión único",
     "setupSSODesc": "Seleccione la opción adecuada para su configuración de SSO.",
     "manualInvite": "Introduzca las direcciones de correo electrónico de las personas de su empresa que recibirán servicios de colaboración. Estas recibirán una invitación por correo electrónico para inscribirse.",
@@ -1498,6 +1632,11 @@
     "startYourTrial": "Inicie su nueva prueba de {{days}} días.",
     "trialDaysRemaining": "{{days}} días restantes de la prueba actual.",
     "messagingSetupPlaceholder": "Seleccionar tiempo de retención",
+    "messagingSetupDataRetentionOption1": "Eliminar de inmediato",
+    "messagingSetupDataRetentionOption2": "30 días",
+    "messagingSetupDataRetentionOption3": "60 días",
+    "messagingSetupDataRetentionOption4": "90 días",
+    "messagingSetupDataRetentionOption5": "Conservar para siempre",
     "assignDnAndDirectLines": "Asignar números",
     "assignDnAndDirectlineDesc": "Verifique las extensiones y líneas directas que se asignarán a los usuarios. Puede escoger utilizar los últimos 4 dígitos de la línea directa para que coincidan con la extensión del usuario presionando el enlace Asignar línea directa con extensión a continuación.",
     "mapDirectLineWithExt": "Asignar línea directa con extensión",
@@ -1555,11 +1694,12 @@
     "successCreateCe": "{{name}} se creó correctamente.",
     "successDeleteCe": "{{name}} se eliminó correctamente.",
     "successUpdateCe": "{{name}} se actualizó correctamente.",
-    "successImport": "Se importaron {{hours}} horas de apertura/cierre y {{holidays}} feriados correctamente",
+    "successImport": "Se copiaron {{hours}} horas de apertura y {{holidays}} feriados correctamente",
     "errorCreateCe": "Se produjo un error al crear {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Se produjo un error al eliminar {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Se produjo un error al actualizar {{name}}: {{statusText}} ({{status}}).",
     "errorCreateSchedule": "Se produjo un error al crear el programa para {{name}}: {{statusText}} ({{status}}).",
+    "errorUpdateScheduleName": "Se produjo un error al actualizar el nombre del programa: {{name}} {{statusText}} ({{status}}).",
     "errorDeletePredefinedSchedule": "Se produjo un error al eliminar el programa predefinido para {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Crear mensajes personalizados, desarrollar menús telefónicos y enrutar llamadas.",
     "resourceCountPlusMore": "+{{count}} más",
@@ -1578,12 +1718,12 @@
     "actionRouteCallHint": "Dirija la llamada a un destino como un grupo de búsqueda, un asistente automático o una extensión.",
     "actionDialByExtensionHint": "Solicite una extensión interna a la persona que llama y dirija la llamada.",
     "actionDialByExtensionHelp": "Introduzca el mensaje utilizado para solicitar la extensión para marcar a la persona que llama. Seleccione el idioma y la voz para esta frase.",
-    "actionEndCall": "Finalizar llamada",
+    "actionEndCall": "Desconectar",
     "schedule": "Planificación",
     "scheduleAllDay": "Abierto las 24 horas",
-    "scheduleOpenClosed": "Abierto/Cerrado",
     "scheduleOpen": "Horas abierto",
     "scheduleClosed": "Horas cerrado",
+    "scheduleClosedHolidays": "Cerrado/Feriados",
     "scheduleHolidays": "Feriados",
     "hoursMissing": "No se definieron las horas.",
     "holidaysMissing": "No se definieron los feriados.",
@@ -1608,18 +1748,25 @@
     "phoneMenuRouteHunt": "Derivar al grupo de búsqueda",
     "phoneMenuRouteVM": "Derivar al correo de voz",
     "phoneMenuRouteAA": "Derivar al asistente automático",
+    "phoneMenuRouteQueue": "Derivar a la cola",
     "phoneMenuListening": "Mientras está atento a la siguiente entrada del usuario",
     "phoneMenuRepeatOnce": "Una vez",
     "phoneMenuRepeatTwice": "Dos veces",
     "phoneMenuRepeatThree": "Tres veces",
     "phoneMenuRepeatFour": "Cuatro veces",
     "phoneMenuRepeatFive": "Cinco veces",
-    "phoneMenuHelp": "Seleccione el idioma deseado y la voz que se utiliza para decir la frase a la persona que realiza la llamada. Es opcional dejar un mensaje. Si no se deja un mensaje, aún estaremos atentos la entrada de la persona que realiza la llamada.",
-    "phoneMenuErrorRouteToAATargetMissing": "Falta la ruta al destino del asistente automático en la clave {{key}}.",
-    "phoneMenuErrorRouteToHGTargetMissing": "Falta la ruta al grupo de búsqueda en la clave {{key}}.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Falta la ruta al destino del número de teléfono en la clave {{key}}.",
-    "phoneMenuErrorDialByExtMessageMissing": "Falta el mensaje Marcar por extensión en la clave {{key}}.",
-    "phoneMenuErrorRouteToUserTargetMissing": "Falta la ruta al destino del usuario en la clave {{key}}.",
+    "phoneMenuHelp": "Seleccione el idioma deseado y la voz que se utiliza para decir la frase a la persona que realiza la llamada. Es opcional dejar un mensaje. Si no se deja un mensaje, aún estaremos atentos a la entrada de la persona que realiza la llamada.",
+    "phoneMenuErrorRouteToQueueTargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: falta la ruta al destino de la cola en el dígito de entrada {{key}}.",
+    "phoneMenuErrorRouteToAATargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: falta la ruta al destino del asistente automático en el dígito de entrada {{key}}.",
+    "phoneMenuErrorRouteToHGTargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: falta la ruta al destino del grupo de búsqueda en el dígito de entrada {{key}}.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: el dígito de entrada {{key}} tiene una ruta faltante o no válida al destino del número telefónico.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: falta la ruta al destino del usuario en el dígito de entrada {{key}}.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "Programa {{schedule}} en el menú telefónico {{at}}: falta la ruta al destino del correo de voz en el dígito de entrada {{key}}.",
+    "routeCallErrorRouteToVoicemailTargetMissing": "Programa {{schedule}} en la llamada de enrutamiento {{at}}: falta el destino en la ruta al correo de voz.",
+    "routeCallErrorRouteToUserTargetMissing": "Programa {{schedule}} en la llamada de enrutamiento {{at}}: falta el destino en la ruta al usuario.",
+    "routeCallErrorRouteToHGTargetMissing": "Programa {{schedule}} en la llamada de enrutamiento {{at}}: falta el destino en la ruta al grupo de búsqueda.",
+    "routeCallErrorRouteToAATargetMissing": "Programa {{schedule}} en la llamada de enrutamiento {{at}}: falta el destino en la ruta al asistente automático.",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "Programa {{schedule}} en la llamada de enrutamiento {{at}}: la ruta al número telefónico tiene un destino faltante o no válido.",
     "addNumberMsg": "Este asistente automático responderá todas las llamadas a los siguientes números. Puede agregar o eliminar números en cualquier momento.",
     "numberInfoPopover": "Si no ingresa un número aquí, no hay problema. Las llamadas aún pueden provenir de otro asistente automático.",
     "routeCallPopover": "Seleccione cómo enrutar las llamadas.",
@@ -1630,6 +1777,7 @@
     "sayMessagePlaceholder": "Introduzca su mensaje aquí.",
     "sayMessageUninterrupt": "La reproducción del mensaje será ininterrumpible.",
     "sayMessageVoice": "Voz",
+    "sayMessageInvalidChar": "Carácter no válido. El carácter '{{char}}' no está permitido.",
     "scheduleAddAdditionalHolidays": "Agregar feriados",
     "selectDate": "Seleccionar fecha",
     "allDay": "Todo el día",
@@ -1639,9 +1787,9 @@
     "on": "Activ.",
     "day": "Día",
     "selectAA": "Seleccionar asistente automático",
-    "importSchedule": "Importar programa",
-    "importDesc": "Seleccione un asistente automático existente para importar el programa de apertura/cierre y feriados desde",
-    "closedBehavious": "Comportamiento parecido al de los feriados",
+    "importSchedule": "Copiar programa",
+    "importDesc": "Seleccione un asistente automático existente para copiar el programa de apertura y feriados desde",
+    "closedBehaviour": "Comportamiento parecido al de los feriados",
     "failureImport": "Error al recuperar los programas. Estado: {{status}} ",
     "voices": {
       "male": "masculino",
@@ -1715,8 +1863,8 @@
     "sayMessageHelp": "Seleccione el idioma deseado y la voz que se utiliza para decir la frase a la persona que realiza la llamada. Es opcional dejar un mensaje. Si no se deja un mensaje, la conversación continuará al paso siguiente.",
     "errorReadCMI": "No se pudieron cargar los números de teléfono asignados. La opción para guardar está deshabilitada. Vuelva a abrir el asistente automático.",
     "errorAddCMI": "No se puede asignar el número de teléfono {{phoneNumber}}: {{statusText}} ({{status}}).",
-    "errorRemoveCMI": "No se puede(n) eliminar el (los) número(s) de teléfono asignado(s)",
-    "errorResetCMI": "No se puede restablecer al (los) número(s) de teléfono asignado(s) previamente",
+    "errorRemoveCMI": "No se puede eliminar los números de teléfono asignados. La opción para guardar está desactivada. Vuelva a abrir el asistente automático.",
+    "errorResetCMI": "No se puede restablecer al (los) número(s) de teléfono asignado(s) previamente.",
     "errorFailedToAssignNumbers": "No se puede(n) asignar los número(s): {{phoneNumbers}}",
     "errorNumbersCMIOnly": "Los números se asignaron, pero no en asistente automático: {{phoneNumbers}}",
     "errorNumbersCESOnly": "Los números están en el asistente automático, pero no se asignaron: {{phoneNumbers}}",
@@ -1727,8 +1875,9 @@
     "AABasic": "Básico",
     "AABasicDesc": "Mensajes reproducidos simples con menú telefónico personalizado.",
     "AACustom": "Personalizar",
-    "AACustomDesc": "Crear un asistente automático personalizado",
-    "AAOpenClosedDesc": "Programa de apertura/cierre simple con mensajes personalizados y menú telefónico."
+    "AACustomDesc": "Cree un asistente automático personalizado.",
+    "AABusinessHours": "Horas laborales",
+    "AABusinessHoursDesc": "Programa de apertura/cierre simple con acciones personalizadas."
   },
   "callPark": {
     "code": "CP",
@@ -1779,7 +1928,7 @@
     "internalNumberExtensionTooltip": "Utilice la extensión interna para comunicarse con esta línea desde el interior de la empresa en el mismo sitio.",
     "internalNumberPoolError": "No se pudieron cargar las extensiones internas.",
     "siteError": "No se pudo cargar la información del sitio.",
-    "steeringDigitOverlapWarning": "El primer dígito de la extensión interna se superpone con el dígito de marcado saliente ({{steeringDigitInTranslation}}).",
+    "steeringDigitOverlapWarning": "El primer dígito de la extensión interna se superpone con el dígito de marcado saliente.",
     "enterpriseSiteNumberLabel": "Si su empresa usa marcado de un sitio a otro:",
     "externalNumberLabel": "Número de teléfono",
     "externalNumberTooltip": "Utilice la línea directa para comunicarse con esta línea desde el exterior de la empresa.",
@@ -1889,6 +2038,20 @@
     "unassignedNumbers": "{count, plural, one{# Número no asignado} other{# Números sin asignar}}",
     "searchResults": "{count, plural, one{# resultados de búsqueda} other{# resultados de la búsqueda}}"
   },
+  "pstnOrderOverview": {
+    "pstnOrders": "Pedidos de red de telefonía conmutada pública (PSTN)",
+    "successful": "Correcto",
+    "inProgress": "En curso",
+    "advanceOrder": "Avanzar números",
+    "newNumberOrder": "Nuevos números",
+    "portNumberOrder": "Números de asignación de puertos",
+    "searchPlaceholder": "Buscar pedidos"
+  },
+  "pstnOrderDetail": {
+    "orderNumber": "N.° de pedido{{orderId}}",
+    "pendingNumbers": "{count, plural, one{hay # número} other{hay # números}} pendiente(s) para este pedido",
+    "searchPlaceholder": "Buscar números de teléfono"
+  },
   "serviceAddress": {
     "streetAddress": "Dirección postal",
     "unit": "Unidad",
@@ -1946,12 +2109,14 @@
     "serviceAddress": "Dirección de servicio",
     "serviceAddressPrompt": "En el caso de una llamada de emergencia, el grupo de respuesta de emergencia local utilizará esta dirección para ubicar a la persona que llama.",
     "serviceAddressConfirmation": "¿Es esta la dirección?",
-    "serviceAddressNotFound": "No se pudo encontrar la dirección. Actualice y vuelva a intentarlo.",
+    "serviceAddressNotFound": "No se puede encontrar la dirección. Actualice y vuelva a intentarlo.",
+    "orderNumber": "Número de pedido",
     "advancedOrder": {
       "noResults": "No se encontraron resultados de la búsqueda, pero tenemos una solución.",
       "detail": "Si bien no tenemos ningún número para mostrar en los resultados de la búsqueda, aún podemos realizar un pedido especial para obtener los números de códigos de área {{areaCode}}. Puede demorar aproximadamente 5 días para que el proveedor complete el pedido.",
       "addNumbers": "Agregar números",
-      "tooltip": "El bloque le permite agregar una gran cantidad de números consecutivos y no consecutivos.",
+      "blockTooltip": "Marque esta casilla para mostrar un bloque de números telefónicos. Después podrá seleccionar los números que desea ordenar.",
+      "consecutiveTooltip": "Marque esta casilla para filtrar los resultados y mostrar solo una secuencia consecutiva de números telefónicos.",
       "extra": "*Los números consecutivos tendrán un costo adicional"
     },
     "errors": {
@@ -2040,14 +2205,13 @@
       "title": "Iniciar prueba nueva"
     },
     "meeting": {
-      "title": "Configuración de prueba: reunión y WebEx",
-      "webexHeader": "Tipo de licencia de la reunión y de WebEx",
-      "meetingDetails": "Reunión de 25 integrantes",
-      "webexDetails": "WebEx Enterprise Edition",
+      "title": "Configuración de prueba: WebEx",
+      "webexHeader": "Tipo de licencia de WebEx",
       "siteUrl": "URL del sitio",
       "timezone": "Zona horaria",
       "webexSiteUrl": "URL del sitio de WebEx",
       "webexTimezone": "Zona horaria de WebEx",
+      "customerTimezone": "Zona horaria del cliente",
       "default": "Establecer como predeterminado",
       "siteUrlDescription": "Por ejemplo: companyname.webex.com",
       "tzDescription": "Seleccione una zona horaria cercana al cliente. Esto garantizará que el sitio de WebEx se implemente en el centro de datos adecuado.",
@@ -2093,7 +2257,8 @@
       "unit": "Unidad",
       "city": "Ciudad",
       "state": "Estado",
-      "zip": "Código postal"
+      "zip": "Código postal",
+      "dealId": "ID de acuerdo"
     },
     "numbers": {
       "title": "Iniciar nueva prueba: Agregar números"
@@ -2135,6 +2300,9 @@
         "siteFail": "No se creó el sitio"
       }
     },
+    "finish": {
+      "title": "Felicitaciones."
+    },
     "trialSuccess": "Su prueba está lista",
     "nextStepPrompt": "¿Desea configurar los servicios para el cliente?",
     "setupLater": "No, gracias",
@@ -2150,19 +2318,23 @@
     "squaredUC": "Llamada avanzada de Spark",
     "licenses": "Licencias",
     "licenseQuantity": "Cantidad de licencias",
+    "licenseCount": "Número de licencias",
     "users": "Usuarios",
     "message": "Mensaje",
     "meeting": "Reunión de 25 integrantes",
-    "webex": "WebEx Enterprise Edition 200",
+    "webex": "WebEx Enterprise Edition 200 con CMR",
     "call": "Llamada",
+    "callUsOnly": "Llamada (actualmente solo en los EE. UU.)",
     "roomSystem": "Sistema de salas de Spark",
+    "roomSysUsOnly": "Sistema de salas de Spark (actualmente solo en los EE. UU.)",
     "expireWarningMsg": "Su prueba termina en {{numDaysLeft}} día(s).",
     "expiredMsg": "Su prueba ha caducado.",
-    "requestPurchaseMsg": "¿Desea solicitar información de la compra?",
+    "requestPurchaseMsg": "¿Desea comprar Cisco Spark?",
     "requestConfirmMsg": "Se ha enviado un mensaje de solicitud de compra a {{partnerAdminDisplayName}}",
-    "requestPurchaseBtn": "Solicitar compra",
+    "requestPurchaseBtn": "Comprar ahora",
     "requestAgainBtn": "Solicitar de nuevo",
-    "requestConfirmNotifyMsg": "Se ha enviado una notificación a {{partnerAdminDisplayName}} de su intento de compra"
+    "requestConfirmNotifyMsg": "Se ha enviado una notificación a {{partnerAdminDisplayName}} de su intento de compra",
+    "trialDuration": "Duración de la prueba"
   },
 
   "status": {
@@ -2177,6 +2349,8 @@
     "service": "Servicio",
     "message": "Mensaje",
     "call": "Llamada",
+    "adminManagement": "Gestión del administrador",
+    "administrators": "Administradores",
     "meeting": "Reunión",
     "roomSystems": "Sistemas de salas",
     "notes": "Notas",
@@ -2244,9 +2418,17 @@
     "CO": "Llamada",
     "ST": "Almacenamiento",
     "SD": "Sistema de salas de Spark",
-    "deleteOrg": "Eliminar organización {{orgName}}",
+    "deleteOrgTitle": "Eliminar cliente",
+    "deleteOrgConfirmMsg": "¿Está seguro de que desea eliminar '{{orgName}}'?",
+    "deleteOrg": "Eliminar '{{orgName}}'",
     "deleteOrgSuccess": "{{orgName}} se eliminó correctamente",
-    "deleteOrgError": "{{orgName}} no se eliminó"
+    "deleteOrgError": "{{orgName}} no se eliminó. Mensaje: {{message}}",
+    "pstnOrders": "Pedidos de red de telefonía conmutada pública (PSTN)",
+    "addNumbers": "Agregar números"
+  },
+  "customerAdminPanel": {
+    "addAdministrators": "Agregar administradores",
+    "assignedAdministrators": "Administradores asignados"
   },
   "didAddModal": {
     "title": "Agregar números de teléfono (Opcional)"
@@ -2266,7 +2448,8 @@
     "companyCallerIdsaveError": "No se pudo guardar la ID de la persona que realiza la llamada de la empresa.",
     "internationalDialingSaveError": "No se pudo guardar el marcado internacional.",
     "disableCompanyVoicemailTitle": "Desactivar el correo de voz de la empresa",
-    "disableCompanyVoicemailMessage": "La desactivación del correo de voz de la empresa eliminará de forma permanente todos los mensajes y la configuración del correo de voz de la empresa. ¿Está seguro de que desea desactivar el correo de voz de la empresa?"
+    "disableCompanyVoicemailMessage": "La desactivación del correo de voz de la empresa eliminará de forma permanente todos los mensajes y la configuración del correo de voz de la empresa. ¿Está seguro de que desea desactivar el correo de voz de la empresa?",
+    "errorGettingTimeZoneToggle": "Ocurrió un problema al obtener el conmutador de características atlasHuronDeviceTimeZone"
   },
   "settingsServiceAddress": {
     "label": "Dirección de servicio de emergencia",
@@ -2338,7 +2521,8 @@
     "deviceCodeExpires": "El código de activación actual caducará {{inXDays}}",
     "getNewCode": "Obtener un código nuevo",
     "channelUpdated": "Se actualizó el canal de actualización de software",
-    "channelUpdateFailed": "El dispositivo no actualizó su canal de actualización de software a tiempo"
+    "channelUpdateFailed": "El dispositivo no actualizó su canal de actualización de software a tiempo",
+    "logUploadWarning": "La selección de 'Informar problema' enviará los registros del dispositivo a Cisco."
   },
   "generateActivationCodeModal": {
     "title": "Código de activación",
@@ -2366,6 +2550,7 @@
     "cloudOpDescription": "Este usuario también se puede activar como Administrador de operaciones en la nube. Esta función incluye permisos especiales para visualizar y operar el sistema Spark desde este portal.",
     "cloudOpAdmin": "Administrador de operaciones en la nube",
     "fullAdmin": "Privilegios de administrador completos",
+    "readonlyAdmin": "Privilegios de administrador de solo lectura",
     "partialAdmin": "Algunos privilegios de administrador",
     "noAdmin": "Sin privilegios de administrador",
     "salesAdmin": "Administrador de ventas",
@@ -2374,11 +2559,11 @@
     "supportAdmin": "Administrador de soporte",
     "save": "Guardar",
     "roles": "Funciones",
-    "helpdesk": "Mesa de ayuda"
+    "helpdesk": "Mesa de ayuda",
+    "compliance": "Cumplimiento"
   },
   "mohManagement": {
     "title": "Medios en espera",
-    "subtitle": "Nueva copia que viene de Ahmed.",
     "newPlaylistButton": "Nueva lista de reproducción",
     "tracks": "Pistas",
     "draganddrop": "Arrastre y suelte para reordenar las pistas. Estas pistas se reproducirán en bucle.",
@@ -2508,6 +2693,18 @@
       "softwareUpgrade": "Mejoras de software",
       "scheduleText": "Elija un canal de lanzamiento con el que desea que se actualice este grupo:"
     },
+    "metrics": {
+      "cluster": "Grupo:",
+      "ecp": "ECP:",
+      "fromDate": "De:",
+      "toDate": "Para:",
+      "outOfRange": "Fecha fuera de rango",
+      "time": "Hora:",
+      "callVolume": "Volumen de llamada de Linus para",
+      "clusterAvailability": "Disponibilidad de grupo para",
+      "callReject": "Rechazos de llamada para",
+      "node": "Nodo"
+    },
     "serviceStatus": {
       "unknown": "Estado desconocido",
       "not_configured": "No configurado",
@@ -2572,16 +2769,19 @@
     },
     "add-resource-dialog": {
       "title": "Registrar un nuevo servidor de medios",
-      "text1": "Cree un Grupo de medios nuevo o elija un Grupo de medios existente para asignar el nuevo Servidor de medios a:",
-      "text2": "Introduzca el nombre del organizador o la dirección IP del Servidor de medios que desea registrar en la nube. Haga clic en REGISTRAR RECURSO, conéctese a su Servidor de medios y regístrese.",
-      "register": "Ir al Servidor de medios",
+      "text1": "Cree un Grupo de medios nuevo o elija un Grupo de medios existente para asignar el nuevo servidor de medios a:",
+      "text2": "Introduzca el nombre de organizador o la dirección IP del servidor de medios que desea registrar en la nube. Haga clic en Siguiente y, a continuación, conéctese a su servidor de medios para confirmar el registro.",
+      "register": "Ir al servidor de medios",
       "cancel": "Cancelar",
-      "hostname-placeholder": "Introducir nombre del organizador o dirección IP",
-      "grant-registration-success-header-old-cluster": "Ahora puede registrar el Servidor de medios <strong>{{hostname}}</strong>, que pertenece a <strong>{{clustername}}</strong> con Cisco Collaboration Cloud.",
+      "hostname-placeholder": "Introducir el nombre de organizador o la dirección IP",
+      "grant-registration-success-header-old-cluster": "Ahora puede registrar el servidor de medios <strong>{{hostname}}</strong>, que pertenece a <strong>{{clustername}}</strong> con Cisco Collaboration Cloud.",
       "grant-registration-success-header-new-cluster": "Ahora puede registrar el servidor de medios <strong>{{hostname}}</strong>, que pertenece al grupo nuevo <strong>{{clustername}}</strong> con Cisco Collaboration Cloud.",
-      "grant-success-information": "Vaya a su Servidor de medios en el plazo de una hora para finalizar el registro.",
+      "grant-success-information": "Vaya a su servidor de medios en el plazo de una hora para finalizar el registro.",
       "next": "Siguiente",
-      "back": "Atrás"
+      "back": "Atrás",
+      "errorTitle": "Error de registro",
+      "errorOnlineText": "El servidor de medios que está registrando ya existe y está en línea.",
+      "errorOfflineText": "El servidor de medios que está registrando ya existe y está sin conexión. Cancele el registro del servidor existente antes de intentar de nuevo."
     },
     "mediaServiceActivationFailure": "Problemas para habilitar el servicio",
     "mediaAgentOrgMappingFailure": "Problemas para habilitar Orpheus para MediaFusion",
@@ -2784,6 +2984,7 @@
     "indexPageLabel_CommonSettings_session_type": "Tipos de sesión",
     "indexPageLabel_CommonSettings_user_priv": "Privilegios de usuario",
     "indexPageLabel_CommonSettings_site_info": "Información del sitio",
+    "indexPageLabel_CommonSettings_pda_settings": "Autenticación delegada de socio",
 
     "indexPageLabel_MC_mc_options": "Opciones del sitio",
     "indexPageLabel_MC_mc_default_options": "Opciones predeterminadas",
@@ -2837,6 +3038,7 @@
     "settingPageLabel_CommonSettings_session_type": "Tipos de sesión",
     "settingPageLabel_CommonSettings_user_priv": "Privilegios de usuario",
     "settingPageLabel_CommonSettings_site_info": "Descripción general del sitio",
+    "settingPageLabel_CommonSettings_pda_settings": "Autenticación delegada de socio",
 
     "settingPageLabel_MC_mc_options": "Configuración de Meeting Center",
     "settingPageLabel_MC_mc_default_options": "Configuración de Meeting Center",
@@ -2884,6 +3086,7 @@
     "meeting_usage": "Uso de reuniones",
     "recordings_storage_usage": "Uso del almacenamiento",
     "recording_usage": "Uso de las grabaciones",
+    "inactive_user": "Usuarios inactivos",
 
     "training_usage": "Uso de la capacitación",
     "registration": "Registro",
@@ -2930,13 +3133,16 @@
     "recorded_session_access": "Acceso a sesiones grabadas",
     "coupon_usage": "Uso de cupones",
     "training_record_attendee": "Registro de capacitación del asistente",
-    "access_anywhere_usage": "Uso de Access Anywhere"
+    "access_anywhere_usage": "Uso de Access Anywhere",
+
+    "adminReportNotEnabled": "Los informes no están habilitados para este sitio"
   },
   "webexReportsPageTitles": {
     "meeting_in_progess": "Reuniones en curso",
     "meeting_usage": "Uso de reuniones",
     "recording_usage": "Uso de las grabaciones",
     "storage_utilization": "Uso del almacenamiento",
+    "inactive_user": "Usuarios inactivos",
     "event_center_overview": "Descripción general del evento",
     "event_center_scheduled_events": "Eventos planificados",
     "event_center_held_events": "Eventos llevados a cabo",
@@ -2946,7 +3152,7 @@
     "remote_access_computer_tracking": "Seguimiento de computadora remota",
     "remote_access_computer_usage": "Uso de computadora remota",
     "support_center_csr_activity": "Admitir actividades de CSR",
-    "support_center_allocation_queue": "Admitir colas de asignacíón",
+    "support_center_allocation_queue": "Admitir colas de asignación",
     "support_center_url_referral": "Admitir referencia de URL",
     "remote_access_csrs_usage": "CSR de acceso remoto",
     "support_center_support_sessions": "Sesiones de soporte",
@@ -2962,21 +3168,15 @@
   },
   "webexCSVResultsModal": {
     "csvExportTitle": "Exportar resultados",
-    "csvExportRecordsAvailable": "Grabaciones totales disponibles",
-    "csvExportRecordsSuccessful": "Grabaciones exportadas correctamente:",
-    "csvExportDownloadFile": "Descargar archivo CSV:",
-    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
-
     "csvImportTitle": "Importar resultados",
-    "csvImportFileName": "Nombre de archivo:",
-    "csvImportRecordsRequested": "Grabaciones totales solicitadas:",
-    "csvImportRecordsUpdated": "Grabaciones actualizadas correctamente:",
-    "csvImportDownloadErr": "Descargar registro de errores:",
-    "csvImportErrFilename": "WebEx-ImportErr.tsv",
 
-    "csvStarted": "Iniciadas:",
-    "csvFinished": "Finalizadas:",
-    "csvRecordsFailed": "Grabaciones con errores:"
+    "csvStarted": "Se inició:",
+    "csvFinished": "Se finalizó:",
+    "csvRecordsRequested": "Registros solicitados:",
+    "csvRecordsReturned": "Registros devueltos:",
+    "csvRecordsUpdated": "Registros actualizados:",
+    "csvRecordsFailed": "Errores:",
+    "csvDownloadImportErr": "Descargar registro de errores de importación"
   },
   "leaderBoard": {
     "actions": "Acciones",
@@ -3020,6 +3220,7 @@
     "allowCustomerLogo": "Habilitar a todos los clientes para que usen su propio logotipo",
     "useCiscoLogo": "Usar el logotipo de Cisco Spark",
     "logoPlaceholder": "Arrastre y suelte su logotipo aquí",
+    "logoUploadNote": "Solo se aceptan los tipos de archivo .gif, .jpg o .png. El tamaño no puede ser mayor a 1 MB. No incluya relleno alrededor de la imagen.",
     "chooseFile": "Elegir archivo",
     "supportInfo": "Si proporciona soporte a sus usuarios, introduzca la información de soporte a continuación. Esta información buscará en el menú Soporte de la aplicación de Spark.",
     "supportOptions": "Opciones de soporte de Cisco",
@@ -3063,6 +3264,7 @@
     "supportContacts": "Contactos del soporte",
     "partnerAdmin": "Administradores de socios",
     "brandingInfo": "Si desea mostrar su propia marca además de Cisco Spark, cargue su logotipo a continuación.",
+
     "usePartnerLogo": "Utilice el mismo logotipo en uso por {{partner}}",
     "supportInfo": "Si proporciona soporte a sus usuarios, introduzca los parámetros de soporte a continuación. Estos parámetros se visualizarán en Opciones de soporte en la aplicación de Spark.",
     "supportAccessTitle": "Acceso al soporte",
@@ -3070,13 +3272,17 @@
     "supportAccessCheckbox": "Permitir acceso de solo lectura a Cisco o al soporte del socio a la organización."
   },
   "fileUpload": {
-    "uploading": "Cargar un archivo",
+    "uploading": "Cargando archivo",
     "success": "El archivo se cargó correctamente",
     "errorUnknown": "El archivo no se cargó: error de carga desconocido",
     "errorFileType": "El archivo no se cargó: tipo de archivo incorrecto",
     "errorFilePNG": "El archivo cargado debe ser un archivo PNG",
     "errorDimensions": "El archivo no se cargó: dimensiones de archivo incorrectas",
     "errorWidthHeight": "El archivo cargado debe tener {{width}} de ancho y {{height}} de altura"
+  },
+  "brandingEample": {
+    "title": "Ejemplos de personalización de marca personalizada",
+    "note": "Ejemplos de ubicación de los logotipos: una vez que su logotipo se haya cargado, se ajustará el tamaño automáticamente y aparecerá en las fichas “Acerca de” y “Soporte” de Spark, como se muestra a la derecha. El logotipo también se mostrará del lado derecho del encabezado del sitio webex.com, como se muestra en la ilustración a continuación."
   },
   "utilizationPage": {
     "entResUtilization": "Utilización de recursos empresariales",
@@ -3118,7 +3324,7 @@
     "spanishSpain": "Español (España)",
     "spanishColumbian": "Español (América Latina)",
     "french": "Français (France)",
-    "indionesian": "Bahasa Indonesia",
+    "indonesian": "Bahasa Indonesia",
     "italian": "Italiano",
     "japanese": "日本語",
     "korean": "한국어",
@@ -3147,10 +3353,15 @@
     "conferencing": "Sitios de WebEx",
     "siteName": "Nombre del sitio",
     "licenseCount": "Número de licencias",
-    "licenseTypes": "Tipos de licencia",
+    "licenseTypes": "Tipo de licencia",
     "siteSettings": "Configurar",
     "siteReports": "Informes",
-    "siteCsvColumnHeader": "Atributos del usuario",
+    "siteActions": "Acciones",
+    "siteCsvColumnHeader": "Modificar atributos de usuarios en cantidad",
+    "siteCsvModalText": "Exporte los atributos de usuario, edite el archivo .csv e importe la versión editada. Para obtener detalles sobre las columnas de solo lectura y otra información relacionada con el archivo CSV, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>haga clic aquí</a>.",
+    "siteCsvModalImportText": "Arrastre y suelte el archivo CSV aquí o haga clic para explorar.",
+    "siteCsvModalExportText": "Exportar atributos de usuario para {{siteUrl}}",
+    "siteCsvModalExportTextShort": "Haga clic para exportar atributos de usuario en un archivo CSV que se pueda descargar.",
     "siteCsvExportLinkLabel": "Exportar",
     "siteCsvExportInProgressLinkLabel": "Exportando...",
     "siteCsvExportResultsLinkLabel": "Exportar resultados",
@@ -3159,27 +3370,31 @@
     "siteCsvDownloadLinkLabel": "Descargar archivo",
     "siteCsvImportResultsLinkLabel": "Importar resultados",
     "userAttributesTooltip": "Modifique los atributos del usuario para diversos usuarios de WebEx a la vez mediante el uso de un programa de hojas de cálculo. Exporte sus usuarios en un archivo .csv, edite la información del usuario e importe de nuevo el archivo .csv actualizado en el sitio de WebEx.",
+    "bulkModifyUserAttributesTooltip": "Modificar atributos de usuarios en cantidad",
+    "csvRejectedToast-060100": "Falló la solicitud; ya hay una solicitud de exportación/importación en proceso.",
     "exportBlockedTooltip": "A fin de exportar, usted debe esperar que finalice la importación.",
-    "exportInProgressTooltip": "Esta exportación puede tardar un rato. La exportación continuará hasta que finalice, incluso si se desconecta, o importe o exporte los atributos del usuario en otro sitio. Aparecerá un enlace de descarga en esta página cuando esté listo.",
-    "exportFinishedWithErrorsTooltip": "La exportación finalizó con errores",
-    "exportFailedTooltip": "Error en la exportación",
-    "exportStartedToast": "Esta exportación puede tardar un rato. La exportación continuará hasta que finalice, incluso si se desconecta, o importe o exporte los atributos del usuario en otro sitio. Aparecerá un enlace de descarga en esta página cuando esté listo.",
-    "exportRejectedToast": "Error en la exportación, vuelva a intentarlo.",
+    "exportInProgressTooltip": "Esta exportación puede tardar un rato. La exportación continuará hasta que finalice, incluso si se desconecta, o importe o exporte los atributos de usuario en otro sitio. Aparecerá un enlace de descarga en esta página cuando esté listo.",
+    "exportFinishedWithErrorsTooltip": "La exportación finalizó con errores.",
+    "exportFailedTooltip": "Error en la exportación.",
+    "exportStartedToast": "Esta exportación puede tardar un rato. La exportación continuará hasta que finalice, incluso si se desconecta, o importe o exporte los atributos de usuario en otro sitio. Aparecerá un enlace de descarga en esta página cuando esté listo.",
+    "exportRejectedToast": "Error en la exportación. Vuelva a intentarlo.",
     "importButton": "Importar",
     "importStartModalTitle": "Importar atributos de usuario de WebEx",
     "importStartModalInstruction_1": "Para cargar un archivo delimitado por comas, seleccione el archivo que desea cargar y seleccione Importar. Si el archivo a importar contiene caracteres que no son ASCII, verifique que utilice un delimitador de comas Unicode.",
     "importBlockedTooltip": "A fin de importar, usted debe esperar que finalice la exportación.",
-    "importInProgressTooltip": "Esta importación puede tardar un rato. La importación continuará hasta que finalice, incluso si se desconecta. Puede importar o exportar los atributos del usuario en otro sitio si lo desea.",
-    "importFinishedWithErrorsTooltip": "La importación finalizó con errores",
-    "importFailedTooltip": "Error en la importación",
-    "importStartedToast": "Esta importación puede tardar un rato. La importación continuará hasta que finalice, incluso si se desconecta. Puede importar o exportar los atributos del usuario en otro sitio si lo desea.",
-    "importRejectedToast": "Error en la importación, vuelva a intentarlo.",
+    "importInProgressTooltip": "Esta importación puede tardar un rato. La importación continuará hasta que finalice, incluso si se desconecta. Puede importar o exportar los atributos de usuario en otro sitio si lo desea.",
+    "importFinishedWithErrorsTooltip": "La importación finalizó con errores.",
+    "importFailedTooltip": "Error en la importación.",
+    "importStartedToast": "Esta importación puede tardar un rato. La importación continuará hasta que finalice, incluso si se desconecta. Puede importar o exportar los atributos de usuario en otro sitio si lo desea.",
+    "importRejectedToast": "Error en la importación. Vuelva a intentarlo.",
     "importInvalidFileToast": "Elija un archivo para importar.",
+    "asyncErrorMessage": "No se puede recuperar el estado actual.",
     "siteCSVNotAvailable": "No disponible",
-    "siteCSVNotAvailableTooltip": "Debe mejorar este sitio para acceder a esta característica",
-    "authError": "No se puede autenticar. Compruebe su autorización para este sitio.",
-    "systemError": "No se puede comunicar con este sitio de WebEx. Comuníquese con el soporte.",
-    "multipleLicenses": "Varios…"
+    "siteCSVNotAvailableTooltip": "Debe mejorar este sitio para acceder a la característica Modificar atributos de usuarios en cantidad",
+    "authError": "No tiene permiso para acceder a este sitio.",
+    "systemError": "No se puede conectar al sitio.",
+    "multipleLicenses": "Varios…",
+    "checkingServices": "Comprobando los servicios…"
   },
   "cloudExtensions": {
     "cloudExtensions": "Servicios híbridos",
@@ -3194,7 +3409,8 @@
     "callForward": "El campo puede contener los dígitos 0 a 9, *, #, X y +.",
     "specialCharacters": "Esta entrada contiene caracteres especiales.",
     "numeric": "El campo puede contener dígitos del 0 al 9.",
-    "positiveNumber": "Debe introducir un número positivo."
+    "positiveNumber": "Debe introducir un número positivo.",
+    "maxNumber100": "La cantidad debe ser inferior a 100."
   },
   "CsdmStatus": {
     "Online": "En línea",
@@ -3252,11 +3468,19 @@
       },
       "MissingEncryptionKey": {
         "type": "Falta la clave de opción de cifrado",
-        "message": "Agregue una clave de opción de cifrado"
+        "message": "Agregue una clave de opción de cifrado."
       },
       "ConfiguredForTestAutomation": {
         "type": "Configurado para la automatización de pruebas",
-        "message": "Los informes de registros y las métricas se ven afectados"
+        "message": "Los informes de registros y las métricas se ven afectados."
+      },
+      "TouchPanelConnection": {
+        "type": "Panel táctil obligatorio",
+        "message": "No hay ningún panel táctil conectado al sistema de salas de Spark. Compruebe el cable que conecta el panel táctil al sistema de salas de Spark."
+      },
+      "NetworkQuality": {
+        "type": "Se detectó la pérdida de paquetes",
+        "message": "Durante la última llamada hemos detectado un nivel de pérdida de paquetes que puede haber afectado la calidad de la llamada. La pérdida de paquetes normalmente es causada por la congestión de la red."
       },
       "inactive": {
         "type": "Cuenta inactiva",
@@ -3299,7 +3523,19 @@
       "emptyAliasErrorMessage": "El alias del usuario no puede estar vacío."
     }
   },
-
+  "sunlightDetails": {
+    "title": "Atención",
+    "settingsTitle": "Configuración",
+    "featuresTitle": "Características",
+    "sorryMessage": "Lo sentimos. Ocurrió un error ",
+    "reloadMessage": "Intente volver a cargar la página",
+    "newFeatureButtonText": "Nuevo",
+    "featuresNotYetConfiguredPage": {
+      "createCT": "Crear una plantilla de chat",
+      "createCTDesc": "Una plantilla de chat es lo que su cliente verá al chatear con un agente.",
+      "new": "Nuevo"
+    }
+  },
   "huronDetails": {
     "title": "Llamada",
     "linesTitle": "Números",
@@ -3318,7 +3554,7 @@
     "aaDependsTitle": "Dependientes del asistente automático",
     "aaDependsContext": "A continuación, le presentamos una lista de asistentes automáticos que hacen referencia a {{featureName}}:",
     "aaDeleteBlocked": "La operación no puede completarse porque este asistente automático está referenciado por {{aaNames}}",
-    "deleteFeature": "Eliminar {{ featureType }}",
+    "deleteFeature": "Eliminar",
     "deleteConfirmText": "¿Está seguro de que desea eliminar el {{ featureType }} de {{ featureName }}?",
     "deleteSuccessText": "{{ featureType }} de {{ featureName }} se eliminó correctamente",
     "deleteFailedText": "Error al eliminar {{ featureName }} {{ featureType }}.",
@@ -3335,6 +3571,7 @@
     "allLines": "Todos",
     "unassignedLines": "Sin asignar",
     "assignedLines": "Asignados",
+    "pending": "Pendiente",
     "csvBtnTitle": "Exportar a CSV",
     "csvFilename": "exported_lines.csv",
     "internalNumberHeader": "Extensión interna",
@@ -3342,7 +3579,10 @@
     "userEmailHeader": "Usuario",
     "actionHeader": "Acciones",
     "lineListError": "Error al recuperar la lista de asociación de líneas del usuario. Intente recargando la página.",
-    "getCountError": "No se pudieron recuperar los recuentos de registros."
+    "getCountError": "No se pudieron recuperar los recuentos de registros.",
+    "phoneNumbers": "Números de teléfono",
+    "assignedTo": "Asignados a",
+    "inProgress": "En curso"
   },
 
   "messengerCiSync": {
@@ -3379,9 +3619,122 @@
     "dirsyncStatusHeading": "Sincronización de directorio de identidad común",
     "dirsyncStatusTooltip": "Para acceder a las funcionalidades de la plataforma de Spark, los usuarios de WebEx Messenger deben sincronizarse con el servicio de identidad común."
   },
+  "careChatTpl": {
+    "editAction": "Editar",
+    "deleteAction": "Eliminar",
+    "deleteFeature": "Eliminar {{ featureText }}",
+    "deleteFeatureTextConfirmation": "¿Está seguro de que desea eliminar el {{ featureText}} de {{ featureName }}?",
+    "createSuccessText": "La plantilla de chat {{ featureName }} se ha creado correctamente",
+    "deleteSuccessText": "{{ featureText }} de {{ featureName }} se eliminó correctamente",
+    "deleteFailedText": "Error al eliminar {{ featureText }} de {{ featureName }}.",
+    "messageError": "Mensaje {{message }}",
+    "failedToLoad": "No se pudo cargar la información de {{ featureText }}",
+    "chatTemplate": "Plantilla de chat",
+    "namePlaceholder": "Asignar un nombre a la plantilla de chat",
+    "nameHint": "Este nombre es para que usted identifique de forma exclusiva esta plantilla de chat.",
+    "createTitle": "Crear plantilla de chat",
+    "profile": "Perfil de la plantilla de chat",
+    "overview": "Descripción general de la plantilla de chat",
+    "customerInfo": "Pantalla de información del cliente",
+    "feedback": "Pantalla de comentarios",
+    "agentUnavailable": "Agente no disponible",
+    "offHours": "Fuera de hora",
+    "chatStrings": "Configuración de las cadenas de chat",
+    "embedCode": "Código de inserción",
+    "profileDesc": "Seleccione cómo será representada su empresa",
+    "overviewDesc": "Estas son las pantallas que verán los clientes cuando utilicen el chat para comunicarse con atención al cliente",
+    "customerInfoDesc": "Esta es la pantalla que completa un cliente antes de chatear con un agente",
+    "feedbackDesc": "Esta pantalla se utiliza para recopilar comentarios del cliente después de que finaliza el chat",
+    "agentUnavailableDesc": "Esta pantalla se muestra a un cliente cuando no hay ningún agente disponible para ayudar",
+    "offHoursDesc": "Esta pantalla se muestra durante las horas fuera de trabajo",
+    "chatStringsDesc": "Estas cadenas aparecen en la interfaz de usuario en función de diferentes situaciones",
+    "cancelHeader": "Cancelar la creación de la plantilla de chat",
+    "cancelDialog": "¿Está seguro de que desea cancelar la creación de la plantilla de chat? Esta plantilla de chat no se guardará.",
+    "confirmButton": "Cancelar creación",
+    "continueButton": "Continuar creación",
+    "screenCard": "Pantalla",
+    "attributesCard": "Atributos",
+    "windowTitleLabel": "Título de la ventana",
+    "defaultOrgLabel": "Organización",
+    "defaultWelcomeText": "Bienvenido a",
+    "defaultOrgText": "Atención al cliente de Cumulus",
+    "defaultNameText": "Nombre",
+    "defaultNameHint": "",
+    "defaultEmailText": "Su correo electrónico o ID de cliente",
+    "defaultEmail": "p. ej.: abc@xyz.com",
+    "defaultQuestionText": "¿Cómo puedo ayudarlo?",
+    "optionalText": "(Opcional)",
+    "field3HintText": "Seleccionar de la lista o escribir",
+    "defaultTypeMessageText": "Escriba su mensaje y presione Entrar",
+    "selectFieldText": "Seleccione un campo de la izquierda para cambiar su atributo.",
+    "ciHelpText": "Ayuda a dirigir a los clientes al agente de la derecha",
+    "riHelpText": "Ayuda a dirigir a los clientes al agente de la derecha",
+    "requiredField": "Campo obligatorio",
+    "optionalField": "Campo opcional",
+    "categoryLabel": "Categoría",
+    "categoryTextCustomer": "Información del cliente",
+    "categoryTextRequest": "Solicitar información",
+    "label": "Etiqueta",
+    "hintText": "Texto de sugerencia",
+    "type": "Tipo",
+    "defaultRightCardText": "Seleccione un campo de la izquierda para cambiar su atributo.",
+    "profileSelector": "Perfil",
+    "screen": "Pantalla",
+    "attributes": "Atributos",
+    "org": "Organización",
+    "agent": "Agente",
+    "agentAlias": "Permitir que el agente utilice un alias",
+    "agentRealName": "Utilizar el nombre real del agente",
+    "agentNamePreview": "Nombre del agente",
+    "agentAliasPreview": "Alias del agente",
+    "image": "Imagen",
+    "displayText": "Mostrar texto",
+    "agentMsg": "Hola, necesito ayuda con la tecla MFI.",
+    "agentMsgTime": "10:10 a. m.",
+    "customerMsg": "Claro, lo ayudaré con eso.",
+    "customerMsgTime": "10:11 a. m.",
+    "agentEnteredStatus": "El agente ha ingresado a la sala de chat",
+    "typeNewMsg": "Escriba su mensaje y presione Entrar.",
+    "feedbackQuery": "¿Está satisfecho con su experiencia de chat?",
+    "rating": "Calificación {{index}}",
+    "rating1Text": "Para nada",
+    "rating2Text": "Moderadamente",
+    "rating3Text": "Absolutamente",
+    "ratingHintText": "Texto de sugerencia",
+    "ratingComment": "Agregar comentarios",
+    "submitFeedbackBtn": "Enviar comentarios",
+    "noThanksBtn": "No, gracias",
+    "typeCategory": "Categoría",
+    "typeName": "Nombre",
+    "typeEmail": "Correo electrónico",
+    "typeId": "Id",
+    "typePhone": "Teléfono",
 
+    "ctOverview": {
+      "customerInformation": {
+        "title": "Información del cliente",
+        "desc": "Esta es la pantalla que completa un cliente antes de chatear con un agente"
+      },
+      "agentUnavailable": {
+        "title": "Agente no disponible",
+        "desc": "Esta pantalla se muestra a un cliente cuando no hay ningún agente disponible para ayudar"
+      },
+      "offHours": {
+        "title": "Fuera de hora",
+        "desc": "Esta pantalla se muestra durante las horas fuera de trabajo"
+      },
+      "feedback": {
+        "title": "Comentarios",
+        "desc": "Esta pantalla se utiliza para recopilar comentarios del cliente después de que finaliza el chat"
+      }
+    },
+    "summary": "Resumen",
+    "summaryDesc": "Resumen de configuración",
+    "copyEmbedCode": "Copiar código de inserción",
+    "errorCreateChatTemplate": "Error al crear plantilla de chat."
+  },
   "huronHuntGroup": {
-    "modalTitle": "Grupos de búsqueda",
+    "modalTitle": "Grupo de búsqueda",
     "title": "grupo de búsqueda",
     "createTitle": "Crear grupo de búsqueda",
     "namePlaceholder": "Nombrar el grupo de búsqueda",
@@ -3473,35 +3826,85 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "title": "Inicio de sesión del carrito de compras del portal de Atlas (APSCL)",
-      "header": "Introducir la dirección de correo electrónico",
-      "emailPlaceholder": "P. ej.: x@y.com",
+      "startTrial": "Para iniciar una prueba de Spark, debe crear una cuenta.",
+      "enterEmail": "Introduzca la dirección de correo electrónico de la cuenta",
+      "emailPlaceholder": "Introduzca la dirección de correo electrónico",
       "validation": {
-        "emptyEmail": "La dirección de correo electrónico no puede estar en blanco"
-      }
+        "emptyEmail": "Falta la dirección de correo electrónico o no es válida."
+      },
+      "domainClaimed": "Hemos hecho coincidir su dominio con una organización que no permite la adición de cuentas. Proporcione una dirección de correo electrónico alternativa para continuar."
     },
     "createAccount": {
-      "title": "Crear cuenta",
-      "passwordLabel": "Introduzca su contraseña:",
-      "confirmPlaceholder": "confirmar",
+      "noAccount": "{{email}} no tiene una cuenta. Cree una:",
+      "passwordLabel": "Introduzca su contraseña",
+      "confirmEmailPlaceholder": "Compruebe la dirección de correo electrónico",
+      "passwordPlaceholder": "Introducir contraseña",
+      "confirmPasswordPlaceholder": "Comprobar contraseña",
+      "createAccount": "Crear cuenta",
       "validation": {
-        "emptyEmail": "Correo electrónico vacío",
-        "emptyPassword": "Contraseña vacía",
-        "emailsDontMatch": "Los correos electrónicos no coinciden",
-        "passwordsDontMatch": "Las contraseñas no coinciden"
+        "emptyEmail": "Falta una dirección de correo electrónico o no es válida.",
+        "emptyPassword": "Falta una contraseña.",
+        "emailsDontMatch": "Las direcciones de correo electrónico no coinciden.",
+        "passwordsDontMatch": "Las contraseñas no coinciden.",
+        "accountExists": "Ya existe una cuenta con esa dirección de correo electrónico."
       }
     },
+    "submitOrder": {
+      "submitting": "Enviando pedido…",
+      "activate": "Haga clic en el botón Activar a continuación para iniciar su suscripción y comenzar a usar su nuevo servicio.",
+      "newUserHeader": "Se ha creado su prueba",
+      "newUserText": "Se ha enviado un correo electrónico de activación a {{email}}. Haga clic en el botón Comenzar del correo electrónico para iniciar su suscripción y comenzar a usar su nuevo servicio.",
+      "missingEmail": "Han pasado más de 30 minutos y todavía no he recibido el correo electrónico.",
+      "userError": "Se produjo un error al recuperar el usuario.",
+      "submitError": "Se produjo un error al enviar el pedido."
+    },
+    "drOnboardQuestion": {
+      "adminQuestionLabel": "¿Administrará la siguiente persona '{{email}}' los servicios de Spark?"
+    },
+    "drConfirmAdminOrg": {
+      "useDifferentName": "Utilizar un nombre diferente",
+      "companyAndOrg1": "Hemos hecho coincidir su dirección de correo electrónico con la siguiente organización:",
+      "companyAndOrg2": "¿Desea asignar los servicios de Spark a esta organización?"
+    },
+    "drOnboardEnterAdminEmail": {
+      "adminEmailLabel": "Introduzca la dirección de correo electrónico de la persona que administrará los servicios de Spark"
+    },
+    "orgName": {
+      "orgNameLabel": "Introduzca el nombre de su organización. Usted será configurado como el administrador y podrá agregar otros usuarios a su organización, administrar los servicios de Spark, etc.",
+      "enterOrgName": "Introducir el nombre de la empresa",
+      "missingOrgName": "Falta el nombre de la empresa."
+    },
+    "adminChoices": {
+      "header1": "Hemos hecho coincidir su dirección de correo electrónico con la organización existente {{orgName}}. Sin embargo, no tiene privilegios de administrador para esta organización.",
+      "header2": "Tiene las siguientes opciones:",
+      "choice1a": "Envíe una solicitud para recibir privilegios de administrador",
+      "choice1b": "Una vez que se le hayan asignado privilegios de administrador, podrá reiniciar el proceso haciendo clic en el botón del correo electrónico de bienvenida o dirigiéndose a la <Screen 15> página.",
+      "choice2": "Permitir al administrador de esta organización administrar los servicios que he adquirido",
+      "choice3a": "Crear una organización nueva para administrar los servicios",
+      "choice3b": "Tenga en cuenta que no podrá asignar las licencias de Spark que acaba de adquirir a nadie en su actual organización si elige esta opción."
+    },
     "validation": {
+      "missingSKU": "Al pedido le falta un SKU.",
+      "invalidOrder": "Falta la información del pedido o no es válida.",
       "unexpectedError": "Error inesperado"
     },
+    "restrictedPage": "Página restringida",
+    "ciscoSpark": "Cisco Spark",
     "emailLabel": "Introduzca su dirección de correo electrónico:",
-    "nextButton": "Siguiente"
+    "nextButton": "Siguiente",
+    "submitButton": "Enviar",
+    "activateButton": "Activar",
+    "continue": "Continuar",
+    "sentEmail": "Gracias. Se ha enviado un correo electrónico a {{email}}"
   },
   "overview": {
     "pageTitle": "Descripción general",
     "thisMonth": "Este mes",
     "lastMonth": "Mes pasado:",
     "contactPartner": "Comuníquese con su representante asociado o de ventas de Cisco para obtener más información.",
+    "visitCsb": "Visitar",
+    "telstraMarketplace": "Telstra Apps Marketplace",
+    "toSubscribe": "para suscribirse",
     "nonotifications": "Actualmente, no hay notificaciones para mostrar.",
     "cards": {
       "users": {
@@ -3539,10 +3942,92 @@
         "services": {
           "squared-fusion-cal": "Calendario",
           "squared-fusion-uc": "Llamada",
-          "squared-fusion-mgmt": "Administración"
-
+          "squared-fusion-mgmt": "Administración",
+          "squared-fusion-media": "Mediafusion"
         }
       }
+    }
+  },
+  "globalSettings": {
+    "pageTitle": "Configuración",
+    "branding": {
+      "title": "Personalización",
+      "subsectionLabel": "Personalización"
+    },
+    "sipDomain": {
+      "title": "Dominio SIP",
+      "subsectionLabel": "Prefijo de dominio SIP",
+      "subsectionDescription": "Especifique un prefijo de dominio SIP que se utilizará en las direcciones de un usuario al llamar a un usuario en un dispositivo habilitado para SIP. Por ejemplo, en esta dirección example.call.ciscospark.com, \"example\" es el prefijo que está definiendo."
+    },
+    "domains": {
+      "title": "Dominios"
+    },
+    "authentication": {
+      "title": "Autenticación",
+      "subsectionLabel": "Inicio de sesión único"
+    },
+    "dataPolicy": {
+      "title": "Política de datos",
+      "subsectionLabel": "Retención de datos (después de la eliminación de la organización)",
+      "subsectionDescription": "Al eliminar un usuario (o una prueba) del sistema, ¿cuánto tiempo debe retener el sistema las salas de equipo del usuario?",
+      "retentionOption1": "Eliminar de inmediato",
+      "retentionOption2": "Conservar por 1 año",
+      "retentionOption3": "Conservar para siempre"
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "supportAccessHeader": "Acceso al soporte",
+      "supportAccessDescription": "Esta configuración le otorga a Cisco o al soporte de socio acceso de solo lectura a la organización. No permite realizar cambios en los detalles de la organización.",
+      "allowReadOnlyOrgAccess": "Permitir acceso de solo lectura a Cisco o al soporte del socio a la organización",
+      "usageDataHeader": "Datos de uso enviados a un socio de Cisco",
+      "usageDataDescription": "Comparta la calidad de servicio y los datos de participación con su socio de Cisco para permitir un soporte al socio de mayor nivel.",
+      "crashReportTitle": "Informes automáticos de caídas",
+      "crashReportText": "Si un extremo se bloquea, se cargarán registros en Cisco para ayudar a mejorar la calidad del servicio.",
+      "crashReportCheckboxLabel": "Habilitar informes automáticos de caídas",
+      "crashReportTooltipDescription": "¿Qué contienen estos informes?",
+      "crashReportTooltip": "Los informes de caídas pueden incluir identificadores de usuarios y de la organización, cadenas de agente de usuario, cadenas de explorador de agente desinfectado, direcciones IP del cliente y la dirección MAC del dispositivo del usuario. Toda la información será tratada de forma confidencial y se utilizará exclusivamente para la mejora de la calidad de los productos."
+    },
+    "security": {
+      "title": "Seguridad",
+      "subsectionLabel": "Seguridad del cliente de Spark",
+      "requireProtectedDevices": "Los usuarios solo pueden iniciar la aplicación Cisco Spark en las estaciones de trabajo o los dispositivos protegidos"
+    },
+    "support": {
+      "title": "Soporte",
+      "subsectionLabel": "Informes de problemas",
+      "subsectionDescription": "Defina las opciones de soporte en la aplicación Cisco Spark.",
+      "problemReportsToCustomUrl": "Enviar informes de problemas a una URL personalizada",
+      "problemReportsTextPlaceholder": "Introduzca información de contacto de soporte adicional aquí, como números de teléfono o direcciones de correo electrónico",
+      "helpSiteLabel": "Sitio de ayuda",
+      "useCustomHelpSite": "Utilice un sitio de ayuda personalizado"
+    }
+  },
+  "my-company": {
+    "pageTitle": "Mi empresa",
+    "subscription": "Suscripciones",
+    "info": "Información",
+    "order": "Historial de pedidos"
+  },
+  "subscriptions": {
+    "message": "Mensaje",
+    "meeting": "Reunión",
+    "call": "Llamada",
+    "room": "Sistemas de salas",
+    "hybrid": "Servicios híbridos",
+    "subscription": "Suscripción: ",
+    "usage": "Uso: ",
+    "licenseTypes": {
+      "MS": "Salas de equipo estándar",
+      "CF": "Reunión de 25 integrantes",
+      "MC": "WebEx Meeting Center",
+      "SC": "WebEx Support Center",
+      "TC": "WebEx Training Center",
+      "EC": "WebEx Event Center",
+      "EE": "Webex Enterprise Edition",
+      "CMR": "Salas de reuniones de colaboración de WebEx",
+      "CO": "Llamada",
+      "ST": "Almacenamiento",
+      "SD": "Sistemas de salas de Spark"
     }
   },
   "ciRoles": {
@@ -3554,7 +4039,10 @@
     "atlas-portal.partner.salesadmin": "Administración de ventas",
     "id_full_admin": "Administración completa",
     "id_readonly_admin": "Administración de solo lectura",
-    "user": "Usuario"
+    "user": "Usuario",
+    "ciscouc.devops": "Desarrollo y operaciones de la llamada de Spark",
+    "ciscouc.devsupport": "Soporte del dispositivo de llamada de Spark",
+    "compliance": "Oficial de cumplimiento"
   },
   "atlasRoles": {
     "Full_Admin": "Administración completa",
@@ -3574,7 +4062,8 @@
     "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Administración del sitio",
     "Readonly_Admin": "Administración de solo lectura",
-    "PARTNER_READ_ONLY_ADMIN": "Administración de socios de solo lectura"
+    "PARTNER_READ_ONLY_ADMIN": "Administración de socios de solo lectura",
+    "Compliance_User": "Oficial de cumplimiento"
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Soporte de mesa de ayuda",
@@ -3613,7 +4102,7 @@
     "message": "Mensaje",
     "meeting": "Reunión",
     "call": "Llamada",
-    "rooms": "Salas",
+    "rooms": "salas",
     "claimedDomain": "Dominios reclamados",
     "hybridServices": "Servicios híbridos",
     "entitlements": {
@@ -3681,7 +4170,8 @@
     "help": {
       "title": "Ayuda",
       "navigation-title": "Navegación por teclado",
-      "navigation-info": "Presione <strong>Tabulación</strong> o las teclas ↑ ↓ ← → para navegar por los resultados, ↵ para seleccionar y <strong>Esc</strong> para volver a los resultados y borrar los términos de la búsqueda. Presione <strong>s</strong> después de haber seleccionado un cliente (o desde la página de vista del cliente) para filtrar la búsqueda solo para ese cliente. ",
+      "navigation-info1": "Presione <strong>Tab</strong> o las teclas ↑ ↓ ← → para navegar por los resultados, ↵ para seleccionar, y <strong>Esc</strong> para volver a los resultados o para borrar los términos de búsqueda.",
+      "navigation-info2": "Presione <strong>s</strong> después de seleccionar un cliente (o desde la página de vista del cliente) para filtrar la búsqueda solo para ese cliente.",
       "search-criterias-title": "Criterios de búsqueda",
       "search-criterias-users": "<strong>Usuarios</strong>: Correo electrónico, Nombre (Nombre, Apellido), Número de teléfono y Nombre para mostrar (requiere dos palabras con al menos tres caracteres cada una)",
       "search-criterias-customers": "<strong>Clientes</strong>: Nombre para mostrar (requiere al menos tres caracteres)",
@@ -3705,7 +4195,8 @@
     "usage": "{{usage}} de {{volume}} en uso",
     "numbers": "Números",
     "noDeviceEntitlements": "Búsqueda de dispositivo no aplicable. El cliente no tiene derechos para acceder a Cloudberry ni a las llamadas de Spark.",
-    "applyOrgFilterPleaseWait": "Aplicando filtro, espere…",
+    "noDeviceEntitlementsCustomerOrg": "Búsqueda de dispositivo no aplicable.",
+    "applyOrgFilterPleaseWait": "Aplicando filtro; espere…",
     "noMoreResults": "Límite máximo de resultados alcanzado. Pruebe con una búsqueda diferente.",
     "huronNotActivated": "No se puede buscar dispositivos de llamadas de Spark. El servicio de voz no está activado para este cliente.",
     "primary": "Primario",
@@ -3789,13 +4280,124 @@
       "beforeVerify": "Antes de comprobar"
     }
   },
+  "csvUpload": {
+    "fileModalTitle": "Importar lista de usuarios",
+    "resultModalTitle": "Importar resultados de la lista de usuarios",
+    "desc": "El mejor método para agregar hasta {{maxUsers}} usuarios a la vez. Los cambios de derechos de los usuarios existentes también se pueden realizar a través de la carga de un archivo CSV. Los usuarios no pueden eliminarse durante este proceso.",
+    "uploadPrompt": "Arrastre y suelte su archivo CSV aquí",
+    "fileBrowser": "o haga clic para explorar",
+    "enableRemoveLabel": "Hacer coincidir los derechos de los usuarios exactamente desde el archivo CSV",
+    "enableRemoveNote": "Nota: los derechos de los usuarios no incluidos en la carga del archivo CSV no se eliminarán.",
+    "removeFile": "Eliminar archivo",
+    "newUsers": "Agregado",
+    "existingUsers": "Actualizado",
+    "errorUsers": "Errores",
+    "exportErrors": "Exportar errores a CSV"
+  },
   "csvDownload": {
-    "csvDownloadConfirmTitle": "¿Está seguro?",
+    "confirmTitle": "¿Está seguro?",
     "confirmCsvDownloadMsg": "Es posible que la recopilación de datos para exportar demore un poco. Durante este tiempo, no podrá cerrar sesión ni actualizar su explorador o la exportación no se completará.",
     "confirmCsvDownload": "¿Desea continuar?",
     "confirmCsvCancelMsg": "Esto cancelará la exportación de datos actual. Esta acción no puede revertirse.",
-    "csvDownloadIsRunning": "Ya hay una tarea de exportación en ejecución. Vuelva a intentarlo más tarde.",
-    "csvDownloadInProgress": "La tarea en segundo plano 'Exportar lista de {{type}}' se está ejecutando...",
-    "csvDownloadSuccess": "Su lista de {{type}} se ha compilado y ha comenzado la descarga."
+    "isRunning": "Ya hay una tarea de exportación en ejecución. Vuelva a intentarlo más tarde.",
+    "inProgress": "La tarea en segundo plano 'Exportar lista de {{type}}' se está ejecutando...",
+    "success": "Su lista de {{type}} se ha compilado y ha comenzado la descarga."
+  },
+  "servicesOverview": {
+    "title": "Servicios",
+    "cloudServices": "Servicios en la nube",
+    "hybridServices": "Servicios híbridos",
+    "showAllCards": "Mostrar todas las tarjetas",
+    "showActiveCards": "Mostrar solo las tarjetas activas",
+    "cards": {
+      "message": {
+        "title": "Mensaje",
+        "description": "Configuraciones de Cisco Spark para su organización y las personas.",
+        "buttons": {
+          "webexMessenger": "Webex Messenger"
+        }
+      },
+      "meeting": {
+        "title": "Reunión",
+        "description": "Configuraciones de Cisco Spark y WebEx Meeting Center para su organización y las personas."
+      },
+      "call": {
+        "title": "Llamada",
+        "description": "Configuraciones de llamadas básicas y Unified Communications para su organización.",
+        "buttons": {
+          "numbers": "Números",
+          "features": "Características",
+          "settings": "Configuración"
+        }
+      },
+      "hybridManagement": {
+        "title": "Administración híbrida",
+        "description": "Administración de conectores para servicios de calendario y llamadas híbridas.",
+        "buttons": {
+          "resources": "Recursos",
+          "settings": "Configuración"
+        }
+      },
+      "clusterList": {
+        "title": "Lista de grupos",
+        "description": "Configuración y grupos en las instalaciones para su organización.",
+        "buttons": {
+          "all": "Todos los grupos",
+          "expressway": "Expressway",
+          "mediafusion": "Mediafusion",
+          "context": "Contexto"
+        }
+      },
+      "calendar": {
+        "title": "Calendario híbrido",
+        "description": "Inserta detalles de la sala y para entrar mediante la adición de @WebEx o @Spark al campo Ubicación de la invitación a la reunión.",
+        "buttons": {
+          "resources": "Recursos",
+          "settings": "Configuración"
+        }
+      },
+      "hybridCall": {
+        "title": "Llamada híbrida",
+        "description": "Aporta capacidades en la nube a los usuarios de teléfono de escritorio de Cisco Unified CM, como el uso de la aplicación Cisco Spark para compartir pantallas, y realizar y recibir llamadas.",
+        "buttons": {
+          "resources": "Recursos",
+          "settings": "Configuración"
+        }
+      },
+      "hybridMedia": {
+        "title": "Medios híbridos",
+        "description": "Extiende los medios en la nube a fin de utilizar recursos basados en las instalaciones para llamadas y reuniones.",
+        "buttons": {
+          "resources": "Recursos",
+          "settings": "Configuración"
+        }
+      },
+      "hybridContext": {
+        "title": "Contexto",
+        "description": "Permite un servicio de almacenamiento que ofrece un repositorio de datos de recorrido del cliente para los clientes de Cisco Contact Center.",
+        "buttons": {
+          "settings": "Configuración"
+        }
+      }
+    },
+    "showMore": "Ver todo",
+    "genericButtons": {
+      "setup": "Configurar"
+    },
+    "cardStatus": {
+      "running": "Operativo",
+      "alarms": "Servicio afectado",
+      "error": "Interrupción",
+      "disabled": "Desactivado"
+    }
+  },
+  "readOnlyModal": {
+    "banner": "Está en modo de solo lectura",
+    "title": "Solo lectura",
+    "okButton": "Aceptar",
+    "text": "Ahora está visualizando el portal de <b>{{orgName}}</b> como usuario de solo lectura. Su acceso limitado permite la visualización de todo el portal, pero no aceptará cambios."
+  },
+  "readOnlyMessages": {
+    "notAllowed": "No se permite en el modo de solo lectura. Operación no ejecutada."
   }
 }

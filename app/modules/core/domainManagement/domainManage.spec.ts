@@ -16,7 +16,7 @@ namespace domainManagement {
 
     describe('DomainManagementCtrl', ()=> {
       let ctrl;
-      beforeEach(inject(($controller, $translate)=> {
+      beforeEach(inject(($controller)=> {
         DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
         ctrl = $controller('DomainManagementCtrl', {
           Authinfo: {getOrgId: sinon.stub().returns('org-id')},

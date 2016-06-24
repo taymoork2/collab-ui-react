@@ -6,9 +6,10 @@
     .controller('ClusterDeregisterController', ClusterDeregisterController);
 
   /* @ngInject */
-  function ClusterDeregisterController(cluster, ClusterService, XhrNotificationService, $translate, $modalInstance) {
+  function ClusterDeregisterController(cluster, ClusterService, XhrNotificationService, $translate, $modalInstance, isF410enabled) {
     var vm = this;
     vm.deregistering = false;
+    vm.isF410enabled = isF410enabled;
 
     vm.deregisterAreYouSure = $translate.instant(
       'hercules.clusters.deregisterAreYouSure', {

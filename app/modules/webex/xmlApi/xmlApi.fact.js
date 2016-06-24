@@ -11,13 +11,11 @@
     $log,
     $interpolate,
     $q,
-    $timeout,
     $rootScope,
     Authinfo,
     Storage,
     WebExXmlApiConstsSvc,
     Auth,
-    OAuthConfig,
     SessionStorage
   ) {
 

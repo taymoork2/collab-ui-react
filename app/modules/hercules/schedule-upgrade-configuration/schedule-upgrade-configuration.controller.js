@@ -6,7 +6,7 @@
     .controller('ScheduleUpgradeConfigurationCtrl', ScheduleUpgradeConfigurationCtrl);
 
   /* @ngInject */
-  function ScheduleUpgradeConfigurationCtrl($rootScope, $scope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService, TimezoneService) {
+  function ScheduleUpgradeConfigurationCtrl($rootScope, $scope, $translate, $modal, Authinfo, ScheduleUpgradeService, TimezoneService) {
     var vm = this;
     vm.state = 'syncing'; // 'error' | 'idle'
     vm.data = {}; // UI data

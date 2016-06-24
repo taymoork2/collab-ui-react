@@ -5,7 +5,7 @@
     .controller('SunlightUserOverviewCtrl', SunlightUserOverviewCtrl);
 
   /* @ngInject */
-  function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
+  function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, Log) {
 
     var vm = this;
 

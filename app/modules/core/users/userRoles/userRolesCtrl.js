@@ -9,9 +9,9 @@
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
     $scope.isPartner = SessionStorage.get('partnerOrgId');
-    $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
-    $scope.showHelpDeskRole = ($scope.isPartner && !Config.isProd()) || $scope.helpDeskFeatureAllowed;
-    $scope.showComplianceRole = Authinfo.getUserId() == "b78903e2-39e6-45fa-af0f-5d31de45934f";
+    $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
+    $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
+    $scope.showComplianceRole = _.includes(['b78903e2-39e6-45fa-af0f-5d31de45934f', '2f0d33ae-2ba1-46f7-a244-bde004fdffdf'], Authinfo.getUserId());
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
@@ -56,7 +56,7 @@
           $scope.dirsyncEnabled = data.dirsyncEnabled;
           $scope.delegatedAdministration = data.delegatedAdministration;
           if (!$scope.showHelpDeskRole) {
-            $scope.showHelpDeskRole = ($scope.delegatedAdministration && !Config.isProd()) || $scope.helpDeskFeatureAllowed;
+            $scope.showHelpDeskRole = $scope.delegatedAdministration || $scope.helpDeskFeatureAllowed;
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);

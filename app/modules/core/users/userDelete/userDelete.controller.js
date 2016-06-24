@@ -5,7 +5,7 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Log, Userservice, Notification, Config, $translate, HuronUser) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Userservice, Notification, Config, $translate, HuronUser) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;

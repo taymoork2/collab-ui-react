@@ -9,68 +9,88 @@
 </div>
 
 <!-- body -->
-<section class="modal-body">
-  <form id="callTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-    <h5 translate="trialModal.pstn.pstnProvider"></h5>
-    <section class="row full indent">
-      <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"
-        class="medium-12 columns indent">
-        </formly-form>
-    </section>
-    <div ng-hide="pstnTrial.trialData.details.pstnProvider.apiExists">
-      <section class="modal-body row">
-        <h5 translate="trialModal.pstn.phoneNumbers"></h5>
-        <h6 class="indent" translate="trialModal.pstn.pleaseAdd"></h6>
-        <section class="medium-11 indent columns flex-row">
-          <div class="pad-right">
-            <h6 translate="trialModal.pstn.numbers"></h6>
-          </div>
-          <div class="did-input flex1">
-            <cs-token-field tokens="pstnTrial.manualUnsavedTokens" tokenfieldid="pstnTrial.manualTokenFieldId" tokenoptions="pstnTrial.manualTokenOptions" tokenmethods="pstnTrial.manualTokenMethods"></cs-token-field>
-          </div>
-        </section>
-      </section>
+<div class="modal-body trials">
+  <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
+    
+    <!-- provider selection -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
+      </div>
+      <div class="section__content">
+        <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"></formly-form>
+      </div>
     </div>
+    
+    <!-- manual number entry -->
+    <div class="cs-form__section" ng-hide="pstnTrial.trialData.details.pstnProvider.apiExists">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.pstn.phoneNumbers"></h4>
+        <h6 class="section__description" translate="trialModal.pstn.pleaseAdd"></h6>
+        <!--<h6 translate="trialModal.pstn.pleaseAdd"></h6>-->
+      </div>
+      <div class="section__content">
+        <div class="pad-right">
+          <h6 translate="trialModal.pstn.numbers"></h6>
+        </div>
+        <div class="did-input">
+          <cs-token-field tokens="pstnTrial.manualUnsavedTokens" tokenfieldid="pstnTrial.manualTokenFieldId" tokenoptions="pstnTrial.manualTokenOptions" tokenmethods="pstnTrial.manualTokenMethods"></cs-token-field>
+        </div>
+      </div>
+    </div>
+    
+    <!-- provider specific options -->
     <div ng-show="pstnTrial.trialData.details.pstnProvider.apiExists">
-      <section class="modal-body row">
-          <div class="flex-row">
-              <h5 translate="trialModal.pstn.contract"></h5>
-              <i class="icon icon-question-circle legal-tooltip" tooltip="{{'trialModal.pstn.popover' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
-          </div>
-          <section class="row full indent">
-          <formly-form model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
-              </formly-form>
-          </section>
-      </section>
-      <section class="modal-body row">
-          <h5 translate="trialModal.pstn.phoneNumbers"></h5>
-          <h6 translate="trialModal.pstn.pleaseAdd10" class="indent"></h6>
-          <section class="medium-12 columns">
-            <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
-              </formly-form>
-          </section>
-          <section class="medium-12 columns flex-row">
-            <div class="medium-2 columns pad-right">
-              <h6 class="text-right" translate="trialModal.pstn.numbers"></h6>
-            </div>
-          <div class="did-input medium-10 columns flex1">
+      
+      <!-- legal info -->
+      <div class="cs-form__section">
+        <div class="section__info">
+            <h4 class="section__title" translate="trialModal.pstn.contract"></h4>
+            <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
+        </div>
+        <div class="section__content">
+          <formly-form class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
+            </formly-form>
+        </div>
+      </div>
+      
+      <!-- provider numbers -->
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 translate="trialModal.pstn.phoneNumbers"></h4>
+          <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
+        </div>
+        <div class="section__content">
+          <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
+            </formly-form>
+          <h6 translate="trialModal.pstn.numbers"></h6>
+          <div class="did-input">
             <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenFieldId" tokenoptions="pstnTrial.tokenOptions" tokenmethods="pstnTrial.tokenMethods"></cs-token-field>
           </div>
-        </section>
-      </section>
+        </div>
+      </div>
+      
     </div>
   </form>
-</section>
+</div>
+
 <!-- footer -->
-<div class="modal-footer">
-  <a class="pull-left" ng-click="pstnTrial.skip(true)" translate="trialModal.pstn.skip"></a>
-  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+<div class="modal-footer trials">
+  <a class="alt-btn-link"
+    ng-click="pstnTrial.skip(true)"
+    translate="trialModal.skip">
+  </a>
+  <button class="btn with-slim-offset offset-l"
+    ng-click="trial.previousStep()"
+    ng-disabled="trial.loading"
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); trial.nextStep()" 
+    ng-click="trialForm.$setPristine(true); trial.nextStep()"
     ng-disabled="(trialForm.$invalid && pstnTrial.showOrdering) || pstnTrial.disableNextButton()">
     <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
     <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>
 </div>
+
+

@@ -7,6 +7,33 @@
   }
 
   .status {
+    .red {
+      color: $color-negative-base;
+    }
+    .green {
+      color: $color-cta-base;
+    }
+    .grey {
+      color: $gray-base;
+    }
+    .yellow {
+      color: $color-attention-base;
+    }
+    .error {
+      color: $color-negative-base;
+    }
+    .ok {
+      color: $color-cta-base;
+    }
+    .warn {
+      color: $color-attention-base;
+    }
+    .helpdesk-warning {
+      color: $color-attention-base;
+    }
+    .fa-circle {
+      margin-right: 0.5rem;
+    }
     .help-desk {
       text-align: center;
     }

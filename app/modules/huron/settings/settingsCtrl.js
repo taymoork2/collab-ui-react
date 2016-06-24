@@ -7,17 +7,15 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, InternalNumberPoolService, CeService, HuntGroupServiceV2,
-    InternationalDialing) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing) {
 
     var vm = this;
     vm.loading = true;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
-      value: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles'),
-      timezoneid: '4'
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -33,7 +31,6 @@
 
     var savedModel = null;
     var errors = [];
-    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -94,7 +91,6 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -226,20 +222,12 @@
         description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
-        valuefield: 'value',
+        valuefield: 'id',
         inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
         filter: true
       },
       controller: /* @ngInject */ function ($scope) {
         _buildTimeZoneOptions($scope);
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.timeZoneToggleEnabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.timeZoneToggleEnabled;
-        }
       }
 
     }, {
@@ -285,9 +273,6 @@
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
         }
-      },
-      hideExpression: function () {
-        return vm.model.hideExtensionLength;
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -354,7 +339,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
@@ -414,7 +399,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -756,7 +741,7 @@
     function updateVoicemailUserTimeZone() {
       // TODO: This is not a good way to determine when to update the timezone, get site doesn't
       // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.timezoneid') !== _.get(vm, 'model.voicemailTimeZone.timezoneid'))) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -808,8 +793,8 @@
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
 
-      if (vm.model.site.timeZone.timezoneid !== savedModel.site.timeZone.timezoneid) {
-        siteData.timeZone = vm.model.site.timeZone.value;
+      if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
+        siteData.timeZone = vm.model.site.timeZone.id;
       }
 
       if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
@@ -835,8 +820,8 @@
     }
 
     function updateVoicemailUserTemplate() {
-      if (_.get(vm, 'model.site.timeZone.timezoneid') && _.get(vm, 'voicemailUserTemplate.objectId')) {
-        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.voicemailUserTemplate.objectId)
+      if (_.get(vm, 'model.site.timeZone.id') && _.get(vm, 'voicemailUserTemplate.objectId')) {
+        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.id, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -922,7 +907,7 @@
                 return digit === site.siteSteeringDigit;
               });
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.id === site.timeZone;
               });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -981,8 +966,9 @@
               };
 
               vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.timezoneid === vm.voicemailUserTemplate.timeZone;
+                return timezone.id === vm.voicemailUserTemplate.timeZone;
               });
+
             }
           })
           .catch(_.noop);
@@ -1265,8 +1251,6 @@
       errors = [];
 
       var promises = [];
-      promises.push(enableTimeZoneFeatureToggle());
-      promises.push(enableExtensionLengthFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1531,35 +1515,14 @@
       });
     }
 
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
-      });
-    }
-
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 

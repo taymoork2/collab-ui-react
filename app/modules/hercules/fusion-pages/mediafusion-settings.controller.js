@@ -9,6 +9,10 @@
   function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService) {
     var vm = this;
     vm.backUrl = 'cluster-list';
+    vm.upgradeSchedule = {
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
+      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+    };
 
     ////////////
 

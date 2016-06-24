@@ -13,6 +13,7 @@ describe('Template: branding', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(dependencies));
@@ -67,7 +68,7 @@ describe('Template: branding', function () {
     compileView();
   }
 
-  describe('Regular Admin', function () {
+  xdescribe('Regular Admin', function () {
     beforeEach(compileView);
 
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));

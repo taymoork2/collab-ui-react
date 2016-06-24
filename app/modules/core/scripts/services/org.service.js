@@ -6,7 +6,7 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig, Utils) {
+  function Orgservice($http, $q, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,

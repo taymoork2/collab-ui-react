@@ -68,9 +68,10 @@
           height: 100%;
         }
         h4 {
-          font-size: 1.75rem;
+          font-size: 1.63rem;
           padding-top: 0.5rem;
           text-align: center;
+          font-family: $brand-font-extra-light;
           i {
             position: relative;
             top: 0.2rem;
@@ -86,11 +87,8 @@
         button {
           width: 100%;
           margin-left: 0;
-          background-color: $gray-light-3;
-          color: $gray-dark-2;
           text-overflow: ellipsis;
           a {
-            color: $gray-dark-2;
             white-space: nowrap;
             overflow: hidden;
             display: block;
@@ -99,11 +97,9 @@
             padding-bottom: 1px;
           }
         }
-        .cta-btn {
-          background-color: $color-primary-base !important;
-          color: white;
+        .btn {
           margin-top: 1rem;
-          width: auto;
+          width: auto !important;
           padding-left: 1rem;
           padding-right: 1rem;
         }
@@ -122,6 +118,7 @@
             top: 0.9rem;
             display: block;
             span {
+              color: $gray-base;
               position: relative;
               top: -0.2rem;
               left: 0.1rem;

@@ -51,6 +51,10 @@ module.exports = function () {
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
       ],
+      notJsSpec: [
+        '!' + app + '/modules/**/*.spec.js',
+        '!' + app + '/scripts/**/*.spec.js'
+      ],
       notTs: [
         '!' + app + '/modules/**/*.ts.js',
         '!' + app + '/scripts/**/*.js'
@@ -159,7 +163,6 @@ module.exports = function () {
         node_modules + '/lodash/index.js',
         node_modules + '/draggable.js/draggable.js',
         node_modules + '/moment/moment.js',
-        node_modules + '/Base64/base64.js',
         node_modules + '/jquery.nicescroll/jquery.nicescroll.js',
         node_modules + '/punycode/punycode.js',
         node_modules + '/angular/angular.js',
@@ -191,7 +194,7 @@ module.exports = function () {
         node_modules + '/d3/d3.js',
         node_modules + '/jquery-csv/src/jquery.csv.js',
         node_modules + '/angular-timer/dist/angular-timer.js',
-        node_modules + '/humanize-duration/humanize-duration.js',
+        node_modules + '/angular-timer/bower_components/humanize-duration/humanize-duration.js',
         node_modules + '/angular-libphonenumber/dist/libphonenumber.full.js',
         node_modules + '/angular-libphonenumber/dist/angular-libphonenumber.js',
         node_modules + '/angularjs-toaster/toaster.js',
@@ -218,7 +221,6 @@ module.exports = function () {
         ]
       },
       css: [
-        node_modules + '/animate.css/animate.css',
         node_modules + '/ng-tags-input/build/ng-tags-input.css',
         node_modules + '/collab-amcharts/amcharts/plugins/export/export.css',
       ],

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, Config, UrlConfig) {
+  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, UrlConfig) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {

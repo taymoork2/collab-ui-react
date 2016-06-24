@@ -6,7 +6,7 @@
     .factory('QueueHelperService', QueueHelperService);
 
   /* @ngInject */
-  function QueueHelperService($q, QueueService, Authinfo) {
+  function QueueHelperService(QueueService, Authinfo) {
 
     var service = {
       listQueues: listQueues,

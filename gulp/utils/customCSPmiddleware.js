@@ -7,15 +7,61 @@ var csp = require('helmet-csp');
 // but the one for Browser Sync changes too often (it contains the version number).
 // We use 'unsafe-inline' instead, but it should never make it to production! Production should only
 // use 'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=', the SHA1 for the image preload script
-var onlyForDev = '\'unsafe-inline\'';
+var inlineScriptOnlyForDev = '\'unsafe-inline\'';
+// Localytics will load a pixel image using http when developing locally
+var localyticsOnlyForDev = 'http://*.localytics.com';
 module.exports = csp({
   reportOnly: false,
   browserSniff: false,
   directives: {
-    defaultSrc: ['\'self\'', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.localytics.com', '*.webexconnect.com'],
-    connectSrc: ['\'self\'', '*.cisco.com', '*.huron-int.com', '*.huron.uno', '*.huron-dev.com', '*.ciscoccservice.com', '*.statuspage.io', '*.webex.com', '*.wbx2.com', '*.webexconnect.com', 'cdn.mxpnl.com', 'api.mixpanel.com', 'ws://127.0.0.1:8000', 'ws://localhost:8000', 'http://127.0.0.1:8080', 'http://localhost:8080'],
-    imgSrc: ['\'self\'', 'data:', '*.localytics.com', '*.rackcdn.com', '*.clouddrive.com'],
-    scriptSrc: ['\'self\'', onlyForDev, '\'unsafe-eval\'', '*.webex.com', '*.localytics.com', 'cdn.mxpnl.com', 'api.mixpanel.com'],
-    styleSrc: ['\'self\'', '\'unsafe-inline\'']
+    defaultSrc: [
+      '\'self\'',
+      'https://*.localytics.com',
+      'https://*.statuspage.io',
+      'https://*.wbx2.com',
+      'https://*.webex.com',
+      'https://*.webexconnect.com'
+    ],
+    connectSrc: [
+      '\'self\'',
+      'https://*.cisco.com',
+      'https://*.ciscoccservice.com',
+      'https://*.huron-dev.com',
+      'https://*.huron-int.com',
+      'https://*.huron.uno',
+      'https://*.statuspage.io',
+      'https://*.wbx2.com',
+      'https://*.webex.com',
+      'https://*.webexconnect.com',
+      'https://api.mixpanel.com',
+      'https://cdn.mxpnl.com',
+      // Browser Sync:
+      'ws://127.0.0.1:8000',
+      'ws://localhost:8000',
+      // Local Atlas Backend:
+      'http://127.0.0.1:8080',
+      'http://localhost:8080'
+    ],
+    imgSrc: [
+      '\'self\'',
+      'data:',
+      localyticsOnlyForDev,
+      'https://*.clouddrive.com',
+      'https://*.localytics.com',
+      'https://*.rackcdn.com'
+    ],
+    scriptSrc: [
+      '\'self\'',
+      inlineScriptOnlyForDev,
+      '\'unsafe-eval\'',
+      'https://*.localytics.com',
+      'https://*.webex.com',
+      'https://api.mixpanel.com',
+      'https://cdn.mxpnl.com'
+    ],
+    styleSrc: [
+      '\'self\'',
+      '\'unsafe-inline\''
+    ]
   }
 });

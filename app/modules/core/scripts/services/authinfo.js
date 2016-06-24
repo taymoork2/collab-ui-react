@@ -33,6 +33,7 @@
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
+      careServices: null,
       conferenceServicesWithoutSiteUrl: null,
       cmrServices: null,
       hasAccount: false,
@@ -205,6 +206,7 @@
           var msgLicenses = [];
           var confLicenses = [];
           var commLicenses = [];
+          var careLicenses = [];
           var cmrLicenses = [];
           var confLicensesWithoutSiteUrl = [];
           var customerAccounts = data.customers || [];
@@ -260,6 +262,10 @@
                 service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
                 commLicenses.push(service);
                 break;
+              case 'CARE':
+                service = new ServiceFeature($translate.instant('onboardModal.paidCare'), x + 1, 'careRadio', license);
+                careLicenses.push(service);
+                break;
               case 'CMR':
                 service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
                 cmrLicenses.push(service);
@@ -274,6 +280,9 @@
           }
           if (commLicenses.length !== 0) {
             authData.communicationServices = commLicenses;
+          }
+          if (careLicenses.length !== 0) {
+            authData.careServices = careLicenses;
           }
           if (cmrLicenses.length !== 0) {
             authData.cmrServices = cmrLicenses;
@@ -326,6 +335,9 @@
       getCommunicationServices: function () {
         return authData.communicationServices;
       },
+      getCareServices: function () {
+        return authData.careServices;
+      },
       getCmrServices: function () {
         return authData.cmrServices;
       },
@@ -367,7 +379,7 @@
         return this.hasRole('Full_Admin');
       },
       isCSB: function () {
-        return authData.customerType === 'APP_DIRECT';
+        return (_.contains(authData.customerType, ['APP_DIRECT', 'CSB']));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

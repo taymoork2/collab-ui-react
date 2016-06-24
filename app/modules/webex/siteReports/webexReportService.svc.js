@@ -8,12 +8,10 @@
     $q,
     $log,
     $translate,
-    $filter,
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
-    WebExXmlApiInfoSvc,
-    Notification
+    WebExXmlApiInfoSvc
   ) {
     var self = this;
     //ok, we need a unique global self.

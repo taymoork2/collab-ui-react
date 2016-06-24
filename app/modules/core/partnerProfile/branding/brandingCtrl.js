@@ -4,17 +4,16 @@
   angular.module('Core')
     .controller('BrandingCtrl', BrandingCtrl);
 
-  function BrandingCtrl($scope, $state, $translate, $timeout, $modal, Authinfo, Notification, Log, Utils, UserListService, WebexClientVersion, BrandService, Orgservice, FeatureToggleService) {
+  function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, FeatureToggleService, Orgservice) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
 
     brand.isPartner = Authinfo.isPartner();
     brand.usePartnerLogo = true;
     brand.allowCustomerLogos = false;
-    brand.allowCustomerLogos = false;
     brand.progress = 0;
     brand.modalType = $state.params.modalType;
-
+    brand.isDirectCustomer = false;
     brand.logoCriteria = {
       'pattern': '.png',
       'width': {
@@ -28,6 +27,10 @@
     brand.wbxNoClientSelected = true;
     brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
     brand.showClientVersions = true;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasDirectCustomerBranding).then(function (result) {
+      brand.isDirectCustomer = result;
+    });
 
     brand.init = function () {
       Log.debug('branding init');
@@ -199,12 +202,13 @@
     };
 
     function openModal(size) {
-      $state.go('brandingUpload').then(function () {});
-      // brand.uploadModal = $modal.open({
-      //   scope: bCtrl,
-      //   templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
-      //   size: size
-      // });
+      brand.uploadModal = $modal.open({
+        type: 'small',
+        scope: $scope,
+        modalClass: 'modal-logo-upload',
+        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+        size: size
+      });
     }
 
     brand.toggleLogo = _.debounce(function (value) {
@@ -229,25 +233,11 @@
       'trailing': false
     });
 
-    brand.upload = function (file, event) {
-      openModal('sm');
-      if (validateLogo(file)) {
-        brand.progress = 0;
-        BrandService.upload(orgId, file)
-          .then(uploadSuccess, uploadError, uploadProgress);
-      }
-    };
     // Add branding example static page
     brand.showBrandingExample = function (type) {
       $state.go('brandingExample', {
         modalType: type
-      }).then(function () {});
-      // brand.type = type;
-      // $modal.open({
-      //   scope: bCtrl,
-      //   templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-      //   size: 'lg'
-      // });
+      });
     };
 
     function validateLogo(logo) {

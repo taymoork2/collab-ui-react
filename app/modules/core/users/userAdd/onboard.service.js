@@ -6,7 +6,7 @@
     .factory('OnboardService', OnboardService);
 
   /* @ngInject */
-  function OnboardService(HybridService) {
+  function OnboardService() {
     var service = {
       huronCallEntitlement: false
     };

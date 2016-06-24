@@ -7,6 +7,14 @@
       "balloonColor": "#ccc",
       "columnWidth": 4
     },
+    "smoothedLine": {
+      "type": "smoothedLine",
+      "lineColor": "#ccc",
+      "lineThickness": 2,
+      "balloonColor": "#ccc",
+      "negativeLineColor": "#ccc",
+      "negativeBase": 100
+    },
     "line": {
       "type": "line",
       "bullet": "round",
@@ -24,6 +32,23 @@
       "tickLength": 0,
       "titleColor": "#444",
       "fontFamily": "CiscoSansTT Light"
+    },
+    "guideaxis": {
+      "axisColor": "#ccc",
+      "gridColor": "#ccc",
+      "color": "#444",
+      "titleColor": "#ccc",
+      "fontFamily": "CiscoSansTT Light",
+      "gridAlpha": 0,
+      "axisAlpha": 1,
+      "tickLength": 0,
+      "guides": [{
+        "inside": true,
+        "label": "Utilization High",
+        "lineColor": "#000000",
+        "lineAlpha": 0.5,
+        "value": 80
+      }]
     },
     "legend": {
       "color": "#444",

@@ -1,0 +1,11 @@
+<div class="setting">
+  <div class="large-9 columns">
+    <cs-select id="retentionTimeSelector"
+               name="retentionTime"
+               ng-model="vm.selectedRetention"
+               options="vm.retentionOptions"
+               on-change-fn="vm.updateRetention()"
+               is-disabled="!vm.dataLoaded">
+    </cs-select>
+  </div>
+</div>

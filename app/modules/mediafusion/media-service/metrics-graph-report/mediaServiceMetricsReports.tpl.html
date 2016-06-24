@@ -10,8 +10,10 @@
   </cs-page-sub-header>
   <div class="content-container">
     <div class="row" >
+      &nbsp;&nbsp;{{nav.label}} ({{nav.date}})
       <cs-card-layout>
-        <!--uc-utilization-metrics></uc-utilization-metrics-->
+        <uc-metrics-info-card></uc-metrics-info-card>
+        <uc-utilization-metrics></uc-utilization-metrics>
         <uc-call-volume-metrics></uc-call-volume-metrics>
         <uc-availability-metrics></uc-availability-metrics>
       </cs-card-layout>

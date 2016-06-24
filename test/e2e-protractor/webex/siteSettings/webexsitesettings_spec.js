@@ -1,36 +1,33 @@
 'use strict';
 
-/* global sitesettings */
+/* global webExSiteSettings */
 /* global webEx */
+/* global webExCommon */
 
-sitesettings.testInfo.describeCount = 0;
-while (1 >= sitesettings.testInfo.describeCount) {
-  switch (sitesettings.testInfo.describeCount) {
+webExCommon.testInfo.describeCount = 0;
+while (1 >= webExCommon.testInfo.describeCount) {
+  switch (webExCommon.testInfo.describeCount) {
   case 1:
-    sitesettings.testInfo.testType = 'T30';
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t30Info.siteUrl;
+    webExCommon.testInfo.testType = 'T30';
+    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
     break;
 
   default:
-    sitesettings.testInfo.testType = 'T31';
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t31Info.siteUrl;
+    webExCommon.testInfo.testType = 'T31';
+    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
   }
 
-  describe(sitesettings.testInfo.describeText, function () {
+  describe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
-    if (sitesettings.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == "T31") {
       beforeAll(function () {
-        /*
-        login.loginUsingIntegrationBackend('t31RegressionTestAdmin');
-        setup = true;
-        */
         var promise = webEx.setup(
           1,
-          't31RegressionTestAdmin',
-          sitesettings.t31Info.testAdminUsername,
-          sitesettings.t31Info.testAdminPassword,
-          sitesettings.t31Info.siteUrl
+          'wbx-t31RegressionTestAdmin',
+          webExCommon.t31Info.testAdminUsername,
+          webExCommon.t31Info.testAdminPassword,
+          webExCommon.t31Info.siteUrl
         );
 
         promise.then(
@@ -45,16 +42,12 @@ while (1 >= sitesettings.testInfo.describeCount) {
       });
     } else {
       beforeAll(function () {
-        /*
-        login.loginUsingIntegrationBackend('t30RegressionTestAdmin');
-        setup = true;
-        */
         var promise = webEx.setup(
           1,
-          't30RegressionTestAdmin',
-          sitesettings.t30Info.testAdminUsername,
-          sitesettings.t30Info.testAdminPassword,
-          sitesettings.t30Info.siteUrl
+          'wbx-t30RegressionTestAdmin',
+          webExCommon.t30Info.testAdminUsername,
+          webExCommon.t30Info.testAdminPassword,
+          webExCommon.t30Info.siteUrl
         );
 
         promise.then(
@@ -69,293 +62,293 @@ while (1 >= sitesettings.testInfo.describeCount) {
       });
     }
 
-    if (sitesettings.testInfo.testType == "T31") {
-      it('shsetupould sign in as ' + sitesettings.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
+    if (webExCommon.testInfo.testType == "T31") {
+      it('shsetupould sign in as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
-          utils.click(sitesettings.conferencing);
+          utils.click(webExSiteSettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.t31Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t31ConfigureCog);
-          utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t31CardsSectionId);
+          utils.click(webExCommon.t31ConfigureCog);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should sign in as ' + sitesettings.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
-          utils.click(sitesettings.conferencing);
+          utils.click(webExSiteSettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.t30Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t30ConfigureCog);
-          utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t30CardsSectionId);
+          utils.click(webExCommon.t30ConfigureCog);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }
 
     it('should click on site list breadcrumb and navigate to site list', function () {
       if (setup) {
-        utils.click(sitesettings.siteListCrumb);
+        utils.click(webExSiteSettings.siteListCrumb);
       }
     });
 
-    if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+    if (webExCommon.testInfo.testType == "T31") {
+      it('should click on configure site cog for ' + webExCommon.t31Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t31ConfigureCog);
-          utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t31CardsSectionId);
+          utils.click(webExCommon.t31ConfigureCog);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
+          utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      it('should click on configure site cog for ' + webExCommon.t30Info.siteUrl, function () {
         if (setup) {
-          utils.click(sitesettings.t30ConfigureCog);
-          utils.wait(sitesettings.siteSettingsPanel);
-          utils.wait(sitesettings.t30CardsSectionId);
+          utils.click(webExCommon.t30ConfigureCog);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
+          utils.wait(webExCommon.t30CardsSectionId);
         }
       });
     }
 
-    if (sitesettings.testInfo.testType == "T31") { // for T31 site only
+    if (webExCommon.testInfo.testType == "T31") { // for T31 site only
       it('should click on common settings cmr link', function () {
         if (setup) {
-          utils.click(sitesettings.configureCommonCMRLink);
-          utils.wait(sitesettings.siteSettingPanel);
-          utils.wait(sitesettings.cmrId);
-          utils.wait(sitesettings.iFramePage);
+          utils.click(webExSiteSettings.configureCommonCMRLink);
+          utils.wait(webExSiteSettings.siteSettingPanel);
+          utils.wait(webExSiteSettings.cmrId);
+          utils.wait(webExSiteSettings.iFramePage);
         }
       });
 
       it('should click on settings index breadcrumb and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteSettingsCrumb);
-          utils.wait(sitesettings.siteSettingsPanel);
+          utils.click(webExSiteSettings.siteSettingsCrumb);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
         }
       });
 
       it('should click on common settings scheduler link', function () {
         if (setup) {
-          utils.click(sitesettings.configureCommonSchedulerLink);
-          utils.wait(sitesettings.siteSettingPanel);
-          utils.wait(sitesettings.commonSchedulerId);
-          utils.wait(sitesettings.iFramePage);
+          utils.click(webExSiteSettings.configureCommonSchedulerLink);
+          utils.wait(webExSiteSettings.siteSettingPanel);
+          utils.wait(webExSiteSettings.commonSchedulerId);
+          utils.wait(webExSiteSettings.iFramePage);
         }
       });
 
       it('should click on settings index breadcrumb and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteSettingsCrumb);
-          utils.wait(sitesettings.siteSettingsPanel);
+          utils.click(webExSiteSettings.siteSettingsCrumb);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
         }
       });
 
       it('should click on common settings security link ', function () {
         if (setup) {
-          utils.click(sitesettings.configureCommonSecurityLink);
-          utils.wait(sitesettings.siteSettingPanel);
-          utils.wait(sitesettings.commonSecurityId);
-          utils.wait(sitesettings.iFramePage);
+          utils.click(webExSiteSettings.configureCommonSecurityLink);
+          utils.wait(webExSiteSettings.siteSettingPanel);
+          utils.wait(webExSiteSettings.commonSecurityId);
+          utils.wait(webExSiteSettings.iFramePage);
         }
       });
 
       it('should click on settings index breadcrumb and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteSettingsCrumb);
-          utils.wait(sitesettings.siteSettingsPanel);
+          utils.click(webExSiteSettings.siteSettingsCrumb);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
         }
       });
 
       it('should click on common settings session types link', function () {
         if (setup) {
-          utils.click(sitesettings.configureCommonSessionTypesLink);
-          utils.wait(sitesettings.siteSettingPanel);
-          utils.wait(sitesettings.commonSessionTypesId);
-          utils.wait(sitesettings.iFramePage);
+          utils.click(webExSiteSettings.configureCommonSessionTypesLink);
+          utils.wait(webExSiteSettings.siteSettingPanel);
+          utils.wait(webExSiteSettings.commonSessionTypesId);
+          utils.wait(webExSiteSettings.iFramePage);
         }
       });
 
       it('should click on settings index breadcrumb and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteSettingsCrumb);
-          utils.wait(sitesettings.siteSettingsPanel);
+          utils.click(webExSiteSettings.siteSettingsCrumb);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
         }
       });
 
       it('should click on common settings user privileges link', function () {
         if (setup) {
-          utils.click(sitesettings.configureCommonUserPrivLink);
-          utils.wait(sitesettings.siteSettingPanel);
-          utils.wait(sitesettings.commonUserPrivId);
-          utils.wait(sitesettings.iFramePage);
+          utils.click(webExSiteSettings.configureCommonUserPrivLink);
+          utils.wait(webExSiteSettings.siteSettingPanel);
+          utils.wait(webExSiteSettings.commonUserPrivId);
+          utils.wait(webExSiteSettings.iFramePage);
         }
       });
 
       it('should click on settings index breadcrumb and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteSettingsCrumb);
-          utils.wait(sitesettings.siteSettingsPanel);
+          utils.click(webExSiteSettings.siteSettingsCrumb);
+          utils.wait(webExSiteSettings.siteSettingsPanel);
         }
       });
     } // For T31 site only
 
     it('should click on common settings company addresses link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonCompanyAddressesLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.companyAddressesId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonCompanyAddressesLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.companyAddressesId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings disclaimers link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonDisclaimersLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.disclaimersId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonDisclaimersLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.disclaimersId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings mobile link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonMobileLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonMobileId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonMobileLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonMobileId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings navigation customization link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonNavigationLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonNavigationId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonNavigationLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonNavigationId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings productivity tools link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonProductivityToolsLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonProductivityToolsId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonProductivityToolsLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonProductivityToolsId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings partner delegated authentication link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonPartnerAuthLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonPartnerAuthId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonPartnerAuthLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonPartnerAuthId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings site options link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonSiteOptionsLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonSiteOptionsId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonSiteOptionsLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonSiteOptionsId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on common settings site information link', function () {
       if (setup) {
-        utils.click(sitesettings.configureCommonSiteInformationLink);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.commonSiteInformationId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.configureCommonSiteInformationLink);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.commonSiteInformationId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
-        utils.click(sitesettings.siteSettingsCrumb);
-        utils.wait(sitesettings.siteSettingsPanel);
+        utils.click(webExSiteSettings.siteSettingsCrumb);
+        utils.wait(webExSiteSettings.siteSettingsPanel);
       }
     });
 
     it('should click on email all hosts btn', function () {
       if (setup) {
-        utils.click(sitesettings.emailAllHostsBtn);
-        utils.wait(sitesettings.siteSettingPanel);
-        utils.wait(sitesettings.emaillAllHostsId);
-        utils.wait(sitesettings.iFramePage);
+        utils.click(webExSiteSettings.emailAllHostsBtn);
+        utils.wait(webExSiteSettings.siteSettingPanel);
+        utils.wait(webExSiteSettings.emaillAllHostsId);
+        utils.wait(webExSiteSettings.iFramePage);
       }
     });
 
-    if (sitesettings.testInfo.testType == "T31") {
+    if (webExCommon.testInfo.testType == "T31") {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteListCrumb);
-          utils.wait(sitesettings.t31ConfigureCog);
+          utils.click(webExSiteSettings.siteListCrumb);
+          utils.wait(webExCommon.t31ConfigureCog);
         }
       });
     } else {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
-          utils.click(sitesettings.siteListCrumb);
-          utils.wait(sitesettings.t30ConfigureCog);
+          utils.click(webExSiteSettings.siteListCrumb);
+          utils.wait(webExCommon.t30ConfigureCog);
         }
       });
     }
@@ -369,5 +362,5 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
   });
 
-  ++sitesettings.testInfo.describeCount;
+  ++webExCommon.testInfo.describeCount;
 }

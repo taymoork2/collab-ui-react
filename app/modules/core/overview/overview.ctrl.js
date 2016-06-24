@@ -6,11 +6,11 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig, Notification) {
+  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, UrlConfig, Notification) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
-    vm.isCSB = false;
+    vm.isCSB = Authinfo.isCSB();
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
@@ -20,16 +20,18 @@
       OverviewCardFactory.createUsersCard()
     ];
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-        vm.isCSB = Authinfo.isCSB() && result;
-      })
-      .then(function () {
-        if (vm.isCSB) {
-          _.remove(vm.cards, {
-            name: 'overview.cards.users.title'
-          });
-        }
-      });
+    function init() {
+      removeCardUserTitle();
+      setSipUriNotification();
+    }
+
+    function removeCardUserTitle() {
+      if (vm.isCSB) {
+        _.remove(vm.cards, {
+          name: 'overview.cards.users.title'
+        });
+      }
+    }
 
     function forwardEvent(handlerName) {
       var eventArgs = [].slice.call(arguments, 1);
@@ -38,10 +40,6 @@
           card[handlerName].apply(card, eventArgs);
         }
       });
-    }
-
-    function init() {
-      setSipUriNotification();
     }
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());

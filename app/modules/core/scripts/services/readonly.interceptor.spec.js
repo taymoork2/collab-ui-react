@@ -5,7 +5,7 @@ describe('ReadonlyInterceptor', function () {
 
   var $httpBackend, Interceptor, Authinfo, Log, Notification, $q;
 
-  beforeEach(inject(function (_$q_, _$httpBackend_, $injector, _ReadonlyInterceptor_, _Authinfo_, _Notification_, _Log_) {
+  beforeEach(inject(function (_$q_, _$httpBackend_, _ReadonlyInterceptor_, _Authinfo_, _Notification_, _Log_) {
     Interceptor = _ReadonlyInterceptor_;
     Authinfo = _Authinfo_;
     Notification = _Notification_;

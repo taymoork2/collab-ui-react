@@ -27,6 +27,7 @@ describe('Controller: CustomerListCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
@@ -158,27 +159,6 @@ describe('Controller: CustomerListCtrl', function () {
       var result = $scope.getSubfields('meeting');
       expect(result[0]).toBe('conferencing');
       expect(result[1]).toBe('webexEEConferencing');
-    });
-  });
-
-  describe('addCorrectMeetingColumn function', function () {
-
-    it('should add a meeting column if FeatureToggle is true', function () {
-      initController();
-      $scope.addCorrectMeetingColumn();
-      expect($scope.gridColumns[2].field).toBe('meeting');
-    });
-  });
-
-  describe('addCorrectMeetingColumn function', function () {
-
-    it('should add a conferencing column if FeatureToggle is false', function () {
-      FeatureToggleService.supports.and.callFake(function (val) {
-        return $q.when(false);
-      });
-      initController();
-      $scope.addCorrectMeetingColumn();
-      expect($scope.gridColumns[2].field).toBe('conferencing');
     });
   });
 

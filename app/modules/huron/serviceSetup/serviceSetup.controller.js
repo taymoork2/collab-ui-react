@@ -8,13 +8,12 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    InternalNumberPoolService, CeService, HuntGroupServiceV2, ModalService, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
-      value: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles'),
-      timezoneid: '4'
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -25,17 +24,6 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-
-    var mohOptions = [{
-      label: $translate.instant('serviceSetupModal.ciscoDefault'),
-      value: 'ciscoDefault'
-    }, {
-      label: $translate.instant('serviceSetupModal.fall'),
-      value: 'fall'
-    }, {
-      label: $translate.instant('serviceSetupModal.winter'),
-      value: 'winter'
-    }];
 
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -64,13 +52,11 @@
       previousLength: DEFAULT_EXT_LEN,
       //var to hold ranges in view display
       displayNumberRanges: [],
-      globalMOH: mohOptions[0],
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
       },
       ftswSteeringDigit: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -81,7 +67,6 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
-    vm.timeZoneToggleEnabled = false;
     vm.previousTimeZone = DEFAULT_TZ;
     vm.extensionLengthChanged = false;
 
@@ -206,7 +191,7 @@
           description: $translate.instant('serviceSetupModal.tzDescription'),
           options: [],
           labelfield: 'label',
-          valuefield: 'value',
+          valuefield: 'id',
           inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
           filter: true
         },
@@ -216,14 +201,6 @@
           }, function (timeZones) {
             $scope.to.options = timeZones;
           });
-        },
-        expressionProperties: {
-          'templateOptions.required': function () {
-            return vm.timeZoneToggleEnabled;
-          },
-          'templateOptions.disabled': function () {
-            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
-          }
         }
       }, {
         key: 'steeringDigit',
@@ -308,11 +285,6 @@
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.model.disableExtensions;
-        },
-        // hide function added to expressionProperties because hideExpression does not dependably hide
-        // the element on load, and will evaluate only after the model updates after first load
-        'hideExpression': function () {
-          return vm.model.hideExtensionLength;
         }
       }
     }, {
@@ -364,7 +336,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': vm.steerDigitOverLapValidation,
               'templateOptions.minlength': function () {
@@ -425,7 +397,7 @@
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return vm.model.disableExtensions;
+                return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
               },
               // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
               // it retriggers validation
@@ -591,26 +563,6 @@
           }
         }]
       }
-    }, {
-      key: 'globalMOH',
-      type: 'select',
-      className: 'service-setup',
-      templateOptions: {
-        inputClass: 'service-setup-moh',
-        label: $translate.instant('serviceSetupModal.globalMOH'),
-        description: $translate.instant('serviceSetupModal.mohDescription'),
-        options: mohOptions,
-        labelfield: 'label',
-        valuefield: 'value'
-      },
-      hideExpression: function ($viewValue, $modelValue, scope) {
-        return vm.firstTimeSetup;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return !vm.firstTimeSetup;
-        }
-      }
     }];
 
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -641,12 +593,6 @@
       }).catch(function (response) {
         errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
-        // Get the timezone feature toggle setting
-        return enableTimeZoneFeatureToggle();
-      }).then(function () {
-        // Get the extemsion length feature toggle setting
-        return enableExtensionLengthFeatureToggle();
-      }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
       }).then(function () {
@@ -675,7 +621,7 @@
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.id === site.timeZone;
               });
               vm.previousTimeZone = vm.model.site.timeZone;
             });
@@ -733,35 +679,14 @@
       });
     }
 
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
-      });
-    }
-
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 
@@ -806,7 +731,7 @@
           vm.timeZone = '' + usertemplates[0].timeZone;
           vm.objectId = usertemplates[0].objectId;
           var currentTimeZone = timezones.filter(function (timezone) {
-            return timezone.timezoneid === vm.timeZone;
+            return timezone.id === vm.timeZone;
           });
           if (currentTimeZone.length > 0) {
             vm.model.site.timeZone = currentTimeZone[0];
@@ -1014,7 +939,7 @@
         }
 
         var currentSite = angular.copy(site);
-        currentSite.timeZone = currentSite.timeZone.value;
+        currentSite.timeZone = currentSite.timeZone.id;
 
         return ServiceSetup.createSite(currentSite)
           .catch(function (response) {
@@ -1046,8 +971,8 @@
           var siteData = {};
           //this value is not gonna change when timezone select combo is disabled
           // so no need to check for timeZoneToggle here
-          if (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) {
-            siteData.timeZone = vm.model.site.timeZone.value;
+          if (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'previousTimeZone.id')) {
+            siteData.timeZone = vm.model.site.timeZone.id;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
@@ -1073,13 +998,18 @@
         }
       }
 
-      function updateTimezone(timeZoneId) {
-        if (!timeZoneId) {
+      function updateTimezone(timeZone) {
+        if (!timeZone) {
           errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
-          return $q.reject('No timezoneid set');
+          return $q.reject('No timeZone Id set');
         }
 
-        return ServiceSetup.updateVoicemailTimezone(timeZoneId, vm.objectId)
+        if (!angular.isString(timeZone)) {
+          errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
+          return $q.reject('TimeZone Id is not a String');
+        }
+
+        return ServiceSetup.updateVoicemailTimezone(timeZone, vm.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -1087,9 +1017,9 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+        if ((_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone')) && voicemailToggleEnabled && vm.hasVoicemailService) {
 
-          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
+          return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
         }
       }
 

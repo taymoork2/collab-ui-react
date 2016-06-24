@@ -10,9 +10,8 @@
 
 <!-- body -->
 <div class="modal-body trials">
-  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
-  <!-- error state - cannot add more devices -->
-  <div class="messagebox-backdrop" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
+<!-- error state - cannot add more devices -->
+  <div class="messagebox-backdrop" ng-if="!callTrial.areAdditionalDevicesAllowed()">
     <div class="message-box splash-msg">
       <div class="splash-msg__title">
         <h2 translate="trialModal.call.deviceTrialCapacityHeader"></h2>
@@ -23,14 +22,23 @@
         </div>
         <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
         <div ng-if="!callTrial.limitsError">
-          <p translate="trialModal.call.deviceTrialLimitReached" translate-values="{number: callTrial.maxTrials}"></p>
-          <p translate="trialModal.call.deviceTrialLimitHelp"></p>
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitReachedA"></span>
+            <span>
+              <a ng-href translate="trialModal.call.activeDeviceTrial" tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-animation="false"></a>
+            </span>
+            <span translate="trialModal.call.deviceTrialLimitReachedB" translate-values="{number: callTrial.maxTrials}"></span>
+          </p>
+          <p>
+            <span translate="trialModal.call.deviceTrialLimitHelp"></span>
+          </p>
         </div>
       </div>
     </div>
   </div>
+  <form id="addDevicesForm" class="cs-form trial-modal" name="trialForm">
     <!-- normal state -->
-  <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+  <div ng-if="callTrial.areAdditionalDevicesAllowed()">
     <!-- select devices -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -61,20 +69,25 @@
     </div>
     </div>
   </form>
-  </div>
+</div>
+
 <!-- footer -->
-<div class="modal-footer">
-  <a class="pad-top pull-left" ng-if="callTrial.canAddDevice || !callTrial.limitReached"
+<div class="modal-footer trials">
+  <a class="alt-btn-link"
+    ng-hide="!callTrial.areAdditionalDevicesAllowed()"
     ng-click="callTrial.skip(true); trial.nextStep()"
-    translate="trialModal.call.skipAddDevices">
+    translate="trialModal.skip">
   </a>
-  <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+  <button class="btn with-slim-offset offset-l"
+    ng-click="trial.previousStep()"
+    ng-disabled="trial.loading"
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-    ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid || !callTrial.getTotalQuantity()>0">
+      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || !callTrial.getTotalQuantity()>0)">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>
   </button>
+  </div>
 </div>
