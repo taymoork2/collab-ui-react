@@ -74,10 +74,10 @@
 
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
-        params: {
-          disableCache: cacheDisabled
-        }
-      })
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -196,19 +196,25 @@
       });
     }
 
-
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
     function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
-      savedOrgSettingsCache.push({date: new Date(), setting: _.clone(settings)});
+      savedOrgSettingsCache.push({
+        propertySaveTimeStamp: new Date(),
+        setting: _.clone(settings)
+      });
       var mergedCacheAndNewSettings = _.chain(savedOrgSettingsCache)
         .filter(function (cache) {
-          return moment(cache.date).isAfter(moment().subtract(5, 'minutes'));
+          return moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
         })
-        .map(function (cache) {return _.clone(cache.setting);})
-        .reduce(function (result, setting) {return _.merge(result, setting);}, {})
+        .map(function (cache) {
+          return _.clone(cache.setting);
+        })
+        .reduce(function (result, setting) {
+          return _.merge(result, setting);
+        }, {})
         .value();
       return getOrg(_.noop, orgId, true)
         .then(function (response) {
