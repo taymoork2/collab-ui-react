@@ -17,14 +17,13 @@
       };
 
       this.tooLongSinceLastUpdate = function () {
-        var now = new Date().getTime();
-        var lastUpdated = new Date(this.report.lastUpdatedTime).getTime();
-        var duration = now - lastUpdated;
+        var lastUpdated = moment(this.report.lastUpdatedTime);
+        var duration = moment().diff(lastUpdated);
         return duration > timeoutInSeconds * 1000;
       };
 
       this.hasNotExpired = function () {
-        return !this.report.expiryTime || this.currentTime() < new Date(this.report.expiryTime).getTime();
+        return !this.report.expiryTime || moment(this.report.expiryTime) > moment();
       };
 
       this.isDone = function () {
@@ -34,14 +33,12 @@
       this.hasExpired = function () {
         return !this.hasNotExpired();
       };
+
       this.expiresIn = function () {
         var e = moment(this.report.expiryTime);
         return e.fromNow();
       };
 
-      this.currentTime = function () {
-        return new Date().getTime();
-      };
     }
 
     function tweakReport(report) {

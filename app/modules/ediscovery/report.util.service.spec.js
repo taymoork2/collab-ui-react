@@ -39,13 +39,13 @@ describe('Service: ReportUtilService', function () {
 
       var report = {
         state: "RUNNING",
-        lastUpdatedTime: moment(moment()).subtract(150, 'seconds').utc().format()
+        lastUpdatedTime: moment().subtract(150, 'seconds').utc().format()
       };
       expect(Service.tweakReport(report).timeoutDetected).toBe(false);
 
       var report = {
         state: "RUNNING",
-        lastUpdatedTime: moment(moment()).subtract(200, 'seconds').utc().format()
+        lastUpdatedTime: moment().subtract(200, 'seconds').utc().format()
       };
       expect(Service.tweakReport(report).timeoutDetected).toBe(true);
     });
@@ -53,7 +53,7 @@ describe('Service: ReportUtilService', function () {
     it('report reaching expiry time will be marked as expired', function () {
       var report = {
         state: "COMPLETED",
-        expiryTime: moment(moment()).subtract(1, 'minute').utc().format()
+        expiryTime: moment().subtract(1, 'minute').utc().format()
       };
       expect(Service.tweakReport(report).hasExpired).toBe(true);
     });
@@ -61,7 +61,7 @@ describe('Service: ReportUtilService', function () {
     it('report completed and not expired will be marked as downloadable', function () {
       var report = {
         state: "COMPLETED",
-        expiryTime: moment(moment()).add(1, 'minute').utc().format()
+        expiryTime: moment().add(1, 'minute').utc().format()
       };
       expect(Service.tweakReport(report).hasExpired).toBe(false);
       expect(Service.tweakReport(report).canBeDownloaded).toBe(true);
