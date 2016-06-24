@@ -299,14 +299,14 @@ fdescribe('orgService', function () {
 
       httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload2).respond(200, {});
       var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
-      jasmine.clock().mockDate(moment(baseTime).add(5,'minutes').toDate());
+      jasmine.clock().mockDate(moment(baseTime).add(5, 'minutes').toDate());
       var promise2 = Orgservice.setOrgSettings(Authinfo.getOrgId(), save2);
       httpBackend.flush();
       expect(promise).toBeResolved();
       expect(promise2).toBeResolved();
     });
 
-    it('a new save should ovveride same keys as in cache', function () {
+    it('a new save should overwrite same keys as in cache', function () {
       var save1 = {
         reportingSiteUrl: 'http://example.com',
         reportingSiteDesc: 'Description',
@@ -328,27 +328,32 @@ fdescribe('orgService', function () {
 
       httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload2).respond(200, {});
       var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
-      jasmine.clock().mockDate(baseTime);
-      jasmine.clock().mockDate(moment(baseTime).add(2,'seconds').toDate());
+      jasmine.clock().mockDate(moment(baseTime).add(2, 'seconds').toDate());
       var promise2 = Orgservice.setOrgSettings(Authinfo.getOrgId(), save2);
       httpBackend.flush();
       expect(promise).toBeResolved();
       expect(promise2).toBeResolved();
     });
 
-    it('a new save should with same value as in cache should override the cached value', function () {
-      var payload = {
-        reportingSiteUrl: 'http://example.com',
-        reportingSiteDesc: 'Description',
-        helpUrl: 'http://example.com/help',
-        isCiscoHelp: true,
-        isCiscoSupport: false
-      };
-      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
-      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
-      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), payload);
-      httpBackend.flush();
-      expect(promise).toBeResolved();
+    it('multiple saves should have net result to be save 3 and 4', function () {
+      var saves = [{a: '1'}, {b: '1'}, {b: '2'}, {c: '1'}];
+      var fiveMinutes = moment(baseTime).add(5, 'minutes');
+      var saveTimes = [moment(baseTime), fiveMinutes, fiveMinutes, fiveMinutes];
+      var payloads = [_.clone(saves[0]), _.clone(saves[1]), _.clone(saves[2]), _.merge(_.clone(saves[2]), _.clone(saves[3]))];
+      var promises = [];
+
+      for (var i = 0;i < saves.length;i++) {
+        httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+        httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payloads[i]).respond(200, {});
+        jasmine.clock().mockDate(saveTimes[i].toDate());
+        promises.push(Orgservice.setOrgSettings(Authinfo.getOrgId(), saves[i]));
+        httpBackend.flush();
+      }
+
+      expect(promises.length).toBe(saves.length);
+      promises.forEach(function (promise) {
+        expect(promise).toBeResolved();
+      });
     });
 
   });
