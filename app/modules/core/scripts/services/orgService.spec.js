@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('orgService', function () {
+describe('orgService', function () {
   beforeEach(module('Core'));
 
   var q, deferred;
@@ -263,7 +263,6 @@ fdescribe('orgService', function () {
         allowCrashLogUpload: true
       };
 
-
       var payload = _.clone(save1);
       var payload2 = _.merge(_.clone(save1), _.clone(save2));
       httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
@@ -289,7 +288,6 @@ fdescribe('orgService', function () {
       var save2 = {
         allowCrashLogUpload: true
       };
-
 
       var payload = _.clone(save1);
       var payload2 = _.clone(save2);
@@ -319,7 +317,6 @@ fdescribe('orgService', function () {
         isCiscoSupport: true
       };
 
-
       var payload = _.clone(save1);
       var payload2 = _.merge(_.clone(save1), _.clone(save2));
       httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
@@ -336,13 +333,21 @@ fdescribe('orgService', function () {
     });
 
     it('multiple saves should have net result to be save 3 and 4', function () {
-      var saves = [{a: '1'}, {b: '1'}, {b: '2'}, {c: '1'}];
+      var saves = [{
+        a: '1'
+      }, {
+        b: '1'
+      }, {
+        b: '2'
+      }, {
+        c: '1'
+      }];
       var fiveMinutes = moment(baseTime).add(5, 'minutes');
       var saveTimes = [moment(baseTime), fiveMinutes, fiveMinutes, fiveMinutes];
       var payloads = [_.clone(saves[0]), _.clone(saves[1]), _.clone(saves[2]), _.merge(_.clone(saves[2]), _.clone(saves[3]))];
       var promises = [];
 
-      for (var i = 0;i < saves.length;i++) {
+      for (var i = 0; i < saves.length; i++) {
         httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
         httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payloads[i]).respond(200, {});
         jasmine.clock().mockDate(saveTimes[i].toDate());
