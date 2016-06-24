@@ -208,7 +208,7 @@
           return moment(cache.date).isAfter(moment().subtract(5, 'minutes'));
         })
         .map(function (cache) {return _.clone(cache.setting);})
-        .reduce(function (result, setting) {return _.merge(result, setting);})
+        .reduce(function (result, setting) {return _.merge(result, setting);}, {})
         .value();
       return getOrg(_.noop, orgId, true)
         .then(function (response) {
