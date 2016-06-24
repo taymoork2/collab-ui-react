@@ -175,6 +175,7 @@
             conferenceService.showLicenseTypes = false;
             conferenceService.multipleWebexServicesLicensed = false;
             conferenceService.licenseTypeContentDisplay = null;
+            conferenceService.licenseTypeId = newSiteUrl + "_";
             conferenceService.licenseTooltipDisplay = null;
             conferenceService.MCLicensed = false;
             conferenceService.ECLicensed = false;
@@ -315,6 +316,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "MC" + mc.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity
@@ -346,6 +350,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
                       capacity: ee.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "EE" + ee.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
                       capacity: ee.capacity
@@ -377,6 +384,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "CMR" + cmr.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity
@@ -408,6 +418,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "EC" + ec.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity
@@ -439,6 +452,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "SC" + sc.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity
@@ -470,6 +486,9 @@
                     siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity
                     });
+
+                    siteRow.licenseTypeId = siteRow.licenseTypeId + "TC" + tc.capacity + "-";
+
                     //Tooltip display
                     siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity
@@ -481,6 +500,8 @@
               } else {
                 siteRow.TCLicensed = false;
               }
+
+              siteRow.licenseTypeId = siteRow.licenseTypeId + "license";
 
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
@@ -533,8 +554,6 @@
       var funcName = "updateActionsColumnForOneRow()";
       var logMsg = "";
       //$log.log(logMsg);
-
-      //var siteUrl = siteRow.license.siteUrl;
 
       siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
       siteRow.userEmailParam = Authinfo.getPrimaryEmail();

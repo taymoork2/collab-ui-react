@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -67,7 +67,6 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
-    vm.timeZoneToggleEnabled = false;
     vm.previousTimeZone = DEFAULT_TZ;
     vm.extensionLengthChanged = false;
 
@@ -202,14 +201,6 @@
           }, function (timeZones) {
             $scope.to.options = timeZones;
           });
-        },
-        expressionProperties: {
-          'templateOptions.required': function () {
-            return vm.timeZoneToggleEnabled;
-          },
-          'templateOptions.disabled': function () {
-            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
-          }
         }
       }, {
         key: 'steeringDigit',
@@ -602,9 +593,6 @@
       }).catch(function (response) {
         errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
-        // Get the timezone feature toggle setting
-        return enableTimeZoneFeatureToggle();
-      }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
       }).then(function () {
@@ -688,16 +676,6 @@
         if (vm.hasVoicemailService) {
           return listVoicemailTimezone(timezones);
         }
-      });
-    }
-
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
       });
     }
 

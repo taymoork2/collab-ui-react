@@ -63,7 +63,7 @@
       },
       columnDefs: [{
         field: 'groupName',
-        displayName: 'Media Clusters',
+        displayName: 'Media Node Clusters',
         cellTemplate: 'modules/mediafusion/media-service-v2/resources/cluster-list-display-name.html',
         width: '35%'
       }, {
