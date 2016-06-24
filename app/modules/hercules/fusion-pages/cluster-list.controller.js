@@ -151,7 +151,13 @@
     }
 
     function labelForDay(day) {
-      var keys = ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      var keys = _.reduce(days, function (result, day, i) {
+        // the days in shcedule upgrade starts at 1 == monday and ends with 7 == sunday
+        // (API made by a British :))
+        result[i + 1] = day;
+        return result;
+      }, {});
       return $translate.instant('weekDays.everyDay', {
         day: $translate.instant('weekDays.' + keys[day])
       });

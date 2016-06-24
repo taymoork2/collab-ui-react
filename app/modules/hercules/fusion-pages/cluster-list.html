@@ -24,8 +24,7 @@
           </header>
           <div class="row">
             <div class="columns medium-5" translate="hercules.fusion.list.upgrade-schedule">Upgrade Schedule</div>
-            <div class="columns medium-7" ng-if="!cluster.clusterUpgradeSchedule" translate="hercules.fusion.list.no-upgrade-schedule">Defaulting on some random value defined by Torgeir Johansen.</div>
-            <div class="columns medium-7" ng-if="cluster.clusterUpgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
+            <div class="columns medium-7">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
             {{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div>
           </div>
           <section ng-if="!resourceList._helpers.hasServices(cluster)" class="service-list" translate="hercules.fusion.list.no-services"></section>
