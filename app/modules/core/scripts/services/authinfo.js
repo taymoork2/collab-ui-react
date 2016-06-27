@@ -208,6 +208,7 @@
           var commLicenses = [];
           var careLicenses = [];
           var cmrLicenses = [];
+          var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
           var customerAccounts = data.customers || [];
 

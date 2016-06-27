@@ -29,6 +29,11 @@
     .columns {
       padding: 1.5rem;
     }
+    .small-3 {
+      &:not(:last-of-type) {
+        margin-right: 3px;
+      }
+    }
     .small-4 {
       &:not(:last-of-type) {
         margin-right: 3px;
