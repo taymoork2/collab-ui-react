@@ -1521,7 +1521,9 @@
       "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownload": "Downloading, please wait..."
+      "waitingForDownload": "Downloading, please wait...",
+      "expires": "Expires",
+      "expired": "Expired"
     },
     "tabs": {
       "search": "Search",
