@@ -77,9 +77,8 @@ describe('Template: branding', function () {
     });
   });
 
-  xdescribe('Regular Admin', function () {
+  describe('Direct Customer Admin', function () {
     beforeEach(compileView);
-
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));
     it('Custom logo radio should not exist', verifyRadioNotExist(CUSTOM_LOGO_RADIO));
 

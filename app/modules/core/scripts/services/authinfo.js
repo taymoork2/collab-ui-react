@@ -37,7 +37,8 @@
       cmrServices: null,
       hasAccount: false,
       emails: null,
-      customerType: null
+      customerType: null,
+      commerceRelation: null
     };
 
     var getTabTitle = function (title) {
@@ -87,11 +88,8 @@
           .includes(parentState)
           .value();
       });
-      if (stateAllowedByAService) {
-        return true;
-      }
+      return !!stateAllowedByAService;
 
-      return false;
     };
 
     var isEntitled = function (entitlement) {
@@ -173,7 +171,6 @@
           var msgLicenses = [];
           var confLicenses = [];
           var commLicenses = [];
-          var careLicenses = [];
           var cmrLicenses = [];
           var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
@@ -184,6 +181,7 @@
           }
 
           authData.customerType = _.get(customerAccounts, '[0].customerType', '');
+          authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
 
           for (var x = 0; x < customerAccounts.length; x++) {
 
@@ -349,6 +347,9 @@
       isCSB: function () {
         return (_.contains(authData.customerType, ['APP_DIRECT', 'CSB']));
       },
+      isDirectCustomer: function () {
+        return (_.contains(authData.commerceRelation, ['Direct']));
+      },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');
       },
@@ -395,11 +396,7 @@
         return false;
       },
       isServiceAllowed: function (service) {
-        if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
-          return false;
-        } else {
-          return true;
-        }
+        return !(service === 'squaredTeamMember' && !this.isSquaredTeamMember());
       },
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);
