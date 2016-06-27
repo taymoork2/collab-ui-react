@@ -5,7 +5,7 @@
     .controller('ConnectorDetailsController',
 
       /* @ngInject */
-      function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, $log, Notification, $translate) {
+      function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, Notification, $translate) {
         $scope.visibleAlarm = {};
         $scope.clusters = [];
         $scope.selectedCluster = '';

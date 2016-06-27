@@ -8,9 +8,10 @@ describe('Controller: HuronSettingsCtrl', function () {
   var getDeferred;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_,
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _PstnSetupService_, _ModalService_,
     _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
 
     $scope = $rootScope.$new();
@@ -21,7 +22,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
-    FeatureToggleService = _FeatureToggleService_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
     InternationalDialing = _InternationalDialing_;
@@ -59,7 +59,6 @@ describe('Controller: HuronSettingsCtrl', function () {
       return $q.when();
     });
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
@@ -82,10 +81,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
 
     $httpBackend
-      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/internalnumberpools')
-      .respond([{
-        directoryNumber: null
-      }]);
+      .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
+      .respond([]);
     $httpBackend
       .expectGET(HuronConfig.getCesUrl() + '/customers/' + customer.uuid + '/callExperiences')
       .respond([{
@@ -299,15 +296,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     };
 
     var userTemplate = [{
-      "timeZone": 3,
+      "timeZone": "America/Anchorage",
       "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
 
     controller.model.site.timeZone = {
-      "value": "Pacific/Honolulu",
-      "label": "(GMT-10:00) Hawaii",
-      "timezoneid": "2"
-
+      "id": "Pacific/Honolulu",
+      "label": "Pacific/Honolulu"
     };
 
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
@@ -426,9 +421,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.to = {};
 
     controller.timeZoneOptions = [{
-      "value": "America/Anchorage",
-      "label": "(GMT-09:00) Alaska",
-      "timezoneid": "3"
+      "id": "America/Anchorage",
+      "label": "America/Anchorage"
     }];
 
     controller._buildTimeZoneOptions($scope);
@@ -794,27 +788,28 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
 
     it('should update timezone when timezone selection changes and feature toggle is ON', function () {
-      controller.model.site.timeZone = {
-        "value": "America/Anchorage",
-        "label": "(GMT-09:00) Alaska",
-        "timezoneid": "3"
+      var newTimeZone = {
+        "id": "America/Anchorage",
+        "label": "America/Anchorage"
       };
+      controller.model.site.timeZone = newTimeZone;
       controller.save();
       $scope.$apply();
 
-      expect(ServiceSetup.updateSite).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.updateSite).toHaveBeenCalledWith(jasmine.any(String), {
+        timeZone: newTimeZone.id
+      });
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(newTimeZone.id, jasmine.any(String));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
     it('should not update timezone when timezone selection did not change and Feature toggle is ON', function () {
-      /* the default "timezoneid = 4" is loaded in the beginnig
+      /* the default "value = 'America/Los_Angeles'" is loaded in the beginnig
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
       controller.model.site.timeZone = {
-        "value": "America/Los_Angeles",
-        "label": "(GMT-08:00) Pacific Time (US & Canada)",
-        "timezoneid": "4"
+        "id": "America/Los_Angeles",
+        "label": "America/Los_Angeles"
       };
       controller.save();
       $scope.$apply();

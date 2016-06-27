@@ -27,6 +27,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$translate_, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
     $rootScope = _$rootScope_;
@@ -157,6 +158,7 @@ describe('Huron Feature DeleteCtrl', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));

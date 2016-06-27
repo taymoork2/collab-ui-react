@@ -1,28 +1,31 @@
-<div class="ui-grid-cell-contents" ng-switch on="row.entity.state">
-
-  <div ng-if="!row.entity.timeoutDetected">
-    <span ng-switch-when="RUNNING">
-      {{'ediscovery.reportStates.RUNNING' | translate}}...
-      <span class="spinner-example--small">
-        <i class="icon icon-spinner"></i>
-      </span>
-      <span ng-if="row.entity.progress > 0">
-        {{row.entity.progress}}%
-      </span>
-    </span>
-
-    <span ng-switch-when="FAILED" class="red">
-      {{'ediscovery.reportStates.' + row.entity.state | translate}}
-      ({{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}})
-    </span>
-
-    <span ng-switch-default>
+<div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents">
+  <span class="fit-in-cell" ng-if="!row.entity.isDone">
+     <div class="progressbar-info">
+       <span>{{'ediscovery.reportStates.' + row.entity.state | translate}}...</span>
+       <span class="progressbar-progress">{{row.entity.progress}}%</span>
+     </div>
+     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
+  </span>
+  <div ng-if="row.entity.isDone" ng-switch on="row.entity.state">
+    <div ng-switch-when="FAILED"
+         class="fit-in-cell"
+         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+         cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
+      <i class="icon icon-warning"></i> <span translate="ediscovery.reportsList.failed"></span>
+    </div>
+    <span ng-switch-default class="fit-in-cell">
       {{'ediscovery.reportStates.' + row.entity.state | translate}}
     </span>
-    <br>
-    {{grid.appScope.prettyPrintBytes(row.entity.sizeInBytes)}}
-
   </div>
+</div>
 
-  <span ng-if="row.entity.timeoutDetected" class="red" translate="ediscovery.reportTimeout"></span>
+<div ng-if="row.entity.timeoutDetected"
+     class="ui-grid-cell-contents"
+     tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+     cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
+  <div class="progressbar-info">
+    <i class="icon icon-warning"></i> <span>{{'ediscovery.timeout' | translate}}</span>
+    <span class="progressbar-progress">{{row.entity.progress}}%</span>
+  </div>
+  <progressbar type="danger" class="progress-striped" value="row.entity.progress"></progressbar>
 </div>

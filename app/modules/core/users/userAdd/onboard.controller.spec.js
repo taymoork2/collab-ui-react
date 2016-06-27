@@ -16,10 +16,13 @@ describe('OnboardCtrl: Ctrl', function () {
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var unlicensedUsers;
+  var allLicensesData;
   var $controller;
+  var getCareServices;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
 
   beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
@@ -64,6 +67,8 @@ describe('OnboardCtrl: Ctrl', function () {
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
+    allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
+    getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -90,6 +95,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
     spyOn(Userservice, 'onboardUsers');
@@ -449,8 +455,32 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
-    it('checkUnauthorizedToAdd', function () {
+    it('checkUnauthorizedToAdd - 400096', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400096')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExistsOrDomainClaimed', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400108')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUnableToMigrate', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400109')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUnauthorizedToAdd - 400110', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400110')));
+      $scope.onboardUsers();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkInsufficientEntitlements', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400111')));
       $scope.onboardUsers();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
@@ -586,15 +616,18 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('updateUserLicense()', function () {
     beforeEach(initCurrentUserAndController);
 
+    beforeEach(function () {
+      $scope.$dismiss = angular.noop;
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200, '')));
+    });
+
     describe('with a current user', function () {
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.updateUsers() with the current user', function () {
-        expect(Userservice.updateUsers).toHaveBeenCalled();
-        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
-          address: $stateParams.currentUser.userName,
-          name: undefined
-        }]);
+      it('should call Userservice.onboardUsers() with the current user', function () {
+        expect(Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual($stateParams.currentUser.userName);
       });
     });
 
@@ -602,24 +635,104 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initCustomUsrList);
       beforeEach(updateUserLicense);
 
-      it('should call Userservice.updateUsers() with the custom user list', function () {
-        expect(Userservice.updateUsers).toHaveBeenCalled();
-        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
-          address: $scope.usrlist[0].address
-        }]);
+      it('should call Userservice.onboardUsers() with the custom user list', function () {
+        expect(Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual(this.usrlist[0].address);
       });
     });
 
     function initCustomUsrList() {
-      $scope.usrlist = [{
+      this.usrlist = [{
         address: 'customTestUser'
       }];
+      $scope.usrlist = this.usrlist;
     }
 
     function updateUserLicense() {
       $scope.updateUserLicense();
       $scope.$apply();
     }
+  });
+
+  describe('MC/CMR Checkbox logic', function () {
+    beforeEach(initCurrentUserAndController);
+
+    it('should check if CMR gets checked when CF gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
+          });
+        });
+      });
+    });
+
+    it('should check if CF gets checked when CMR gets checked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = true; // check CMR license
+          });
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
+        });
+      });
+    });
+
+    it('should check if CF remains checked when CMR is unchecked', function () {
+      allLicensesData.allLicenses.forEach(function (lic) {
+        lic.confLic.forEach(function (cfLic) {
+          cfLic.confModel = true; // check CF license
+          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          lic.cmrLic.forEach(function (cmrLic) {
+            cmrLic = false; // uncheck CMR license
+          });
+          expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
+        });
+      });
+    });
+  });
+
+  describe('With assigning care licenses', function () {
+    describe('Check if single licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
+        $stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
+        };
+        initController();
+      });
+
+      it('should have care license', function () {
+        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect($scope.radioStates.careRadio).toEqual(false);
+      });
+    });
+
+    describe('Check if multiple licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
+        $stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
+          entitlements: ['cloud-contact-center']
+        };
+        initController();
+      });
+
+      it('should call getAccountLicenses correctly', function () {
+        var licenseFeatures = $scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
+        expect(licenseFeatures[0].idOperation).toEqual('ADD');
+        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect($scope.radioStates.careRadio).toEqual(true);
+      });
+    });
   });
 
   function initUserShouldAddCall() {

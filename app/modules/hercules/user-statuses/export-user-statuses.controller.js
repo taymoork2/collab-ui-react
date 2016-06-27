@@ -19,7 +19,7 @@
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
 
-    $scope.$on('destroy', function () {
+    $scope.$on('$destroy', function () {
       vm.exportCanceled = true;
     });
 

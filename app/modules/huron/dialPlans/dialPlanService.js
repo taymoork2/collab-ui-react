@@ -6,7 +6,7 @@
     .factory('DialPlanService', DialPlanService);
 
   /* @ngInject */
-  function DialPlanService($q, Authinfo, CustomerVoiceCmiService) {
+  function DialPlanService(Authinfo, CustomerVoiceCmiService) {
 
     var service = {
       getCustomerVoice: getCustomerVoice,

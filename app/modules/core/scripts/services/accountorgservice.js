@@ -6,7 +6,7 @@
     .service('AccountOrgService', AccountOrgService);
 
   /* @ngInject */
-  function AccountOrgService($http, $q, $rootScope, Config, Auth, UrlConfig) {
+  function AccountOrgService($http, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {

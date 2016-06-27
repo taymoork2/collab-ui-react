@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -158,13 +158,13 @@
       }
     }
 
-    function loadRetrievedDataToList(list, isTrialData) {
+    function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData);
+        return massageDataForCustomer(customer, isTrialData, isCareEnabled);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData) {
+    function massageDataForCustomer(customer, isTrialData, isCareEnabled) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -185,6 +185,7 @@
         sparkConferencing: null,
         webexEEConferencing: null,
         webexCMR: null,
+        care: null,
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
@@ -199,7 +200,7 @@
         isPartner: false
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer);
+      var licensesAndOffersData = parseLicensesAndOffers(customer, isCareEnabled);
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
@@ -233,6 +234,7 @@
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -251,11 +253,10 @@
       return licensesGotten;
     }
 
-    function exportCSV() {
+    function exportCSV(isCareEnabled) {
       var deferred = $q.defer();
 
       var customers = [];
-
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
@@ -286,6 +287,9 @@
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
             });
+            var careLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.CARE
+            });
 
             if (messagingLicense && angular.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
@@ -298,6 +302,11 @@
             }
             if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
+            }
+            if (isCareEnabled) {
+              if (careLicense && angular.isArray(careLicense.features)) {
+                exportedCustomer.careEntitlements = careLicense.features.join(' ');
+              }
             }
             return exportedCustomer;
           });
@@ -313,12 +322,16 @@
           header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
           header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
 
+          if (isCareEnabled) {
+            header.careEntitlements = $translate.instant('customerPage.csvHeaderCareEntitlements');
+          }
+
           exportedCustomers.unshift(header);
           return exportedCustomers;
         });
     }
 
-    function parseLicensesAndOffers(customer) {
+    function parseLicensesAndOffers(customer, isCareEnabled) {
       var partial = {
         licenses: 0,
         deviceLicenses: 0,
@@ -374,6 +387,11 @@
           break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
+          break;
+        case Config.offerTypes.care:
+          if (isCareEnabled) {
+            userServices.push($translate.instant('trials.care'));
+          }
           break;
         }
       }

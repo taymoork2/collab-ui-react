@@ -6,7 +6,7 @@
     .factory('InternationalDialing', InternationalDialing);
 
   /* @ngInject */
-  function InternationalDialing(Authinfo, $q, $translate, UserCosRestrictionServiceV2, FeatureToggleService) {
+  function InternationalDialing(Authinfo, UserCosRestrictionServiceV2, FeatureToggleService) {
 
     var disableInternationalDialing;
 

@@ -12,6 +12,14 @@
       'balloonColor': chartColors.grayLight,
       'columnWidth': 4
     };
+    baseVariables['smoothedLine'] = {
+      'type': 'smoothedLine',
+      'lineColor': chartColors.colorPurple,
+      'lineThickness': 2,
+      'balloonColor': chartColors.grayLight,
+      'negativeLineColor': chartColors.colorPurple,
+      'negativeBase': 100,
+    };
     baseVariables['line'] = {
       'type': 'line',
       'bullet': 'round',
@@ -30,6 +38,23 @@
       'axisAlpha': 1,
       'tickLength': 0
     };
+    baseVariables['guideaxis'] = {
+      'axisColor': chartColors.grayLight,
+      'gridColor': chartColors.grayLight,
+      'color': chartColors.grayDarkest,
+      'titleColor': chartColors.grayDarkest,
+      'fontFamily': 'CiscoSansTT Light',
+      'gridAlpha': 0,
+      'axisAlpha': 1,
+      'tickLength': 0,
+      "guides": [{
+        "inside": true,
+        "label": "Utilization High",
+        "lineColor": '#000000',
+        "lineAlpha": 0.5,
+        "value": 80
+      }]
+    };
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
       'align': 'center',
@@ -40,7 +65,7 @@
       'markerType': 'square',
       'markerSize': 10,
       'position': 'absolute',
-      'left': 550,
+      'left': 350,
       'equalWidths': false,
       'horizontalGap': 5,
       'valueAlign': 'left',
@@ -180,7 +205,10 @@
         'durationField': 'duration',
         'dataProvider': data,
         'valueScrollbar': {
-          'autoGridCount': true
+          'autoGridCount': true,
+          'color': '#AAAAAA',
+          'backgroundColor': '#ffffff',
+          'backgroundAlpha': 1
         },
         'chartCursor': {
           'cursorColor': '#55bb76',

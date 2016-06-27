@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($scope, $stateParams, $q, $timeout, $translate, $log, Authinfo, Config, MediaFusionAnalyticsService, MetricsReportService, DummyMetricsReportService, MetricsGraphService) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaFusionAnalyticsService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -22,6 +22,11 @@
     vm.setCallVolumeData = setCallVolumeData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setUtilizationData = setUtilizationData;
+    vm.setCPUUtilizationData = setCPUUtilizationData;
+    vm.setClusterAvailability = setClusterAvailability;
+    //vm.averageUtilization = vm.REFRESH;
+    //vm.clusterAvailability = vm.REFRESH;
+    //vm.card = vm.REFRESH;
     vm.resizeCards = resizeCards;
     vm.delayedResize = delayedResize;
     vm.setDummyData = setDummyData;
@@ -49,14 +54,50 @@
       description: $translate.instant('mediaFusion.metrics.threeMonths2')
     }];
     vm.timeSelected = vm.timeOptions[0];
+    vm.displayDate = displayDate;
 
     init();
+    displayDate();
 
     function init() {
       $timeout(function () {
         setDummyData();
         setAllGraphs();
       }, 30);
+    }
+
+    function displayDate() {
+      var date1 = new Date();
+      var date2 = new Date();
+      var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      if (vm.timeSelected.value === 0) {
+
+        vm.label = vm.timeSelected.label;
+        vm.date = date1.getHours() + ':' + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
+
+      } else if (vm.timeSelected.value === 1) {
+
+        vm.label = vm.timeSelected.label;
+        date1.setDate(date1.getDate() - 7);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      } else if (vm.timeSelected.value === 2) {
+
+        vm.label = vm.timeSelected.label;
+        date1.setMonth(date1.getMonth() - 1);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      } else {
+
+        vm.label = vm.timeSelected.label;
+        date1.setMonth(date1.getMonth() - 3);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      }
     }
 
     function getClusters() {
@@ -80,6 +121,7 @@
     }
 
     function timeUpdate() {
+      displayDate();
       vm.callVolumeStatus = vm.REFRESH;
       vm.availabilityStatus = vm.REFRESH;
       vm.utilizationStatus = vm.REFRESH;
@@ -96,7 +138,9 @@
     }
 
     function setAllGraphs() {
-      // setUtilizationData();
+      setCPUUtilizationData();
+      setClusterAvailability();
+      setUtilizationData();
       setCallVolumeData();
       setAvailabilityData();
     }
@@ -121,9 +165,11 @@
     }
 
     function setDummyData() {
-      //   setCallVolumeGraph(DummyMetricsReportService.dummyCallVolumeData(vm.timeSelected));
-      //    setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+      setCallVolumeGraph(DummyMetricsReportService.dummyCallVolumeData(vm.timeSelected));
+      setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+      setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
       resizeCards();
+      //delayedResize();
     }
 
     function setCallVolumeGraph(data) {
@@ -144,6 +190,7 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
+        //delayedResize();
       });
     }
 
@@ -158,18 +205,19 @@
       MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (response.data[0].clusterCategories === 0) {
+        } else if (!angular.isDefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !angular.isDefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
           vm.availabilityStatus = vm.EMPTY;
         } else {
           setAvailabilityGraph(response);
           vm.availabilityStatus = vm.SET;
         }
         resizeCards();
+        //delayedResize();
       });
     }
 
     function setUtilizationGraph(data) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart, vm.clusterSelected);
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
@@ -179,11 +227,44 @@
       MetricsReportService.getUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (response === vm.ABORT) {
           return;
-        } else if (response.data[0].clusterCategories === 0) {
+        } else if (!angular.isDefined(response.graphData) || response.graphData.length === 0) {
           vm.utilizationStatus = vm.EMPTY;
         } else {
-          setUtilizationGraph(response);
+          setUtilizationGraph(response.graphData);
+          vm.card = '';
           vm.utilizationStatus = vm.SET;
+        }
+        resizeCards();
+        //delayedResize();
+      });
+    }
+
+    function setCPUUtilizationData() {
+      MetricsReportService.getCPUUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.avgCpu) || !angular.isDefined(response.data.peakCpu)) {
+          vm.averageUtilization = vm.EMPTY;
+          vm.peakUtilization = vm.EMPTY;
+          vm.averageUtilization = '';
+          vm.peakUtilization = '';
+        } else {
+          vm.averageUtilization = response.data.avgCpu + '%';
+          vm.peakUtilization = response.data.peakCpu + '%';
+        }
+        resizeCards();
+      });
+    }
+
+    function setClusterAvailability() {
+      MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.availabilityPercent)) {
+          vm.clusterAvailability = vm.EMPTY;
+          vm.clusterAvailability = '';
+        } else {
+          vm.clusterAvailability = response.data.availabilityPercent + '%';
         }
         resizeCards();
       });

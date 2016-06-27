@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($scope, $translate, Config, Utils, FeatureToggleService) {
+  function HeaderCtrl($translate, Utils, FeatureToggleService) {
     var vm = this;
     vm.newTabDisplay = false;
 

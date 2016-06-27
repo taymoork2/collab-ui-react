@@ -52,6 +52,14 @@
           }]
         }
       },
+      "careTrial": {
+        "type": "CARE",
+        "enabled": false,
+        "details": {
+          "enabled": false,
+          "quantity": 0
+        }
+      },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
         "enabled": false,
@@ -131,6 +139,14 @@
             "enabled": false,
             "quantity": 0
           }]
+        }
+      },
+      "careTrial": {
+        "type": "CARE",
+        "enabled": true,
+        "details": {
+          "enabled": true,
+          "quantity": 10
         }
       },
       "roomSystemTrial": {

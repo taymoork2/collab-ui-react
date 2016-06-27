@@ -6,7 +6,7 @@
     .directive('aaBuilderNameEdit', aaBuilderNameEdit);
 
   /* @ngInject */
-  function aaBuilderNameEdit($sce) {
+  function aaBuilderNameEdit() {
     return {
       require: '?ngModel',
       scope: {

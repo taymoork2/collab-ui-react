@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -189,10 +189,11 @@
           enabled: true
         })
         .map(function (trial) {
-          if (trial.type === Config.offerTypes.pstn) {
+          if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
             return;
           }
-          var licenseCount = trial.type === Config.trials.roomSystems ?
+          var licenseCount =
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -208,9 +209,11 @@
       TrialMeetingService.reset();
       TrialWebexService.reset();
       TrialCallService.reset();
+      TrialCareService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
+      TrialContextService.reset();
 
       var defaults = {
         customerName: '',
@@ -227,9 +230,11 @@
           meetingTrial: TrialMeetingService.getData(),
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
+          careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
-          pstnTrial: TrialPstnService.getData()
+          pstnTrial: TrialPstnService.getData(),
+          contextTrial: TrialContextService.getData()
         },
       };
 

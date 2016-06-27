@@ -7,25 +7,24 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
-      atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
-      atlasDeviceTrials: 'atlas-device-trials',
-      atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
-      atlasTrialConversion: 'atlas-trial-conversion',
+      atlasDirectCustomerBranding: 'atlas-direct-customer-branding',
+      huronAASubmenu: 'huron-aa-submenu',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      huronAASchedules: 'huronAASchedules',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
@@ -127,8 +126,9 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmTz: 'csdm-timezone',
       readonlyAdmin: 'atlas-read-only-admin',
+      helpdeskExt: 'atlas-helpdesk-extended-information',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'
@@ -171,7 +171,18 @@
       features: features
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);

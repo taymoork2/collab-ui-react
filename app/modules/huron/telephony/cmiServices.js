@@ -408,7 +408,7 @@
 
   /* @ngInject */
   function TimeZoneService($resource) {
-    return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
+    return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
   }
 
   /* @ngInject */

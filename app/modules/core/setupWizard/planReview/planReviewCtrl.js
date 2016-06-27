@@ -6,8 +6,12 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
+  function PlanReviewCtrl($scope, $translate, Authinfo, FeatureToggleService, TrialService) {
     var vm = this;
+    var classes = {
+      userService: 'user-service-',
+      hasRoomSys: 'has-room-systems'
+    };
 
     vm.messagingServices = {
       isNewTrial: false,
@@ -22,6 +26,11 @@
     vm.commServices = {
       isNewTrial: false,
       services: []
+    };
+
+    vm.careServices = {
+      isNewTrial: false,
+      services: Authinfo.getCareServices() || []
     };
 
     vm.cmrServices = {
@@ -40,10 +49,31 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
+    vm.getUserServiceRowClass = getUserServiceRowClass;
+    vm._helpers = {
+      maxServiceRows: maxServiceRows
+    };
+    vm.isCareEnabled = false;
 
     init();
 
+    function getUserServiceRowClass(hasRoomSystem) {
+      //determine how many vertical entrees there is going to be
+      var returnClass = (hasRoomSystem) ? classes.hasRoomSys + ' ' + classes.userService : classes.userService;
+      var serviceRows = vm._helpers.maxServiceRows();
+      return returnClass + serviceRows;
+    }
+
+    function maxServiceRows() {
+      var confLength = _.get(vm.confServices, 'services.length', 0) + _.get(vm.cmrServices, 'services.length', 0);
+      return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
+    }
+
     function init() {
+
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+        vm.isCareEnabled = careStatus;
+      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
@@ -82,6 +112,24 @@
           }
         }
       });
+
+      var isNewCareTrial = _.chain(vm.careServices.services)
+        .map('license')
+        .filter(function (license) {
+          if (license.isTrial) {
+            vm.trialExists = true;
+            vm.trialId = license.trialId;
+            return true;
+          }
+          return false;
+        }).filter(function (license) {
+          return license.status === 'PENDING';
+        })
+        .value();
+
+      if (isNewCareTrial.length) {
+        vm.careServices.isNewTrial = true;
+      }
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
@@ -156,8 +204,8 @@
 
     function populateTrialData(trial) {
       vm.trial = trial;
-      var now = moment();
-      var start = moment(vm.trial.startDate);
+      var now = moment().startOf('day');
+      var start = moment(vm.trial.startDate).startOf('day');
       var daysUsed = moment(now).diff(start, 'days');
       vm.trialDaysRemaining = (vm.trial.trialPeriod - daysUsed);
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);

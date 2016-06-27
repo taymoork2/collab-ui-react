@@ -1,14 +1,15 @@
 'use strict';
 
 describe('Service: Mixpanel', function () {
-  var Config, Mixpanel, Orgservice, $scope, $window;
+  var Config, Mixpanel, Orgservice, $q, $scope, $window;
 
   beforeEach(module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$window_, _Config_, _Mixpanel_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _$window_, _Config_, _Mixpanel_, _Orgservice_) {
     $scope = $rootScope.$new();
+    $q = _$q_;
     $window = _$window_;
     Config = _Config_;
     Mixpanel = _Mixpanel_;
@@ -17,6 +18,7 @@ describe('Service: Mixpanel', function () {
 
   function initSpies() {
     spyOn(Config, 'isProd');
+    spyOn(Mixpanel, '_init').and.returnValue($q.when());
     spyOn(Mixpanel, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
       callback({
@@ -39,6 +41,12 @@ describe('Service: Mixpanel', function () {
       Mixpanel.trackEvent('myState', {});
       $scope.$apply();
       expect(Mixpanel._track).toHaveBeenCalled();
+    });
+
+    it('should not call _track if it is also not a test org', function () {
+      Mixpanel._init.and.returnValue($q.reject());
+      spyOn(Mixpanel, 'getTestOrg').and.returnValue(false);
+      expect(Mixpanel._track).not.toHaveBeenCalled();
     });
   });
 

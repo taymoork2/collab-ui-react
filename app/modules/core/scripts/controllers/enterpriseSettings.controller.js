@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config, UrlConfig) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Authinfo, Log, Notification, $translate, $window, UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -17,20 +17,6 @@
     var oldSSOValue = 0;
     $scope.updateSSO = updateSSO;
 
-    //SipDomain Controller code
-    $scope.cloudSipDomainField = {
-      inputValue: '',
-      isDisabled: false,
-      isUrlAvailable: false,
-      isButtonDisabled: false,
-      isLoading: false,
-      isConfirmed: null,
-      urlValue: '',
-      isRoomLicensed: false,
-      domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
-      errorMsg: $translate.instant('firstTimeWizard.setSipDomainErrorMessage')
-    };
-
     $scope.options = {
       configureSSO: 1,
       enableSSORadioOption: null,
@@ -39,12 +25,9 @@
       deleteSSOBySwitchingRadio: false
     };
 
-    var sipField = $scope.cloudSipDomainField;
     init();
 
     function init() {
-      checkRoomLicense();
-      setSipDomain();
       updateSSO();
     }
 
@@ -55,112 +38,6 @@
         $scope.options.configureSSO = 0;
       }
     }
-
-    function checkRoomLicense() {
-      Orgservice.getLicensesUsage().then(function (response) {
-        var licenses = _.get(response, '[0].licenses');
-        var roomLicensed = _.find(licenses, {
-          offerName: 'SD'
-        });
-        sipField.isRoomLicensed = !_.isUndefined(roomLicensed);
-      });
-    }
-
-    function setSipDomain() {
-      Orgservice.getOrg(function (data, status) {
-        var displayName = '';
-        var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
-        if (status === 200) {
-          if (data.orgSettings.sipCloudDomain) {
-            displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
-            sipField.isDisabled = true;
-            sipField.isButtonDisabled = true;
-          } else if (data.verifiedDomains) {
-            if (_.isArray(data.verifiedDomains)) {
-              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
-            }
-          } else if (data.displayName) {
-            displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
-          }
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-        }
-        sipField.inputValue = displayName;
-      }, false, true);
-    }
-
-    $scope.checkSipDomainAvailability = function () {
-      var domain = sipField.inputValue;
-      sipField.isUrlAvailable = false;
-      sipField.isLoading = true;
-      sipField.isButtonDisabled = true;
-      sipField.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
-      return SparkDomainManagementService.checkDomainAvailability(domain)
-        .then(function (response) {
-          if (response.data.isDomainAvailable) {
-            sipField.isUrlAvailable = true;
-            sipField.urlValue = sipField.inputValue;
-            sipField.isError = false;
-          } else {
-            sipField.isError = true;
-            sipField.isButtonDisabled = false;
-          }
-          sipField.isLoading = false;
-        })
-        .catch(function (response) {
-          if (response.status === 400) {
-            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessageInvalidDomain');
-            sipField.isError = true;
-          } else {
-            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-          }
-          sipField.isLoading = false;
-          sipField.isButtonDisabled = false;
-        });
-    };
-
-    $scope._saveDomain = function () {
-      var domain = sipField.inputValue;
-      if (sipField.isUrlAvailable && sipField.isConfirmed) {
-        SparkDomainManagementService.addSipDomain(domain)
-          .then(function (response) {
-            if (response.data.isDomainReserved) {
-              sipField.isError = false;
-              sipField.isDisabled = true;
-              sipField.isButtonDisabled = true;
-              Notification.success('firstTimeWizard.setSipDomainSuccessMessage');
-              $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
-            }
-          })
-          .catch(function (response) {
-            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-          });
-      }
-    };
-
-    $scope.$on('wizard-enterprise-sip-url-event', $scope._saveDomain);
-
-    $scope.validateSipDomain = function () {
-      if (sipField.inputValue.length > 40) {
-        sipField.isError = true;
-      }
-
-      return sipField.isError;
-    };
-
-    $scope.$watch('cloudSipDomainField.inputValue', function (newValue, oldValue) {
-      if (newValue !== sipField.urlValue && !sipField.isDisabled) {
-        sipField.isUrlAvailable = false;
-        sipField.isError = false;
-        sipField.isButtonDisabled = false;
-        sipField.isConfirmed = false;
-      }
-    });
-
-    $scope.openSipHelpWiki = function () {
-      $window.open('https://help.webex.com/docs/DOC-7763', '_blank');
-    };
 
     $scope.handleModify = function () {
       $scope.options.modifySSO = true;

@@ -1,24 +1,59 @@
-<div style="padding-left: 15px;">
-  <span ng-if="grid.appScope.downloadable(row.entity.id)"
-        tooltip-placement="top"
-        cs-tooltip="Download"
+<div class="ui-grid-cell-contents">
+  <span ng-if="!row.entity.isDone"
+        tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+        cs-tooltip="{{'ediscovery.reportsList.viewDetails' | translate}}"
         tooltip-animation="false"
         tooltip-append-to-body="true"
-        class="icon icon-download"
-        ng-click="grid.appScope.downloadReport(row.entity.id)"></span>
-  <span ng-if="grid.appScope.cancable(row.entity.id)"
-        tooltip-placement="top"
-        cs-tooltip="Cancel"
+        class="icon icon-info-outline action-icons"
+        ng-click="grid.appScope.viewReport(row.entity)"></span>
+  <span ng-if="row.entity.canBeDownloaded">
+    <span ng-if="!grid.appScope.downloadReportId"
+          tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}} ({{'ediscovery.reportsList.expires' | translate}} {{row.entity.expiresIn}})"
+          tooltip-animation="false"
+          tooltip-append-to-body="true"
+          class="icon icon-download action-icons"
+          ng-click="grid.appScope.downloadReport(row.entity);$event.stopPropagation();"></span>
+    <span ng-if="grid.appScope.downloadReportId === row.entity.id"
+          class="download-wait">
+            <i class="icon icon-download action-icons"></i>
+            <i class="icon icon-spinner action-icons"
+               cs-tooltip="{{'ediscovery.reportsList.waitingForDownload' | translate}}"
+               tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+               tooltip-animation="false"
+               tooltip-append-to-body="true"></i>
+    </span>
+    <span ng-if="grid.appScope.downloadReportId && grid.appScope.downloadReportId !== row.entity.id"
+          tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+          cs-tooltip="{{'ediscovery.reportsList.anotherDownloadInProgress' | translate}}"
+          tooltip-animation="false"
+          tooltip-append-to-body="true"
+          class="icon icon-download action-icons disabled"></span>
+  </span>
+  <span ng-if="row.entity.hasExpired"
+        cs-tooltip="{{'ediscovery.reportsList.expired' | translate}} {{row.entity.expiresIn}}."
         tooltip-animation="false"
         tooltip-append-to-body="true"
-        class="icon icon-exit"
-        ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
-  <span ng-if="grid.appScope.downloadable(row.entity.id)"
-        tooltip-placement="top"
-        cs-tooltip="Create new report with same query parameters"
-        tooltip-animation="false"
-        tooltip-append-to-body="true"
-        class="icon icon-refresh"
-        ng-click="grid.appScope.rerunReport(row.entity.roomQuery.roomId, row.entity.roomQuery.startDate, row.entity.roomQuery.endDate)"></span>
-</div>
+        class="icon icon-download action-icons disabled">
+  </span>
 
+  <span ng-if="row.entity.canBeCancelled && !grid.appScope.reportsBeingCancelled[row.entity.id]"
+        tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+        cs-tooltip="{{'ediscovery.search.cancelReport' | translate}}"
+        tooltip-animation="false"
+        tooltip-append-to-body="true"
+        class="icon icon-exit action-icons"
+        ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
+  <span ng-if="grid.appScope.reportsBeingCancelled[row.entity.id]" class="cancel-wait">
+    <i class="icon icon-exit action-icons"></i>
+    <i class="icon icon-spinner action-icons"></i>
+  </span>
+
+  <span ng-if="row.entity.isDone"
+        tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+        cs-tooltip="{{'ediscovery.reportsList.createNew' | translate}}"
+        tooltip-animation="false"
+        tooltip-append-to-body="true"
+        class="icon icon-refresh action-icons"
+        ng-click="grid.appScope.rerunReport(row.entity)"></span>
+</div>

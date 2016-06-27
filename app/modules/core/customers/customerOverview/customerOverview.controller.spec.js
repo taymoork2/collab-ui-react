@@ -13,8 +13,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
   beforeEach(module('Core'));
-
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
@@ -85,6 +85,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(true)
+    );
     spyOn(modal, 'open').and.callThrough();
 
     controller = $controller('CustomerOverviewCtrl', {
@@ -164,6 +167,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
     it('should call deleteTestOrg', function () {
       controller.deleteTestOrg();
       expect(modal.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called', function () {
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
     });
   });
 

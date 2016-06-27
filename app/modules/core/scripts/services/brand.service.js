@@ -6,7 +6,7 @@
     .factory('BrandService', BrandService);
 
   /* @ngInject */
-  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload, UrlConfig) {
+  function BrandService($http, $q, Log, Notification, Orgservice, Upload, UrlConfig) {
 
     var service = {
       'getSettings': getSettings,

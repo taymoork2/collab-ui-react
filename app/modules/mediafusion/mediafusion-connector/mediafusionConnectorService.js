@@ -5,7 +5,7 @@
     .service('MediafusionClusterService', MediafusionClusterService);
 
   /* @ngInject */
-  function MediafusionClusterService($http, $q, $location, MediafusionConnectorMock, MediafusionConverterService, MediafusionConfigService, XhrNotificationService, Authinfo) {
+  function MediafusionClusterService($http, $location, MediafusionConnectorMock, MediafusionConverterService, MediafusionConfigService, XhrNotificationService, Authinfo) {
     var lastClusterResponse = [];
 
     function extractDataFromResponse(res) {

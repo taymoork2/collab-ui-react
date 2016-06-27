@@ -1,7 +1,8 @@
 ## Setup the environment
 
 * Recommended using [nvm](https://github.com/creationix/nvm) to manage your node versions
-* Install current node.js [Long-term Support (LTS) v4.x](https://nodejs.org/en/download/)
+* Install `node4-lts`: `brew tap homebrew/versions && brew install node4-lts`
+* Install npm 2: `brew install npm && npm install -g npm@latest-2`
   ![g-gif-update](https://sqbu-github.cisco.com/github-enterprise-assets/0000/2093/0000/5682/dbe73b7e-f717-11e5-9cbf-4d1c308fc385.gif)
 * Run `./setup.sh` (found in the root directory)
   * Use `./setup.sh --restore` if ever needing to restore 'node_modules' dirs from the most recently successfully built dependencies (requires at least 1 successful run)

@@ -13,11 +13,19 @@
     var _trialRoomSystemData = TrialRoomSystemService.getData();
     var _trialDeviceData = TrialDeviceService.getData();
 
+    var minRoomSystems = 1;
+    var maxRoomSystems = 3;
+    var minCallDevices = 1;
+    var maxCallDevices = 5;
+    var minTotalDevices = 1;
+    var maxTotalDevices = 7;
+
     // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
     vm.skipDevices = _trialDeviceData.skipDevices;
     vm.deviceTrialTip = $translate.instant('trialModal.call.deviceTrialTip');
     vm.limitsError = false;
+    vm.activeDeviceLink = $translate.instant('trialModal.call.activeDeviceTrial');
 
     vm.isEditing = _.get($stateParams, 'isEditing');
     vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
@@ -37,6 +45,7 @@
     vm.hasExistingDevices = hasExistingDevices;
     vm.notifyLimits = notifyLimits;
     vm.getQuantityInputDefault = _getQuantityInputDefault;
+    vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -100,8 +109,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 2,
+        max: maxRoomSystems,
+        min: minRoomSystems,
         disabled: true,
       },
       modelOptions: {
@@ -119,7 +128,7 @@
           return !vm.sx10.enabled || vm.sx10.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.sx10, 2);
+          return vm.getQuantityInputDefault(vm.sx10, minRoomSystems);
         }
 
       },
@@ -154,8 +163,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 1,
+        max: maxCallDevices,
+        min: minCallDevices,
         disabled: true,
       },
       modelOptions: {
@@ -172,7 +181,7 @@
           return !vm.phone8865.enabled || vm.phone8865.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.phone8865, 1);
+          return vm.getQuantityInputDefault(vm.phone8865, minCallDevices);
         }
       },
       watcher: _addWatcher(),
@@ -204,8 +213,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 1,
+        max: maxCallDevices,
+        min: minCallDevices,
         disabled: true,
       },
       modelOptions: {
@@ -222,7 +231,7 @@
           return !vm.phone8845.enabled || vm.phone8845.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.phone8845, 1);
+          return vm.getQuantityInputDefault(vm.phone8845, minCallDevices);
         }
 
       },
@@ -255,8 +264,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 1,
+        max: maxCallDevices,
+        min: minCallDevices,
         disabled: true,
       },
       modelOptions: {
@@ -273,7 +282,7 @@
           return !vm.phone8841.enabled || vm.phone8841.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.phone8841, 1);
+          return vm.getQuantityInputDefault(vm.phone8841, minCallDevices);
         }
       },
       watcher: _addWatcher(),
@@ -305,8 +314,8 @@
         labelClass: 'pull-left medium-6 text-right',
         inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
         type: 'number',
-        max: 5,
-        min: 1,
+        max: maxCallDevices,
+        min: minCallDevices,
         disabled: true,
       },
       modelOptions: {
@@ -323,7 +332,7 @@
           return !vm.phone7841.enabled || vm.phone7841.readonly;
         },
         'model.quantity': function () {
-          return vm.getQuantityInputDefault(vm.phone7841, 1);
+          return vm.getQuantityInputDefault(vm.phone7841, minCallDevices);
         }
       },
       watcher: _addWatcher(),
@@ -463,7 +472,6 @@
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
-
       if (!_.isUndefined(limitsPromise)) {
         limitsPromise.then(function (data) {
             vm.activeTrials = data.activeDeviceTrials;
@@ -492,6 +500,11 @@
       }
     }
 
+    function areAdditionalDevicesAllowed() {
+      var result = vm.canAddMoreDevices || !vm.limitReached;
+      return result;
+    }
+
     function skip(skipped) {
       _trialDeviceData.skipDevices = skipped;
     }
@@ -507,17 +520,17 @@
       if (!device.enabled) {
         return true;
       } else {
-        return (quantity >= 1 && quantity <= 5);
+        return (quantity >= minCallDevices && quantity <= maxCallDevices);
       }
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems);
+      return _validateTypeQuantity(scope, _trialRoomSystemData.details.roomSystems, minRoomSystems, maxRoomSystems);
 
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      return _validateTypeQuantity(scope, _trialCallData.details.phones);
+      return _validateTypeQuantity(scope, _trialCallData.details.phones, minCallDevices, maxCallDevices);
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
@@ -526,7 +539,7 @@
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity < 2 || quantity > 7);
+        return !(quantity < minTotalDevices || quantity > maxTotalDevices);
       }
     }
 
@@ -565,13 +578,13 @@
       }
     }
 
-    function _validateTypeQuantity(scope, deviceType) {
+    function _validateTypeQuantity(scope, deviceType, min, max) {
       var quantity = vm.calcQuantity(deviceType);
       var device = scope.model;
       if (!device.enabled) {
         return true;
       } else {
-        return !(quantity < 2 || quantity > 5);
+        return !(quantity < min || quantity > max);
       }
     }
 

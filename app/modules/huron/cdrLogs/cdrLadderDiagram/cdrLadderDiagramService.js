@@ -5,7 +5,7 @@
     .service('CdrLadderDiagramService', CdrLadderDiagramService);
 
   /* @ngInject */
-  function CdrLadderDiagramService($rootScope, $http, $q, Config, $translate, Notification, Log, UrlConfig) {
+  function CdrLadderDiagramService($http, $q, Log, UrlConfig) {
     var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var getActivitiesUrl = UrlConfig.getAdminServiceUrl() + 'callflow/activities';
     var TIMEOUT_IN_MILI = 15000;

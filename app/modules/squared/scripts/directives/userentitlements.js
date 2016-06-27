@@ -6,7 +6,7 @@
     .directive('userEntitlements', userEntitlements);
 
   /* @ngInject */
-  function UserEntitlementsCtrl($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
+  function UserEntitlementsCtrl($scope, $timeout, Userservice, Log, $rootScope, Notification, $filter, Utils, Authinfo) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.entitlements = Utils.getSqEntitlements($scope.currentUser);
 
