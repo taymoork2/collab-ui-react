@@ -2,13 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController(ReportUtilService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
+  function EdiscoveryReportsController(ReportUtilService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
 
-    vm.deleteReports = deleteReports;
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
@@ -157,12 +156,6 @@
       }]
     };
 
-    function deleteReports() {
-      EdiscoveryService.deleteReports().then(function (res) {
-        pollAvalonReport();
-      });
-    }
-
     function pollAvalonReport() {
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
@@ -197,5 +190,5 @@
 
   angular
     .module('Ediscovery')
-    .controller('EdiscoveryController', EdiscoveryController);
+    .controller('EdiscoveryReportsController', EdiscoveryReportsController);
 }());

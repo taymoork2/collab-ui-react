@@ -2287,7 +2287,7 @@
           })
           .state('ediscovery.reports', {
             url: '/reports',
-            controller: 'EdiscoveryController',
+            controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
