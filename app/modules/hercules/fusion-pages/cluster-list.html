@@ -22,7 +22,13 @@
               <span ng-if="cluster.type === 'mediafusion'" translate="hercules.fusion.list.mediafusion-short"></span>
             </div>
           </header>
-          <section>
+          <div class="row">
+            <div class="columns medium-5" translate="hercules.fusion.list.upgrade-schedule">Upgrade Schedule</div>
+            <div class="columns medium-7">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
+            {{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div>
+          </div>
+          <section ng-if="!resourceList._helpers.hasServices(cluster)" class="service-list" translate="hercules.fusion.list.no-services"></section>
+          <section ng-if="resourceList._helpers.hasServices(cluster)">
             <ul class="service-list">
               <li ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
                 <div ng-hide="service.total === 0">

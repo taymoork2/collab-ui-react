@@ -5,16 +5,16 @@
 /* global webExCommon */
 
 // Start of Licenses column tests
-describe('WebEx Sitelist: License - Single: ', function () {
+describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", function () {
   var setup = false;
 
   beforeAll(function () {
     var promise = webEx.setup(
       1,
       'wbx-singleCenterLicenseTestAdmin',
-      webExCommon.singleCenterLicenseInfo.testAdminUsername,
-      webExCommon.singleCenterLicenseInfo.testAdminPassword,
-      webExCommon.singleCenterLicenseInfo.siteUrl
+      webExCommon.t30citestprov9Info.testAdminUsername,
+      webExCommon.t30citestprov9Info.testAdminPassword,
+      webExCommon.t30citestprov9Info.siteUrl
     );
 
     promise.then(
@@ -28,7 +28,7 @@ describe('WebEx Sitelist: License - Single: ', function () {
     );
   }); // beforeAll()
 
-  it('should allow login as admin user ' + webExCommon.singleCenterLicenseInfo.testAdminUsername + ' and navigate to webex site list page', function () {
+  it('should allow login as ' + webExCommon.t30citestprov9Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
       utils.click(webExSiteList.conferencingLink);
@@ -36,15 +36,15 @@ describe('WebEx Sitelist: License - Single: ', function () {
     }
   });
 
-  it('should detect the license column', function () {
+  it('should detect single licensed site', function () {
     if (setup) {
-      utils.wait(webExSiteList.licenseTypesColumnId);
+      utils.wait(webExCommon.t30citestprov9Info.licenseID);
     }
   });
 
-  it('should detect text ' + webExSiteList.license_MC200, function () {
+  it('should detect ' + webExCommon.t30citestprov9Info.siteUrl + ' is a CI site', function () {
     if (setup) {
-      utils.expectText(webExCommon.singleLicenseSiteId, webExSiteList.license_MC200);
+      utils.wait(webExCommon.t30citestprov9Info.isCIID);
     }
   });
 
@@ -53,16 +53,16 @@ describe('WebEx Sitelist: License - Single: ', function () {
   });
 });
 
-describe('WebEx Sitelist: License - Multiple: ', function () {
+describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", function () {
   var setup = false;
 
   beforeAll(function () {
     var promise = webEx.setup(
       1,
       'wbx-multipleCenterLicenseTestAdmin',
-      webExCommon.multiCenterLicenseInfo.testAdminUsername,
-      webExCommon.multiCenterLicenseInfo.testAdminPassword,
-      webExCommon.multiCenterLicenseInfo.siteUrl
+      webExCommon.t30citestprov6Info.testAdminUsername,
+      webExCommon.t30citestprov6Info.testAdminPassword,
+      webExCommon.t30citestprov6Info.siteUrl
     );
 
     promise.then(
@@ -76,7 +76,7 @@ describe('WebEx Sitelist: License - Multiple: ', function () {
     );
   }); // beforeAll()
 
-  it('should allow login as admin user ' + webExCommon.multiCenterLicenseInfo.testAdminUsername + ' and navigate to webex site list page', function () {
+  it('should allow login as ' + webExCommon.t30citestprov6Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
       utils.click(webExSiteList.conferencingLink);
@@ -84,15 +84,15 @@ describe('WebEx Sitelist: License - Multiple: ', function () {
     }
   });
 
-  it('should detect the license column', function () {
+  it('should detect multiple licensed site', function () {
     if (setup) {
-      utils.wait(webExSiteList.licenseTypesColumnId);
+      utils.wait(webExCommon.t30citestprov6Info.licenseID);
     }
   });
 
-  it('should detect text ' + webExSiteList.license_Multiple, function () {
+  it('should detect ' + webExCommon.t30citestprov6Info.siteUrl + ' is a CI site', function () {
     if (setup) {
-      utils.expectText(webExCommon.multiLicenseSiteId, webExSiteList.license_Multiple);
+      utils.wait(webExCommon.t30citestprov6Info.isCIID);
     }
   });
 

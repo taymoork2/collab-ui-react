@@ -1,5 +1,5 @@
 <p ng-if="$ctrl.state === 'error'" class="red">{{$ctrl.errorMessage}}</p>
-<div class="upgrade-schedule-form" ng-class="{'upgrade-schedule-form-daily': $ctrl.daily}">
+<div class="upgrade-schedule-form">
   <cs-select
     class="upgrade-schedule-time"
     is-disabled="$ctrl.state === 'syncing'"
@@ -12,14 +12,13 @@
   </cs-select>
   <cs-select
     class="upgrade-schedule-day"
-    is-disabled="$ctrl.state === 'syncing'"
+    is-disabled="$ctrl.state === 'syncing' || $ctrl.daily"
     labelfield="label"
     valuefield="value"
     input-placeholder="sel.inputPlaceholder"
     ng-model="$ctrl.data.scheduleDay"
     options="$ctrl.dayOptions"
     placeholder="'Select a day'"
-    ng-if="!$ctrl.daily"
     >
   </cs-select>
   <cs-select

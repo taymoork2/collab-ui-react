@@ -9,7 +9,7 @@
   <span ng-if="row.entity.canBeDownloaded">
     <span ng-if="!grid.appScope.downloadReportId"
           tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}}"
+          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}} ({{'ediscovery.reportsList.expires' | translate}} {{row.entity.expiresIn}})"
           tooltip-animation="false"
           tooltip-append-to-body="true"
           class="icon icon-download action-icons"
@@ -28,7 +28,13 @@
           cs-tooltip="{{'ediscovery.reportsList.anotherDownloadInProgress' | translate}}"
           tooltip-animation="false"
           tooltip-append-to-body="true"
-          class="icon icon-download action-icons light"></span>
+          class="icon icon-download action-icons disabled"></span>
+  </span>
+  <span ng-if="row.entity.hasExpired"
+        cs-tooltip="{{'ediscovery.reportsList.expired' | translate}} {{row.entity.expiresIn}}."
+        tooltip-animation="false"
+        tooltip-append-to-body="true"
+        class="icon icon-download action-icons disabled">
   </span>
 
   <span ng-if="row.entity.canBeCancelled && !grid.appScope.reportsBeingCancelled[row.entity.id]"

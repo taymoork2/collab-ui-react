@@ -953,7 +953,6 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
-    "errorGettingTimeZoneToggle": "Failed to get atlasHuronDeviceTimeZone feature toggle",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
@@ -1438,10 +1437,12 @@
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion"
+        "mediafusion": "Media Fusion",
+        "no-services": "No services",
+        "upgrade-schedule": "Upgrade Schedule:"
       }
     }
   },
@@ -1502,7 +1503,9 @@
       "createReportFailed": "Failed to initialize the report",
       "roomNotFound": "Your search for '{{roomId}}' returned no matches",
       "invalidRoomId": "Search input '{{roomId}}' is not a valid room ID",
-      "roomLookupError": "An unexpected error occurred when searching for the room"
+      "roomLookupError": "An unexpected error occurred when searching for the room",
+      "generatedAt": "Generated Today at {{time}}",
+      "expiryInfo": "Generated reports will expire after 10 days. Any reports older than 10 days will automatically be deleted by the system."
     },
     "reportsList": {
       "name": "Name",
@@ -1518,7 +1521,9 @@
       "createNew": "Create New Report",
       "failed": "Report failed",
       "anotherDownloadInProgress": "Another download is in progress",
-      "waitingForDownload": "Downloading, please wait..."
+      "waitingForDownload": "Downloading, please wait...",
+      "expires": "Expires",
+      "expired": "Expired"
     },
     "tabs": {
       "search": "Search",
@@ -1599,11 +1604,13 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "care": "Care",
     "roomSystems": "Room Systems",
     "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
+    "freeCare": "None",
     "communicationsSub": "Setup calling service",
     "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
     "setSipDomainMsg": "Enter a subdomain",
@@ -2540,8 +2547,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3500,6 +3506,7 @@
     "catalan": "Català"
   },
   "siteList": {
+    "nonCIWebExSiteAccess": "<a href='https://{{siteUrl}}' target='_blank' ng-click='{{click}}'>Sign in to manage</a>",
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",

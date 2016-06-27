@@ -28,36 +28,52 @@
     header {
       display: flex;
       position: relative;;
-      padding-top: 19px;
-      padding-bottom: 15px;
+      padding-top: 1.25rem;
+      padding-bottom: 0.9375rem;
 
       h4 {
         flex-grow: 1;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        margin-right: 10px;
+        margin-right: 0.625rem;
       }
 
+      $orb-size: 2.125rem;
       .cluster-type-orb {
         flex-grow: 0;
-        border-radius: 34px;
-        width: 34px;
-        height: 34px;
-        font-size: 14px;
+        border-radius: $orb-size;
+        width: $orb-size;
+        height: $orb-size;
+        font-size: 0.875rem;
         line-height: 2.8;
         text-align: center;
         background-color: $gray-light-4;
       }
     }
 
+    .columns {
+      &:first-child {
+        color: $gray-light-1;
+      }
+      padding-left: 1rem;
+      padding-right: 1rem;
+      font-size: 16px;
+    }
+
     .service-list {
       padding: 0;
       margin: 0;
+      margin-top: 1rem;
       margin-left: 1rem;
+      font-size: 1rem;
 
       li {
         list-style: none;
+      }
+
+      span {
+        font-size: 1rem;
       }
 
       .fa {

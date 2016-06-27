@@ -43,8 +43,8 @@ namespace globalsettings {
         beforeEach(initFailureSpy);
         beforeEach(initController);
 
-        it('should not set dataloaded and no value for selected retention policy', () => {
-          expect(controller.dataLoaded).toBeFalsy();
+        it('should set dataloaded and no value for selected retention policy', () => {
+          expect(controller.dataLoaded).toBeTruthy();
           expect(controller.selectedRetention).toBeFalsy();
         });
 
@@ -65,9 +65,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            data:{
-              msgDataRetention:secondRetentionOption
-            }
+            msgDataRetention:secondRetentionOption
           }));
         }
       });
@@ -83,9 +81,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            data:{
-              msgDataRetention:45444
-            }
+            msgDataRetention:45444
           }));
         }
       });

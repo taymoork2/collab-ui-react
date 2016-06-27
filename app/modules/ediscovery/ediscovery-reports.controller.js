@@ -2,13 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoveryController($state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
+  function EdiscoveryReportsController(ReportUtilService, $state, $interval, $window, $scope, $translate, EdiscoveryService, uiGridConstants, EdiscoveryNotificationService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant("ediscovery.browserTabHeaderTitle");
     });
     var vm = this;
 
-    vm.deleteReports = deleteReports;
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
@@ -82,6 +81,7 @@
       enableRowHeaderSelection: false,
       enableColumnResizing: true,
       enableColumnMenus: false,
+      enableSorting: false,
       enableHorizontalScrollbar: 0,
       infiniteScrollUp: true,
       infiniteScrollDown: true,
@@ -108,6 +108,8 @@
                       vm.reports[index] = updatedReport;
                       gridApi.core.notifyDataChange(uiGridConstants.dataChange.ROW);
                     });
+                  } else {
+                    ReportUtilService.tweakReport(r);
                   }
                 });
               }, 3000);
@@ -154,12 +156,6 @@
       }]
     };
 
-    function deleteReports() {
-      EdiscoveryService.deleteReports().then(function (res) {
-        pollAvalonReport();
-      });
-    }
-
     function pollAvalonReport() {
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
@@ -194,5 +190,5 @@
 
   angular
     .module('Ediscovery')
-    .controller('EdiscoveryController', EdiscoveryController);
+    .controller('EdiscoveryReportsController', EdiscoveryReportsController);
 }());

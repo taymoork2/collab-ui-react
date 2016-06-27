@@ -11,7 +11,7 @@
     $scope.isPartner = SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
     $scope.showHelpDeskRole = $scope.isPartner || $scope.helpDeskFeatureAllowed;
-    $scope.showComplianceRole = Authinfo.getUserId() == "b78903e2-39e6-45fa-af0f-5d31de45934f";
+    $scope.showComplianceRole = _.includes(['b78903e2-39e6-45fa-af0f-5d31de45934f', '2f0d33ae-2ba1-46f7-a244-bde004fdffdf'], Authinfo.getUserId());
     $scope.updateRoles = updateRoles;
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;

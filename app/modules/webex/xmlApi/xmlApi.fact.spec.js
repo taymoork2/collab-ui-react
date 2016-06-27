@@ -8,7 +8,8 @@ describe('WebExXmlApiFact', function () {
   var $rootScope;
   var deferred;
   var Auth;
-  var Storage;
+  var SessionStorage;
+  var TokenService;
 
   /**  
     var MyReporter = function () {
@@ -26,27 +27,31 @@ describe('WebExXmlApiFact', function () {
     env.addReporter(new MyReporter());
 	**/
 
+  beforeEach(module('Core'));
   beforeEach(module('WebExApp'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _Storage_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _SessionStorage_, _TokenService_) {
     $rootScope = _$rootScope_;
     WebExXmlApiFact = _WebExXmlApiFact_;
     Auth = _Auth_;
-    Storage = _Storage_;
+    SessionStorage = _SessionStorage_;
+    TokenService = _TokenService_;
 
     deferred = _$q_.defer();
     spyOn(WebExXmlApiFact, 'tokeninfo').and.returnValue(deferred.promise);
 
     spyOn(Auth, 'redirectToLogin');
+
   }));
 
   it('redirects to login if token is not found', function () {
+    spyOn(TokenService, 'getAccessToken').and.returnValue(null);
     WebExXmlApiFact.validateToken();
     expect(Auth.redirectToLogin).toHaveBeenCalled();
   });
 
   it('does not redirect to login if token is valid', function () {
-    spyOn(Storage, 'get').and.returnValue("aToken");
+    spyOn(TokenService, 'getAccessToken').and.returnValue('aToken');
 
     WebExXmlApiFact.validateToken();
 
@@ -57,7 +62,7 @@ describe('WebExXmlApiFact', function () {
   });
 
   it('redirects to login if token is invalid', function () {
-    spyOn(Storage, 'get').and.returnValue("aToken");
+    spyOn(TokenService, 'getAccessToken').and.returnValue('invalidToken');
 
     WebExXmlApiFact.validateToken();
 
