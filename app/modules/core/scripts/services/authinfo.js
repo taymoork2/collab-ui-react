@@ -5,7 +5,7 @@
     .service('Authinfo', Authinfo);
 
   /* @ngInject */
-  function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
+  function Authinfo($rootScope, $translate, Config, Localytics) {
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -26,7 +26,6 @@
       entitlements: null,
       services: null,
       roles: [],
-      tabs: [],
       isInitialized: false,
       setupDone: false,
       licenses: [],
@@ -95,35 +94,6 @@
       return false;
     };
 
-    function isAllowedTab(tab) {
-      return isAllowedState(tab.state) && !isHideProdTab(tab);
-    }
-
-    function isHideProdTab(tab) {
-      return tab.hideProd && Config.isProd();
-    }
-
-    function initializeTabs() {
-      var tabs = angular.copy(tabConfig);
-      return _.chain(tabs)
-        .filter(function (tab) {
-          // Remove subPages whose parent tab is hideProd or states that aren't allowed
-          _.remove(tab.subPages, function (subTab) {
-            return isHideProdTab(tab) || !isAllowedTab(subTab);
-          });
-          // Filter allowed states or tabs with subPages
-          return isAllowedTab(tab) || _.size(tab.subPages);
-        })
-        .forEach(function (tab) {
-          tab.title = $translate.instant(tab.title);
-          _.forEach(tab.subPages, function (subTab) {
-            subTab.title = $translate.instant(subTab.title);
-            subTab.desc = $translate.instant(subTab.desc);
-          });
-        })
-        .value();
-    }
-
     var isEntitled = function (entitlement) {
       var services = authData.services;
       if (services) {
@@ -168,9 +138,6 @@
 
         Localytics.setOrgId(authData.orgId);
         Localytics.setUserId(authData.userId);
-      },
-      initializeTabs: function () {
-        authData.tabs = initializeTabs();
       },
       clear: function () {
         authData.username = null;
