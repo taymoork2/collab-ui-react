@@ -114,6 +114,11 @@
       return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/' + id);
     }
 
+    function deleteReports() {
+      var orgId = Authinfo.getOrgId();
+      return $http.delete(urlBase + 'compliance/organizations/' + orgId + '/reports/');
+    }
+
     function setEntitledForCompliance(orgId, userId, entitled) {
       return $http.patch(urlBase + 'compliance/organizations/' + orgId + '/users/' + userId, {
         entitledForCompliance: entitled
@@ -156,6 +161,7 @@
       getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
+      deleteReports: deleteReports,
       createReport: createReport,
       runReport: runReport,
       patchReport: patchReport,

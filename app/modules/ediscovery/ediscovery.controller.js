@@ -8,6 +8,7 @@
     });
     var vm = this;
 
+    vm.deleteReports = deleteReports;
     vm.readingReports = true;
     vm.concat = false;
     vm.moreReports = false;
@@ -155,6 +156,12 @@
         width: '160'
       }]
     };
+
+    function deleteReports() {
+      EdiscoveryService.deleteReports().then(function (res) {
+        pollAvalonReport();
+      });
+    }
 
     function pollAvalonReport() {
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
