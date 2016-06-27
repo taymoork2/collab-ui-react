@@ -10,10 +10,10 @@
     var partnerAdminId;
 
     vm.canShow = canShow;
-    vm.daysLeft;
+    vm.daysLeft = undefined;
     vm.hasRequested = false;
-    vm.partnerAdminEmail;
-    vm.partnerAdminDisplayName;
+    vm.partnerAdminEmail = undefined;
+    vm.partnerAdminDisplayName = undefined;
     vm.sendRequest = sendRequest;
     vm._helpers = {
       getDaysLeft: getDaysLeft,
