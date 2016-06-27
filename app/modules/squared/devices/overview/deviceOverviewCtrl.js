@@ -299,7 +299,7 @@
     };
 
     deviceOverview.reset = function () {
-      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem);
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.addonModule.length);
       deviceOverview.form.$setPristine();
       deviceOverview.form.$setUntouched();
     };
