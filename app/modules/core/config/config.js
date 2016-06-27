@@ -56,7 +56,9 @@
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
-        messenger: 'webex-messenger'
+        messenger: 'webex-messenger',
+        care: 'cloud-contact-center',
+        context: 'contact-center-context'
       },
 
       offerTypes: {
