@@ -42,7 +42,8 @@
         vm.daily = changes.daily.currentValue;
       }
       if (changes.clusterId) {
-        if (changes.clusterId.previousValue !== changes.clusterId.currentValue) {
+        if (changes.clusterId.currentValue &&
+          changes.clusterId.previousValue !== changes.clusterId.currentValue) {
           init();
         }
         vm.clusterId = changes.clusterId.currentValue;
@@ -63,10 +64,10 @@
 
     function init() {
       return FusionClusterService.getUpgradeSchedule(vm.clusterId)
-        .then(function (response) {
-          vm.data = convertDataForUI(response);
-          vm.isAcknowledged = response.isAcknowledged;
-          vm.postponed = response.postponed;
+        .then(function (upgradeSchedule) {
+          vm.data = convertDataForUI(upgradeSchedule);
+          vm.isAcknowledged = upgradeSchedule.isAcknowledged;
+          vm.postponed = upgradeSchedule.postponed;
           vm.nextUpdate = findNextUpdate();
           vm.errorMessage = '';
           vm.state = 'idle';
@@ -164,7 +165,7 @@
 
     function patch(data) {
       vm.state = 'syncing';
-      return FusionClusterService.setUpgradeSchedule(Authinfo.getOrgId(), {
+      return FusionClusterService.setUpgradeSchedule(vm.clusterId, {
           scheduleTime: data.scheduleTime.value,
           scheduleTimeZone: data.scheduleTimeZone.value,
           scheduleDays: [data.scheduleDay.value]
