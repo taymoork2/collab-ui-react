@@ -30,18 +30,15 @@
 
     return service;
 
-    function getOrg(callback, oid, disableCache) {
-      var scomUrl = null;
-      if (oid) {
-        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
-      } else {
-        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
+    function getOrg(callback, orgId, disableCache) {
+      if (!orgId) {
+        orgId = Authinfo.getOrgId();
       }
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
       if (disableCache) {
         scomUrl = scomUrl + '?disableCache=true';
       }
-
       return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
@@ -53,6 +50,8 @@
           } else {
             data.orgSettings = JSON.parse(_.last(data.orgSettings));
           }
+          var d = getCachedOrgSettings(orgId);
+          _.assign(data.orgSettings, d);
 
           callback(data, status);
         })
@@ -196,18 +195,10 @@
       });
     }
 
-    /**
-     * Get the latest orgSettings, merge with new settings, and PATCH the org
-     */
-    function setOrgSettings(orgId, settings) {
-      var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
-      savedOrgSettingsCache.push({
-        propertySaveTimeStamp: new Date(),
-        setting: _.clone(settings)
-      });
-      var mergedCacheAndNewSettings = _.chain(savedOrgSettingsCache)
+    function getCachedOrgSettings(orgId) {
+      return _.chain(savedOrgSettingsCache)
         .filter(function (cache) {
-          return moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
+          return cache.orgId === orgId && moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
         })
         .map(function (cache) {
           return _.clone(cache.setting);
@@ -216,10 +207,23 @@
           return _.merge(result, setting);
         }, {})
         .value();
+    }
+
+    /**
+     * Get the latest orgSettings, merge with new settings, and PATCH the org
+     */
+    function setOrgSettings(orgId, settings) {
+      var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
+      savedOrgSettingsCache.push({
+        orgId: orgId,
+        propertySaveTimeStamp: new Date(),
+        setting: _.clone(settings)
+      });
+      // var mergedCacheAndNewSettings = getCachedOrgSettings(orgId);
       return getOrg(_.noop, orgId, true)
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
-          _.assign(orgSettings, mergedCacheAndNewSettings);
+          _.assign(orgSettings, settings);
 
           return $http({
             method: 'PATCH',
