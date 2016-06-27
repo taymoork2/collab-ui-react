@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService, Notification) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService,
+    Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -24,6 +25,7 @@
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
+    vm.ongoingSearch = false;
 
     init($stateParams.report, $stateParams.reRun);
 
@@ -102,6 +104,7 @@
     });
 
     function searchForRoom(roomId) {
+      vm.ongoingSearch = true;
       disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
