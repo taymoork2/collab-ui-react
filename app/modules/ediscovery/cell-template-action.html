@@ -9,7 +9,7 @@
   <span ng-if="row.entity.canBeDownloaded">
     <span ng-if="!grid.appScope.downloadReportId"
           tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}}. (Expires {{row.entity.expiresIn}})"
+          cs-tooltip="{{'ediscovery.search.downloadReport' | translate}} (Expires {{row.entity.expiresIn}})"
           tooltip-animation="false"
           tooltip-append-to-body="true"
           class="icon icon-download action-icons"
