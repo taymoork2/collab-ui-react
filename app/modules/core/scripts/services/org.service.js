@@ -201,7 +201,7 @@
           return cache.orgId === orgId && moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
         })
         .map(function (cache) {
-          return _.clone(cache.setting);
+          return cache.setting;
         })
         .reduce(function (result, setting) {
           return _.merge(result, setting);
@@ -219,11 +219,9 @@
         propertySaveTimeStamp: new Date(),
         setting: _.clone(settings)
       });
-      // var mergedCacheAndNewSettings = getCachedOrgSettings(orgId);
-      return getOrg(_.noop, orgId, true)
+      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
-          _.assign(orgSettings, settings);
 
           return $http({
             method: 'PATCH',
