@@ -57,8 +57,9 @@
         return;
       }
       patch(newValue)
-        .then(function () {
-          vm.nextUpdate = findNextUpdate();
+        .then(function (arg) {
+          console.warn('return of the patch', arg);
+          // vm.nextUpdate = findNextUpdate();
         });
     }, true);
 
@@ -66,9 +67,9 @@
       return FusionClusterService.getUpgradeSchedule(vm.clusterId)
         .then(function (upgradeSchedule) {
           vm.data = convertDataForUI(upgradeSchedule);
-          vm.isAcknowledged = upgradeSchedule.isAcknowledged;
+          vm.isAcknowledged = upgradeSchedule.acknowledged;
           vm.postponed = upgradeSchedule.postponed;
-          vm.nextUpdate = findNextUpdate();
+          vm.nextUpdate = upgradeSchedule.nextUpgradeWindow.startTime;
           vm.errorMessage = '';
           vm.state = 'idle';
         }, function (error) {
@@ -204,24 +205,24 @@
       // });
     }
 
-    function findNextUpdate() {
-      var now = moment.tz(vm.data.scheduleTimeZone.value);
-      var time = vm.data.scheduleTime.value.split(':');
-      var nextUpdate = moment.tz(vm.data.scheduleTimeZone.value)
-        .isoWeekday(vm.data.scheduleDay.value)
-        .hours(Number(time[0]))
-        .minutes(Number(time[1]))
-        .seconds(0);
-
-      // the .isoWeekday() from moment.js is not made to ALWAYS get the NEXT $day (i.e. monday)
-      // and always doing a +7 is not the right thing to do either
-      if (nextUpdate.isBefore(now)) {
-        nextUpdate.add(7, 'day');
-      }
-      if (vm.postponed) {
-        nextUpdate.add(7, 'day');
-      }
-      return nextUpdate.toDate();
-    }
+    // function findNextUpdate() {
+    //   var now = moment.tz(vm.data.scheduleTimeZone.value);
+    //   var time = vm.data.scheduleTime.value.split(':');
+    //   var nextUpdate = moment.tz(vm.data.scheduleTimeZone.value)
+    //     .isoWeekday(vm.data.scheduleDay.value)
+    //     .hours(Number(time[0]))
+    //     .minutes(Number(time[1]))
+    //     .seconds(0);
+    //
+    //   // the .isoWeekday() from moment.js is not made to ALWAYS get the NEXT $day (i.e. monday)
+    //   // and always doing a +7 is not the right thing to do either
+    //   if (nextUpdate.isBefore(now)) {
+    //     nextUpdate.add(7, 'day');
+    //   }
+    //   if (vm.postponed) {
+    //     nextUpdate.add(7, 'day');
+    //   }
+    //   return nextUpdate.toDate();
+    // }
   }
 })();
