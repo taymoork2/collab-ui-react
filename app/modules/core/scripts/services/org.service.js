@@ -50,8 +50,7 @@
           } else {
             data.orgSettings = JSON.parse(_.last(data.orgSettings));
           }
-          var d = getCachedOrgSettings(orgId);
-          _.assign(data.orgSettings, d);
+          _.assign(data.orgSettings, getCachedOrgSettings(orgId));
 
           callback(data, status);
         })
@@ -73,10 +72,10 @@
 
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
-          params: {
-            disableCache: cacheDisabled
-          }
-        })
+        params: {
+          disableCache: cacheDisabled
+        }
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
