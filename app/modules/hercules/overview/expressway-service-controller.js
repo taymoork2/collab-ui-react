@@ -181,7 +181,8 @@
             },
             servicesId: function () {
               return vm.servicesId;
-            }
+            },
+            firstTimeSetup: false
           },
           controller: 'AddResourceController',
           controllerAs: 'addResource',
@@ -203,7 +204,32 @@
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
     });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
+          },
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: true
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'addResource',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
+    }
 
   }
 }());
