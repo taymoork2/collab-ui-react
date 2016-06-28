@@ -135,6 +135,10 @@
   .button-container {
     right: 0;
   }
+
+  .dropdown-container {
+    @include vr-spacing(mt, 1);
+  }
 }
 
 .device-img {
