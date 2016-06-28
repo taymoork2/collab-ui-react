@@ -547,23 +547,11 @@ describe('Controller: TrialAddCtrl', function () {
       expect(controller.uniqueEmail).toBe(testCase[index].targetVal);
     }
 
-    it('should pass testCase #0', function () {
-      doTestCase(i++);
-    });
-    it('should pass testCase #1', function () {
-      doTestCase(i++);
-    });
-    it('should pass testCase #2', function () {
-      doTestCase(i++);
-    });
-    it('should pass testCase #3', function () {
-      doTestCase(i++);
-    });
-    it('should pass testCase #4', function () {
-      doTestCase(i++);
-    });
-    it('should pass testCase #5', function () {
-      doTestCase(i++);
+    _.times(testCase.length, function (index) {
+      var testMsg = 'should confirm ' + angular.toJson(testCase[index].retVal) + ' validates as ' + testCase[index].targetVal;
+      it(testMsg, function () {
+        doTestCase(index);
+      });
     });
   });
 });
