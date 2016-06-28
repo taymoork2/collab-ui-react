@@ -348,9 +348,8 @@
     @include vr-spacing(mt, 1.5);
   }
   .search-custom {
-  @include vr-spacing(mt, 1);
-  float: right;
-  @include vr-spacing(mr, 0.5);
-
+    @include vr-spacing(mt, 1);
+    float: right;
+    @include vr-spacing(mr, 0.5);
   }
 }
