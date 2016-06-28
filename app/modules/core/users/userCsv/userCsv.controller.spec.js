@@ -79,13 +79,13 @@ describe('OnboardCtrl: Ctrl', function () {
   // <numUsers>: user <numUsers>
   function generateUsersCsv(numUsers, invalidUsers) {
     var invalidUsersToMake = invalidUsers || [];
-    var header = ["First Name", "Last Name", "Display Name", "User ID/Email (Required)", "Directory Number", "Direct Line", "Calendar Service", "Meeting 25 Party", "Spark Call", "Spark Message"];
+    var header = ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Directory Number', 'Direct Line', 'Calendar Service', 'Meeting 25 Party', 'Spark Call', 'Spark Message'];
     var csv = [header];
     for (var ii = 0; ii < numUsers; ii++) {
       var user = [
-        "First" + ii, "Last" + ii, "First" + ii + " Last" + ii, "firstlast" + ii + "@sample.com",
-        5001 + ii, "",
-        "true", "true", "true", "true"
+        'First' + ii, 'Last' + ii, 'First' + ii + ' Last' + ii, 'firstlast' + ii + '@example.com',
+        5001 + ii, '',
+        'true', 'true', 'true', 'true'
       ];
       if (_.contains(invalidUsers, csv.length + 1)) {
         // create an error in the CSV data for user
@@ -124,7 +124,7 @@ describe('OnboardCtrl: Ctrl', function () {
       if (statusCodes.length > 0) {
         var idx = _.random(0, statusCodes.length - 1);
         status = statusCodes[idx].status;
-        statusCodes[idx].users -= 1;
+        statusCodes[idx].users--;
         if (statusCodes[idx].users === 0) {
           statusCodes.splice(idx, 1);
         }
@@ -180,13 +180,13 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(function () {
       initController();
     });
-    var oneColumnValidUser = "User ID/Email (Required),\njohndoe@example.com,";
-    var oneColumnInvalidUser = "First Name,\nJohn,";
+    var oneColumnValidUser = 'User ID/Email (Required),\njohndoe@example.com,';
+    var oneColumnInvalidUser = 'First Name,\nJohn,';
     var twoValidUsers = generateUsersCsv(2);
-    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
-    var twoValidUsersWithSpaces = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f";
+    var twoInvalidUsers = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false';
+    var twoValidUsersWithSpaces = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f';
 
-    var threeUsersOneDuplicateEmail = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@sample.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@sample.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@sample.com,5002,,true,true,true,true";
+    var threeUsersOneDuplicateEmail = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true';
 
     beforeEach(installPromiseMatchers);
 
@@ -375,11 +375,11 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should report indices for invalid csv users', function () {
         controller.model.file = 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n' +
-          'Row2,Last0,No Error,firstlast0@sample.com,5001,,true,true,true,true\n' +
+          'Row2,Last0,No Error,firstlast0@example.com,5001,,true,true,true,true\n' +
           'Row3,Last1,Missing ID,,5002,,true,true,true,true\n' +
           '\n' +
-          'Row5,Last2,Valid User,firstlast2@sample.com,5003,,true,true,true,true\n' +
-          'Row6,Last3,Invalid Flag,firstlast3@sample.com,5004,,true,treu,true,true\n' +
+          'Row5,Last2,Valid User,firstlast2@example.com,5003,,true,true,true,true\n' +
+          'Row6,Last3,Invalid Flag,firstlast3@example.com,5004,,true,treu,true,true\n' +
           '';
 
         $scope.$apply();

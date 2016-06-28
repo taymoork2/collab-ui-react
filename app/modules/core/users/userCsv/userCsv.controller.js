@@ -309,8 +309,8 @@
       function successCallback(response, onboardedUsers) {
 
         function onboardedUserWithEmail(email) {
-          return _.find(onboardedUsers, function (o) {
-            return o.address === email;
+          return _.find(onboardedUsers, {
+            'address': email
           });
         }
 
@@ -320,12 +320,6 @@
 
           _.forEach(response.data.userResponse, function (user, index) {
             onboardUser = onboardedUserWithEmail(user.email);
-
-            // todo - this is for testing!  Force retrying users with a retry in their name
-            // if (Boolean(Math.random() < 0.5) && user.displayName && user.displayName.indexOf('retry') !== -1 && vm.model.numRetriesToAttempt > 0) {
-            //   vm.model.retryAfter = 15000;
-            //   vm.model.usersToRetry.push(onboardUser);
-            // } else
 
             if (user.httpStatus === 200 || user.httpStatus === 201) {
               if (user.httpStatus === 200) {
@@ -500,7 +494,7 @@
                     }
                   }
                 });
-              } else if (input != '') {
+              } else if (input !== '') {
                 isWrongLicenseFormat = true;
               }
             }
