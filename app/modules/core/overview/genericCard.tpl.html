@@ -17,8 +17,8 @@
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
         ng-if="card.enabled">
   <span class="footer-content">
-  <span class="badge warning ng-scope" ng-if="card.trial && card.allLicenses[$index].status == 'ACTIVE' ">Trial</span>
-  <span class="badge alert ng-scope" ng-if="card.trial && card.allLicenses[$index].status != 'ACTIVE' ">Expired</span>
+  <span class="badge warning ng-scope" ng-if="card.trial && !isExpired(card.allLicenses[$index])">Trial</span>
+  <span class="badge alert ng-scope" ng-if="card.trial && isExpired(card.allLicenses[$index])">Expired</span>
   <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
     <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
     <span>{{card.levelText}}</span>
