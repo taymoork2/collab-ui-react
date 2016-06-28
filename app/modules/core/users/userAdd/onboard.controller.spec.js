@@ -208,6 +208,46 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('with determining message checkbox visibility', function () {
+    beforeEach(initController);
+    it('should return false if more than one license', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        license: 1
+      }, {
+        license: 2
+      }]);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and no billingServiceId', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        license: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return true if only one license and no selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }]);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return false if only one license and billingServiceId does not match selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and billingServiceId match selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 1);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+  });
+
   describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {

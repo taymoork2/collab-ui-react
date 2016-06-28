@@ -369,6 +369,7 @@
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -387,6 +388,17 @@
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+    }
+
+    function checkMessageVisibility(licenses, selectedSubscription) {
+      if (licenses.length === 1) {
+        var license = licenses[0];
+        if (license.billingServiceId && selectedSubscription) {
+          return license.billingServiceId === selectedSubscription;
+        }
+        return true;
+      }
+      return false;
     }
 
     function populateConf() {
