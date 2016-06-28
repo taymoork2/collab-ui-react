@@ -165,6 +165,7 @@
             conferenceService.showSiteLinks = false;
             conferenceService.isError = false;
             conferenceService.isWarn = false;
+            conferenceService.isCI = false;
             conferenceService.isCSVSupported = false;
             conferenceService.adminEmailParam = null;
             conferenceService.userEmailParam = null;
@@ -563,6 +564,8 @@
       var siteUrl = siteRow.siteUrl;
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+      
+      siteRow.isCI = isCISite;
 
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "\n" +
