@@ -13,7 +13,7 @@
     vm.moreReports = false;
 
     $scope.downloadReport = downloadReport;
-    $scope.downloadReportId = undefined;
+    $scope.downloadingReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -42,13 +42,13 @@
     pollAvalonReport();
 
     function downloadReport(report) {
-      $scope.downloadReportId = report.id;
+      $scope.downloadingReportId = report.id;
       EdiscoveryService.downloadReport(report)
         .catch(function (err) {
           Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
         })
         .finally(function (res) {
-          $scope.downloadReportId = undefined;
+          $scope.downloadingReportId = undefined;
         });
     }
 
