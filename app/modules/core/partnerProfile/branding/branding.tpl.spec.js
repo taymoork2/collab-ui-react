@@ -48,7 +48,7 @@ describe('Template: branding', function () {
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
+    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when(["x", "y"]));
     spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
     spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
     spyOn(Authinfo, 'isPartner');
@@ -68,9 +68,17 @@ describe('Template: branding', function () {
     compileView();
   }
 
-  xdescribe('Regular Admin', function () {
+  describe('client versions dropdown', function () {
     beforeEach(compileView);
+    it('client versions drop down to exist', function () {
+      var clientVersionsDropDown = view.find('#' + 'webex_client_version_drop_down');
+      var at = "bctrl.wbxclientversionselected";
+      expect(clientVersionsDropDown).not.toBe(null);
+    });
+  });
 
+  describe('Direct Customer Admin', function () {
+    beforeEach(compileView);
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));
     it('Custom logo radio should not exist', verifyRadioNotExist(CUSTOM_LOGO_RADIO));
 

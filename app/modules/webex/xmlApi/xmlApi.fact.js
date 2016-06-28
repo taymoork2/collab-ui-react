@@ -16,7 +16,8 @@
     Storage,
     WebExXmlApiConstsSvc,
     Auth,
-    SessionStorage
+    SessionStorage,
+    TokenService
   ) {
 
     var _self = this;
@@ -376,7 +377,7 @@
           xmlApiUrl: xmlApiUrl,
           wbxSiteName: wbxSiteName,
           webexAdminID: primaryEmail,
-          accessToken: Storage.get('accessToken')
+          accessToken: TokenService.getAccessToken()
         };
 
         this.getSessionTicketInfo(xmlApiAccessInfo).then(
@@ -537,7 +538,7 @@
 
       validateToken: function () {
         var defer = $q.defer();
-        var token = Storage.get('accessToken');
+        var token = TokenService.getAccessToken();
         if (!_.isEmpty(token)) {
           this.tokeninfo(token).then(function () {
             $log.log("AccessToken valid.");

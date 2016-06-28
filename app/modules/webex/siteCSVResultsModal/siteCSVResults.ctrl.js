@@ -5,10 +5,12 @@
 
   /*@ngInject*/
   function SiteCSVResultsCtrl(
+    $log,
     $stateParams,
     $translate,
     WebExUtilsFact
   ) {
+
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
 
@@ -28,14 +30,21 @@
     vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
+    var createdTime = new Date(vm.csvStatusObj.details.created);
+    var startedTime = new Date(vm.csvStatusObj.details.started);
     var finishedTime = new Date(vm.csvStatusObj.details.finished);
+
+    var formattedCreatedTime = createdTime.toUTCString();
+    var formattedStartedTime = startedTime.toUTCString();
     var formattedFinishedTime = finishedTime.toUTCString();
 
-    if (
-      ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
-      ("exportCompletedWithErr" === vm.csvStatusObj.status)
-    ) {
+    var logMsg = funcName + "\n" +
+      "formattedCreatedTime=" + formattedCreatedTime + "\n" +
+      "formattedStartedTime=" + formattedStartedTime + "\n" +
+      "formattedFinishedTime=" + formattedFinishedTime;
+    $log.log(logMsg);
 
+    if (2 === vm.csvStatusObj.details.jobType) { // export results
       vm.modalId = "csvExport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
@@ -71,10 +80,7 @@
         "vm.downloadFileName=" + vm.downloadFileName;
       // $log.log(logMsg);
 
-    } else if (
-      ("importCompletedNoErr" === vm.csvStatusObj.status) ||
-      ("importCompletedWithErr" === vm.csvStatusObj.status)
-    ) {
+    } else if (1 === vm.csvStatusObj.details.jobType) { // import results
 
       vm.modalId = "csvImport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");

@@ -58,7 +58,7 @@ var auth = {
   },
   'huron-e2e-partner': {
     user: 'admin@ucpartner.e2e.huronalpha.com',
-    pass: 'Cisco123!!',
+    pass: 'C1sco123!',
     org: '666a7b2f-f82e-4582-9672-7f22829e728d'
   },
   'account-admin': {

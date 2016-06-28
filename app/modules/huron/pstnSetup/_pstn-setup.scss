@@ -336,3 +336,20 @@
     }
   }
 }
+
+.address-validation-container {
+  display: flex;
+  flex-direction: row;
+  .flex-address {
+    flex: 1;
+  }
+  .validation-padding {
+    @include vr-spacing(pl, 1.5);
+    @include vr-spacing(mt, 1.5);
+  }
+  .search-custom {
+    @include vr-spacing(mt, 1);
+    float: right;
+    @include vr-spacing(mr, 0.5);
+  }
+}
