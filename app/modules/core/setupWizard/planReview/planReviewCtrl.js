@@ -55,9 +55,10 @@
     };
     vm.isCareEnabled = false;
 
-    vm.getWidthCss = function () {
-      return vm.isCareEnabled ? 'small-3':'small-4';
-    }
+    //TODO this function has to be removed when atlas-care-trials feature is removed
+    vm.getGridColumnClassName = function () {
+      return vm.isCareEnabled ? 'small-3' : 'small-4';
+    };
 
     init();
 
