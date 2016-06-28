@@ -2402,7 +2402,13 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
-    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service."
+    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}.",
+    "errorInUse": "Entered value is already in use. Try a different value.",
+    "errorServerDown": "Could not reach server to validate this field.",
+    "errorFailSafe": "Could not validate entered valued.",
+    "errorInvalid": "Entered value contains invalid characters.",
+    "errorInvalidName": "Entered name contains invalid characters."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
