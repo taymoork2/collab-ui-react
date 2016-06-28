@@ -55,6 +55,10 @@
     };
     vm.isCareEnabled = false;
 
+    vm.getWidthCss = function () {
+      return vm.isCareEnabled ? 'small-3':'small-4';
+    }
+
     init();
 
     function getUserServiceRowClass(hasRoomSystem) {
