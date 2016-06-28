@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AddResourceController', function () {
-  var controller, $scope, $controller, $q, $window, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock, firstTimeSetup;
+  var controller, $scope, $controller, $q, $window, modalInstanceMock, translateMock, windowMock, clusterServiceMock, fusionClusterServiceMock;
 
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
