@@ -413,7 +413,7 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-                controller: 'BrandingCtrl',
+                controller: 'BrandingExampleCtrl',
                 controllerAs: 'brandEg',
               }
             },
