@@ -32,6 +32,12 @@
     transition: initial;
   }
 
+  .privacy {
+    position: absolute;
+    bottom: 12px;
+    color: $gray-light-1;
+  }
+
 }
 
 .inputbox {

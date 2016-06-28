@@ -20,7 +20,6 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
-      atlasDirectCustomerBranding: 'atlas-direct-customer-branding',
       huronAASubmenu: 'huron-aa-submenu',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',

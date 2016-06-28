@@ -37,7 +37,7 @@ describe('Directive: hrServiceAddress', function () {
     var element = $compile('<hr-service-address address="myAddress" read-only="readOnly"><hr-service-address/>')($scope);
     $scope.$apply();
 
-    expect(element.html()).not.toContain('id="streetAddress"');
+    expect(element.html()).toContain('id="streetAddress"');
     expect(element.text()).toContain('123 MY STREET');
     expect(element.text()).toContain('RICHARDSON, TX  75082');
   });

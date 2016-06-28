@@ -1163,7 +1163,12 @@
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
-      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters."
+      "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters.",
+      "confirmationDialogHeader": "Cancel Setup",
+      "confirmationDialogBody": "Are you sure you want to cancel service setup?",
+      "setupScreenBodyAboutToSetup": "You are about to set up:",
+      "setupScreenBodyPrerequisites": "Verify that you have completed the prerequisites before you start configuring {{ServiceName}}.",
+      "setupScreenBodyLinks": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about {{ServiceName}} prerequisites."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2181,8 +2186,9 @@
     "searchResults": "Search Results",
     "noSearchResults": "No Search Results",
     "emergencyAcknowledge": "Customer acknowledges dialing emergency numbers may not work on an enterprise class IP telephony network.",
-    "serviceAddress": "Service Address",
-    "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+    "serviceAddress": "Emergency Service Address",
+    "serviceAddressPrompt1": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+    "serviceAddressPrompt2": "Users will be able to override this address for their Direct Lines. And this will be the default emergency address.",
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
     "orderNumber": "Order Number",
