@@ -6,7 +6,7 @@
     .controller("AddResourceController", AddResourceController);
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, XhrNotificationService, FusionClusterService, FusionUtils) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state) {
     var vm = this;
     vm.hostname = '';
     vm.releaseChannel = 'GA'; // hard-coded for now, release channel support is not part of phase 1
@@ -15,6 +15,12 @@
     vm.preregistrationCompleted = false;
     vm.provisioningToExistingExpresswayCompleted = false;
     vm.selectedAction = 'new';
+    vm.closeSetupModal = closeSetupModal;
+    vm.firstTimeSetup = firstTimeSetup;
+    vm.welcomeScreenAccepted = false;
+    if (!firstTimeSetup) {
+      vm.welcomeScreenAccepted = true;
+    }
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
@@ -167,6 +173,23 @@
 
     function getIconClassForService() {
       return FusionUtils.serviceId2Icon(vm.servicesId[0]);
+    }
+
+    function closeSetupModal() {
+      if (!firstTimeSetup) {
+        $modalInstance.close();
+        return;
+      }
+      $modal.open({
+          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+          type: 'dialog'
+        })
+        .result.then(function (isAborting) {
+          if (isAborting) {
+            $modalInstance.close();
+            $state.go('services-overview');
+          }
+        });
     }
 
   }

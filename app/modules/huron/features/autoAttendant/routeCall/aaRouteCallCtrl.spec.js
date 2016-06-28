@@ -21,6 +21,7 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }];
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;

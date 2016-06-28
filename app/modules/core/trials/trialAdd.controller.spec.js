@@ -5,6 +5,7 @@ describe('Controller: TrialAddCtrl', function () {
   var addContextSpy;
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _$httpBackend_, _Notification_, _TrialService_, _TrialContextService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_, _Orgservice_) {

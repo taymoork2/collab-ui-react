@@ -2,7 +2,7 @@
 'use strict';
 
 describe('User Service', function () {
-
+  beforeEach(module('Sunlight'));
   beforeEach(function () {
     bard.appModule('Huron');
     bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
@@ -14,6 +14,7 @@ describe('User Service', function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
+  var testData = getJSONFixture('sunlight/json/features/config/sunlightUserConfig.json');
 
   it('deactivateUser should send DELETE request to specific organization', function () {
     var user = {
@@ -66,6 +67,31 @@ describe('User Service', function () {
     Userservice.updateUsers(users);
     $httpBackend.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
+  });
+
+  it('onboardUsers success with sunlight license should send POST request to Sunlight Config', function () {
+    $httpBackend
+      .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
+      .respond(200, testData.onboard_success_response);
+    $httpBackend.expectPOST(UrlConfig.getSunlightConfigServiceUrl() + '/user').respond(200);
+    Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
+    $httpBackend.flush();
+  });
+
+  it('onboardUsers failure with sunlight license should not send POST request to Sunlight Config', function () {
+    $httpBackend
+      .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
+      .respond(201, testData.onboard_failure_response);
+    Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.sunlight_license]);
+    $httpBackend.flush();
+  });
+
+  it('onboardUsers success without sunlight license should not send POST request to Sunlight Config', function () {
+    $httpBackend
+      .expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/onboard')
+      .respond(200, testData.onboard_success_response);
+    Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
+    $httpBackend.flush();
   });
 
 });

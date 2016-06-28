@@ -24,8 +24,8 @@
   </div>
 
   <div class="wrapper">
-    <div ng-controller="TabsCtrl">
-      <cs-left-nav pages="tabs"  ng-if="Utils.isAdminPage()"></cs-left-nav>
+    <div ng-controller="TabsCtrl as tCtrl">
+      <cs-left-nav pages="tCtrl.tabs"  ng-if="tCtrl.showLeftNav()"></cs-left-nav>
     </div>
     <div class="page-content-wrapper container-fluid">
       <div class="row full">

@@ -1421,8 +1421,8 @@
         "hosts": "{count, plural, one{# Toplantı Sahibi} other{# Toplantı Sahibi}}",
         "settings": "Ayarlar",
         "all": "Tümü",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }

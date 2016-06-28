@@ -30,7 +30,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row" ng-hide="ediscoverySearchCtrl.report">
+              <div class="row last-input-row" ng-hide="ediscoverySearchCtrl.report">
                 <div class="columns small-12 medium-6 large-5">
                   <div class="input-section">
                     <h6 translate="ediscovery.search.startDate"></h6>
@@ -82,9 +82,10 @@
                       </div>
                       <progressbar class="progress-striped" value="ediscoverySearchCtrl.reportProgress()"></progressbar>
                     </div>
-                    <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED' || ediscoverySearchCtrl.report.state === 'ABORTED'">
-                      {{('ediscovery.reportStates.' + ediscoverySearchCtrl.report.state | translate)}}
-                    </span>
+                    <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
+                          translate="ediscovery.search.generatedAt"
+                          translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></span>
+                    <span ng-if="ediscoverySearchCtrl.report.state === 'ABORTED'" translate="ediscovery.reportStates.ABORTED"></span>
                     <div class="row" ng-if="ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.timeoutDetected" ng-class="{'report-timeout' : ediscoverySearchCtrl.report.timeoutDetected }">
                       <div class="columns small-1">
                         <i class="icon icon-warning"></i>
@@ -92,6 +93,8 @@
                       <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.state === 'FAILED'">
                         <span translate="ediscovery.search.failure"></span>:
                         <span>{{'ediscovery.reportFailureReasons.' + ediscoverySearchCtrl.report.failureReason | translate}}</span>
+                        <br>
+                        <span translate="ediscovery.search.tryAgain"></span>
                       </div>
                       <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.timeoutDetected">
                         <span translate="ediscovery.reportTimeout"></span>
@@ -114,36 +117,35 @@
               </div>
               <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeCancelled">
                 <div class="columns small-12 medium-6 large-6">
-                  <div class="input-section-last">
-                    <button ng-cloak type="button" class="btn btn--primary"
+                  <button ng-cloak type="button" class="btn btn--primary"
                             translate="ediscovery.search.takeMeToReports"
                             ui-sref="ediscovery.reports"></button>
-                  </div>
                 </div>
               </div>
               <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state === 'COMPLETED'">
-                <div class="columns small-12 medium-12 large-8">
+                <div class="columns small-12 medium-12 large-10">
                   <div class="result-section">
                     <h6 translate="ediscovery.search.reportSize"></h6>
-                    <span>{{ediscoverySearchCtrl.prettyPrintBytes(ediscoverySearchCtrl.report.sizeInBytes)}}</span>
+                    <span>{{ediscoverySearchCtrl.report.sizeInBytes | bytesFilter : 2 }}</span>
                   </div>
                 </div>
               </div>
               <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
-                <div class="columns small-12 medium-12 large-6">
-                  <div class="input-section-last">
-                    <button cs-btn
-                            class="btn btn--primary"
-                            loading="ediscoverySearchCtrl.downloadingReport"
-                            ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
-                      <span translate="ediscovery.search.downloadReport"></span>
-                    </button>
+                <div class="columns small-12 medium-12 large-10">
+                  <button cs-btn
+                          class="btn btn--primary"
+                          loading="ediscoverySearchCtrl.downloadingReport"
+                          ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
+                    <span translate="ediscovery.search.downloadReport"></span>
+                  </button>
+                  <div class="expiry-info">
+                    <span translate="ediscovery.search.expiryInfo"></span>
                   </div>
                 </div>
               </div>
               <div class="row" ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED')">
-                <div class="columns small-12 medium-12 large-6">
-                  <div class="input-section-last" ng-if="!ediscoverySearchCtrl.createReportInProgress">
+                <div class="columns small-12 medium-12 large-10">
+                  <div ng-if="!ediscoverySearchCtrl.createReportInProgress">
                     <button translate="ediscovery.search.generateReport"
                             ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError"
                             type="button"

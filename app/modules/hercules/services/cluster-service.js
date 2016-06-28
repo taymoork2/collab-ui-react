@@ -176,7 +176,9 @@
         .then(extractDataFromResponse)
         .then(function (response) {
           // only keep fused clusters
-          return _.filter(response.clusters, 'state', 'fused');
+          return _.filter(response.clusters, function (cluster) {
+            return cluster.state ? cluster.state === 'fused' : true;
+          });
         })
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it, per connectorType

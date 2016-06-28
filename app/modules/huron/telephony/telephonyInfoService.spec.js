@@ -8,6 +8,7 @@ describe('Service: TelephonyInfoService', function () {
   var cosRestrictions;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var customer = {
     "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",

@@ -100,11 +100,7 @@
         if (error !== null) {
           XhrNotificationService.notify(error);
         } else {
-          $state.go(FusionUtils.connectorType2RouteName(FusionUtils.serviceId2ConnectorType(serviceId)) + '.list', {
-            connectorType: FusionUtils.serviceId2ConnectorType(serviceId)
-          }, {
-            reload: true
-          });
+          $state.go('overview'); // once F410 goes public, let's go to to 'services-overview' instead.
         }
       });
     };
@@ -183,4 +179,5 @@
       $modalInstance.dismiss();
     };
   }
+
 }());

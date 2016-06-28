@@ -29,6 +29,7 @@ describe('Controller: LineSettingsCtrl', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var Config;
   beforeEach(inject(function (_Config_) {
