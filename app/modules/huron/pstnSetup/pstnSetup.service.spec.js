@@ -17,7 +17,7 @@ describe('Service: PstnSetupService', function () {
 
   var orders = getJSONFixture('huron/json/orderManagement/orderManagement.json');
   var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
-  var pendingOrder = getJSONFixture('huron/json/lines/pendingNumbers.json');
+  var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
   var numbers = ['123', '456'];
 
@@ -205,7 +205,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should get translated order status message', function () {
     var translated = PstnSetupService.translateStatusMessage(pendingOrder[0]);
-    expect(translated).toEqual('Order cannot be fulfilled for trials');
+    expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
   });
 
   it('should get original order status message since it does not exist in translations', function () {

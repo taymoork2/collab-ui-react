@@ -6,7 +6,7 @@ describe('Service: LineListService', function () {
   var lines = getJSONFixture('huron/json/lines/numbers.json');
   var count = getJSONFixture('huron/json/lines/count.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
-  var pendingLines = getJSONFixture('huron/json/lines/pendingNumbers.json');
+  var pendingLines = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
   var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
 
   var Authinfo = {

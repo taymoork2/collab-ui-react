@@ -1,4 +1,5 @@
 [{
   "externalNumber": "+17077318481",
-  "userId": "linesPage.inProgress - Order cannot be fulfilled for trials"
+  "status": "linesPage.inProgress - Customer has Trial Status",
+  "tooltip": "Order cannot be fulfilled for trials"
 }]

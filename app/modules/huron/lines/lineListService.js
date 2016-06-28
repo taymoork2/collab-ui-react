@@ -66,7 +66,6 @@
                 try {
                   var parsedResponse = JSON.parse(order.response);
                   var numbers = parsedResponse[order.carrierOrderId];
-                  order.statusMessage = PstnSetupService.translateStatusMessage(order);
                 } catch (error) {
                   return;
                 }
@@ -75,13 +74,17 @@
                     return (number.e164 && number.e164 === line.externalNumber);
                   });
                   if (lineFound) {
-                    lineFound.userId = order.statusMessage ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
+                    lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
+                    lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
                     pendingLines.push(lineFound);
                   } else {
-                    nonProvisionedPendingLines.push({
-                      externalNumber: number.e164,
-                      userId: order.statusMessage ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress')
-                    });
+                    if (number.e164) {
+                      nonProvisionedPendingLines.push({
+                        externalNumber: number.e164,
+                        status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                        tooltip: PstnSetupService.translateStatusMessage(order)
+                      });
+                    }
                   }
                 });
               });

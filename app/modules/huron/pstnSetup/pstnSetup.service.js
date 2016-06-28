@@ -287,7 +287,8 @@
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 response: _.get(order, 'response'),
                 operation: _.get(order, 'operation'),
-                statusMessage: translateStatusMessage(order)
+                statusMessage: _.get(order, 'statusMessage') === 'None' ? null : _.get(order, 'statusMessage'),
+                tooltip: translateStatusMessage(order)
               };
               //translate order status
               if (order.status === PROVISIONED) {
@@ -318,16 +319,16 @@
 
     function translateStatusMessage(order) {
       var translations = {
-        'Account Number and PIN Required': 'Customer needs to sign PSTN Contract.',
-        'Address Mismatch': 'Emergency or Billing Address needs to be submitted. Contact Inteleepeer.',
-        'BTN Mismatch': 'Billing Telephone Number needs to be submitted. Contact Inteleepeer.',
-        'Customer has Trial Status': 'Order cannot be fulfilled for trials',
-        'FOC Received': 'Scheduled transfer date received from previous carrier for number porting.',
-        'Invalid Authorization Signature': 'Invalid Signature in Letter of Authorization for number porting.',
-        'LOA Not Signed': 'Customer needs to sign Letter of Authorization for number porting.',
-        'Master Service Agreement not signed': 'Customer needs to sign PSTN Contract.',
-        'Pending FOC from Vendor': 'Scheduled transfer date requested from previous carrier for number porting.',
-        'Rejected': 'Order has been rejected. Contact Inteleepeer.'
+        'Account Number and PIN Required': $translate.instant('pstnSetup.orderStatus.pinRequired'),
+        'Address Mismatch': $translate.instant('pstnSetup.orderStatus.addressMismatch'),
+        'BTN Mismatch': $translate.instant('pstnSetup.orderStatus.btnMismatch'),
+        'Customer has Trial Status': $translate.instant('pstnSetup.orderStatus.trialStatus'),
+        'FOC Received': $translate.instant('pstnSetup.orderStatus.focReceived'),
+        'Invalid Authorization Signature': $translate.instant('pstnSetup.orderStatus.invalidSig'),
+        'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
+        'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
+        'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
+        'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
       };
 
       if (angular.isDefined(translations[order.statusMessage])) {
