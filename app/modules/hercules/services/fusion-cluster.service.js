@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -20,7 +20,8 @@
       buildSidepanelConnectorList: buildSidepanelConnectorList,
       getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
-      postponeUpgradeSchedule: postponeUpgradeSchedule
+      postponeUpgradeSchedule: postponeUpgradeSchedule,
+      deleteMoratoria: deleteMoratoria
     };
 
     return service;
@@ -48,7 +49,15 @@
     function getUpgradeSchedule(id) {
       var orgId = Authinfo.getOrgId();
       return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
-        .then(extractData);
+        .then(extractData)
+        .then(function (upgradeSchedule) {
+          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria')
+            .then(extractData)
+            .then(function (moratoria) {
+              upgradeSchedule.moratoria = moratoria;
+              return upgradeSchedule;
+            });
+        });
     }
 
     function setUpgradeSchedule(id, params) {
@@ -56,8 +65,14 @@
       return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params);
     }
 
-    function postponeUpgradeSchedule(id) {
-      return $q.reject('Not Implemented');
+    function postponeUpgradeSchedule(id, upgradeWindow) {
+      var orgId = Authinfo.getOrgId();
+      return $http.post(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria', { timeWindow: upgradeWindow });
+    }
+
+    function deleteMoratoria(clusterId, moratoriaId) {
+      var orgId = Authinfo.getOrgId();
+      return $http.delete(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + clusterId + '/upgradeSchedule/moratoria/' + moratoriaId);
     }
 
     function extractData(response) {
