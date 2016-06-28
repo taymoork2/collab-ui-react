@@ -1,4 +1,4 @@
-<div ng-if="exp.serviceEnabled === true">
+<div ng-if="exp.serviceEnabled === true || exp.featureToggled">
   <div class="expressway-service hercules hercules-fix-paragraphs">
     <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs"></cs-page-header>
     <cs-page-sub-header>
@@ -24,14 +24,14 @@
     <div ui-view="fullPane" class="small-padding-top content-container"></div>
   </div>
 </div>
-<div ng-if="exp.serviceEnabled === false">
+<div ng-if="exp.serviceEnabled === false && !exp.featureToggled">
   <div class="hercules content-container" cs-scroll>
     <div class="centered-info-pane full-height">
       <div ng-include src="'modules/hercules/overview/activate-service.html'"></div>
     </div>
   </div>
 </div>
-<div ng-if="exp.serviceEnabled === null">
+<div ng-if="exp.serviceEnabled === null && !exp.featureToggled">
   <div class="hercules content-container" cs-scroll>
     <div class="centered-info-pane full-height">
       <i class="icon icon-spinner icon-2x"></i>
