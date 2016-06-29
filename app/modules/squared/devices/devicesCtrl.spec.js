@@ -4,8 +4,8 @@ describe('Controller: DevicesCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
   var CsdmConfigService, AccountOrgService, CsdmHuronOrgDeviceService;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

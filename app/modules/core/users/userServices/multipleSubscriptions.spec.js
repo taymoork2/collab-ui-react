@@ -5,8 +5,8 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
   var getLicensesUsage;
   var $controller;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$httpBackend_, _$q_, _Orgservice_) {
     $scope = $rootScope.$new();

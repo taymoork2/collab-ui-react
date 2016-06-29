@@ -35,8 +35,8 @@
       "label": 'secondTestLabel'
     }];
 
-    beforeEach(module('uc.autoattendant'));
-    beforeEach(module('Huron'));
+    beforeEach(angular.mock.module('uc.autoattendant'));
+    beforeEach(angular.mock.module('Huron'));
     beforeEach(inject(function (_AACommonService_, _AutoAttendantCeMenuModelService_) {
       AACommonService = _AACommonService_;
       AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;

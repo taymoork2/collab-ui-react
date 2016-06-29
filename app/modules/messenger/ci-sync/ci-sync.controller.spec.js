@@ -5,9 +5,9 @@
     var ctrl;
 
     beforeEach(function () {
-      module('Huron');
-      module('Sunlight');
-      module('Messenger');
+      angular.mock.module('Huron');
+      angular.mock.module('Sunlight');
+      angular.mock.module('Messenger');
 
       inject(function ($controller) {
         ctrl = $controller('CiSyncCtrl');

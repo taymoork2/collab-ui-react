@@ -3,9 +3,9 @@
 describe('Controller: OverviewCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');

@@ -3,7 +3,7 @@
 describe('Directive: hrServiceAddress', function () {
   var $httpBackend, $compile, $scope;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$httpBackend_, _$compile_, $rootScope) {
     $httpBackend = _$httpBackend_;

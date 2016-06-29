@@ -33,9 +33,9 @@ describe('Controller: AADialByExtCtrl', function () {
     return _menuEntry;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
     $translate = _$translate_;

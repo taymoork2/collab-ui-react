@@ -5,6 +5,7 @@
     .module('core.readonlyinterceptor', [
       require('modules/core/notifications/notifications.module'),
       require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
     ])
     .factory('ReadonlyInterceptor', ReadonlyInterceptor)
     .name;

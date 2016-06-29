@@ -3,8 +3,8 @@
 
 describe('Service: Webex Trial Service', function () {
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', 'Authinfo', 'Config', 'Notification', 'WebexOrderStatusResource', 'UrlConfig');

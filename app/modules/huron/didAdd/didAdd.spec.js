@@ -9,14 +9,14 @@ describe('Controller: DidAddCtrl', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
     getOrgName: sinon.stub().returns('awesomeco')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

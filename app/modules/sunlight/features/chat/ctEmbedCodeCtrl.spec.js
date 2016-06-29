@@ -4,7 +4,7 @@ describe('Chat template embed code control', function () {
 
   var controller, $scope, CTService, createController, createControllerWithNoTemplateId;
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, $rootScope, _CTService_) {
     $scope = $rootScope.$new();

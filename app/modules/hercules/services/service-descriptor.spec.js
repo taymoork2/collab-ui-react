@@ -2,13 +2,13 @@
 
 describe('ServiceDescriptor', function () {
   // load the service's module
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
   var Service, $httpBackend, authinfo;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub()
       };

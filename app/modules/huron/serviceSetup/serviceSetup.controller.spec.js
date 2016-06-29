@@ -13,8 +13,8 @@ describe('Controller: ServiceSetup', function () {
     supportSiteSteeringDigit: "true"
   }];
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_) {

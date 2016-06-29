@@ -53,8 +53,8 @@ describe('Directive: aaRouteToUser', function () {
   var index = '0';
   var keyIndex = '0';
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _UserListService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $compile = _$compile_;

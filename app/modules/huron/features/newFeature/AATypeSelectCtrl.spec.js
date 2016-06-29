@@ -2,7 +2,7 @@
 
 describe('Controller: AATypeSelectCtrl', function () {
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var controller, $scope, $state, $q, $timeout;
   var modalFake = {

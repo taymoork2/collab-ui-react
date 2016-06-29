@@ -16,8 +16,8 @@ describe('Chat Template Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("UrlConfig", spiedUrlConfig);
     $provide.value("Authinfo", spiedAuthinfo);
   }));

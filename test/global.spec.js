@@ -1,5 +1,12 @@
 'use strict';
 
+var Promise = require('promise');
+beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
+  var ocLazyLoadMock = jasmine.createSpyObj('$ocLazyLoad', ['load', 'inject', 'getModules', 'toggleWatch']);
+  ocLazyLoadMock.inject.and.returnValue(Promise.resolve());
+  $provide.value('$ocLazyLoad', ocLazyLoadMock);
+}));
+
 describe('Global Unit Test Config', function () {
   // NOTE: fixturesPath is a singleton.  Changing this path changes it
   // for all tests!  Please know what you are doing before changing.

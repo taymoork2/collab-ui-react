@@ -52,8 +52,8 @@ describe('Controller: AABuilderActionsCtrl', function () {
     return text.match(/function (.*)\(/)[1];
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;

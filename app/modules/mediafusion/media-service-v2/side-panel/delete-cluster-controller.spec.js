@@ -1,6 +1,6 @@
 'use strict';
 describe('Controller: DeleteClusterControllerV2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
   var $scope, vm, controller, clusterId, groupDetail, groupName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
   var getGroupsDefered, redirectTargetPromise, httpBackend;
   beforeEach(inject(function (_MediaClusterServiceV2_, $rootScope, $httpBackend, $controller, _XhrNotificationService_, _$q_, _$translate_, $log) {

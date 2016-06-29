@@ -51,9 +51,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $translate = _$translate_;

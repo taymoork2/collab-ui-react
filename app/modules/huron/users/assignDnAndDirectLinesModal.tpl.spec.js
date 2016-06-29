@@ -11,11 +11,11 @@ describe('Template: assignDnAndDirectLinesModal', function () {
   var CONVERT_BUTTON = '#btnConvert';
   var EDIT_SERVICES_BUTTON = '#btnEditServices';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
   beforeEach(inject(dependencies));
   beforeEach(initDependencySpies);
   beforeEach(compileView);

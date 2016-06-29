@@ -4,10 +4,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

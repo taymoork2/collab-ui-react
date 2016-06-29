@@ -10,7 +10,7 @@ describe('Service: TelephoneNumberService', function () {
   var tollFreeNumber = '+18003287448';
   var premiumNumber = '+19003287448';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_TelephoneNumberService_) {
     TelephoneNumberService = _TelephoneNumberService_;

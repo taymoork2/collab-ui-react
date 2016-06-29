@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: messagingSetupCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Mixpanel;
 

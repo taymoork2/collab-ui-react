@@ -12,8 +12,8 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;

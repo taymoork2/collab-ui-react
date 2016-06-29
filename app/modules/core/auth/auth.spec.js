@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Auth Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.auth'));
 
   var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 

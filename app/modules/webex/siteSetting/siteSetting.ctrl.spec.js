@@ -25,7 +25,7 @@ describe(
     var scopeLocale = "es_MX";
     var scopeSiteName = paramsSiteUrl;
 
-    beforeEach(module('WebExApp'));
+    beforeEach(angular.mock.module('WebExApp'));
 
     beforeEach(
       inject(

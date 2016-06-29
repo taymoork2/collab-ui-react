@@ -3,7 +3,7 @@
 describe('Service: Mixpanel', function () {
   var Config, Mixpanel, Orgservice, $q, $scope, $window;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 

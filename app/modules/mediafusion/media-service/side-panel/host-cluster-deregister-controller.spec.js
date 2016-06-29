@@ -2,7 +2,7 @@
 
 describe('Controller: HostClusterDeregisterController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var vm, controller, cluster, orgName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 

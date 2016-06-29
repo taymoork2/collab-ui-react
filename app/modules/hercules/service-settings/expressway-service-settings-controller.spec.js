@@ -2,8 +2,8 @@
 
 describe('Controller: ExpresswayServiceSettingsController', function () {
 
-  beforeEach(module('Hercules'));
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
 
   var controller, $scope, $httpBackend;
   beforeEach(inject(function ($controller, $rootScope, _$httpBackend_) {

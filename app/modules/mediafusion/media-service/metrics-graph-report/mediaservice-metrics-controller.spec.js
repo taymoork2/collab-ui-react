@@ -32,7 +32,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     description: 'mediaFusion.metrics.threeMonths2'
   }];
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   describe('MediaServiceMetricsContoller - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _MediaFusionAnalyticsService_, _MetricsReportService_, _DummyMetricsReportService_, _MetricsGraphService_) {

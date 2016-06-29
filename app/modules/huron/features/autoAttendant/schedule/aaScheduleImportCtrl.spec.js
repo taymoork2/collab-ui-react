@@ -14,8 +14,8 @@ describe('Controller: AAScheduleImportCtrl', function () {
       callExperienceName: 'AA2'
     }]
   };
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AACalendarService_, _AAICalService_, _AAModelService_, _$translate_, $controller, $rootScope, _$q_) {
     $scope = $rootScope.$new();

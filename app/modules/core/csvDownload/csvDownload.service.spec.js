@@ -10,9 +10,9 @@ describe('Service: CsvDownloadService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

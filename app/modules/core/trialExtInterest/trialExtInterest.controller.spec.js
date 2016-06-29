@@ -4,7 +4,7 @@ describe('Controller: TrialExtInterestCtrl', function () {
   var $rootScope, $location, $translate, Log, TrialExtInterestService, $controller, controller, $q;
   var eqpParam = 'hi';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$location_, _Log_, _TrialExtInterestService_, _$controller_, _$q_) {
     $rootScope = _$rootScope_;

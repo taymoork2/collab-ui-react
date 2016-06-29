@@ -2,9 +2,9 @@ describe('Controller: HeaderCtrl', function () {
   var $scope, $controller, $q;
   var controller, FeatureToggleService, Utils;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   function dependencies($rootScope, _$controller_, _$q_, _FeatureToggleService_, _Utils_) {
     $scope = $rootScope.$new();

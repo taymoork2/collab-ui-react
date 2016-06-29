@@ -15,7 +15,7 @@ describe('Directive: aaTimeOutInvalid', function () {
   var index = '0';
   var keyIndex = '0';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $compile = _$compile_;

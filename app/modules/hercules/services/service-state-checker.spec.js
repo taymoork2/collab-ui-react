@@ -1,8 +1,8 @@
 'use strict';
 
 describe('ServiceStateChecker', function () {
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron')); // Because FeatureToggle is used
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron')); // Because FeatureToggle is used
 
   var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService, Orgservice;
 
@@ -34,7 +34,7 @@ describe('ServiceStateChecker', function () {
     }]
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     ClusterService = {
       getClustersByConnectorType: sinon.stub(),
       getRunningStateSeverity: sinon.stub().returns({

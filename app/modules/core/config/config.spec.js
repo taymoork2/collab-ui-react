@@ -2,7 +2,7 @@
 
 describe('Config', function () {
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var Config, $location, tabConfig, Storage;
   beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {

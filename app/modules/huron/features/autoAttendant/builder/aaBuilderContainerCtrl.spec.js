@@ -29,9 +29,9 @@ describe('Controller: AABuilderContainerCtrl', function () {
     }
   };
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
     $scope = _$rootScope_;

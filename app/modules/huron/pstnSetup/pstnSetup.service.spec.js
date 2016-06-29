@@ -48,9 +48,9 @@ describe('Service: PstnSetupService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

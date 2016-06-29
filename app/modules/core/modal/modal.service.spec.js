@@ -10,7 +10,7 @@ describe('Service: ModalService', function () {
   var myType = 'myType';
   var mySize = 'mySize';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_ModalService_, _$modal_) {
     ModalService = _ModalService_;

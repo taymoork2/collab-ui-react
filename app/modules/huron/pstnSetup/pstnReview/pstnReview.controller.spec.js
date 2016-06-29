@@ -8,7 +8,7 @@ describe('Controller: PstnReviewCtrl', function () {
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
   var swivelNumberTokens = getJSONFixture('huron/json/pstnSetup/swivelNumberTokens.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _$stateParams_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();

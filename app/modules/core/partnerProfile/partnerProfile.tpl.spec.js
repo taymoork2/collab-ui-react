@@ -18,10 +18,10 @@ describe('Template: partnerProfile', function () {
   var SAVE_BUTTON = '#orgProfileSaveBtn';
   var INVISIBLE = 'invisible';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 

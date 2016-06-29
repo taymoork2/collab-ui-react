@@ -6,8 +6,8 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   var controller, view;
   var skipBtn, backBtn;
 
-  beforeEach(module('Core'));
-  beforeEach(module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 

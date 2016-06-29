@@ -1,7 +1,7 @@
 'use strict';
 
 describe('orgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var q, deferred;
 
@@ -9,7 +9,7 @@ describe('orgService', function () {
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Auth = {
         setAccessToken: sinon.stub()
       };

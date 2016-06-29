@@ -41,8 +41,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     status: 201
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
     $provide.value("SunlightConfigService", {

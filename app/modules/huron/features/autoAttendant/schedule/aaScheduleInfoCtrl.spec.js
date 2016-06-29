@@ -35,8 +35,8 @@ describe('Controller: AAScheduleInfoCtrl', function () {
 
   var hh = moment(dtStr).set('hour', '00').set('minute', '00');
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($controller, _$q_, $rootScope, _AACalendarService_, _AAModelService_, _AAICalService_) {
     $scope = $rootScope.$new();

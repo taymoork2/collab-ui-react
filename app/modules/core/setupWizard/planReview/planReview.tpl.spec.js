@@ -4,9 +4,9 @@ describe('Template: planReview', function () {
   var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
   var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
@@ -18,7 +18,7 @@ describe('Template: planReview', function () {
     getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
   }));
 

@@ -7,8 +7,8 @@ describe('Controller: HuronSettingsCtrl', function () {
   var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
   var getDeferred;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
     _Notification_, _HuronCustomer_, _ServiceSetup_, _PstnSetupService_, _ModalService_,

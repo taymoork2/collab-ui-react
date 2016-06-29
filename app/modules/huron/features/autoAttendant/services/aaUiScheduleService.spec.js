@@ -55,9 +55,9 @@ describe('Service: AAUiScheduleService', function () {
   var createCalendarDefer;
   var scheduleId;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
     AANotificationService = _AANotificationService_;

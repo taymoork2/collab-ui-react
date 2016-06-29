@@ -21,7 +21,7 @@ describe('Service: Metrics Reports Service', function () {
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var responsedata = callVolumeGraphData.graphData;
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
@@ -52,7 +52,7 @@ describe('Service: Metrics Reports Service', function () {
     message: 'error'
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

@@ -1,9 +1,9 @@
 'use strict';
 
 describe('FeatureToggleService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
   var forOrg = false;

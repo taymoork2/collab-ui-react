@@ -2,7 +2,7 @@
 
 describe('Controller: GroupSettingsControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $scope, redirectTargetPromise, httpBackend, controller, $stateParams, MediaClusterServiceV2, $q;
 
@@ -263,7 +263,7 @@ describe('Controller: GroupSettingsControllerV2', function () {
       "assignedClusters": ["287d4423-6008-4975-b22e-10c6f7e3ce53"]
     });
 
-    httpBackend.flush();
+    $scope.$apply();
     controller.changeReleaseChanel();
 
     expect(MediaClusterServiceV2.getPropertySet).toHaveBeenCalled();
@@ -277,7 +277,7 @@ describe('Controller: GroupSettingsControllerV2', function () {
     getPropertySetDefered.reject();
     setPropertySetSetDefered.resolve();
 
-    httpBackend.flush();
+    $scope.$apply();
     controller.changeReleaseChanel();
 
     expect(MediaClusterServiceV2.setPropertySet).not.toHaveBeenCalled();

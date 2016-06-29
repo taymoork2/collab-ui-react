@@ -49,8 +49,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceCustom = cmenu.ceCustom;
   var customMenu = cmenu.customMenu;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;

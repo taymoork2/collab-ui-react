@@ -28,7 +28,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    module('Core', function ($provide) {
+    angular.mock.module('Core', function ($provide) {
       provide = $provide;
     });
     inject(function ($injector) {

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service : AccountOrgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var AccountOrgService, $httpBackend, Config, Auth, UrlConfig, Authinfo;
   var authInfo = {
@@ -9,7 +9,7 @@ describe('Service : AccountOrgService', function () {
   };
   var appSecurityRegex = /.*\/settings\/enforceClientSecurity\.*/;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

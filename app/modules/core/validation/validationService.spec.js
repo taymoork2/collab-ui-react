@@ -3,7 +3,7 @@
 describe('Service: ValidationService', function () {
   var ValidationService;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_ValidationService_) {
     ValidationService = _ValidationService_;

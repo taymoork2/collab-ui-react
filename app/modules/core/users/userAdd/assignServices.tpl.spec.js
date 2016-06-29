@@ -27,11 +27,11 @@ describe('assignServices', function () {
     }).entitlementState === 'ACTIVE').toBe(state);
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,

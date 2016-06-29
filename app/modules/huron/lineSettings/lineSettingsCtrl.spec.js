@@ -28,8 +28,8 @@ describe('Controller: LineSettingsCtrl', function () {
     status: 500
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var Config;
   beforeEach(inject(function (_Config_) {

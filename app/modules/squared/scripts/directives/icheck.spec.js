@@ -3,7 +3,7 @@
 describe('Directive: icheck', function () {
 
   // load the directive's module
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Squared'));
 
   var element,
     scope;

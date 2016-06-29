@@ -2,7 +2,7 @@
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
   var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, OtpService, $q;
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var stateParams = {
     currentUser: {

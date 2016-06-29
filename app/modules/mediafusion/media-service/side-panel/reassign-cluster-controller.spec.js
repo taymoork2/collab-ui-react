@@ -2,7 +2,7 @@
 
 describe('Controller: ReassignClusterController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var vm, controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 

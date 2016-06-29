@@ -1,7 +1,7 @@
 'use strict';
 
 describe('emailService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var $httpBackend, UrlConfig, EmailService, LogMetricsService;
 

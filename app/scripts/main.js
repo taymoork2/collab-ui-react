@@ -47,7 +47,7 @@
     .constant('addressparser', require('emailjs-addressparser'));
 
   // TODO fix circular dependencies between modules
-  angular.module('Squared', ['Core', 'Hercules', 'Huron']);
+  angular.module('Squared', ['Core', 'Hercules', 'Huron', 'Sunlight']);
 
   angular.module('DigitalRiver', ['Core']);
 

@@ -93,10 +93,10 @@ describe('Service: CallPark', function () {
     }]
   }];
 
-  beforeEach(module('uc.callpark'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.callpark'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

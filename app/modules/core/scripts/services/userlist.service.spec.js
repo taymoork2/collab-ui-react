@@ -1,14 +1,14 @@
 'use strict';
 
 describe('User List Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var $httpBackend, $rootScope, UserListService, Authinfo, Config, UrlConfig;
 
   var testData;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getOrgId: function () {
           return '12345';

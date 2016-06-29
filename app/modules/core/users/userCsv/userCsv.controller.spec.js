@@ -5,11 +5,11 @@ describe('OnboardCtrl: Ctrl', function () {
   var getUserMe, getMigrateUsers, getMyFeatureToggles, sites;
   var fusionServices, headers, getMessageServices, getLicensesUsage;
   var getLicensesUsageSpy, customer;
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
 
   beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _Orgservice_, _FeatureToggleService_, _Authinfo_, _CsvDownloadService_, _HuronCustomer_) {
     $scope = $rootScope.$new();

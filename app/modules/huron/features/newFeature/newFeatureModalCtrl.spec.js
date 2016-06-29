@@ -2,7 +2,7 @@
 
 describe('Controller: NewFeatureModalCtrl', function () {
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var controller, $scope;
   var modalFake = {

@@ -4,7 +4,7 @@ describe('Controller: PstnContractInfoCtrl', function () {
   var controller, $controller, $scope, $q, $state, PstnSetup;
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_) {
     $scope = $rootScope.$new();

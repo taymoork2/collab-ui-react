@@ -1,8 +1,8 @@
 'use strict';
 describe('Controller: HostClusterDeregisterControllerV2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
-  var vm, connector, controller, $rootScope, cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log, redirectTargetPromise, $modal, httpBackend;
-  beforeEach(inject(function ($controller, _$rootScope_, _XhrNotificationService_, _$q_, _$translate_, $log, $httpBackend) {
+  beforeEach(angular.mock.module('Mediafusion'));
+  var vm, connector, controller, $rootScope, cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log, redirectTargetPromise, $modal;
+  beforeEach(inject(function ($controller, _$rootScope_, _XhrNotificationService_, _$q_, _$translate_, $log) {
     $rootScope = _$rootScope_;
     connector = {
       id: 'a'
@@ -45,8 +45,6 @@ describe('Controller: HostClusterDeregisterControllerV2', function () {
         }
       })
     };
-    httpBackend = $httpBackend;
-    httpBackend.when('GET', 'l10n/en_US.json').respond({});
     controller = $controller('HostClusterDeregisterControllerV2', {
       $scope: $rootScope.$new(),
       $modal: $modal,
@@ -82,12 +80,10 @@ describe('Controller: HostClusterDeregisterControllerV2', function () {
     deleteClusterDefered.resolve({
       preventDefault: function () {}
     });
-    httpBackend.flush();
+    $rootScope.$apply();
     controller.deregister();
     $rootScope.$digest();
     expect($modal.open.calledOnce).toBe(true);
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
   });
   it('should go to error when DeRegister is called with mock deleteCluster promise is called', function () {
     var deleteClusterDefered = $q.defer();
@@ -95,12 +91,10 @@ describe('Controller: HostClusterDeregisterControllerV2', function () {
     deleteClusterDefered.reject({
       preventDefault: function () {}
     });
-    httpBackend.flush();
+    $rootScope.$apply();
     controller.deregister();
     $rootScope.$digest();
     expect($modal.open.calledOnce).toBe(false);
     expect(controller.saving).toBe(false);
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
   });
 });

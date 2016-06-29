@@ -1,5 +1,5 @@
 describe('Service: Notification', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var Notification, $translate, toaster, Authinfo, Config, $timeout, Log;
 

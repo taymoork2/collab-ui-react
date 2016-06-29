@@ -9,8 +9,8 @@ describe('Controller: MyCompanyPageSubscriptionCtrl', function () {
   data.subscriptionsFormatted[2].subscriptions[0].siteUrl = undefined;
   data.subscriptionsFormatted[3].subscriptions[0].siteUrl = undefined;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
 
   beforeEach(inject(function ($rootScope, $controller, $q, _Orgservice_, _ServiceDescriptor_) {
     $scope = $rootScope.$new();

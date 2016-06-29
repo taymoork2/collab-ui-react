@@ -2,11 +2,11 @@
 
 describe('Controller: HostDeregisterControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, $rootScope, $scope, httpBackend, controller, cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var vm, $rootScope, $scope, controller, cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 
-  beforeEach(inject(function (_$rootScope_, $httpBackend, $controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function (_$rootScope_, $controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
     $rootScope = _$rootScope_;
     cluster = {
       id: 'a',
@@ -30,10 +30,6 @@ describe('Controller: HostDeregisterControllerV2', function () {
     };
     log = $log;
     log.reset();
-    httpBackend = $httpBackend;
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
 
@@ -73,22 +69,20 @@ describe('Controller: HostDeregisterControllerV2', function () {
     var deregisterDefered = $q.defer();
     spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue(deregisterDefered.promise);
     deregisterDefered.resolve();
-    httpBackend.flush();
+    $rootScope.$apply();
 
     controller.deregister();
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
+    $rootScope.$apply();
     expect(controller.saving).toBe(false);
   });
   it('Should go to failure module of deregister', function () {
     var deregisterDefered = $q.defer();
     spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue(deregisterDefered.promise);
     deregisterDefered.reject();
-    httpBackend.flush();
+    $rootScope.$apply();
 
     controller.deregister();
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
+    $rootScope.$apply();
     expect(controller.saving).toBe(false);
   });
 });

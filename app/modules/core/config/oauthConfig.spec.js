@@ -1,7 +1,7 @@
 'use strict';
 
 describe('OAuthConfig', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var OAuthConfig, $location, Config;
 

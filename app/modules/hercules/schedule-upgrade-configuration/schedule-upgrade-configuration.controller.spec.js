@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var vm, $rootScope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService;
 
@@ -28,7 +28,7 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     postponed: false
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     Authinfo = {
       getOrgId: sinon.stub().returns('dead-beef-123')
     };

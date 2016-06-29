@@ -19,8 +19,8 @@ describe('Controller: FeatureCtrl', function () {
     }
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _Log_, _Notification_) {
     $scope = $rootScope.$new();

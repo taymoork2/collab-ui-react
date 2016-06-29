@@ -6,7 +6,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   var controller, view;
   var skipBtn, backBtn;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 

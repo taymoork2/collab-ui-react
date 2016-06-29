@@ -7,7 +7,7 @@ xdescribe('iFrameResizable directive', function () {
   var elm;
   var window;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function ($rootScope, $compile, _$window_) {
     window = _$window_;
