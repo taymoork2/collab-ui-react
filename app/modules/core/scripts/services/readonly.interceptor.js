@@ -32,7 +32,7 @@
       var Notification = $injector.get('Notification');
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
         Notification.notifyReadOnly(config);
-        $log.warn('Intercepting request in read-only mode: ' + config);
+        $log.warn('Intercepting request in read-only mode: ', config);
         return $q.reject(config);
       } else {
         return config;
