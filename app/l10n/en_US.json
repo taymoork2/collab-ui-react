@@ -2205,6 +2205,18 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory"
+    },
+    "orderStatus": {
+      "pinRequired": "Customer needs to sign PSTN Contract.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "trialStatus": "Order cannot be fulfilled for trials",
+      "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
+      "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
+      "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
+      "msaNotSigned": "Customer needs to sign PSTN Contract.",
+      "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
+      "rejected": "Order has been rejected. Contact Inteleepeer."
     }
   },
   "pstnContractInformation": {

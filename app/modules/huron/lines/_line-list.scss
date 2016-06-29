@@ -34,3 +34,8 @@
   display: inline-block;
   height: 22px;
 }
+
+.assignedTo {
+  @include vr-spacing(pt, .75);
+  @include vr-spacing(pl, 1.25);
+}
