@@ -27,8 +27,8 @@ describe('FirstTimeWizardCtrl', function () {
       entitlements: ['spark']
     };
     var custOrgId = 'xyz-abc';
-    var GetMeUrl = 'https://identity.webex.com/identity/scim/'+custOrgId+'/v1/Users/me';
-    var PatchAdminUserUrl = 'https://identity.webex.com/identity/scim/'+custOrgId+'/v1/Users/' + adminUser.id;
+    var GetMeUrl = 'https://identity.webex.com/identity/scim/' + custOrgId + '/v1/Users/me';
+    var PatchAdminUserUrl = 'https://identity.webex.com/identity/scim/' + custOrgId + '/v1/Users/' + adminUser.id;
 
     function initController() {
       Controller = $controller('FirstTimeWizardCtrl', {
@@ -41,7 +41,7 @@ describe('FirstTimeWizardCtrl', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(value));
     }
 
-    function asParterAdmin(isPartner) {
+    function asDelegatedAdmin(isPartner) {
       Authinfo.isInDelegatedAdministrationOrg.and.returnValue(isPartner);
     }
 
@@ -59,23 +59,16 @@ describe('FirstTimeWizardCtrl', function () {
       $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should not check isInDelegatedAdministrationOrg if care feature is off', function () {
-      atlasCareTrialsOn(false);
-      initController();
-      expect(Authinfo.isInDelegatedAdministrationOrg).not.toHaveBeenCalled();
-    });
-
-    it('should not check care services if isInDelegatedAdministrationOrg is true', function () {
-      atlasCareTrialsOn(true);
-      asParterAdmin(true);
+    it('should not check care feature toggle, if isInDelegatedAdministrationOrg is true', function () {
+      asDelegatedAdmin(true);
       initController();
       // We will handle partner scenarios later.
-      expect(Authinfo.getCareServices).not.toHaveBeenCalled();
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
     });
 
     it('should not get user details if there are no care licenses', function () {
       atlasCareTrialsOn(true);
-      asParterAdmin(false);
+      asDelegatedAdmin(false);
       Authinfo.getCareServices.and.returnValue([]);
       initController();
       expect(Authinfo.getCareServices).toHaveBeenCalled();
@@ -83,9 +76,10 @@ describe('FirstTimeWizardCtrl', function () {
     });
 
     it('should proceed to patch & logout if care admin does not have care roles & care ' +
-      'entitlements', function () {
+      'entitlements',
+      function () {
         atlasCareTrialsOn(true);
-        asParterAdmin(false);
+        asDelegatedAdmin(false);
         Authinfo.getCareServices.and.returnValue([{
           type: 'CDC_xxx'
         }]);

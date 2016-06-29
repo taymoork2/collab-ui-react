@@ -135,6 +135,7 @@
 
     function getUser(userid, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
+      var deferred = $q.defer();
 
       $http.get(scimUrl, {
           cache: true
@@ -143,17 +144,21 @@
           data = data || {};
           data.success = true;
           callback(data, status);
+          deferred.resolve(data);
         })
         .error(function (data, status) {
           data = data || {};
           data.success = false;
           data.status = status;
           callback(data, status);
+          deferred.resolve(data);
         });
+      return deferred.promise;
     }
 
     function updateUserProfile(userid, userData, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
+      var deferred = $q.defer();
 
       if (userData) {
 
@@ -184,14 +189,17 @@
               data.success = true;
               callback(data, status);
             }
+            deferred.resolve(data);
           })
           .error(function (data, status) {
             data = data || {};
             data.success = false;
             data.status = status;
             callback(data, status);
+            deferred.reject(data);
           });
       }
+      return deferred.promise;
     }
 
     function inviteUsers(usersDataArray, entitlements, forceResend, callback) {

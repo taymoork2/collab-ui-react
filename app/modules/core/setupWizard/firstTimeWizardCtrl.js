@@ -6,8 +6,8 @@
 
   /* @ngInject */
   function FirstTimeWizardCtrl($scope, $state, $translate, Auth, Authinfo,
-                               Config, FeatureToggleService, Orgservice,
-                               Userservice) {
+    Config, FeatureToggleService, Orgservice,
+    Userservice) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName()
     });
@@ -27,52 +27,74 @@
       });
     };
 
-    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careEnabled) {
-      if (!careEnabled || needNotPatch()) {
-        return;
-      }
+    init();
 
-      function needNotPatch() {
-        return (Authinfo.isInDelegatedAdministrationOrg() ||
-                !Authinfo.getCareServices() ||
-                Authinfo.getCareServices().length === 0);
-      }
-
+    function init() {
       /**
        * Patch the first time admin login with SyncKms role and Care entitlements.
        */
-      Userservice.getUser('me', function (user) {
-        if (!user.success) {
-          return; // Can't patch now, try later.
-        }
+      if (adminPatchNeeded()) {
+        FeatureToggleService.atlasCareTrialsGetStatus()
+          .then(getCareAdminUser)
+          .then(isPatchRequired)
+          .then(patchAdmin)
+          .then(updateAccessToken);
+      }
+    }
 
-        var hasSyncKms = _.find(user.roles, function (r) {
-          return r === Config.backend_roles.spark_synckms;
-        });
+    function adminPatchNeeded() {
+      return (!Authinfo.isInDelegatedAdministrationOrg() &&
+        Authinfo.getCareServices() &&
+        Authinfo.getCareServices().length > 0);
+    }
 
-        var hasCareEntitlements = _.filter(user.entitlements, function (e) {
-          return (e === Config.entitlements.care ||
-                  e === Config.entitlements.context);
-        }).length === 2;
+    function getCareAdminUser(careEnabled) {
+      if (careEnabled) {
+        return Userservice.getUser('me', _.noop);
+      }
+    }
 
-        if (!hasSyncKms || !hasCareEntitlements) {
-          var userData = {
-            'schemas': Config.scimSchemas,
-            roles: [Config.backend_roles.spark_synckms],
-            entitlements: [Config.entitlements.care, Config.entitlements.context]
-          };
+    function isPatchRequired(careAdmin) {
+      if (!careAdmin || !careAdmin.success) {
+        return;
+      }
 
-          Userservice.updateUserProfile(user.id, userData, function (res, status) {
-            if (res.success) {
-              /**
-               * TODO: This is a workaround until we figure out a way to
-               * Revoke/Refresh access token with newly patched entitlements.
-               */
-              Auth.logout();
-            }
-          });
-        }
+      var hasSyncKms = _.find(careAdmin.roles, function (r) {
+        return r === Config.backend_roles.spark_synckms;
       });
-    });
+
+      var hasCareEntitlements = _.filter(careAdmin.entitlements, function (e) {
+        return (e === Config.entitlements.care ||
+          e === Config.entitlements.context);
+      }).length === 2;
+
+      if (!hasSyncKms || !hasCareEntitlements) {
+        return careAdmin;
+      }
+    }
+
+    function patchAdmin(admin) {
+      if (!admin) {
+        return;
+      }
+
+      var userData = {
+        schemas: Config.scimSchemas,
+        roles: [Config.backend_roles.spark_synckms],
+        entitlements: [Config.entitlements.care, Config.entitlements.context]
+      };
+
+      return Userservice.updateUserProfile(admin.id, userData, _.noop);
+    }
+
+    function updateAccessToken(result) {
+      if (result && result.success) {
+        /**
+         * TODO: This is a workaround until we figure out a way to
+         * Revoke/Refresh access token with newly patched entitlements.
+         */
+        Auth.logout();
+      }
+    }
   }
 })();
