@@ -564,7 +564,7 @@
       var siteUrl = siteRow.siteUrl;
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
-      
+
       siteRow.isCI = isCISite;
 
       logMsg = funcName + ": " + "\n" +
