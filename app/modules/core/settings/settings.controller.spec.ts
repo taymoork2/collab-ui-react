@@ -1,4 +1,3 @@
-///<reference path="../../../../typings/tsd-testing.d.ts"/>
 /// <reference path="settings.controller.ts"/>
 namespace globalsettings {
 
