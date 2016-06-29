@@ -19,7 +19,8 @@
       callForward: callForward,
       numeric: numeric,
       positiveNumber: positiveNumber,
-      maxNumber100: maxNumber100
+      maxNumber100: maxNumber100,
+      phoneUS: phoneUS
     };
 
     return factory;
@@ -68,5 +69,11 @@
       var value = modelValue || viewValue;
       return value <= 100;
     }
+
+    function phoneUS(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value);
+    }
+
   }
 })();

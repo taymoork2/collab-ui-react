@@ -747,6 +747,7 @@
     "selectLanguage": "Select a language",
     "select": "Select",
     "invalidPhoneNumber": "Incorrect Phone Number",
+    "invalidZipCode": "Incorrect Zip Code",
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
@@ -2362,7 +2363,8 @@
       "state": "State",
       "zip": "Zip",
       "dealId": "Deal ID",
-      "usOnly": "Currently U.S. only"
+      "usOnly": "Currently U.S. only",
+      "invalidDealId": "Invalid Deal ID number"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
