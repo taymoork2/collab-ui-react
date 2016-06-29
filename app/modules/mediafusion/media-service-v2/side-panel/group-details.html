@@ -9,7 +9,7 @@
     <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
       <ul>
         <li class="feature" ng-repeat="alarm in groupDetails.alarms">
-          <a ui-sref="connector-details.alarm-details({alarm: alarm})">
+          <a ui-sref="connector-details-v2.alarm-details({alarm: alarm})">
             <i class="icon icon-error hercules-alarm status-icon"/>
             <span class="feature-name">{{alarm.alarm.title}}</span>
             <i class="feature-arrow"></i>
@@ -47,15 +47,15 @@
             <!--span class="feature-name">{{ecp.properties["mf.role"]}} {{ecp.hosts[0].state}} {{ecp.hosts[0].offline}} {{ecp.needs_attention}} {{ecp.needs_attention &&  ecp.host[0].state == 'offline' && ecp.host[0].offline}}</span-->
 
             {{cluster.needs_attention}}{{cluster.alarms_present}}
-            <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count > 0 && !ecp.hosts[0].offline" class="yellow">
+            <span ng-if="ecp.state == 'has_alarms'"  class="yellow">
               <i class="fa fa-circle mediafusion-state-alarm" />
               <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}}  </span>
             </span>
-            <span ng-if="ecp.needs_attention &&  ecp.hosts[0].state == 'offline' && ecp.hosts[0].offline" class="red">
+            <span ng-if="ecp.state == 'offline'" class="red">
               <i class="fa fa-circle mediafusion-state-offline" />
               <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
             </span>
-            <span ng-if="!ecp.needs_attention &&  !ecp.alarms_present" class="green">
+            <span ng-if="ecp.state == 'running'" class="green">
               <i class="fa fa-circle mediafusion-state-running" />
               <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
             </span>

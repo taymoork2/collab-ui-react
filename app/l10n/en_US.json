@@ -2871,7 +2871,14 @@
       "needs_attention": "Needs attention",
       "alarm": "Alarm",
       "Unknown": "Registering",
-      "nohosts": "No Hosts Registered"
+      "nohosts": "No Hosts Registered",
+      "no_hosts": "No Hosts Registered",
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending",
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
     },
     "deleteGroup": {
       "title": "Delete Cluster",

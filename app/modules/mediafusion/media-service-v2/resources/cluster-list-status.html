@@ -1,5 +1,5 @@
-<div class="ui-grid-cell-contents" style="padding-top: 30px">
-    <i class="fa fa-circle mediafusion-state-{{row.entity.serviceStatus}}"/>
-    <span translate="{{'mediaFusion.serviceStatus.' + row.entity.serviceStatus}}"></span>
+<div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
+  <i class="fa fa-circle mediafusion-state-{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}"></i>
+  <span translate="{{'mediaFusion.serviceStatus.' + row.entity.aggregates.state}}"></span>
+  <span ng-if="row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="mediaFusion.serviceStatus.upgrading"></span></span>
 </div>
-
