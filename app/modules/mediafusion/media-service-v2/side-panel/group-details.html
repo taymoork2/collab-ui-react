@@ -30,17 +30,7 @@
           {{groupDetails.clusterDetail.releaseChannel}}
       </span>
     </div>
-    <div class="row">
-      <div class="large-3">
-        <cs-select
-          ng-model="groupDetails.selected"
-          options="groupDetails.options"
-          placeholder="groupDetails.selectPlaceholder"
-          on-change-fn="groupDetails.changeReleaseChanel()"
-          >
-        </cs-select>
-      </div>
-    </div>
+
   </cs-sp-section>
 
   <cs-sp-section>
@@ -76,6 +66,17 @@
       </ul>
     </div>
     <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <strong>
+      <div class="section-title-row section-name" translate="mediaFusion.clusters.manageThisCluster"></div>
+    </strong>    
+    <div>
+      <a href ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"
+        style="color:#049FD9"> {{groupDetails.openSettingsTitle}}
+      </a>
+    </div>
   </cs-sp-section>
 
   <cs-sp-section ng-if="groupDetails.nodeList.length == 0">
