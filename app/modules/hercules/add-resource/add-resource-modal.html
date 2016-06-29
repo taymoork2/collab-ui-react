@@ -1,12 +1,29 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$close()">
+  <button type="button" class="close" ng-click="addResource.closeSetupModal()">
     <span class="sr-only" translate="common.close"></span>
   </button>
   <h5 class="modal-title" translate="hercules.addResourceDialog.title" translate-values="{ServiceName: addResource.localizedServiceName}"></h5>
 </div>
 
 <div class="modal-body add-resource">
-  <form name="selectNewOrExisting" class="cs-form" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted">
+  <div ng-hide="addResource.welcomeScreenAccepted" class="add-resource hercules-fix-paragraphs deregister-expressway-modal">
+
+    <p translate="hercules.addResourceDialog.setupScreenBodyAboutToSetup"></p>
+
+    <p>
+      <i ng-class="addResource.getIconClassForService() + ' icon-2x serviceicon'"></i>
+      <strong translate="{{addResource.localizedServiceName}}" class="serviceicon"></strong>
+    </p>
+
+    <p>
+      <span translate="hercules.addResourceDialog.setupScreenBodyPrerequisites" translate-values="{ServiceName: addResource.localizedServiceName}"></span>
+      <span translate="hercules.addResourceDialog.setupScreenBodyLinks" translate-values="{ServiceName: addResource.localizedServiceName}"></span>
+    </p>
+
+    <div class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></div>
+  </div>
+
+  <form name="selectNewOrExisting" class="cs-form" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted || !addResource.welcomeScreenAccepted">
     <div class="cs-radio-group">
       <input
         cs-input
@@ -97,13 +114,13 @@
 </div>
 
 <div class="modal-footer add-resource">
-  <button class="btn" ng-click="$close()" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted">
+  <button class="btn" ng-click="addResource.closeSetupModal()" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted">
     <span translate="common.cancel"></span>
   </button>
   <button class="btn btn--primary"
           ng-click="addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
           ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname"
-          ng-hide="addResource.preregistrationCompleted || addResource.selectedAction === 'existing'"
+          ng-hide="addResource.preregistrationCompleted || addResource.selectedAction === 'existing' ||  !addResource.welcomeScreenAccepted"
   >
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>
@@ -118,8 +135,16 @@
 
   <button class="btn btn--primary"
           ng-click="addResource.provisionExpresswayWithNewConnector(addResource.selectedCluster.value, addResource.connectorType)"
-          ng-show="addResource.selectedAction === 'existing' && !addResource.provisioningToExistingExpresswayCompleted"
-          ng-disabled="addResource.selectedClusters.length === 0"
+          ng-show="addResource.selectedAction === 'existing' && !addResource.provisioningToExistingExpresswayCompleted && addResource.welcomeScreenAccepted"
+          ng-disabled="addResource.selectedCluster.length === 0"
+  >
+
+    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+  </button>
+
+  <button class="btn btn--primary"
+          ng-click="addResource.welcomeScreenAccepted = true"
+          ng-hide="addResource.welcomeScreenAccepted"
   >
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>

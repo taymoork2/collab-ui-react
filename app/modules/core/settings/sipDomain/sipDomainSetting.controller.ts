@@ -8,7 +8,7 @@ namespace globalsettings {
     public isDisabled = false;
     public isButtonDisabled = false;
     public isLoading = false;
-    public isConfirmed:boolean = null;
+    public isConfirmed:boolean = null;  
 
     public isRoomLicensed = false;
     public domainSuffix = '';

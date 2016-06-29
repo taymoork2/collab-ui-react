@@ -52,7 +52,7 @@
         <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
           <div ng-if="msgFeature.licenses">
             <div class="item-license" translate="onboardModal.message"></div>
-            <div class="ckbx" id="paidMsg" ng-if="msgFeature.licenses.length === 1">
+            <div class="ckbx" id="paidMsg" ng-if="checkMessageVisibility(msgFeature.licenses, multipleSubscriptions.selectedSubscription)">
               <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}">
               </cs-checkbox>
             </div>
