@@ -6,11 +6,15 @@
     .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
 
   /* @ngInject */
-  function HelpdeskExtendedInfoDialogController(title, data, $timeout) {
+  function HelpdeskExtendedInfoDialogController(title, data, $timeout, $scope) {
     var vm = this;
     vm.title = title;
     vm.copied = false;
     var copiedTimer;
+
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(copiedTimer);
+    });
 
     var populate = function () {
       vm.data = JSON.stringify(data, null, 4);
