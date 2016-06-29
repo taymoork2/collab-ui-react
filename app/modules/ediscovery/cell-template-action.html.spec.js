@@ -1,21 +1,16 @@
 'use strict';
 describe('cell-template-action', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
-
+  beforeEach(module('Core'));
+  beforeEach(module('Ediscovery'));
   var $templateCache, $scope, $compile, httpBackend, view, html;
+
   beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_, _$httpBackend_) {
     $templateCache = _$templateCache_;
     $scope = _$rootScope_.$new();
     $compile = _$compile_;
     httpBackend = _$httpBackend_;
-    stubAllHttpGetRequests();
     html = $templateCache.get("modules/ediscovery/cell-template-action.html");
-
   }));
-
-  function stubAllHttpGetRequests() {
-    httpBackend.whenGET(/.*/).respond({});
-  }
 
   function compileHtml() {
     view = $compile(angular.element(html))($scope);
