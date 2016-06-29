@@ -48,7 +48,9 @@ module.exports = csp({
       localyticsOnlyForDev,
       'https://*.clouddrive.com',
       'https://*.localytics.com',
-      'https://*.rackcdn.com'
+      'https://*.rackcdn.com',
+      // Webpack Dev
+      'blob:',
     ],
     scriptSrc: [
       '\'self\'',
@@ -61,7 +63,9 @@ module.exports = csp({
     ],
     styleSrc: [
       '\'self\'',
-      '\'unsafe-inline\''
+      '\'unsafe-inline\'',
+      // Webpack Dev
+      'blob:',
     ]
   }
 });

@@ -89,19 +89,17 @@ fi
 
 # -----
 # Phase 3: Build
-gulp clean || exit $?
-gulp jsb:verify || exit $?
-
-# TODO: we can clean this up after enabling the 'atlas-web' job for the team
-# - build - build without default 'karma-all' codepath enabled (see below)
-gulp build --nolint --nounit
-
-# - unit tests - run in parallel
-time gulp karma-parallel || exit $?
-gulp karma-combine-coverage || exit $?
+set -e
+time npm run jsb-verify
+time npm run eslint
+time npm run json-verify
+time npm run languages-verify
+time npm run test
+time npm run build
+set +e
 
 # - e2e tests
-gulp e2e --sauce --production-backend --nobuild --verbose | tee ./.cache/e2e-sauce-logs
+./e2e.sh | tee ./.cache/e2e-sauce-logs
 e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
