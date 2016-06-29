@@ -14,6 +14,7 @@
       description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
     };
 
+//hardcoded now and will be changed in the future 
     vm.options = [
       'GA',
       'DEV',
@@ -22,7 +23,6 @@
 
     vm.selected = '';
 
-    vm.selectPlaceholder = 'Select One';
 
     vm.changeReleaseChanel = function () {
       if (vm.selected != vm.cluster.releaseChannel) {
@@ -39,6 +39,7 @@
             return c.id === clusterid;
           });
           vm.cluster = cluster;
+          vm.selectPlaceholder = vm.cluster.releaseChannel;
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });
