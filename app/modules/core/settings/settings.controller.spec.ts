@@ -47,7 +47,7 @@ namespace globalsettings {
         expect(controller.domains).toBeFalsy();
         expect(controller.sipDomain).toBeFalsy();
         expect(controller.authentication).toBeFalsy();
-        expect(controller.support).toBeFalsy();
+        expect(controller.support).toBeTruthy();
         expect(controller.branding).toBeTruthy();
         expect(controller.privacy).toBeFalsy();
         expect(controller.retention).toBeFalsy();
