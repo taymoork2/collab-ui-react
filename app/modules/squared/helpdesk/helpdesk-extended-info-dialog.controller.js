@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
+
   /* @ngInject */
   function HelpdeskExtendedInfoDialogController(title, data, $timeout) {
     var vm = this;
@@ -24,7 +28,4 @@
     };
   }
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
 }());
