@@ -225,7 +225,7 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
-        .then(onlyKeepFusedClusters)
+        // .then(onlyKeepFusedClusters)
         //.then(addServicesStatuses)
         .then(sort);
     }
