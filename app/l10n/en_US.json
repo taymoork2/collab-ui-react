@@ -4374,6 +4374,10 @@
       "singlematch": "match",
       "matches": "matches"
     },
+    "extended-data-dialog": {
+      "copy": "Copy",
+      "copiedToClipboard": "Data copied to clipboard"
+    },
     "verification": "Verification",
     "resend": "Resend Invite",
     "sendCode": "Send Code",
