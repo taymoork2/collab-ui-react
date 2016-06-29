@@ -14,7 +14,7 @@
       description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
     };
 
-//hardcoded now and will be changed in the future 
+    //hardcoded now and will be changed in the future 
     vm.options = [
       'GA',
       'DEV',
@@ -22,7 +22,6 @@
     ];
 
     vm.selected = '';
-
 
     vm.changeReleaseChanel = function () {
       if (vm.selected != vm.cluster.releaseChannel) {
