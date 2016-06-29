@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function MediafusionClusterSettingsController($scope,$stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $log) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -14,7 +14,22 @@
       description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
     };
 
-    ////////////
+    vm.options = [
+      'GA',
+      'DEV',
+      'ALPHA'
+    ];
+
+    vm.selected = '';
+
+    vm.selectPlaceholder = 'Select One';
+
+    vm.changeReleaseChanel = function () {
+      $log.log("hello");
+      if (vm.selected != vm.cluster.releaseChannel) {
+        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected);
+      }
+    };
 
     loadCluster($stateParams.id);
 
