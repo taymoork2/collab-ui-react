@@ -50,16 +50,15 @@
 
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
-        var userStringified = JSON.stringify(vm.user, null, 4);
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
           resolve: {
             title: function () {
               return 'helpdesk.userDetails';
             },
-            message: function () {
-              return userStringified;
+            data: function () {
+              return vm.user;
             }
           }
         });
@@ -142,15 +141,7 @@
     }
   }
 
-  /* @ngInject */
-  function HelpdeskExtendedInformationCtrl(title, message) {
-    var vm = this;
-    vm.message = message;
-    vm.title = title;
-  }
-
   angular
     .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController)
-    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
+    .controller('HelpdeskUserController', HelpdeskUserController);
 }());
