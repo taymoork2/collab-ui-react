@@ -1092,7 +1092,7 @@
     "licenseSuspendedWarning": "Your room systems license is suspended.",
     "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
     "addAnother": "Add Another",
-    "retrieveDevicesFail": "Failed to load device information",
+    "retrieveDevicesFail": "Failed to load device information.",
     "retrieveKemFail": "Failed to retrieve key expansion module count."
   },
   "hercules": {
