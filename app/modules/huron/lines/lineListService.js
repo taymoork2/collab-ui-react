@@ -78,13 +78,11 @@
                     lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
                     pendingLines.push(lineFound);
                   } else {
-                    if (number.e164) {
-                      nonProvisionedPendingLines.push({
-                        externalNumber: number.e164,
-                        status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
-                        tooltip: PstnSetupService.translateStatusMessage(order)
-                      });
-                    }
+                    nonProvisionedPendingLines.push({
+                      externalNumber: number.e164,
+                      status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                      tooltip: PstnSetupService.translateStatusMessage(order)
+                    });
                   }
                 });
               });
