@@ -1,5 +1,5 @@
 var compression = require('compression')();
-var customCSPmiddleware = require('../gulp/utils/customCSPmiddleware');
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 var webpack = require('webpack');
 var webpackConfig = require('../webpack.config.js');
 var webpackMiddleware = require('webpack-dev-middleware');

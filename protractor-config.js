@@ -6,8 +6,8 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var gulpConfig = require('./gulp/gulp.config')();
-var processEnvUtil = require('./gulp/utils/processEnvUtil.gulp')();
+var gulpConfig = require('./config/config')();
+var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
 

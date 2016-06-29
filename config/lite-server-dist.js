@@ -1,5 +1,5 @@
 var compression = require('compression')();
-var customCSPmiddleware = require('../gulp/utils/customCSPmiddleware');
+var customCSPmiddleware = require('../utils/customCSPmiddleware');
 
 module.exports = {
   port: "8000",

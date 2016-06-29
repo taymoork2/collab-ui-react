@@ -1,5 +1,5 @@
 var protractorLauncher = require('protractor/built/launcher');
-var fileListParser = require('../gulp/utils/fileListParser.gulp');
+var fileListParser = require('../utils/fileListParser');
 var args = require('yargs').argv;
 var _ = require('lodash');
 var path = require('path');
