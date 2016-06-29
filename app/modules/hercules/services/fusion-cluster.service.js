@@ -67,7 +67,9 @@
 
     function postponeUpgradeSchedule(id, upgradeWindow) {
       var orgId = Authinfo.getOrgId();
-      return $http.post(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria', { timeWindow: upgradeWindow });
+      return $http.post(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria', {
+        timeWindow: upgradeWindow
+      });
     }
 
     function deleteMoratoria(clusterId, moratoriaId) {
