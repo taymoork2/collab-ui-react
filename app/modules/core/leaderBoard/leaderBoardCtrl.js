@@ -6,13 +6,14 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice, TrialService) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
 
     $scope.state = 'license'; // Possible values are license, warning or error
     $scope.icon = 'check-gear';
+    $scope.trialDaysLeft = undefined;
 
     $scope.bucketKeys = [
       'messaging',
@@ -87,6 +88,9 @@
 
     function init() {
       getLicenses();
+      TrialService.getDaysLeft().then(function(daysLeft) {
+        $scope.trialDaysLeft = daysLeft;
+      });
     }
 
     init();

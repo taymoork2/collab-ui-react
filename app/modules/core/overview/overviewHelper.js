@@ -10,11 +10,6 @@
           return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
         }
 
-        function isExpired(license) {
-          // expired includes everything but active + pending, such as disabled
-          return !(license.status === 'ACTIVE' || license.status === 'PENDING');
-        }
-
         function mapStatus(oldStatus, componentStatus) {
           if (oldStatus == 'danger') return 'danger';
           if (componentStatus == "partial_outage" || componentStatus == 'degraded_performance' || oldStatus == 'warning') return "warning";
@@ -35,7 +30,6 @@
 
         return {
           isntCancelledOrSuspended: isntCancelledOrSuspended,
-          isExpired: isExpired,
           mapStatus: mapStatus,
           statusIds: statusIds
         };

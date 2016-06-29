@@ -300,6 +300,35 @@ describe('Service: Trial Service:', function () {
         $rootScope.$apply();
       });
 
+      describe('getDaysLeft():', function () {
+        var getDaysLeft;
+
+        beforeEach(function () {
+          getDaysLeft = TrialService.getDaysLeft;
+          spyOn(TrialService, 'getTrialIds').and.returnValue([fakeTrialId]);
+          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
+          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
+        });
+
+        it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
+          getDaysLeft().then(function (daysLeft) {
+            expect(daysLeft).toBe(1);
+          });
+        });
+
+        it('should have called "TrialService.getTrialIds()"', function () {
+          getDaysLeft().then(function (daysLeft) {
+            expect(TrialService.getTrialIds).toHaveBeenCalled();
+          });
+        });
+
+        it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
+          getDaysLeft().then(function (daysLeft) {
+            expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith([fakeTrialId]);
+          });
+        });
+      });
+
       describe('getTrialPeriodData():', function () {
         describe('successful fetch of trial data:', function () {
           beforeEach(function () {
