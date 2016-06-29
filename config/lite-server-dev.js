@@ -24,5 +24,5 @@ module.exports = {
     forms: false,
     scroll: false,
   },
-  open: false,
+  open: 'external',
 };
