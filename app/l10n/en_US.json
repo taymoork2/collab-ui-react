@@ -1618,9 +1618,11 @@
     "freeCare": "None",
     "communicationsSub": "Setup calling service",
     "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
+    "setSipDomainLink": "What is a Spark SIP Address?",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
     "setSipDomainCompNames": "These subdomains can be reserved for you:",
+    "setSipDomainAsssignedNames": "These subdomains have been reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
@@ -2402,7 +2404,13 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
-    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service."
+    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}.",
+    "errorInUse": "Entered value is already in use. Try a different value.",
+    "errorServerDown": "Could not reach server to validate this field.",
+    "errorFailSafe": "Could not validate entered valued.",
+    "errorInvalid": "Entered value contains invalid characters.",
+    "errorInvalidName": "Entered name contains invalid characters."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -2891,7 +2899,12 @@
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "releaseChannel": "Release channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
-      "youHostNoAvailable": "Your host will no longer be available in future"
+      "youHostNoAvailable": "Your host will no longer be available in future",
+      "manageThisCluster": "Manage this cluster",
+      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
+      "deletecluster": "Delete cluster",
+      "deleteclusterDesc": "Delete this cluster from Cisco Collaboration Cloud and remove all Hybrid Media and related configuration"
+
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -2966,7 +2979,9 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
-    "deleteCluster": "DELETE CLUSTER"
+    "deleteCluster": "DELETE CLUSTER",
+    "openSettings": "Open settings",
+    "openSettingsTitle": "Open {{clusterName}} settings"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -4358,6 +4373,10 @@
       "nohistory": "No Search History",
       "singlematch": "match",
       "matches": "matches"
+    },
+    "extended-data-dialog": {
+      "copy": "Copy",
+      "copiedToClipboard": "Data copied to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",

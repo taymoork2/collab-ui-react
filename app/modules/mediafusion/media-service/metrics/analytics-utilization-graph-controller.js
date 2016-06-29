@@ -53,7 +53,6 @@
 
     if (!angular.equals($stateParams.endTime, {}) && $stateParams.endTime !== undefined && $stateParams.endTime != '') {
       vm.endTime = $stateParams.endTime;
-      //console.log("r we here here" + $stateParams.endTime);
       getClustersOnly();
       //getHostsOnly(vm.selectedCluster);
       getActiveMediaCounts(vm.selectedCluster, vm.startTime, vm.endTime);
@@ -66,7 +65,6 @@
     } else {
 
       getClusters();
-      //console.log("Inise here");
     }
 
     //vm.optionsCluster = 'GraphCtrl.clusterData';
