@@ -1,0 +1,23 @@
+$brand-font-folder: "~collab-ui/fonts";
+$ui-icon-font-path: "~collab-ui/fonts/";
+$ui-icon-font-name: "Cisco_Toolkit_Icons";
+$ui-icon-font-svg-id: "Cisco_Toolkit_Icons";
+$flagsImagePath: "../images/";
+
+// Core variables and mixins
+@import "~collab-ui/scss/collab-ui/tools/functions/functions.core";
+@import "~collab-ui/scss/collab-ui/config/variables.bootstrap";
+@import "~collab-ui/scss/collab-ui/config/settings.foundation";
+@import "~collab-ui/scss/collab-ui/config/variables.baseline";
+@import "~collab-ui/scss/collab-ui/config/variables.ui";
+@import "~collab-ui/scss/collab-ui/config/variables.colors";
+@import "~collab-ui/scss/collab-ui/tools/mixins/spacing.responsive";
+@import "~collab-ui/scss/collab-ui/tools/mixins/type";
+@import "~collab-ui/scss/collab-ui/tools/mixins/page-layout";
+@import "~collab-ui/scss/collab-ui/tools/mixins/focus";
+@import "~collab-ui/scss/collab-bootstrap/mixins";
+@import "~collab-ui/scss/collab-ui/modules/trumps.spacing.responsive";
+@import "~collab-ui/scss/collab-ui/icons/icons";
+
+// // Baseline
+@import "~collab-ui/scss/collab-ui/tools/baseline";

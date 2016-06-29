@@ -75,3 +75,5 @@
     spyOn: true
     xdescribe: true
     xit: true
+  settings:
+    import/resolver: webpack

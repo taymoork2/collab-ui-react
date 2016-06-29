@@ -3,7 +3,7 @@
 
   /* global d3 */
 
-  angular.module('csDonut', []).directive('csDonut', csDonut);
+  angular.module('csDonut').directive('csDonut', csDonut);
 
   /* @ngInject */
   function csDonut() {

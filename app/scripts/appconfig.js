@@ -2,6 +2,28 @@
   'use strict';
 
   /* eslint angular/di:0 */
+  var loadedModules = [];
+
+  function loadModuleAndResolve($ocLazyLoad, resolve) {
+    return function loadModuleCallback(moduleName) {
+      // Don't reload a loaded module or core angular module
+      if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
+        resolve();
+      } else {
+        lazyLoadModule(moduleName)
+          .finally(resolve);
+      }
+    };
+
+    function lazyLoadModule(moduleName) {
+      loadedModules.push(moduleName);
+      $ocLazyLoad.toggleWatch(true);
+      return $ocLazyLoad.inject(moduleName)
+        .finally(function disableToggleWatch() {
+          $ocLazyLoad.toggleWatch(false);
+        });
+    }
+  }
 
   angular
     .module('wx2AdminWebClientApp')
@@ -22,17 +44,72 @@
 
         $urlRouterProvider.otherwise('login');
         $stateProvider
+          .state('modal', {
+            abstract: true,
+            onEnter: modalOnEnter(),
+            onExit: modalOnExit
+          })
+          .state('modalLarge', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              size: 'lg'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalSmall', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              size: 'sm'
+            }),
+            onExit: modalOnExit
+          })
+          .state('modalFull', {
+            abstract: true,
+            onEnter: modalOnEnter({
+              windowClass: 'modal-full',
+              backdrop: 'static'
+            }),
+            onExit: modalOnExit
+          })
+          .state('wizardmodal', {
+            abstract: true,
+            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+              $previousState.memo(wizardmodalMemo);
+              $state.modal = $modal.open({
+                template: '<div ui-view="modal"></div>',
+                controller: 'ModalWizardCtrl',
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                backdrop: 'static'
+              });
+              $state.modal.result.finally(function () {
+                $state.modal = null;
+                var previousState = $previousState.get(wizardmodalMemo);
+                if (previousState) {
+                  return $previousState.go(wizardmodalMemo);
+                }
+              });
+            },
+            onExit: ['$state', '$previousState',
+              function ($state, $previousState) {
+                if ($state.modal) {
+                  $previousState.forget(wizardmodalMemo);
+                  $state.modal.close();
+                }
+              }
+            ]
+          })
           .state('login', {
+            parent: 'loginLazyLoad',
             url: '/login',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('activateUser', {
+            parent: 'mainLazyLoad',
             url: '/activate-user',
             views: {
               'main@': {
@@ -61,6 +138,7 @@
             authenticate: false
           })
           .state('activateProduct', {
+            parent: 'mainLazyLoad',
             url: '/activate-product',
             views: {
               'main@': {
@@ -86,6 +164,7 @@
             }
           })
           .state('unauthorized', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
@@ -96,6 +175,7 @@
             authenticate: false
           })
           .state('login-error', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
@@ -106,6 +186,7 @@
             authenticate: false
           })
           .state('404', {
+            parent: 'stateRedirectLazyLoad',
             url: '/404',
             views: {
               'main@': {
@@ -116,6 +197,51 @@
             },
             authenticate: false
           })
+          .state('mainLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('loginLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/login'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
+          .state('stateRedirectLazyLoad', {
+            views: {
+              'main@': {
+                template: '<div ui-view="main"></div>'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/core/stateRedirect/stateRedirect.controller'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -123,6 +249,13 @@
               }
             },
             abstract: true,
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['./main'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
+            },
             sticky: true
           })
           .state('partner', {
@@ -181,13 +314,7 @@
         $httpProvider.interceptors.push('TimingInterceptor');
         $httpProvider.interceptors.push('ServerErrorInterceptor');
         $httpProvider.interceptors.push('ReadonlyInterceptor');
-      }
-    ]);
 
-  angular
-    .module('Squared')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -233,6 +360,7 @@
         $stateProvider
           .state('activate', {
             url: '/activate',
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/activate.html',
@@ -249,6 +377,7 @@
           })
           .state('downloads', {
             url: '/downloads',
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/downloads.html',
@@ -564,7 +693,7 @@
                   }
                 }
               }
-            }
+            },
           })
           .state('users.add.services', {
             views: {
@@ -580,11 +709,7 @@
             }
           })
           .state('users.add.services.dn', {
-            views: {
-              'usersAdd@users.add': {
-                templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
-              }
-            }
+            templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
           })
           .state('users.convert', {
             parent: 'modalLarge',
@@ -1175,21 +1300,21 @@
             controllerAs: 'nav'
           })
           .state('login_swap', {
+            parent: 'loginLazyLoad',
             url: '/login/:customerOrgId/:customerOrgName',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
           })
           .state('launch_partner_org', {
+            parent: 'loginLazyLoad',
             url: '/login/:partnerOrgId/:partnerOrgName/:launchPartner',
             views: {
               'main@': {
-                templateUrl: 'modules/core/login/login.tpl.html',
-                controller: 'LoginCtrl'
+                template: '<login/>'
               }
             },
             authenticate: false
@@ -1276,61 +1401,9 @@
               currentOrder: {}
             }
           })
-          .state('modal', {
-            abstract: true,
-            onEnter: modalOnEnter(),
-            onExit: modalOnExit
-          })
-          .state('modalLarge', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              size: 'lg'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalSmall', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              size: 'sm'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalFull', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              windowClass: 'modal-full',
-              backdrop: 'static'
-            }),
-            onExit: modalOnExit
-          })
-          .state('wizardmodal', {
-            abstract: true,
-            onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-              $previousState.memo(wizardmodalMemo);
-              $state.modal = $modal.open({
-                template: '<div ui-view="modal"></div>',
-                controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
-                backdrop: 'static'
-              });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
-                var previousState = $previousState.get(wizardmodalMemo);
-                if (previousState) {
-                  return $previousState.go(wizardmodalMemo);
-                }
-              });
-            },
-            onExit: ['$state', '$previousState',
-              function ($state, $previousState) {
-                if ($state.modal) {
-                  $previousState.forget(wizardmodalMemo);
-                  $state.modal.close();
-                }
-              }
-            ]
-          })
-          .state('firsttimesplash', {
+
+        .state('firsttimesplash', {
+            parent: 'mainLazyLoad',
             abstract: true,
             views: {
               'main@': {
@@ -1442,13 +1515,7 @@
               orgId: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Huron')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('cdrsupport', {
             url: '/cdrsupport',
@@ -1862,13 +1929,7 @@
               feature: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Hercules')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('services-overview', {
             url: '/services/overview',
@@ -2066,13 +2127,7 @@
               connectorType: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Mediafusion')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
 
           .state('metrics', {
@@ -2251,13 +2306,7 @@
               dispName: null
             }
           });
-      }
-    ]);
 
-  angular
-    .module('Ediscovery')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
 
           .state('ediscovery-main', {
@@ -2291,13 +2340,7 @@
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
-      }
-    ]);
 
-  angular
-    .module('Messenger')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('messenger', {
             parent: 'main',
@@ -2306,13 +2349,7 @@
             controller: 'CiSyncCtrl',
             controllerAs: 'sync'
           });
-      }
-    ]);
 
-  angular
-    .module('Sunlight')
-    .config(['$stateProvider',
-      function ($stateProvider) {
         $stateProvider
           .state('care', {
             parent: 'main',

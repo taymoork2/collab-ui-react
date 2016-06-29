@@ -152,8 +152,9 @@
     }]
   }];
 
-  angular
-    .module('Core')
-    .value('tabConfig', tabs);
+  module.exports = angular
+    .module('core.tabconfig', [])
+    .value('tabConfig', tabs)
+    .name;
 
 }());

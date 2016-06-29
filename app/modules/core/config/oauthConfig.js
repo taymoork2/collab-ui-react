@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('OAuthConfig', OAuthConfig);
+  module.exports = angular
+    .module('core.oauthconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('OAuthConfig', OAuthConfig)
+    .name;
 
   function OAuthConfig(Utils, Config) {
 

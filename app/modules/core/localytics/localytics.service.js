@@ -3,9 +3,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('Localytics', Localytics);
+  module.exports = angular
+    .module('core.localytics', [])
+    .service('Localytics', Localytics)
+    .name;
 
   /* @ngInject */
   function Localytics(Config) {

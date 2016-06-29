@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  angular.module('core.notifications')
     .config(toastrConfig)
     .service('Notification', NotificationFn);
 

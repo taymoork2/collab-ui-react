@@ -1,11 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('LoginCtrl', LoginCtrl);
-
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $timeout, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
     var loadingDelay = 2000;
     var logoutDelay = 5000;
 
@@ -36,8 +33,6 @@
 
     var authorizeUser = function () {
       $scope.loading = true;
-      var loadingDelayPromise = $timeout(function () {}, loadingDelay);
-
       Auth.authorize()
         .then(function () {
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -69,9 +64,7 @@
               Log.debug('Sending "customer logged in" metrics');
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
-            return loadingDelayPromise.then(function () {
-              $state.go(state, params);
-            });
+            $state.go(state, params);
           }
         }).catch(function (error) {
           $state.go('login-error');
@@ -89,4 +82,6 @@
     }
 
   }
+
+  module.exports = LoginCtrl;
 })();

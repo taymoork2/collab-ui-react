@@ -3,7 +3,7 @@
 describe('Directive: icheck', function () {
 
   // load the directive's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Squared'));
 
   var element,
     scope;

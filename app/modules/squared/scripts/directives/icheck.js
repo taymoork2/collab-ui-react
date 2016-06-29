@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('wx2AdminWebClientApp')
+  angular.module('Squared')
     .directive('icheck', icheck);
 
   /* @ngInject */

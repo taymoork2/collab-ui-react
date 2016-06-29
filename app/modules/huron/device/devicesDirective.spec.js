@@ -5,7 +5,7 @@ xdescribe('Directive: ucDevices', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  beforeEach(inject(function ($injector, _$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $injector.get('$httpBackend').when('GET', 'l10n/en_US.json').respond({});

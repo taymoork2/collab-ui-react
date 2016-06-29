@@ -1,9 +1,23 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Auth', Auth);
+  module.exports = angular
+    .module('core.auth', [
+      'pascalprecht.translate',
+      'ui.router',
+      require('modules/core/auth/token.service'),
+      require('modules/core/config/config'),
+      require('modules/core/config/oauthConfig'),
+      require('modules/core/config/urlConfig'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/sessionstorage'),
+      require('modules/core/scripts/services/storage'),
+      require('modules/core/scripts/services/utils'),
+      require('modules/core/windowLocation/windowLocation'),
+    ])
+    .factory('Auth', Auth)
+    .name;
 
   /* @ngInject */
   function Auth($injector, $translate, $q, Log, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {

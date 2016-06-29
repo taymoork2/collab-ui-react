@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Config', Config);
+  module.exports = angular
+    .module('core.config', [
+      require('modules/core/scripts/services/storage')
+    ])
+    .factory('Config', Config)
+    .name;
 
   function Config($location, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';

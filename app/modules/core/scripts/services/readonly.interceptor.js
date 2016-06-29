@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('ReadonlyInterceptor', ReadonlyInterceptor);
+  module.exports = angular
+    .module('core.readonlyinterceptor', [
+      require('modules/core/notifications/notifications.module'),
+      require('modules/core/scripts/services/authinfo'),
+    ])
+    .factory('ReadonlyInterceptor', ReadonlyInterceptor)
+    .name;
 
   /*ngInject*/
   function ReadonlyInterceptor($q, $injector, $log) {
