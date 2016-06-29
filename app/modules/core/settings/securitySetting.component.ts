@@ -1,15 +1,13 @@
-/// <reference path="SettingSection.ts"/>
-namespace globalsettings {
+import { SettingSection } from './settingSection';
 
-  export class SecuritySetting extends SettingSection {
+export class SecuritySetting extends SettingSection {
 
-    constructor() {
-      super('security');
-      this.subsectionDescription = '';
-    }
+  constructor() {
+    super('security');
+    this.subsectionDescription = '';
   }
-  angular.module('Core').component('securitySetting', {
-    controller: 'SecuritySettingController as secCtrl',
-    templateUrl:'modules/core/settings/security/securitySetting.tpl.html',
-  });
 }
+angular.module('Core').component('securitySetting', {
+  controller: 'SecuritySettingController as secCtrl',
+  templateUrl:'modules/core/settings/security/securitySetting.tpl.html',
+});
