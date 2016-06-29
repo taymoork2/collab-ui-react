@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskOrgController', HelpdeskOrgController);
+
   /* @ngInject */
   function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
@@ -216,8 +220,4 @@
         });
     }
   }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController);
 }());

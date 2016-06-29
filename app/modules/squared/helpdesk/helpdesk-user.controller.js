@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskUserController', HelpdeskUserController);
+  
   /* @ngInject */
   function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
@@ -141,7 +145,4 @@
     }
   }
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController);
 }());
