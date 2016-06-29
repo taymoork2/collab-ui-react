@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($scope,$stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2, $log) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -25,7 +25,6 @@
     vm.selectPlaceholder = 'Select One';
 
     vm.changeReleaseChanel = function () {
-      $log.log("hello");
       if (vm.selected != vm.cluster.releaseChannel) {
         MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected);
       }

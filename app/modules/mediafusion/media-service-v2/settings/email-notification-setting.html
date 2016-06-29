@@ -1,29 +1,24 @@
 <form class="cs-form-head">
-	<div class="cs-form__section">
+  <div class="cs-form__section">
 		<div class="section__info">
-<h5 class="section__title" translate="{{'mediaFusion.settings.emailNotificationsHeading'}}">
-</h5>
-
-<p class="section__description" translate="{{'mediaFusion.settings.emailNotifications'}}">
-</p>
-</div>
-<div class="section__content">
-        <div class="sub-section">
-<tags-input add-on-blur="false"
-            class="sub-section__label"
-            on-tag-added="mediaServiceSettings.writeConfig()"
-            on-tag-removed="mediaServiceSettings.writeConfig()"
-            on-invalid-tag="mediaServiceSettings.invalidEmail($tag)"
-            placeholder="Add email addresses"
-            ng-disabled="mediaServiceSettings.savingEmail"
-            ng-model="mediaServiceSettings.emailSubscribers"
-            type="email"
-            allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-<i class="sub-section__description">{{'mediaFusion.settings.emailExample' | translate}}</i>
-<span class="right" ng-show="mediaServiceSettings.savingEmail">
-  Saving <i class="icon icon-spinner"/>
-</span>
-</div>
-</div>
-</div>
+      <h5 class="section__title" translate="{{'mediaFusion.settings.emailNotificationsHeading'}}"></h5>
+      <p class="section__description" translate="{{'mediaFusion.settings.emailNotifications'}}"></p>
+    </div>
+    <div class="section__content">
+      <div class="sub-section">
+        <tags-input add-on-blur="false"
+          class="sub-section__label"
+          on-tag-added="mediaServiceSettings.writeConfig()"
+          on-tag-removed="mediaServiceSettings.writeConfig()"
+          on-invalid-tag="mediaServiceSettings.invalidEmail($tag)"
+          placeholder="Add email addresses"
+          ng-disabled="mediaServiceSettings.savingEmail"
+          ng-model="mediaServiceSettings.emailSubscribers"
+          type="email"
+          allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
+          <i class="sub-section__description">{{'mediaFusion.settings.emailExample' | translate}}</i>
+          <span class="right" ng-show="mediaServiceSettings.savingEmail">Saving <i class="icon icon-spinner"/></span>
+      </div>
+    </div>
+  </div>
 </form>
