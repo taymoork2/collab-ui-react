@@ -138,6 +138,11 @@
 
   .dropdown-container {
     @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+  }
+
+  .select-list.alert {
+    @include vr-spacing(m, 0);
   }
 }
 

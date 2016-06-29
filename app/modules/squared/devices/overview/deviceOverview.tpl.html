@@ -78,17 +78,7 @@
           </div>
         </div>
       </cs-sp-section>
-      <!--<cs-sp-section ng-show="deviceOverview.isKEMAvailable"> -->
-      <!--<div class="section-title-row">-->
-      <!--<span class="section-name" translate="deviceOverviewPage.kem"></span>-->
-      <!--</div>-->
-      <!--<p translate="deviceOverviewPage.kemDescription"></p> -->
-      <!--<cs-select-->
-      <!--  name="kem"   ng-model="deviceOverview.kemNumber"   options="deviceOverview.kemOptions"   labelfield="label"-->
-      <!--valuefield="value"  >-->
-      <!--</cs-select>-->
-      <!--</cs-sp-section>-->
-      <cs-sp-section>
+      <cs-sp-section ng-show="deviceOverview.isKEMAvailable">
         <div class="section-title-row">
           <span class="section-name" translate="deviceOverviewPage.kem"></span>
         </div>
@@ -96,7 +86,7 @@
         <div class="dropdown-container">
           <cs-select
               name="kem"   ng-model="deviceOverview.kemNumber"   options="deviceOverview.kemOptions"  
-            labelfield="label"
+            labelfield="label" is-error="{{deviceOverview.isError}}" error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
             valuefield="value"  >
           </cs-select>
         </div>
