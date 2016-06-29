@@ -14,6 +14,7 @@
       '/api/v1/logs/',
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
+      '/idb/oauth2/v1/access_token',
       '/resendinvitation/invoke',
       '/sendverificationcode/invoke',
       '/elevatereadonlyadmin/invoke',
