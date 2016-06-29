@@ -2899,7 +2899,12 @@
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "releaseChannel": "Release channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
-      "youHostNoAvailable": "Your host will no longer be available in future"
+      "youHostNoAvailable": "Your host will no longer be available in future",
+      "manageThisCluster": "Manage this cluster",
+      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
+      "deletecluster": "Delete cluster",
+      "deleteclusterDesc": "Delete this cluster from Cisco Collaboration Cloud and remove all Hybrid Media and related configuration"
+
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -2974,7 +2979,9 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
-    "deleteCluster": "DELETE CLUSTER"
+    "deleteCluster": "DELETE CLUSTER",
+    "openSettings": "Open settings",
+    "openSettingsTitle": "Open {{clusterName}} settings"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",

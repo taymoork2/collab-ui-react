@@ -5,15 +5,13 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $log, MediaClusterServiceV2) {
+      function ($stateParams, $modal, $log, $state, $translate) {
 
         var vm = this;
         vm.displayName = null;
         vm.nodeList = null;
         vm.clusterDetail = null;
-        vm.options = [];
-        vm.selectPlaceholder = 'Select One';
-        vm.selected = '';
+        vm.openSettings = openSettings;
 
         if (!angular.equals($stateParams.clusterName, {})) {
           vm.displayName = $stateParams.clusterName;
@@ -28,17 +26,11 @@
           $log.log("cluster details ", vm.clusterDetail);
         }
 
-        vm.options = [
-          'GA',
-          'DEV',
-          'ALPHA'
-        ];
-
-        vm.changeReleaseChanel = function () {
-          if (vm.selected != vm.clusterDetail.releaseChannel) {
-            MediaClusterServiceV2.updateV2Cluster(vm.clusterDetail.id, vm.displayName, vm.selected);
-          }
-        };
+        function openSettings(type, id) {
+          $state.go('mediafusion-settings', {
+            id: id
+          });
+        }
 
         vm.alarmsSummary = function () {
           var alarms = {};
@@ -75,6 +67,9 @@
           });
         };
 
+        vm.openSettingsTitle = $translate.instant('mediaFusion.openSettingsTitle', {
+          clusterName: vm.displayName
+        });
         vm.alarms = [];
         // vm.alarms = vm.alarmsSummary();
       }

@@ -23,6 +23,7 @@ namespace globalsettings {
     constructor(Authinfo, private Orgservice, private FeatureToggleService) {
       if (Authinfo.isPartner()) {
         //Add setting sections for partner admins here.
+        this.support = new SupportSetting();
         this.initBranding();
       } else {
         this.initSecurity();
