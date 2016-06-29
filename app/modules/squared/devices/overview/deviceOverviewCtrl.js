@@ -15,16 +15,13 @@
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.isError = false;
-    console.log(deviceOverview.currentDevice.product);
     deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
-    console.log(deviceOverview.isKEMAvailable);
     if (deviceOverview.isKEMAvailable) {
       if (!_.has(deviceOverview.currentDevice, 'kem')) {
         deviceOverview.currentDevice.kem = {
           addonModule: []
         };
         deviceOverview.isError = true;
-        console.log(deviceOverview.form);
       }
       deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.addonModule.length);
       deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
