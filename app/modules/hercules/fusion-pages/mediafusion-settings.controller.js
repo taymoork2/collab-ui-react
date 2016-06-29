@@ -6,7 +6,7 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function MediafusionClusterSettingsController($stateParams, $translate, FusionClusterService, XhrNotificationService, MediaClusterServiceV2) {
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
@@ -14,7 +14,20 @@
       description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
     };
 
-    ////////////
+    //hardcoded now and will be changed in the future 
+    vm.options = [
+      'GA',
+      'DEV',
+      'ALPHA'
+    ];
+
+    vm.selected = '';
+
+    vm.changeReleaseChanel = function () {
+      if (vm.selected != vm.cluster.releaseChannel) {
+        MediaClusterServiceV2.updateV2Cluster(vm.cluster.id, vm.displayName, vm.selected);
+      }
+    };
 
     loadCluster($stateParams.id);
 
@@ -25,6 +38,7 @@
             return c.id === clusterid;
           });
           vm.cluster = cluster;
+          vm.selectPlaceholder = vm.cluster.releaseChannel;
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });

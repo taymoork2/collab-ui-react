@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskOrgController', HelpdeskOrgController);
+
   /* @ngInject */
   function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
@@ -38,11 +42,11 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
 
+    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
-
-    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     scrollToTop();
 
@@ -77,16 +81,15 @@
 
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
-        var orgStringified = JSON.stringify(vm.org, null, 4);
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
           resolve: {
             title: function () {
               return 'helpdesk.customerDetails';
             },
-            message: function () {
-              return orgStringified;
+            data: function () {
+              return vm.org;
             }
           }
         });
@@ -217,16 +220,4 @@
         });
     }
   }
-
-  /* @ngInject */
-  function HelpdeskExtendedInformationCtrl(title, message) {
-    var vm = this;
-    vm.message = message;
-    vm.title = title;
-  }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController)
-    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
 }());

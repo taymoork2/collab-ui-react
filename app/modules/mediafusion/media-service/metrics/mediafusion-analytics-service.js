@@ -203,7 +203,6 @@
     var getHosts = function (clusterId, callback) {
 
       vm.url = vm.baseUrl + '/organizations/' + Authinfo.getOrgId() + '/cluster/' + clusterId + '/hosts';
-      //console.log("service" + clusterId);
 
       $http.get(vm.url)
         .success(function (data, status) {
@@ -228,7 +227,6 @@
     var getRelativeTimeClusterAvailabilityForHost = function (clusterId, hostName, relativeTime, callback) {
 
       vm.url = vm.baseUrl + '/organizations/' + Authinfo.getOrgId() + '/cluster/' + clusterId + '/host/' + hostName + '/availability' + '?' + 'relativeTime=' + relativeTime;
-      //console.log("service" + clusterId);
 
       $http.get(vm.url)
         .success(function (data, status) {
@@ -253,7 +251,6 @@
     var getRelativeTimeActiveMediaCountForHost = function (clusterId, hostName, relativeTime, callback) {
 
       vm.url = vm.baseUrl + '/organizations/' + Authinfo.getOrgId() + '/cluster/' + clusterId + '/host/' + hostName + '/media_count' + '?' + 'relativeTime=' + relativeTime;
-      //console.log("service" + clusterId);
 
       $http.get(vm.url)
         .success(function (data, status) {
@@ -278,7 +275,6 @@
     var getRelativeTimeCallRejectForHost = function (clusterId, hostName, relativeTime, callback) {
 
       vm.url = vm.baseUrl + '/organizations/' + Authinfo.getOrgId() + '/cluster/' + clusterId + '/host/' + hostName + '/call_reject' + '?' + 'relativeTime=' + relativeTime;
-      //console.log("service" + clusterId);
 
       $http.get(vm.url)
         .success(function (data, status) {
