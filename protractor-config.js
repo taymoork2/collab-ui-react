@@ -8,6 +8,10 @@ var touch = require('touch');
 var fs = require('fs');
 var gulpConfig = require('./gulp/gulp.config')();
 var processEnvUtil = require('./gulp/utils/processEnvUtil.gulp')();
+var args = require('yargs').argv;
+var _ = require('lodash');
+
+var gatingSuites = _.chain(gulpConfig.testFiles.e2e).omit('huron').values().value();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -22,6 +26,10 @@ var NEWLINE = '\n';
 
 exports.config = {
   framework: "jasmine2",
+
+  suites: _.extend({}, gulpConfig.testFiles.e2e, {
+    jenkins: gatingSuites,
+  }),
 
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
@@ -63,8 +71,7 @@ exports.config = {
   onPrepare: function() {
     browser.ignoreSynchronization = true;
 
-    global.isProductionBackend = browser.params.isProductionBackend === 'true';
-
+    global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
@@ -221,7 +228,7 @@ exports.config = {
         }
 
         this.specDone = function (spec) {
-          if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
+          if (spec.status === 'failed' && !args.nofailfast) {
               disableSpecs();
           }
         };
@@ -252,7 +259,7 @@ function Logger() {
   var lastLogMessageCount = 0;
 
   function log(message) {
-    if (log.verbose || browser.params.log === 'true') {
+    if (log.verbose || args.verbose) {
       if (lastLogMessage === message) {
         lastLogMessageCount++;
       } else {
