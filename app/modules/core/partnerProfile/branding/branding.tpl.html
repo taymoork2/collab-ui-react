@@ -26,7 +26,6 @@
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
                 <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-drag-over-class="dragover" ngf-validate="{{bctrl.logoCriteria}}" name="file">
-                  <!-- <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile" ng-hide="bctrl.logoError" /> -->
                   <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
                   <p class="vertical-align text-center placeholder"  ng-hide="!bctrl.logoFile">
                     <i class="icon icon-upload"></i><br/>

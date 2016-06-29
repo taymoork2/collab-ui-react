@@ -5,6 +5,7 @@
     .controller('BrandingCtrl', BrandingCtrl)
     .controller('BrandingExampleCtrl', BrandingExampleCtrl);
 
+  /* @ngInject */
   function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
@@ -270,6 +271,7 @@
     }
   }
 
+  /* @ngInject */
   function BrandingExampleCtrl($state, $translate) {
     this.modalType = $state.params.modalType;
     this.name = this.modalType === 'Partner' ? $translate.instant('branding.partner') : $translate.instant('branding.customer');
