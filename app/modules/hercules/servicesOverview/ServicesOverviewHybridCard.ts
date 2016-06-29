@@ -1,4 +1,4 @@
-import { CardParams, ServicesOverviewCard } from './servicesOverviewCard';
+import { CardParams, ServicesOverviewCard } from './ServicesOverviewCard';
 
 export interface HybridCardParams extends CardParams {
   activeServices:Array<string>;
