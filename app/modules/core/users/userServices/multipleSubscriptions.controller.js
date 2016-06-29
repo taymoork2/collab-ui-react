@@ -28,8 +28,11 @@
           'licenseType': 'SHARED_DEVICES'
         });
       }).catch(function (response) {
-        Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+        if (_.get(response, 'status') !== 404 && _.get(response, 'status') !== 403) {
+          Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+        }
       });
+
     }
 
     function showLicenses(billingServiceId, isTrial) {
