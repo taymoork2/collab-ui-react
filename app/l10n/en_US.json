@@ -4499,6 +4499,10 @@
     "newUsers": "Added",
     "existingUsers": "Updated",
     "errorUsers": "Errors",
+    "retryUsers": "Retry",
+    "retrying": "Retrying...",
+    "retryingIn": "retrying in:",
+    "retryingUsers": "{users, plural, one{# User} other{# Users}}",
     "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {
