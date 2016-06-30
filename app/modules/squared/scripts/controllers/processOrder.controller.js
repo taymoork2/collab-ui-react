@@ -20,6 +20,7 @@
         Auth.logoutAndRedirectTo(data.redirectUrl);
       })
       .catch(function () {
+        vm.isProcessing = false;
         $('#processOrderErrorModal').modal('show');
       });
   }

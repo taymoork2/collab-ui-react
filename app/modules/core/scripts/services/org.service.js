@@ -219,8 +219,8 @@
         'encryptedQueryString': enc
       };
       return Auth.setAccessToken().then(function () {
-        return $http.post(orgUrl, orgRequest).then(function (data) {
-          return data.data;
+        return $http.post(orgUrl, orgRequest).then(function (response) {
+          return response.data;
         });
       });
     }

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ProcessorderCtrl', function () {
- var $controller, $httpBackend, $location, $q, $scope, controller, Auth, Orgservice;
+  var $controller, $httpBackend, $location, $q, $scope, controller, Auth, Orgservice;
 
   beforeEach(module('Squared'));
   beforeEach(inject(dependencies));
