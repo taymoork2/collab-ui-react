@@ -5,10 +5,10 @@
 
   angular
     .module('Core')
-    .service('Mixpanel', Mixpanel);
+    .service('Analytics', Analytics);
 
   /* @ngInject */
-  function Mixpanel($q, Config, Orgservice) {
+  function Analytics($q, Config, Orgservice) {
 
     var service = {
       _init: _init,
