@@ -36,16 +36,15 @@
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    
     FeatureToggleService.atlasCareTrialsGetStatus()
-        .then(function (result) {
-      if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
-        vm.showRoomSystems = true;
-      }
-      setOffers(result);
-    });
+      .then(function (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = true;
+        }
+        setOffers(result);
+      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
