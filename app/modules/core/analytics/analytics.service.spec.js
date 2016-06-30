@@ -1,25 +1,25 @@
 'use strict';
 
-describe('Service: Mixpanel', function () {
-  var Config, Mixpanel, Orgservice, $q, $scope, $window;
+describe('Service: Analytics', function () {
+  var Config, Analytics, Orgservice, $q, $scope, $window;
 
   beforeEach(module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _$window_, _Config_, _Mixpanel_, _Orgservice_) {
+  function dependencies(_$q_, $rootScope, _$window_, _Config_, _Analytics_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $window = _$window_;
     Config = _Config_;
-    Mixpanel = _Mixpanel_;
+    Analytics = _Analytics_;
     Orgservice = _Orgservice_;
   }
 
   function initSpies() {
     spyOn(Config, 'isProd');
-    spyOn(Mixpanel, '_init').and.returnValue($q.when());
-    spyOn(Mixpanel, '_track').and.callFake(_.noop);
+    spyOn(Analytics, '_init').and.returnValue($q.when());
+    spyOn(Analytics, '_track').and.callFake(_.noop);
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
       callback({
         success: true,
@@ -38,15 +38,15 @@ describe('Service: Mixpanel', function () {
     beforeEach(setIsProd(false));
 
     it('should call _track', function () {
-      Mixpanel.trackEvent('myState', {});
+      Analytics.trackEvent('myState', {});
       $scope.$apply();
-      expect(Mixpanel._track).toHaveBeenCalled();
+      expect(Analytics._track).toHaveBeenCalled();
     });
 
     it('should not call _track if it is also not a test org', function () {
-      Mixpanel._init.and.returnValue($q.reject());
-      spyOn(Mixpanel, 'getTestOrg').and.returnValue(false);
-      expect(Mixpanel._track).not.toHaveBeenCalled();
+      Analytics._init.and.returnValue($q.reject());
+      spyOn(Analytics, 'getTestOrg').and.returnValue(false);
+      expect(Analytics._track).not.toHaveBeenCalled();
     });
   });
 
@@ -54,9 +54,9 @@ describe('Service: Mixpanel', function () {
     beforeEach(setIsProd(true));
 
     it('should call _track', function () {
-      Mixpanel.trackEvent('myState', {});
+      Analytics.trackEvent('myState', {});
       $scope.$apply();
-      expect(Mixpanel._track).toHaveBeenCalled();
+      expect(Analytics._track).toHaveBeenCalled();
     });
   });
 
