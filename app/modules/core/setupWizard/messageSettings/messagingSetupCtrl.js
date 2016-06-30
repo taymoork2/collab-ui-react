@@ -6,7 +6,7 @@
       .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
     /* @ngInject */
-    function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification, Analytics) {
+    function MessagingSetupCtrl($scope, $translate, AccountOrgService, Analytics, Authinfo, FeatureToggleService, Notification) {
       var msgIntFlag = false;
       var currentDataRetentionPeriod = null;
       var orgId = Authinfo.getOrgId();

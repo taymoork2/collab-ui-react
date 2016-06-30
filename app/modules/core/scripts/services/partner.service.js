@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Authinfo, Auth, Config, Localytics, Log, Analytics, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {

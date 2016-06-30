@@ -7,7 +7,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
   var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Analytics;
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Notification_, _Analytics_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _Analytics_, _FeatureToggleService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
