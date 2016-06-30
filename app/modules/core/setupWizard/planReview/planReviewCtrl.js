@@ -212,10 +212,9 @@
       var now = moment().startOf('day');
       var start = moment(vm.trial.startDate).startOf('day');
       var daysUsed = moment(now).diff(start, 'days');
-      // Waiting on ok for change
-      //var daysLeft = vm.trial.trialPeriod - daysUsed;
-      //daysLeft = daysLeft < 0 ? 0 : daysLeft;
-      vm.trialDaysRemaining = (vm.trial.trialPeriod - daysUsed);
+      var daysLeft = vm.trial.trialPeriod - daysUsed;
+      daysLeft = daysLeft < 0 ? 0 : daysLeft;
+      vm.trialDaysRemaining = (daysLeft);
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);
     }
 
