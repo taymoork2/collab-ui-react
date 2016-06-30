@@ -6,7 +6,6 @@
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
-
   .top-bar {
     .sparkstatus-info {
       @extend .user-info;
@@ -681,5 +680,14 @@
         min-width: 1.5rem;
       }
     }
+  }
+}
+.helpdesk-dialog-progress {
+  text-align:center;
+  margin-top:auto;
+  margin-bottom:auto;
+  font-size:3rem;
+  .status {
+    padding-right:1rem;
   }
 }

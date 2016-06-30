@@ -30,7 +30,8 @@
       getTrialPeriodData: getTrialPeriodData,
       calcDaysLeft: calcDaysLeft,
       calcDaysUsed: calcDaysUsed,
-      getExpirationPeriod: getExpirationPeriod
+      getExpirationPeriod: getExpirationPeriod,
+      shallowValidation: shallowValidation,
     };
 
     return service;
@@ -48,6 +49,61 @@
         params: {
           customerName: searchText
         }
+      });
+    }
+
+    function shallowValidation(key, val) {
+      var validationUrl = UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke';
+
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          isTrial: true,
+          properties: [{
+            key: key,
+            value: val
+          }]
+        }
+      };
+
+      return $http(config).then(function (response) {
+        var data = response.data || {};
+        var obj = _.find(data.properties, {
+          key: key
+        });
+        if (angular.isUndefined(obj)) {
+          return {
+            error: 'trialModal.errorServerDown'
+          };
+        } else {
+          if (obj.isExist === 'true') {
+            return {
+              error: 'trialModal.errorInUse'
+            };
+          } else if (obj.isValid === 'false') {
+            if (key === 'organizationName') {
+              return {
+                error: 'trialModal.errorInvalidName'
+              };
+            } else {
+              return {
+                error: 'trialModal.errorInvalid'
+              };
+            }
+          }
+          return {
+            unique: true
+          };
+        }
+      }).catch(function (response) {
+        return {
+          error: 'trialModal.errorServerDown',
+          status: response.status
+        };
       });
     }
 

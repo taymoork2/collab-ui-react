@@ -6,10 +6,11 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
 
     var vm = this;
 
+    vm.tooltipTemplate = $templateCache.get('modules/huron/lines/tooltipTemplate.tpl.html');
     vm.currentDataPosition = 0;
     vm.gridRefresh = true; // triggers the spinner over the grid
     vm.searchStr = '';
@@ -141,6 +142,7 @@
       }, {
         field: 'userId',
         displayName: $translate.instant('linesPage.assignedTo'),
+        cellTemplate: vm.tooltipTemplate,
         sortable: true,
         sort: {
           direction: 'asc',
