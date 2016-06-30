@@ -1845,6 +1845,13 @@
               detailsDependsList: null
             }
           })
+          .state('huronCallPark', {
+            url: '/huronCallPark',
+            parent: 'hurondetails',
+            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
+            controller: 'CallParkSetupAssistantCtrl',
+            controllerAs: 'callParkSA'
+          })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
