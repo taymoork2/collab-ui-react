@@ -129,8 +129,7 @@ module.exports = function () {
         messenger: appModules + '/messenger/**/*.spec.js',
         squared: appModules + '/squared/**/*.spec.js',
         sunlight: appModules + '/sunlight/**/*.spec.js',
-        webex: appModules + '/webex/**/*.spec.js',
-        custom: 'custom'
+        webex: appModules + '/webex/**/*.spec.js'
       },
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
