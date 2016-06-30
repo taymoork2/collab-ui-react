@@ -76,7 +76,7 @@
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
           _.forEach(deviceList, function (device) {
             if (KemService.isKEMAvailable(device.product)) {
-              CmiKemService.getKEM(device.cisUuid, device.huronId).then(
+              CmiKemService.getKEM(device.huronId).then(
                 function (data) {
                   device.kem = data;
                 }
