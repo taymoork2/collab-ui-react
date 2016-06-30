@@ -2918,7 +2918,8 @@
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}.",
-      "moveHost": "Move Host"
+      "moveHost": "Move Host",
+      "deregister_host": "Deregister Host"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2986,7 +2987,7 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
-    "deleteCluster": "DELETE CLUSTER",
+    "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
     "openSettingsTitle": "Open {{clusterName}} settings"
   },

@@ -1,14 +1,26 @@
 <cs-sp-header>
   <div class="header-image">
     <div>
-      <i class="icon icon-4x icon-circle-data"/>
+      <i class="icon icon-4x icon-circle-data" />
     </div>
   </div>
-<div class="header-info">
+  <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
         <span>{{groupDetails.displayName}}</span>
       </div>
+      <span ng-if="groupDetails.clusterDetail.aggregates.state == 'has_alarms'" class="yellow">
+          <i class="fa fa-circle mediafusion-state-alarm" />
+        </span>
+      <span ng-if="groupDetails.clusterDetail.aggregates.state == 'offline'" class="red">
+          <i class="fa fa-circle mediafusion-state-offline" />
+        </span>
+      <span ng-if="groupDetails.clusterDetail.aggregates.state == 'running'" class="green">
+          <i class="fa fa-circle mediafusion-state-running" />
+        </span>
+      <span ng-if="groupDetails.clusterDetail.aggregates.state == 'no_hosts'" class="grey">
+          <i class="fa fa-circle"/>
+        </span>
       <span translate="{{'mediaFusion.serviceStatus.' + groupDetails.clusterDetail.aggregates.state}}"></span>
     </div>
   </div>

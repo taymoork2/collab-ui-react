@@ -1,5 +1,16 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
-  <i class="fa fa-circle mediafusion-state-{{grid.appScope.exp.getSeverity(row.entity.aggregates.state).label}}"></i>
+  <span ng-if="row.entity.aggregates.state == 'has_alarms'" class="yellow">
+    <i class="fa fa-circle mediafusion-state-alarm" />
+  </span>
+  <span ng-if="row.entity.aggregates.state == 'offline'" class="red">
+  	<i class="fa fa-circle mediafusion-state-offline" />
+  </span>
+  <span ng-if="row.entity.aggregates.state == 'running'" class="green">
+  	<i class="fa fa-circle mediafusion-state-running" />
+  </span>
+  <span ng-if="row.entity.aggregates.state == 'no_hosts'" class="grey">
+  	<i class="fa fa-circle"/>
+  </span>
   <span translate="{{'mediaFusion.serviceStatus.' + row.entity.aggregates.state}}"></span>
   <span ng-if="row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="mediaFusion.serviceStatus.upgrading"></span></span>
 </div>
