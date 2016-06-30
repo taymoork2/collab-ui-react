@@ -37,6 +37,7 @@
       bridgeMaxConvParticipants: 'bridge-max-conv-participants',
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
+      callParkService: 'call-park-service',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',

@@ -20,7 +20,8 @@ module.exports = csp({
       'https://*.statuspage.io',
       'https://*.wbx2.com',
       'https://*.webex.com',
-      'https://*.webexconnect.com'
+      'https://*.webexconnect.com',
+      'https://wbxdmz.admin.ciscospark.com'
     ],
     connectSrc: [
       '\'self\'',

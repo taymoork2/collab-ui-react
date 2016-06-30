@@ -1354,7 +1354,10 @@
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
+      "emailNotificationsWatermark": "Add email addresses",
       "emailNotificationsSaving": "Saving.",
+      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
@@ -1620,9 +1623,11 @@
     "freeCare": "None",
     "communicationsSub": "Setup calling service",
     "setSipDomainDescription": "Select a subdomain that identifies your company and that will be used to create Spark SIP Addresses.",
+    "setSipDomainLink": "What is a Spark SIP Address?",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
     "setSipDomainCompNames": "These subdomains can be reserved for you:",
+    "setSipDomainAsssignedNames": "These subdomains have been reserved for you:",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
@@ -2205,6 +2210,18 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory"
+    },
+    "orderStatus": {
+      "pinRequired": "Customer needs to sign PSTN Contract.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "trialStatus": "Order cannot be fulfilled for trials",
+      "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
+      "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
+      "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
+      "msaNotSigned": "Customer needs to sign PSTN Contract.",
+      "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
+      "rejected": "Order has been rejected. Contact Inteleepeer."
     }
   },
   "pstnContractInformation": {
@@ -2404,7 +2421,13 @@
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
-    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service."
+    "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}.",
+    "errorInUse": "Entered value is already in use. Try a different value.",
+    "errorServerDown": "Could not reach server to validate this field.",
+    "errorFailSafe": "Could not validate entered valued.",
+    "errorInvalid": "Entered value contains invalid characters.",
+    "errorInvalidName": "Entered name contains invalid characters."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -2903,7 +2926,12 @@
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "releaseChannel": "Release channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
-      "youHostNoAvailable": "Your host will no longer be available in future"
+      "youHostNoAvailable": "Your host will no longer be available in future",
+      "manageThisCluster": "Manage this cluster",
+      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
+      "deletecluster": "Delete cluster",
+      "deleteclusterDesc": "Delete this cluster from Cisco Collaboration Cloud and remove all Hybrid Media and related configuration"
+
     },
     "reassign": {
       "reassignHost": "Reassign Host",
@@ -2978,7 +3006,9 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
-    "deleteCluster": "DELETE CLUSTER"
+    "deleteCluster": "DELETE CLUSTER",
+    "openSettings": "Open settings",
+    "openSettingsTitle": "Open {{clusterName}} settings"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -4370,6 +4400,10 @@
       "nohistory": "No Search History",
       "singlematch": "match",
       "matches": "matches"
+    },
+    "extended-data-dialog": {
+      "copy": "Copy",
+      "copiedToClipboard": "Data copied to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
