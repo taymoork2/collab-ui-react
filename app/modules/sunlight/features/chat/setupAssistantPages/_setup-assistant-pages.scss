@@ -1,8 +1,9 @@
-@import "ct-name";
-@import "ct-customer";
-@import "ct-feedback";
-@import "ct-profile";
-@import "ct-overview";
+@import 'ct-name';
+@import 'ct-customer';
+@import 'ct-feedback';
+@import 'ct-profile';
+@import 'ct-overview';
+@import 'ct-offhours';
 
 // These variables define the height of chat template setup assistant page title and desc
 $ct-title-height : 48px;
@@ -32,4 +33,9 @@ $ct-desc-height: 32px;
   justify-content: center;
   height: calc(100vh - #{($top-bar-height + $page-header-height + $ct-title-height + $ct-desc-height)});
   overflow: auto;
+
+  .cs-card section ul {
+    @include vr-spacing(p, 0);
+  }
 }
+

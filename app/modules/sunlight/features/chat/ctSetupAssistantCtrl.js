@@ -22,6 +22,8 @@
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
+    vm.setDay = setDay;
+    vm.setEndTimeOptions = setEndTimeOptions;
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
 
@@ -59,52 +61,61 @@
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
+    vm.days = CTService.getDays();
+    vm.open24Hours = true;
+    vm.isBusinessHoursDisabled = false;
+    vm.timings = CTService.getDefaultTimes();
+    vm.startTimeOptions = CTService.getTimeOptions();
+    vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
+    vm.scheduleTimeZone = CTService.getDefaultTimeZone();
+    vm.timezoneOptions = CTService.getTimezoneOptions();
+    vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
 
     /**
      * Type enumerations
      */
 
     vm.STATIC_FIELD_TYPES = {
-      "welcome": {
-        text: "welcome",
-        htmlType: "label"
+      welcome: {
+        text: 'welcome',
+        htmlType: 'label'
       }
     };
 
     vm.typeOptions = [{
-      id: "email",
+      id: 'email',
       text: $translate.instant('careChatTpl.typeEmail'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Work_Email"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Work_Email'
       }
     }, {
-      id: "name",
+      id: 'name',
       text: $translate.instant('careChatTpl.typeName'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_First_Name"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_First_Name'
       }
     }, {
-      id: "category",
+      id: 'category',
       text: $translate.instant('careChatTpl.typeCategory'),
       dictionaryType: {
-        fieldSet: "cisco.base.ccc.pod",
-        fieldName: "category"
+        fieldSet: 'cisco.base.ccc.pod',
+        fieldName: 'category'
       }
     }, {
-      id: "phone",
+      id: 'phone',
       text: $translate.instant('careChatTpl.typePhone'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Mobile_Phone"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Mobile_Phone'
       }
     }, {
-      id: "id",
+      id: 'id',
       text: $translate.instant('careChatTpl.typeId'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Customer_External_ID"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Customer_External_ID'
       }
     }];
 
@@ -227,38 +238,39 @@
             enabled: true
           },
           offHours: {
-            enabled: true
+            enabled: true,
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage')
           },
           feedback: {
             enabled: true,
             fields: {
-              "feedbackQuery": {
-                "displayText": $translate.instant('careChatTpl.feedbackQuery')
+              feedbackQuery: {
+                displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              "ratings": [{
-                "displayText": $translate.instant('careChatTpl.rating1Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+              ratings: [{
+                displayText: $translate.instant('careChatTpl.rating1Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating2Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+                displayText: $translate.instant('careChatTpl.rating2Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating3Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+                displayText: $translate.instant('careChatTpl.rating3Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }],
-              "comment": {
-                "displayText": $translate.instant('careChatTpl.ratingComment'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingComments"
+              comment: {
+                displayText: $translate.instant('careChatTpl.ratingComment'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingComments'
                 }
               }
             }
@@ -485,6 +497,39 @@
           }
         }
       });
+    }
+
+    function setDay(index) {
+      vm.days[index].isSelected = !vm.days[index].isSelected;
+      setDayPreview();
+    }
+
+    function setEndTimeOptions() {
+      vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
+      vm.timings.endTime = vm.endTimeOptions[0];
+    }
+
+    function setDayPreview() {
+      var firstSelectedDayIndex = _.findIndex(vm.days, function (day) {
+        return day.isSelected;
+      });
+      var lastSelectedDayIndex = _.findLastIndex(vm.days, function (day) {
+        return day.isSelected;
+      });
+
+      if (firstSelectedDayIndex != -1) {
+        vm.isBusinessHoursDisabled = false;
+        var areContinousDays = true;
+        for (var i = firstSelectedDayIndex; i <= lastSelectedDayIndex; i++) {
+          if (!(vm.days[i].isSelected)) {
+            areContinousDays = false;
+            break;
+          }
+        }
+        vm.daysPreview = CTService.getPreviewDays(vm.days, areContinousDays, firstSelectedDayIndex, lastSelectedDayIndex);
+      } else {
+        vm.isBusinessHoursDisabled = true;
+      }
     }
 
     function handleChatTemplateError() {

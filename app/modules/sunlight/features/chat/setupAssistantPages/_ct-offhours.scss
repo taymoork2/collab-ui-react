@@ -1,0 +1,144 @@
+.ct-offhours {
+
+  @include vr-spacing(ml, 2.5);
+
+  .cs-card {
+    @include vr-spacing(mr, 3);
+  }
+  //Globals
+  .cs-card header {
+    text-align: center;
+    color: $gray-dark-1;
+  }
+
+  .preview {
+    display: flex;
+    flex-flow: column;
+    width: rem-calc(364); // 348px + 1rem
+
+    article {
+      height: rem-calc(424);
+    }
+
+    .preview-text {
+      text-align: center;
+    }
+
+    .offhours-icon {
+      font-size: 3rem;
+      line-height: 1;
+      color: $color-attention;
+      @include vr-spacing(pt, 2);
+    }
+
+    .offhours-message {
+      height: 7rem;
+      @include vr-spacing(pt, 1);
+      @include vr-spacing(mh, 4);
+    }
+
+    .business-hours {
+      height: 10rem;
+      @include vr-spacing(pt,1);
+      .message {
+        color: $color-people-base;
+      }
+    }
+
+    .day-time-preview {
+      @include vr-spacing(pt, 0.5);
+    }
+
+    .day-time-preview.days {
+      @include vr-spacing(mh, 2);
+    }
+
+    .offhours-closebtn {
+      @include vr-spacing(ph, 2);
+    }
+    .offhours-closebtn.no-business-hours {
+      @include vr-spacing(mt, 10);
+    }
+  }
+
+  .attributes {
+    display: flex;
+    flex-flow: column;
+    article {
+      background-color: $gray-light-4;
+      box-shadow: 0;
+      height: rem-calc(426);
+      width: rem-calc(414);
+    }
+
+    .field-name {
+      line-height: $h5-line-height;
+      @include vr-spacing(pl, 1);
+      @include vr-spacing(pt, 0.75);
+    }
+
+    .offhours-msg {
+      height: rem-calc(86);
+      width: 24rem;
+      resize: none;
+      line-height: 1rem;
+      @include vr-spacing(p, 0.75);
+      @include vr-spacing(mt, 0);
+      @include vr-spacing(mh, 1);
+    }
+
+    .day-picker {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-content: center;
+      align-items: center;
+      @include vr-spacing(pl, 1);
+
+      .day {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        height: 3.125rem;
+        width: 3rem;
+        margin-right: 0.125rem;
+      }
+
+      .day-selected {
+        color: $white !important;
+        background-color: $color-primary-darker;
+      }
+
+      .day-unselected {
+        color: $gray-base !important;
+        background-color: $white;
+        border: 1px solid $gray-light-2;
+      }
+    }
+
+    .time-and-timezone-picker {
+      @include vr-spacing(pl, 1);
+      .cs-checkbox {
+        @include vr-spacing(pt, 1);
+      }
+      .time-picker {
+        display: flex;
+        flex-direction: row;
+        .start-time {
+          @include vr-spacing(pr, 1.5);
+        }
+        .time {
+          width: 8rem;
+        }
+      }
+      .timezone-picker {
+        width: 21.5rem;
+        @include vr-spacing(pt, 1);
+      }
+    }
+  }
+}
