@@ -275,17 +275,17 @@
       var promiseList = [];
       if (diff > 0) {
         _.times(diff, function (n) {
-          promiseList.push(CmiKemService.createKEM(device.cisUuid, device.huronId, previousKemNumber + 1 + n));
+          promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
         });
       } else {
         _.times(-diff, function (n) {
           var module = _.findWhere(device.kem.addonModule, {
             index: (previousKemNumber - n)
           });
-          promiseList.push(CmiKemService.deleteKEM(device.cisUuid, device.huronId, module.id));
+          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.id));
         });
       }
-      promiseList.push(CmiKemService.getKEM(device.cisUuid, device.huronId));
+      promiseList.push(CmiKemService.getKEM(device.huronId));
       $q.all(promiseList).then(
         function (data) {
           device.kem = data[data.length - 1];

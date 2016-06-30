@@ -1,10 +1,8 @@
 (function () {
   'use strict';
-  var kem = 1;
 
   /* @ngInject */
-  //function CmiKemService($resource, HuronConfig, Authinfo) {
-  function CmiKemService($q) {
+  function CmiKemService($resource, HuronConfig, Authinfo) {
 
     return {
       getKEM: getKEM,
@@ -14,74 +12,41 @@
 
     /////////////////////
 
-    function getKEM(userId, deviceId) {
-      //TODO:Update parameters
-      //return $resource(HuronConfig.getCmiUrl() + '/customers/:customerId/users/:userId/devices/:deviceId/addonmodules', {
-      //  customerId: '@customerId',
-      //  userId: '@userId',
-      //  deviceId: '@deviceId'
-      //}).get({
-      //  customerId: Authinfo.getOrgId(),
-      //  userId: userId,
-      //  deviceId: deviceId
-      //}).$promise;
+    function getKEM(sipEndpointId) {
+      return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId/addonmodules', {
+        customerId: '@customerId',
+        sipEndpointId: '@sipEndpointId'
+      }).get({
+        customerId: Authinfo.getOrgId(),
+        sipEndpointId: sipEndpointId
+      }).$promise;
+    }
+
+    function createKEM(sipEndpointId, index) {
       var data = {
-        addonModule: [],
-        uri: '/customers/:customerId/users/:userId/devices/:deviceId/addonmodules',
-        version: '1'
+        index: index
       };
-      _.times(kem, function (n) {
-        data.addonModule.push({
-          id: n,
-          moniker: 'BEKEM',
-          index: n + 1
-        });
-      });
-      var deferred = $q.defer();
-      deferred.resolve(data);
-      return deferred.promise;
+      return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId/addonmodules', {
+        customerId: '@customerId',
+        sipEndpointId: '@sipEndpointId'
+      }).save({
+          customerId: Authinfo.getOrgId(),
+          sipEndpointId: sipEndpointId
+        },
+        data
+      ).$promise;
     }
 
-    function createKEM(userId, deviceId, index) {
-      //TODO:Update parameters
-      //var data = {
-      //  index: index,
-      //  moniker: 'BEKEM'
-      //};
-      //return $resource(HuronConfig.getCmiUrl() + '/customers/:customerId/users/:userId/devices/:deviceId/addonmodule', {
-      //  customerId: '@customerId',
-      //  userId: '@userId',
-      //  deviceId: '@deviceId'
-      //}).save({
-      //    userId: userId,
-      //    deviceId: deviceId,
-      //    customerId: Authinfo.getOrgId()
-      //  },
-      //  data
-      //).$promise;
-      kem++;
-      var deferred = $q.defer();
-      deferred.resolve();
-      return deferred.promise;
-    }
-
-    function deleteKEM(userId, deviceId, kemId) {
-      //TODO:Update parameters
-      //return $resource(HuronConfig.getCmiUrl() + '/customers/:customerId/users/:userId/devices/:deviceId/addonmodule/:addonmoduleId', {
-      //  customerId: '@customerId',
-      //  userId: '@userId',
-      //  deviceId: '@deviceId',
-      //  addonmoduleId: '@addonmoduleId'
-      //}).delete({
-      //  customerId: Authinfo.getOrgId(),
-      //  userId: userId,
-      //  deviceId: deviceId,
-      //  addonmoduleId: kemId
-      //}).$promise;
-      kem--;
-      var deferred = $q.defer();
-      deferred.resolve();
-      return deferred.promise;
+    function deleteKEM(sipEndpointId, addOnModuleId) {
+      return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId/addonmodules/:addOnModuleId', {
+        customerId: '@customerId',
+        sipEndpointId: '@sipEndpointId',
+        addOnModuleId: '@addOnModuleId'
+      }).delete({
+        customerId: Authinfo.getOrgId(),
+        sipEndpointId: sipEndpointId,
+        addOnModuleId: addOnModuleId
+      }).$promise;
     }
   }
 
