@@ -204,7 +204,7 @@
           $scope.wizard.showDoItLater = true;
         }
       }
-  }
+    }
     /////////////////
 
     function populateTrialData(trial) {
@@ -213,8 +213,7 @@
       var start = moment(vm.trial.startDate).startOf('day');
       var daysUsed = moment(now).diff(start, 'days');
       var daysLeft = vm.trial.trialPeriod - daysUsed;
-      daysLeft = daysLeft < 0 ? 0 : daysLeft;
-      vm.trialDaysRemaining = (daysLeft);
+      vm.trialDaysRemaining = daysLeft < 0 ? 0 : daysLeft;
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);
     }
 
