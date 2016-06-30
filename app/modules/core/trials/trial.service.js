@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -30,7 +30,8 @@
       getTrialPeriodData: getTrialPeriodData,
       calcDaysLeft: calcDaysLeft,
       calcDaysUsed: calcDaysUsed,
-      getExpirationPeriod: getExpirationPeriod
+      getExpirationPeriod: getExpirationPeriod,
+      shallowValidation: shallowValidation,
     };
 
     return service;
@@ -48,6 +49,61 @@
         params: {
           customerName: searchText
         }
+      });
+    }
+
+    function shallowValidation(key, val) {
+      var validationUrl = UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke';
+
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          isTrial: true,
+          properties: [{
+            key: key,
+            value: val
+          }]
+        }
+      };
+
+      return $http(config).then(function (response) {
+        var data = response.data || {};
+        var obj = _.find(data.properties, {
+          key: key
+        });
+        if (angular.isUndefined(obj)) {
+          return {
+            error: 'trialModal.errorServerDown'
+          };
+        } else {
+          if (obj.isExist === 'true') {
+            return {
+              error: 'trialModal.errorInUse'
+            };
+          } else if (obj.isValid === 'false') {
+            if (key === 'organizationName') {
+              return {
+                error: 'trialModal.errorInvalidName'
+              };
+            } else {
+              return {
+                error: 'trialModal.errorInvalid'
+              };
+            }
+          }
+          return {
+            unique: true
+          };
+        }
+      }).catch(function (response) {
+        return {
+          error: 'trialModal.errorServerDown',
+          status: response.status
+        };
       });
     }
 
@@ -189,10 +245,11 @@
           enabled: true
         })
         .map(function (trial) {
-          if (trial.type === Config.offerTypes.pstn) {
+          if (trial.type === Config.offerTypes.pstn || trial.type === Config.offerTypes.context) {
             return;
           }
-          var licenseCount = trial.type === Config.trials.roomSystems ?
+          var licenseCount =
+            (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care) ?
             trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
@@ -208,9 +265,11 @@
       TrialMeetingService.reset();
       TrialWebexService.reset();
       TrialCallService.reset();
+      TrialCareService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
       TrialPstnService.reset();
+      TrialContextService.reset();
 
       var defaults = {
         customerName: '',
@@ -227,9 +286,11 @@
           meetingTrial: TrialMeetingService.getData(),
           webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
+          careTrial: TrialCareService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
-          pstnTrial: TrialPstnService.getData()
+          pstnTrial: TrialPstnService.getData(),
+          contextTrial: TrialContextService.getData()
         },
       };
 

@@ -9,16 +9,12 @@
     $rootScope,
     $log,
     $translate,
-    $filter,
-    $state,
     $stateParams,
     $sce,
     $timeout,
     $window,
     Authinfo,
-    Notification,
-    Config,
-    Storage,
+    TokenService,
     WebExUtilsFact
   ) {
 
@@ -40,7 +36,7 @@
       $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
     $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
-    $scope.authToken = Storage.get('accessToken');
+    $scope.authToken = TokenService.getAccessToken();
     $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
     $scope.siteName = $stateParams.siteUrl;
     $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);

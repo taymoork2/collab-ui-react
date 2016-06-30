@@ -15,6 +15,7 @@ describe('Service: AutoAttendantCeService', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", Authinfo);

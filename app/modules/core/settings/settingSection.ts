@@ -19,12 +19,5 @@ namespace globalsettings {
       this.template = `modules/core/settings/setting-.${settingKey}.tpl.html`;
     }
   }
-
-  angular.module('Core').component('settingSection', {
-    bindings: {
-      setting: '<'
-    },
-    transclude: true,
-    templateUrl: "modules/core/settings/settingSection.tpl.html"
-  });
+  
 }

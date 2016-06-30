@@ -4,7 +4,7 @@ describe('Service: HelpdeskSplunkReporterService', function () {
 
   var LogMetricsService, Service;
 
-  beforeEach(inject(function (_LogMetricsService_, _$httpBackend_, _ReportsService_, _$rootScope_, _HelpdeskSplunkReporterService_) {
+  beforeEach(inject(function (_LogMetricsService_, _HelpdeskSplunkReporterService_) {
     Service = _HelpdeskSplunkReporterService_;
     LogMetricsService = _LogMetricsService_;
   }));

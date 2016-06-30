@@ -1,0 +1,61 @@
+<div class="enterprise-sipDomain-page">
+  <div class="title space-flow">
+    <p class="paragraphSpacing">
+      <span translate="firstTimeWizard.setSipDomainDescription"></span>
+    </p>
+    <span>
+      <a class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
+    </span>
+  </div>
+  <div class="row-fluid">
+    <form name="sipDomainForm" novalidate>
+      <div class="row">
+        <p translate="firstTimeWizard.setSipDomainMsg"></p>
+        <div class="cs-input-group medium-3 columns" ng-class="{'error': vm.validateSipDomain()}">
+          <input class="sip-domain-input col-lg-5"
+                 name="sipDomainInput"
+                 type="text"
+                 placeholder="{{'firstTimeWizard.setSipDomainPlaceholder' | translate}}"
+                 ng-model="vm.inputValue"
+                 ng-disabled="vm.isDisabled">
+          <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="vm.validateSipDomain()">
+            <div class="message">{{vm.errorMsg}}</div>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <button id="checkAvailabilityBtn" class="space btn--cta" ng-click="vm.checkSipDomainAvailability()" translate="firstTimeWizard.setSipDomainCheckAvailability" ng-disabled="vm.isButtonDisabled"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row-fluid error-msg-spacing">
+    <p ng-if="!vm.isDisabled" class="url-examples-style" translate="firstTimeWizard.setSipDomainCompNames"></p>
+    <p ng-if="vm.isDisabled" class="url-examples-style" translate="firstTimeWizard.setSipDomainAsssignedNames"></p>
+    <div class="domain-check-space url-examples-style">
+      <h5 class="inline">{{vm.inputValue}}.call{{vm.domainSuffix}}</h5>
+      <i ng-if="vm.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+      <i ng-if="vm.isError" class="red-error-icon space icon icon-error"></i>
+      <i ng-if="vm.isLoading" class="space icon icon-spinner"></i>
+    </div>
+    <div ng-if="vm.isRoomLicensed" class="domain-check-space url-examples-style">
+      <h5 class="inline">{{vm.inputValue}}.room{{vm.domainSuffix}}</h5>
+      <i ng-if="vm.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+      <i ng-if="vm.isError" class="red-error-icon space icon icon-error"></i>
+      <i ng-if="vm.isLoading" class="space icon icon-spinner"></i>
+    </div>
+  </div>
+  <div class="row-fluid" ng-if="vm.isUrlAvailable">
+    <div class="confirm-box">
+      <cs-checkbox ckid="confirmSaveCheckBox" ng-model="vm.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
+    </div>
+  </div>
+  <div class="row-fluid" ng-if="vm.showSaveButton && vm.isUrlAvailable && vm.isConfirmed">
+    <div class="save-box">
+      <button id="save"
+              ng-disabled="!vm.isConfirmed"
+              class="space btn--primary"
+              ng-click="vm.saveDomain()"
+              translate="common.save"></button>
+    </div>
+  </div>
+</div>

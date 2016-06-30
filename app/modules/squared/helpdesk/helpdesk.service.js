@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, USSService2, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -243,7 +243,7 @@
       var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);

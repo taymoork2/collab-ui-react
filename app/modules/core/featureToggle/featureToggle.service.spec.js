@@ -3,6 +3,7 @@
 describe('FeatureToggleService', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
   var forOrg = false;
@@ -81,4 +82,18 @@ describe('FeatureToggleService', function () {
     });
     httpBackend.flush();
   });
+
+  it('should return accurate value when GetStatus function is called for a feature', function () {
+    httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
+    var careStatus = FeatureToggleService.atlasCareTrialsGetStatus();
+    careStatus.then(function (result) {
+      expect(result).toBe(false);
+    });
+    var androidAddGuestReleaseStatus = FeatureToggleService.androidAddGuestReleaseGetStatus();
+    androidAddGuestReleaseStatus.then(function (result) {
+      expect(result).toBe(true);
+    });
+    httpBackend.flush();
+  });
+
 });

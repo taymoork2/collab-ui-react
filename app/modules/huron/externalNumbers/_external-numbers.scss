@@ -56,6 +56,12 @@
   }
 }
 
+.pstn-order-detail {
+  .info-tooltip {
+    @include vr-spacing(p, .5);
+  }
+}
+
 .detail-group {
   margin-left: 1.5rem;
   margin-top: 1rem;

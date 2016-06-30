@@ -5,11 +5,7 @@
     .controller('DownloadsCtrl', DownloadsCtrl);
 
   /* @ngInject */
-  function DownloadsCtrl($scope, $location, $http, Localytics, UrlConfig, Userservice) {
-    // Note: only keep Localytics until we gathered enough data usage
-    Localytics.tagEvent('Display /downloads', {
-      hasJustResetPassword: !!$location.search().pwdResetSuccess
-    });
+  function DownloadsCtrl($scope, $location, UrlConfig, Userservice) {
     $scope.email = $location.search().email;
     $scope.tlData = {
       email: $scope.email

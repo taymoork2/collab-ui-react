@@ -16,7 +16,7 @@ describe('OAuthConfig', function () {
   var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
-  var scope = 'webexsquare%3Aadmin%20webexsquare%3Abilling%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin%20webex-messenger%3Aget_webextoken%20ccc_config%3Aadmin%20compliance%3Aspark_conversations_read';
+  var scope = 'webexsquare%3Aadmin%20webexsquare%3Abilling%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin%20webex-messenger%3Aget_webextoken%20ccc_config%3Aadmin%20compliance%3Aspark_conversations_read%20contact-center-context%3Apod_read%20contact-center-context%3Apod_write';
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {

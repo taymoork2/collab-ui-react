@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,

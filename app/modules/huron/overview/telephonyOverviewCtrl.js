@@ -6,7 +6,7 @@
     .controller('TelephonyOverviewCtrl', TelephonyOverviewCtrl);
 
   /* @ngInject */
-  function TelephonyOverviewCtrl($stateParams, $state, $rootScope, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
+  function TelephonyOverviewCtrl($stateParams, TelephonyInfoService) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
 

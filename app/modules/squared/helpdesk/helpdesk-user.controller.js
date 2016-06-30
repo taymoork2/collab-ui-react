@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskUserController', HelpdeskUserController);
+
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -27,6 +31,13 @@
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -39,6 +50,23 @@
         vm.verificationCode = code;
         vm.sendingVerificationCode = false;
       }, XhrNotificationService.notify);
+    }
+
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          resolve: {
+            title: function () {
+              return 'helpdesk.userDetails';
+            },
+            data: function () {
+              return vm.user;
+            }
+          }
+        });
+      }
     }
 
     function initUserView(user) {
@@ -90,11 +118,12 @@
         }, angular.noop);
       }
 
+      vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
     }
 
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+      return Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isReadOnlyAdmin());
     }
 
     function downloadLog(filename) {
@@ -116,7 +145,4 @@
     }
   }
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController);
 }());

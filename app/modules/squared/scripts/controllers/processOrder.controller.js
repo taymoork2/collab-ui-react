@@ -6,11 +6,7 @@
     .controller('ProcessorderCtrl', ProcessorderCtrl);
 
   /* @ngInject */
-  function ProcessorderCtrl($scope, $location, $timeout, WindowLocation, Orgservice, Localytics) {
-    // Note: only keep $timeout and Localytics until we gathered enough data usage
-    Localytics.tagEvent('Display /processorder', {
-      enc: !!$location.search().enc
-    });
+  function ProcessorderCtrl($scope, $location, $timeout, WindowLocation, Orgservice) {
     $scope.isProcessing = true;
     $scope.enc = $location.search().enc;
     Orgservice.createOrg($scope.enc, function (data, status) {

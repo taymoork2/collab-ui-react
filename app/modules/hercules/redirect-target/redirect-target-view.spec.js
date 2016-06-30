@@ -5,7 +5,7 @@ describe('RedirectTargetView', function () {
   var $scope;
   var view;
 
-  beforeEach(inject(function ($rootScope, $templateCache, $compile, $httpBackend) {
+  beforeEach(inject(function ($rootScope, $templateCache, $compile) {
     $scope = $rootScope.$new();
     var html = $templateCache.get("modules/hercules/redirect-target/redirect-target-dialog.html");
     view = $compile(angular.element(html))($scope);

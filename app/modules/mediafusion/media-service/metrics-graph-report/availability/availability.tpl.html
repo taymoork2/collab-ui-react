@@ -1,0 +1,24 @@
+<cs-card id='availability-card' class="full report-card">
+  <article>
+    <graphheader>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster' ng-if="nav.clusterSelected == 'All'"></h4>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost' ng-if="nav.clusterSelected != 'All'"></h4>
+    </graphheader>
+    <section>
+      <div class="metrics-availability">
+        <p class="report-description" translate='mediaFusion.metrics.availabilityOfClusterDescription' ng-if="nav.clusterSelected == 'All'"></p>
+        <p class="report-description" translate='mediaFusion.metrics.availabilityOfHostDescription' ng-if="nav.clusterSelected != 'All'"></p>
+        <div id="availabilitydiv" class="barchart" ng-class="{'availability-chart': !nav.isEmpty(nav.availabilityStatus) && !nav.isRefresh(nav.availabilityStatus)}"></div>
+        <div class="spinner-position" ng-if="nav.isRefresh(nav.availabilityStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="nav.isEmpty(nav.availabilityStatus)">
+          <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='reportsPage.noCustomerData'></span>
+          </h3>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

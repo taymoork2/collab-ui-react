@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils, FeatureToggleService) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, FusionUtils, FeatureToggleService, $stateParams) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -39,6 +39,7 @@
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
     vm.enableService = enableService;
+    vm.featureToggled = false;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -53,6 +54,9 @@
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $scope.exp.showClusterSidepanel(row.entity);
         });
+        if (angular.isDefined($stateParams.clusterId) && $stateParams.clusterId !== null) {
+          showClusterSidepanel(ClusterService.getCluster(vm.connectorType, $stateParams.clusterId));
+        }
       },
       columnDefs: [{
         field: 'name',
@@ -97,7 +101,7 @@
         error: 0,
         notActivated: 0,
         notEntitled: 0,
-        total: 0,
+        total: 0
       };
       vm.userStatusSummary = _.chain(USSService2.getStatusesSummary())
         .filter(function (summary) {
@@ -177,7 +181,8 @@
             },
             servicesId: function () {
               return vm.servicesId;
-            }
+            },
+            firstTimeSetup: false
           },
           controller: 'AddResourceController',
           controllerAs: 'addResource',
@@ -194,14 +199,37 @@
       }
     }
 
-    vm.featureToggled = false;
-
     function isFeatureToggled() {
       return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
     });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
+          },
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: true
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'addResource',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
+    }
 
   }
 }());

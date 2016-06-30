@@ -6,10 +6,11 @@
     .factory('OverviewMeetingCard', OverviewMeetingCard);
 
   /* @ngInject */
-  function OverviewMeetingCard(OverviewHelper, Authinfo, FeatureToggleService) {
+  function OverviewMeetingCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
         var card = {};
+        card.isCSB = Authinfo.isCSB();
         card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
@@ -22,11 +23,6 @@
         card.settingsUrl = '';
         card.helper = OverviewHelper;
         card.showHealth = true;
-        card.isCSB = false;
-
-        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-          card.isCSB = Authinfo.isCSB() && result;
-        });
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {

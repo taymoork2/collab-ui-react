@@ -48,7 +48,7 @@
 
   /* @ngInject */
   function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo,
-    SessionStorage, $stateParams, $state, FeatureToggleService, Userservice, ModalService, ServiceSetup) {
+    SessionStorage, $stateParams, $state, ModalService, ServiceSetup) {
     var vm = this;
     vm.current = {};
 
@@ -110,6 +110,13 @@
       } else {
         vm.current.tab = getTabs()[0];
       }
+
+      if ($stateParams.currentSubTab) {
+        vm.current.subTab = _.findWhere(getTab().subTabs, {
+          name: $stateParams.currentSubTab
+        });
+      }
+
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {

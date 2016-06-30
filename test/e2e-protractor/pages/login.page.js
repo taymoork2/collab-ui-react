@@ -58,7 +58,7 @@ var LoginPage = function () {
         bearer = _bearer;
         expect(bearer).toBeDefined();
         navigation.expectDriverCurrentUrl('/login').then(function () {
-          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.executeScript("sessionStorage.accessToken='" + bearer + "'");
           browser.refresh();
           navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
         });

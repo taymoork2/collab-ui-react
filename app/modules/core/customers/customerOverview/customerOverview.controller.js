@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, Auth, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -31,24 +31,25 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
-    vm.atlasPartnerAdminFeatureToggle = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
-    vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
-
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials), FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures)])
+    FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
             id: Config.offerTypes.roomSystems
           })) {
-          vm.showRoomSystems = result[0];
+          vm.showRoomSystems = true;
         }
-        vm.atlasPartnerAdminFeatureToggle = result[1];
+        setOffers(result);
       });
+
+    function setOffers(isCareEnabled) {
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
+      vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+    }
 
     init();
 
@@ -144,30 +145,32 @@
       promise.then(function () {
         if (licIds.length > 0) {
           Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop);
-          $window.open($state.href('login_swap', {
-            customerOrgId: vm.customerOrgId,
-            customerOrgName: vm.customerName
-          }));
+          openCustomerPortal();
         } else {
           AccountOrgService.getAccount(vm.customerOrgId).then(function (data) {
-            var len = data.accounts.length;
-            var updateUsersList = [];
-            for (var i = 0; i < len; i++) {
-              var account = data.accounts[i];
-              var lics = account.licenses;
-              var licIds = collectLicenseIdsForWebexSites(lics);
-              updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+            var accountsLength = _.get(data, 'accounts.length');
+            if (accountsLength) {
+              var updateUsersList = [];
+              for (var i = 0; i < accountsLength; i++) {
+                var account = data.accounts[i];
+                var lics = account.licenses;
+                var licIds = collectLicenseIdsForWebexSites(lics);
+                updateUsersList.push(Userservice.updateUsers([emailObj], licIds, null, 'updateUserLicense', _.noop));
+              }
+              $q.all(updateUsersList).then(openCustomerPortal);
+            } else {
+              openCustomerPortal();
             }
-            $q.all(updateUsersList).then(function () {
-              $window.open($state.href('login_swap', {
-                customerOrgId: vm.customerOrgId,
-                customerOrgName: vm.customerName
-              }));
-            });
           });
         }
       });
+    }
 
+    function openCustomerPortal() {
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.customerName
+      }));
     }
 
     function openEditTrialModal() {

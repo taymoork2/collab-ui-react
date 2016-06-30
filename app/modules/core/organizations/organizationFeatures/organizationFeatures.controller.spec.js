@@ -17,6 +17,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$stateParams_, $rootScope, _FeatureToggleService_, _Notification_, _$q_, $controller) {
     $scope = $rootScope.$new();

@@ -5,8 +5,7 @@
     .controller('LoginCtrl', LoginCtrl);
 
   /* @ngInject */
-  function LoginCtrl($filter, $http, $location, $rootScope, $scope, $state, $stateParams, $timeout, $window, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, Utils) {
-
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $timeout, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
     var loadingDelay = 2000;
     var logoutDelay = 5000;
 
@@ -83,7 +82,7 @@
       authorizeUser();
     });
 
-    if (!_.isEmpty(Storage.get('accessToken'))) {
+    if (!_.isEmpty(TokenService.getAccessToken())) {
       authorizeUser();
     } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
       Auth.redirectToLogin(null, queryParams.sso);

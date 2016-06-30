@@ -3,13 +3,14 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, TrialService;
+    var Authinfo, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
+    beforeEach(module('Sunlight'));
 
-    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _TrialService_) {
+    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
@@ -18,6 +19,7 @@
       PartnerService = _PartnerService_;
       Orgservice = _Orgservice_;
       TrialService = _TrialService_;
+      FeatureToggleService = _FeatureToggleService_;
       $q = _$q_;
       $scope.timeoutVal = 1;
       $rootScope.typeOfExport = {
@@ -31,11 +33,17 @@
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
         data: {}
       }));
+
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
       spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
         callback({
           success: true
         }, 200);
       });
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+        $q.when(true)
+      );
     }));
 
     describe('Add trial button', function () {

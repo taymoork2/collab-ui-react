@@ -5,13 +5,12 @@
 
   /*@ngInject*/
   function SiteCSVResultsCtrl(
-    $state,
+    $log,
     $stateParams,
     $translate,
-    $log,
-    WebExUtilsFact,
-    WebExApiGatewayService
+    WebExUtilsFact
   ) {
+
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
 
@@ -31,18 +30,34 @@
     vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
-    if (
-      ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
-      ("exportCompletedWithErr" === vm.csvStatusObj.status)
-    ) {
+    var createdTime = new Date(vm.csvStatusObj.details.created);
+    var startedTime = new Date(vm.csvStatusObj.details.started);
+    var finishedTime = new Date(vm.csvStatusObj.details.finished);
 
+    var formattedCreatedTime = createdTime.toUTCString();
+    var formattedStartedTime = startedTime.toUTCString();
+    var formattedFinishedTime = finishedTime.toUTCString();
+
+    //Insert "at" between date and time
+    var currentYear = finishedTime.getUTCFullYear();
+    var splitResult = formattedFinishedTime.split(currentYear); //Results in an array of length 2
+    var displayFinishedTime = splitResult[0] + currentYear + " at" + splitResult[1];
+
+    var logMsg = funcName + "\n" +
+      "formattedCreatedTime=" + formattedCreatedTime + "\n" +
+      "formattedStartedTime=" + formattedStartedTime + "\n" +
+      "formattedFinishedTime=" + formattedFinishedTime + "\n" +
+      "displayFinishedTime=" + displayFinishedTime;
+    $log.log(logMsg);
+
+    if (2 === vm.csvStatusObj.details.jobType) { // export results
       vm.modalId = "csvExport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
       vm.gridRows.push({
         id: 'export-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: vm.csvStatusObj.details.finished,
+        value: displayFinishedTime
       });
 
       vm.gridRows.push({
@@ -71,10 +86,7 @@
         "vm.downloadFileName=" + vm.downloadFileName;
       // $log.log(logMsg);
 
-    } else if (
-      ("importCompletedNoErr" === vm.csvStatusObj.status) ||
-      ("importCompletedWithErr" === vm.csvStatusObj.status)
-    ) {
+    } else if (1 === vm.csvStatusObj.details.jobType) { // import results
 
       vm.modalId = "csvImport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");
@@ -82,7 +94,7 @@
       vm.gridRows.push({
         id: 'import-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: vm.csvStatusObj.details.finished,
+        value: displayFinishedTime
       });
 
       vm.gridRows.push({

@@ -1,0 +1,13 @@
+<div class="sub-section">
+  <h5 class="sub-section__label" translate='globalSettings.privacy.supportAccessHeader'></h5>
+  <div class="form-spacing">
+    <p class="sub-section__description" translate='globalSettings.privacy.supportAccessDescription'></p>
+  </div>
+  <input
+    cs-input
+    type="checkbox"
+    id="allowReadOnlyOrgAccess"
+    ng-model="vm.allowReadOnlyAccess"
+    cs-input-label="{{'globalSettings.privacy.allowReadOnlyOrgAccess'|translate}}"
+    ng-disabled="vm.disableAllowReadOnlyAccessCheckbox">
+</div>

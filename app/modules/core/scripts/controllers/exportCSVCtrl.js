@@ -5,16 +5,21 @@
     .controller('ExportCSVCtrl', ExportCSVCtrl);
 
   /* @ngInject */
-  function ExportCSVCtrl($scope, $rootScope, $translate, $q, UserListService, PartnerService, Log, Notification) {
+  function ExportCSVCtrl($scope, $rootScope, $translate, $q, FeatureToggleService, UserListService, PartnerService, Log, Notification) {
 
     $scope.exporting = $rootScope.exporting;
     var promise = null;
+
+    $scope.isCareEnabled = false;
+    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+      $scope.isCareEnabled = careStatus;
+    });
 
     $scope.exportCSV = function () {
       if ($scope.exportType === $rootScope.typeOfExport.USER) {
         promise = UserListService.exportCSV($scope.activeFilter);
       } else if ($scope.exportType === $rootScope.typeOfExport.CUSTOMER) {
-        promise = PartnerService.exportCSV();
+        promise = PartnerService.exportCSV($scope.isCareEnabled);
       } else {
         Log.debug('Invalid export type: ' + $scope.exportType);
         Notification.notify([$translate.instant('errors.csvError')], 'error');

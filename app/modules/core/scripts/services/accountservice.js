@@ -5,7 +5,7 @@
     .service('AccountService', AccountService);
 
   /* @ngInject */
-  function AccountService($http, $rootScope, $location, Config, LogMetricsService, Log, UrlConfig) {
+  function AccountService($http, LogMetricsService, Log, UrlConfig) {
     return {
       createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
         var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';

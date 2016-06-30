@@ -7,12 +7,11 @@
 
   /* @ngInject */
   function WebExApiGatewayService(
-    $rootScope,
     $q,
     $window,
     $log,
     Authinfo,
-    Storage,
+    TokenService,
     WebExUtilsFact,
     WebExXmlApiFact,
     WebExXmlApiInfoSvc,
@@ -33,12 +32,10 @@
 
       WebExApiGatewayConstsService.csvAPIs.forEach(
         function checkAPI(csvAPI) {
-
           if (csvApi == csvAPI.request) {
-
             csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
 
-            accessToken = Storage.get('accessToken');
+            accessToken = TokenService.getAccessToken();
 
             httpsObj = {
               url: csvUrl,
@@ -52,7 +49,6 @@
             if ("POST" == csvAPI.method) {
               httpsObj.data = csvAPI.data;
             }
-
           }
         } // csvAPI()
       ); // WebExApiGatewayConstsService.csvAPIs.forEach()
@@ -198,7 +194,7 @@
       var logMsg = '';
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl;
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var csvHttpsObj = _this.csvConstructHttpsObj(
         siteUrl,
@@ -236,7 +232,7 @@
 
       logMsg = funcName + "\n" +
         "data.length=" + data.length;
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
 
@@ -347,8 +343,8 @@
       return deferredResponse.promise;
     }; // csvImport()
 
-    this.isSiteSupportsIframe = function (siteUrl) {
-      var funcName = "isSiteSupportsIframe()";
+    this.siteFunctions = function (siteUrl) {
+      var funcName = "siteFunctions()";
       var logMsg = "";
 
       var deferredIsSiteSupportsIframe = $q.defer();
@@ -364,79 +360,27 @@
           WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
           WebExXmlApiInfoSvc.webexAdminSessionTicket = response;
 
-          var siteVersionJsonObj = null;
-          var enableT30UnifiedAdminJsonObj = null;
-
-          var isAdminReportEnabled = false;
-          var isT31IframeSupported = false;
-          var isT30IframeSupported = false;
-
           getSiteData().then(
             function getSiteDataSuccess(response) {
               var funcName = "getSiteDataSuccess()";
               var logMsg = "";
 
-              siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(response.siteVersionXml);
-              isAdminReportEnabled = isAdminReportEnabledCheck(WebExUtilsFact.validateSiteInfoXmlData(response.siteInfoXml));
-              isT31IframeSupported = isT31IframeSupportedCheck(siteVersionJsonObj);
+              var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(response.siteVersionXml);
+              var isAdminReportEnabled = isAdminReportEnabledCheck(WebExUtilsFact.validateSiteInfoXmlData(response.siteInfoXml));
+              var t31Site = isT31Site(siteVersionJsonObj);
 
-              if (isT31IframeSupported) {
-                var isSiteSupportsIframeResult = {
-                  siteUrl: siteUrl,
-                  isCSVSupported: true,
-                  isIframeSupported: true,
-                  isAdminReportEnabled: isAdminReportEnabled
-                };
+              var isSiteSupportsIframeResult = {
+                siteUrl: siteUrl,
+                isCSVSupported: t31Site,
+                isIframeSupported: true,
+                isAdminReportEnabled: isAdminReportEnabled
+              };
 
-                logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                  "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                $log.log(logMsg);
+              logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+                "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+              $log.log(logMsg);
 
-                deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-              } else { // check iFrame support for T30 site
-                getEnableT30UnifiedAdminData().then(
-                  function getEnableT30UnifiedAdminDataSuccess(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataSuccess()";
-                    var logMsg = "";
-
-                    enableT30UnifiedAdminJsonObj = WebExUtilsFact.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml);
-                    isT30IframeSupported = isT30IframeSupportedCheck(
-                      siteVersionJsonObj,
-                      enableT30UnifiedAdminJsonObj
-                    );
-
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      isCSVSupported: false,
-                      isIframeSupported: isT30IframeSupported,
-                      isAdminReportEnabled: isAdminReportEnabled
-                    };
-
-                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
-
-                    deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                  }, // getEnableT30UnifiedAdminDataSuccess()
-
-                  function getEnableT30UnifiedAdminDataError(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataError()";
-                    var logMsg = "";
-
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      error: "getEnableT30UnifiedAdminDataError",
-                      response: response
-                    };
-
-                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
-
-                    deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
-                  } // getEnableT30UnifiedAdminDataError()
-                ); // getEnableT30UnifiedAdminData().then()
-              } // check iFrame support for T30 site
+              deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
             }, // getSiteDataSuccess()
 
             function getSiteDataError(response) {
@@ -456,10 +400,10 @@
               deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
             } // getSiteDataError()
           ); // getSiteData().then
-        }, // isSiteSupportsIframe().getSessionTicketSuccess()
+        }, // siteFunctions().getSessionTicketSuccess()
 
         function getSessionTicketError(response) {
-          var funcName = "isSiteSupportsIframe().getSessionTicketError()";
+          var funcName = "siteFunctions().getSessionTicketError()";
           var logMsg = "";
 
           var result = {
@@ -473,8 +417,8 @@
           $log.log(logMsg);
 
           deferredIsSiteSupportsIframe.reject(result);
-        } // isSiteSupportsIframe().getSessionTicketError()
-      ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
+        } // siteFunctions().getSessionTicketError()
+      ); // siteFunctions().getSessionTicket(siteUrl).then()
 
       function getSiteData() {
         var siteVersionXml = WebExXmlApiFact.getSiteVersion(WebExXmlApiInfoSvc);
@@ -494,44 +438,23 @@
         });
       } // getEnableT30UnifiedAdminData()
 
-      function isT31IframeSupportedCheck(siteVersionJsonObj) {
-        var funcName = "isT31IframeSupportedCheck()";
+      function isT31Site(siteVersionJsonObj) {
+        var funcName = "isT31Site()";
         var logMsg = "";
 
         var trainReleaseOrder = WebExUtilsFact.getSiteVersion(siteVersionJsonObj).trainReleaseOrder;
-        var isT31IframeSupported = (
+        var isT31SiteResult = (
           (null != trainReleaseOrder) &&
           (400 <= +trainReleaseOrder)
         ) ? true : false;
 
         logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
           "trainReleaseOrder=" + trainReleaseOrder + "\n" +
-          "isT31IframeSupported=" + isT31IframeSupported;
+          "isT31SiteResult=" + isT31SiteResult;
         // $log.log(logMsg);
 
-        return isT31IframeSupported;
-      } // isT31IframeSupportedCheck()
-
-      function isT30IframeSupportedCheck(
-        siteVersionJsonObj,
-        enableT30UnifiedAdminJsonObj
-      ) {
-        var funcName = "isT30IframeSupportedCheck()";
-        var logMsg = "";
-
-        var enableT30UnifiedAdmin = WebExUtilsFact.getEnableT30UnifiedAdmin(enableT30UnifiedAdminJsonObj);
-        var isT30IframeSupported = (
-          (null != enableT30UnifiedAdmin) &&
-          ("true" == enableT30UnifiedAdmin)
-        ) ? true : false;
-
-        logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-          "enableT30UnifiedAdmin=" + enableT30UnifiedAdmin + "\n" +
-          "isIframeSupported=" + isT30IframeSupported;
-        // $log.log(logMsg);
-
-        return isT30IframeSupported;
-      } // isT30IframeSupportedCheck()
+        return isT31SiteResult;
+      } // isT31Site()
 
       function isAdminReportEnabledCheck(siteInfoJsonObj) {
         var funcName = "isAdminReportEnabledCheck()";
@@ -551,6 +474,6 @@
       } // isAdminReportEnabledCheck()
 
       return deferredIsSiteSupportsIframe.promise;
-    }; // isSiteSupportsIframe()
+    }; // siteFunctions()
   } // end top level function
 })();
