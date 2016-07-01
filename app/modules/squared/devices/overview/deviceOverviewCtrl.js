@@ -18,12 +18,10 @@
     deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
     if (deviceOverview.isKEMAvailable) {
       if (!_.has(deviceOverview.currentDevice, 'kem')) {
-        deviceOverview.currentDevice.kem = {
-          addonModule: []
-        };
+        deviceOverview.currentDevice.kem = [];
         deviceOverview.isError = true;
       }
-      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.addonModule.length);
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
       deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
     }
     deviceOverview.saveInProcess = false;
@@ -269,7 +267,7 @@
     deviceOverview.save = function () {
       deviceOverview.saveInProcess = true;
       var device = deviceOverview.currentDevice;
-      var previousKemNumber = device.kem.addonModule.length;
+      var previousKemNumber = device.kem.length;
       var newKemNumber = deviceOverview.kemNumber.value;
       var diff = newKemNumber - previousKemNumber;
       var promiseList = [];
@@ -279,10 +277,13 @@
         });
       } else {
         _.times(-diff, function (n) {
-          var module = _.findWhere(device.kem.addonModule, {
-            index: (previousKemNumber - n)
+          console.log(device.kem);
+          console.log((previousKemNumber - n));
+          var module = _.findWhere(device.kem, {
+            index: '' + (previousKemNumber - n)
           });
-          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.id));
+          console.log(module);
+          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
         });
       }
       promiseList.push(CmiKemService.getKEM(device.huronId));
@@ -303,7 +304,7 @@
     };
 
     deviceOverview.reset = function () {
-      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.addonModule.length);
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
       deviceOverview.form.$setPristine();
       deviceOverview.form.$setUntouched();
     };
