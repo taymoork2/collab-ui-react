@@ -72,7 +72,7 @@
 
     function phoneUS(viewValue, modelValue) {
       var value = modelValue || viewValue;
-      return /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value);
+      return /^(\(?1\)?[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value);
     }
 
   }
