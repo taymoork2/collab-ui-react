@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChoosePersonalCtrl', ChoosePersonalCtrl);
   /* @ngInject */
-  function ChoosePersonalCtrl($q, UserListService, OtpService, XhrNotificationService, MailValidatorService, $stateParams, $translate) {
+  function ChoosePersonalCtrl($q, UserListService, OtpService, Notification, MailValidatorService, $stateParams, $translate) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.radioSelect = null;
@@ -53,6 +53,7 @@
     vm.search = function (searchString) {
       var deferred = $q.defer();
       if (searchString.length >= 3) {
+        vm.isSearching = true;
         var callback = function (data) {
           if (!data.success) {
             deferred.resolve([]);
@@ -75,9 +76,10 @@
             r.extractedName = name;
             return r;
           });
+          vm.isSearching = false;
           deferred.resolve(userList);
         };
-        UserListService.listUsers(0, 10, null, null, callback, searchString, false);
+        UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');
       } else {
         deferred.resolve([]);
       }
@@ -85,6 +87,10 @@
     };
 
     function selectUser($item) {
+      vm.userError = false;
+      if (!_.contains($item.entitlements, 'ciscouc')) {
+        vm.userError = true;
+      }
       vm.cisUuid = $item.id;
       vm.deviceName = $item.displayName;
       vm.userName = $item.userName;
@@ -121,7 +127,9 @@
             displayName: vm.displayName,
             organizationId: vm.organizationId
           }, vm.radioSelect);
-        }, XhrNotificationService.notify);
+        }, function (err) {
+          Notification.error(err.statusText);
+        });
       } else {
         // create user!!!
         $stateParams.wizard.next({
@@ -152,7 +160,7 @@
     };
 
     vm.isNameValid = function () {
-      if (vm.cisUuid) {
+      if (vm.cisUuid && !vm.userError) {
         return true;
       } // hack;
       return vm.newUser.emailAddress && vm.newUser.emailAddress.length > 0 && vm.isValidEmailAddress;

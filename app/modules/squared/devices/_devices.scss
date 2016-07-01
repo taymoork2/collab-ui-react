@@ -314,14 +314,12 @@
   }
 }
 
-.choose-device-type {
-  .errorBox {
-    display: flex;
-    align-items: flex-start;
-    .icon {
-      margin: 3px 8px 0 0;
-      color: #f5a623;
-    }
+.errorBox {
+  display: flex;
+  align-items: flex-start;
+  .icon {
+    margin: 3px 8px 0 0;
+    color: #f5a623;
   }
 }
 

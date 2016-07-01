@@ -2663,7 +2663,8 @@
       "firstNameExample": "e.g. John",
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
-      "invalidEmailAddress": "Invalid Email Address"
+      "invalidEmailAddress": "Invalid Email Address",
+      "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
