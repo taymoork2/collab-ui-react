@@ -56,7 +56,7 @@
         vm.noResults = false;
         vm.isSearching = true;
         var callback = function (data) {
-          if (!data.success) {
+          if (!data.success || !data.Resources) {
             deferred.resolve([]);
             return;
           }
