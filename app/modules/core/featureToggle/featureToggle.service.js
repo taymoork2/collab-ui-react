@@ -16,6 +16,7 @@
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
