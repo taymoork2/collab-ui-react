@@ -20,40 +20,42 @@ namespace globalsettings {
     public retention:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, private Orgservice, private FeatureToggleService) {
-      if (Authinfo.isPartner()) {
-        //Add setting sections for partner admins here.
-        this.support = new SupportSetting();
-        this.initBranding();
-      } else {
+    constructor(private Authinfo, private Orgservice, private FeatureToggleService) {
+      // provide these settings to everyone
+      this.initBranding();
+      this.support = new SupportSetting();
+
+      // if they are not a partner, provide everything else
+      if(!this.Authinfo.isPartner()) {
         this.initSecurity();
-        this.domains = new DomainsSetting();
-        this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
-        this.support = new SupportSetting();
-        this.initBrandingForNonPartner();
+        this.domains = new DomainsSetting();
         this.privacy = new PrivacySetting();
+        this.sipDomain = new SipDomainSetting();
         this.retention = new RetentionSetting();
       }
     }
 
-    private initBrandingForNonPartner(){
-      this.Orgservice.getOrg(data => {
-        if (_.get(data, 'orgSettings.allowCustomerLogos')) {
-          this.initBranding();
-        }
-      });
-    }
-
     private initBranding() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(() => {
-        //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
+      if(this.Authinfo.isPartner()) {
+        this.FeatureToggleService.brandingWordingChangeGetStatus().then(() => {
+          // this is done to prevent flashing between the two branding templates,
+          // it will be revealed after toggle is resolved
+          this.branding = new BrandingSetting();
+        });
+      } else if(this.Authinfo.isPartnerUser()) {
+        this.Orgservice.getOrg(_.noop).then(data => {
+          if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+            this.branding = new BrandingSetting();
+          }
+        });
+      } else { // enable if they are a direct customer
         this.branding = new BrandingSetting();
-      });
+      }
     }
 
     private initSecurity() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then(toggle=> {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then((toggle) => {
         if (toggle) {
           this.security = new SecuritySetting();
         }

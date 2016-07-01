@@ -4131,7 +4131,7 @@
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledActionText": "Learn More",
-        "serviceHeader": "On Premise Status",
+        "serviceHeader": "On-Premises Status",
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
@@ -4499,6 +4499,10 @@
     "newUsers": "Added",
     "existingUsers": "Updated",
     "errorUsers": "Errors",
+    "retryUsers": "Retry",
+    "retrying": "Retrying...",
+    "retryingIn": "retrying in:",
+    "retryingUsers": "{users, plural, one{# User} other{# Users}}",
     "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {
