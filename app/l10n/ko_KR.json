@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "죄송합니다. 파트너에게 통지하는 동안 문제가 발생했습니다."
   },
   "contactCenterUserConfig": {
-    "channels": "채널",
-    "contactCenterProfile": "케어 프로필",
-    "chat": "채팅",
-    "voice": "음성",
-    "email": "이메일",
-    "role": "역할",
     "alias": "별칭",
     "attributes": "속성",
-    "userRoles": {
-      "user": "사용자",
-      "supervisor": "감독관"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "사용자 {{userId}} 님에 대한 정보가 성공적으로 업데이트되었습니다. "
     },

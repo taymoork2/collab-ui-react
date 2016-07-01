@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Lo sentimos, pero se ha producido un error al intentar notificar a su asociado."
   },
   "contactCenterUserConfig": {
-    "channels": "Canales",
-    "contactCenterProfile": "Perfil del servicio de atención al cliente",
-    "chat": "Chat",
-    "voice": "Voz",
-    "email": "Correo electrónico",
-    "role": "Función",
     "alias": "Alias",
     "attributes": "Atributos",
-    "userRoles": {
-      "user": "Usuario",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "La información se ha actualizado correctamente para el usuario {{userId}}. "
     },

@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
   "contactCenterUserConfig": {
-    "channels": "Channels",
-    "contactCenterProfile": "Care Profile",
-    "chat": "Chat",
-    "voice": "Voice",
-    "email": "E-mail",
-    "role": "Role",
     "alias": "Alias",
     "attributes": "Attributes",
-    "userRoles": {
-      "user": "User",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },

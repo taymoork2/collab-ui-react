@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Leider ist etwas fehlgeschlagen, während wir versucht haben, Ihren Partner zu benachrichtigen."
   },
   "contactCenterUserConfig": {
-    "channels": "Kanäle",
-    "contactCenterProfile": "Care-Profil",
-    "chat": "Chat",
-    "voice": "Voice",
-    "email": "E-Mail",
-    "role": "Rolle",
     "alias": "Alias",
     "attributes": "Attribute",
-    "userRoles": {
-      "user": "Benutzer",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Informationen wurden für den Benutzer {{userId}} erfolgreich aktualisiert. "
     },

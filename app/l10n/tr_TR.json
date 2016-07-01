@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Maalesef ortağınıza bildirimde bulunmaya çalışırken bir şeyler ters gitti."
   },
   "contactCenterUserConfig": {
-    "channels": "Kanallar",
-    "contactCenterProfile": "Bakım Profili",
-    "chat": "Sohbet",
-    "voice": "Ses",
-    "email": "E-posta",
-    "role": "Rol",
     "alias": "Rumuz",
     "attributes": "Öznitelikler",
-    "userRoles": {
-      "user": "Kullanıcı",
-      "supervisor": "Şef"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "{{userId}} kullanıcısı için bilgiler başarılı şekilde güncellendi. "
     },

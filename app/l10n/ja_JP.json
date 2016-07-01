@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "申し訳ありません。パートナーに通知を送信しようとしている間に問題が発生しました。"
   },
   "contactCenterUserConfig": {
-    "channels": "チャンネル",
-    "contactCenterProfile": "ケアのプロファイル",
-    "chat": "チャット",
-    "voice": "音声",
-    "email": "メール",
-    "role": "役割",
     "alias": "別名",
     "attributes": "属性",
-    "userRoles": {
-      "user": "ユーザー",
-      "supervisor": "スーパーバイザー"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "ユーザー {{userId}} の情報を更新しました。 "
     },

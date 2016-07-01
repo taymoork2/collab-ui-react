@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Désolé, un problème est survenu lors de la tentative d'avertissement de votre partenaire."
   },
   "contactCenterUserConfig": {
-    "channels": "Canaux",
-    "contactCenterProfile": "Profil assistance",
-    "chat": "Clavardage",
-    "voice": "Voix",
-    "email": "Courriel",
-    "role": "Rôle",
     "alias": "Alias",
     "attributes": "Attributs",
-    "userRoles": {
-      "user": "Utilisateur",
-      "supervisor": "Superviseur"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "L'information a été mise à niveau avec succès pour l'utilisateur {{userId}}. "
     },

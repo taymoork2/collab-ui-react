@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Vi beklager, noe gikk galt under varsling av din partner."
   },
   "contactCenterUserConfig": {
-    "channels": "Kanaler",
-    "contactCenterProfile": "Støtteprofil",
-    "chat": "Chatte",
-    "voice": "Stemme",
-    "email": "E-post",
-    "role": "Rolle",
     "alias": "Alias",
     "attributes": "Attributter",
-    "userRoles": {
-      "user": "Bruker",
-      "supervisor": "Leder"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Informasjon har blitt oppdatert for bruker {{userId}}. "
     },

@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Si è verificato un problema nella notifica del partner."
   },
   "contactCenterUserConfig": {
-    "channels": "Canali",
-    "contactCenterProfile": "Profilo assistenza",
-    "chat": "Chat",
-    "voice": "Voce",
-    "email": "E-mail",
-    "role": "Ruolo",
     "alias": "Alias",
     "attributes": "Attributi",
-    "userRoles": {
-      "user": "Utente",
-      "supervisor": "Supervisore"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Informazioni aggiornate correttamente per l'utente {{userId}}. "
     },

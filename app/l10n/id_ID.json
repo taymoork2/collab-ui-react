@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Maaf, terjadi kesalahan saat berusaha memberitahu rekan Anda."
   },
   "contactCenterUserConfig": {
-    "channels": "Saluran",
-    "contactCenterProfile": "Profil Care",
-    "chat": "Obrolan",
-    "voice": "Suara",
-    "email": "Email",
-    "role": "Peran",
     "alias": "Alias",
     "attributes": "Atribut",
-    "userRoles": {
-      "user": "Pengguna",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Informasi berhasil diperbarui untuk pengguna {{userId}}. "
     },

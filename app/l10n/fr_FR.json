@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "Nous sommes désolés, une erreur s'est produite lors de l'envoi d'une notification à votre partenaire."
   },
   "contactCenterUserConfig": {
-    "channels": "Canaux",
-    "contactCenterProfile": "Profil Care",
-    "chat": "Chat",
-    "voice": "Voix",
-    "email": "Adresse électronique",
-    "role": "Rôle",
     "alias": "Alias",
     "attributes": "Attributs",
-    "userRoles": {
-      "user": "Utilisateur",
-      "supervisor": "Superviseur"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Les informations ont été modifiées avec succès pour l'utilisateur {{userId}}. "
     },

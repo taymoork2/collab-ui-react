@@ -3502,18 +3502,8 @@
     "notifyPartnerErrorMsg": "對不起，嘗試通知您的合作夥伴時發生錯誤。"
   },
   "contactCenterUserConfig": {
-    "channels": "頻道",
-    "contactCenterProfile": "服務設定檔",
-    "chat": "聊天",
-    "voice": "語音",
-    "email": "電子郵件",
-    "role": "角色",
     "alias": "別名",
     "attributes": "屬性",
-    "userRoles": {
-      "user": "使用者",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "已成功更新使用者 {{userId}} 的資訊。 "
     },
