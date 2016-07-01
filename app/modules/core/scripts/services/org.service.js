@@ -72,10 +72,10 @@
 
       var cacheDisabled = !!disableCache;
       return $http.get(adminUrl, {
-        params: {
-          disableCache: cacheDisabled
-        }
-      })
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
