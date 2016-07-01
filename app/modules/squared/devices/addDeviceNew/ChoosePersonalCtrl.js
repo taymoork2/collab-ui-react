@@ -53,6 +53,7 @@
     vm.search = function (searchString) {
       var deferred = $q.defer();
       if (searchString.length >= 3) {
+        vm.noResults = false;
         vm.isSearching = true;
         var callback = function (data) {
           if (!data.success) {
@@ -77,6 +78,7 @@
             return r;
           });
           vm.isSearching = false;
+          vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
         UserListService.listUsers(0, 10, null, null, callback, searchString, false, 'ciscouc');

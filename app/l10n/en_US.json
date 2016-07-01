@@ -2664,6 +2664,7 @@
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
+      "noUserFound": "no users found",
       "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
     },
     "chooseSharedSpace": {

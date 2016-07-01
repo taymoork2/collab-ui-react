@@ -49,7 +49,8 @@
             <span ng-bind-html="match.label.extractedName | typeaheadHighlight:query" ></span>
           </a>
         </script>
-        <div ng-show="choosePersonal.isSearching" cs-loader class="loader-example--small"></div>
+        <span ng-show="choosePersonal.isSearching" cs-loader class="loader-example--small"></span>
+        <span ng-show="choosePersonal.noResults" translate="addDeviceWizard.choosePersonal.noUserFound"></span>
         <div class="errorBox" ng-if="choosePersonal.userError">
           <i class="icon icon-warning"></i>
           <span translate="addDeviceWizard.choosePersonal.userMissesUcEntitlement"></span>
