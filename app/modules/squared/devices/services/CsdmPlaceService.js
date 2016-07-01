@@ -9,7 +9,7 @@
     var placesList = [];
     var loadedData = false;
 
-    function init(){
+    function init() {
       fetchPlaces();
     }
 
