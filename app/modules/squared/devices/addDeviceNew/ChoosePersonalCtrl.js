@@ -54,7 +54,7 @@
       var deferred = $q.defer();
       if (searchString.length >= 3) {
         var callback = function (data) {
-          if (!data.success) {
+          if (!data.success || !data.Resources) {
             deferred.resolve([]);
             return;
           }
