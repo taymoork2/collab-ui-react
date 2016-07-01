@@ -42,6 +42,7 @@
       $orb-size: 2.125rem;
       .cluster-type-orb {
         flex-grow: 0;
+        flex-shrink: 0;
         border-radius: $orb-size;
         width: $orb-size;
         height: $orb-size;
@@ -50,6 +51,12 @@
         text-align: center;
         background-color: $gray-light-4;
       }
+    }
+
+    .cluster-list-timezone {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .columns {
