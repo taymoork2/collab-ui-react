@@ -54,6 +54,10 @@
       var deferred = $q.defer();
       if (searchString.length >= 3) {
         var callback = function (data) {
+          if (!data.success) {
+            deferred.resolve([]);
+            return;
+          }
           var userList = data.Resources.map(function (r) {
             var name = null;
             if (r.name) {
