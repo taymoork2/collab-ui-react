@@ -34,7 +34,7 @@
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
         vm.showPlaces = false;
-        CsdmPlaceService.placesEnabled().then(function (result) {
+        CsdmPlaceService.placesFeatureIsEnabled().then(function (result) {
           vm.showPlaces = result;
         });
 

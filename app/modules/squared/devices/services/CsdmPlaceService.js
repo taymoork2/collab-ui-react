@@ -9,8 +9,12 @@
     var placesList = [];
     var loadedData = false;
 
-    function fetch() {
-      placesEnabled().then(function (res) {
+    function init(){
+      fetchPlaces();
+    }
+
+    function fetchPlaces() {
+      placesFeatureIsEnabled().then(function (res) {
         if (res) {
           return $http.get(placesUrl).then(function (res) {
             loadedData = true;
@@ -25,9 +29,9 @@
 
     }
 
-    fetch();
+    init();
 
-    function placesEnabled() {
+    function placesFeatureIsEnabled() {
       if ($window.location.search.indexOf("enablePlaces=true") > -1) {
         return $q.when(true);
       } else {
@@ -71,7 +75,7 @@
     }
 
     return {
-      placesEnabled: placesEnabled,
+      placesFeatureIsEnabled: placesFeatureIsEnabled,
       deletePlace: deletePlace,
       createPlace: createPlace,
       getPlacesList: getPlacesList,
