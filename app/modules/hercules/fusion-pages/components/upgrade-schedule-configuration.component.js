@@ -30,7 +30,9 @@
         time: getTimeOptions(),
         timeZone: getTimeZoneOptions()
       };
-      vm.upgradeSchedule = null;
+      vm.upgradeSchedule = {
+        acknowledged: false
+      };
       vm.errorMessage = '';
     }
 
@@ -105,10 +107,7 @@
           });
           return $q.all(promises);
         })
-        .then(function ackUpdateAndupdateUI(data) {
-          $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
-          return updateUI();
-        })
+        .then(updateUI)
         .catch(function (error) {
           vm.errorMessage = error.message;
           vm.state = 'error';

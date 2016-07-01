@@ -83,17 +83,6 @@ describe('Component: upgradeScheduleConfiguration', function () {
       expect(FusionClusterService.deleteMoratoria).toHaveBeenCalledWith(controller.clusterId, upgradeScheduleMock.moratoria[0].id);
     });
 
-    xit('should broadcast ACK_SCHEDULE_UPGRADE when acknowledging', function () {
-      $scope.clusterId = '123';
-      var controller = initController($scope);
-      controller.postpone({
-        preventDefault: function () {}
-      });
-      // this test is broken because Angular broadcasts $locationChangeStart first…
-      expect($rootScope.$broadcast.calls.count()).toBe(1);
-      expect($rootScope.$broadcast).toHaveBeenCalledWith('ACK_SCHEDULE_UPGRADE');
-    });
-
     it('should call postponeUpgradeSchedule and then fetch latest data when postponing', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
