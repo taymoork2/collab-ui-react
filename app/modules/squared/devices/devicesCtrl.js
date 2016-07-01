@@ -5,7 +5,7 @@
     .controller('DevicesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+      function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, Authinfo, AccountOrgService, WizardFactory, CsdmPlaceService) {
         var vm = this;
 
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -33,6 +33,11 @@
 
         var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
 
+        vm.showPlaces = false;
+        CsdmPlaceService.placesEnabled().then(function (result) {
+          vm.showPlaces = result;
+        });
+
         vm.existsDevices = function () {
           return (vm.shouldShowList() && (
             Object.keys(CsdmCodeService.getCodeList()).length > 0 ||
@@ -52,6 +57,10 @@
 
         vm.isEntitledToHuron = function () {
           return Authinfo.isSquaredUC();
+        };
+
+        vm.isEntitled = function () {
+          return vm.isEntitledToRoomSystem() || vm.isEntitledToHuron();
         };
 
         vm.updateListAndFilter = function () {
@@ -123,8 +132,96 @@
           }]
         };
 
-        vm.showAddDeviceDialog = function () {
-          AddDeviceModal.open();
+        vm.wizardWithoutPlaces = function () {
+          return {
+            data: {
+              function: "addDevice",
+              showPlaces: false,
+              title: "addDeviceWizard.newDevice",
+              isEntitledToHuron: vm.isEntitledToHuron(),
+              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              allowUserCreation: false
+            },
+            history: [],
+            currentStateName: 'addDeviceFlow.chooseDeviceType',
+            wizardState: {
+              'addDeviceFlow.chooseDeviceType': {
+                nextOptions: {
+                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
+                  huron: 'addDeviceFlow.choosePersonal'
+                }
+              },
+              'addDeviceFlow.choosePersonal': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.chooseSharedSpace': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.showActivationCode': {}
+            }
+          };
+        };
+
+        vm.wizardWithPlaces = function () {
+          return {
+            data: {
+              function: "addDevice",
+              showPlaces: true,
+              title: "addDeviceWizard.newDevice",
+              isEntitledToHuron: vm.isEntitledToHuron(),
+              isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
+              allowUserCreation: true
+            },
+            history: [],
+            currentStateName: 'addDeviceFlow.chooseDeviceType',
+            wizardState: {
+              'addDeviceFlow.chooseDeviceType': {
+                nextOptions: {
+                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
+                  huron: 'addDeviceFlow.chooseAccountType'
+                }
+              },
+              'addDeviceFlow.chooseAccountType': {
+                nextOptions: {
+                  shared: 'addDeviceFlow.chooseSharedSpace',
+                  personal: 'addDeviceFlow.choosePersonal'
+                }
+              },
+              'addDeviceFlow.choosePersonal': {
+                nextOptions: {
+                  create: 'addDeviceFlow.addServices',
+                  existing: 'addDeviceFlow.showActivationCode'
+                }
+              },
+              'addDeviceFlow.addServices': {
+                next: "addDeviceFlow.addLines"
+              },
+              'addDeviceFlow.chooseSharedSpace': {
+                nextOptions: {
+                  cloudberry: 'addDeviceFlow.showActivationCode',
+                  huron_existing: 'addDeviceFlow.showActivationCode',
+                  huron_create: 'addDeviceFlow.addLines'
+                }
+              },
+              'addDeviceFlow.addLines': {
+                next: 'addDeviceFlow.showActivationCode'
+              },
+              'addDeviceFlow.showActivationCode': {}
+            }
+          };
+        };
+
+        vm.startAddDeviceFlow = function () {
+          var wizardState = undefined;
+          if (vm.showPlaces) {
+            wizardState = vm.wizardWithPlaces();
+          } else {
+            wizardState = vm.wizardWithoutPlaces();
+          }
+          var wizard = WizardFactory.create(wizardState);
+          $state.go(wizard.state().currentStateName, {
+            wizard: wizard
+          });
         };
 
         function getTemplate(name) {

@@ -297,6 +297,10 @@
         'huntgroupedit',
         'devices',
         'device-overview',
+        'devices-redux',
+        'addDeviceFlow',
+        'places',
+        'place-overview',
         'services-overview'
       ],
       'squared-fusion-mgmt': [
@@ -308,7 +312,10 @@
       ],
       'spark-room-system': [
         'devices',
-        'device-overview'
+        'device-overview',
+        'addDeviceFlow',
+        'places',
+        'place-overview'
       ],
       'squared-fusion-uc': [
         'cluster-list',

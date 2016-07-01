@@ -126,6 +126,7 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
+      csdmPlaces: 'csdm-places',
       readonlyAdmin: 'atlas-read-only-admin',
       helpdeskExt: 'atlas-helpdesk-extended-information',
       brandingWordingChange: 'atlas-branding-wording-change',
