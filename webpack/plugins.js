@@ -14,7 +14,9 @@ if (!env.isTest) {
     })
   );
 }
-plugins.push(new ExtractTextPlugin('[name].[hash].css', { disable: !env.isProd }));
+plugins.push(new ExtractTextPlugin(env.isProd ? 'styles/[name].[hash].css' : 'styles/[name].css', {
+  disable: !env.isProd,
+}));
 
 plugins.push(new webpack.ProvidePlugin({
   $: 'jquery',

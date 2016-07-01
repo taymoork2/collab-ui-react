@@ -1,17 +1,16 @@
 'use strict';
 
-/* eslint global-require:0 */
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var gulpConfig = require('./config/config')();
+var appConfig = require('./config/config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
 
-var gatingSuites = _.chain(gulpConfig.testFiles.e2e).omit('huron').values().value();
+var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -21,13 +20,13 @@ var agent = mkProxyAgent();
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
-var E2E_FAIL_RETRY = gulpConfig.e2eFailRetry;
+var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 exports.config = {
   framework: "jasmine2",
 
-  suites: _.extend({}, gulpConfig.testFiles.e2e, {
+  suites: _.extend({}, appConfig.e2eSuites, {
     jenkins: gatingSuites,
   }),
 

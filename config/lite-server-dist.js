@@ -1,21 +1,5 @@
-var compression = require('compression')();
-var customCSPmiddleware = require('../utils/customCSPmiddleware');
+var liteServerConfig = require('./lite-server');
+liteServerConfig.server.baseDir = './dist';
+liteServerConfig.codeSync = false;
 
-module.exports = {
-  port: "8000",
-  host: "127.0.0.1",
-  server: {
-    baseDir: "./dist",
-    middleware: [
-      compression,
-      customCSPmiddleware,
-    ]
-  },
-  ghostMode: {
-    clicks: false,
-    forms: false,
-    scroll: false,
-  },
-  open: false,
-  codeSync: false
-};
+module.exports = liteServerConfig;

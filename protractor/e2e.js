@@ -1,5 +1,5 @@
 var processEnvUtil = require('../utils/processEnvUtil')();
-var config = require('../config/config')();
+var config = require('../config/config');
 var fs = require('fs-extra');
 var yargs = require('yargs');
 var unparse = require('unparse-args');
