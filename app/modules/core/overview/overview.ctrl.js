@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $rootScope, TrialService, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, UrlConfig, Notification) {
+  function OverviewCtrl($rootScope, $scope, $state, $translate, Authinfo, Config, Log, Notification, Orgservice, OverviewCardFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -24,7 +24,7 @@
     function init() {
       removeCardUserTitle();
       setSipUriNotification();
-      TrialService.getDaysLeft().then(function(daysLeft) {
+      TrialService.getDaysLeftForCurrentUser().then(function(daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
     }

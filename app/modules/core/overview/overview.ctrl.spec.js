@@ -28,6 +28,10 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
+
+    it('should have properly set trialDaysLeft', function() {
+      expect(controller.trialDaysLeft).toEqual(1);
+    });
   });
 
   describe('Callcard with healthStatus Event', function () {
@@ -246,7 +250,7 @@ describe('Controller: OverviewCtrl', function () {
     Config = _Config_;
     Authinfo = _Authinfo_;
     TrialService = _TrialService_;
-    
+
     ServiceDescriptor = {
       services: function (eventHandler) {}
     };
@@ -294,7 +298,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getLicenses').and.returnValue([{}]);
     spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Authinfo, 'getServices').and.returnValue(services);
-    spyOn(TrialService, 'getDaysLeft').and.returnValue($q.when(1));
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,

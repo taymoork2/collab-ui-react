@@ -26,7 +26,7 @@
     ///////////////////////
 
     function init() {
-      TrialService.getDaysLeft().then(function(daysLeft) {
+      TrialService.getDaysLeftForCurrentUser().then(function(daysLeft) {
         vm.daysLeft = daysLeft;
       });
       getPrimaryPartnerInfo();

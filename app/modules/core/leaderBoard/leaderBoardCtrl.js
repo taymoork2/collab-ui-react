@@ -88,7 +88,7 @@
 
     function init() {
       getLicenses();
-      TrialService.getDaysLeft().then(function(daysLeft) {
+      TrialService.getDaysLeftForCurrentUser().then(function(daysLeft) {
         $scope.trialDaysLeft = daysLeft;
       });
     }
