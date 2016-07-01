@@ -132,7 +132,8 @@
       brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
-      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics',
+      newRoomSystems: 'newRoomSystems'
     };
 
     var toggles = {};

@@ -1,17 +1,28 @@
-/* globals $controller, $q, $rootScope, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
   var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+    // TODO - check for removal of $httpBackend and FeatureToggleService when DX80 and MX300 are officially supported
+    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+  });
 
+  beforeEach(function () {
     controller = $controller('TrialDeviceController');
+    // TODO - remove spyOn feature toggle and $httpBackend when DX80 and MX300 are officially supported
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    $httpBackend
+      .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
+      .respond({});
     $rootScope.$apply();
   });
 

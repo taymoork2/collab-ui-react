@@ -6,7 +6,8 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($stateParams, $translate, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  // TODO - check for removal of $q and FeatureToggleService when DX80 and MX300 are officially supported
+  function TrialDeviceController($q, $stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -46,6 +47,8 @@
     vm.notifyLimits = notifyLimits;
     vm.getQuantityInputDefault = _getQuantityInputDefault;
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
+    // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
+    vm.showNewRoomSystems = false;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -63,6 +66,12 @@
     vm.sx10 = _.find(_trialRoomSystemData.details.roomSystems, {
       model: 'CISCO_SX10'
     });
+    vm.dx80 = _.find(_trialRoomSystemData.details.roomSystems, {
+      model: 'CISCO_DX80'
+    });
+    vm.mx300 = _.find(_trialRoomSystemData.details.roomSystems, {
+      model: 'CISCO_MX300'
+    });
     vm.phone8865 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8865'
     });
@@ -77,6 +86,8 @@
     });
 
     vm.setQuantity(vm.sx10);
+    vm.setQuantity(vm.dx80);
+    vm.setQuantity(vm.mx300);
     vm.setQuantity(vm.phone8865);
     vm.setQuantity(vm.phone8845);
     vm.setQuantity(vm.phone8841);
@@ -131,6 +142,123 @@
           return vm.getQuantityInputDefault(vm.sx10, minRoomSystems);
         }
 
+      },
+      watcher: _addWatcher(),
+      validators: _addRoomSystemValidators()
+    }, {
+      model: vm.dx80,
+      key: 'enabled',
+      type: 'checkbox',
+      className: 'pull-left medium-5 medium-offset-1',
+      templateOptions: {
+        label: $translate.instant('trialModal.call.dx80'),
+        id: 'cameraDX80',
+        labelClass: 'medium-offset-1',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.canAddRoomSystemDevice;
+        }
+      },
+      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      hideExpression: function () {
+        return !vm.showNewRoomSystems;
+      },
+      validators: _checkValidators()
+    }, {
+      model: vm.dx80,
+      key: 'quantity',
+      type: 'input',
+      className: 'pull-left medium-6',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.call.quantity'),
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
+        type: 'number',
+        max: maxRoomSystems,
+        min: minRoomSystems,
+        disabled: true,
+      },
+      modelOptions: {
+        allowInvalid: true
+      },
+      validation: {
+        show: true
+      },
+
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.dx80.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.dx80.enabled || vm.dx80.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.dx80, minRoomSystems);
+        }
+      },
+      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      hideExpression: function () {
+        return !vm.showNewRoomSystems;
+      },
+      watcher: _addWatcher(),
+      validators: _addRoomSystemValidators()
+    }, {
+      model: vm.mx300,
+      key: 'enabled',
+      type: 'checkbox',
+      className: 'pull-left medium-5 medium-offset-1',
+      templateOptions: {
+        label: $translate.instant('trialModal.call.mx300'),
+        id: 'cameraMX300',
+        labelClass: 'medium-offset-1',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.canAddRoomSystemDevice;
+        }
+      },
+      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      hideExpression: function () {
+        return !vm.showNewRoomSystems;
+      },
+      validators: _checkValidators()
+    }, {
+      model: vm.mx300,
+      key: 'quantity',
+      type: 'input',
+      className: 'pull-left medium-6',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.call.quantity'),
+        labelClass: 'pull-left medium-6 text-right',
+        inputClass: 'pull-left medium-5 medium-offset-1 ui--mt-',
+        type: 'number',
+        max: maxRoomSystems,
+        min: minRoomSystems,
+        disabled: true,
+      },
+      modelOptions: {
+        allowInvalid: true
+      },
+      validation: {
+        show: true
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.mx300.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.mx300.enabled || vm.mx300.readonly;
+        },
+        'model.quantity': function () {
+          return vm.getQuantityInputDefault(vm.mx300, minRoomSystems);
+        }
+      },
+      // TODO - remove hideExpression when DX80 and MX300 are officially supported
+      hideExpression: function () {
+        return !vm.showNewRoomSystems;
       },
       watcher: _addWatcher(),
       validators: _addRoomSystemValidators()
@@ -373,7 +501,6 @@
           }
         }
       }
-
     }, {
       model: vm.shippingInfo,
       key: 'country',
@@ -497,6 +624,19 @@
 
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
+      // TODO - remove showNewRoomSystems when DX80 and MX300 are officially supported
+      var showNewRoomSystems;
+
+      // TODO - check to remove $q.all when DX80 and MX300 are officially supported
+      $q.all(
+        // Hides the DX80 and MX300 under a feature toggle
+        FeatureToggleService.supports(FeatureToggleService.features.newRoomSystems)
+      ).then(function (results) {
+        showNewRoomSystems = results[0];
+      }).finally(function () {
+        vm.showNewRoomSystems = showNewRoomSystems;
+      });
+
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {
         limitsPromise.then(function (data) {
