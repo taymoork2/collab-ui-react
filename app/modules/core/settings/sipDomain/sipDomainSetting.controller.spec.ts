@@ -124,16 +124,9 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
         expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);
     });
 
-    it('should enable Next button when isSSARerved is false and isConfirmed is true', () => {
+    it('should enable Next button when isSSARerved is false and depends on isConfirmed', () => {
         controller.isSSAReserved = false;
-        controller.isConfirmed = true;
-        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);
-    });
-
-    it('should disable Next button when isSSARerved is false and isConfirmed is false', () => {
-        controller.isSSAReserved = false;
-        controller.isConfirmed = false;
-        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', true);
+        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', !controller.isConfirmed);
     });
   });
 

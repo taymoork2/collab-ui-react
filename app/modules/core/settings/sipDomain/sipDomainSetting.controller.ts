@@ -53,17 +53,11 @@ namespace globalsettings {
     }
 
     public checkSSAReservation() {
-      if(this.isSSAReserved)
+      if(this.isSSAReserved) {
         this.$scope.$emit('wizardNextButtonDisable', false);
-      else
-      {
-        if(!this.isConfirmed)
-        {
-          this.$scope.$emit('wizardNextButtonDisable', true);
-        }
-        else{
-          this.$scope.$emit('wizardNextButtonDisable', false);
-        }
+      }
+      else {
+        this.$scope.$emit('wizardNextButtonDisable', !this.isConfirmed);
       }
     }
 
