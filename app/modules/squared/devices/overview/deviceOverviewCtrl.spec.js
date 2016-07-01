@@ -35,9 +35,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       product: 'Cisco 8865',
       cisUuid: 2,
       huronId: 3,
-      kem: {
-        addonModule: []
-      }
+      kem: []
     }
   };
 
