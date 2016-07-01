@@ -13,7 +13,7 @@ var maxLineWidth = 100;
 // https://github.com/leonardoanalista/cz-customizable
 // https://github.com/commitizen/cz-conventional-changelog
 module.exports = {
-  prompter: function(cz, commit) {
+  prompter: function (cz, commit) {
     console.log('\nLine 1 will be cropped at ' + maxLineWidth + ' characters. All other lines will be wrapped after ' + maxLineWidth + ' characters.\n');
 
     var questions = [{
@@ -87,33 +87,42 @@ module.exports = {
       type: 'input',
       name: 'footer',
       message: 'List any issues, JIRA, Rally, etc. related to change (optional). E.g.: Fixes #31, F410:\n'
-    },
-    {
+    }, {
       type: 'expand',
       name: 'confirmCommit',
-      message: function(answers) {
+      message: function (answers) {
         var SEP = '###--------------------------------------------------------###';
         console.log('\n' + SEP + '\n' + buildCommit(answers) + '\n' + SEP + '\n');
         return 'Are you sure you want to proceed with the commit above?';
       },
-      choices: [
-        { key: 'y', name: 'Yes', value: 'yes' },
-        { key: 'n', name: 'Abort commit', value: 'no' },
-        { key: 'e', name: 'Edit message', value: 'edit' }
-      ],
+      choices: [{
+        key: 'y',
+        name: 'Yes',
+        value: 'yes'
+      }, {
+        key: 'n',
+        name: 'Abort commit',
+        value: 'no'
+      }, {
+        key: 'e',
+        name: 'Edit message',
+        value: 'edit'
+      }],
       default: 0
     }];
 
     cz.prompt(questions)
-      .then(function(answers) {
+      .then(function (answers) {
         if (answers.confirmCommit === 'edit') {
-          temp.open('ATLAS_GIT_COMMIT', function(err, info) {
+          temp.open('ATLAS_GIT_COMMIT', function (err, info) {
             if (!err) {
               fs.write(info.fd, buildCommit(answers));
               fs.close(info.fd, function (err) {
                 editor(info.path, function (code, sig) {
                   if (code === 0) {
-                    var commitStr = fs.readFileSync(info.path, { encoding: 'utf8' });
+                    var commitStr = fs.readFileSync(info.path, {
+                      encoding: 'utf8'
+                    });
                     commit(commitStr);
                   } else {
                     console.log('Editor returned non zero value. Commit message was:\n' + buildCommit(answers));
