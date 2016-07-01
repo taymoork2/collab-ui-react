@@ -6,6 +6,9 @@ describe('Controller: DevicesCtrl', function () {
 
   beforeEach(module('Squared'));
   beforeEach(module('Huron'));
+  beforeEach(module('Core'));
+  beforeEach(module('Sunlight'));
+
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

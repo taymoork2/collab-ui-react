@@ -297,7 +297,6 @@
         'huntgroupedit',
         'devices',
         'device-overview',
-        'devices-redux',
         'addDeviceFlow',
         'places',
         'place-overview',
