@@ -16,6 +16,7 @@
       updateUserProfile: updateUserProfile,
       inviteUsers: inviteUsers,
       sendEmail: sendEmail,
+      getUserEmailStatus: getUserEmailStatus,
       patchUserRoles: patchUserRoles,
       migrateUsers: migrateUsers,
       onboardUsers: onboardUsers,
@@ -268,6 +269,30 @@
           callback(data, status);
         });
     }
+
+    function getUserEmailStatus(email) {
+      /* fn getEmStats(arr){
+  if(!arr || !Array.isArray(arr)){
+    $q.reject('invalid email array');
+  }
+
+  return $http.get(url,{params:emails}); */
+      if (!email) {
+        return $q.reject('Invalid Email');
+      }
+      var emailUrl = userUrl + 'email?email=' + email;
+
+      return $http.get(emailUrl, {'params': email});
+    }
+
+    // function getUserEmailStatus(orgId, uuid) {
+    //   var emailUrl = userUrl + '/organization/' + orgId + '/email/' + uuid;
+
+    //   return $http({
+    //     method: 'GET',
+    //     url: emailUrl
+    //   });
+    // }
 
     function patchUserRoles(email, name, roles, callback) {
       var patchUrl = userUrl + '/organization/' + Authinfo.getOrgId() + '/users/roles';
