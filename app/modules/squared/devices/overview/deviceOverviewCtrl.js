@@ -277,12 +277,9 @@
         });
       } else {
         _.times(-diff, function (n) {
-          console.log(device.kem);
-          console.log((previousKemNumber - n));
           var module = _.findWhere(device.kem, {
             index: '' + (previousKemNumber - n)
           });
-          console.log(module);
           promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
         });
       }
