@@ -213,25 +213,15 @@
         });
     }
 
-    function createOrg(enc, callback) {
+    function createOrg(enc) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
         'encryptedQueryString': enc
       };
-
-      Auth.setAccessToken().then(function () {
-        $http.post(orgUrl, orgRequest)
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
-          });
+      return Auth.setAccessToken().then(function () {
+        return $http.post(orgUrl, orgRequest).then(function (response) {
+          return response.data;
+        });
       });
     }
 

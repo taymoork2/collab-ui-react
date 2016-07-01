@@ -1352,7 +1352,10 @@
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
+      "emailNotificationsWatermark": "Add email addresses",
       "emailNotificationsSaving": "Saving.",
+      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
@@ -4496,6 +4499,10 @@
     "newUsers": "Added",
     "existingUsers": "Updated",
     "errorUsers": "Errors",
+    "retryUsers": "Retry",
+    "retrying": "Retrying...",
+    "retryingIn": "retrying in:",
+    "retryingUsers": "{users, plural, one{# User} other{# Users}}",
     "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {

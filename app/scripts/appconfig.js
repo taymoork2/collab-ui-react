@@ -443,6 +443,7 @@
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
+            controllerAs: 'processOrder',
             parent: 'main',
             authenticate: false
           })
