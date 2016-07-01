@@ -9,9 +9,9 @@
     <p class="wizardDescription">
       <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone"></span>
       <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem"></span>
-      <span ng-if="showActivationCode.newCodeLocation()==='users'" translate="addDeviceWizard.showActivationCode.newCodeInUsersPage"></span>
-      <span ng-if="showActivationCode.newCodeLocation()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
-      <span ng-if="showActivationCode.newCodeLocation()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='users'" translate="addDeviceWizard.showActivationCode.newCodeInUsersPage"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
     </p>
     <div class="qrCodeSection">
       <div class="qrCodePlaceholder"></div>

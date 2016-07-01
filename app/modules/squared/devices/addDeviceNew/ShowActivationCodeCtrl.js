@@ -28,7 +28,7 @@
       });
     }
 
-    vm.newCodeLocation = function () {
+    vm.activationFlowType = function () {
       if (vm.wizardData.deviceType === "cloudberry") {
         if (vm.wizardData.showPlaces) {
           return "places";
