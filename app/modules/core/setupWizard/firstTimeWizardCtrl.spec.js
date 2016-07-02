@@ -40,12 +40,13 @@ describe('FirstTimeWizardCtrl', function () {
       $scope.$apply();
     }
 
-    function testData(data) {
+    function initControllerWith(data) {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.when(data.atlasCareTrialsOn));
       Authinfo.isInDelegatedAdministrationOrg.and.returnValue(data.asDelegatedAdmin);
       Authinfo.getCareServices.and.returnValue(data.careServices);
       Userservice.getUser.and.returnValue($q.when(data.getUserResponse));
       Userservice.updateUserProfile.and.returnValue($q.when(data.updateUserProfileResponse));
+      initController();
     }
 
     beforeEach(function () {
@@ -59,30 +60,27 @@ describe('FirstTimeWizardCtrl', function () {
     });
 
     it('should not check care feature toggle, if isInDelegatedAdministrationOrg is true', function () {
-      testData({
+      initControllerWith({
         asDelegatedAdmin: true
       });
 
-      initController();
       // We will handle partner scenarios later.
       expect(FeatureToggleService.atlasCareTrialsGetStatus).not.toHaveBeenCalled();
     });
 
     it('should not get user details if there are no care licenses', function () {
-      testData({
+      initControllerWith({
         asDelegatedAdmin: false,
         atlasCareTrialsOn: true,
         careServices: []
       });
-
-      initController();
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
       expect(Userservice.getUser).not.toHaveBeenCalled();
     });
 
     it('should not patch user if get user failed', function () {
-      testData({
+      initControllerWith({
         asDelegatedAdmin: false,
         atlasCareTrialsOn: true,
         careServices: [{
@@ -91,15 +89,13 @@ describe('FirstTimeWizardCtrl', function () {
         getUserResponse: failedResponse
       });
 
-      initController();
-
       expect(Authinfo.getCareServices).toHaveBeenCalled();
       expect(Userservice.getUser).toHaveBeenCalled();
       expect(Userservice.updateUserProfile).not.toHaveBeenCalled();
     });
 
     it('do not logout if patch user failed', function () {
-      testData({
+      initControllerWith({
         asDelegatedAdmin: false,
         atlasCareTrialsOn: true,
         careServices: [{
@@ -108,8 +104,6 @@ describe('FirstTimeWizardCtrl', function () {
         getUserResponse: successResponse,
         updateUserProfileResponse: failedResponse
       });
-
-      initController();
 
       expect(Authinfo.getCareServices).toHaveBeenCalled();
       expect(Userservice.getUser).toHaveBeenCalled();
@@ -120,7 +114,7 @@ describe('FirstTimeWizardCtrl', function () {
     it('should proceed to patch & logout if care admin does not have care roles & care ' +
       'entitlements',
       function () {
-        testData({
+        initControllerWith({
           asDelegatedAdmin: false,
           atlasCareTrialsOn: true,
           careServices: [{
@@ -129,8 +123,6 @@ describe('FirstTimeWizardCtrl', function () {
           getUserResponse: successResponse,
           updateUserProfileResponse: successResponse
         });
-
-        initController();
 
         expect(Auth.logout).toHaveBeenCalled();
       });

@@ -47,7 +47,6 @@
 
     function adminPatchNeeded() {
       return (!Authinfo.isInDelegatedAdministrationOrg() &&
-        Authinfo.getCareServices() &&
         Authinfo.getCareServices().length > 0);
     }
 
@@ -84,8 +83,7 @@
         entitlements: [Config.entitlements.care, Config.entitlements.context]
       };
 
-      var res = Userservice.updateUserProfile(admin.id, userData, _.noop);
-      return res ? res : $q.reject();
+      return Userservice.updateUserProfile(admin.id, userData, _.noop);
     }
 
     function updateAccessToken(response) {
