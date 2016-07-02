@@ -323,7 +323,8 @@
       getClustersByConnectorType: getClustersByConnectorType,
       getRunningStateSeverity: getRunningStateSeverity,
       mergeAllAlarms: mergeAllAlarms,
-      getMostSevereRunningState: getMostSevereRunningState
+      getMostSevereRunningState: getMostSevereRunningState,
+      buildAggregates: buildAggregates
     };
   }
 

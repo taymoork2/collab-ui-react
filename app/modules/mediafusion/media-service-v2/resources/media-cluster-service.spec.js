@@ -172,4 +172,60 @@ describe('Service: MediaClusterServiceV2', function () {
     expect(object.stateSeverity).toBe('error');
     expect(object.stateSeverityValue).toBe(3);
   });
+
+  it('should return the buildAggregates', function () {
+    var type = 'mf_mgmt';
+    var cluster = {
+      "url": " ",
+      "id": "8aadca1c-805a-422f-8081-300f75281a70",
+      "name": "10.22.162.19",
+      "connectors": [{
+        "url": " ",
+        "id": "mf_mgmt@8aadca1c-805a-422f-8081-300f75281a70",
+        "connectorType": "mf_mgmt",
+        "upgradeState": "upgraded",
+        "state": "has_alarms",
+        "hostname": "10.22.162.48",
+        "hostSerial": "8aadca1c-805a-422f-8081-300f75281a70",
+        "alarms": [{
+          "id": "mf.docker.error",
+          "firstReported": "2016-07-01T22:10:12.994Z",
+          "lastReported": "2016-07-01T22:10:12.994Z",
+          "severity": "warning",
+          "title": "Management process error",
+          "description": "No such container: 5415fb12efbde04f7178a34a3c92e14f1185d07d4fca942abbfc0962899a4455\n"
+        }],
+        "runningVersion": "2016.06.16.124",
+        "packageUrl": " ",
+        "registered": true
+      }],
+      "releaseChannel": "GA",
+      "provisioning": [{
+        "url": " ",
+        "connectorType": "mf_mgmt",
+        "provisionedVersion": "1.0",
+        "availableVersion": "1.0",
+        "packageUrl": " "
+      }],
+      "registered": true,
+      "targetType": "mf_mgmt"
+    };
+
+    var object = Service.buildAggregates(type, cluster);
+    expect(object).toBeDefined();
+    expect(object.alarms).toBeDefined();
+    expect(object.alarms[0]).toBeDefined();
+    expect(object.alarms[0].description).toBeDefined();
+    expect(object.alarms[0].severity).toBeDefined();
+    expect(object.alarms[0].severity).toBe('warning');
+    expect(object.hosts).toBeDefined();
+    expect(object.provisioning).toBeDefined();
+    expect(object.provisioning.connectorType).toBeDefined();
+    expect(object.provisioning.connectorType).toBe('mf_mgmt');
+    expect(object.state).toBeDefined();
+    expect(object.state).toBe('has_alarms');
+    expect(object.upgradeState).toBeDefined();
+    expect(object.upgradeState).toBe('upgraded');
+
+  });
 });
