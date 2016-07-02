@@ -17,7 +17,7 @@ namespace globalsettings {
     public errorMsg = '';
 
     /* @ngInject */
-    constructor(private $scope, private $rootScope, private Notification,
+    constructor(private $scope, private $rootScope, private Notification, private Config,
                 private Orgservice, private SparkDomainManagementService, private Log, private $translate, private $window, private UrlConfig) {
       
       $scope.$emit('wizardNextButtonDisable', true);
@@ -53,7 +53,7 @@ namespace globalsettings {
     }
 
     public checkSSAReservation() {
-      if(this.isSSAReserved) {
+      if(this.isSSAReserved || this.Config.isE2E()) {
         this.$scope.$emit('wizardNextButtonDisable', false);
       }
       else {
