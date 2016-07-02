@@ -52,7 +52,7 @@ namespace globalsettings {
             this.branding = new BrandingSetting();
           }
         });
-      } else { // enable if they are a direct customer
+      } else if(this.Authinfo.isDirectCustomer()) {
         this.branding = new BrandingSetting();
       }
     }
