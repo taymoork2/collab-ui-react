@@ -321,7 +321,9 @@
       defuseV2Connector: defuseV2Connector,
       moveV2Host: moveV2Host,
       getClustersByConnectorType: getClustersByConnectorType,
-      getRunningStateSeverity: getRunningStateSeverity
+      getRunningStateSeverity: getRunningStateSeverity,
+      mergeAllAlarms: mergeAllAlarms,
+      getMostSevereRunningState: getMostSevereRunningState
     };
   }
 

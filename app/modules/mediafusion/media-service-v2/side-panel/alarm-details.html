@@ -45,7 +45,17 @@
       <tbody>
       <tr>
         <td translate="mediaFusion.alarms.severity"></td>
-        <td><span ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'mediafusion-state-disabled' : 'mediafusion-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.severity | translate}}</span></td>
+        <td>
+          <span ng-if="alarmCtrl.alarm.severity == 'warning' " class="yellow">
+            <i class="fa fa-circle mediafusion-state-alarm" />
+          </span>
+          <span ng-if="alarmCtrl.alarm.severity == 'critical'" class="red">
+            <i class="fa fa-circle mediafusion-state-offline" />
+          </span>
+          <span
+          ng-class="alarmCtrl.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.severity | translate}}
+          </span>
+        </td>
       </tr>
       <tr>
         <td translate="mediaFusion.alarms.raised"></td>
