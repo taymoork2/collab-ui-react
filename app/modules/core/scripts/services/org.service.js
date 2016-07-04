@@ -26,20 +26,19 @@
       setEftSetting: setEftSetting
     };
 
+    var savedOrgSettingsCache = [];
+
     return service;
 
-    function getOrg(callback, oid, disableCache) {
-      var scomUrl = null;
-      if (oid) {
-        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
-      } else {
-        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
+    function getOrg(callback, orgId, disableCache) {
+      if (!orgId) {
+        orgId = Authinfo.getOrgId();
       }
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
       if (disableCache) {
         scomUrl = scomUrl + '?disableCache=true';
       }
-
       return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
@@ -51,6 +50,7 @@
           } else {
             data.orgSettings = JSON.parse(_.last(data.orgSettings));
           }
+          _.assign(data.orgSettings, getCachedOrgSettings(orgId));
 
           callback(data, status);
         })
@@ -194,16 +194,33 @@
       });
     }
 
+    function getCachedOrgSettings(orgId) {
+      return _.chain(savedOrgSettingsCache)
+        .filter(function (cache) {
+          return cache.orgId === orgId && moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
+        })
+        .map(function (cache) {
+          return cache.setting;
+        })
+        .reduce(function (result, setting) {
+          return _.merge(result, setting);
+        }, {})
+        .value();
+    }
+
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
     function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
-
-      return getOrg(_.noop, orgId, true)
+      savedOrgSettingsCache.push({
+        orgId: orgId,
+        propertySaveTimeStamp: new Date(),
+        setting: _.clone(settings)
+      });
+      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
-          _.assign(orgSettings, settings);
 
           return $http({
             method: 'PATCH',

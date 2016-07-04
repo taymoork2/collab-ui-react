@@ -747,6 +747,7 @@
     "selectLanguage": "Select a language",
     "select": "Select",
     "invalidPhoneNumber": "Incorrect Phone Number",
+    "invalidZipCode": "Incorrect Zip Code",
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
@@ -1624,8 +1625,8 @@
     "setSipDomainLink": "What is a Spark SIP Address?",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
-    "setSipDomainCompNames": "These subdomains can be reserved for you:",
-    "setSipDomainAsssignedNames": "These subdomains have been reserved for you:",
+    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}} will be reserved for you:",
+    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}} reserved for you",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
@@ -2362,7 +2363,8 @@
       "state": "State",
       "zip": "Zip",
       "dealId": "Deal ID",
-      "usOnly": "Currently U.S. only"
+      "usOnly": "Currently U.S. only",
+      "invalidDealId": "Invalid Deal ID number"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -4134,7 +4136,7 @@
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledActionText": "Learn More",
-        "serviceHeader": "On Premise Status",
+        "serviceHeader": "On-Premises Status",
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",

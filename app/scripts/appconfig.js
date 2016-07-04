@@ -379,7 +379,12 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasSettingsPageGetStatus();
+              }
+            }
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
