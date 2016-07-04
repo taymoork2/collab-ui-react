@@ -11,7 +11,8 @@
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
              ng-class="{'typeButtonClicked':chooseAccountType.radioSelect === 'personal'}"
-             ng-click="chooseAccountType.personal()">
+             ng-click="chooseAccountType.personal()"
+             ng-dblclick="chooseAccountType.next()">
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/user-illustration.png" />
           </div>
@@ -22,7 +23,8 @@
       <div class="typeButtonWrapper">
         <div class="typeButton"
              ng-class="{'typeButtonClicked':chooseAccountType.radioSelect === 'shared'}"
-             ng-click="chooseAccountType.shared()">
+             ng-click="chooseAccountType.shared()"
+             ng-dblclick="chooseAccountType.next()">
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/places-illustration.png" />
           </div>

@@ -12,7 +12,8 @@
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'huron'}"
-             ng-click="chooseDeviceType.huron()">
+             ng-click="chooseDeviceType.huron()"
+             ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
           </div>
@@ -30,7 +31,8 @@
       <div class="typeButtonWrapper">
         <div class="typeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'cloudberry'}"
-             ng-click="chooseDeviceType.cloudberry()">
+             ng-click="chooseDeviceType.cloudberry()"
+             ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/room-system.png"/>
           </div>
