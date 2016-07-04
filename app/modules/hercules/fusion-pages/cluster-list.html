@@ -13,7 +13,7 @@
     </div>
     <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="small header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
+      <cs-card class="medium header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
@@ -25,7 +25,7 @@
           <div class="row">
             <div class="columns medium-5" translate="hercules.fusion.list.upgrade-schedule">Upgrade Schedule</div>
             <div class="columns medium-7">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
-            {{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div>
+            <div class="cluster-list-timezone" title="{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}">{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div></div>
           </div>
           <section ng-if="!resourceList._helpers.hasServices(cluster)" class="service-list" translate="hercules.fusion.list.no-services"></section>
           <section ng-if="resourceList._helpers.hasServices(cluster)">

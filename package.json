@@ -57,10 +57,13 @@
     "angular-mocks": "~1.5.5",
     "bardjs": "~0.1.8",
     "browser-sync": "^2.7.1",
+    "commitizen": "^2.8.2",
     "compression": "~1.6.0",
     "cross-spawn": "^4.0.0",
     "crypto-js": "^3.1.5",
+    "cz-customizable": "^4.0.0",
     "del": "^2.2.0",
+    "editor": "^1.0.0",
     "eslint": "^2.8.0",
     "eslint-config-airbnb-base": "^3.0.1",
     "eslint-config-angular": "^0.5.0",
@@ -145,8 +148,10 @@
     "sinon-ng": "~0.1.2",
     "sprintf-js": "^1.0.3",
     "stream-series": "^0.1.1",
+    "temp": "^0.8.3",
     "touch": "^1.0.0",
     "uuid": "~2.0.1",
+    "word-wrap": "^1.1.0",
     "yargs": "^4.3.2"
   },
   "engines": {
@@ -154,7 +159,13 @@
     "npm": ">=2.0.0 <3.0"
   },
   "scripts": {
+    "commit": "git-cz",
     "test": "gulp e2e",
     "postinstall": "gulp tsd"
+  },
+  "config": {
+    "commitizen": {
+      "path": "gulp/cz-atlas"
+    }
   }
 }

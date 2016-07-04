@@ -85,8 +85,8 @@ describe('ServiceDescriptor', function () {
           emailSubscribers: "alvar@example.org"
         })
       .respond(204, '');
-    Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org", function (err) {
-      expect(err).toBeNull();
+    Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org", function (statusCode) {
+      expect(statusCode).toBe(204);
       done();
     });
     $httpBackend.flush();

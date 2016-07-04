@@ -78,7 +78,6 @@ describe('Controller: CustomerOverviewCtrl', function () {
       callback();
     });
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);

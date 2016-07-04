@@ -747,6 +747,7 @@
     "selectLanguage": "Select a language",
     "select": "Select",
     "invalidPhoneNumber": "Incorrect Phone Number",
+    "invalidZipCode": "Incorrect Zip Code",
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
@@ -1352,7 +1353,10 @@
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
+      "emailNotificationsWatermark": "Add email addresses",
       "emailNotificationsSaving": "Saving.",
+      "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
+      "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
@@ -1621,8 +1625,8 @@
     "setSipDomainLink": "What is a Spark SIP Address?",
     "setSipDomainMsg": "Enter a subdomain",
     "setSipDomainTitle": "Spark SIP Address",
-    "setSipDomainCompNames": "These subdomains can be reserved for you:",
-    "setSipDomainAsssignedNames": "These subdomains have been reserved for you:",
+    "setSipDomainCompNames": "{count, plural, one{This subdomain} other{These subdomains}} will be reserved for you:",
+    "setSipDomainAsssignedNames": "{count, plural, one{This subdomain is} other{These subdomains are}} reserved for you",
     "setSipDomainCheckAvailability": "Check Availability",
     "setSipDomainPlaceholder": "enter a subdomain",
     "setSipDomainErrorMessage": "Not available. Please try another name",
@@ -2205,6 +2209,18 @@
     "errors": {
       "states": "Failed to retrieve states",
       "inventory": "Failed to get PSTN inventory"
+    },
+    "orderStatus": {
+      "pinRequired": "Customer needs to sign PSTN Contract.",
+      "addressMismatch": "Emergency or Billing Address needs to be submitted. Contact Inteleepeer.",
+      "btnMismatch": "Billing Telephone Number needs to be submitted. Contact Inteleepeer.",
+      "trialStatus": "Order cannot be fulfilled for trials",
+      "focReceived": "Scheduled transfer date received from previous carrier for number porting.",
+      "invalidSig": "Invalid Signature in Letter of Authorization for number porting.",
+      "loaNotSigned": "Customer needs to sign Letter of Authorization for number porting.",
+      "msaNotSigned": "Customer needs to sign PSTN Contract.",
+      "pendingVendor": "Scheduled transfer date requested from previous carrier for number porting.",
+      "rejected": "Order has been rejected. Contact Inteleepeer."
     }
   },
   "pstnContractInformation": {
@@ -2347,7 +2363,8 @@
       "state": "State",
       "zip": "Zip",
       "dealId": "Deal ID",
-      "usOnly": "Currently U.S. only"
+      "usOnly": "Currently U.S. only",
+      "invalidDealId": "Invalid Deal ID number"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -4125,7 +4142,7 @@
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledActionText": "Learn More",
-        "serviceHeader": "On Premise Status",
+        "serviceHeader": "On-Premises Status",
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
@@ -4493,6 +4510,10 @@
     "newUsers": "Added",
     "existingUsers": "Updated",
     "errorUsers": "Errors",
+    "retryUsers": "Retry",
+    "retrying": "Retrying...",
+    "retryingIn": "retrying in:",
+    "retryingUsers": "{users, plural, one{# User} other{# Users}}",
     "exportErrors": "Export errors to CSV"
   },
   "csvDownload": {

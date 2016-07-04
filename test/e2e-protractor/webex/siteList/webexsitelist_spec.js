@@ -4,7 +4,7 @@
 /* global webEx */
 /* global webExCommon */
 
-// Start of Licenses column tests
+// Start of site list tests
 describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", function () {
   var setup = false;
 
@@ -45,6 +45,16 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
   it('should detect ' + webExCommon.t30citestprov9Info.siteUrl + ' is a CI site', function () {
     if (setup) {
       utils.wait(webExCommon.t30citestprov9Info.isCIID);
+    }
+  });
+
+  it('should not detect WebEx CSV operation icon', function () {
+    if (setup) {
+      expect(webExCommon.t30csvCogDisabled.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvCogEnabled.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvSpinner.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvResult.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvIcon.isPresent()).toBeFalsy();
     }
   });
 
@@ -96,8 +106,17 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
     }
   });
 
+  it('should detect WebEx CSV operation icon', function () {
+    if (setup) {
+      var csvCogDisabled = webExCommon.t31csvCogDisabled.isPresent();
+      var csvCogEnabled = webExCommon.t31csvCogEnabled.isPresent();
+      expect(webExCommon.t31csvIcon.isPresent()).toBeTruthy();
+      expect(csvCogDisabled || csvCogEnabled).toBe(true);
+    }
+  });
+
   it('should log out', function () {
     navigation.logout();
   });
 });
-// End of Licenses column tests
+// End of site list tests

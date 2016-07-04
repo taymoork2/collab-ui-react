@@ -31,23 +31,20 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
-    vm.atlasPartnerAdminFeatureToggle = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures),
-      FeatureToggleService.atlasCareTrialsGetStatus()
-    ]).then(function (result) {
-      if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
-        vm.showRoomSystems = true;
-      }
-      vm.atlasPartnerAdminFeatureToggle = result[0];
-      setOffers(result[1]);
-    });
+    FeatureToggleService.atlasCareTrialsGetStatus()
+      .then(function (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = true;
+        }
+        setOffers(result);
+      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);

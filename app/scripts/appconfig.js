@@ -379,7 +379,12 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasSettingsPageGetStatus();
+              }
+            }
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -443,6 +448,7 @@
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
+            controllerAs: 'processOrder',
             parent: 'main',
             authenticate: false
           })

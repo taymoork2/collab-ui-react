@@ -121,6 +121,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     it('should click on privileges link in panel 3', function () {
+      webExUserSettings.scrollToBottom();
       utils.wait(webExUserSettings.userPrivilegesLink);
       utils.click(webExUserSettings.userPrivilegesLink);
     });
