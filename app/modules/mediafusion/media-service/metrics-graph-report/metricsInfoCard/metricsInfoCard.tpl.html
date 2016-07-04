@@ -1,4 +1,4 @@
-<cs-card-layout>
+<cs-card-layout class="large">
 <cs-card class="large-3 medium-6 small-12 menu-card header-bar grey overview-card">
     <article>
         <header>
@@ -38,7 +38,7 @@
         <section>
             <div class="metrics-info">
              <span translate ='mediaFusion.metrics.avgerageUtilizationDescription'></span> 
-                <div class="metrics-count">{{(nav.averageUtilization) || 'N/A'}}</div>
+                <div class="utilization-count">{{(nav.averageUtilization) || 'N/A'}}</div>
             </div>
         </section>
     </article>
@@ -51,7 +51,7 @@
         <section>
             <div class="metrics-info">
                 <span translate ='mediaFusion.metrics.clusterAvailabilityDescription'></span> 
-                <div class="metrics-count">{{(nav.clusterAvailability) || 'N/A'}}</div>
+                <div class="availability-count">{{(nav.clusterAvailability) || 'N/A'}}</div>
             </div>
         </section>
     </article>

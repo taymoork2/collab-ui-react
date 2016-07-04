@@ -139,9 +139,6 @@
 
     function setAllGraphs() {
       setTotalCallsData();
-      //vm.onprem = 500;
-      //vm.cloud = 200;
-      //vm.total = 700;
       setCPUUtilizationData();
       setClusterAvailability();
       setUtilizationData();
@@ -242,27 +239,6 @@
         //delayedResize();
       });
     }
-
-    /*function setTotalCallsData() {
-      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        if (response === vm.ABORT) {
-          return;
-        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
-          vm.onprem = vm.EMPTY;
-          vm.cloud = vm.EMPTY;
-          vm.onprem = '';
-          vm.cloud = '';
-          vm.total = '';
-        } else {
-          vm.onprem = response.data.callsOnPremise;
-          vm.cloud = response.data.callsOverflow;
-          vm.total = vm.onprem + vm.cloud;
-
-        }
-        resizeCards();
-      });
-
-    }*/
 
     function setTotalCallsData() {
       MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {

@@ -3,7 +3,6 @@
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
-    var urlTemp = 'http://10.196.5.250:8080/athena-server-1.0-SNAPSHOT/athena/api/v1/' + 'organizations/' + '1eb65fdf-9643-417f-9974-ad72cae0e10f';
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';
     var topn = 'topn';
@@ -225,27 +224,14 @@
       returnGraph.push(item);
       return returnGraph;
     }
-    /*function getQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
-        cacheOption = cacheValue;
-      }
-      if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
-      } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
-      } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
-      }
-    }*/
+
     function getQuery(cluster, time, cacheOption) {
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
       if (cluster == "All") {
-        //$log.log('the vlaue of cluster is ' + cluster + time);
         return formRelativeTime(time);
       } else {
-        //$log.log('the vlaue of cluster is ' + cluster);
         return '/cluster/' + cluster + formRelativeTime(time);
       }
     }
@@ -255,10 +241,8 @@
         cacheOption = cacheValue;
       }
       if (cluster == "All") {
-        //$log.log('the vlaue of cluster is ' + cluster + time);
         return link + formRelativeTime(time);
       } else {
-        //$log.log('the vlaue of cluster is ' + cluster);
         return '/cluster/' + cluster + link + formRelativeTime(time);
       }
     }
