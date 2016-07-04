@@ -97,6 +97,15 @@
         }];
       }
 
+    }).then(function () {
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
+        if (result) {
+          vm.headerTabs.push({
+            title: $translate.instant('tabs.careTab'),
+            state: 'care-reports'
+          });
+        }
+      });
     });
 
     vm.timeOptions = [{
@@ -497,14 +506,22 @@
       vm.showEngagement = false;
       vm.showWebexReports = true;
       vm.showMFMetrics = false;
+      vm.showCareReports = false;
     } else if ($stateParams.tab === 'metrics') {
       vm.showEngagement = false;
       vm.showWebexReports = false;
       vm.showMFMetrics = true;
+      vm.showCareReports = false;
+    } else if ($stateParams.tab === 'care') {
+      vm.showEngagement = false;
+      vm.showWebexReports = false;
+      vm.showMFMetrics = false;
+      vm.showCareReports = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;
       vm.showMFMetrics = false;
+      vm.showCareReports = false;
     }
 
     function onlyUnique(value, index, self) {

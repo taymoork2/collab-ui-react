@@ -4,7 +4,7 @@
   <div ng-if='nav.showMFMetrics'>
     <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
   </div>
-  <cs-page-sub-header ng-if="nav.showEngagement">
+  <cs-page-sub-header ng-if="nav.showEngagement || nav.showCareReports">
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
@@ -32,11 +32,23 @@
         </ul>
       </div>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right>
+    <cs-page-sub-header-right ng-if='!nav.showCareReports'>
       <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
+    <div ng-if='nav.showCareReports' ng-controller="CareReportsController as nav">
+      <cs-page-sub-header-right>
+        <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+      </cs-page-sub-header-right>
+    </div>
   </cs-page-sub-header>
- <div ng-if='!nav.showMFMetrics'>  
+  <div ng-if='nav.showCareReports'>
+    <div class="content-container">
+      <cs-card-layout>
+        This is where Care specific reports will appear.
+      </cs-card-layout>
+    </div>
+  </div>
+ <div ng-if='!nav.showMFMetrics && !nav.showCareReports'>
   <div class="content-container">
     <div class="row" ng-if='nav.showEngagement'>
       <cs-card-layout>
@@ -61,5 +73,5 @@
       <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
     </div>
   </div>
- </div>  
+ </div>
 </div>

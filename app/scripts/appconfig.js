@@ -1164,6 +1164,17 @@
               siteUrl: null
             }
           })
+          .state('care-reports', {
+            url: '/reports/care',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'care',
+              siteUrl: null
+            }
+          })
           .state('webex-reports.webex-reports-iframe', {
             templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
             controller: 'ReportsIframeCtrl',
