@@ -386,4 +386,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect($state.go).toHaveBeenCalled();
     });
   });
+
+  describe('Chat Status Messages Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      resolveLogoPromise();
+    });
+    it("should have previous and next button enabled", function () {
+      checkStateOfNavigationButtons(CHAT_STRING_PAGE_INDEX, true, true);
+    });
+  });
 });

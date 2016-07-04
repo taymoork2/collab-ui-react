@@ -5,7 +5,7 @@
   <div class="h4 ct-title-desc" translate="careChatTpl.overviewDesc"></div>
   <div class="ct-sa-content">
     <cs-card-layout>
-      <cs-card ng-repeat="(page, status) in careChatSA.template.configuration.pages" class="medium">
+      <cs-card ng-repeat="(page, status) in careChatSA.template.configuration.pages" ng-if="page!='chatString'" class="medium">
         <article ng-class="{'ct-card-border-enabled': status.enabled ,'ct-card-border-disabled': !status.enabled}" class="ct-card-overview">
           <i ng-class="['icon', 'icon-' + careChatSA.overview.{{page}},'icon-4x','ct-card-img']"></i>
           <div class="h4 ct-card-title" translate="careChatTpl.ctOverview.{{page}}.title"></div>

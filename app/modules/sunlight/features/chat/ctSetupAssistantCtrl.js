@@ -138,7 +138,6 @@
     };
 
     /* Template */
-
     vm.template = {
       name: '',
       mediaType: 'chat',
@@ -262,6 +261,26 @@
                 }
               }
             }
+          },
+          chatString: {
+            messages: {
+              "connectingString": {
+                "displayText": $translate.instant('careChatTpl.connectingString')
+              },
+              "waitingString": {
+                "displayText": $translate.instant('careChatTpl.waitingString')
+              },
+              "enterRoomString": {
+                "displayText": $translate.instant('careChatTpl.enterRoomString')
+              },
+              "leaveRoomString": {
+                "displayText": $translate.instant('careChatTpl.leaveRoomString')
+              },
+              "chattingString": {
+                "displayText": $translate.instant('careChatTpl.chattingString')
+              }
+            }
+
           }
         }
       }

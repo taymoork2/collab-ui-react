@@ -48,6 +48,11 @@ var ChatTemplateCreation = function () {
   this.copyEmbedCodeOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .left span'));
   this.deleteEmbedCodeBtnOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .right .icon-trash'));
   this.deleteChatTemplateonModal = element(by.css('.btn.btn--negative'));
+  this.chatStringConnectingMessage = element.all(by.css('.ct-attribute-field-textbox')).get(0);
+  this.chatStringWaitingMessage = element.all(by.css('.ct-attribute-field-textbox')).get(1);
+  this.chatStringEnterRoomMessage = element.all(by.css('.ct-attribute-field-textbox')).get(2);
+  this.chatStringLeaveRoomMessage = element.all(by.css('.ct-attribute-field-textbox')).get(3);
+  this.chatStringChattingMessage = element.all(by.css('.ct-attribute-field-textbox')).get(4);
 };
 
 module.exports = ChatTemplateCreation;

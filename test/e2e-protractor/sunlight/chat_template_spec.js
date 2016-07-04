@@ -169,7 +169,10 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfChatStringsPage() {
-    validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
+    validateTitleAndDesc('Chat Status Messages', 'Configure status messages which your customer sees on chat bubble');
+    validateChatStringsDefaultPage();
+    validateChatStringChange();
+
   }
 
   function validateContentsOfSummaryPage() {
@@ -191,6 +194,20 @@ describe('Care admin should be able to', function () {
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
+  }
+
+  function validateChatStringsDefaultPage() {
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringConnectingMessage, "Connecting you to an Agent");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringWaitingMessage, "Waiting for an Agent to join…");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringEnterRoomMessage, "Agent has entered the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringLeaveRoomMessage, "Agent has left the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringChattingMessage, "You are chatting with our agent");
+  }
+
+  function validateChatStringChange() {
+    utils.sendKeys(careChatTemplateSetupPage.chatStringChattingMessage, " Cody Banks");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStringChattingMessage,
+      "You are chatting with our agent Cody Banks");
   }
 
 });
