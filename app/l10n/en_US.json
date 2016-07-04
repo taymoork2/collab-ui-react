@@ -3006,7 +3006,8 @@
     "moveHost": "MOVE HOST",
     "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
-    "openSettingsTitle": "Open {{clusterName}} settings"
+    "openSettingsTitle": "Open {{clusterName}} settings",
+    "installing":"Installing"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",

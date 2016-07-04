@@ -37,18 +37,6 @@
           });
         };
 
-        vm.deleteHost = function () {
-          return MediaClusterServiceV2.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
-            if (MediaClusterServiceV2.getClusters()[vm.clusterId]) {
-              $state.go('connector-details', {
-                clusterId: vm.clusterId
-              });
-            } else {
-              $state.sidepanel.close();
-            }
-          }, XhrNotificationService.notify);
-        };
-
         vm.showDeregisterHostDialog = function () {
           if (vm.hostscount == 1) {
             $log.log("cluster details ", vm.cluster);

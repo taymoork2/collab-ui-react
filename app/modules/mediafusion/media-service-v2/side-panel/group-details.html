@@ -59,7 +59,10 @@
               <i class="fa fa-circle mediafusion-state-running" />
               <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
             </span>
-
+            <span ng-if="ecp.state == 'installing'" class="installing">
+              <i class="fa fa-circle mediafusion-state-installing" />
+              <span class="hidden-xs">{{'mediaFusion.installing' | translate}} </span>
+            </span>
             <i class="feature-arrow"></i>
           </a>
         </li>
