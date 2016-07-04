@@ -48,6 +48,8 @@ var ChatTemplateCreation = function () {
   this.copyEmbedCodeOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .left span'));
   this.deleteEmbedCodeBtnOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .right .icon-trash'));
   this.deleteChatTemplateonModal = element(by.css('.btn.btn--negative'));
+  this.agentUnavailableMessageField = element(by.id('agentUnavailableMessageField'));
+  this.agentUnavailableMessage = element(by.id('agentUnavailableMessage'));
 };
 
 module.exports = ChatTemplateCreation;

@@ -162,6 +162,11 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfAgentUnavailablePage() {
     validateTitleAndDesc('Agent Unavailable', 'This screen is shown to a customer when no agent is available to assist');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.sendKeys(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
   }
 
   function validateContentsOfOffHoursPage() {

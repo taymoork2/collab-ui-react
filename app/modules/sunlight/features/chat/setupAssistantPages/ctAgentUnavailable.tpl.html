@@ -4,4 +4,47 @@
     <span class="h2" translate="careChatTpl.agentUnavailable"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.agentUnavailableDesc"></div>
+
+  <div class="ct-agentunavailable ct-sa-content">
+    <cs-card-layout block-view="true" class="cardScroll">
+      <cs-card>
+        <header class="cardHeader1 h4" translate="careChatTpl.screen"></header>
+        <article class="ct-article articleHeight">
+          <section class="ct-attribute-section ct-attribute-screen ct-flex-topleft">
+
+            <i class="icon icon-warning ct-agent-unavailable-icon icon-2x"></i>
+
+            <label title="{{careChatSA.getAttributeValue('displayText', 'agentUnavailableMessage', 'agentUnavailable')}}"
+                    id="agentUnavailableMessage"
+                    class="ct-agent-unavailable-msg ct-agent-unavailable-textOverflow"
+                   for="agentUnavailableMessage">{{careChatSA.getAttributeValue('displayText', 'agentUnavailableMessage', 'agentUnavailable')}}
+            </label>
+
+            <div class="ct-agent-unavailable-close-button-div">
+              <button type="button" class="btn ct-agent-unavailable-close-btn" translate="careChatTpl.closeBtn"></button>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card>
+        <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
+        <article class="ct-article articleHeight">
+          <section class="ct-attribute-section ct-flex-topleft">
+
+            <div class="row ct-attribute-row ct-agent-unavailable-label-text">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.message">
+              </label>
+              <textarea id="agentUnavailableMessageField" class="ct-agent-unavailable-msg-field"
+                        ng-minlength="1" maxlength="250"
+                        ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText">
+              </textarea>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
 </div>
