@@ -3,7 +3,7 @@
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
-    var urlTemp = 'http://10.196.5.245:8080/athena/api/v1/' + 'organizations/' + Authinfo.getOrgId();
+    var urlTemp = 'http://10.196.5.250:8080/athena-server-1.0-SNAPSHOT/athena/api/v1/' + 'organizations/' + '1eb65fdf-9643-417f-9974-ad72cae0e10f';
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';
     var topn = 'topn';
@@ -13,6 +13,7 @@
     var clusterAvailability = '/clusters_availability';
     var agg_availability = '/agg_availability';
     var agg_cpu_utilization = '/agg_cpu_utilization';
+    var total_calls = '/total_calls';
 
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -28,13 +29,15 @@
     var activePromiseForUtilization = null;
     var activePromiseForClusterAvailability = null;
     var activePromiseForCPUUtilization = null;
+    var activePromiseForTotalCalls = null;
 
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
-      getCPUUtilizationData: getCPUUtilizationData
+      getCPUUtilizationData: getCPUUtilizationData,
+      getTotalCallsData: getTotalCallsData
     };
 
     function getUtilizationData(time, cluster) {
@@ -132,6 +135,24 @@
       });
     }
 
+    function getTotalCallsData(time, cluster) {
+      // cancel any currently running jobs
+      if (activePromiseForTotalCalls !== null && angular.isDefined(activePromiseForTotalCalls)) {
+        activePromiseForTotalCalls.resolve(ABORT);
+      }
+      activePromiseForTotalCalls = $q.defer();
+      var returnData = [];
+      return getService(urlBase + getQuerys(total_calls, cluster, time), activePromiseForTotalCalls).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Total Number of Calls not returned for customer.', $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var emptyGraph = true;
       var returnDataArray = [];
@@ -226,6 +247,19 @@
       } else {
         //$log.log('the vlaue of cluster is ' + cluster);
         return '/cluster/' + cluster + formRelativeTime(time);
+      }
+    }
+
+    function getQuerys(link, cluster, time, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
+      if (cluster == "All") {
+        //$log.log('the vlaue of cluster is ' + cluster + time);
+        return link + formRelativeTime(time);
+      } else {
+        //$log.log('the vlaue of cluster is ' + cluster);
+        return '/cluster/' + cluster + link + formRelativeTime(time);
       }
     }
 

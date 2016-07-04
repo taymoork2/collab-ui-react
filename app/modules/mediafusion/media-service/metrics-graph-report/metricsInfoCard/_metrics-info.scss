@@ -2,12 +2,17 @@
        header:after { 
 	  border-top: 5px solid #EF824F;
      }      
-  } 
+} 
 .cs-card.header-bar.green {
        header:after { 
 	  border-top: 5px solid #7BAF5D;
      }      
-  } 
+} 
+.cs-card.header-bar.grey {
+       header:after { 
+    border-top: 5px solid #9B9B9B;
+     }      
+}   
 
 .metrics-header {
         display: -webkit-box;
@@ -20,43 +25,64 @@
        -ms-flex-pack: center;
        justify-content: center;
        color: #343537;
-       font-size: 1.625rem; 
+       font-size: 1.525rem;
        font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
- }
+}
 
 .metrics-header span { 
       font-size: inherit;
        line-height: 1; 
- }
+}
 
 .metrics-header i { 
       color: #4F5051; 
       font-size: 2rem;
       margin-right: .5rem; 
- }
+}
 
 .metrics-paragraph { 
       font-size: 1rem; 
       color: #4F5051;
- }
+}
 
 .metrics-info { 
+      padding-top: 1rem; 
+      padding-bottom: 1rem;
       font-size: 1rem; 
-      color: #858688; 
+      color: #343537; 
       font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
- }
+}
+
+.call-counts { 
+      font-size: 3rem; 
+      font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+      color: #5390E0; 
+      margin-bottom: .1rem; 
+}
 
 .percentage-count { 
     	font-size: 3rem; 
     	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
     	color: #EF824F; 
-    	margin-bottom: .5rem; 
- }
+    	margin-bottom: .1rem; 
+}
 
 .metrics-count { 
     	font-size: 3rem; 
     	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
     	color: #7BAF5D; 
-    	margin-bottom: .5rem; 
- }
+    	margin-bottom: .1rem; 
+}
+
+ .last-counts { 
+      font-size: 0.775rem; 
+      color: #5390E0;
+      padding-bottom: 6px;
+}
+
+.last-text { 
+      font-size: 0.775rem; 
+      color: #343537;
+      padding-bottom: 6px;
+}

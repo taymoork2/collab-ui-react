@@ -2871,7 +2871,12 @@
       "overallCallVolumeGraphError": "There was an error while loading total number of calls",
       "overallAvailabilityGraphError": "There was an error while loading detailed availability data",
       "overallAverageUtilizationGraphError": "There was an error while loading Average/Peak utilization data",
-      "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data"
+      "overallClusterAvailabilityGraphError": "There was an error while loading cluster availability data",
+      "overallTotalNumberOfCallsError": "There was an error while loading Total Number of calls",
+      "total_calls": "Total Calls",
+      "totalCallsDescription": " Description for total calls comes here",
+      "onpremcalls": "Calls on prem |",
+      "cloudcalls": "Calls bursted to cloud"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
