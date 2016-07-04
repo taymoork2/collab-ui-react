@@ -65,6 +65,9 @@
                 },
                 orgName: function () {
                   return vm.organization.displayName;
+                },
+                connector: function () {
+                  return vm.connector;
                 }
               },
               type: 'dialog',
