@@ -120,7 +120,7 @@
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-global-settings",
+    feature: "atlas-settings-page",
     link: '/settings'
   }, {
     tab: 'organizationTab',

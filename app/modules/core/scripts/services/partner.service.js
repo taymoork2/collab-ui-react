@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -78,7 +78,7 @@
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
             });
-            Mixpanel.trackEvent('patch user call', {
+            Analytics.trackEvent('patch user call', {
               by: response.data.orgId
             });
           }
