@@ -1043,10 +1043,7 @@
   "spacesPage": {
     "addTag": "Add tag",
     "title": "Devices",
-    "modalTitle": "Add a New Device",
-    "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
-    "deleteActivationCode": "Delete Activation Code",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
@@ -1054,29 +1051,15 @@
     "account": "Account",
     "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Settings",
-    "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
-    "addDeviceStep1": "Where will this device be installed?",
-    "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
     "addPersonalDevice": "Trying to add a personal device?",
     "addPersonalDeviceDesc": "To add a personal device, generate an activation code for a specific user in the <a ng-click=\"{{onclick}}\">Users</a> page.",
-    "addDeviceStep2": "Your activation code has been created",
-    "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
-    "emptyDevices1": "Once you add a new device,",
-    "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
     "rebootDevice": "Reboot Device",
     "reboot": "Reboot",
-    "cancel": "Cancel",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
-    "videoQTitle": "Potential Loss of Video Quality",
-    "videoQMsg": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.",
-    "needsActivation": "Needs Activation",
-    "active": "Active",
-    "offline": "Offline",
-    "issuesDetected": "Issues Detected",
     "ciscoSupport": "Cisco Support",
     "remoteAccessKey": "Remote Access Key",
     "rsuKey": "Share this key with Cisco Support by pasting it in a message.",
@@ -1090,9 +1073,7 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended.",
-    "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
-    "addAnother": "Add Another"
+    "licenseSuspendedWarning": "Your room systems license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -2634,9 +2615,6 @@
     "errorLogNotFound": "No device log was been found"
   },
   "deviceOverviewPage": {
-    "activationNoLongerNeeded": "If this activation is no longer needed:",
-    "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "ciscoSX10": "Cisco SX10",
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
@@ -2646,7 +2624,6 @@
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
-    "codeExpires": "This activation code expires {{inXDays}}",
     "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
@@ -2655,6 +2632,73 @@
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
     "timeZoneUpdateFailed": "Device did not update its Time Zone in time"
+  },
+  "addDeviceWizard": {
+    "newDevice": "New Device",
+    "chooseDeviceType": {
+      "deviceType": "What kind of device do you want to set up?",
+      "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup so that it can be assigned to either a user or a place. What kind of device do you want to activate?",
+      "deskPhone": "Desk Phone",
+      "newDeskPhone": "New desk phone for existing user",
+      "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
+      "deskPhoneLicenseWarning": "Using desk phones requires your organization to purchase Cisco Spark Call licenses. Contact your partner or Cisco Sales for more information.",
+      "roomSystem": "Room System",
+      "newRoomSystem": "New room system",
+      "roomSystemExamples": "e.g. DX, MX and SX series",
+      "roomSystemLicenseWarning": "Using room systems requires your organization to purchase Cisco Spark Room System licenses. Contact your partner or Cisco Sales for more information."
+    },
+    "chooseAccountType": {
+      "assignToUserOrPlace": "Assign to a user or a place?",
+      "userOrPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. All devices under a single user or place will share the same calling configuration. For example, desk phones will share the same lines.",
+      "personalUsage": "Personal Usage",
+      "place": "Place",
+      "sharedUsage": "Shared Usage"
+    },
+    "choosePersonal": {
+      "existingOrNewUser": "Assign to an existing user or a new user?",
+      "existingOrNewUserInstructions": "Creating a user with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this user, if they do not have one already.",
+      "existingUser": "Existing User",
+      "existingUserInstructions": "If the user you are searching for isn’t listed, that user may already have 10 desk phones associated to them. A user can only have up to 10 desk phones associated to them.",
+      "searchForUser": "Search for a user",
+      "newUser": "New User",
+      "newUserInstructions": "Please enter the user’s information.",
+      "firstNameExample": "e.g. John",
+      "lastNameExample": "e.g. Smith",
+      "emailExample": "e.g. johnsmith@example.com",
+      "invalidEmailAddress": "Invalid Email Address",
+      "noUserFound": "no users found",
+      "userMissesUcEntitlement": "User is missing a Cisco Spark Call license."
+    },
+    "chooseSharedSpace": {
+      "existingOrNewPlace": "Assign to an existing place or a new place?",
+      "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
+      "existingPlace": "Existing Place",
+      "existingPlaceInstructions": "If the place you are searching for isn’t listed, it either has 10 associated desk phones or an assigned Cisco Spark Room System license. A place can only have up to 10 desk phones associated to it. Desk phones and room systems cannot share the same place.",
+      "searchRoom": "Search for a room",
+      "newPlace": "New Place",
+      "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
+      "deviceInstalled": "Where will this device be installed?",
+      "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+      "insertRoomName": "Insert name of room or shared space"
+    },
+    "assignPhoneNumber": {
+      "assignPhoneNumber": "Assign a phone number",
+      "assignPhoneNumberInstructions": "Using a Desk Phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already."
+    },
+    "assignServices": {
+      "assignServices": "Assign Services",
+      "selectEntitlements": "Select any entitlements that you wish to assign to this user."
+    },
+    "showActivationCode": {
+      "activationCode": "Activation Code",
+      "plugInDeskPhone": "Plug in your new Cisco desk phone and enter the activation code when prompted or use the device camera to scan the QR code.",
+      "plugInRoomSystem": "Plug in your new Cisco room system and enter the activation code when prompted.",
+      "newCodeInUsersPage": "A new activation code can be created from the Users page after this code expires.",
+      "newCodeInPlacesPage": "A new activation code can be created from the Places page after this code expires.",
+      "newCodeInDevicesPace": "A new activation code can be created from the Devices page after this code expires.",
+      "expires": "Expires {{expiryDate}}",
+      "searchAnotherUser": "Or search for another user"
+    }
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
