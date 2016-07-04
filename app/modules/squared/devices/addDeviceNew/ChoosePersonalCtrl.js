@@ -51,13 +51,15 @@
     };
 
     vm.search = function (searchString) {
+      vm.userError = false;
+      vm.cisUuid = undefined;
       var deferred = $q.defer();
       if (searchString.length >= 3) {
         vm.noResults = false;
-        vm.isSearching = true;
         var callback = function (data) {
           if (!data.success || !data.Resources) {
             deferred.resolve([]);
+            vm.noResults = true;
             return;
           }
           var userList = data.Resources.map(function (r) {
@@ -77,7 +79,6 @@
             r.extractedName = name;
             return r;
           });
-          vm.isSearching = false;
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
@@ -89,7 +90,6 @@
     };
 
     function selectUser($item) {
-      vm.userError = false;
       if (!_.contains($item.entitlements, 'ciscouc')) {
         vm.userError = true;
       }
