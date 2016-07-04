@@ -4,6 +4,12 @@
     <cs-page-sub-header-left>
       <cs-searchfilter filters="resourceList.filters" set-filter-fn="resourceList.setFilter(filter)" search-item-fn="resourceList.searchData(searchStr)" placeholder-text="{{resourceList.placeholder.name}}" ng-model="resourceList.placeholder.count"></cs-searchfilter>
     </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people add-resource-button"
+              type="button"
+              translate="hercules.fusion.list.add-resource"
+              ng-click="resourceList.addResource()"></button>
+    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">
     <div ng-if="resourceList.loading" class="loading-list">

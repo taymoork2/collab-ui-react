@@ -1445,6 +1445,7 @@
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
+        "add-resource": "Add Resource",
         "expressway-short": "E",
         "mediafusion-short": "M",
         "expressway": "Expressway",

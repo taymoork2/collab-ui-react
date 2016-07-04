@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $q, $modal, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -39,6 +39,7 @@
     vm.searchData = searchData;
     vm.openService = openService;
     vm.openSettings = openSettings;
+    vm.addResource = addResource;
     vm._helpers = {
       formatTimeAndDate: formatTimeAndDate,
       hasServices: hasServices
@@ -186,6 +187,15 @@
     function hasServices(cluster) {
       return cluster.servicesStatuses.some(function (serviceStatus) {
         return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
+      });
+    }
+
+    function addResource() {
+      $modal.open({
+        controller: 'AddFusionResourceController',
+        controllerAs: 'addResource',
+        templateUrl: 'modules/hercules/fusion-pages/add-resource-modal.html',
+        type: 'small'
       });
     }
   }
