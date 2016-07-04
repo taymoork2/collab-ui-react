@@ -3007,7 +3007,7 @@
     "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
     "openSettingsTitle": "Open {{clusterName}} settings",
-    "installing":"Installing"
+    "installing": "Installing"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
