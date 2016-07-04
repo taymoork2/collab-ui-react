@@ -2893,7 +2893,14 @@
       "needs_attention": "Needs attention",
       "alarm": "Alarm",
       "Unknown": "Registering",
-      "nohosts": "No Hosts Registered"
+      "nohosts": "No Hosts Registered",
+      "no_hosts": "No Hosts Registered",
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending",
+      "initializing": "Initializing",
+      "not_operational": "Not Operational"
     },
     "deleteGroup": {
       "title": "Delete Cluster",
@@ -2933,7 +2940,8 @@
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}.",
-      "moveHost": "Move Host"
+      "moveHost": "Move Host",
+      "deregister_host": "Deregister Host"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -3001,9 +3009,10 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
-    "deleteCluster": "DELETE CLUSTER",
+    "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
-    "openSettingsTitle": "Open {{clusterName}} settings"
+    "openSettingsTitle": "Open {{clusterName}} settings",
+    "installing": "Installing"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
