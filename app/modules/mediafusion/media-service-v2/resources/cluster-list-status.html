@@ -8,6 +8,9 @@
   <span ng-if="row.entity.aggregates.state == 'running'" class="green">
   	<i class="fa fa-circle mediafusion-state-running" />
   </span>
+    <span ng-if="row.entity.aggregates.state == 'installing'" class="green">
+    <i class="fa fa-circle mediafusion-state-installing" />
+  </span>
   <span ng-if="row.entity.aggregates.state == 'no_hosts'" class="grey">
   	<i class="fa fa-circle"/>
   </span>
