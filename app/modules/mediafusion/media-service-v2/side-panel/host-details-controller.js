@@ -5,7 +5,7 @@
     .controller('HostDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $state, $log, MediaClusterServiceV2, XhrNotificationService, $modal) {
+      function ($stateParams, $log, MediaClusterServiceV2, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.connector = $stateParams.connector;
@@ -35,18 +35,6 @@
             controllerAs: "reassignClust",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-cluster-dialog.html'
           });
-        };
-
-        vm.deleteHost = function () {
-          return MediaClusterServiceV2.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
-            if (MediaClusterServiceV2.getClusters()[vm.clusterId]) {
-              $state.go('connector-details', {
-                clusterId: vm.clusterId
-              });
-            } else {
-              $state.sidepanel.close();
-            }
-          }, XhrNotificationService.notify);
         };
 
         vm.showDeregisterHostDialog = function () {
