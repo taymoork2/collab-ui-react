@@ -2238,18 +2238,6 @@
               hostLength: null,
               selectedCluster: null
             }
-          })
-          .state('connector-details-v2.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-settings.html',
-            controller: 'GroupSettingsControllerV2',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
-            }
           });
       }
     ]);
