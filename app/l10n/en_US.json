@@ -4334,6 +4334,7 @@
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
+    "tooManySearchResults": "Search returned too many results. Please narrow your search criteria.",
     "unexpectedError": "An unexpected error occurred",
     "cancelled": "Search was cancelled",
     "searchingPleaseWait": "Searching, please wait...",
