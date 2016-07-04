@@ -19,6 +19,8 @@
     vm.quality = 'quality';
     var currentFilter = vm.allReports;
 
+    vm.tab = $stateParams.tab;
+
     vm.displayEngagement = true;
     vm.displayQuality = true;
 
@@ -184,7 +186,7 @@
     };
 
     function init() {
-      if (vm.showEngagement) {
+      if (vm.tab === null) {
         setFilterBasedText();
         $timeout(function () {
           setDummyData();
@@ -502,28 +504,6 @@
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab === 'webex') {
-      vm.showEngagement = false;
-      vm.showWebexReports = true;
-      vm.showMFMetrics = false;
-      vm.showCareReports = false;
-    } else if ($stateParams.tab === 'metrics') {
-      vm.showEngagement = false;
-      vm.showWebexReports = false;
-      vm.showMFMetrics = true;
-      vm.showCareReports = false;
-    } else if ($stateParams.tab === 'care') {
-      vm.showEngagement = false;
-      vm.showWebexReports = false;
-      vm.showMFMetrics = false;
-      vm.showCareReports = true;
-    } else {
-      vm.showEngagement = true;
-      vm.showWebexReports = false;
-      vm.showMFMetrics = false;
-      vm.showCareReports = false;
-    }
-
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
@@ -578,7 +558,7 @@
           var logMsg = "";
 
           // if we are displaying the webex reports index page then go ahead with the rest of the code
-          if (vm.showWebexReports) {
+          if (vm.tab === 'webex') {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
             // get the information needed for the webex reports index page

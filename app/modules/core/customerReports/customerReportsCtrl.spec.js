@@ -453,8 +453,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     describe('webex tests', function () {
       it('should show engagement as true and webex as false', function () {
-        expect(controller.showEngagement).toEqual(true);
-        expect(controller.showWebexReports).toEqual(false);
+        expect(controller.tab).toEqual('webex');
       });
 
       it('should not have anything in the dropdown for webex reports', function () {

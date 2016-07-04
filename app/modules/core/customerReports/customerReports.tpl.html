@@ -1,10 +1,10 @@
 <!-- dont show if there is only one option, aka if webex does not show -->
 <div class="customer-reports">
   <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
-  <div ng-if='nav.showMFMetrics'>
+  <div ng-if="nav.tab == 'metrics'">
     <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
   </div>
-  <cs-page-sub-header ng-if="nav.showEngagement || nav.showCareReports">
+  <cs-page-sub-header ng-if="nav.tab == 'metrics' || nav.tab == 'care'">
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
@@ -32,25 +32,24 @@
         </ul>
       </div>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right ng-if='!nav.showCareReports'>
+    <cs-page-sub-header-right ng-if="nav.tab != 'care'">
       <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
     </cs-page-sub-header-right>
-    <div ng-if='nav.showCareReports' ng-controller="CareReportsController as nav">
+    <div ng-if="nav.tab == 'care'" ng-controller="CareReportsController as nav">
       <cs-page-sub-header-right>
         <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
       </cs-page-sub-header-right>
     </div>
   </cs-page-sub-header>
-  <div ng-if='nav.showCareReports'>
+  <div ng-if="nav.tab == 'care'">
     <div class="content-container">
       <cs-card-layout>
-        This is where Care specific reports will appear.
       </cs-card-layout>
     </div>
   </div>
- <div ng-if='!nav.showMFMetrics && !nav.showCareReports'>
+ <div ng-if="nav.tab != 'metrics' && nav.tab != 'care'">
   <div class="content-container">
-    <div class="row" ng-if='nav.showEngagement'>
+    <div class="row" ng-if="nav.tab == null">
       <cs-card-layout>
         <uc-avg-rooms></uc-avg-rooms>
         <uc-active-user-customer></uc-active-user-customer>
@@ -61,7 +60,7 @@
       </cs-card-layout>
     </div>
     <!-- WebEx reports content -->
-    <div ng-if="nav.showWebexReports">
+    <div ng-if="nav.tab == 'webex'">
       <!-- webex siteUrl dropdown list -->
       <div class="row" ng-show="webexOptions.length > 1">
         <div class="large-4 columns webexPage">
