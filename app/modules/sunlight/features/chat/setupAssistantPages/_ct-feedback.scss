@@ -133,7 +133,7 @@
 
   .feedback-question-text {
     @include vr-spacing(mt, 4.5);
-    font-size: 14px;
+    font-size: rem-calc(14px);
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
@@ -144,7 +144,7 @@
     @include vr-spacing(mb, 2.5);
     @include vr-spacing(mr, 1.8);
     @include vr-spacing(ml, 1.8);
-    font-size: 14px;
+    font-size: rem-calc(14px);
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
@@ -154,13 +154,13 @@
     color: $color-attention-base;
     align-self: center;
     @include vr-spacing(mr, 1.4);
-    font-size: 33px;
+    font-size: rem-calc(33px);
   }
 
   .feedback-star-end {
     color: $gray-light-2;
     align-self: center;
-    font-size: 33px;
+    font-size: rem-calc(33px);
   }
 
   .feedback-comment-text {
@@ -173,7 +173,7 @@
     position: relative;
     align-self: center;
     font-family: CiscoSansTT Light;
-    font-size: 14px;
+    font-size: rem-calc(14px);
     resize: none;
     border: 1px solid $gray-light-2;
     border-radius: 3px;
