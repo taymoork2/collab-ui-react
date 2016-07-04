@@ -3924,9 +3924,9 @@
       }
     },
     "summary": "Summary",
-    "summaryDesc": "Configuration Summary",
+    "summaryDesc": "You have successfully configured the chat template. Click Finish to generate the embed code and start using this chat template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
-    "errorCreateChatTemplate": "Error creating chat template."
+    "errorCreateChatTemplate": "Error generating embed code, please try again."
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
