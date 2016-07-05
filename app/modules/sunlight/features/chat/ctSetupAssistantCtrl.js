@@ -33,7 +33,7 @@
       'feedback',
       'agentUnavailable',
       'offHours',
-      'chatStrings',
+      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -261,27 +261,27 @@
                 }
               }
             }
-          },
-          chatString: {
-            messages: {
-              "connectingString": {
-                "displayText": $translate.instant('careChatTpl.connectingString')
-              },
-              "waitingString": {
-                "displayText": $translate.instant('careChatTpl.waitingString')
-              },
-              "enterRoomString": {
-                "displayText": $translate.instant('careChatTpl.enterRoomString')
-              },
-              "leaveRoomString": {
-                "displayText": $translate.instant('careChatTpl.leaveRoomString')
-              },
-              "chattingString": {
-                "displayText": $translate.instant('careChatTpl.chattingString')
-              }
-            }
-
           }
+        },
+        chatStatusMessages: {
+          messages: {
+            connectingMessage: {
+              displayText: $translate.instant('careChatTpl.connectingMessage')
+            },
+            waitingMessage: {
+              displayText: $translate.instant('careChatTpl.waitingMessage')
+            },
+            enterRoomMessage: {
+              displayText: $translate.instant('careChatTpl.enterRoomMessage')
+            },
+            leaveRoomMessage: {
+              displayText: $translate.instant('careChatTpl.leaveRoomMessage')
+            },
+            chattingMessage: {
+              displayText: $translate.instant('careChatTpl.chattingMessage')
+            }
+          }
+
         }
       }
     };

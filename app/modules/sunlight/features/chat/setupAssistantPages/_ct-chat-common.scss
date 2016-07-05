@@ -1,6 +1,5 @@
-.ct-chatstring {
+.ct-chat-common {
   align-items: center;
-
   @mixin placeholder {
     ::-webkit-input-placeholder {
       @content
@@ -15,11 +14,10 @@
       @content
     }
   }
-
   .cs-card {
     @include vr-spacing(ml, 2);
-    width: rem-calc(575px);
-    height: rem-calc(513px);
+    width: rem-calc(366px);
+    height: rem-calc(458px);
     display: flex;
     flex-flow: column;
     .cardHeader1 {
@@ -30,23 +28,22 @@
       height: 100%;
     }
   }
-
   .cardScroll {
     @include vr-spacing(pt, 1);
     @include vr-spacing(pr, 3.75);
     @include vr-spacing(pb, 3.125);
     @include vr-spacing(pl, 2);
   }
-
+  .ct-feedback-rating {
+    width: 100%;
+  }
   .ct-left-row {
     &:hover {
       background-color: $color-primary-lighter;
     }
   }
-
   .labelText {
     @include vr-spacing(pt, 0.75);
-    color: blue;
   }
 
   .textOverflow{
@@ -54,13 +51,11 @@
     overflow: hidden;
     white-space: nowrap;
   }
-
   .inputField {
     @include vr-spacing(ml, 1);
     @include vr-spacing(mb, 0.1);
     color: $gray-dark-2;
   }
-
   .ct-left-cs-input {
     @include vr-spacing(ml, 1);
     @extend .cs-input;
@@ -70,20 +65,17 @@
     pointer-events: none;
     width: 90%
   }
-
   .ct-footer {
     color: $gray-light-1;
     border-top: 1px solid $gray-light-3;
     @include vr-spacing(pv, 0.75);
     @include vr-spacing(pl, 0.5);
   }
-
   .ct-flex-topleft {
     justify-content: flex-start;
     align-content: flex-start;
     align-items: flex-start;
   }
-
   .ct-attribute-section {
     display: flex;
     flex-flow: column;
@@ -94,25 +86,20 @@
       color: $gray-dark-1;
     }
   }
-
   .ct-attribute-field-label {
-    @include vr-spacing(mb, 0.3);
-    @include vr-spacing(ml, 3);
-    font-family: "CiscoSansTT Regular";
-
-
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+    font-family: $brand-font-cisco-TT-Regular;
   }
-
   .ct-attribute-field-textbox {
     @include placeholder {
-      line-height: rem-calc(40px);
+      line-height: rem-calc(12px);
     }
-    font-family: "CiscoSansTT Light";
-    @include vr-spacing(ml, 3);
-    width: 85%;
-    height: rem-calc(40px);
+    font-family: $brand-font-cisco-TT-Light;
+    @include vr-spacing(ml, 1);
+    width: 90%;
+    height: 2rem;
   }
-
   .ct-attribute-section {
     display: flex;
     flex-flow: column;
@@ -124,7 +111,6 @@
       color: $gray-dark-1;
     }
   }
-
   .ct-attribute-row {
     width: 100%;
   }
