@@ -47,21 +47,18 @@
 
       if (!getAdmins) {
         if (typeof entitlements !== 'undefined' && entitlements !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
-          //It seems CI does not support 'ANDing' filters in this situation.
           filter = searchFilter;
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           var encodedEntitlementsStr = 'entitlements%20eq%20%22' + $window.encodeURIComponent(entitlements) + '%22%20and%20';
           encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedEntitlementsStr, encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
-          searchStr = searchStr;
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = $window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, ['', encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
-
-        } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
-          filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + $window.encodeURIComponent(entitlement);
+        } else if (typeof entitlements !== 'undefined' && entitlements !== null) {
+          filter = 'filter=active%20eq%20true%20and%20entitlements%20eq%20%22' + $window.encodeURIComponent(entitlements) + '%22';
           scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           listUrl = scimSearchUrl;
         }
