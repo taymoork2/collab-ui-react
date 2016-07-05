@@ -3,14 +3,14 @@
     <span class="icon icon-circle-check-mark-success ct-success-icon"></span>
   </div>
 	<div class="h4 ct-title-desc">{{:: 'careChatTpl.summaryDesc' | translate }}</div>
-	<div class="ct-finish-btn-div " >
+	<div class="ct-finish-btn-div" >
 		<button loading="careChatSA.creatingChatTemplate";
             cs-btn id="chatSetupFinishBtn"
             id="chatSetupFinishBtn"
-            cs-btn class="btn btn--primary"
+            cs-btn class="btn btn--primary ct-finish-btn"
             ng-click="careChatSA.submitChatTemplate()">{{:: careChatSA.ChatTemplateButtonText | translate }}</button>
 	</div>
-  <div class="h6 ct-status-div ">
+  <div class="h6 ct-status-div">
     <div ng-if="careChatSA.saveCTErrorOccurred" class="ct-error-desc">
       <div>{{:: 'careChatTpl.errorCreateChatTemplate' | translate }}</div>
     </div>
