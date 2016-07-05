@@ -21,7 +21,8 @@
       getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
       postponeUpgradeSchedule: postponeUpgradeSchedule,
-      deleteMoratoria: deleteMoratoria
+      deleteMoratoria: deleteMoratoria,
+      setClusterName: setClusterName
     };
 
     return service;
@@ -212,6 +213,13 @@
         }
       });
       return sidepanelConnectorList;
+    }
+
+    function setClusterName(clusterId, newClusterName) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, {
+        name: newClusterName
+      });
     }
 
   }
