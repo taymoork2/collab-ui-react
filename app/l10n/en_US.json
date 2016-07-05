@@ -712,6 +712,7 @@
   },
   "weekDays": {
     "everyDay": "Every {{day}}",
+    "day": "day",
     "monday": "Monday",
     "tuesday": "Tuesday",
     "wednesday": "Wednesday",
@@ -1439,7 +1440,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule:"
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
@@ -4218,7 +4219,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Mediafusion"
+          "squared-fusion-media": "Media Fusion"
         }
       }
     }
@@ -4638,7 +4639,7 @@
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",
-          "mediafusion": "Mediafusion",
+          "mediafusion": "Media Fusion",
           "context": "Context"
         }
       },
