@@ -29,7 +29,7 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
-    it('should have properly set trialDaysLeft', function() {
+    it('should have properly set trialDaysLeft', function () {
       expect(controller.trialDaysLeft).toEqual(1);
     });
   });

@@ -24,7 +24,7 @@
     function init() {
       removeCardUserTitle();
       setSipUriNotification();
-      TrialService.getDaysLeftForCurrentUser().then(function(daysLeft) {
+      TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
     }
