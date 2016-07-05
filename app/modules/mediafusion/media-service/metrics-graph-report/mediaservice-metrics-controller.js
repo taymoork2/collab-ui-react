@@ -33,7 +33,7 @@
     vm.callVolumeStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.utilizationStatus = vm.REFRESH;
-    vm.clusterOptions = ['All'];
+    vm.clusterOptions = ['All Clusters'];
     vm.clusterSelected = vm.clusterOptions[0];
     getClusters();
     vm.timeOptions = [{
@@ -242,7 +242,7 @@
 
     function setTotalCallsData() {
       MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        if (vm.clusterSelected === 'All') {
+        if (vm.clusterSelected === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {

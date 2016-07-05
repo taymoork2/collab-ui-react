@@ -229,7 +229,7 @@
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
-      if (cluster == "All") {
+      if (cluster == "All Clusters") {
         return formRelativeTime(time);
       } else {
         return '/cluster/' + cluster + formRelativeTime(time);
@@ -240,7 +240,7 @@
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
-      if (cluster == "All") {
+      if (cluster == "All Clusters") {
         return link + formRelativeTime(time);
       } else {
         return '/cluster/' + cluster + link + formRelativeTime(time);
