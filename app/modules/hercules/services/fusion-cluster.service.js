@@ -57,6 +57,14 @@
               upgradeSchedule.moratoria = moratoria;
               return upgradeSchedule;
             });
+        })
+        .then(function (upgradeSchedule) {
+          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/nextUpgradeWindow')
+            .then(extractData)
+            .then(function (nextUpgradeWindow) {
+              upgradeSchedule.nextUpgradeWindow = nextUpgradeWindow;
+              return upgradeSchedule;
+            });
         });
     }
 
