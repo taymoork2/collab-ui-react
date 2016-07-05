@@ -61,6 +61,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
       spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
       spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
+      //spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(totalcallsdata));
 
       controller = $controller('MediaServiceMetricsContoller', {
         $stateParams: $stateParams,
@@ -85,6 +86,7 @@ describe('Controller:MediaServiceMetricsContoller', function () {
           expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
           expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
           expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
+          //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0]);
 
           expect(MetricsGraphService.setCallVolumeGraph).toHaveBeenCalled();
           expect(MetricsGraphService.setAvailabilityGraph).toHaveBeenCalled();
@@ -104,19 +106,21 @@ describe('Controller:MediaServiceMetricsContoller', function () {
         controller.timeSelected = timeOptions[1];
         controller.timeUpdate();
         expect(controller.timeSelected).toEqual(timeOptions[1]);
-        expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'All');
-        expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'All');
-        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'All');
+        expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+        expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+        //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
       });
 
       it('All graphs should update on cluster filter changes', function () {
-        controller.clusterSelected = 'All';
+        controller.clusterSelected = 'All Clusters';
         controller.clusterUpdate();
 
         expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
         expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
         expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+        //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
 
       });
     });

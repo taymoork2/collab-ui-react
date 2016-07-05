@@ -29,7 +29,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.
   * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
   * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
-  * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
+  * [Angular's Git Commit Guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)
 * **Build failure triage is mandatory**. When you push code that breaks the builds, you are responsible to investigate
   and triage this failure before attempting another push. More info on the [triage wiki](http://cs.co/atlas-triage).
 

@@ -7,7 +7,10 @@
       <span class="feature-name">{{pstnOrderDetail.currentOrder.created}}&emsp;{{pstnOrderDetail.currentOrder.type}}</span>
     </div>
     <div>
-      <span class="feature-name">{{pstnOrderDetail.currentOrder.status}} - {{pstnOrderDetail.currentOrder.statusMessage}}</span>
+      <span class="feature-name">{{pstnOrderDetail.currentOrder.status}}
+        <span ng-if="pstnOrderDetail.currentOrder.statusMessage"> - {{pstnOrderDetail.currentOrder.statusMessage}}</span>
+        <i ng-if="pstnOrderDetail.currentOrder.tooltip" class="icon icon-info info-tooltip" tooltip-placement="right" tooltip="{{pstnOrderDetail.currentOrder.tooltip}}" tooltip-animation="false"  tooltip-append-to-body="true"></i>
+      </span>
     </div>
     <div class="filter">
       <input type="text" class="form-control" ng-model="orderDetails.filter" ng-model-options="{ debounce: 250 }" placeholder="{{::'pstnOrderDetail.searchPlaceholder' | translate}}">

@@ -207,10 +207,9 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should logout', function () {
+  it('should logout and redirect to a provided url', function () {
     var loggedOut = sinon.stub();
     Storage.clear = sinon.stub();
-    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
     SessionStorage.get = sinon.stub().returns('accessToken');
     OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -219,13 +218,20 @@ describe('Auth Service', function () {
       .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
       .respond(200, {});
 
-    Auth.logout().then(loggedOut);
+    Auth.logoutAndRedirectTo('logoutUrl').then(loggedOut);
 
     $httpBackend.flush();
 
     expect(loggedOut.callCount).toBe(1);
     expect(Storage.clear.callCount).toBe(1);
     expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+  });
+
+  it('should logout and redirect to the default logout url', function () {
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    Auth.logoutAndRedirectTo = sinon.stub();
+    Auth.logout();
+    expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
   });
 
   describe('authorize', function () {

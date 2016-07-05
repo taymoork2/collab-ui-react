@@ -4,19 +4,22 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, $rootScope, $scope, controller, cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var vm, $rootScope, $scope, controller, cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 
   beforeEach(inject(function (_$rootScope_, $controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
     $rootScope = _$rootScope_;
     cluster = {
-      id: 'a',
+      id: 'id',
       name: 'b'
     };
     orgName = '123';
-
+    connector = {
+      id: 'id'
+    };
     MediaClusterServiceV2 = {
 
-      deleteCluster: sinon.stub()
+      deleteCluster: sinon.stub(),
+      defuseV2Connector: sinon.stub()
     };
     XhrNotificationService = _XhrNotificationService_;
     $q = _$q_;
@@ -32,7 +35,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
     log.reset();
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
-
+      connector: connector,
       cluster: cluster,
       orgName: orgName,
       MediaClusterServiceV2: MediaClusterServiceV2,
@@ -51,23 +54,23 @@ describe('Controller: HostDeregisterControllerV2', function () {
   });
 
   it('check if Deregister is called', function () {
-    spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.when());
     controller.deregister();
-    expect(MediaClusterServiceV2.deleteCluster).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalled();
     expect(controller.saving).toBe(true);
 
   });
 
   it('check if Deregister is called with  clusterId', function () {
 
-    spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue($q.when());
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue($q.when());
     controller.deregister();
-    expect(MediaClusterServiceV2.deleteCluster).toHaveBeenCalledWith(cluster.id);
+    expect(MediaClusterServiceV2.defuseV2Connector).toHaveBeenCalledWith(cluster.id);
   });
 
   it('Should go to success module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue(deregisterDefered.promise);
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
     deregisterDefered.resolve();
     $rootScope.$apply();
 
@@ -77,7 +80,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
   });
   it('Should go to failure module of deregister', function () {
     var deregisterDefered = $q.defer();
-    spyOn(MediaClusterServiceV2, 'deleteCluster').and.returnValue(deregisterDefered.promise);
+    spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
     deregisterDefered.reject();
     $rootScope.$apply();
 

@@ -1,16 +1,16 @@
-'use strict';
+namespace globalsettings {
 
-describe('Controller: EnterpriseSettingsCtrl', function () {
-  var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
-  var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
-  var getOrgStatus = 200;
-  var rootScope;
+describe('Controller: EnterpriseSettingsCtrl', ()  => {
+  let controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
+  let orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
+  let getOrgStatus = 200;
+  let rootScope;
 
-  var authInfo = {
+  let authInfo = {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
 
-  beforeEach(angular.mock.module(function ($provide) {
+  beforeEach(angular.mock.module(($provide) => {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -18,7 +18,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   beforeEach(installPromiseMatchers);
 
-  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_, _SparkDomainManagementService_) {
+  beforeEach(inject(($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_, _SparkDomainManagementService_) => {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     SparkDomainManagementService = _SparkDomainManagementService_;
@@ -33,6 +33,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     };
 
     spyOn($scope.wizard, 'nextTab');
+    spyOn($scope, '$emit').and.callThrough();
     spyOn(SparkDomainManagementService, 'checkDomainAvailability').and.returnValue($q.when({
       data: {
         isDomainAvailable: true,
@@ -53,7 +54,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       }]
     }]));
 
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, status) {
+    spyOn(Orgservice, 'getOrg').and.callFake((callback, status) => {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(Notification, 'error');
@@ -69,25 +70,29 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $scope.$apply();
   }
 
-  describe('test Orgservice getOrg callback setting displayName', function () {
-    beforeEach(function () {
-      Orgservice.getOrg.and.callFake(function (callback, status) {
+  describe('test Orgservice getOrg callback setting displayName', () => {
+    beforeEach(() => {
+      Orgservice.getOrg.and.callFake((callback, status) => {
         callback(orgServiceJSONFixture.getOrg, 201);
       });
       initController();
     });
 
-    it('should gracefully error', function () {
+    it('should gracefully error',() => {
       expect(Notification.error).toHaveBeenCalled();
     });
   });
 
-  describe('test if checkSipDomainAvailability function sets isUrlAvailable to true', function () {
+  describe('test if checkSipDomainAvailability function sets isUrlAvailable to true', () => {
     beforeEach(initController);
 
-    it('should check if checkSipDomainAvailability in success state sets isUrlAvailable to true ', function (done) {
+    it('should emit wizardNextDisabled', () => {
+      expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', true);
+    });
+
+    it('should check if checkSipDomainAvailability in success state sets isUrlAvailable to true ', (done) => {
       controller.inputValue = 'shatest1';
-      controller.checkSipDomainAvailability().then(function () {
+      controller.checkSipDomainAvailability().then(() => {
         expect(controller.isUrlAvailable).toEqual(true);
         expect(SparkDomainManagementService.checkDomainAvailability).toHaveBeenCalledWith(controller.inputValue);
         done();
@@ -95,7 +100,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       $scope.$apply();
     });
 
-    it('should disable the field and clear error on the field validation', function () {
+    it('should disable the field and clear error on the field validation', () => {
       controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
       controller.saveDomain();
@@ -104,20 +109,34 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       expect(controller.isDisabled).toEqual(true);
     });
 
-    it('should check if checkSipDomainAvailability in success state is set to false ', function () {
+    it('should check if checkSipDomainAvailability in success state is set to false ', () => {
       controller.inputValue = 'amtest2';
       controller.checkSipDomainAvailability();
       expect(controller.isUrlAvailable).toEqual(false);
     });
   });
 
-  describe('test if addSipDomain errors gracefully', function () {
-    beforeEach(function () {
+  describe('test checkSSAReservation', () => {
+    beforeEach(initController);
+
+    it('should enable Next button when isSSAReserved is true', () => {
+        controller.isSSAReserved = true;
+        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', false);
+    });
+
+    it('should enable Next button when isSSARerved is false and depends on isConfirmed', () => {
+        controller.isSSAReserved = false;
+        expect($scope.$emit).toHaveBeenCalledWith('wizardNextButtonDisable', !controller.isConfirmed);
+    });
+  });
+
+  describe('test if addSipDomain errors gracefully', () => {
+    beforeEach(() => {
       SparkDomainManagementService.addSipDomain.and.returnValue($q.reject());
       initController();
     });
 
-    it('addSipDomain should error gracefully', function () {
+    it('addSipDomain should error gracefully', () => {
 
       controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
@@ -127,16 +146,16 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
   });
 
-  describe('test if checkRoomLicense function sets isRoomLicensed to true', function () {
+  describe('test if checkRoomLicense function sets isRoomLicensed to true', () => {
     beforeEach(initController);
 
-    it('checkRoomLicense should set Room license to true', function () {
+    it('checkRoomLicense should set Room license to true', () => {
       expect(controller.isRoomLicensed).toEqual(true);
     });
   });
 
-  describe('test if checkRoomLicense function sets isRoomLicensed to false', function () {
-    beforeEach(function () {
+  describe('test if checkRoomLicense function sets isRoomLicensed to false', () => {
+    beforeEach(() => {
       Orgservice.getLicensesUsage.and.returnValue($q.when([{
         licenses: [{
           offerName: 'CF'
@@ -145,8 +164,9 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       initController();
     });
 
-    it('checkRoomLicense should set Room license to false', function () {
+    it('checkRoomLicense should set Room license to false', () => {
       expect(controller.isRoomLicensed).toEqual(false);
     });
   });
 });
+}

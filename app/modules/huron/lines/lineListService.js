@@ -74,12 +74,14 @@
                     return (number.e164 && number.e164 === line.externalNumber);
                   });
                   if (lineFound) {
-                    lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                    lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
+                    lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
                     pendingLines.push(lineFound);
                   } else {
                     nonProvisionedPendingLines.push({
                       externalNumber: number.e164,
-                      userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                      status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                      tooltip: PstnSetupService.translateStatusMessage(order)
                     });
                   }
                 });

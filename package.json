@@ -10,6 +10,7 @@
     "build": "rimraf dist && webpack --bail --progress --profile",
     "clean": "rimraf dist ./test/results ./test/coverage",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",
+    "commit": "git-cz",
     "eslint": "eslint .",
     "jsb": "node ./utils/js-beautify --beautify",
     "jsb-verify": "node ./utils/js-beautify --verify",
@@ -82,11 +83,14 @@
     "autoprefixer": "^6.3.6",
     "bardjs": "^0.1.8",
     "browser-sync": "^2.13.0",
+    "commitizen": "^2.8.2",
     "compression": "^1.6.2",
     "cross-spawn": "^4.0.0",
     "crypto-js": "^3.1.6",
+    "cz-customizable": "^4.0.0",
     "css-loader": "^0.23.1",
     "dotenv": "^2.0.0",
+    "editor": "^1.0.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb-base": "^3.0.1",
     "eslint-config-angular": "^0.5.0",
@@ -149,6 +153,7 @@
     "selenium-webdriver": "^2.53.3",
     "sinon": "^1.17.4",
     "style-loader": "^0.13.1",
+    "temp": "^0.8.3",
     "touch": "^1.0.0",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
@@ -158,10 +163,16 @@
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^1.14.1",
+    "word-wrap": "^1.1.0",
     "yargs": "^4.7.1"
   },
   "engines": {
     "node": ">=4.0.0",
     "npm": ">=2.0.0 <3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "config/cz-atlas"
+    }
   }
 }

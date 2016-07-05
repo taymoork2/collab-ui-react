@@ -10,7 +10,7 @@ describe('Directive: setupAssistantPages', function () {
     'ct-feedback',
     'ct-agent-unavailable',
     'ct-off-hours',
-    'ct-chat-strings',
+    'ct-chat-status-messages',
     'ct-summary'
   ];
 

@@ -9,14 +9,18 @@ export class SipDomainSettingController {
   public isConfirmed:boolean = null;
 
   public isRoomLicensed = false;
+  public isSSAReserved = false;
+  public subdomainCount = 0;
   public domainSuffix = '';
   public errorMsg = '';
 
   /* @ngInject */
-  constructor($scope, private $rootScope, private Notification,
+  constructor(private $scope, private $rootScope, private Notification, private Config,
               private Orgservice, private SparkDomainManagementService, private Log, private $translate, private $window, private UrlConfig) {
 
+    $scope.$emit('wizardNextButtonDisable', true);
     this.domainSuffix = UrlConfig.getSparkDomainCheckUrl();
+    this.subdomainCount++;
     this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
 
     let onSaveEventDeregister = $rootScope.$on('wizard-enterprise-sip-url-event', this.saveDomain.bind(this));
@@ -25,6 +29,7 @@ export class SipDomainSettingController {
 
     this.checkRoomLicense();
     this.loadSipDomain();
+    this.checkSSAReservation();
   }
 
   get isUrlAvailable():boolean {
@@ -42,8 +47,16 @@ export class SipDomainSettingController {
       this.isButtonDisabled = false;
       this.isConfirmed = false;
     }
-
     this._inputValue = newValue;
+  }
+
+  public checkSSAReservation() {
+    if(this.isSSAReserved || this.Config.isE2E()) {
+      this.$scope.$emit('wizardNextButtonDisable', false);
+    }
+    else {
+      this.$scope.$emit('wizardNextButtonDisable', !this.isConfirmed);
+    }
   }
 
   public openSipHelpWiki() {
@@ -54,14 +67,11 @@ export class SipDomainSettingController {
     if (this._inputValue.length > 40) {
       this.isError = true;
     }
-
     return this.isError;
   }
 
   public saveDomain() {
-
     if (this.isUrlAvailable && this.isConfirmed) {
-
       this.SparkDomainManagementService.addSipDomain(this._validatedValue)
         .then((response) => {
           if (response.data.isDomainReserved) {
@@ -79,7 +89,6 @@ export class SipDomainSettingController {
   }
 
   public checkSipDomainAvailability() {
-
     let domain = this._inputValue;
     this.isLoading = true;
     this.isButtonDisabled = true;
@@ -116,6 +125,7 @@ export class SipDomainSettingController {
         offerName: 'SD'
       });
       this.isRoomLicensed = !_.isUndefined(roomLicensed);
+      this.subdomainCount++;
     });
   }
 
@@ -128,6 +138,8 @@ export class SipDomainSettingController {
           displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
           this.isDisabled = true;
           this.isButtonDisabled = true;
+          this.isSSAReserved = true;
+          this.checkSSAReservation();
         }
       } else {
         this.Log.debug('Get existing org failed. Status: ' + status);

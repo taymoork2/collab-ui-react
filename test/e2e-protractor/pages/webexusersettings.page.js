@@ -47,6 +47,10 @@ var WebExUserSettingsPage = function () {
     username: 'prov6usr@mailinator.com',
     password: 'Cisco!23',
   };
+
+  this.scrollToBottom = function () {
+    browser.executeScript('window.scrollTo(0,1000);');
+  };
 };
 
 module.exports = WebExUserSettingsPage;

@@ -5,16 +5,16 @@ describe('Controller: messagingSetupCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Mixpanel;
+  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Analytics;
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Notification_, _Mixpanel_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _Analytics_, _FeatureToggleService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    Mixpanel = _Mixpanel_;
+    Analytics = _Analytics_;
     Notification = _Notification_;
 
     spyOn(AccountOrgService, 'getOrgSettings').and.returnValue($q.when({
@@ -36,7 +36,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'notify');
   }));
 
