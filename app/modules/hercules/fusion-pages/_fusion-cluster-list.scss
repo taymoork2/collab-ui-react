@@ -27,7 +27,7 @@
   .cs-card {
     header {
       display: flex;
-      position: relative;;
+      position: relative;
       padding: 1.25rem 1rem 0.9375rem !important;
       align-items: baseline;
 
@@ -112,7 +112,6 @@
 
     .connection-status-service {
       font-size: 0.75rem;
-      @include text-overflow;
 
       a {
         display: flex;
@@ -154,6 +153,15 @@
       header:after {
         border-top-color: $color-meetings-base;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 470px) {
+  .fusion-cluster-list .cs-card .cluster-list-body {
+    flex-direction: column;
+    .connection-status {
+      margin-top: 0.9375rem;
     }
   }
 }
