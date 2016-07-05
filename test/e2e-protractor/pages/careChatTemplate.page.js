@@ -48,6 +48,7 @@ var ChatTemplateCreation = function () {
   this.copyEmbedCodeOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .left span'));
   this.deleteEmbedCodeBtnOnCard = element(by.css('.cs-card-container .cs-card-layout .small footer .right .icon-trash'));
   this.deleteChatTemplateonModal = element(by.css('.btn.btn--negative'));
+  this.chatStatusMessages = element.all(by.css('.ct-attribute-field-textbox'));
 };
 
 module.exports = ChatTemplateCreation;
