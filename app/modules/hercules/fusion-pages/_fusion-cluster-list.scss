@@ -28,109 +28,131 @@
     header {
       display: flex;
       position: relative;;
-      padding-top: 1.25rem;
-      padding-bottom: 0.9375rem;
+      padding: 1.25rem 1rem 0.9375rem !important;
+      align-items: baseline;
 
       h4 {
-        flex-grow: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        @include text-overflow;
         margin-right: 0.625rem;
       }
 
-      $orb-size: 2.125rem;
-      .cluster-type-orb {
-        flex-grow: 0;
+      .cluster-list-hosts {
         flex-shrink: 0;
-        border-radius: $orb-size;
-        width: $orb-size;
-        height: $orb-size;
-        font-size: 0.875rem;
-        line-height: 2.8;
-        text-align: center;
-        background-color: $gray-light-4;
+        height: 18px;
+        border-radius: 2px;
+        color: #fff;
+        font-size: 0.75rem;
+        background-color: $gray-base;
+        padding: 1px 5px;
       }
     }
 
-    .cluster-list-timezone {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+    .cluster-list-body {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .cluster-list-cat {
+      color: $gray-base;
+      font-size: 0.75rem;
+    }
+
+    .cluster-list-info {
+      color: $gray-dark-2;
+      font-size: 0.875rem;
     }
 
     .columns {
-      &:first-child {
-        color: $gray-light-1;
-      }
       padding-left: 1rem;
       padding-right: 1rem;
-      font-size: 16px;
     }
 
-    .service-list {
-      padding: 0;
-      margin: 0;
-      margin-top: 1rem;
-      margin-left: 1rem;
-      font-size: 1rem;
+    .cluster-list-timezone {
+      @include text-overflow;
+    }
 
-      li {
-        list-style: none;
+    .connection-status {
+      display: flex;
+    }
+
+    .connection-status-column {
+      flex: 1 0 auto;
+      min-width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 0.9375rem;
+    }
+
+    .connection-status-icon {
+      // outline: 1px dashed blue;
+      width: 48px;
+      height: 32px;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .connection-status-cloud-icon {
+      background-image: url('/images/hybrid-services/cloud.svg');
+    }
+
+    .connection-status-cable {
+      height: 16px;
+      border-right: 1px solid $gray-light-1;
+      margin: 8px 0;
+    }
+
+    .connection-status-cable-cloud {
+      margin-bottom: 5px
+    }
+
+    .connection-status-cable-premises {
+      margin-top: 5px
+    }
+
+    .connection-status-service {
+      font-size: 0.75rem;
+      @include text-overflow;
+
+      a {
+        display: flex;
+        align-items: baseline;
       }
 
       span {
-        font-size: 1rem;
+        margin-left: 4px;
+        font-size: 0.75rem;
       }
+    }
 
-      .fa {
-        font-size: 12px;
-        vertical-align: 1px;
-      }
+    .connection-status-premises-icon {
+      background-image: url('/images/hybrid-services/server.svg');
     }
 
     footer {
-      display: flex;
-      padding: 1rem;
-
-      div, a {
-         width: 50%;
-         color: $gray-base;
-         font-size: 16px;
-      }
+      text-align: center;
+      padding: 0;
 
       a {
-        text-align: right;
+        display: block;
+        padding: 1rem;
+        border-top: 1px solid $gray-light-3;
+        width: 100%;
+        font-size: 16px;
         &:focus {
           box-shadow: none
         }
-      }
-
-      span {
-        font-size: 16px;
-      }
-
-      i {
-        font-size: 24px;
-        vertical-align: -7px;
-        color: $gray-light-2;
       }
     }
 
     &.card-expressway {
       header:after {
-        border-top-color: $color-primary-base;
-      }
-      .cluster-type-orb {
-        color: $color-primary-base;
+        border-top-color: $color-people-base;
       }
     }
     &.card-mediafusion {
       header:after {
         border-top-color: $color-meetings-base;
-      }
-      .cluster-type-orb {
-        color: $color-meetings-base;
       }
     }
   }

@@ -711,6 +711,7 @@
   },
   "weekDays": {
     "everyDay": "Every {{day}}",
+    "day": "day",
     "monday": "Monday",
     "tuesday": "Tuesday",
     "wednesday": "Wednesday",
@@ -1451,7 +1452,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule:"
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
