@@ -3,8 +3,8 @@
 describe('Component: upgradeScheduleConfiguration', function () {
   var component, Authinfo, $scope, $q, $compile, $rootScope, FusionClusterService;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(mockDirectives));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(mockDirectives));
   beforeEach(inject(dependencies));
 
   var upgradeScheduleMock = {

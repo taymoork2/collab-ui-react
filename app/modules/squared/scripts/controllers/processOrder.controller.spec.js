@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: ProcessorderCtrl', function () {
-  var $controller, $httpBackend, $location, $q, $scope, controller, Auth, Orgservice;
+  var $controller, $httpBackend, $location, $q, $scope, controller, Auth, ModalService, Orgservice;
 
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Squared'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _$q_, _Auth_, _Orgservice_) {
+  function dependencies($rootScope, _$controller_, _$httpBackend_, _$q_, _Auth_, _ModalService_, _Orgservice_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $location = {
@@ -16,6 +16,7 @@ describe('Controller: ProcessorderCtrl', function () {
     $q = _$q_;
     $scope = $rootScope.$new();
     Auth = _Auth_;
+    ModalService = _ModalService_;
     Orgservice = _Orgservice_;
   }
 
@@ -25,6 +26,7 @@ describe('Controller: ProcessorderCtrl', function () {
     });
     spyOn(Orgservice, 'createOrg');
     spyOn(Auth, 'logoutAndRedirectTo');
+    spyOn(ModalService, 'open');
   }
 
   function initController() {
@@ -76,24 +78,17 @@ describe('Controller: ProcessorderCtrl', function () {
       });
 
       describe('when "Orgservice.createOrg()" rejects:', function () {
-        var $bak;
-
         beforeEach(function () {
-          $bak = $;
-          $ = jasmine.createSpy().and.returnValue({
-            modal: jasmine.createSpy()
-          });
           Orgservice.createOrg.and.returnValue($q.reject());
         });
         beforeEach(initController);
 
-        afterEach(function () {
-          $ = $bak;
-        });
-
-        it('should show the "#processOrderErrorModal"', function () {
-          expect($).toHaveBeenCalledWith('#processOrderErrorModal');
-          expect($('#processOrderErrorModal').modal).toHaveBeenCalledWith('show');
+        it('should show the error dialog', function () {
+          expect(ModalService.open).toHaveBeenCalledWith({
+            title: 'processOrderPage.info',
+            message: 'processOrderPage.errOrgCreation',
+            dismiss: false,
+          });
         });
       });
     });
