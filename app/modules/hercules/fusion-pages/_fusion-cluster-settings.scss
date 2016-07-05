@@ -8,6 +8,10 @@
   .sub-section {
     margin-bottom: 25px !important;
   }
+
+  .cap-long-names {
+    @include text-overflow;
+  }
 }
 
 .deregister-expressway-modal {

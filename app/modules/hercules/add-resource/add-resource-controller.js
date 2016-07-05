@@ -42,6 +42,13 @@
     vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
       "ServiceName": vm.localizedServiceName
     });
+    vm.chooseClusterName = false;
+    vm.validationMessages = {
+      required: $translate.instant('common.invalidRequired')
+    };
+    vm.clustername = '';
+    vm.localizedHostNameHelpText = $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription');
+    vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
     vm.selectedCluster = '';
     vm.expresswayOptions = [];
@@ -59,7 +66,7 @@
     };
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
-      preregisterCluster(vm.hostname)
+      preregisterCluster(vm.clustername)
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(pregistrationSucceeded)
@@ -70,8 +77,8 @@
       vm.preregistrationCompleted = true;
     }
 
-    function preregisterCluster(hostname) {
-      return FusionClusterService.preregisterCluster(hostname, vm.releaseChannel, 'c_mgmt')
+    function preregisterCluster(clusterName) {
+      return FusionClusterService.preregisterCluster(clusterName, vm.releaseChannel, 'c_mgmt')
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
         });

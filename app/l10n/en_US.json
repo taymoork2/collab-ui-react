@@ -1158,6 +1158,8 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
+      "enterDisplayName": "Enter a name for the Expressway:",
+      "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
@@ -1344,7 +1346,15 @@
       "deregisterClusterSubHeader": "Remove {{ClusterName}}",
       "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
       "deregisterClusterButton": "Remove",
-      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
+      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration.",
+      "clusterMainSectionHeader": "Cluster",
+      "renameClusterSubHeader": "Rename",
+      "renameClusterParagraph": "Rename the Expressway cluster.",
+      "renameClusterDescription": "The cluster name is only used for display purposes in Cloud Collaboration Management, and changing it will not update the name on the Expressway itself.",
+      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
+      "clusterNameSaved": "Cluster name saved successfully",
+      "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
+      "clusterNameWatermark": "Enter cluster name…"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
