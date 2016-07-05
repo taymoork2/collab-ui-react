@@ -27,7 +27,7 @@
 
     vm.confirmDisable = function (serviceId) {
       $modal.open({
-        templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
+        templateUrl: "modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
         type: 'small'
