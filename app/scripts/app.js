@@ -95,13 +95,14 @@
     require('modules/core/localytics/localytics.service'),
     require('modules/core/trackingId/trackingId.module'),
     'atlas.templates',
-    'oc.lazyLoad',
     'cisco.ui',
-    'pascalprecht.translate',
-    'ui.router',
     'ct.ui.router.extras.sticky',
     'ct.ui.router.extras.future',
     'ct.ui.router.extras.previous',
+    'ngSanitize',
+    'oc.lazyLoad',
+    'pascalprecht.translate',
+    'ui.router',
   ]).run(require('./apprun'));
   require('./appconfig');
 
