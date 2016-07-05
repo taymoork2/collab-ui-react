@@ -177,7 +177,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfSummaryPage() {
-    validateDesc('You have successfully configured the chat template. Click Finish to generate the embed code and start using this chat template on your organization website.');
+    validateDesc('Click Finish to generate the embed code and start using this chat template on your organization website.');
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
   }
