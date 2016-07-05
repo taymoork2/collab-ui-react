@@ -133,7 +133,7 @@
 
   .feedback-question-text {
     @include vr-spacing(mt, 4.5);
-    font-size: rem-calc(14px);
+    font-size: $h6-font-size;
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
@@ -142,25 +142,24 @@
   .feedback-star {
     @include vr-spacing(mt, 1.5);
     @include vr-spacing(mb, 2.5);
-    @include vr-spacing(mr, 1.8);
-    @include vr-spacing(ml, 1.8);
-    font-size: rem-calc(14px);
+    @include vr-spacing(mh, 1.8);
+    font-size: $h6-font-size;
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
   }
 
-  .feedback-star-text {
+  .feedback-star-orange {
     color: $color-attention-base;
     align-self: center;
     @include vr-spacing(mr, 1.4);
-    font-size: rem-calc(33px);
+    font-size: $h2-font-size;
   }
 
-  .feedback-star-end {
+  .feedback-star-grey {
     color: $gray-light-2;
     align-self: center;
-    font-size: rem-calc(33px);
+    font-size: $h2-font-size;
   }
 
   .feedback-comment-text {
@@ -173,7 +172,7 @@
     position: relative;
     align-self: center;
     font-family: CiscoSansTT Light;
-    font-size: rem-calc(14px);
+    font-size: $h6-font-size;
     resize: none;
     border: 1px solid $gray-light-2;
     border-radius: 3px;
@@ -193,7 +192,7 @@
     border: medium none;
     border-radius: 0.25rem;
     color: $white;
-    font-size: 15px;
+    font-size: $h6-font-size;
     height: rem-calc(35px);
     position: relative;
     text-align: center;
