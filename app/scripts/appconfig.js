@@ -2389,7 +2389,7 @@
             controller: 'HostDetailsControllerV2',
             controllerAs: 'hostDetails',
             data: {
-              displayName: 'Host'
+              displayName: 'Node'
             },
             params: {
               clusterId: null,

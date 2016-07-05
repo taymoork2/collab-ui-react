@@ -2841,7 +2841,8 @@
       "software": "Software",
       "deregister_host": "DEREGISTER HOST",
       "goToHost": "Go to Host",
-      "hosts": "Hosts"
+      "hosts": "Hosts",
+      "nodes": "Nodes"
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2850,7 +2851,7 @@
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Deactivating a service requires another confirm step and will remove any service related functionality from your users.",
+      "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
@@ -2861,10 +2862,10 @@
       "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
       "documentation_4": "Download Media Service OVA from",
       "documentation_5": "software.cisco.com",
-      "deactivate": "DEACTIVATE",
       "cancelCaps": "CANCEL",
+      "cancel": "Cancel",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
-      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
+      "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
       "schedule": "Set a Schedule",
       "softwareUpgrade": "Software Upgrades",
@@ -2945,7 +2946,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not Operational",
+      "nonodes": "No Nodes Registered"
     },
     "deleteGroup": {
       "title": "Delete Cluster",
@@ -2974,10 +2976,10 @@
       "releaseChannel": "Release channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
-      "manageThisCluster": "Manage this cluster",
+      "clusterSettings": "Cluster Settings",
       "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
       "deletecluster": "Delete cluster",
-      "deleteclusterDesc": "Delete this cluster from Cisco Collaboration Cloud and remove all Hybrid Media and related configuration"
+      "deleteclusterDesc": "Delete the cluster from Cisco Collaboration Cloud"
 
     },
     "reassign": {
@@ -2986,7 +2988,9 @@
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}.",
       "moveHost": "Move Host",
-      "deregister_host": "Deregister Host"
+      "deregister_host": "Deregister Host",
+      "moveNode": "Move Node",
+      "deregister_node": "Deregister Node"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -3019,7 +3023,9 @@
       "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
       "titleV2": "Register New Hybrid Media Node",
       "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
-      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud",
+      "serverOnline": "The media server that you are registering already exists and is online.",
+      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3056,7 +3062,6 @@
     "moveHost": "MOVE HOST",
     "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
-    "openSettingsTitle": "Open {{clusterName}} settings",
     "installing": "Installing"
   },
   "webexUserSettings": {
