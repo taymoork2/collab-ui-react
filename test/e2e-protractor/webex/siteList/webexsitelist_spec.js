@@ -170,9 +170,6 @@ xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function (
     }
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
 }); //End dev dmz tests
 
 // End of site list tests
