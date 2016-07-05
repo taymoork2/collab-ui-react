@@ -31,6 +31,7 @@
                 return vm.connector;
               }
             },
+            type: 'small',
             controller: 'ReassignClusterControllerV2',
             controllerAs: "reassignClust",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-cluster-dialog.html'
@@ -65,6 +66,9 @@
                 },
                 orgName: function () {
                   return vm.organization.displayName;
+                },
+                connector: function () {
+                  return vm.connector;
                 }
               },
               type: 'dialog',

@@ -26,12 +26,12 @@
 </div>
 
 <div class="modal-footer" ng-hide="hostDeregister.error">
-  <button id="convertCancelButton" class="btn pull-right" ng-click="hostClusterDeregister.close()"
+  <button id="convertCancelButton" class="btn pull-right" ng-click="hostDeregister.close()"
           style="margin-right: 10px">
     <span translate="common.no"></span>
   </button>
   <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--primary"
-          ng-click="hostClusterDeregister.deregister()">
+          ng-click="hostDeregister.deregister()">
     <span ng-hide="saving" translate="common.yes"></span>
       <span ng-show="saving">
         <i class="icon icon-spinner"/>

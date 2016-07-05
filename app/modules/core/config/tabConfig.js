@@ -26,6 +26,13 @@
     state: 'users',
     link: '/users'
   }, {
+    tab: 'placeTab',
+    icon: 'icon-meeting-room',
+    title: 'tabs.placeTab',
+    feature: 'csdm-places',
+    state: 'places',
+    link: '/places'
+  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',

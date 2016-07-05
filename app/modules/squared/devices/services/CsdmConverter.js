@@ -56,7 +56,9 @@
         "Cisco TelePresence MX800": "images/devices-hi/mx800.png",
         "Cisco TelePresence MX800 Dual": "images/devices-hi/mx800dspeakertrack.png",
         "Cisco TelePresence MX800 SpeakerTrack": "images/devices-hi/mx800speakertrack.png",
-        "Project Swedish Island": "images/devices-hi/swedish_island.png"
+        "Project Swedish Island": "images/devices-hi/swedish_island.png",
+        "Cisco Spark Board 55": "images/devices-hi/spark_board_55.png",
+        "Darling": "images/devices-hi/spark_board_55.png"
       };
 
       function HuronDevice(obj) {
@@ -162,7 +164,8 @@
         this.url = obj.url;
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
-        this.expiryTime = convertExpiryTime(obj.expiryTime);
+        this.expiryTime = obj.expiryTime;
+        this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
         this.product = t('spacesPage.unactivatedDevice');
         this.tags = getTags(obj.description);
         this.tagString = getTagString(obj.description);
@@ -180,6 +183,18 @@
         this.updateName = function (newName) {
           this.displayName = newName;
         };
+      }
+
+      function Place(obj) {
+        this.url = obj.url;
+        this.cisUuid = obj.cisUuid;
+        this.displayName = obj.displayName;
+        this.sipUrl = obj.sipUrl;
+        this.devices = convertDevices(obj.devices);
+        this.isUnused = obj.devices || false;
+        this.canDelete = true;
+        this.accountType = obj.placeType || 'MACHINE';
+        this.image = "images/devices-hi/unknown.png";
       }
 
       function decodeHuronTags(description) {
@@ -207,6 +222,10 @@
         return _.mapValues(data, convertAccount);
       }
 
+      function convertPlaces(data) {
+        return _.mapValues(data, convertPlace);
+      }
+
       function convertDevice(data) {
         return new Device(data);
       }
@@ -217,6 +236,10 @@
 
       function convertAccount(data) {
         return new UnusedAccount(data);
+      }
+
+      function convertPlace(data) {
+        return new Place(data);
       }
 
       function convertCode(data) {
@@ -415,6 +438,8 @@
       }
 
       return {
+        convertPlace: convertPlace,
+        convertPlaces: convertPlaces,
         convertCode: convertCode,
         convertCodes: convertCodes,
         convertDevice: convertDevice,
