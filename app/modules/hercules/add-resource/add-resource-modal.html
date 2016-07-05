@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body add-resource">
-  <div ng-hide="addResource.welcomeScreenAccepted" class="add-resource hercules-fix-paragraphs deregister-expressway-modal">
+  <div ng-hide="addResource.welcomeScreenAccepted" class="hercules-fix-paragraphs deregister-expressway-modal">
 
     <p translate="hercules.addResourceDialog.setupScreenBodyAboutToSetup"></p>
 
@@ -88,7 +88,7 @@
     </div>
   </form>
 
-  <div ng-show="addResource.chooseClusterName && !addResource.preregistrationCompleted" class="add-resource">
+  <div ng-show="addResource.chooseClusterName && !addResource.preregistrationCompleted">
     <p translate="hercules.addResourceDialog.enterDisplayName"></p>
 
     <form name="chooseClusterName" novalidate>
@@ -108,7 +108,7 @@
   </div>
 
 
-  <div ng-show="addResource.preregistrationCompleted" class="add-resource">
+  <div ng-show="addResource.preregistrationCompleted">
     <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
              translate-values="{hostname: addResource.clustername || ''}"></span>
     </p>
@@ -119,7 +119,7 @@
     </p>
   </div>
 
-  <div ng-show="addResource.provisioningToExistingExpresswayCompleted" class="add-resource hercules-fix-paragraphs deregister-expressway-modal">
+  <div ng-show="addResource.provisioningToExistingExpresswayCompleted" class="hercules-fix-paragraphs deregister-expressway-modal">
     <p translate="hercules.addResourceDialog.connectorIsProvisioned" translate-values="{ClusterName: addResource.selectedCluster.label}"></p>
 
     <p>
