@@ -58,9 +58,6 @@
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });
-          vm.localizedRemoveClusterHeader = $translate.instant('hercules.expresswayClusterSettings.deregisterClusterSubHeader', {
-            ClusterName: vm.cluster.name
-          });
           vm.newClusterName = vm.cluster.name;
         }, XhrNotificationService.notify);
     }
@@ -118,9 +115,6 @@
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
         .then(function () {
           vm.cluster.name = newClusterName;
-          vm.localizedRemoveClusterHeader = $translate.instant('hercules.expresswayClusterSettings.deregisterClusterSubHeader', {
-            ClusterName: newClusterName
-          });
           Notification.success($translate.instant('hercules.expresswayClusterSettings.clusterNameSaved'));
         }, function () {
           Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotBeSaved'));

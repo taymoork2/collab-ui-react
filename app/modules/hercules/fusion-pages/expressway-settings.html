@@ -4,32 +4,6 @@
 
   <div class="cs-form">
 
-    <setting-section setting="clusterSettings.renameClusterSection">
-
-      <div class="sub-section">
-        <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.renameClusterSubHeader"></h5>
-        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
-
-        <div class="row">
-          <input
-            cs-input
-            type="text"
-            placeholder={{clusterSettings.localizedClusterNameWatermark}}
-            ng-model="clusterSettings.newClusterName"
-            cs-input-group-size="medium-8"
-            cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
-          >
-        </div>
-        <button
-          type="button"
-          class="btn btn--primary"
-          ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
-          translate="common.save"
-        ></button>
-
-      </div>
-    </setting-section>
-
     <setting-section setting="clusterSettings.upgradeSchedule">
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
@@ -76,17 +50,40 @@
       </div>
     </setting-section>
 
-    <setting-section setting="clusterSettings.deregisterClusterSection">
+    <setting-section setting="clusterSettings.renameClusterSection">
 
       <div class="sub-section">
-        <h5 class="cap-long-names sub-section__label">{{clusterSettings.localizedRemoveClusterHeader}}</h5>
+        <h5 class="sub-section__label" translate="common.rename"></h5>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
+
+        <div class="row">
+          <input
+            cs-input
+            type="text"
+            placeholder={{clusterSettings.localizedClusterNameWatermark}}
+            ng-model="clusterSettings.newClusterName"
+            cs-input-group-size="medium-8"
+            cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
+          >
+        </div>
+        <button
+          type="button"
+          class="btn btn--primary"
+          ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
+          translate="common.save"
+        ></button>
+
+      </div>
+
+      <div class="sub-section">
+        <h5 class="cap-long-names sub-section__label" translate="common.remove"></h5>
         <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
         <div ng-if="clusterSettings.enabledServices.length > 1">
-          <button type="button" class="btn btn--alert" disabled="disabled" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
+          <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
           <p class="cap-long-names sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
         </div>
         <div ng-if="clusterSettings.enabledServices.length < 2">
-          <button type="button" class="btn btn--alert" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
+          <button type="button" class="btn" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="common.remove"></button>
         </div>
       </div>
     </setting-section>
