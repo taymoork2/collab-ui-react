@@ -67,6 +67,13 @@ var WebExCommon = function () {
   this.devDmzInfo.csvCogEnabled = element(by.id(this.devDmzInfo.siteUrl + "_csvEnabled"));
   this.devDmzInfo.csvSpinner = element(by.id(this.devDmzInfo.siteUrl + "_csvSpinner"));
   this.devDmzInfo.csvResult = element(by.id(this.devDmzInfo.siteUrl + "_csvResult"));
+  this.devDmzInfo.csvModalHeader = element(by.id("webexCsv-modalHeader"));
+  this.devDmzInfo.csvModalBody = element(by.id("webexCsv-modalBody"));
+  this.devDmzInfo.csvModalCloseButton = element(by.id("webexCsv-closeModalButton"));
+  this.devDmzInfo.csvModalExportCard = element(by.id("webexCsv-exportCard"));
+  this.devDmzInfo.csvModalExportIcon = element(by.id("webexCsv-exportIcon"));
+  this.devDmzInfo.csvModalImportCard = element(by.id("webexCsv-importCard"));
+  this.devDmzInfo.csvModalImportIcon = element(by.id("webexCsv-importIcon"));
 
   ////////////////////
 

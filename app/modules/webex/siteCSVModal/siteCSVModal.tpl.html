@@ -1,7 +1,8 @@
 <div ng-if="siteCSVModalCtrl.viewReady"
-     class="modal-header">
+     class="modal-header"
+     id="webexCsv-modalHeader">
      
-  <button id="closeCSVImportModal" 
+  <button id="webexCsv-closeModalButton" 
           type="button" 
           class="close"
           ng-click="$dismiss()">
@@ -14,7 +15,7 @@
       translate='siteList.siteCsvColumnHeader'></h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="webexCsv-modalBody">
   <h4>
     {{siteCSVModalCtrl.siteUrl}}
   </h4>
@@ -30,7 +31,7 @@
   <div class="cs-card-container">
     <cs-card-layout block-view="true">
       <!-- csv export card -->
-      <cs-card class="large">
+      <cs-card class="large" id="webexCsv-exportCard">
         <article class="csvModal">
           <div class="webex-csv-container ">
               <p align="center">
@@ -38,6 +39,7 @@
                   <i ng-if="(!siteCSVModalCtrl.modal.file) && 
                             (!siteCSVModalCtrl.requestingExport)"
                      class="icon icon-download-contain icon-5x icon-export-import"
+                     id="webexCsv-exportIcon"
                      ng-click="siteCSVModalCtrl.startExport()"></i>
                  
                   <i ng-if="(siteCSVModalCtrl.modal.file) || 
@@ -70,7 +72,7 @@
       <!-- end of csv export card -->
       
       <!-- start of csv import card -->
-      <cs-card class="large">
+      <cs-card class="large" id="webexCsv-importCard">
         <article class="csvModal">
 		  <div class="webex-csv-container">
               <div ng-if="(siteCSVModalCtrl.requestingExport)">
@@ -114,7 +116,7 @@
 							   file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
 								   
 						<label for='upload'> 
-							<i class="icon icon-upload-contain icon-5x icon-export-import"></i>
+							<i class="icon icon-upload-contain icon-5x icon-export-import" id="webexCsv-importIcon"></i>
 						</label>
 						
 						<br>

@@ -170,6 +170,20 @@ xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function (
     }
   });
 
+  it('should check import/export modal', function () {
+    if (setup) {
+      //Click on the csv icon
+      utils.click(webExCommon.devDmzInfo.csvCogEnabled);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalHeader);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalBody);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalCloseButton);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportIcon);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportIcon);
+    }
+  });
+
 }); //End dev dmz tests
 
 // End of site list tests
