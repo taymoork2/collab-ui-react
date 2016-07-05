@@ -13,6 +13,7 @@
       getDays: getDays,
       getLogo: getLogo,
       getPreviewDays: getPreviewDays,
+      areDaysSelected: areDaysSelected,
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
       getDefaultTimes: getDefaultTimes,
@@ -139,6 +140,13 @@
       } else {
         return days[startIndex].label;
       }
+    }
+
+    function areDaysSelected(days) {
+      var selectedDayIndex = _.findIndex(days, function(day){
+        return day.isSelected;
+      });
+      return selectedDayIndex != -1;
     }
 
     function getDays() {

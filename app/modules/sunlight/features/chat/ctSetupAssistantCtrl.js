@@ -322,12 +322,18 @@
       return false;
     }
 
+    function isOffHoursPageValid() {
+      return vm.template.configuration.pages.offHours.message != '' && CTService.areDaysSelected(vm.days);
+    }
+
     function nextButton() {
       switch (vm.currentState) {
       case 'name':
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
+      case 'offHours':
+        return isOffHoursPageValid();
       case 'summary':
         return 'hidden';
       default:
