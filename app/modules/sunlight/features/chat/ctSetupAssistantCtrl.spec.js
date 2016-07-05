@@ -14,7 +14,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var FEEDBACK_PAGE_INDEX = 4;
   var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
   var OFF_HOURS_PAGE_INDEX = 6;
-  var CHAT_STRING_PAGE_INDEX = 7;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
   var EMBED_CODE_PAGE_INDEX = 8;
   var OrgName = 'Test-Org-Name';
   var spiedAuthinfo = {
@@ -385,6 +385,16 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       });
       expect(controller.saveCTErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
+    });
+  });
+
+  describe('Chat Status Messages Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      resolveLogoPromise();
+    });
+    it("should have previous and next button enabled", function () {
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
   });
 });

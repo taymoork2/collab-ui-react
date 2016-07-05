@@ -1,0 +1,67 @@
+<div>
+  <div class="ct-title">
+    <span class="h2" translate="careChatTpl.chatStatusMessages"></span>
+  </div>
+  <div class="h4 ct-title-desc" translate="careChatTpl.chatStatusMessagesDesc"></div>
+  <div class="ct-chat-common ct-chat-status-messages ct-sa-content">
+    <cs-card-layout block-view="true" class="cardScroll">
+      <cs-card>
+        <article class="ct-article articleHeight">
+          <section class="ct-attribute-section ct-flex-topleft">
+
+            <div class="row ct-attribute-row labelText">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.connecting">
+              </label>
+              <input id="connecting"
+                     class="h5 inputField ct-attribute-field-textbox large-11"
+                     type="text" maxlength="50"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.connectingMessage.displayText"/>
+            </div>
+
+            <div class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.waiting">
+              </label>
+              <input id="waiting"
+                     class="h5 inputField ct-attribute-field-textbox large-11"
+                     type="text" maxlength="50"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"/>
+            </div>
+
+            <div class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.enterRoom">
+              </label>
+              <input id="enterRoom"
+                     class="h5 inputField ct-attribute-field-textbox large-11"
+                     type="text" maxlength="50"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.enterRoomMessage.displayText"/>
+            </div>
+
+            <div class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.leaveRoom">
+              </label>
+              <input id="leaveRoom"
+                     class="h5 inputField ct-attribute-field-textbox large-11"
+                     type="text" maxlength="50"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"/>
+            </div>
+
+            <div class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label  h4 large-11"
+                     translate="careChatTpl.chatting">
+              </label>
+              <input id="chatting"
+                     class="h5 inputField ct-attribute-field-textbox large-11"
+                     type="text" maxlength="50"
+                     ng-model="careChatSA.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"/>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>
