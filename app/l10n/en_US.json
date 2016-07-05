@@ -3020,7 +3020,9 @@
       "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
       "titleV2": "Register New Hybrid Media Node",
       "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
-      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud",
+      "serverOnline": "The media server that you are registering already exists and is online.",
+      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
