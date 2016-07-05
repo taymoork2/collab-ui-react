@@ -184,7 +184,7 @@
           vm.currentSearch.orgSearchFailure = null;
           if (err.status === 400) {
             var message = _.get(err.data, "message");
-            if (message.indexOf("Search phrase is too generic" != -1)) {
+            if (message && message.indexOf("Search phrase is too generic" != -1)) {
               vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.tooManySearchResults');
             } else {
               vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
