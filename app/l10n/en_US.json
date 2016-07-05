@@ -1346,7 +1346,7 @@
       "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration.",
       "clusterMainSectionHeader": "Cluster",
       "renameClusterParagraph": "Rename the Expressway cluster.",
-      "renameClusterDescription": "The cluster name is only used for display purposes in Cloud Collaboration Management, and changing it will not update the name on the Expressway itself.",
+      "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
       "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
       "clusterNameSaved": "Cluster name saved successfully",
       "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
