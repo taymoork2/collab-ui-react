@@ -226,8 +226,8 @@
           agentUnavailable: {
             enabled: true,
             fields: {
-              "agentUnavailableMessage": {
-                "displayText": $translate.instant('careChatTpl.agentUnavailableMessage')
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
               }
             }
           },
@@ -301,10 +301,7 @@
     }
 
     function isNamePageValid() {
-      if (vm.template.name === '') {
-        return false;
-      }
-      return true;
+      return (vm.template.name !== '');
     }
 
     function isProfilePageValid() {
@@ -316,11 +313,7 @@
     }
 
     function isAgentUnavailablePageValid() {
-      if (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText === '') {
-        return false;
-      }
-
-      return true;
+      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
     }
 
     function nextButton() {
