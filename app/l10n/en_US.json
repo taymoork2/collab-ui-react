@@ -2986,8 +2986,10 @@
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}.",
-      "moveHost": "Move Node",
-      "deregister_host": "Deregister Node"
+      "moveHost": "Move Host",
+      "deregister_host": "Deregister Host",
+      "moveNode": "Move Node",
+      "deregister_node": "Deregister Node"
     },
     "alarms": {
       "alarms": "Alarms",
