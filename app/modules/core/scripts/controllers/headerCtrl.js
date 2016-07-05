@@ -34,20 +34,20 @@
       }
     }
 
-    function originalTabDisplay() {
+    function isOriginalTabDisplay() {
       return !_.isUndefined(vm.newTabDisplay) && !vm.newTabDisplay;
     }
 
     function showOrgName() {
-      return originalTabDisplay() && Utils.isAdminPage();
+      return isOriginalTabDisplay() && Utils.isAdminPage();
     }
 
     function showFirstTimeSetupDropDown() {
-      return Utils.isAdminPage() && originalTabDisplay();
+      return Utils.isAdminPage() && isOriginalTabDisplay();
     }
 
     function showLicenseUsageDropDown() {
-      return originalTabDisplay() && Utils.isAdminPage();
+      return isOriginalTabDisplay() && Utils.isAdminPage();
     }
 
     function showUserDropDown() {
