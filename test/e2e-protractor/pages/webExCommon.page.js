@@ -24,7 +24,7 @@ var WebExCommon = function () {
   this.t30citestprov9Info.csvSpinner = element(by.id(this.t30citestprov9Info.siteUrl + "_csvSpinner"));
   this.t30citestprov9Info.csvResult = element(by.id(this.t30citestprov9Info.siteUrl + "_csvResult"));
 
-  //T31 CI enabled site
+  //T31 CI enabled site with CSV feature toggle enabled
   this.t30citestprov6Info = {
     siteUrl: 't30citestprov6.webex.com',
     testAdminUsername: 't31r1-regression-adm@mailinator.com',
@@ -42,6 +42,31 @@ var WebExCommon = function () {
   this.t30citestprov6Info.csvCogEnabled = element(by.id(this.t30citestprov6Info.siteUrl + "_csvEnabled"));
   this.t30citestprov6Info.csvSpinner = element(by.id(this.t30citestprov6Info.siteUrl + "_csvSpinner"));
   this.t30citestprov6Info.csvResult = element(by.id(this.t30citestprov6Info.siteUrl + "_csvResult"));
+
+  /**
+   * ********************* IMPORTANT *********************
+   * The following account is a Dev DMZ User - To be deleted once BTS is ready.
+   * Keep these tests disabled
+   * ********************* IMPORTANT *********************
+   */
+  this.devDmzInfo = {
+    siteUrl: 'sjsite04.webex.com',
+    testAdminUsername: 'dev-dmz-e2e@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  this.devDmzInfo.siteElement = element(by.id(this.devDmzInfo.siteUrl));
+  this.devDmzInfo.licenseID = element(by.id(this.devDmzInfo.siteUrl + '_MC200-MC25-license'));
+  this.devDmzInfo.isCIID = element(by.id(this.devDmzInfo.siteUrl + '_isCI'));
+  this.devDmzInfo.reportsCog = element(by.id(this.devDmzInfo.siteUrl + "_webex-site-reports"));
+  this.devDmzInfo.configCog = element(by.id(this.devDmzInfo.siteUrl + "_webex-site-settings"));
+  this.devDmzInfo.cardSectionId = element(by.id(this.devDmzInfo.siteUrl + "-cardsSection"));
+  this.devDmzInfo.checkingServicesSpinner = element(by.id(this.devDmzInfo.siteUrl + "_checkingServicesSpinner"));
+  this.devDmzInfo.csvIcon = element(by.id(this.devDmzInfo.siteUrl + "_csvIcon"));
+  this.devDmzInfo.csvCogDisabled = element(by.id(this.devDmzInfo.siteUrl + "_csvDisabled"));
+  this.devDmzInfo.csvCogEnabled = element(by.id(this.devDmzInfo.siteUrl + "_csvEnabled"));
+  this.devDmzInfo.csvSpinner = element(by.id(this.devDmzInfo.siteUrl + "_csvSpinner"));
+  this.devDmzInfo.csvResult = element(by.id(this.devDmzInfo.siteUrl + "_csvResult"));
 
   ////////////////////
 
@@ -67,6 +92,7 @@ var WebExCommon = function () {
 
   this.t30SiteElement = element(by.id(this.t30Info.siteUrl));
   this.t31SiteElement = element(by.id(this.t31Info.siteUrl));
+  this.devDmzSiteElement = element(by.id(this.devDmzInfo.siteUrl));
 };
 
 module.exports = WebExCommon;
