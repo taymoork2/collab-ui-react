@@ -1227,8 +1227,57 @@
         /*
           devices
         */
-
-        .state('devices', {
+        .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
+          .state('place-overview', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'PlaceOverviewCtrl',
+                controllerAs: 'placeOverview',
+                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+              },
+              'header@place-overview': {
+                templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
+              }
+            },
+            params: {
+              currentPlace: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
+          })
+          .state('place-overview.csdmDevice', {
+            views: {
+              '': {
+                controller: 'DeviceOverviewCtrl',
+                controllerAs: 'deviceOverview',
+                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html'
+              }
+            },
+            resolve: {
+              channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+                return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+              }
+            },
+            params: {
+              currentDevice: {},
+              huronDeviceService: {}
+            },
+            data: {
+              displayName: 'Device Configuration'
+            }
+          })
+          .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
             controller: 'DevicesCtrl',
