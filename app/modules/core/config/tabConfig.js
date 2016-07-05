@@ -121,6 +121,7 @@
     icon: 'icon-sliders',
     title: 'tabs.accountTab',
     state: 'profile',
+    feature: 'atlas-settings-page',
     link: '/profile'
   }, {
     tab: 'settingsTab',

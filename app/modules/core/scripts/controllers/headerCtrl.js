@@ -28,7 +28,7 @@
 
     function initFeatureToggles() {
       if (Utils.isAdminPage()) {
-        FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
+        FeatureToggleService.supports(FeatureToggleService.features.atlasSettingsPage).then(function (support) {
           vm.newTabDisplay = !!support;
         });
       }
@@ -43,7 +43,7 @@
     }
 
     function showFirstTimeSetupDropDown() {
-      return Utils.isAdminPage();
+      return Utils.isAdminPage() && originalTabDisplay();
     }
 
     function showLicenseUsageDropDown() {
