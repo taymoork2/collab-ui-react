@@ -4153,7 +4153,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Mediafusion"
+          "squared-fusion-media": "Media Fusion"
         }
       }
     }
@@ -4572,7 +4572,7 @@
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",
-          "mediafusion": "Mediafusion",
+          "mediafusion": "Media Fusion",
           "context": "Context"
         }
       },
