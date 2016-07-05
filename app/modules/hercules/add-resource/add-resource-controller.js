@@ -57,6 +57,7 @@
     vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
     vm.getIconClassForService = getIconClassForService;
     vm.updateDropdownMenu = updateDropdownMenu;
+    vm.goToClusterNameSelection = goToClusterNameSelection;
 
     findAndPopulateExistingExpressways(vm.connectorType);
 
@@ -197,6 +198,11 @@
             $state.go('services-overview');
           }
         });
+    }
+
+    function goToClusterNameSelection() {
+      vm.chooseClusterName = true;
+      vm.clustername = vm.hostname;
     }
 
   }

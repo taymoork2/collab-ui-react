@@ -50,6 +50,7 @@
         placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
         class="addResourceModalInput"
         ng-if="addResource.selectedAction === 'new'"
+        ng-keyup="$event.keyCode == 13 && addResource.goToClusterNameSelection()"
       >
 
       <input
@@ -103,6 +104,7 @@
           cs-input-help-text={{addResource.localizedHostNameHelpText}}
           cs-input-messages="addResource.validationMessages"
           ng-required="true"
+          ng-keyup="$event.keyCode == 13 && addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
         >
     </form>
   </div>
@@ -139,8 +141,8 @@
 
   <button class="btn btn--primary"
           ng-hide="addResource.chooseClusterName || addResource.selectedAction === 'existing' || !addResource.welcomeScreenAccepted"
-          ng-click="addResource.chooseClusterName = true; addResource.clustername = addResource.hostname;"
-          ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname";
+          ng-click="addResource.goToClusterNameSelection()"
+          ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname"
   >
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>
@@ -156,6 +158,7 @@
   <button class="btn btn--primary"
           ng-show="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted"
           ng-click="addResource.redirectToTargetAndCloseWindowClicked(addResource.hostname)"
+          ng-keyup="$event.keyCode == 13 && addResource.redirectToTargetAndCloseWindowClicked(addResource.hostname)"
           >
     <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
   </button>
