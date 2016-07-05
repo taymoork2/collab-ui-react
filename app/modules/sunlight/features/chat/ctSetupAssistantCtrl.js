@@ -59,6 +59,7 @@
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
+    vm.ChatTemplateButtonText = 'Finish';
 
     /**
      * Type enumerations
@@ -490,6 +491,7 @@
     function handleChatTemplateError() {
       vm.saveCTErrorOccurred = true;
       vm.creatingChatTemplate = false;
+      vm.ChatTemplateButtonText = 'Retry';
     }
 
     function init() {

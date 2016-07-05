@@ -30,7 +30,8 @@ namespace globalsettings {
 
     function initController() {
       controller = $controller('SettingsCtrl', {
-        $scope: $scope
+        $scope: $scope,
+        hasFeatureToggle: true
       });
 
       $scope.$apply();

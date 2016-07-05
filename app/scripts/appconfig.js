@@ -231,6 +231,110 @@
         }
 
         $stateProvider
+          .state('addDeviceFlow', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseDeviceType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseAccountType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseAccountTypeCtrl',
+                controllerAs: 'chooseAccountType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseAccountTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.choosePersonal', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChoosePersonalCtrl',
+                controllerAs: 'choosePersonal',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChoosePersonalTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseSharedSpaceCtrl',
+                controllerAs: 'choosePlace',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addServices', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddServicesCtrl',
+                controllerAs: 'addServices',
+                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addLines', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddLinesCtrl',
+                controllerAs: 'addLines',
+                templateUrl: 'modules/squared/devices/addDeviceNew/AddLinesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.showActivationCode', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ShowActivationCodeCtrl',
+                controllerAs: 'showActivationCode',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -379,7 +483,12 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasSettingsPageGetStatus();
+              }
+            }
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -2238,18 +2347,6 @@
               connector: null,
               hostLength: null,
               selectedCluster: null
-            }
-          })
-          .state('connector-details-v2.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-settings.html',
-            controller: 'GroupSettingsControllerV2',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
             }
           });
       }

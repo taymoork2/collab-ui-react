@@ -20,7 +20,10 @@ namespace globalsettings {
     public retention:SettingSection;
 
     /* @ngInject */
-    constructor(private Authinfo, private Orgservice, private FeatureToggleService) {
+    constructor($state, private Authinfo, private Orgservice, private FeatureToggleService, private hasFeatureToggle) {
+      if(!hasFeatureToggle) {
+        $state.go('login');
+      }
       // provide these settings to everyone
       this.initBranding();
       this.support = new SupportSetting();
@@ -49,7 +52,7 @@ namespace globalsettings {
             this.branding = new BrandingSetting();
           }
         });
-      } else { // enable if they are a direct customer
+      } else if(this.Authinfo.isDirectCustomer()) {
         this.branding = new BrandingSetting();
       }
     }
