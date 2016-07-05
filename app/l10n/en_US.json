@@ -3978,7 +3978,7 @@
       }
     },
     "summary": "Summary",
-    "summaryDesc": "You have successfully configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
+    "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again."
   },
