@@ -28,6 +28,10 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
     );
   }); // beforeAll()
 
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
+
   it('should allow login as ' + webExCommon.t30citestprov9Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
@@ -58,9 +62,6 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
     }
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
 });
 
 describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", function () {
@@ -85,6 +86,10 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
       }
     );
   }); // beforeAll()
+
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
 
   it('should allow login as ' + webExCommon.t30citestprov6Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
@@ -115,9 +120,6 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
     }
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
 });
 
 /**
@@ -151,7 +153,11 @@ xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function (
     );
   }); // beforeAll()
 
-  xit('should detect checking services spinner and then WebEx CSV operation icon', function () {
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
+
+  it('should detect checking services spinner and then WebEx CSV operation icon', function () {
     if (setup) {
       navigation.clickServicesTab();
       utils.click(webExSiteList.conferencingLink);
@@ -164,7 +170,7 @@ xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function (
     }
   });
 
-  xit('should log out', function () {
+  it('should log out', function () {
     navigation.logout();
   });
 }); //End dev dmz tests
