@@ -1,0 +1,54 @@
+
+
+
+<div class="sq-places-page-overview">
+  <div ui-view="header"></div>
+  <cs-sp-container>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="placeOverview.currentPlace.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{placeOverview.currentPlace.sipUrl}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.actionsHeader"></span>
+      </div>
+      <div class="form-group">
+        <button
+            ng-click="placeOverview.deletePlace()"
+            class="btn btn-action">
+          <span
+              translate="common.delete">
+          </span>
+        </button>
+      </div>
+
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name">Devices</span>
+      </div>
+      <div class="feature-list">
+        <ul>
+
+          <li class="feature" ng-repeat="device in placeOverview.currentPlace.devices ">
+            <a ng-click="placeOverview.showDeviceDetails(device)">
+              <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
+              <span class="feature-name">{{device.product}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>
