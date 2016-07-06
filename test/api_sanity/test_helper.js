@@ -78,7 +78,7 @@ var auth = {
   },
   'support-admin': {
     user: 'sqtest-admin-support@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sc0123!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
   },
   'media-super-admin': {
