@@ -184,14 +184,14 @@
     }
 
     function keyPressHandler(event) {
-      if (!modalVisible()){
+      if (!modalVisible()) {
         switch (event.keyCode) {
-          case 27: // Esc
-            $window.history.back();
-            break;
-          case 83: // S
-            gotoSearchUsersAndDevices();
-            break;
+        case 27: // Esc
+          $window.history.back();
+          break;
+        case 83: // S
+          gotoSearchUsersAndDevices();
+          break;
         }
       }
     }
