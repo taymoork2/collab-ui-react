@@ -67,34 +67,50 @@
     article {
       background-color: $gray-light-4;
       box-shadow: 0;
-      height: rem-calc(426);
-      width: rem-calc(414);
+      height: 26.4rem;
+      width: 23.5rem;
     }
 
-    .field-name {
-      line-height: $h5-line-height;
+    .offhours-section {
       @include vr-spacing(pl, 1);
-      @include vr-spacing(pt, 0.75);
     }
 
-    .offhours-msg {
-      height: rem-calc(86);
-      width: 24rem;
-      resize: none;
-      line-height: 1rem;
-      @include vr-spacing(p, 0.75);
-      @include vr-spacing(mt, 0);
-      @include vr-spacing(mh, 1);
+    .offhours-message {
+
+      height: 7.5rem;
+      .message-label {
+        line-height: $h5-line-height;
+        @include vr-spacing(pt, 0.75);
+      }
+
+      .message {
+        height: 4rem;
+        width: 21.5rem;
+        background-color: $white;
+        resize: none;
+        line-height: 1rem;
+        @include vr-spacing(p, 0.75);
+        @include vr-spacing(mt, 0);
+      }
+
+      .no-message {
+        background-color: $color-attention-lighter;
+        border-color: $color-attention-base;
+      }
     }
+
+    .business-hours-label {
+      @include vr-spacing(pt, 0.5);
+    }
+
 
     .day-picker {
+      height: 4rem;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-start;
       align-content: center;
-      align-items: center;
-      @include vr-spacing(pl, 1);
 
       .day {
         display: flex;
@@ -103,41 +119,43 @@
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        height: 3.125rem;
-        width: 3rem;
-        margin-right: 0.125rem;
+        height: 2.25rem;
+        width: 2.25rem;
+        margin-right: 1px;
       }
 
       .day-selected {
-        color: $white !important;
+        color: $white;
         background-color: $color-primary-darker;
       }
 
       .day-unselected {
-        color: $gray-base !important;
+        color: $gray-base;
+        &:hover {
+          background-color: $gray-light-2;
+        }
         background-color: $white;
         border: 1px solid $gray-light-2;
       }
     }
 
     .time-and-timezone-picker {
-      @include vr-spacing(pl, 1);
       .cs-checkbox {
-        @include vr-spacing(pt, 1);
+        @include vr-spacing(pt, 0.5);
       }
       .time-picker {
         display: flex;
         flex-direction: row;
         .start-time {
-          @include vr-spacing(pr, 1.5);
+          @include vr-spacing(pr, 2);
         }
         .time {
-          width: 8rem;
+          width: 7rem;
         }
       }
       .timezone-picker {
         width: 21.5rem;
-        @include vr-spacing(pt, 1);
+        @include vr-spacing(pt, 0.5);
       }
     }
   }

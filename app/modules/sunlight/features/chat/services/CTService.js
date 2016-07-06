@@ -143,7 +143,7 @@
     }
 
     function areDaysSelected(days) {
-      var selectedDayIndex = _.findIndex(days, function(day){
+      var selectedDayIndex = _.findIndex(days, function (day) {
         return day.isSelected;
       });
       return selectedDayIndex != -1;

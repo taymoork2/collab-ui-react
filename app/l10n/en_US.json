@@ -3920,6 +3920,8 @@
     "offHoursStartTime": "Start Time",
     "offHoursEndTime": "End Time",
     "offHoursTimeZone": "Time Zone",
+    "offHoursWarningMessage": "Please Enter Off Hours Message",
+    "offHoursDayWarningMessage": "Please Select a Day",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
     "chatStatusMessagesDesc": "Configure status messages which your customer sees on chat bubble",
     "cancelHeader": "Cancel Chat Template Creation",

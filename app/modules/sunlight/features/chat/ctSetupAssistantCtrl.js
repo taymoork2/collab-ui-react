@@ -63,6 +63,7 @@
     vm.creatingChatTemplate = false;
     vm.days = CTService.getDays();
     vm.open24Hours = true;
+    vm.isOffHoursMessageValid = true;
     vm.isBusinessHoursDisabled = false;
     vm.timings = CTService.getDefaultTimes();
     vm.startTimeOptions = CTService.getTimeOptions();
@@ -342,6 +343,7 @@
     }
 
     function isOffHoursPageValid() {
+      setOffHoursWarning();
       return vm.template.configuration.pages.offHours.message != '' && CTService.areDaysSelected(vm.days);
     }
 
@@ -555,6 +557,10 @@
       } else {
         vm.isBusinessHoursDisabled = true;
       }
+    }
+
+    function setOffHoursWarning() {
+      vm.isOffHoursMessageValid = vm.template.configuration.pages.offHours.message == '' ? false : true;
     }
 
     function handleChatTemplateError() {

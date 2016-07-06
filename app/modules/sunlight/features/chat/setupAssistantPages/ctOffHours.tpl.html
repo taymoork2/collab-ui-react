@@ -32,20 +32,28 @@
       <cs-card class="attributes">
         <header class="h4" translate="careChatTpl.attributesCard"></header>
         <article>
-          <section>
-            <div>
-              <div class="h4 field-name" translate="careChatTpl.offHoursMessage"></div>
-            <textarea id="label" class="h6 inputField offhours-msg"
-                      type="text" maxlength="100"
-                      ng-model="careChatSA.template.configuration.pages.offHours.message"/>
+          <section class="offhours-section">
+            <div class="offhours-message">
+              <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
+              <textarea class="h6 message" type="text" maxlength="100"
+                      ng-model="careChatSA.template.configuration.pages.offHours.message"
+                      ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
+            <div class="warning" ng-if="!careChatSA.isOffHoursMessageValid">
+              <span><i class="icon icon-warning"></i></span>
+              <span translate="careChatTpl.offHoursWarningMessage"></span>
+            </div>
             </div>
             <div>
-              <div class="h4 field-name" translate="careChatTpl.businessHours"></div>
+              <div class="h4 business-hours-label" translate="careChatTpl.businessHours"></div>
               <div class="day-picker">
                 <div class="day"
                      ng-repeat=" dayObj in careChatSA.days"
                      ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
                      ng-click="careChatSA.setDay($index)">{{dayObj.day}}</div>
+                <div class="warning" ng-if="careChatSA.isBusinessHoursDisabled">
+                  <span><i class="icon icon-warning"></i></span>
+                  <span translate="careChatTpl.offHoursDayWarningMessage"></span>
+                </div>
               </div>
               <div class="time-and-timezone-picker">
                 <cs-checkbox class="h5"
@@ -55,16 +63,17 @@
                              label="{{:: 'careChatTpl.open24Hours' | translate}}"></cs-checkbox>
                 <div ng-if="!careChatSA.open24Hours && !careChatSA.isBusinessHoursDisabled">
                   <div class="time-picker">
-                    <div>
+                    <div class="start-time">
                       <div class="h5" translate="careChatTpl.offHoursStartTime"></div>
-                      <cs-select class="time start-time"
+
+                      <cs-select class="time"
                                  labelfield="label"
                                  valuefield="value"
                                  ng-model="careChatSA.timings.startTime"
                                  options="careChatSA.startTimeOptions"
                                  on-change-fn="careChatSA.setEndTimeOptions()"></cs-select>
                     </div>
-                    <div>
+                    <div class="end-time">
                       <div class="h5" translate="careChatTpl.offHoursEndTime"></div>
                       <cs-select class="time"
                                  labelfield="label"
