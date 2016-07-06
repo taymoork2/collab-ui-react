@@ -3,45 +3,44 @@
     <span class="h2" translate="careChatTpl.offHours"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.offHoursDesc"></div>
-  <div class="ct-sa-content ct-offhours">
-    <cs-card-layout block-view="true">
-      <cs-card class="preview">
-        <header class="h4" translate="careChatTpl.screen"></header>
-        <article>
-          <section class="preview-text">
+  <div class="cs-card-container ct-sa-content ct-offhours">
+    <cs-card-layout >
+      <cs-card>
+        <div class="h4 card-info" translate="careChatTpl.screen"></div>
+        <article class="offhours-preview">
+          <section>
             <div class="offhours-icon">
-              <i class="icon icon-clock icon-lg"></i>
+              <i class="icon icon-clock"></i>
             </div>
-            <div class="h5 offhours-message">{{careChatSA.template.configuration.pages.offHours.message}}</div>
+            <div class="h5 offhours-preview-message">{{careChatSA.template.configuration.pages.offHours.message}}</div>
             <div ng-if="!careChatSA.isBusinessHoursDisabled" class="business-hours">
               <div class="h5 message" translate="careChatTpl.businessHours"></div>
               <div class="h6" ng-if="!careChatSA.open24Hours">{{careChatSA.scheduleTimeZone.label}}</div>
               <div class="h6 day-time-preview days" ng-model="careChatSA.daysPreview">{{careChatSA.daysPreview}}</div>
               <div class="h6 day-time-preview" ng-if="careChatSA.open24Hours" translate="careChatTpl.open24Hours"></div>
               <div class="h6 day-time-preview" ng-if="!careChatSA.open24Hours">
-                  <span>{{careChatSA.timings.startTime.label}} - </span>
-                  <span>{{careChatSA.timings.endTime.label}}</span>
+                <span>{{careChatSA.timings.startTime.label}} - </span>
+                <span>{{careChatSA.timings.endTime.label}}</span>
               </div>
             </div>
             <button type="button" class="offhours-closebtn"
                     ng-class="{ 'no-business-hours': careChatSA.isBusinessHoursDisabled }" translate="common.close"></button>
           </section>
         </article>
-      </cs-card>
-
-      <cs-card class="attributes">
-        <header class="h4" translate="careChatTpl.attributesCard"></header>
-        <article>
-          <section class="offhours-section">
+      </cs-card >
+      <cs-card>
+        <div class="h4 card-info" translate="careChatTpl.attributesCard"></div>
+        <article class="off-hours-attributes">
+          <section>
             <div class="offhours-message">
               <div class="h4 message-label" translate="careChatTpl.offHoursMessage"></div>
               <textarea class="h6 message" type="text" maxlength="100"
-                      ng-model="careChatSA.template.configuration.pages.offHours.message"
-                      ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
-            <div class="warning" ng-if="!careChatSA.isOffHoursMessageValid">
-              <span><i class="icon icon-warning"></i></span>
-              <span translate="careChatTpl.offHoursWarningMessage"></span>
-            </div>
+                        ng-model="careChatSA.template.configuration.pages.offHours.message"
+                        ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
+              <div class="warning" ng-if="!careChatSA.isOffHoursMessageValid">
+                <span><i class="icon icon-warning"></i></span>
+                <span translate="careChatTpl.offHoursWarningMessage"></span>
+              </div>
             </div>
             <div>
               <div class="h4 business-hours-label" translate="careChatTpl.businessHours"></div>
@@ -85,19 +84,19 @@
                   <div class="timezone-picker">
                     <div class="h5" translate="careChatTpl.offHoursTimeZone"></div>
                     <cs-select
-                      labelfield="label"
-                      valuefield="value"
-                      filter="true"
-                      ng-model="careChatSA.scheduleTimeZone"
-                      options="careChatSA.timezoneOptions"
-                      placeholder="'Select a timezone'"></cs-select>
+                            labelfield="label"
+                            valuefield="value"
+                            filter="true"
+                            ng-model="careChatSA.scheduleTimeZone"
+                            options="careChatSA.timezoneOptions"
+                            placeholder="'Select a timezone'"></cs-select>
                   </div>
                 </div>
               </div>
             </div>
           </section>
         </article>
-      </cs-card>
-    </cs-card-layout>
-  </div>
+      </cs-card >
+      </cs-card-layout>
+    </div>
 </div>
