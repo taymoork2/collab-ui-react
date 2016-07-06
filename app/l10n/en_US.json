@@ -4410,7 +4410,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",

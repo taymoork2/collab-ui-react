@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, USSService2, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService2) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -308,9 +308,27 @@
       }
     }
 
+    function isEmailBlocked(email) {
+      return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+    }
+
     function resendInviteEmail(displayName, email) {
-      return $http
-        .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
+        return isEmailBlocked(email).then(function () {
+          $http.delete(urlBase + 'email/bounces?email=' + email)
+            .then(function (response) {
+              return invokeInviteEmail(displayName, email);
+            });
+        }).catch(function () {
+          return invokeInviteEmail(displayName, email);
+        });
+      } else {
+        return invokeInviteEmail(displayName, email);
+      }
+    }
+
+    function invokeInviteEmail(displayName, email) {
+      return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
           inviteList: [{
             displayName: displayName,
             email: email
@@ -370,6 +388,7 @@
       searchOrgs: searchOrgs,
       getUser: getUser,
       getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
