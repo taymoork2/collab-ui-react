@@ -4192,14 +4192,20 @@
     "order": "Order History"
   },
   "subscriptions": {
+    "licenseSummary": "License Summary",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
-    "subscription": "Subscription: ",
+    "subscription": "Subscription ID: ",
+    "defaultName": "Your Subscription",
+    "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "more": "More",
+    "less": "Less",
+    "quantity": "Qty: ",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4209,8 +4215,7 @@
       "EC": "WebEx Event Center",
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
-      "CO": "Call",
-      "ST": "Storage",
+      "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
   },
