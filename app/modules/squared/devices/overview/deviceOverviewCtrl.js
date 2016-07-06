@@ -174,7 +174,17 @@
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
-      RemoteSupportModal.open(deviceOverview.currentDevice);
+      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+        Notification.notifyReadOnly();
+        return;
+      }
+      if (deviceOverview.showRemoteSupportButton()) {
+        RemoteSupportModal.open(deviceOverview.currentDevice);
+      }
+    };
+
+    deviceOverview.showRemoteSupportButton = function () {
+      return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
     };
 
     deviceOverview.addTag = function () {
