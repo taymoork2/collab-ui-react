@@ -1,0 +1,14 @@
+.sq-places-page {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
+  .ui-grid-cell:first-child ,
+  .ui-grid-header-cell:first-child  {
+    border-right: 0px;
+
+    .place_avatar {
+      margin: 4px 5px 4px 30px;
+      width: 35px;
+    }
+  }
+}

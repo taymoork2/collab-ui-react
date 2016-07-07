@@ -37,9 +37,6 @@
           data: _.cloneDeep(report),
           status: 200
         };
-      } else {
-        //TODO: Fix.
-        //console.log("Report not found is not handled.");
       }
     }
 

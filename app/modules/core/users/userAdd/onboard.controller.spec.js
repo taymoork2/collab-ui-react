@@ -208,6 +208,46 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('with determining message checkbox visibility', function () {
+    beforeEach(initController);
+    it('should return false if more than one license', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        license: 1
+      }, {
+        license: 2
+      }]);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and no billingServiceId', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        license: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return true if only one license and no selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }]);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return false if only one license and billingServiceId does not match selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and billingServiceId match selectedSubscription', function () {
+      var displayMessageCheckbox = $scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 1);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+  });
+
   describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {
@@ -702,7 +742,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(Authinfo, 'isInitialized').and.returnValue(true);
         spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
         $stateParams.currentUser = {
-          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767']
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
         };
         initController();
       });
@@ -719,7 +759,7 @@ describe('OnboardCtrl: Ctrl', function () {
         spyOn(Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
         $stateParams.currentUser = {
-          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767'],
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center']
         };
         initController();
@@ -727,7 +767,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should call getAccountLicenses correctly', function () {
         var licenseFeatures = $scope.getAccountLicenses();
-        expect(licenseFeatures[0].id).toEqual('CDC_24b7d249-d452-47e5-b484-651210e55767');
+        expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
         expect($scope.radioStates.careRadio).toEqual(true);

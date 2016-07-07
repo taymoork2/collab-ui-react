@@ -5,8 +5,7 @@
     .controller('LoginCtrl', LoginCtrl);
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $timeout, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, Storage, Utils) {
-
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $timeout, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
     var loadingDelay = 2000;
     var logoutDelay = 5000;
 
@@ -25,6 +24,12 @@
     } else if ($stateParams.partnerOrgId && $stateParams.partnerOrgName) {
       SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
+    }
+
+    // If the tab has logged out and we are logged into another tab
+    // we want to allow the tab to get auth tokens from another logged in tab
+    if (SessionStorage.get('logout')) {
+      SessionStorage.remove('logout');
     }
 
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
@@ -83,7 +88,7 @@
       authorizeUser();
     });
 
-    if (!_.isEmpty(Storage.get('accessToken'))) {
+    if (!_.isEmpty(TokenService.getAccessToken())) {
       authorizeUser();
     } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
       Auth.redirectToLogin(null, queryParams.sso);

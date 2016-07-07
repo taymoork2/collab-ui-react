@@ -6,11 +6,11 @@
     .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log) {
+  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate) {
     var vm = this;
     vm.clusterList = [];
-    vm.onlineClusterList = [];
-    vm.offlineClusterList = [];
+    vm.onlineNodeList = [];
+    vm.offlineNodeList = [];
     vm.clusters = null;
     vm.groups = null;
     vm.combo = true;
@@ -35,12 +35,30 @@
         _.each(clusters, function (cluster) {
           if (cluster.targetType === "mf_mgmt") {
             vm.clusterList.push(cluster.name);
+            _.each(cluster.connectors, function (connector) {
+              if ("running" == connector.state) {
+                vm.onlineNodeList.push(connector.hostname);
+              } else {
+                vm.offlineNodeList.push(connector.hostname);
+              }
+            });
           }
         });
         vm.clusterList.sort();
       }, XhrNotificationService.notify);
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
+
+      //Checking if the host is already present
+      if (vm.onlineNodeList.indexOf(hostName) > -1) {
+        $modalInstance.close();
+        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOnline'));
+      }
+
+      if (vm.offlineNodeList.indexOf(hostName) > -1) {
+        $modalInstance.close();
+        XhrNotificationService.notify($translate.instant('mediaFusion.add-resource-dialog.serverOffline'));
+      }
 
       //Checking if value in selected cluster is in cluster list
       _.each(vm.clusters, function (cluster) {

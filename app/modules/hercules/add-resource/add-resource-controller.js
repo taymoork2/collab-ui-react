@@ -6,7 +6,7 @@
     .controller("AddResourceController", AddResourceController);
 
   /* @ngInject */
-  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, XhrNotificationService, FusionClusterService, FusionUtils) {
+  function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state) {
     var vm = this;
     vm.hostname = '';
     vm.releaseChannel = 'GA'; // hard-coded for now, release channel support is not part of phase 1
@@ -15,6 +15,12 @@
     vm.preregistrationCompleted = false;
     vm.provisioningToExistingExpresswayCompleted = false;
     vm.selectedAction = 'new';
+    vm.closeSetupModal = closeSetupModal;
+    vm.firstTimeSetup = firstTimeSetup;
+    vm.welcomeScreenAccepted = false;
+    if (!firstTimeSetup) {
+      vm.welcomeScreenAccepted = true;
+    }
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
@@ -36,6 +42,13 @@
     vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
       "ServiceName": vm.localizedServiceName
     });
+    vm.chooseClusterName = false;
+    vm.validationMessages = {
+      required: $translate.instant('common.invalidRequired')
+    };
+    vm.clustername = '';
+    vm.localizedHostNameHelpText = $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription');
+    vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
     vm.selectedCluster = '';
     vm.expresswayOptions = [];
@@ -44,6 +57,7 @@
     vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
     vm.getIconClassForService = getIconClassForService;
     vm.updateDropdownMenu = updateDropdownMenu;
+    vm.goToClusterNameSelection = goToClusterNameSelection;
 
     findAndPopulateExistingExpressways(vm.connectorType);
 
@@ -53,7 +67,7 @@
     };
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
-      preregisterCluster(vm.hostname)
+      preregisterCluster(vm.clustername)
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(pregistrationSucceeded)
@@ -64,8 +78,8 @@
       vm.preregistrationCompleted = true;
     }
 
-    function preregisterCluster(hostname) {
-      return FusionClusterService.preregisterCluster(hostname, vm.releaseChannel, 'c_mgmt')
+    function preregisterCluster(clusterName) {
+      return FusionClusterService.preregisterCluster(clusterName, vm.releaseChannel, 'c_mgmt')
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
         });
@@ -167,6 +181,28 @@
 
     function getIconClassForService() {
       return FusionUtils.serviceId2Icon(vm.servicesId[0]);
+    }
+
+    function closeSetupModal() {
+      if (!firstTimeSetup) {
+        $modalInstance.close();
+        return;
+      }
+      $modal.open({
+          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+          type: 'dialog'
+        })
+        .result.then(function (isAborting) {
+          if (isAborting) {
+            $modalInstance.close();
+            $state.go('services-overview');
+          }
+        });
+    }
+
+    function goToClusterNameSelection() {
+      vm.chooseClusterName = true;
+      vm.clustername = vm.hostname;
     }
 
   }

@@ -10,12 +10,12 @@ while (1 >= webExCommon.testInfo.describeCount) {
   switch (webExCommon.testInfo.describeCount) {
   case 1:
     webExCommon.testInfo.testType = 'T30';
-    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS1.siteUrl;
     break;
 
   default:
     webExCommon.testInfo.testType = 'T31';
-    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS3.siteUrl;
   }
 
   describe(webExCommon.testInfo.describeText, function () {
@@ -26,9 +26,9 @@ while (1 >= webExCommon.testInfo.describeCount) {
         var promise = webEx.setup(
           1,
           'wbx-t31RegressionTestAdmin',
-          webExCommon.t31Info.testAdminUsername,
-          webExCommon.t31Info.testAdminPassword,
-          webExCommon.t31Info.siteUrl
+          webExCommon.BTS3.testAdminUsername,
+          webExCommon.BTS3.testAdminPassword,
+          webExCommon.BTS3.siteUrl
         );
 
         promise.then(
@@ -46,9 +46,9 @@ while (1 >= webExCommon.testInfo.describeCount) {
         var promise = webEx.setup(
           1,
           'wbx-t30RegressionTestAdmin',
-          webExCommon.t30Info.testAdminUsername,
-          webExCommon.t30Info.testAdminPassword,
-          webExCommon.t30Info.siteUrl
+          webExCommon.BTS1.testAdminUsername,
+          webExCommon.BTS1.testAdminPassword,
+          webExCommon.BTS1.siteUrl
         );
 
         promise.then(
@@ -64,31 +64,31 @@ while (1 >= webExCommon.testInfo.describeCount) {
     }
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should sign in as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS3.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteReports.conferencing);
         }
       });
 
-      it('should click on reports icon for ' + webExCommon.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + webExCommon.BTS3.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.T31ReportsCog);
+          utils.click(webExCommon.t31ReportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.t31CardsSectionId);
         }
       });
     } else {
-      it('should sign in as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS1.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteReports.conferencing);
         }
       });
 
-      it('should click on reports icon for ' + webExCommon.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + webExCommon.BTS1.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.T30ReportsCog);
+          utils.click(webExCommon.t30ReportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.t30CardsSectionId);
         }

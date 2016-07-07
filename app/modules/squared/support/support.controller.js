@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig, WindowLocation) {
+  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, TokenService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -276,7 +276,7 @@
           cache: true,
           ajax: {
             headers: {
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
+              'Authorization': 'Bearer ' + TokenService.getAccessToken()
             }
           }
         }

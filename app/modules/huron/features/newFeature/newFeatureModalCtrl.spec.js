@@ -3,6 +3,7 @@
 describe('Controller: NewFeatureModalCtrl', function () {
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var controller, $scope;
   var modalFake = {

@@ -9,6 +9,7 @@
     var vm = this;
     vm.validateAddress = validateAddress;
     vm.hasBackButton = hasBackButton;
+    vm.modify = modify;
     vm.goBack = goBack;
     vm.loading = false;
     vm.isValid = false;
@@ -21,6 +22,11 @@
       if (!_.isEmpty(vm.address)) {
         vm.isValid = true;
       }
+    }
+
+    function modify() {
+      vm.address = {};
+      vm.isValid = false;
     }
 
     function validateAddress() {

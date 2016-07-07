@@ -32,7 +32,6 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
-    vm.setDeviceModal = setDeviceModal;
     vm.hasUserServices = hasUserServices;
 
     vm.preset = {
@@ -53,6 +52,7 @@
     vm.details.licenseDuration = vm.preset.licenseDuration;
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
     vm.careTrial.details.quantity = vm.preset.careLicenseValue;
+    vm.canSeeDevicePage = true;
 
     vm.trialStates = [{
       name: 'trialEdit.webex',
@@ -187,6 +187,7 @@
       model: vm.careTrial.details,
       key: 'quantity',
       type: 'input',
+      name: 'trialCareLicenseCount',
       className: '',
       templateOptions: {
         id: 'trialCareLicenseCount',
@@ -364,11 +365,15 @@
     ///////////////////////
 
     function init() {
+      var isTestOrg = false;
+      var overrideTestOrg = false;
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
         TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        FeatureToggleService.supports('atlasTrialsShipDevices'),
+        Orgservice.getAdminOrg(_.noop)
       ]).then(function (results) {
         vm.showRoomSystems = true;
         vm.roomSystemTrial.enabled = vm.preset.roomSystems;
@@ -383,12 +388,18 @@
         vm.preset.context = results[2];
         vm.showCare = results[3];
         vm.careTrial.enabled = vm.preset.care;
-        setDeviceModal();
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
         }
+
+        // To determine whether to display the ship devices page
+        overrideTestOrg = results[4];
+        if (results[5].data.success) {
+          isTestOrg = results[5].data.isTestOrg;
+        }
       }).finally(function () {
+        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
         $scope.$watch(function () {
           return vm.trialData.trials;
         }, function (newVal, oldVal) {
@@ -737,24 +748,6 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
-    }
-
-    function setDeviceModal() {
-      var overrideTestOrg = false;
-      var isTestOrg = false;
-
-      $q.all([
-        FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        overrideTestOrg = results[0];
-        if (results[1].data.success) {
-          isTestOrg = results[1].data.isTestOrg;
-        }
-      }).finally(function () {
-        // Display devices modal if not a test org or if toggle is set
-        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
-      });
     }
   }
 })();
