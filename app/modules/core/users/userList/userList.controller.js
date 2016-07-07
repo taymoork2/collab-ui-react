@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($http, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, UrlConfig, Userservice, UserListService, Utils) {
+  function UserListCtrl($rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -61,9 +61,7 @@
     $scope.totalUsers = 0;
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
-    $scope.getUserEmailStatus = getUserEmailStatus;
-    //$scope.getEmailAddress = getEmailAddress;
-    $scope.test = null;
+    $scope.emailError = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -100,7 +98,6 @@
       bind();
       configureGrid();
       getUserList();
-      //getUserEmailStatus();
     }
 
     function checkOrg() {
@@ -224,6 +221,20 @@
               } else {
                 endOfUserList = true;
               }
+              // get email status here
+              _.map($scope.userList.allUsers, function (user) {
+                if (!user.active) {
+                  Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
+                    var eventStatus = response.data.items[0].event;
+                    if (eventStatus === 'rejected' || eventStatus === 'failed') {
+                      user.userStatus = 'Error';
+                      $scope.emailError = true;
+                    }
+                  }).catch(function (error) {
+                    Log.debug('User not found. Error: ' + error);
+                  });
+                }
+              });
 
               $scope.setFilter($scope.activeFilter);
 
@@ -302,31 +313,6 @@
           Log.debug('Get existing org failed. Status: ' + status);
         }
       });
-    }
-
-    function getUserEmailStatus(userName) {
-
-      /*getUserBlah().then(funciton(blah){
-  var emails = _.map(blah,email);
-  return emails;
-}).then(function(emails){
- return getUserEmailStatuses(emails);
-}); */
-      var email = encodeURIComponent(userName);
-      getUser().then(function (response) {
-        var emails = _.map(response, email);
-        return emails;
-      }).then(function (emails) {
-        return getUserEmailStatus(emails);
-      }).catch(function (error) {
-        Log.debug('Get existing user email status failed.');
-      });
-      // Userservice.getUserEmailStatus(email).then(function (response) {
-      //   Log.debug(response);
-      // }).catch(function (error) {
-      //   Log.debug('Get existing user email status failed.');
-      // });
-
     }
 
     function getUserLicenses(user) {
@@ -448,7 +434,7 @@
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
-        '<li ng-if="(row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)) && !grid.appScope.isCSB || grid.appScope.getUserEmailStatus(row.entity.userName)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
+        '<li ng-if="(row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements) || grid.appScope.emailError) && !grid.appScope.isCSB" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +

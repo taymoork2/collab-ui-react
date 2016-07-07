@@ -6,7 +6,13 @@
   /* @ngInject */
   function userListFilter($filter) {
     return function (status) {
-      return (typeof status === 'undefined' || status === null || status == 'active') ? $filter('translate')('usersPage.active') : $filter('translate')('usersPage.pending');
+      if (typeof status === 'undefined' || status === null || status == 'active') {
+        return $filter('translate')('usersPage.active');
+      } else if (status === 'pending') {
+        return $filter('translate')('usersPage.pending');
+      } else if (status === 'error') {
+      	return $filter('translate')('usersPage.error');
+      }
     };
   }
 })();
