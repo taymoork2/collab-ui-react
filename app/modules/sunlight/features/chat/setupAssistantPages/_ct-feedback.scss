@@ -87,7 +87,7 @@
     align-items: flex-start;
   }
 
-  .ct-attribute-right-section {
+  .ct-attribute-section {
     display: flex;
     flex-flow: column;
     background-color: $gray-light-4;
@@ -115,10 +115,10 @@
     height: 2rem;
   }
 
-  .ct-attribute-left-section {
+  .ct-attribute-section {
     display: flex;
     flex-flow: column;
-    background-color: $color-white;
+    background-color: $gray-light-4;
     .ct-default-msg {
       max-width: 60%;
       text-align: center;
@@ -132,34 +132,96 @@
   }
 
   .feedback-question-text {
-    @include vr-spacing(mt, 4.5);
-    font-size: $h6-font-size;
+    @include vr-spacing(mt, 5.5);
+    font-size: 14px;
     font-family: CiscoSansTT Light;
     color: $gray-dark-2;
     align-self: center;
   }
 
-  .feedback-star {
+  .feedback-radio-list {
     @include vr-spacing(mt, 1.5);
-    @include vr-spacing(mb, 2.5);
-    @include vr-spacing(mh, 1.8);
-    font-size: $h6-font-size;
-    font-family: CiscoSansTT Light;
+    @include vr-spacing(mr, 1.8);
+    @include vr-spacing(mb, 3.5);
+    @include vr-spacing(ml, 1.8);
+    display: flex;
+    align-self: stretch;
+    justify-content: space-between;
+    position: relative;
+    outline: none;
+    z-index: 20;
+  }
+
+  .feedback-radio-outer {
+    @include vr-spacing(mb, 0);
+    display: inline-block;
+  }
+
+  .feedback-radio {
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    width:1.5rem;
+    height:1.5rem;
+    margin:auto;
+    border:1px solid #999999;
+    border-radius:50%;
+    outline:#999999;
+    position: relative;
+    background-color: $white;
+  }
+
+  .feedback-radio-inner {
+    @include vr-spacing(m, 0.25);
+    background-color: $white;
+    display:block;
+    width:0.85rem;
+    height:0.85rem;
+    border-radius:50%;
+  }
+  .feedback-radio-green {
+    background-color:#7CC153;
+  }
+
+  .feedback-radio-line {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(ml, 2);
+    height: 1px;
+    width: 80%;
+    background-color: #979797;
+    position: relative;
+    top: -5.4rem;
+    z-index: 1;
+  }
+
+  .radio-text-div {
+    @include vr-spacing(pb, 1.25);
+    @include vr-spacing(mt, -5.4);
+    align-self: stretch;
+    display: flex;
+  }
+
+  .radio-text {
+    @include vr-spacing(mt, 0.625);
+    font-size: 10px;
+    font-family: Arial;
     color: $gray-dark-2;
-    align-self: center;
+    text-align: center;
+    width: 100%;
   }
 
-  .feedback-star-orange {
-    color: $color-attention-base;
-    align-self: center;
-    @include vr-spacing(mr, 1.4);
-    font-size: $h2-font-size;
+  .radio-text-left {
+    width: 40%;
   }
 
-  .feedback-star-grey {
-    color: $gray-light-2;
-    align-self: center;
-    font-size: $h2-font-size;
+  .radio-text-middle {
+    @include vr-spacing(pl, 2.5);
+    width: 50%;
+  }
+
+  .radio-text-right {
+    @include vr-spacing(pl, 3.125);
+    width: 50%;
   }
 
   .feedback-comment-text {
@@ -172,7 +234,7 @@
     position: relative;
     align-self: center;
     font-family: CiscoSansTT Light;
-    font-size: $h6-font-size;
+    font-size: 14px;
     resize: none;
     border: 1px solid $gray-light-2;
     border-radius: 3px;
@@ -185,17 +247,17 @@
 
   .feedback-btn {
     @include vr-spacing(p, 0.3125);
-    @include vr-spacing(mt, 1.5);
+    @include vr-spacing(mt, 1);
     @include vr-spacing(mr, 0.3125);
     @include vr-spacing(mb, 0.625);
     @include vr-spacing(ml, 0.5);
     border: medium none;
     border-radius: 0.25rem;
     color: $white;
-    font-size: $h6-font-size;
+    font-size: 15px;
     height: rem-calc(35px);
     position: relative;
     text-align: center;
-    width: 18.75rem;
+    width: rem-calc(141px);
   }
 }

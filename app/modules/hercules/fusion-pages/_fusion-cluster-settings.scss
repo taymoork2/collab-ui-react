@@ -1,20 +1,12 @@
 .fusion-cluster-settings {
   background-color: #fff;
 
-  setting-section {
-    border-top: none;
-  }
-
   button {
     margin-top: 10px;
   }
 
   .sub-section {
     margin-bottom: 25px !important;
-  }
-
-  .cap-long-names {
-    @include text-overflow;
   }
 }
 

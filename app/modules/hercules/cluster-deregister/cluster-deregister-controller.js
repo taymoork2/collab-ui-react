@@ -6,7 +6,7 @@
     .controller('ClusterDeregisterController', ClusterDeregisterController);
 
   /* @ngInject */
-  function ClusterDeregisterController(cluster, FusionClusterService, XhrNotificationService, $translate, $modalInstance, isF410enabled) {
+  function ClusterDeregisterController(cluster, ClusterService, XhrNotificationService, $translate, $modalInstance, isF410enabled) {
     var vm = this;
     vm.deregistering = false;
     vm.isF410enabled = isF410enabled;
@@ -23,15 +23,16 @@
 
     vm.deregister = function () {
       vm.deregistering = true;
-      FusionClusterService
-        .deregisterCluster(cluster.id)
+      ClusterService
+        .deleteCluster(cluster.id)
         .then(function () {
           $modalInstance.close();
         }, function (err) {
-          vm.error = $translate.instant('hercules.clusters.deregisterErrorGeneric', {
-            clusterName: cluster.name,
-            errorMessage: XhrNotificationService.getMessages(err).join(', ')
-          });
+          vm.error = $translate.instant(
+            err.status === 409 ? 'hercules.clusters.deregisterErrorNoDeregisterSupport' : 'hercules.clusters.deregisterErrorGeneric', {
+              clusterName: cluster.name,
+              errorMessage: XhrNotificationService.getMessages(err).join(', ')
+            });
         })
         .finally(function () {
           vm.deregistering = false;

@@ -133,7 +133,6 @@
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
       valueAxes[0].minimum = 0;
-      valueAxes[0].maximum = 100;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       valueAxes[0].title = '%';
@@ -249,7 +248,7 @@
     function createLegendsForAvailabilty(dummydata, selectedCluster) {
       if (dummydata === true) {
         var legendData = [];
-        if (selectedCluster == 'All Clusters') {
+        if (selectedCluster == 'All') {
           var length = 3;
           var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
           var colors = [chartColors.grayLight, chartColors.grayLight, chartColors.grayLight];
@@ -271,7 +270,7 @@
         return legendData;
       } else {
         var legendData = [];
-        if (selectedCluster == 'All Clusters') {
+        if (selectedCluster == 'All') {
           var length = 3;
           var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
           var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];

@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
 
     var vm = this;
 
@@ -27,6 +27,7 @@
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
+    vm.aaModel = {};
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
@@ -245,13 +246,15 @@
     }
 
     function activate() {
+      vm.aaModel = AAModelService.getAAModel();
+      var ui = AAUiModelService.getUiModel();
 
+      vm.uiMenu = ui[$scope.schedule];
+      vm.menuEntry = vm.uiMenu.entries[$scope.index];
       var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       if ($scope.fromRouteCall) {
-        var ui = AAUiModelService.getUiModel();
-        vm.uiMenu = ui[$scope.schedule];
-        vm.menuEntry = vm.uiMenu.entries[$scope.index];
+
         fromRouteCall = true;
 
         if (vm.menuEntry.actions.length === 0) {
@@ -264,8 +267,9 @@
             vm.menuEntry.actions[0].setValue('');
           }
         }
+
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {
@@ -273,6 +277,7 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           vm.menuKeyEntry.addAction(action);
         }
+
       }
       populateUiModel();
 

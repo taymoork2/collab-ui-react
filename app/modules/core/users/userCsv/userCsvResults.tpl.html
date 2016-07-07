@@ -3,14 +3,7 @@
     <div class="csv-process-content">
       <div class="progressbar">
         <div class="progressbar-info">
-          <span class="progressbar-label" ng-if="!csv.model.isRetrying && csv.model.processProgress < 100" translate="firstTimeWizard.processing"></span>
-          <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
-            <span translate="csvUpload.retryingUsers" translate-value-users="{{csv.model.usersToRetry.length}}" translate-interpolation="messageformat"></span>
-            <span translate="csvUpload.retryingIn"></span>
-            <span ng-show="csv.model.retryTimerParts.hours > 0" translate="time.hours" translate-value-time="{{csv.model.retryTimerParts.hours}}" translate-interpolation="messageformat"></span>
-            <span ng-show="csv.model.retryTimerParts.minutes > 0" translate="time.minutes" translate-value-time="{{csv.model.retryTimerParts.minutes}}" translate-interpolation="messageformat"></span>
-            <span translate="time.seconds" translate-value-time="{{csv.model.retryTimerParts.seconds}}" translate-interpolation="messageformat"></span>
-          </span>
+          <span class="progressbar-label" ng-if="csv.model.processProgress < 100" translate="firstTimeWizard.processing"></span>
           <span class="progressbar-label" ng-if="csv.model.processProgress == 100" translate="common.done"></span>
           <span class="progressbar-progress">{{csv.model.numTotalUsers}}/{{csv.model.numMaxUsers}}</span>
         </div>
@@ -34,10 +27,6 @@
       <div class="result existing-users" ng-class="{disabled: csv.model.numExistingUsers === 0}">
         <h4 class="total-title" translate="csvUpload.existingUsers"></h4>
         <div class="total">{{csv.model.numExistingUsers}}</div>
-      </div>
-      <div ng-if="csv.model.usersToRetry.length > 0" class="result retry-users">
-        <h4 class="total-title" translate="csvUpload.retryUsers"></h4>
-        <div class="total">{{csv.model.usersToRetry.length}}</div>
       </div>
       <div ng-if="csv.model.userErrorArray.length > 0" class="result error-users">
         <h4 class="total-title" translate="csvUpload.errorUsers"></h4>

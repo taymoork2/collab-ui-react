@@ -452,6 +452,25 @@ describe('ClusterService', function () {
     });
   });
 
+  describe('.getReleaseNotes', function () {
+
+    it('should return release notes', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId/channels/GA/packages/c_cal?fields=@wide')
+        .respond({
+          releaseNotes: 'Example calendar connector release notes.'
+        });
+
+      var callback = sinon.stub();
+      ClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+      expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
+    });
+
+  });
+
   describe('.deleteHost', function () {
     it('should be using the correct backend', function () {
       $httpBackend
@@ -483,6 +502,43 @@ describe('ClusterService', function () {
 
       var callback = sinon.stub();
       ClusterService.deleteHost('clusterid', 'serial').then(undefined, callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+    });
+  });
+
+  describe('.deleteCluster', function () {
+    it('should be using the correct backend', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(200);
+
+      var callback = sinon.stub();
+      ClusterService.deleteCluster('clusterid').then(callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+    });
+
+    it('should call poller.forceAction on success', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(200);
+
+      ClusterService.deleteCluster('clusterid');
+      $httpBackend.flush();
+
+      expect(forceAction.callCount).toBe(1);
+    });
+
+    it('should fail on 500 errors', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(500);
+
+      var callback = sinon.stub();
+      ClusterService.deleteCluster('clusterid').then(undefined, callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);

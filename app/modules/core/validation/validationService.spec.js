@@ -50,29 +50,4 @@ describe('Service: ValidationService', function () {
     });
   });
 
-  describe('US Phone Number', function () {
-    it('should reject "77359090a9" as invalid', function () {
-      expect(ValidationService.phoneUS('77359090a9')).toBe(false);
-    });
-    it('should accept "7735909089" as valid', function () {
-      expect(ValidationService.phoneUS('7735909089')).toBe(true);
-    });
-    it('should accept "(214)590-9089" as valid', function () {
-      expect(ValidationService.phoneUS('(214)590-9089')).toBe(true);
-    });
-    it('should reject "(214)590-9-089" as invalid', function () {
-      expect(ValidationService.phoneUS('(214)590-9-089')).toBe(false);
-    });
-    it('should reject "(214)590-99089" as invalid', function () {
-      expect(ValidationService.phoneUS('(214)590-9-089')).toBe(false);
-    });
-    it('should accept "1-(214)590-9909" as valid', function () {
-      expect(ValidationService.phoneUS('1-(214)590-9909')).toBe(true);
-    });
-    it('should accept "1-866-499-7888" as valid', function () {
-      expect(ValidationService.phoneUS('1-866-499-7888')).toBe(true);
-    });
-
-  });
-
 });

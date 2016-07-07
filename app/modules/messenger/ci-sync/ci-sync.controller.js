@@ -5,7 +5,7 @@
     .module('Messenger')
     .controller('CiSyncCtrl', CiSyncCtrl);
 
-  /* @ngInject */
+  /** @ngInject */
   function CiSyncCtrl($q, $translate, Authinfo, Log, Notification, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;

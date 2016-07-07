@@ -11,9 +11,6 @@ namespace globalsettings {
     public dataLoaded = false;
     private orgId:string;
 
-    // default is to keep until storage is full => -1
-    public RETENTION_DEFAULT:string = '-1';
-
     initialRetention:{
       value:string,
       label:string
@@ -47,11 +44,12 @@ namespace globalsettings {
 
       this.RetentionService.getRetention(this.orgId)
         .then((response) => {
-          var msgDataRetention = response.msgDataRetention || this.RETENTION_DEFAULT;
-          var retentionGuiOption = _.find(this.retentionOptions, {value: msgDataRetention});
-          if (retentionGuiOption) {
-            this.initialRetention = retentionGuiOption;
-            this.selectedRetention = retentionGuiOption;
+          if (response.msgDataRetention) {
+            var retentionGuiOption = _.find(this.retentionOptions, {value: response.msgDataRetention});
+            if (retentionGuiOption) {
+              this.initialRetention = retentionGuiOption;
+              this.selectedRetention = retentionGuiOption;
+            }
           }
         }).finally(() => {
           this.dataLoaded = true;

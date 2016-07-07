@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body add-resource">
-  <div ng-hide="addResource.welcomeScreenAccepted" class="hercules-fix-paragraphs deregister-expressway-modal">
+  <div ng-hide="addResource.welcomeScreenAccepted" class="add-resource hercules-fix-paragraphs deregister-expressway-modal">
 
     <p translate="hercules.addResourceDialog.setupScreenBodyAboutToSetup"></p>
 
@@ -23,7 +23,7 @@
     <div class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></div>
   </div>
 
-  <form name="selectNewOrExisting" class="cs-form" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted || !addResource.welcomeScreenAccepted || addResource.chooseClusterName">
+  <form name="selectNewOrExisting" class="cs-form" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted || !addResource.welcomeScreenAccepted">
     <div class="cs-radio-group">
       <input
         cs-input
@@ -39,6 +39,7 @@
         type="text"
         ng-model="addResource.hostname"
         placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
+        ng-keyup="$event.keyCode == 13 && addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
         class="addResourceModalInput"
         disabled
         ng-if="addResource.selectedAction === 'existing'"
@@ -48,9 +49,9 @@
         type="text"
         ng-model="addResource.hostname"
         placeholder="{{'hercules.addResourceDialog.enterHostnamePlaceholder' | translate}}"
+        ng-keyup="$event.keyCode == 13 && addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
         class="addResourceModalInput"
         ng-if="addResource.selectedAction === 'new'"
-        ng-keyup="$event.keyCode == 13 && addResource.goToClusterNameSelection()"
       >
 
       <input
@@ -88,31 +89,9 @@
       </cs-select>
     </div>
   </form>
-
-  <div ng-show="addResource.chooseClusterName && !addResource.preregistrationCompleted">
-    <p translate="hercules.addResourceDialog.enterDisplayName"></p>
-
-    <form name="chooseClusterName" novalidate>
-        <input
-          cs-input
-          type="text"
-          id="directiveValidation"
-          name="newClusterName"
-          placeholder={{addResource.localizedClusternameWatermark}}
-          ng-model="addResource.clustername"
-          cs-input-group-size="medium-10"
-          cs-input-help-text={{addResource.localizedHostNameHelpText}}
-          cs-input-messages="addResource.validationMessages"
-          ng-required="true"
-          ng-keyup="$event.keyCode == 13 && addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
-        >
-    </form>
-  </div>
-
-
-  <div ng-show="addResource.preregistrationCompleted">
+  <div ng-show="addResource.preregistrationCompleted" class="add-resource">
     <p><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
-             translate-values="{hostname: addResource.clustername || ''}"></span>
+             translate-values="{hostname: addResource.hostname || ''}"></span>
     </p>
 
     <p>{{addResource.localizedWillBeInstalledMessage}}</p>
@@ -121,7 +100,7 @@
     </p>
   </div>
 
-  <div ng-show="addResource.provisioningToExistingExpresswayCompleted" class="hercules-fix-paragraphs deregister-expressway-modal">
+  <div ng-show="addResource.provisioningToExistingExpresswayCompleted" class="add-resource hercules-fix-paragraphs deregister-expressway-modal">
     <p translate="hercules.addResourceDialog.connectorIsProvisioned" translate-values="{ClusterName: addResource.selectedCluster.label}"></p>
 
     <p>
@@ -138,19 +117,10 @@
   <button class="btn" ng-click="addResource.closeSetupModal()" ng-hide="addResource.preregistrationCompleted || addResource.provisioningToExistingExpresswayCompleted">
     <span translate="common.cancel"></span>
   </button>
-
-  <button class="btn btn--primary"
-          ng-hide="addResource.chooseClusterName || addResource.selectedAction === 'existing' || !addResource.welcomeScreenAccepted"
-          ng-click="addResource.goToClusterNameSelection()"
-          ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname"
-  >
-    <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
-  </button>
-
   <button class="btn btn--primary"
           ng-click="addResource.preregisterAndProvisionExpressway(addResource.connectorType)"
-          ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname || !addResource.clustername"
-          ng-hide="addResource.preregistrationCompleted || addResource.selectedAction === 'existing' ||  !addResource.welcomeScreenAccepted || !addResource.chooseClusterName"
+          ng-disabled="addResource.selectedAction !== 'new' || !addResource.hostname"
+          ng-hide="addResource.preregistrationCompleted || addResource.selectedAction === 'existing' ||  !addResource.welcomeScreenAccepted"
   >
     <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
   </button>

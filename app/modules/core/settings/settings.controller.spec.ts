@@ -22,16 +22,12 @@ namespace globalsettings {
     function initSpies() {
       spyOn(Orgservice, 'getOrg');
       spyOn(FeatureToggleService, 'supports');
-      spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
-      spyOn(Authinfo, 'isPartner');
-      spyOn(Authinfo, 'isPartnerUser');
-      spyOn(Authinfo, 'isDirectCustomer');
+      spyOn(Authinfo, 'isPartner')
     }
 
     function initController() {
       controller = $controller('SettingsCtrl', {
-        $scope: $scope,
-        hasFeatureToggle: true
+        $scope: $scope
       });
 
       $scope.$apply();
@@ -40,7 +36,6 @@ namespace globalsettings {
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
     beforeEach(setFeatureToggle);
-    beforeEach(setBranding);
 
     describe('for partner admin', () => {
 
@@ -59,27 +54,9 @@ namespace globalsettings {
       });
     });
 
-    describe('for direct customer', () => {
-
-      beforeEach(setAuthinfoIsDirectCustomerSpy(true));
-      beforeEach(initController);
-
-      it('should create the ctrl and add the direct customer setting sections', () => {
-        expect(controller.security).toBeTruthy();
-        expect(controller.domains).toBeTruthy();
-        expect(controller.sipDomain).toBeTruthy();
-        expect(controller.authentication).toBeTruthy();
-        expect(controller.support).toBeTruthy();
-        expect(controller.branding).toBeTruthy();
-        expect(controller.privacy).toBeTruthy();
-        expect(controller.retention).toBeTruthy();
-      });
-    });
-
     describe('for normal admin', () => {
 
       beforeEach(setAuthinfoIsPartnerSpy(false));
-      beforeEach(setAuthinfoIsPartnerUserSpy(true));
 
       describe('with allowCustomerLogos set to true', () => {
 
@@ -121,31 +98,15 @@ namespace globalsettings {
         Authinfo.isPartner.and.returnValue(isPartner);
       };
     }
-
-    function setAuthinfoIsPartnerUserSpy(isPartnerUser) {
-      return () => {
-        Authinfo.isPartnerUser.and.returnValue(isPartnerUser);
-      };
-    }
-
-    function setAuthinfoIsDirectCustomerSpy(isDirectCustomer) {
-      return () => {
-        Authinfo.isDirectCustomer.and.returnValue(isDirectCustomer);
-      };
-    }
-
     function setGetOrgSpy(allowBranding) {
       return () => {
-        Orgservice.getOrg.and.returnValue($q.when({orgSettings: {allowCustomerLogos: allowBranding}}));
+        Orgservice.getOrg.and.callFake(function (callback) {
+          callback({orgSettings: {allowCustomerLogos: allowBranding}});
+        });
       };
     }
-
     function setFeatureToggle() {
       FeatureToggleService.supports.and.returnValue($q.when(true));
-    }
-
-    function setBranding() {
-      FeatureToggleService.brandingWordingChangeGetStatus.and.returnValue($q.when(true));
     }
   });
 }

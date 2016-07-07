@@ -197,6 +197,29 @@ describe('Controller: HostDetailsControllerV2', function () {
     expect($modal.open.calledOnce).toBe(true);
 
   });
+  it('should call deleteHost of MediaClusterServiceV2', function () {
+    spyOn(MediaClusterServiceV2, 'deleteHost').and.returnValue(redirectTargetPromise);
+
+    httpBackend.flush();
+    controller.deleteHost();
+    httpBackend.verifyNoOutstandingExpectation();
+
+    expect(MediaClusterServiceV2.deleteHost).toHaveBeenCalled();
+  });
+  it('should call XhrNotificationService notify for reject ', function () {
+    var deleteHostDefered = $q.defer();
+    spyOn(MediaClusterServiceV2, 'deleteHost').and.returnValue(deleteHostDefered.promise);
+
+    deleteHostDefered.reject();
+    sinon.stub(XhrNotificationService, 'notify');
+    XhrNotificationService.notify(redirectTargetPromise);
+    httpBackend.flush();
+    controller.deleteHost();
+    httpBackend.verifyNoOutstandingExpectation();
+
+    expect(MediaClusterServiceV2.deleteHost).toHaveBeenCalled();
+    expect(XhrNotificationService.notify).toHaveBeenCalled();
+  });
 
   it('showDeregisterHostDialog should open modal', function () {
     controller.hostcount = 1;

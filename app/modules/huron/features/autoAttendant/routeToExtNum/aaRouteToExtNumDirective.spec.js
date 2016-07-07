@@ -14,7 +14,6 @@ describe('Directive: aaRouteToExtNum', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
-  var menuId = 'menu1';
 
   beforeEach(module('Huron'));
 
@@ -31,10 +30,8 @@ describe('Directive: aaRouteToExtNum', function () {
     $scope.index = index;
     $scope.aaKey = keyIndex;
     $scope.keyIndex = keyIndex;
-    $scope.menuId = menuId;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
@@ -46,7 +43,7 @@ describe('Directive: aaRouteToExtNum', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-route-to-ext-num aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-ext-num>")($rootScope);
+    var element = $compile("<aa-route-to-ext-num aa-schedule='openHours' aa-index='0' aa-key-index='0'></aa-route-to-ext-num>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aaRouteToExtNum");

@@ -23,7 +23,6 @@ describe('Care Feature Ctrl should ', function () {
   };
 
   beforeEach(module('Sunlight'));
-  beforeEach(module('Hercules'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));

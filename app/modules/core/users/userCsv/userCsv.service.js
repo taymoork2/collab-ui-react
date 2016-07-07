@@ -22,9 +22,7 @@
       getCsvStat: getCsvStat,
       setCsvStat: setCsvStat,
       getBulkErrorResponse: getBulkErrorResponse,
-      addErrorWithTrackingID: addErrorWithTrackingID,
-      chunkSizeWithSparkCall: 2,
-      chunkSizeWithoutSparkCall: 10
+      addErrorWithTrackingID: addErrorWithTrackingID
     };
 
     return service;

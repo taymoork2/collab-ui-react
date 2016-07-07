@@ -33,7 +33,7 @@
     vm.callVolumeStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.utilizationStatus = vm.REFRESH;
-    vm.clusterOptions = ['All Clusters'];
+    vm.clusterOptions = ['All'];
     vm.clusterSelected = vm.clusterOptions[0];
     getClusters();
     vm.timeOptions = [{
@@ -74,7 +74,7 @@
       if (vm.timeSelected.value === 0) {
 
         vm.label = vm.timeSelected.label;
-        vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
+        vm.date = date1.getHours() + ':' + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
 
       } else if (vm.timeSelected.value === 1) {
 
@@ -138,7 +138,6 @@
     }
 
     function setAllGraphs() {
-      setTotalCallsData();
       setCPUUtilizationData();
       setClusterAvailability();
       setUtilizationData();
@@ -238,44 +237,6 @@
         resizeCards();
         //delayedResize();
       });
-    }
-
-    function setTotalCallsData() {
-      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        if (vm.clusterSelected === 'All Clusters') {
-          if (response === vm.ABORT) {
-            return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
-            vm.onprem = vm.EMPTY;
-            vm.cloud = vm.EMPTY;
-            vm.onprem = '';
-            vm.cloud = '';
-            vm.total = '';
-          } else {
-            vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsOverflow;
-            vm.total = vm.onprem + vm.cloud;
-
-          }
-        } else {
-          if (response === vm.ABORT) {
-            return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsRedirect)) {
-            vm.onprem = vm.EMPTY;
-            vm.cloud = vm.EMPTY;
-            vm.onprem = '';
-            vm.cloud = '';
-            vm.total = '';
-          } else {
-            vm.onprem = response.data.callsOnPremise;
-            vm.cloud = response.data.callsRedirect;
-            vm.total = vm.onprem + vm.cloud;
-
-          }
-        }
-        resizeCards();
-      });
-
     }
 
     function setCPUUtilizationData() {

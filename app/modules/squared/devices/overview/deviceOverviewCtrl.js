@@ -8,6 +8,7 @@
   /* @ngInject */
   function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
     var deviceOverview = this;
+
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
@@ -160,42 +161,15 @@
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
       CsdmCodeService.deleteCode(deviceOverview.currentDevice);
-      $state.sidepanel.close();
       CsdmCodeService.createCode(displayName)
         .then(function (result) {
-          var wizardState = {
-            data: {
-              function: "showCode",
-              deviceType: "cloudberry",
-              deviceName: result.displayName,
-              expiryTime: result.friendlyExpiryTime,
-              activationCode: result.activationCode
-            },
-            history: [],
-            currentStateName: 'addDeviceFlow.showActivationCode',
-            wizardState: {
-              'addDeviceFlow.showActivationCode': {}
-            }
-          };
-          var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.showActivationCode', {
-            wizard: wizard
-          });
-        });
+          AddDeviceModal.open(result);
+        })
+        .then($state.sidepanel.close);
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
-      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
-        Notification.notifyReadOnly();
-        return;
-      }
-      if (deviceOverview.showRemoteSupportButton()) {
-        RemoteSupportModal.open(deviceOverview.currentDevice);
-      }
-    };
-
-    deviceOverview.showRemoteSupportButton = function () {
-      return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+      RemoteSupportModal.open(deviceOverview.currentDevice);
     };
 
     deviceOverview.addTag = function () {

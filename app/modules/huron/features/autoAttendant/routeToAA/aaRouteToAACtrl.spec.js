@@ -18,7 +18,6 @@ describe('Controller: AARouteToAACtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
-  var menuId = 'menu1';
 
   var rawCeInfos = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
 
@@ -59,13 +58,11 @@ describe('Controller: AARouteToAACtrl', function () {
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
-    $scope.menuId = menuId;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
   }));

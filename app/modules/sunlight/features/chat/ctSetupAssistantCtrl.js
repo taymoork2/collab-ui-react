@@ -22,8 +22,6 @@
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
-    vm.setDay = setDay;
-    vm.setEndTimeOptions = setEndTimeOptions;
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
 
@@ -35,7 +33,7 @@
       'feedback',
       'agentUnavailable',
       'offHours',
-      'chatStatusMessages',
+      'chatStrings',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -61,63 +59,52 @@
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
-    vm.days = CTService.getDays();
-    vm.open24Hours = true;
-    vm.isOffHoursMessageValid = true;
-    vm.isBusinessHoursDisabled = false;
-    vm.timings = CTService.getDefaultTimes();
-    vm.startTimeOptions = CTService.getTimeOptions();
-    vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
-    vm.scheduleTimeZone = CTService.getDefaultTimeZone();
-    vm.timezoneOptions = CTService.getTimezoneOptions();
-    vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
-    vm.ChatTemplateButtonText = $translate.instant('common.finish');
 
     /**
      * Type enumerations
      */
 
     vm.STATIC_FIELD_TYPES = {
-      welcome: {
-        text: 'welcome',
-        htmlType: 'label'
+      "welcome": {
+        text: "welcome",
+        htmlType: "label"
       }
     };
 
     vm.typeOptions = [{
-      id: 'email',
+      id: "email",
       text: $translate.instant('careChatTpl.typeEmail'),
       dictionaryType: {
-        fieldSet: 'cisco.base.customer',
-        fieldName: 'Context_Work_Email'
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Work_Email"
       }
     }, {
-      id: 'name',
+      id: "name",
       text: $translate.instant('careChatTpl.typeName'),
       dictionaryType: {
-        fieldSet: 'cisco.base.customer',
-        fieldName: 'Context_First_Name'
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_First_Name"
       }
     }, {
-      id: 'category',
+      id: "category",
       text: $translate.instant('careChatTpl.typeCategory'),
       dictionaryType: {
-        fieldSet: 'cisco.base.ccc.pod',
-        fieldName: 'category'
+        fieldSet: "cisco.base.ccc.pod",
+        fieldName: "category"
       }
     }, {
-      id: 'phone',
+      id: "phone",
       text: $translate.instant('careChatTpl.typePhone'),
       dictionaryType: {
-        fieldSet: 'cisco.base.customer',
-        fieldName: 'Context_Mobile_Phone'
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Mobile_Phone"
       }
     }, {
-      id: 'id',
+      id: "id",
       text: $translate.instant('careChatTpl.typeId'),
       dictionaryType: {
-        fieldSet: 'cisco.base.customer',
-        fieldName: 'Context_Customer_External_ID'
+        fieldSet: "cisco.base.customer",
+        fieldName: "Context_Customer_External_ID"
       }
     }];
 
@@ -151,6 +138,7 @@
     };
 
     /* Template */
+
     vm.template = {
       name: '',
       mediaType: 'chat',
@@ -239,63 +227,42 @@
             enabled: true
           },
           offHours: {
-            enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage')
+            enabled: true
           },
           feedback: {
             enabled: true,
             fields: {
-              feedbackQuery: {
-                displayText: $translate.instant('careChatTpl.feedbackQuery')
+              "feedbackQuery": {
+                "displayText": $translate.instant('careChatTpl.feedbackQuery')
               },
-              ratings: [{
-                displayText: $translate.instant('careChatTpl.rating1Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
+              "ratings": [{
+                "displayText": $translate.instant('careChatTpl.rating1Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
                 }
               }, {
-                displayText: $translate.instant('careChatTpl.rating2Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
+                "displayText": $translate.instant('careChatTpl.rating2Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
                 }
               }, {
-                displayText: $translate.instant('careChatTpl.rating3Text'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingPoints'
+                "displayText": $translate.instant('careChatTpl.rating3Text'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingPoints"
                 }
               }],
-              comment: {
-                displayText: $translate.instant('careChatTpl.ratingComment'),
-                dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
-                  fieldName: 'cccRatingComments'
+              "comment": {
+                "displayText": $translate.instant('careChatTpl.ratingComment'),
+                "dictionaryType": {
+                  fieldSet: "cisco.base.ccc.pod",
+                  fieldName: "cccRatingComments"
                 }
               }
             }
           }
-        },
-        chatStatusMessages: {
-          messages: {
-            connectingMessage: {
-              displayText: $translate.instant('careChatTpl.connectingMessage')
-            },
-            waitingMessage: {
-              displayText: $translate.instant('careChatTpl.waitingMessage')
-            },
-            enterRoomMessage: {
-              displayText: $translate.instant('careChatTpl.enterRoomMessage')
-            },
-            leaveRoomMessage: {
-              displayText: $translate.instant('careChatTpl.leaveRoomMessage')
-            },
-            chattingMessage: {
-              displayText: $translate.instant('careChatTpl.chattingMessage')
-            }
-          }
-
         }
       }
     };
@@ -343,19 +310,12 @@
       return false;
     }
 
-    function isOffHoursPageValid() {
-      setOffHoursWarning();
-      return vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected');
-    }
-
     function nextButton() {
       switch (vm.currentState) {
       case 'name':
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
-      case 'offHours':
-        return isOffHoursPageValid();
       case 'summary':
         return 'hidden';
       default:
@@ -502,7 +462,7 @@
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
-        }, function () {
+        }, function (error) {
           handleChatTemplateError();
         });
     }
@@ -527,40 +487,9 @@
       });
     }
 
-    function setDay(index) {
-      vm.days[index].isSelected = !vm.days[index].isSelected;
-      setDayPreview();
-    }
-
-    function setEndTimeOptions() {
-      vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
-      vm.timings.endTime = vm.endTimeOptions[0];
-    }
-
-    function setDayPreview() {
-      var firstSelectedDayIndex = _.findIndex(vm.days, 'isSelected');
-      var lastSelectedDayIndex = _.findLastIndex(vm.days, 'isSelected');
-
-      vm.isBusinessHoursDisabled = firstSelectedDayIndex == -1;
-
-      if (!vm.isBusinessHoursDisabled) {
-        var isDiscontinuous = _.some(
-          _.slice(vm.days, firstSelectedDayIndex, lastSelectedDayIndex + 1), {
-            isSelected: false
-          });
-
-        vm.daysPreview = CTService.getPreviewDays(vm.days, !isDiscontinuous, firstSelectedDayIndex, lastSelectedDayIndex);
-      }
-    }
-
-    function setOffHoursWarning() {
-      vm.isOffHoursMessageValid = vm.template.configuration.pages.offHours.message !== '';
-    }
-
     function handleChatTemplateError() {
       vm.saveCTErrorOccurred = true;
       vm.creatingChatTemplate = false;
-      vm.ChatTemplateButtonText = $translate.instant('common.retry');
     }
 
     function init() {

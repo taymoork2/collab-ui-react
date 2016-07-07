@@ -69,7 +69,7 @@
     }
 
     function extractDevice(res) {
-      return CsdmConverter.convertCloudberryDevice(res.data);
+      return CsdmConverter.convertDevice(res.data);
     }
 
     function extractOrg(res) {
@@ -209,7 +209,7 @@
 
     function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
-        return deferredResolve(filterDevices(searchString, CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), limit));
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices), limit));
       }
       var devices = devicesInOrgCache.get(orgId);
       if (devices) {
@@ -218,7 +218,7 @@
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          var devices = CsdmConverter.convertCloudberryDevices(res.data);
+          var devices = CsdmConverter.convertDevices(res.data);
           devicesInOrgCache.put(orgId, devices);
           return filterDevices(searchString, devices, limit);
         });
@@ -226,7 +226,7 @@
 
     function getCloudberryDevice(orgId, deviceId) {
       if (useMock()) {
-        var device = _.find(CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), function (val, key) {
+        var device = _.find(CsdmConverter.convertDevices(HelpdeskMockData.devices), function (val, key) {
           var id = _.last(key.split('/'));
           return id === deviceId;
         });

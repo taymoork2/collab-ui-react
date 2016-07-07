@@ -16,6 +16,7 @@
     var poller = CsdmPoller.create(fetch, hub);
 
     var service = {
+      deleteCluster: deleteCluster,
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
@@ -26,6 +27,7 @@
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
@@ -238,6 +240,16 @@
         });
     }
 
+    function deleteCluster(id) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
+      return $http.delete(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          poller.forceAction();
+          return data;
+        });
+    }
+
     function deleteHost(id, serial) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
@@ -251,6 +263,15 @@
     function getConnector(connectorId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
+    }
+
+    function getReleaseNotes(releaseChannel, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
+      return $http.get(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          return data.releaseNotes;
+        });
     }
 
   }

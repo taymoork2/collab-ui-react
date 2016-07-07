@@ -109,7 +109,7 @@
     @include vr-spacing(pb, 1);
   }
 
-  .aa-pm-key-select, .aa-pm-action-select, .aa-sm-key-select, .aa-sm-action-select {
+  .aa-pm-key-select, .aa-pm-action-select {
     & .select-options, & .dropdown-menu {
       height: inherit;
       max-height: inherit;
@@ -128,7 +128,7 @@
     }
   }
 
-  .aa-pm-key-select, .aa-sm-key-select {
+  .aa-pm-key-select {
     & .select-toggle {
       @include vr-spacing(pl, 1.25);
       @include vr-spacing(pt, .5);

@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($stateParams, $translate, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($stateParams, $translate, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -362,18 +362,7 @@
         label: $translate.instant('trialModal.call.phone'),
         type: 'text',
         required: true,
-      },
-      validators: {
-        phoneNumber: {
-          expression: function ($viewValue, $modelValue) {
-            return ValidationService.phoneUS($viewValue, $modelValue);
-          },
-          message: function () {
-            return $translate.instant('common.invalidPhoneNumber');
-          }
-        }
       }
-
     }, {
       model: vm.shippingInfo,
       key: 'country',
@@ -461,13 +450,6 @@
         min: 0,
         pattern: '\\d{5}',
         required: true
-      },
-      validation: {
-        messages: {
-          pattern: function (viewValue, modelValue, scope) {
-            return $translate.instant('common.invalidZipCode');
-          }
-        }
       }
     }, {
       model: vm.shippingInfo,
@@ -479,16 +461,8 @@
         inputClass: '',
         label: $translate.instant('trialModal.call.dealId'),
         type: 'text',
-        required: false,
-        pattern: '\\d{1,10}'
+        required: false
       },
-      validation: {
-        messages: {
-          pattern: function (viewValue, modelValue, scope) {
-            return $translate.instant('trialModal.call.invalidDealId');
-          }
-        }
-      }
     }];
 
     init();

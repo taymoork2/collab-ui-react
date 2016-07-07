@@ -5,7 +5,7 @@
     .module('Messenger')
     .factory('SyncService', SyncService);
 
-  /* @ngInject */
+  /** @ngInject */
   function SyncService($http, $q, $translate, Config, Authinfo, Log, UrlConfig) {
     // Interface ---------------------------------------------------------------
 

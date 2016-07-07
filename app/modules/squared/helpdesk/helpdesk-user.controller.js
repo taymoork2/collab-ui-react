@@ -57,7 +57,6 @@
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
               return 'helpdesk.userDetails';
@@ -139,15 +138,9 @@
       }
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
-        if (event.keyCode === 27) { // Esc
-          $window.history.back();
-        }
+      if (event.keyCode === 27) { // Esc
+        $window.history.back();
       }
     }
   }

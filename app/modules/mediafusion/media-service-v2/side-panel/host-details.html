@@ -73,11 +73,13 @@
       <div class="section-title-row section-name" translate="mediaFusion.reassignCluster"></div>
     </strong>
     <div>
-      <a href 
-              style="color:#049FD9";
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--link"
+              style="margin-top: 15px;"
               ng-click="sp.close(); hostDetails.reassignCluster();"
-              translate="mediaFusion.reassign.moveNode">
-      </a>
+              translate="mediaFusion.moveHost">
+      </button>
     </div>
   </cs-sp-section>
 
@@ -90,7 +92,7 @@
       <ul>
         <li class="feature" ng-repeat="alarm in hostDetails.connector.alarms" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details-v2.alarm-details({alarm: alarm, host: hostDetails.connector.hostname})">
+            ui-sref="connector-details.alarm-details({alarm: alarm, host: hostDetails.connector.host.host_name})">
             <i class="icon icon-error status-icon"/>
             <span class="feature-name">{{alarm.title}}</span>
             <i class="feature-arrow"></i>
@@ -104,11 +106,13 @@
   <cs-sp-section>
     <div class="section-title-row section-name" translate=""></div>
     <div>
-      <a href 
-              style="color:#AEAEAF";
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--link"
+              style="margin-top: 15px;"
               ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"
-              translate="mediaFusion.reassign.deregister_node">
-      </a>
+              translate="mediaFusion.connectors.deregister_host">
+      </button>
     </div>
   </cs-sp-section>
 

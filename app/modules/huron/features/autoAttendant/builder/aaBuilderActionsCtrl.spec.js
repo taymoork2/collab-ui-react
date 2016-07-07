@@ -65,7 +65,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
     AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-    spyOn(AutoAttendantCeMenuModelService, 'deleteCeMenuMap');
 
     $scope.schedule = 'openHours';
     controller = $controller('AABuilderActionsCtrl', {
@@ -73,7 +72,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
     $scope.$apply();
   }));
-
   describe('setOption for Dial By Extension', function () {
     it('option for Dial By Extension is selected', function () {
 
@@ -153,15 +151,6 @@ describe('Controller: AABuilderActionsCtrl', function () {
       expect(aaUiModel['openHours']['entries'].length).toEqual(1);
       controller.removeAction(0);
       expect(aaUiModel['openHours']['entries'].length).toEqual(0);
-    });
-
-    it('should invoke deleteCeMenuMap for a Menu action to free up the associated menu mapping', function () {
-      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenu());
-      expect(aaUiModel['openHours']['entries'].length).toEqual(1);
-      controller.removeAction(0);
-      expect(aaUiModel['openHours']['entries'].length).toEqual(0);
-      expect(AutoAttendantCeMenuModelService.deleteCeMenuMap).toHaveBeenCalled();
     });
   });
 

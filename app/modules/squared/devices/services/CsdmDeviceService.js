@@ -7,7 +7,7 @@
     var devicesFastUrl = devicesUrl + "&checkDisplayName=false";
 
     var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
-      return CsdmConverter.convertCloudberryDevices(res.data);
+      return CsdmConverter.convertDevices(res.data);
     });
 
     var deviceCache = CsdmCacheFactory.create({
@@ -34,12 +34,12 @@
       },
       get: function (url) {
         return $http.get(url).then(function (res) {
-          return CsdmConverter.convertCloudberryDevice(res.data);
+          return CsdmConverter.convertDevice(res.data);
         });
       },
       fetch: function () {
         return $http.get(devicesUrl).then(function (res) {
-          return CsdmConverter.convertCloudberryDevices(res.data);
+          return CsdmConverter.convertDevices(res.data);
         });
       },
       initializeData: initialDataPromise

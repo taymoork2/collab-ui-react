@@ -1,14 +1,23 @@
-<div class="ct-summary">
-    <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
-    <div class="h4 description">{{:: 'careChatTpl.summaryDesc' | translate }}</div>
-    <button loading="careChatSA.creatingChatTemplate"
-            cs-btn
+<div>
+	<div class="ct-title">
+		<span class="h2">{{:: 'careChatTpl.summary' | translate }}</span>
+	</div>
+	<div class="h4 ct-title-desc">{{:: 'careChatTpl.summaryDesc' | translate }}</div>
+	<div class="h4 ct-status-div ">
+		<div ng-if="careChatSA.saveCTErrorOccurred" class="ct-error-desc">
+			<i class="icon icon-error icon-4x"></i>
+			<div>{{:: 'careChatTpl.errorCreateChatTemplate' | translate }}</div>
+			<div >
+				<a ng-click="careChatSA.submitChatTemplate()">{{:: 'common.tryAgain' | translate }}</a>
+			</div>
+		</div>
+	</div>
+	<div class="ct-finish-btn-div " >
+		<button ng-disabled="careChatSA.saveCTErrorOccurred"
+            loading="careChatSA.creatingChatTemplate";
+            cs-btn id="chatSetupFinishBtn"
             id="chatSetupFinishBtn"
-            class="btn btn--primary"
-            ng-class="{'btn--link': careChatSA.saveCTErrorOccurred}"
-            ng-click="careChatSA.submitChatTemplate()">{{careChatSA.ChatTemplateButtonText}}
-    </button>
-    <div class="h6 retry-message" ng-if="careChatSA.saveCTErrorOccurred">
-        {{:: 'careChatTpl.errorCreateChatTemplate' | translate }}
-    </div>
+            cs-btn class="btn btn--primary"
+            ng-click="careChatSA.submitChatTemplate()">{{:: 'common.finish' | translate }}</button>
+	</div>
 </div>

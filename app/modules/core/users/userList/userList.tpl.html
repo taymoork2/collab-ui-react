@@ -11,7 +11,7 @@
         <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
       </div>
       <div ng-if="!isCsvEnhancementToggled && isCSB">
-        <a input type="button" class="btn btn--people" ui-sref="userRedirect" translate="usersPage.inviteUsers" target="_blank"></a>
+        <button class="btn btn--people" ui-sref="userRedirect" translate="usersPage.inviteUsers" ></button>
       </div>
       <div ng-if="!isCsvEnhancementToggled" class="export-users">
         <csv-download ng-if="obtainedTotalUserCount && totalUsers <= USER_EXPORT_THRESHOLD" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>

@@ -39,7 +39,7 @@ namespace globalsettings {
 
     describe('contructor()', ()=> {
 
-      describe('when getRetention is not provided with parameters', () => {
+      describe('when getRetention is not provided with parameters', ()=> {
         beforeEach(initFailureSpy);
         beforeEach(initController);
 
@@ -53,7 +53,7 @@ namespace globalsettings {
         }
       });
 
-      describe('when getRetention returns a value from the pre-defined options', () => {
+      describe('when getRetention returns a value from the pre-defined options', ()=> {
         beforeEach(initSpyWithRetention);
         beforeEach(initController);
 
@@ -70,7 +70,7 @@ namespace globalsettings {
         }
       });
 
-      describe('when getRetention returns a value outside the pre-defined options', () => {
+      describe('when getRetention returns a value outside the pre-defined options', ()=> {
         beforeEach(initSpyWithRetention);
         beforeEach(initController);
 
@@ -86,14 +86,13 @@ namespace globalsettings {
         }
       });
 
-      describe('when getRetention returns insufficient data', () => {
+      describe('when getRetention returns insufficient data', ()=> {
         beforeEach(initSpyInsufficientResponse);
         beforeEach(initController);
 
-        it('should set data loaded and default value for the retention policy', () => {
+        it('should set data loaded but no value for the retention policy', () => {
           expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeTruthy();
-          expect(controller.selectedRetention.value).toBe(controller.RETENTION_DEFAULT);
+          expect(controller.selectedRetention).toBeFalsy();
         });
 
         function initSpyInsufficientResponse() {

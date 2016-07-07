@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Localytics, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -78,7 +78,7 @@
             Localytics.tagEvent('patch user call', {
               by: response.data.orgId
             });
-            Analytics.trackEvent('patch user call', {
+            Mixpanel.trackEvent('patch user call', {
               by: response.data.orgId
             });
           }
@@ -361,8 +361,9 @@
         }
 
         partial.usage = offerInfo.usageCount;
-        if (offerInfo.id !== Config.offerTypes.roomSystems &&
-          offerInfo.id !== Config.offerTypes.care) {
+        if (offerInfo.id === Config.offerTypes.roomSystems) {
+          partial.deviceLicenses = offerInfo.licenseCount;
+        } else {
           partial.licenses = offerInfo.licenseCount;
         }
 
@@ -386,7 +387,6 @@
           break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
-          partial.deviceLicenses = offerInfo.licenseCount;
           break;
         case Config.offerTypes.care:
           if (isCareEnabled) {

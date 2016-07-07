@@ -6,7 +6,7 @@
     .controller('AATimeoutInvalidCtrl', AATimeoutInvalidCtrl);
 
   /* @ngInject */
-  function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, AutoAttendantCeMenuModelService, Localytics) {
+  function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, Localytics) {
 
     var vm = this;
 
@@ -43,7 +43,6 @@
     vm.timeoutInvalidChanged = timeoutInvalidChanged;
     vm.populateOptionMenu = populateOptionMenu;
     vm.createOptionMenu = createOptionMenu;
-    vm.updateTimeoutInvalidChangedInSubmenu = updateTimeoutInvalidChangedInSubmenu;
 
     vm.timeoutActions = [{
       label: $translate.instant('autoAttendant.phoneMenuContinue'),
@@ -62,17 +61,6 @@
 
     /////////////////////////
 
-    /*
-     * Change of Invalid Input Timeout should be copied to its submenu.
-     */
-    function updateTimeoutInvalidChangedInSubmenu(attempts) {
-      _.forEach(vm.menuEntry.entries, function (entry) {
-        if (_.has(entry, 'entries') && _.has(entry, 'headers')) {
-          entry.attempts = attempts;
-        }
-      });
-    }
-
     function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
       var type = '';
@@ -80,12 +68,10 @@
       // this is number of times to repeat the timeout/invalid menu
       if (vm.selectedTimeout.value === 1) {
         entry.attempts = vm.selectedTimeout.value;
-        vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
         type = vm.selectedTimeout.name;
       } else if (vm.selectedTimeout.value === 2) {
         if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
           entry.attempts = vm.selectedTimeout.selectedChild.value;
-          vm.updateTimeoutInvalidChangedInSubmenu(entry.attempts);
           type = vm.selectedTimeout.selectedChild.name;
         }
       }
@@ -155,12 +141,7 @@
       var ui = AAUiModelService.getUiModel();
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
-
-      if ($scope.menuId) {
-        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-      } else {
-        vm.menuEntry = vm.entries[$scope.index];
-      }
+      vm.menuEntry = vm.entries[$scope.index];
 
       populateOptionMenu();
 

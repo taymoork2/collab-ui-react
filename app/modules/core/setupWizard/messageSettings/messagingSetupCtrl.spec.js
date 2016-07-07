@@ -5,16 +5,16 @@ describe('Controller: messagingSetupCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Analytics;
+  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Mixpanel;
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _Analytics_, _FeatureToggleService_, _Notification_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Notification_, _Mixpanel_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-    Analytics = _Analytics_;
+    Mixpanel = _Mixpanel_;
     Notification = _Notification_;
 
     spyOn(AccountOrgService, 'getOrgSettings').and.returnValue($q.when({
@@ -36,7 +36,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'notify');
   }));
 

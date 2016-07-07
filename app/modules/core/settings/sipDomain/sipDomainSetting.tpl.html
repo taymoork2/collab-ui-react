@@ -29,8 +29,8 @@
     </form>
   </div>
   <div class="row-fluid error-msg-spacing">
-    <p ng-if="!vm.isSSAReserved" class="url-examples-style" translate="firstTimeWizard.setSipDomainCompNames" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
-    <p ng-if="vm.isSSAReserved" class="url-examples-style" translate="firstTimeWizard.setSipDomainAsssignedNames" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
+    <p ng-if="!vm.isDisabled" class="url-examples-style" translate="firstTimeWizard.setSipDomainCompNames"></p>
+    <p ng-if="vm.isDisabled" class="url-examples-style" translate="firstTimeWizard.setSipDomainAsssignedNames"></p>
     <div class="domain-check-space url-examples-style">
       <h5 class="inline">{{vm.inputValue}}.call{{vm.domainSuffix}}</h5>
       <i ng-if="vm.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
@@ -46,7 +46,7 @@
   </div>
   <div class="row-fluid" ng-if="vm.isUrlAvailable">
     <div class="confirm-box">
-      <cs-checkbox ckid="confirmSaveCheckBox" ng-model="vm.isConfirmed" ng-click ="vm.checkSSAReservation()" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
+      <cs-checkbox ckid="confirmSaveCheckBox" ng-model="vm.isConfirmed" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
     </div>
   </div>
   <div class="row-fluid" ng-if="vm.showSaveButton && vm.isUrlAvailable && vm.isConfirmed">

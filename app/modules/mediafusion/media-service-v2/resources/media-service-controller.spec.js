@@ -175,10 +175,13 @@ describe('Controller: MediaServiceControllerV2', function () {
       "state": "defused",
       "targetType": "mf_mgmt"
     }];
-    spyOn(MediaClusterServiceV2, 'getClustersByConnectorType').and.returnValue(clusters);
+    var setServiceEnabledDeferred = $q.defer();
+    sinon.stub(MediaClusterServiceV2, 'getAll');
+    MediaClusterServiceV2.getAll.returns(setServiceEnabledDeferred.promise);
+    setServiceEnabledDeferred.resolve(clusters);
     httpMock.flush();
     controller.clustersUpdated();
-    expect(MediaClusterServiceV2.getClustersByConnectorType).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.getAll).toHaveBeenCalled();
     httpMock.verifyNoOutstandingExpectation();
   });
 });

@@ -11,8 +11,7 @@
 
     vm.trial = TrialPstnService.getData();
 
-    vm.addressLoading = true;
-    vm.addressFound = false;
+    vm.addressLoading = false;
     vm.validation = false;
 
     vm.validateAddress = validateAddress;
@@ -23,9 +22,8 @@
       model: vm.trial.details.emergAddr,
       key: 'streetAddress',
       type: 'input',
-      className: 'medium-9 inline-row left',
+      className: 'medium-9 inline-row',
       templateOptions: {
-        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.address'),
         inputClass: 'medium-11'
@@ -34,7 +32,7 @@
       model: vm.trial.details.emergAddr,
       key: 'unit',
       type: 'input',
-      className: 'medium-3 inline-row left',
+      className: 'medium-3 inline-row',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.unit')
@@ -45,7 +43,6 @@
       type: 'input',
       className: 'medium-12',
       templateOptions: {
-        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.city'),
       }
@@ -55,7 +52,6 @@
       type: 'select',
       className: 'medium-8 inline-row left',
       templateOptions: {
-        required: true,
         label: $translate.instant('trialModal.pstn.state'),
         labelfield: 'name',
         valuefield: 'abbreviation',
@@ -72,9 +68,8 @@
       model: vm.trial.details.emergAddr,
       key: 'zip',
       type: 'input',
-      className: 'medium-4 inline-row left',
+      className: 'medium-4 inline-row',
       templateOptions: {
-        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.zip'),
         onBlur: validateAddress
@@ -82,8 +77,8 @@
     }];
 
     function validateAddress() {
-      vm.addressLoading = true;
       vm.validation = true;
+      vm.addressLoading = true;
       return PstnServiceAddressService.lookupAddress({
           streetAddress: vm.trial.details.emergAddr.streetAddress,
           unit: vm.trial.details.emergAddr.unit,
@@ -93,14 +88,11 @@
         })
         .then(function (response) {
           if (angular.isDefined(response)) {
-            vm.addressFound = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
             Notification.error('trialModal.pstn.error.noAddress');
           }
-        })
-        .finally(function () {
           vm.addressLoading = false;
         });
     }
@@ -113,7 +105,6 @@
     function resetAddress() {
       TrialPstnService.resetAddress();
       vm.validation = false;
-      vm.addressFound = false;
     }
   }
 })();

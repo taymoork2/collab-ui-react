@@ -3,7 +3,7 @@
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, AANotificationService, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
-  var $state, $rootScope, $scope, $q, $translate, $stateParams, $compile;
+  var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
@@ -51,12 +51,10 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
     _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_) {
-
-    $state = _$state_;
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -86,11 +84,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
 
-    spyOn($state, 'go');
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
-    spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('AABuilderMainCtrl as vm', {
@@ -156,14 +152,6 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('close', function () {
-    it('should invoke clearCeMenuMap to release the associated storage', function () {
-      aaModel.aaRecord = undefined;
-      controller.close();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalled();
-      expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
-    });
-
     it('should warn on CMI assignment failure on close', function () {
 
       // CMI assignment will fail when there is any bad number in the list
@@ -194,6 +182,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect(errorSpy).toHaveBeenCalled();
+
     });
 
   });

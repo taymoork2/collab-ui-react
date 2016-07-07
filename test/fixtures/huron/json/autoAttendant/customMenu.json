@@ -50,7 +50,6 @@
   },
 
   "customMenu": {
-    "id": "menu0",
     "type": "MENU_CUSTOM",
     "headers": [],
     "entries": [{

@@ -84,7 +84,6 @@
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
           controller: 'HelpdeskExtendedInfoDialogController as modal',
-          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
               return 'helpdesk.customerDetails';
@@ -179,20 +178,14 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
-        switch (event.keyCode) {
-        case 27: // Esc
-          $window.history.back();
-          break;
-        case 83: // S
-          gotoSearchUsersAndDevices();
-          break;
-        }
+      switch (event.keyCode) {
+      case 27: // Esc
+        $window.history.back();
+        break;
+      case 83: // S
+        gotoSearchUsersAndDevices();
+        break;
       }
     }
 

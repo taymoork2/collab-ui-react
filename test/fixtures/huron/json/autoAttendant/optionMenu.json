@@ -109,119 +109,6 @@
       }]
     }]
   },
-  "expectedCeOption": {
-    "callExperienceName": "AA Option",
-    "assignedResources": [{
-      "trigger": "incomingCall",
-      "type": "directoryNumber",
-      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
-    }],
-    "defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours"
-    },
-    "actionSets": [{
-      "name": "openHours",
-      "actions": [{
-        "play": {
-          "description": "Welcome prompt",
-          "url": "file1.avi"
-        }
-      }, {
-        "runActionsOnInput": {
-          "description": "",
-          "prompts": {
-            "description": "",
-            "sayList": [{
-              "value": "file2.avi",
-              "voice": "menu instruction"
-            }]
-          },
-          "language": "",
-          "voice": "",
-          "inputs": [{
-            "description": "Play office hours",
-            "input": "0",
-            "actions": [{
-              "play": {
-                "url": "file3.avi"
-              }
-            }]
-          }, {
-            "description": "Operator",
-            "input": "1",
-            "actions": [{
-              "route": {
-                "destination": "1111"
-              }
-            }]
-          }, {
-            "description": "Leave voicemail",
-            "input": "2",
-            "actions": [{
-              "routeToVoiceMail": {
-                "id": "1111"
-              }
-            }]
-          }, {
-            "description": "Repeat instruction",
-            "input": "3",
-            "actions": [{
-              "repeatActionsOnInput": {
-                "level": 0
-              }
-            }]
-          }, {
-            "description": "Call dialed number",
-            "input": "4",
-            "actions": [{
-              "routeToDialed": {}
-            }]
-          }, {
-            "description": "Call dialed mailbox",
-            "input": "5",
-            "actions": [{
-              "routeToDialedMailbox": {}
-            }]
-          }, {
-            "description": "Dial by extension",
-            "input": "6",
-            "actions": [{
-              "runActionsOnInput": {
-                "inputType": 2,
-                "attempts": 3,
-                "minNumberOfCharacters": 4,
-                "maxNumberOfCharacters": 4,
-                "language": "",
-                "voice": "",
-                "prompts": {
-                  "sayList": [{
-                    "value": "Enter the extension now."
-                  }]
-                },
-                "rawInputActions": [{
-                  "routeToExtension": {
-                    "description": "",
-                    "destination": "$Input"
-                  }
-                }],
-                "repeats": 2
-              }
-            }]
-          }, {
-            "description": "",
-            "input": "default",
-            "actions": [{
-              "repeatActionsOnInput": {
-                "description": "Invalid input action",
-                "level": 0
-              }
-            }]
-          }]
-        }
-      }]
-    }]
-  },
   "ceOptionUnsorted": {
     "callExperienceName": "AA Option",
     "assignedResources": [{
@@ -333,7 +220,6 @@
     }]
   },
   "optionMenu": {
-    "id": "menu0",
     "type": "MENU_OPTION",
     "headers": [{
       "description": "",
@@ -359,8 +245,7 @@
         "name": "repeatActionsOnInput",
         "value": "",
         "description": "Invalid input action",
-        "voice": "",
-        "level": 0
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
@@ -425,8 +310,7 @@
         "name": "repeatActionsOnInput",
         "value": "",
         "description": "",
-        "voice": "",
-        "level": 0
+        "voice": ""
       }],
       "timeout": "",
       "username": "",

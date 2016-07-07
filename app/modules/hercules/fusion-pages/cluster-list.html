@@ -13,34 +13,33 @@
     </div>
     <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="medium header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
+      <cs-card class="small header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
-            <div class="cluster-list-hosts" translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+            <div class="cluster-type-orb">
+              <span ng-if="cluster.type === 'expressway'" translate="hercules.fusion.list.expressway-short"></span>
+              <span ng-if="cluster.type === 'mediafusion'" translate="hercules.fusion.list.mediafusion-short"></span>
+            </div>
           </header>
-          <div class="row cluster-list-body">
-            <div class="columns medium-6">
-              <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
-              <div class="cluster-list-info">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
-              <div class="cluster-list-timezone" title="{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}">{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div></div>
-            </div>
-            <div class="columns medium-6" ng-if="!resourceList._helpers.hasServices(cluster)" translate="hercules.fusion.list.no-services">
-            </div>
-            <div class="columns medium-6 connection-status" ng-if="resourceList._helpers.hasServices(cluster)">
-              <div class="connection-status-column" ng-if="service.total > 0" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
-                <div class="connection-status-icon connection-status-cloud-icon"></div>
-                <div class="connection-status-cable connection-status-cable-cloud"></div>
-                <div class="connection-status-service">
+          <div class="row">
+            <div class="columns medium-5" translate="hercules.fusion.list.upgrade-schedule">Upgrade Schedule</div>
+            <div class="columns medium-7">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
+            {{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div>
+          </div>
+          <section ng-if="!resourceList._helpers.hasServices(cluster)" class="service-list" translate="hercules.fusion.list.no-services"></section>
+          <section ng-if="resourceList._helpers.hasServices(cluster)">
+            <ul class="service-list">
+              <li ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
+                <div ng-hide="service.total === 0">
                   <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
                 </div>
-                <div class="connection-status-cable connection-status-cable-premises"></div>
-                <div class=" connection-status-icon connection-status-premises-icon"></div>
-              </div>
-            </div>
-          </div>
+              </li>
+            </ul>
+          </section>
           <footer>
-              <a ng-click="resourceList.openSettings(cluster.type, cluster.id)" translate="hercules.fusion.list.settings"></a>
+              <div translate="hercules.fusion.list.hosts" translate-values="{count: resourceList.countHosts(cluster)}" translate-interpolation="messageformat"></div>
+              <a ng-click="resourceList.openSettings(cluster.type, cluster.id)"><span translate="hercules.fusion.list.settings"></span> <i class="icon icon-settings"></i></a>
             </div>
           </footer>
         </article>

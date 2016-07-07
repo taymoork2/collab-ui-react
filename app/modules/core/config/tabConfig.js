@@ -26,13 +26,6 @@
     state: 'users',
     link: '/users'
   }, {
-    tab: 'placeTab',
-    icon: 'icon-meeting-room',
-    title: 'tabs.placeTab',
-    feature: 'csdm-places',
-    state: 'places',
-    link: '/places'
-  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
@@ -127,7 +120,7 @@
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-settings-page",
+    feature: "atlas-global-settings",
     link: '/settings'
   }, {
     tab: 'organizationTab',

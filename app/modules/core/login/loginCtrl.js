@@ -26,12 +26,6 @@
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
     }
 
-    // If the tab has logged out and we are logged into another tab
-    // we want to allow the tab to get auth tokens from another logged in tab
-    if (SessionStorage.get('logout')) {
-      SessionStorage.remove('logout');
-    }
-
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {

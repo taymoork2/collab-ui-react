@@ -92,10 +92,6 @@
         margin-left: 1rem;
         margin-top: -10px;
       }
-      .retry-label span {
-        @extend .progressbar-progress;
-        float: none;
-      }
     }
   }
 
@@ -143,9 +139,6 @@
         }
         &.error-users:not(.disabled) .total {
           color: $brand-danger;
-        }
-        &.retry-users:not(.disabled) .total {
-          color: $brand-warning;
         }
       }
     }

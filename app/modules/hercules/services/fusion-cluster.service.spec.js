@@ -431,23 +431,4 @@ describe('Service: FusionClusterService', function () {
 
   });
 
-  describe('.getReleaseNotes', function () {
-
-    it('should return release notes', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/GA/packages/c_cal?fields=@wide')
-        .respond({
-          releaseNotes: 'Example calendar connector release notes.'
-        });
-
-      var callback = sinon.stub();
-      FusionClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-      expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
-    });
-
-  });
-
 });

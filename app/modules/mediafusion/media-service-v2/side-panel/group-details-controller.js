@@ -5,7 +5,7 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $log, $state) {
+      function ($stateParams, $modal, $log, $state, $translate) {
 
         var vm = this;
         vm.displayName = null;
@@ -19,7 +19,6 @@
 
         if (!angular.equals($stateParams.nodes, {})) {
           vm.nodeList = $stateParams.nodes;
-          $log.log("node details ", vm.nodeList);
         }
 
         if (!angular.equals($stateParams.cluster, {})) {
@@ -35,16 +34,17 @@
 
         vm.alarmsSummary = function () {
           var alarms = {};
+          $log.log("cluster details ", vm.nodeList);
           _.forEach(vm.nodeList, function (cluster) {
-            _.forEach(cluster.alarms, function (alarm) {
+            _.forEach(cluster.services[0].connectors[0].alarms, function (alarm) {
               if (!alarms[alarm.id]) {
                 alarms[alarm.id] = {
                   alarm: alarm,
                   hosts: []
                 };
               }
-              if (alarms[alarm.id].hosts.indexOf(cluster.hostname) == -1) {
-                alarms[alarm.id].hosts.push(cluster.hostname);
+              if (alarms[alarm.id].hosts.indexOf(cluster.hosts[0].host_name) == -1) {
+                alarms[alarm.id].hosts.push(cluster.hosts[0].host_name);
               }
             });
           });
@@ -67,8 +67,11 @@
           });
         };
 
+        vm.openSettingsTitle = $translate.instant('mediaFusion.openSettingsTitle', {
+          clusterName: vm.displayName
+        });
         vm.alarms = [];
-        vm.alarms = vm.alarmsSummary();
+        // vm.alarms = vm.alarmsSummary();
       }
     );
 })();
