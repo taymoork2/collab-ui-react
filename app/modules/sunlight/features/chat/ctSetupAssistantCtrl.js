@@ -59,7 +59,7 @@
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
-    vm.ChatTemplateButtonText = 'Finish';
+    vm.ChatTemplateButtonText = $translate.instant('common.finish');
 
     /**
      * Type enumerations
@@ -510,7 +510,7 @@
     function handleChatTemplateError() {
       vm.saveCTErrorOccurred = true;
       vm.creatingChatTemplate = false;
-      vm.ChatTemplateButtonText = 'Retry';
+      vm.ChatTemplateButtonText = $translate.instant('common.retry');
     }
 
     function init() {
