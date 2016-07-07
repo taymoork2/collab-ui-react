@@ -1,12 +1,10 @@
 $overlay-panel-height: 93px;
 
-@import 'setupAssistantPages/hg-pilot-lookup';
-@import 'setupAssistantPages/hg-method';
-@import 'setupAssistantPages/hg-member-lookup';
-@import 'setupAssistantPages/hg-fallback-destination';
-@import 'edit/hg-edit';
+@import 'setupAssistantPages/cp-number-lookup';
+@import 'setupAssistantPages/cp-member-lookup';
+//@import 'edit/cp-edit';
 
-.huntgroup {
+.callpark {
   &.overlay-panel {
     & cs-setup-assistant {
       width: 100%;
@@ -43,31 +41,12 @@ $overlay-panel-height: 93px;
     }
   }
 }
-
-[fallback-destination] {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-  > div {
-    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-  }
-  .cs-card {
-    float: none;
-    width: 45%;
-    margin: 0 auto;
-    @include vr-spacing(mb, 1);
-  }
-  .typeahead-large {
-    margin-top: calc(51vh - #{$top-bar-height + $overlay-panel-height});
-  }
-}
 .cs-setupassistant {
   margin: 0 auto;
-  max-width: 1080px;
+  max-width: 100%;
+  padding: 0 1rem;
 }
 .cs-setupassistant--content {
   height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
 }
+
