@@ -74,7 +74,6 @@
           number: hint,
           assigned: assigned
         });
-        console.log(helper);
         return helper;
       }
       return undefined;

@@ -1,0 +1,7 @@
+<ul class="nav nav-stacked" role="tablist">
+  <li role="presentation" ng-repeat="tab in nav.tabs" ui-sref-active="current">
+    <a class="callrouting-nav-menuitem" ui-sref="{{tab.state}}">{{tab.title | translate}}
+      <span class="count">{{tab.count}}</span>
+    </a>
+  </li>
+</ul>

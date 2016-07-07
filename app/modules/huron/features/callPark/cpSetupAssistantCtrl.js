@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-unreachable:0 */
+
   angular
     .module('Huron')
     .controller('CallParkSetupAssistantCtrl', CallParkSetupAssistantCtrl);
@@ -90,13 +92,17 @@
 
     function nextButton($index) {
       switch ($index) {
-        case 0: return vm.callParkName !== '';
-          break;
-        case 1: return vm.selectedSingleNumber !== '';
-          break;
-        case 2: return vm.selectedMembers.length !== 0;
-          break;
-        default: return true;
+      case 0:
+        return vm.callParkName !== '';
+        break;
+      case 1:
+        return vm.selectedSingleNumber !== '';
+        break;
+      case 2:
+        return vm.selectedMembers.length !== 0;
+        break;
+      default:
+        return true;
       }
     }
 

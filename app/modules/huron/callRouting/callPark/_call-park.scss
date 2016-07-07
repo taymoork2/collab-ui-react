@@ -1,0 +1,141 @@
+@mixin tile() {
+  width: 222px;
+  height: 122px;
+  padding: 20px 15px;
+  border: 1px solid $gray-lighter;
+  margin: 0px 10px 10px 0px;
+  display: inline-block;
+  vertical-align: top;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: $gray-lightest;
+  }
+  .delete-btn {
+    float: right;
+    .delete-icon {
+      @extend .icon;
+      @extend .icon-close;
+      font-size: 21px;
+      &:hover {
+        cursor: pointer;
+        color: $brand-primary;
+      }
+    }
+  }
+}
+.callpark-tile {
+  @include tile;
+  .callpark-name {
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: 16px;
+    color: $brand-primary;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .callpark-pattern {
+    font-family: $brand-font-cisco-TT-Extra-Light;
+    font-size: 24px;
+    color: $gray-darker;
+    margin-top: 3px;
+  }
+}
+
+.call-park-detail {
+
+  .form-horizontal .control-label {
+    text-align: left;
+    margin-right: 20px;
+    margin-left: 5px;
+    font-size: 18px;
+  }
+
+  .form-horizontal .has-feedback .form-control-feedback {
+    right: 5px;
+  }
+
+  .name-align {
+    margin-right: 20px;
+  }
+
+  .section-description {
+    color: $gray-darker;
+    font-size: 13px;
+  }
+
+  .col-xs-10 {
+    padding-right: 0;
+  }
+
+  .form-group {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .modal-body .formly-field {
+    padding-top: 5px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .text-form-padding {
+    padding-bottom: 17px;
+  }
+
+  .row-callpark {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: -15px;
+
+  }
+
+  .align-to {
+    margin-top: 8px;
+    margin-right: 6px;
+    padding-left: 0px;
+  }
+  
+  .margin-radio {
+    margin-left: 20px;
+    margin-right: 0;
+  }
+
+  .align-radio {
+    margin-top: 8px;
+  }
+  
+  .align-reversion-number {
+    margin-left : -12px;
+    margin-top: -8px;
+    margin-bottom: 0;
+  }
+
+  .align-number-input {
+    margin-left: -25px;
+  }
+
+  .align-number {
+    margin-left: -25px;
+    margin-top: -8px;
+  }
+
+  .align-prefix {
+    margin-left: 6px;
+  }
+
+  .title-margin {
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+
+  .section-padding {
+    padding-bottom: 10px;
+  }
+
+  .section-padding-reversion {
+    padding-bottom: 5px;
+  }
+
+  .name-padding {
+    padding-top: 15px;
+  }
+}
