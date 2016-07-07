@@ -2699,8 +2699,8 @@
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
-      "plugInDeskPhone": "Plug in your new Cisco desk phone and enter the activation code when prompted or use the device camera to scan the QR code.",
-      "plugInRoomSystem": "Plug in your new Cisco room system and enter the activation code when prompted.",
+      "plugInDeskPhone": "Plug in the Cisco desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code.",
+      "plugInRoomSystem": "Plug in the Cisco room system belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted.",
       "newCodeInUsersPage": "A new activation code can be created from the Users page after this code expires.",
       "newCodeInPlacesPage": "A new activation code can be created from the Places page after this code expires.",
       "newCodeInDevicesPace": "A new activation code can be created from the Devices page after this code expires.",
