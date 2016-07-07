@@ -1,0 +1,27 @@
+.ct-summary {
+
+  @include vr-spacing(mt, 11);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+
+  .success-icon {
+    color: $color-cta-base;
+  }
+
+  .description {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pv, 1);
+    text-align: center;
+  }
+
+  > button {
+    width: 5.5rem;
+  }
+
+  .retry-message {
+    color: $color-alerts-base;
+  }
+}
