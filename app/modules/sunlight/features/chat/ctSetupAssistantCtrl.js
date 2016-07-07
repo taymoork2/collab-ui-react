@@ -33,7 +33,7 @@
       'feedback',
       'agentUnavailable',
       'offHours',
-      'chatStrings',
+      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -139,7 +139,6 @@
     };
 
     /* Template */
-
     vm.template = {
       name: '',
       mediaType: 'chat',
@@ -264,6 +263,26 @@
               }
             }
           }
+        },
+        chatStatusMessages: {
+          messages: {
+            connectingMessage: {
+              displayText: $translate.instant('careChatTpl.connectingMessage')
+            },
+            waitingMessage: {
+              displayText: $translate.instant('careChatTpl.waitingMessage')
+            },
+            enterRoomMessage: {
+              displayText: $translate.instant('careChatTpl.enterRoomMessage')
+            },
+            leaveRoomMessage: {
+              displayText: $translate.instant('careChatTpl.leaveRoomMessage')
+            },
+            chattingMessage: {
+              displayText: $translate.instant('careChatTpl.chattingMessage')
+            }
+          }
+
         }
       }
     };

@@ -35,7 +35,7 @@
 
   <cs-sp-section>
     <strong>
-      <div class="section-title-row section-name" translate="mediaFusion.connectors.hosts"></div>
+      <div class="section-title-row section-name" translate="mediaFusion.connectors.nodes"></div>
     </strong>
     <div class="feature-list">
       <ul>
@@ -68,16 +68,16 @@
         </li>
       </ul>
     </div>
-    <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
+    <p ng-if="groupDetails.nodeList.length == 0" translate="mediaFusion.serviceStatus.nonodes"></p>
   </cs-sp-section>
 
   <cs-sp-section>
     <strong>
-      <div class="section-title-row section-name" translate="mediaFusion.clusters.manageThisCluster"></div>
+      <div class="section-title-row section-name" translate="mediaFusion.clusters.clusterSettings"></div>
     </strong>    
     <div>
       <a href ng-click="groupDetails.openSettings(groupDetails.clusterDetail.type, groupDetails.clusterDetail.id)"
-        style="color:#049FD9"> {{groupDetails.openSettingsTitle}}
+        style="color:#049FD9"> {{groupDetails.displayName}}
       </a>
     </div>
   </cs-sp-section>

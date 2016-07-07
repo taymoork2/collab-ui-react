@@ -64,7 +64,7 @@
       },
       columnDefs: [{
         field: 'groupName',
-        displayName: 'Media Node Clusters',
+        displayName: 'Media Clusters',
         cellTemplate: 'modules/mediafusion/media-service-v2/resources/cluster-list-display-name.html',
         width: '35%'
       }, {
@@ -117,6 +117,7 @@
 
     function addResourceButtonClicked() {
       $modal.open({
+        type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
         templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',

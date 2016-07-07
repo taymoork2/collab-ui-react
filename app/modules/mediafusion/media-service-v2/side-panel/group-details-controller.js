@@ -5,7 +5,7 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $log, $state, $translate) {
+      function ($stateParams, $modal, $log, $state) {
 
         var vm = this;
         vm.displayName = null;
@@ -67,9 +67,6 @@
           });
         };
 
-        vm.openSettingsTitle = $translate.instant('mediaFusion.openSettingsTitle', {
-          clusterName: vm.displayName
-        });
         vm.alarms = [];
         vm.alarms = vm.alarmsSummary();
       }

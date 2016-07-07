@@ -32,7 +32,7 @@
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
-      careServices: null,
+      careServices: [],
       conferenceServicesWithoutSiteUrl: null,
       cmrServices: null,
       hasAccount: false,
