@@ -6,10 +6,11 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
+      logoutAndRedirectTo: logoutAndRedirectTo,
       authorize: authorize,
       getCustomerAccount: getCustomerAccount,
       isLoggedIn: isLoggedIn,
@@ -91,14 +92,22 @@
     }
 
     function logout() {
-      var url = OAuthConfig.getOauthDeleteTokenUrl();
+      var redirectUrl = OAuthConfig.getLogoutUrl();
+      return service.logoutAndRedirectTo(redirectUrl);
+    }
+
+    function logoutAndRedirectTo(redirectUrl) {
+      var revokeUrl = OAuthConfig.getOauthDeleteTokenUrl();
       var data = 'token=' + TokenService.getAccessToken();
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
-      return httpPOST(url, data, token)
+      return httpPOST(revokeUrl, data, token)
         .catch(handleError('Failed to delete the oAuth token'))
         .finally(function () {
           clearStorage();
-          WindowLocation.set(OAuthConfig.getLogoutUrl());
+          // We store a key value in sessionStorage to  
+          // prevent a login when multiple tabs are open
+          SessionStorage.put('logout', 'logout');
+          WindowLocation.set(redirectUrl);
         });
     }
 

@@ -26,7 +26,7 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfChatStringsPage();
+    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
     validateDismissOfCTSetupWizard();
@@ -51,6 +51,10 @@ describe('Care admin should be able to', function () {
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);
+    validateDesc(expectedDesc)
+  }
+
+  function validateDesc(expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
@@ -165,15 +169,18 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfOffHoursPage() {
-    validateTitleAndDesc('Off-Hours', 'This screen is shown during business off-hours');
+    validateTitleAndDesc('Off-Hours', 'This screen is shown to a customer during business off-hours');
   }
 
-  function validateContentsOfChatStringsPage() {
-    validateTitleAndDesc('Chat Strings Configuration', 'These strings appear in the UI based on different scenarios');
+  function validateContentsOfChatStatusMessagesPage() {
+    validateTitleAndDesc('Chat Status Messages', 'Configure status messages which your customer sees on chat bubble');
+    validateChatStatusMessagesDefaultPage();
+    validateChatStatusMessagesChange();
+
   }
 
   function validateContentsOfSummaryPage() {
-    validateTitleAndDesc('Summary', 'Configuration Summary');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
   }
@@ -191,6 +198,32 @@ describe('Care admin should be able to', function () {
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.chatTemplateName);
+  }
+
+  function validateChatStatusMessagesDefaultPage() {
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Connecting you to an Agent");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join…");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has entered the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3), "Agent has left the chat room");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4), "You are chatting with our agent");
+  }
+
+  function validateChatStatusMessagesChange() {
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(0), " named Joy");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(1), " His name is Joy");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(2), " His name is Joy");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(3), " Good Bye");
+    utils.sendKeys(careChatTemplateSetupPage.chatStatusMessages.get(4), " Cody Banks");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0),
+      "Connecting you to an Agent named Joy");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1),
+      "Waiting for an Agent to join… His name is Joy");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2),
+      "Agent has entered the chat room His name is Joy");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3),
+      "Agent has left the chat room Good Bye");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4),
+      "You are chatting with our agent Cody Banks");
   }
 
 });

@@ -187,6 +187,7 @@
       model: vm.careTrial.details,
       key: 'quantity',
       type: 'input',
+      name: 'trialCareLicenseCount',
       className: '',
       templateOptions: {
         id: 'trialCareLicenseCount',

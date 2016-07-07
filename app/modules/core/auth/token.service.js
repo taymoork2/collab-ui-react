@@ -24,8 +24,8 @@
       // listen for changes to localStorage
       $window.addEventListener('storage', sessionTokenTransfer);
 
-      // If no sessionStorage tokens, ask other tabs for the sessionStorage
-      if (!$window.sessionStorage.length) {
+      // If no sessionStorage tokens and the tab was not logged out, ask other tabs for the sessionStorage
+      if (!$window.sessionStorage.length && !$window.sessionStorage.getItem('logout')) {
         $window.localStorage.setItem(requestSessionStorageEvent, 'foobar');
         $window.localStorage.removeItem(requestSessionStorageEvent, 'foobar');
       }
