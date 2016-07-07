@@ -41,6 +41,21 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     status: 201
   };
 
+  var deSelectAllDays = function () {
+    _.forEach(controller.days, function (day, key) {
+      if (day.isSelected) {
+        controller.setDay(key);
+      }
+    });
+  };
+
+  var selectedDaysByDefault = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  var defaultTimeZone = {
+    label: 'United States: America/New_York',
+    value: 'America/New_York'
+  };
+  var defaultDayPreview = 'Monday - Friday';
+
   beforeEach(module('Sunlight'));
   beforeEach(module('Hercules'));
   beforeEach(module(function ($provide) {
@@ -335,6 +350,45 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(mockElementObject.tokenfield).toHaveBeenCalledWith('createToken', 'Mock Category Token');
       expect(controller.categoryOptionTag).toEqual('');
     });
+  });
+
+  describe('Off Hours Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[6]; // set to off hours view
+      resolveLogoPromise();
+    });
+    it('should set off hours message and business hours by default', function () {
+      expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.offHoursDefaultMessage');
+      expect(controller.open24Hours).toBe(true);
+      expect(controller.isOffHoursMessageValid).toBe(true);
+      expect(controller.isBusinessHoursDisabled).toBe(false);
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual(selectedDaysByDefault);
+      expect(_.map(controller.timings, 'value')).toEqual(['08:00', '16:00']);
+      expect(controller.scheduleTimeZone).toEqual(defaultTimeZone);
+      expect(controller.daysPreview).toEqual(defaultDayPreview);
+    });
+
+    it('should set days', function () {
+      deSelectAllDays();
+      expect(controller.isBusinessHoursDisabled).toBe(true);
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual([]);
+      controller.setDay(1); // set Monday
+      controller.setDay(6); // set Saturday
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual(['Monday', 'Saturday']);
+      expect(controller.daysPreview).toEqual('Monday, Saturday');
+    });
+
+    it('should disable the right btn if no days are selected', function () {
+      deSelectAllDays();
+      expect(controller.nextButton()).toBe(undefined);
+    });
+
+    it('should disable the right btn if off hours message is empty', function () {
+      controller.template.configuration.pages.offHours.message = '';
+      expect(controller.nextButton()).toBe(false);
+    });
+
   });
 
   describe('Summary Page', function () {
