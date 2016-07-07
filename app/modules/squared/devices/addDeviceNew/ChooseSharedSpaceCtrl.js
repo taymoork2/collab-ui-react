@@ -87,17 +87,22 @@
         }
       }
 
+      function error(response,status){
+        XhrNotificationService.notify(response,status);
+        vm.isLoading = false;
+      }
+
       if (vm.place) {
         CsdmCodeService
           .createCodeForExisting(vm.place.cisUuid)
-          .then(success, XhrNotificationService.notify);
+          .then(success, error);
       } else {
         CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
           vm.place = place;
           CsdmCodeService
             .createCodeForExisting(place.cisUuid)
-            .then(success, XhrNotificationService.notify);
-        }, XhrNotificationService.notify);
+            .then(success, error);
+        }, error);
       }
 
     };
