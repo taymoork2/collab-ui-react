@@ -13,7 +13,6 @@
       getDays: getDays,
       getLogo: getLogo,
       getPreviewDays: getPreviewDays,
-      areDaysSelected: areDaysSelected,
       getTimeOptions: getTimeOptions,
       getEndTimeOptions: getEndTimeOptions,
       getDefaultTimes: getDefaultTimes,
@@ -51,21 +50,17 @@
 
     function labelForTime(time) {
       var currentLanguage = $translate.use();
-      if (currentLanguage === 'en_US') {
-        return moment(time, 'HH:mm').format('hh:mm A');
-      } else {
-        return time;
-      }
+      return (currentLanguage === 'en_US') ? moment(time, 'HH:mm').format('hh:mm A') : time;
+    }
+
+    function hoursWithSuffix(suffix) {
+      return _.range(0, 24).map(function (time) {
+        return _.padLeft(time, 2, '0') + suffix;
+      });
     }
 
     function getTimeOptions() {
-      var hourValues = _.range(0, 24).map(function (time) {
-        return _.padLeft(time, 2, '0') + ':00';
-      });
-      var halfHourValues = _.range(0, 24).map(function (time) {
-        return _.padLeft(time, 2, '0') + ':30';
-      });
-      var values = _.flatten(_.zip(hourValues, halfHourValues));
+      var values = _.flatten(_.zip(hoursWithSuffix(':00'), hoursWithSuffix(':30')));
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),
@@ -76,23 +71,21 @@
 
     function getEndTimeOptions(startTime) {
       var timeOptions = getTimeOptions();
-      var index = _.findIndex(timeOptions, function (option) {
-        return option.value == startTime.value;
+      var index = _.findIndex(timeOptions, {
+        value: startTime.value
       });
       return timeOptions.slice(index + 1, timeOptions.length);
     }
 
     function getDefaultTimes() {
       var timeOptions = getTimeOptions();
-      var startTime = _.find(timeOptions, function (timeOption) {
-        return timeOption.value == '08:00';
-      });
-      var endTime = _.find(timeOptions, function (timeOption) {
-        return timeOption.value == '16:00';
-      });
       return {
-        startTime: startTime,
-        endTime: endTime
+        startTime: _.find(timeOptions, {
+          value: '08:00'
+        }),
+        endTime: _.find(timeOptions, {
+          value: '16:00'
+        })
       };
     }
 
@@ -120,33 +113,21 @@
     }
 
     function getDefaultTimeZone() {
-      return _.find(getTimezoneOptions(), function (timeZone) {
-        return timeZone.value == 'America/New_York';
+      return _.find(getTimezoneOptions(), {
+        value: 'America/New_York'
       });
     }
 
-    function getPreviewDays(days, continous, startIndex, endIndex) {
-      if (startIndex != endIndex) {
-        if (continous) return days[startIndex].label + ' - ' + days[endIndex].label;
-        else {
-          var daysPreview = [];
-          _.forEach(days, function (day) {
-            if (day.isSelected) {
-              daysPreview.push(day.label);
-            }
-          });
-          return daysPreview.join(', ');
-        }
-      } else {
+    function getPreviewDays(days, continuous, startIndex, endIndex) {
+      if (startIndex == endIndex) {
         return days[startIndex].label;
       }
-    }
 
-    function areDaysSelected(days) {
-      var selectedDayIndex = _.findIndex(days, function (day) {
-        return day.isSelected;
-      });
-      return selectedDayIndex != -1;
+      if (continuous) {
+        return days[startIndex].label + ' - ' + days[endIndex].label;
+      }
+
+      return _.map(_.filter(days, 'isSelected'), 'label').join(', ');
     }
 
     function getDays() {

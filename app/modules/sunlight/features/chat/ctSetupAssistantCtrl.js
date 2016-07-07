@@ -345,7 +345,7 @@
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      return vm.template.configuration.pages.offHours.message != '' && CTService.areDaysSelected(vm.days);
+      return vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected');
     }
 
     function nextButton() {
@@ -502,7 +502,7 @@
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
-        }, function (error) {
+        }, function () {
           handleChatTemplateError();
         });
     }
@@ -538,30 +538,23 @@
     }
 
     function setDayPreview() {
-      var firstSelectedDayIndex = _.findIndex(vm.days, function (day) {
-        return day.isSelected;
-      });
-      var lastSelectedDayIndex = _.findLastIndex(vm.days, function (day) {
-        return day.isSelected;
-      });
+      var firstSelectedDayIndex = _.findIndex(vm.days, 'isSelected');
+      var lastSelectedDayIndex = _.findLastIndex(vm.days, 'isSelected');
 
-      if (firstSelectedDayIndex != -1) {
-        vm.isBusinessHoursDisabled = false;
-        var areContinousDays = true;
-        for (var i = firstSelectedDayIndex; i <= lastSelectedDayIndex; i++) {
-          if (!(vm.days[i].isSelected)) {
-            areContinousDays = false;
-            break;
-          }
-        }
-        vm.daysPreview = CTService.getPreviewDays(vm.days, areContinousDays, firstSelectedDayIndex, lastSelectedDayIndex);
-      } else {
-        vm.isBusinessHoursDisabled = true;
+      vm.isBusinessHoursDisabled = firstSelectedDayIndex == -1;
+
+      if (!vm.isBusinessHoursDisabled) {
+        var isDiscontinuous = _.some(
+          _.slice(vm.days, firstSelectedDayIndex, lastSelectedDayIndex + 1), {
+            isSelected: false
+          });
+
+        vm.daysPreview = CTService.getPreviewDays(vm.days, !isDiscontinuous, firstSelectedDayIndex, lastSelectedDayIndex);
       }
     }
 
     function setOffHoursWarning() {
-      vm.isOffHoursMessageValid = vm.template.configuration.pages.offHours.message == '' ? false : true;
+      vm.isOffHoursMessageValid = vm.template.configuration.pages.offHours.message !== '';
     }
 
     function handleChatTemplateError() {
