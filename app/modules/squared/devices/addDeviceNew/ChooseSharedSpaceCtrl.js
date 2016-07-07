@@ -74,6 +74,7 @@
 
       function success(code) {
         if (code.activationCode && code.activationCode.length > 0) {
+          vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.deviceName,
             activationCode: code.activationCode,
