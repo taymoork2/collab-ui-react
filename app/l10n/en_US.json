@@ -2734,7 +2734,9 @@
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful."
+    "emailError": "Email unsuccessful.",
+    "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
+    "generateError": "Unable to generate activation code. Please try again."
   },
   "rolesPanel": {
     "editUser": "Edit User",

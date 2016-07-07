@@ -1828,7 +1828,6 @@
           })
           .state('generateauthcode', {
             parent: 'modal',
-            url: '/generateauthcode',
             params: {
               currentUser: {},
               activationCode: {}
