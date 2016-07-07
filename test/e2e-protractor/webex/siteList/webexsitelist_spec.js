@@ -28,6 +28,10 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
     );
   }); // beforeAll()
 
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
+
   it('should allow login as ' + webExCommon.t30citestprov9Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
@@ -58,9 +62,6 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
     }
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
 });
 
 describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", function () {
@@ -85,6 +86,10 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
       }
     );
   }); // beforeAll()
+
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
 
   it('should allow login as ' + webExCommon.t30citestprov6Info.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
@@ -115,8 +120,70 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
     }
   });
 
-  it('should log out', function () {
-    navigation.logout();
-  });
 });
+
+/**
+ * ********************* IMPORTANT *********************
+ * The following account is a Dev DMZ User - To be deleted once BTS is ready.
+ * Keep these tests disabled
+ * ********************* IMPORTANT *********************
+ */
+//Start dev dmz tests
+xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function () {
+  var setup = false;
+
+  beforeAll(function () {
+    var promise = webEx.setup(
+      1,
+      'wbx-siteCsvTestAdmin',
+      webExCommon.devDmzInfo.testAdminUsername,
+      webExCommon.devDmzInfo.testAdminPassword,
+      webExCommon.devDmzInfo.siteUrl
+    );
+
+    promise.then(
+      function success(ticket) {
+        setup = (null !== ticket);
+        //If this doesn't happen, then login is not successful.
+      },
+
+      function error() {
+        setup = false;
+      }
+    );
+  }); // beforeAll()
+
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
+
+  it('should detect checking services spinner and then WebEx CSV operation icon', function () {
+    if (setup) {
+      navigation.clickServicesTab();
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
+
+      //WebEx CSV tests, currently pointing to dev dmz
+      utils.wait(webExCommon.devDmzInfo.checkingServicesSpinner);
+      utils.wait(webExCommon.devDmzInfo.csvCogEnabled);
+      expect(webExCommon.devDmzInfo.checkingServicesSpinner.isPresent()).toBeFalsy();
+    }
+  });
+
+  it('should check import/export modal', function () {
+    if (setup) {
+      //Click on the csv icon
+      utils.click(webExCommon.devDmzInfo.csvCogEnabled);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalHeader);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalBody);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalCloseButton);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportIcon);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportIcon);
+    }
+  });
+
+}); //End dev dmz tests
+
 // End of site list tests

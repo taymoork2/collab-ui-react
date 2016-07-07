@@ -384,6 +384,15 @@ exports.sendKeys = function (elem, value) {
   });
 };
 
+exports.sendKeysUpArrow = function (element, howMany) {
+  var len = howMany || 1;
+  var upSeries = '';
+  _.times(len, function () {
+    upSeries += protractor.Key.ARROW_UP;
+  });
+  return element.sendKeys(upSeries);
+};
+
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);

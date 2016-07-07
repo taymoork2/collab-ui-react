@@ -71,6 +71,7 @@
     vm.scheduleTimeZone = CTService.getDefaultTimeZone();
     vm.timezoneOptions = CTService.getTimezoneOptions();
     vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
+    vm.ChatTemplateButtonText = $translate.instant('common.finish');
 
     /**
      * Type enumerations
@@ -566,6 +567,7 @@
     function handleChatTemplateError() {
       vm.saveCTErrorOccurred = true;
       vm.creatingChatTemplate = false;
+      vm.ChatTemplateButtonText = $translate.instant('common.retry');
     }
 
     function init() {
