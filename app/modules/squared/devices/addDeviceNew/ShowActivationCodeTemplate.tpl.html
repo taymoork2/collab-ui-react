@@ -7,8 +7,8 @@
   <div>
     <h5 translate="addDeviceWizard.showActivationCode.activationCode"></h5>
     <p class="wizardDescription">
-      <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.wizardData.displayName }"></span>
-      <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.wizardData.displayName }"></span>
+      <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.belongsTo }"></span>
+      <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.belongsTo }"></span>
       <span ng-if="showActivationCode.activationFlowType()==='users'" translate="addDeviceWizard.showActivationCode.newCodeInUsersPage"></span>
       <span ng-if="showActivationCode.activationFlowType()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
       <span ng-if="showActivationCode.activationFlowType()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
