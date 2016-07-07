@@ -65,11 +65,18 @@
       });
     }
 
+    function createCodeForExisting(cisUuid) {
+      return codeCache.create(codesUrl, {
+        cisUuid: cisUuid
+      });
+    }
+
     return {
       on: codeCache.on,
       updateTags: updateTags,
       deleteCode: deleteCode,
       createCode: createCode,
+      createCodeForExisting: createCodeForExisting,
       getCodeList: getCodeList,
       updateCodeName: updateCodeName
     };
