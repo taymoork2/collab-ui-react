@@ -5,6 +5,7 @@
 @import 'ct-overview';
 @import 'ct-offhours';
 @import 'ct-chat-status-messages';
+@import 'ct-summary';
 
 // These variables define the height of chat template setup assistant page title and desc
 $ct-title-height : 48px;
@@ -26,20 +27,6 @@ $ct-desc-height: 32px;
 .ct-title-desc {
   text-align: center;
   color: $gray-dark-2;
-  @include vr-spacing(mv, 1);
-  @include vr-spacing(mh, 5);
-}
-
-.ct-success {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  @include vr-spacing(mt, 5);
-  @include vr-spacing(mb, 2);
-  @include vr-spacing(mh, 5);
-  @include vr-spacing(pt, 6);
 }
 
 .ct-sa-content{
