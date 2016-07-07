@@ -34,6 +34,7 @@
       count: 0
     }];
     vm.countHosts = countHosts;
+    vm.getHostnames = getHostnames;
     vm.setFilter = setFilter;
     vm.searchData = searchData;
     vm.openService = openService;
@@ -66,9 +67,21 @@
         .value();
     }
 
+    function getHostnames(cluster) {
+      return _.chain(cluster.connectors)
+        .map('hostname')
+        .uniq()
+        .sort()
+        .join()
+        .escape()
+        .split(',')
+        .join('<br />')
+        .value();
+    }
+
     function addMissingUpgradeScheduleToClusters(clusters) {
       // .clusterUpgradeSchedule is populated when getting the list of clusters
-      // only when the upgrade schedule has been explicitely set by the admin.
+      // only when the upgrade schedule has been explicitly set by the admin.
       // Otherwise it's not there but we can get it by fetching directly the
       // cluster data…
       var promises = clusters.map(function (cluster) {
@@ -78,6 +91,11 @@
           return FusionClusterService.getUpgradeSchedule(cluster.id)
             .then(function (upgradeSchedule) {
               cluster.clusterUpgradeSchedule = upgradeSchedule;
+              return cluster;
+            }, function () {
+              XhrNotificationService.notify($translate.instant('hercules.fusion.list.cannot-find-upgrade-schedule', {
+                "clusterName": cluster.name
+              }));
               return cluster;
             });
         }
@@ -160,8 +178,8 @@
     function labelForDay(day) {
       var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       var keys = _.reduce(days, function (result, day, i) {
-        // the days in shcedule upgrade starts at 1 == monday and ends with 7 == sunday
-        // (API made by a British :))
+        // the days in schedule upgrade starts at 1 == Monday and ends with 7 == Sunday
+        // (API made by an European! :))
         result[i + 1] = day;
         return result;
       }, {});
