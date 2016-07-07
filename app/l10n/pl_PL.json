@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "Przepraszamy, wystąpił problem podczas próby powiadomienia partnera."
   },
   "contactCenterUserConfig": {
+    "channels": "Kanały",
+    "contactCenterProfile": "Profil usługi Care",
+    "chat": "Czat",
+    "voice": "Głos",
+    "email": "E-mail",
+    "role": "Rola",
     "alias": "Alias",
     "attributes": "Atrybuty",
+    "userRoles": {
+      "user": "Użytkownik",
+      "supervisor": "Nadzorca"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "Pomyślnie zaktualizowano informacje użytkownika {{userId}}. "
     },

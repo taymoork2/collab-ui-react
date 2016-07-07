@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "Er is een fout opgetreden terwijl we uw partner op de hoogte probeerden te stellen."
   },
   "contactCenterUserConfig": {
+    "channels": "Kanalen",
+    "contactCenterProfile": "Care-profiel",
+    "chat": "Chatten",
+    "voice": "Spraak",
+    "email": "E-mailadres",
+    "role": "Rol",
     "alias": "Alias:",
     "attributes": "Kenmerken",
+    "userRoles": {
+      "user": "Gebruiker",
+      "supervisor": "Supervisor"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "De informatie van gebruiker {{userId}} zijn bijgewerkt. "
     },

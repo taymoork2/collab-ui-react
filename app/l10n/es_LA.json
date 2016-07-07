@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "Lo sentimos, ocurrió un error al intentar notificar a su partner."
   },
   "contactCenterUserConfig": {
+    "channels": "Canales",
+    "contactCenterProfile": "Perfil de atención",
+    "chat": "Chat",
+    "voice": "Voz",
+    "email": "Correo electrónico",
+    "role": "Función",
     "alias": "Alias",
     "attributes": "Atributos",
+    "userRoles": {
+      "user": "Usuario",
+      "supervisor": "Supervisor"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "La información se actualizó correctamente para el usuario {{userId}}. "
     },

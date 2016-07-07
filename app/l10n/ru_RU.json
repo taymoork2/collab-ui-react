@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "К сожалению, что-то пошло не так при попытке уведомить партнера."
   },
   "contactCenterUserConfig": {
+    "channels": "Каналы",
+    "contactCenterProfile": "Профиль поддержки",
+    "chat": "Чат",
+    "voice": "Голос",
+    "email": "Адрес электронной почты",
+    "role": "Роль",
     "alias": "Псевдоним",
     "attributes": "Атрибуты",
+    "userRoles": {
+      "user": "Пользователь",
+      "supervisor": "Супервизор"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "Информация пользователя {{userId}} успешно обновлена. "
     },

@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "Vi beklager, der opstod en fejl under forsøget på at underrette din partner."
   },
   "contactCenterUserConfig": {
+    "channels": "Kanaler",
+    "contactCenterProfile": "Omhuprofil",
+    "chat": "Chat",
+    "voice": "Stemme",
+    "email": "E-mail",
+    "role": "Rolle",
     "alias": "Alias",
     "attributes": "Attributter",
+    "userRoles": {
+      "user": "Bruger",
+      "supervisor": "Tilsynsførende"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "Oplysninger er blevet opdateret for bruger {{userId}}. "
     },

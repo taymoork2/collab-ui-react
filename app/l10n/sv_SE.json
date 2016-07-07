@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "Tyvärr gick något fel när vi försökte meddela din partner."
   },
   "contactCenterUserConfig": {
+    "channels": "Kanaler",
+    "contactCenterProfile": "Ta hand om profil",
+    "chat": "Chatt",
+    "voice": "Röst",
+    "email": "E-post",
+    "role": "Roll",
     "alias": "Alias",
     "attributes": "Attribut",
+    "userRoles": {
+      "user": "Användare",
+      "supervisor": "Handledare"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "Informationen har uppdaterats för användare {{userId}}. "
     },

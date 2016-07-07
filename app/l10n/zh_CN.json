@@ -3502,8 +3502,18 @@
     "notifyPartnerErrorMsg": "很抱歉，尝试通知合作伙伴时出现了一点问题。"
   },
   "contactCenterUserConfig": {
+    "channels": "渠道",
+    "contactCenterProfile": "关怀档案",
+    "chat": "聊天",
+    "voice": "语音",
+    "email": "电子邮件地址",
+    "role": "角色",
     "alias": "别名",
     "attributes": "属性",
+    "userRoles": {
+      "user": "用户",
+      "supervisor": "主管"
+    },
     "successMessages": {
       "userUpdateSuccessMessage": "成功更新了用户 {{userId}} 的信息。 "
     },
