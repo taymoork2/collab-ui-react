@@ -15,7 +15,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
   default:
     webExCommon.testInfo.testType = 'T31';
-    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS3.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS4.siteUrl;
   }
 
   describe(webExCommon.testInfo.describeText, function () {
@@ -26,9 +26,9 @@ while (1 >= webExCommon.testInfo.describeCount) {
         var promise = webEx.setup(
           1,
           'wbx-t31RegressionTestAdmin',
-          webExCommon.BTS3.testAdminUsername,
-          webExCommon.BTS3.testAdminPassword,
-          webExCommon.BTS3.siteUrl
+          webExCommon.BTS4.testAdminUsername,
+          webExCommon.BTS4.testAdminPassword,
+          webExCommon.BTS4.siteUrl
         );
 
         promise.then(
@@ -64,14 +64,14 @@ while (1 >= webExCommon.testInfo.describeCount) {
     }
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should sign in as ' + webExCommon.BTS3.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteReports.conferencing);
         }
       });
 
-      it('should click on reports icon for ' + webExCommon.BTS3.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports icon for ' + webExCommon.BTS4.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
           utils.click(webExCommon.t31ReportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
