@@ -418,7 +418,7 @@ describe('Auth Service', function () {
 
     });
 
-    it('will not add some webex stuff when not Full_Admin/Readonly_Admin', function (done) {
+    it('will add some webex stuff given some condition && when no roles specified', function (done) {
       Authinfo.initialize = sinon.stub();
       UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
 
@@ -444,7 +444,8 @@ describe('Auth Service', function () {
       expect(Authinfo.initialize.callCount).toBe(1);
 
       var result = Authinfo.initialize.getCall(0).args[0];
-      expect(result.services.length).toBe(0);
+      expect(result.services.length).toBe(1);
+      expect(result.services[0].ciName).toBe('webex-messenger');
     });
 
     it('will add some webex stuff given some condition && when Full_Admin', function (done) {
@@ -482,6 +483,42 @@ describe('Auth Service', function () {
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(2);
       expect(result.services[1].ciName).toBe('webex-messenger');
+    });
+
+    it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['PARTNER_ADMIN'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: []
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(0);
     });
   });
 
