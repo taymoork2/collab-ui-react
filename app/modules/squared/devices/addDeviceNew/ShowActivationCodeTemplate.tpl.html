@@ -3,7 +3,7 @@
   </button>
   <h3 class="modal-title" translate="{{showActivationCode.wizardData.title}}"></h3>
 </div>
-<div class="modal-body device-wizard view-activation-code">
+<div class="modal-body device-wizard view-activation-code" id="printActivationCode">
   <div>
     <h5 translate="addDeviceWizard.showActivationCode.activationCode"></h5>
     <p class="wizardDescription">
@@ -28,6 +28,10 @@
       <div class="qrCodeButtons">
         <a class="qrCodeLeftButton" sq-clipboard="showActivationCode.wizardData.activationCode">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
+        </a>
+
+        <a class="qrCodeLeftButton" cr-print print-element-id="printActivationCode">
+          <span translate="generateActivationCodeModal.print"></span>
         </a>
 
         <a
