@@ -10,7 +10,7 @@ npm run server-dist &
 while ! nc -z 127.0.0.1 8000; do sleep 1; done
 
 # Run Protractor
-node ./protractor/e2e.js --production-backend --verbose --suite jenkins --sauce
+npm run e2e -- --verbose --sauce
 e2e_exit_code=$?
 
 npm run kill

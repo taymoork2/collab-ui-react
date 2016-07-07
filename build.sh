@@ -95,7 +95,7 @@ time npm run eslint
 time npm run json-verify
 time npm run languages-verify
 time npm run test
-time npm run build
+time npm run build -- --nolint
 set +e
 
 # - e2e tests
@@ -106,7 +106,7 @@ e2e_exit_code="${PIPESTATUS[0]}"
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
 
-# exit out if 'gulp e2e ...' process exited non-zero
+# exit out if e2e process exited non-zero
 test $e2e_exit_code -eq 0 || exit $e2e_exit_code
 
 

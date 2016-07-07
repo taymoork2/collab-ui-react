@@ -5,7 +5,7 @@ var args = require('yargs').argv;
 module.exports = {
   port: "8000",
   host: "127.0.0.1",
-  files: ['./app/**/*.{html,htm,scss,css,js,ts}'],
+  files: ['./app/**/*.{html,js,ts,json,csv,pdf}'],
   server: {
     middleware: [
       compression,

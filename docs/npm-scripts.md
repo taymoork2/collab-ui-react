@@ -43,11 +43,16 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 ### `npm run clean`
 
-* Clean `dist` and `test` directories
+* Clean `build`, `dist` and `test` directories
 
 ### `npm run clean-install`
 
 * Clean npm cache, `node_modules` directories, and reinstall `node_modules`
+
+### `npm run e2e`
+
+* Runs protractor against production services and jenkins suite
+* Used by the Jenkins build scripts
 
 ### `npm run eslint`
 
@@ -82,7 +87,7 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Bundles the application as webpack middleware and serves the dev application
 
-### `npm run server-dist`
+### `npm run serve-dist`
 
 * Serves the static content from the `dist` directory
 

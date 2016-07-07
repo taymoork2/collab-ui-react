@@ -5,5 +5,4 @@
   require('angular');
 
   require('./scripts/app');
-  require('./styles/app.scss');
 }());

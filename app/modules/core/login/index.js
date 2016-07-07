@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  require('./_login.scss');
-
   module.exports = angular.module('Login', [
       'pascalprecht.translate',
       require('modules/core/auth/auth'),

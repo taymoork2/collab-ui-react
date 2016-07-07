@@ -660,23 +660,6 @@
               modalType: 'Partner'
             }
           })
-          .state('invite', {
-            url: '/invite',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/invite.html',
-                controller: 'InviteCtrl'
-              }
-            },
-            authenticate: false
-          })
-          .state('invitelauncher', {
-            url: '/invitelauncher',
-            templateUrl: 'modules/squared/views/invitelauncher.html',
-            controller: 'InvitelauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
@@ -819,7 +802,11 @@
             }
           })
           .state('users.add.services.dn', {
-            templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            views: {
+              'usersAdd@users.add': {
+                templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+              }
+            }
           })
           .state('users.convert', {
             parent: 'modalLarge',
@@ -896,6 +883,7 @@
             }
           })
           .state('userRedirect', {
+            parent: 'mainLazyLoad',
             url: '/userRedirect',
             views: {
               'main@': {
@@ -1605,6 +1593,7 @@
             parent: 'main'
           })
           .state('helpdesk-main', {
+            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 controller: 'HelpdeskHeaderController',
@@ -2455,18 +2444,17 @@
           });
 
         $stateProvider
-
           .state('ediscovery-main', {
-          views: {
-            'main@': {
-              templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
-            }
-          },
-          abstract: true,
-          sticky: true
-        })
-
-        .state('ediscovery', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
+              }
+            },
+            abstract: true,
+            sticky: true
+          })
+          .state('ediscovery', {
             url: '/ediscovery',
             template: '<div ui-view></div>',
             parent: 'ediscovery-main'

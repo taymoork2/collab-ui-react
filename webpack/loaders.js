@@ -1,6 +1,4 @@
 const path = require('path');
-const env = require('./env');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 exports.js = {
   test: /\.js$/,
@@ -10,24 +8,19 @@ exports.js = {
 
 exports.lint = {
   test: /\.js$/,
-  loaders: ['eslint', 'jscs-loader'],
+  loaders: ['eslint', 'jscs'],
   exclude: [/node_modules/, /\.spec\.js$/],
 };
 
 exports.ts = {
   test: /\.ts$/,
   loader: 'ts',
-  exclude: [env.isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
+  exclude: [/node_modules/],
 };
 
 exports.scss = {
   test: /\.scss$/,
-  loader: env.isTest ? 'null' : ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass'),
-};
-
-exports.css = {
-  test: /\.css$/,
-  loader: env.isTest ? 'null' : ExtractTextPlugin.extract('style', 'css?sourceMap!postcss'),
+  loader: 'style!css?sourceMap!postcss!sass?sourceMap',
 };
 
 exports.html = {
@@ -85,12 +78,5 @@ exports.instrument = {
     /node_modules/,
     /spec\.js$/,
   ],
-  loader: 'istanbul-instrumenter-loader',
-};
-
-exports.sassLoader = {
-  includePaths: [
-    path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
-    path.resolve('node_modules/foundation-sites/scss'),
-  ],
+  loader: 'istanbul-instrumenter',
 };
