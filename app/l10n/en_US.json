@@ -1192,7 +1192,6 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
       "notInstalled": "The {{serviceName}} is not installed on this cluster.",
       "deregisterSectionHeader": "Deregister",
       "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
