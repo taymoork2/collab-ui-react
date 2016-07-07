@@ -169,7 +169,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfOffHoursPage() {
-    validateTitleAndDesc('Off-Hours', 'This screen is shown during business off-hours');
+    validateTitleAndDesc('Off-Hours', 'This screen is shown to a customer during business off-hours');
   }
 
   function validateContentsOfChatStatusMessagesPage() {
@@ -180,7 +180,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfSummaryPage() {
-    validateDesc('You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
   }

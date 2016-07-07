@@ -42,6 +42,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   };
 
   beforeEach(module('Sunlight'));
+  beforeEach(module('Hercules'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
