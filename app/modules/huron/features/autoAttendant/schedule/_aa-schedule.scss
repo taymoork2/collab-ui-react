@@ -19,25 +19,16 @@
 
 // Schedule Modal
 .aa-schedule {
-  
- .schedule-modal-title {
-    font-size: 36px;
-    font-weight: normal;
-    line-height: 48px;
-    color: #FFF;
-    font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin-left: 25px;
-    }
 
+ h3 {
+    display: inline-block;
+  }
+  
   .modal-division {
    float: left;
    width: "90%";
   }
   
-  .modal-title-division {
-   float: left; 
-   width: "170px"
-  }
   
   .modal-icon-division {
   float: left;
@@ -70,10 +61,10 @@
    }
 
   .aa-help-icon {
-   width:30%;
    color:$color-primary-lighter;
    &:hover {
-     color:$white;
+     color: $white;
+     cursor: pointer;
    }
   }
   .down {
