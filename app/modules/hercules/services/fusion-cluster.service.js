@@ -21,7 +21,8 @@
       getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
       postponeUpgradeSchedule: postponeUpgradeSchedule,
-      deleteMoratoria: deleteMoratoria
+      deleteMoratoria: deleteMoratoria,
+      setClusterName: setClusterName
     };
 
     return service;
@@ -55,6 +56,14 @@
             .then(extractData)
             .then(function (moratoria) {
               upgradeSchedule.moratoria = moratoria;
+              return upgradeSchedule;
+            });
+        })
+        .then(function (upgradeSchedule) {
+          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/nextUpgradeWindow')
+            .then(extractData)
+            .then(function (nextUpgradeWindow) {
+              upgradeSchedule.nextUpgradeWindow = nextUpgradeWindow;
               return upgradeSchedule;
             });
         });
@@ -204,6 +213,13 @@
         }
       });
       return sidepanelConnectorList;
+    }
+
+    function setClusterName(clusterId, newClusterName) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, {
+        name: newClusterName
+      });
     }
 
   }

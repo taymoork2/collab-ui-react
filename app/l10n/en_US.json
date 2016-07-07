@@ -217,6 +217,7 @@
     "customerTab": "Customers",
     "userTab": "Users",
     "deviceTab": "Devices",
+    "placeTab": "Places",
     "reportTab": "Reports",
     "supportTab": "Support",
     "logsTab": "Logs",
@@ -711,6 +712,7 @@
   },
   "weekDays": {
     "everyDay": "Every {{day}}",
+    "day": "day",
     "monday": "Monday",
     "tuesday": "Tuesday",
     "wednesday": "Wednesday",
@@ -1125,7 +1127,7 @@
       "hostname-placeholder": "Enter Expressway Hostname",
       "activate-resource-button": "Next",
       "register-resource-button": "Go to Expressway",
-      "grant-registration-success-header": "You may now register the Expressway {{hostname}} with Cisco Collaboration Cloud.",
+      "grant-registration-success-header": "You may now register {{hostname}} with Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Expressway within one hour to complete registration.",
       "register-error-400": "Could not register Expressway. The hostname is not valid.",
       "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
@@ -1140,6 +1142,8 @@
       "selectExisting": "Select an existing Expressway clusters",
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
+      "enterDisplayName": "Enter a name for the Expressway:",
+      "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later, or contact your Cisco technical support representative if the problem persists.",
       "cannotFinalizeAllowlisting": "Could not finalize cluster provisioning. Try again later, or contact your Cisco technical support representative if the problem persists.",
@@ -1322,11 +1326,15 @@
       "deactivateServicesCalendarHeader": "Deactivate Calendar",
       "deactivateServicesCallHeader": "Deactivate Call",
       "noHybridServicesProvisioned": "No Hybrid Services are enabled on this Expressway. To enable a Hybrid Service, go to the relevant service page.",
-      "deregisterClusterHeader": "Remove Cluster",
-      "deregisterClusterSubHeader": "Remove {{ClusterName}}",
       "deregisterClusterParagraph": "Deactivate all services before removing {{ClusterName}}.",
-      "deregisterClusterButton": "Remove",
-      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
+      "deregisterClusterExplanation": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration.",
+      "clusterMainSectionHeader": "Cluster",
+      "renameClusterParagraph": "Rename the Expressway cluster.",
+      "renameClusterDescription": "The cluster name is only used for display purposes. Changing it will not update the name on the Expressway itself.",
+      "clusterNameCannotByEmpty": "Cluster name cannot be empty.",
+      "clusterNameSaved": "Cluster name saved successfully",
+      "clusterNameCannotBeSaved": "Cluster name could not be saved. Try again later.",
+      "clusterNameWatermark": "Enter cluster name…"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1432,7 +1440,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule:"
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
@@ -2840,7 +2848,8 @@
       "software": "Software",
       "deregister_host": "DEREGISTER HOST",
       "goToHost": "Go to Host",
-      "hosts": "Hosts"
+      "hosts": "Hosts",
+      "nodes": "Nodes"
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
@@ -2849,7 +2858,7 @@
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Deactivating a service requires another confirm step and will remove any service related functionality from your users.",
+      "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
@@ -2860,10 +2869,10 @@
       "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
       "documentation_4": "Download Media Service OVA from",
       "documentation_5": "software.cisco.com",
-      "deactivate": "DEACTIVATE",
       "cancelCaps": "CANCEL",
+      "cancel": "Cancel",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
-      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
+      "deactivateBody_2": "Deactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
       "schedule": "Set a Schedule",
       "softwareUpgrade": "Software Upgrades",
@@ -2895,9 +2904,9 @@
       "callLocal": "Calls local to cluster",
       "callReject": "Calls rejected by cluster",
       "availabilityOfCluster": "Cluster Availability",
-      "availabilityOfHost": "Host Availability",
-      "availabilityOfClusterDescription": "Availability of nodes in this Hybrid Media Cluster to host calls",
-      "availabilityOfHostDescription": "Availability of host to take calls",
+      "availabilityOfHost": "Node Availability",
+      "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
+      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls",
       "clusterAvailableTitle": "Available",
       "clusterUnavailableTitle": "Unavailable",
       "clusterPartialTitle": "Partial Availability",
@@ -2944,7 +2953,8 @@
       "upgraded": "Upgraded",
       "pending": "Pending",
       "initializing": "Initializing",
-      "not_operational": "Not Operational"
+      "not_operational": "Not Operational",
+      "nonodes": "No Nodes Registered"
     },
     "deleteGroup": {
       "title": "Delete Cluster",
@@ -2973,10 +2983,10 @@
       "releaseChannel": "Release channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
-      "manageThisCluster": "Manage this cluster",
+      "clusterSettings": "Cluster Settings",
       "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
       "deletecluster": "Delete cluster",
-      "deleteclusterDesc": "Delete this cluster from Cisco Collaboration Cloud and remove all Hybrid Media and related configuration"
+      "deleteclusterDesc": "Delete the cluster from Cisco Collaboration Cloud"
 
     },
     "reassign": {
@@ -2985,7 +2995,9 @@
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}.",
       "moveHost": "Move Host",
-      "deregister_host": "Deregister Host"
+      "deregister_host": "Deregister Host",
+      "moveNode": "Move Node",
+      "deregister_node": "Deregister Node"
     },
     "alarms": {
       "alarms": "Alarms",
@@ -3018,7 +3030,9 @@
       "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
       "titleV2": "Register New Hybrid Media Node",
       "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
-      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud"
+      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud",
+      "serverOnline": "The media server that you are registering already exists and is online.",
+      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3055,7 +3069,6 @@
     "moveHost": "MOVE HOST",
     "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
-    "openSettingsTitle": "Open {{clusterName}} settings",
     "installing": "Installing"
   },
   "webexUserSettings": {
@@ -3892,7 +3905,7 @@
     "feedback": "Feedback Screen",
     "agentUnavailable": "Agent Unavailable",
     "offHours": "Off-Hours",
-    "chatStrings": "Chat Strings Configuration",
+    "chatStatusMessages": "Chat Status Messages",
     "embedCode": "Embed Code",
     "profileDesc": "Select how your company will be represented",
     "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
@@ -3900,7 +3913,7 @@
     "feedbackDesc": "This screen is used to collect feedback from the customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
     "offHoursDesc": "This screen is shown during business off-hours",
-    "chatStringsDesc": "These strings appear in the UI based on different scenarios",
+    "chatStatusMessagesDesc": "Configure status messages which your customer sees on chat bubble",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
@@ -3986,7 +3999,17 @@
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error creating chat template.",
     "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
-    "message": "Message"
+    "message": "Message",
+    "connecting": "Connecting",
+    "connectingMessage": "Connecting you to an Agent",
+    "waiting": "Waiting",
+    "waitingMessage": "Waiting for an Agent to join...",
+    "enterRoom": "Entered the Room",
+    "enterRoomMessage": "Agent has entered the chat room",
+    "leaveRoom": "Left the Room",
+    "leaveRoomMessage": "Agent has left the chat room",
+    "chatting": "Chatting",
+    "chattingMessage": "You are chatting with our agent"
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -4198,7 +4221,7 @@
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Mediafusion"
+          "squared-fusion-media": "Media Fusion"
         }
       }
     }
@@ -4336,6 +4359,7 @@
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
+    "tooManySearchResults": "Search returned too many results. Please narrow your search criteria.",
     "unexpectedError": "An unexpected error occurred",
     "cancelled": "Search was cancelled",
     "searchingPleaseWait": "Searching, please wait...",
@@ -4617,7 +4641,7 @@
         "buttons": {
           "all": "All Clusters",
           "expressway": "Expressway",
-          "mediafusion": "Mediafusion",
+          "mediafusion": "Media Fusion",
           "context": "Context"
         }
       },

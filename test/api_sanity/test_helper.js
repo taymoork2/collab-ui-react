@@ -78,7 +78,7 @@ var auth = {
   },
   'support-admin': {
     user: 'sqtest-admin-support@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sc0123!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
   },
   'media-super-admin': {
@@ -145,6 +145,11 @@ var auth = {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  'wbx-siteCsvTestAdmin': {
+    user: 'dev-dmz-e2e@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
   }
 };
 

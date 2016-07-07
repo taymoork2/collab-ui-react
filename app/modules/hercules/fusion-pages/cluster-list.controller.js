@@ -137,7 +137,14 @@
 
     function formatTimeAndDate(clusterUpgradeSchedule) {
       var time = labelForTime(clusterUpgradeSchedule.scheduleTime);
-      var day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+      var day;
+      if (clusterUpgradeSchedule.scheduleDays.length === 7) {
+        day = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+      } else {
+        day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+      }
       return time + ' ' + day;
     }
 

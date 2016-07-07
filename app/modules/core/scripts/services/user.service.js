@@ -136,7 +136,7 @@
     function getUser(userid, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
-      $http.get(scimUrl, {
+      return $http.get(scimUrl, {
           cache: true
         })
         .success(function (data, status) {
@@ -155,43 +155,44 @@
     function updateUserProfile(userid, userData, callback) {
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
-      if (userData) {
-
-        $http({
-            method: 'PATCH',
-            url: scimUrl,
-            data: userData
-          })
-          .success(function (data, status) {
-            data = data || {};
-            // This code is being added temporarily to update users on Squared UC
-            // Discussions are ongoing concerning how these common functions should be
-            // integrated.
-            if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
-              HuronUser.update(data.id, data)
-                .then(function () {
-                  data.success = true;
-                  callback(data, status);
-                }).catch(function (response) {
-                  // Notify Huron error
-                  Notification.errorResponse(response);
-
-                  // Callback update success
-                  data.success = true;
-                  callback(data, status);
-                });
-            } else {
-              data.success = true;
-              callback(data, status);
-            }
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
-          });
+      if (!userData) {
+        return $q.reject('Invalid user data');
       }
+
+      return $http({
+          method: 'PATCH',
+          url: scimUrl,
+          data: userData
+        })
+        .success(function (data, status) {
+          data = data || {};
+          // This code is being added temporarily to update users on Squared UC
+          // Discussions are ongoing concerning how these common functions should be
+          // integrated.
+          if (data.entitlements && data.entitlements.indexOf(Config.entitlements.huron) !== -1) {
+            HuronUser.update(data.id, data)
+              .then(function () {
+                data.success = true;
+                callback(data, status);
+              }).catch(function (response) {
+                // Notify Huron error
+                Notification.errorResponse(response);
+
+                // Callback update success
+                data.success = true;
+                callback(data, status);
+              });
+          } else {
+            data.success = true;
+            callback(data, status);
+          }
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
     }
 
     function inviteUsers(usersDataArray, entitlements, forceResend, callback) {

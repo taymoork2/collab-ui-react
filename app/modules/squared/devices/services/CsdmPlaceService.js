@@ -6,7 +6,7 @@
 
     var placesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/places';
 
-    var placesList = [];
+    var placesMap = {};
     var loadedData = false;
 
     function init() {
@@ -18,7 +18,7 @@
         if (res) {
           return $http.get(placesUrl).then(function (res) {
             loadedData = true;
-            placesList = CsdmConverter.convertPlaces(res.data);
+            placesMap = CsdmConverter.convertPlaces(res.data);
           }, function () {
             loadedData = true;
           });
@@ -40,7 +40,7 @@
     }
 
     function getPlacesList() {
-      return placesList;
+      return placesMap;
     }
 
     function updatePlaceName(placeUrl, name) {
@@ -48,14 +48,14 @@
         name: name
       }).then(function (res) {
         var place = CsdmConverter.convertPlace(res.data);
-        placesList[place.url] = place;
+        placesMap[place.url] = place;
         return place;
       });
     }
 
     function deletePlace(place) {
       return $http.delete(place.url).then(function (res) {
-        delete placesList[place.url];
+        delete placesMap[place.url];
       });
     }
 
@@ -65,7 +65,7 @@
         placeType: deviceType
       }).then(function (res) {
         var place = CsdmConverter.convertPlace(res.data);
-        placesList[place.url] = place;
+        placesMap[place.url] = place;
         return place;
       });
     }

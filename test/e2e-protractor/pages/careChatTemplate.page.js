@@ -50,6 +50,7 @@ var ChatTemplateCreation = function () {
   this.deleteChatTemplateonModal = element(by.css('.btn.btn--negative'));
   this.agentUnavailableMessageField = element(by.id('agentUnavailableMessageField'));
   this.agentUnavailableMessage = element(by.id('agentUnavailableMessage'));
+  this.chatStatusMessages = element.all(by.css('.ct-attribute-field-textbox'));
 };
 
 module.exports = ChatTemplateCreation;

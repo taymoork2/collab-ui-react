@@ -249,7 +249,7 @@
     function createLegendsForAvailabilty(dummydata, selectedCluster) {
       if (dummydata === true) {
         var legendData = [];
-        if (selectedCluster == 'All') {
+        if (selectedCluster == 'All Clusters') {
           var length = 3;
           var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
           var colors = [chartColors.grayLight, chartColors.grayLight, chartColors.grayLight];
@@ -271,7 +271,7 @@
         return legendData;
       } else {
         var legendData = [];
-        if (selectedCluster == 'All') {
+        if (selectedCluster == 'All Clusters') {
           var length = 3;
           var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
           var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];

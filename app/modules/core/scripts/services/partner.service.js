@@ -361,9 +361,8 @@
         }
 
         partial.usage = offerInfo.usageCount;
-        if (offerInfo.id === Config.offerTypes.roomSystems) {
-          partial.deviceLicenses = offerInfo.licenseCount;
-        } else {
+        if (offerInfo.id !== Config.offerTypes.roomSystems &&
+          offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
 
@@ -387,6 +386,7 @@
           break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
+          partial.deviceLicenses = offerInfo.licenseCount;
           break;
         case Config.offerTypes.care:
           if (isCareEnabled) {
