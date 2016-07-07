@@ -5,6 +5,7 @@ var ChatTemplateCreation = function () {
   this.testOrgName = 'e2e-test-org-name';
   this.setUpTitle = element(by.css('.ct-title .h2'));
   this.setUpDesc = element(by.css('.h4.ct-title-desc'));
+  this.summaryDesc = element(by.css('.ct-summary .description'));
   this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
   this.typeAheadInput = element(by.css('.typeahead-large .ct-input'));
