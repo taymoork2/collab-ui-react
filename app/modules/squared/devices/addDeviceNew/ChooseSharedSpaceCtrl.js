@@ -16,6 +16,7 @@
     vm.isExistingCollapsed = true;
     vm.selected = null;
     vm.radioSelect = null;
+    vm.isLoading = false;
 
     vm.rooms = function () {
       if (vm.wizardData.showPlaces) {
@@ -61,6 +62,7 @@
       return vm.deviceName && vm.deviceName.length < 128;
     };
     vm.next = function () {
+      vm.isLoading = true;
       var nextOption = vm.wizardData.deviceType;
       if (nextOption == 'huron') {
         if (vm.wizardData.function == 'addPlace') {

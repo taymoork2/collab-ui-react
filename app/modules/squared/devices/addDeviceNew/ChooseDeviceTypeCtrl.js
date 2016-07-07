@@ -14,6 +14,7 @@
 
     vm.wizardData = $stateParams.wizard.state().data;
     vm.selectedDeviceType = null;
+    
 
     vm.next = function () {
       $stateParams.wizard.next({
