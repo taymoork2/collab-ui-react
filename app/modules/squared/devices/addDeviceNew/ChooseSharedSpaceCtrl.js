@@ -87,8 +87,8 @@
         }
       }
 
-      function error(response,status){
-        XhrNotificationService.notify(response,status);
+      function error(response, status) {
+        XhrNotificationService.notify(response, status);
         vm.isLoading = false;
       }
 
