@@ -24,8 +24,6 @@
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing',
       errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToUserTargetMissing'
     }, {
-
-    }, {
       name: 'routeToVoiceMail',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToVoicemailTargetMissing',
       errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
