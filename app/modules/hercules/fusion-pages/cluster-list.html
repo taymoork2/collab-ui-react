@@ -28,7 +28,7 @@
             <div class="columns medium-6" ng-if="!resourceList._helpers.hasServices(cluster)" translate="hercules.fusion.list.no-services">
             </div>
             <div class="columns medium-6 connection-status" ng-if="resourceList._helpers.hasServices(cluster)">
-              <div class="connection-status-column" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
+              <div class="connection-status-column" ng-if="service.total > 0" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
                 <div class="connection-status-icon connection-status-cloud-icon"></div>
                 <div class="connection-status-cable connection-status-cable-cloud"></div>
                 <div class="connection-status-service">

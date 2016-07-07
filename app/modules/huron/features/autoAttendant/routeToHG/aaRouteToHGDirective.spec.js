@@ -20,6 +20,7 @@ describe('Directive: aaRouteToHg', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
+  var menuId = 'menu1';
 
   beforeEach(module('Huron'));
 
@@ -37,17 +38,19 @@ describe('Directive: aaRouteToHg', function () {
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.aaKey = keyIndex;
+    $scope.menuId = menuId;
 
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when(huntGroups));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-route-to-hg aa-schedule='openHours' aa-index='0' aa-key-index='0'></aa-route-to-hg>")($rootScope);
+    var element = $compile("<aa-route-to-hg aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-route-to-hg>")($rootScope);
     $rootScope.$digest();
 
     expect(element.html()).toContain("aaRouteToHG");

@@ -3,9 +3,9 @@
 
   angular
     .module('uc.autoattendant')
-    .directive('aaTimeoutInvalid', aaTimeoutInvalid);
+    .directive('aaSubmenu', aaSubmenu);
 
-  function aaTimeoutInvalid() {
+  function aaSubmenu() {
     return {
       restrict: 'E',
       scope: {
@@ -14,9 +14,9 @@
         index: '=aaIndex',
         keyIndex: '@aaKeyIndex'
       },
-      controller: 'AATimeoutInvalidCtrl',
-      controllerAs: 'aaTimeoutInvalidCtrl',
-      templateUrl: 'modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html'
+      controller: 'AASubmenuCtrl',
+      controllerAs: 'aaSubmenu',
+      templateUrl: 'modules/huron/features/autoAttendant/submenu/aaSubmenu.tpl.html'
     };
   }
 })();

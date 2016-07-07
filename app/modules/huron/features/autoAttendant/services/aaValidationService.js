@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, AACommonService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate) {
 
     var routeToCalls = [{
       'name': 'goto',
@@ -83,8 +83,8 @@
 
       // special case - when action is route we need to check for valid phone number
       if (action.name === 'route') {
-        /* AACommonService maintains a list which looks like: 
-           holiday-2-0 for phoneMenu 
+        /* AACommonService maintains a list which looks like:
+           holiday-2-0 for phoneMenu
            holiday-1-RouteCalls for route call
         */
 
@@ -135,7 +135,19 @@
 
       _.forEach(optionMenu.entries, function (entry, index) {
 
-        if (actionValid(entry, whichLane, whichMenu, index, optionMenu.type)) {
+        if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
+          var errors = checkAllKeys(entry, index, whichLane);
+
+          // _.forEach(errors, function(err) {
+          //   isValid = false;
+          //   AANotificationService.error(err.msg, {
+          //     key: err.key,
+          //     schedule: scheduleLabel,
+          //     at: _.indexOf(menuOptions, optionMenu) + 1
+          //   });
+          // });
+          return;
+        } else if (actionValid(entry, whichLane, whichMenu, index, optionMenu.type)) {
           return;
         }
 
@@ -194,14 +206,14 @@
       var isValid = true;
       var error;
 
-      /* save menuOptions array so we can compute which Phone menu  had 
+      /* save menuOptions array so we can compute which Phone menu  had
          the offending field */
 
       var menuOptions = _.filter(uiCombinedMenu.entries, {
         'type': 'MENU_OPTION'
       });
 
-      /* segregate the RouteCall menus so we can determine which 
+      /* segregate the RouteCall menus so we can determine which
          RouteCall menu has the error
        */
 
@@ -212,8 +224,8 @@
         });
       });
 
-      /* we need to iterate over the original array so we can discern the 
-         position ('index') of this menu. Needed for aaCommonService.js's 
+      /* we need to iterate over the original array so we can discern the
+         position ('index') of this menu. Needed for aaCommonService.js's
          getInvalid()
        */
 

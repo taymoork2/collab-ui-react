@@ -480,7 +480,7 @@
         label: $translate.instant('trialModal.call.dealId'),
         type: 'text',
         required: false,
-        pattern: '\\d{10}'
+        pattern: '\\d{1,10}'
       },
       validation: {
         messages: {

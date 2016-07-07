@@ -1,9 +1,8 @@
 (function () {
   'use strict';
-
   angular
     .module('uc.autoattendant')
-    .controller('AAPhoneMenuCtrl', AAPhoneMenuCtrl);
+    .controller('AASubmenuCtrl', AASubmenuCtrl);
 
   function KeyAction() {
     this.key = '';
@@ -16,7 +15,8 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, Config) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, Config) {
+
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -75,6 +75,11 @@
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
       action: 'route'
+    }, {
+      label: $translate.instant('autoAttendant.phoneMenuGoBack'),
+      name: 'phoneMenuGoBack',
+      action: 'repeatActionsOnInput',
+      level: -1
     }];
 
     // search for a key action by its name
@@ -104,7 +109,6 @@
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -113,7 +117,6 @@
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
       setPhonemenuFormDirty();
-      AAScrollBar.resizeBuilderScrollBar();
     }
 
     // the user has changed the key for an existing action
@@ -126,43 +129,24 @@
 
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
-      var entryI = vm.menuEntry.entries[index];
-      if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
-        AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
-      }
       var _keyAction = findKeyAction(keyAction.name);
       if (angular.isDefined(_keyAction)) {
-        if (_keyAction.name === 'phoneMenuPlaySubmenu') {
-          // 1) Change of main menu attempts should copied into its submenus.
-          // See aaTimeoutInvalidCtrl.js.
-          // 2) New submenu attempts should be copied from its parent menu.
-          // See below.
-          var submenu = AutoAttendantCeMenuModelService.newCeMenu();
-          submenu.attempts = vm.menuEntry.attempts;
-          submenu.type = 'MENU_OPTION';
-          submenu.key = vm.menuEntry.entries[index].key;
-          vm.menuEntry.entries[index] = submenu;
-        } else {
-          var phoneMenuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          // Phone menu option now could have multiple actions in it, e.g., say message.
-          // When switching between phone menu options, clear the actions array to
-          // make sure no old option data are carried over to the new option.
-          phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
-          phoneMenuEntry.type = 'MENU_OPTION';
-          phoneMenuEntry.key = vm.menuEntry.entries[index].key;
-          var action = phoneMenuEntry.actions[0];
-          action.name = keyAction.action;
-          if (angular.isDefined(_keyAction.inputType)) {
-            // some action names are overloaded and are distinguished
-            // by inputType
-            action.inputType = _keyAction.inputType;
-          } else if (_.has(_keyAction, 'level')) {
-            action.level = _keyAction.level;
-          }
-          vm.menuEntry.entries[index] = phoneMenuEntry;
+        var phoneMenuEntry = vm.menuEntry.entries[index];
+        // Phone menu option now could have multiple actions in it, e.g., say message.
+        // When switching between phone menu options, clear the actions array to
+        // make sure no old option data are carried over to the new option.
+        phoneMenuEntry.actions = [];
+        phoneMenuEntry.actions[0] = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
+        var action = phoneMenuEntry.actions[0];
+        action.name = keyAction.action;
+        if (angular.isDefined(_keyAction.inputType)) {
+          // some action names are overloaded and are distinguished
+          // by inputType
+          action.inputType = _keyAction.inputType;
+        } else if (_.has(_keyAction, 'level')) {
+          action.level = _keyAction.level;
         }
         setPhonemenuFormDirty();
-        AAScrollBar.resizeBuilderScrollBar();
       }
     }
 
@@ -172,30 +156,12 @@
     // current key as available even though the model thinks it's in use.
     function getAvailableKeys(selectedKey) {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
-      var availableKeys = [];
-      // for each key determine if it's in use by looping over all actions.
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        if (key === selectedKey) {
-          // force this key to be in the available list
-          availableKeys.push(key);
-          continue;
+      _.each(vm.selectedActions, function (selectedAction) {
+        if (selectedAction.key && selectedAction.key !== selectedKey) {
+          _.pull(keys, selectedAction.key);
         }
-        var keyInUse = false;
-        for (var j = 0; j < vm.selectedActions.length; j++) {
-          var actionKey = vm.selectedActions[j].key;
-          if (key === actionKey) {
-            keyInUse = true;
-            break;
-          }
-        }
-        if (!keyInUse) {
-          // key is not in use to add to the available list
-          availableKeys.push(key);
-        }
-      }
-
-      return availableKeys;
+      });
+      return keys;
     }
 
     // update the list of available keys for each action
@@ -217,31 +183,25 @@
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
-            var keyAction = new KeyAction();
-            keyAction.key = menuEntry.key;
-            if (_.has(menuEntry, 'actions')) {
-              if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
-                if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
-                  keyAction.action = _.find(vm.keyActions, function (keyAction) {
-                    if (_.has(this, 'inputType')) {
-                      return this.name === keyAction.action && this.inputType === keyAction.inputType;
-                    } else if (!_.has(keyAction, 'inputType')) {
-                      return this.name === keyAction.action;
-                    }
-                    return false;
-                  }, menuEntry.actions[0]);
-                } else {
-                  keyAction.action = {};
-                  keyAction.action.name = "";
-                  keyAction.action.label = "";
-                }
+
+            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
+              var keyAction = new KeyAction();
+              keyAction.key = menuEntry.key;
+              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                  if (this.name === 'repeatActionsOnInput') {
+                    return (this.name === keyAction.action && this.level === keyAction.level);
+                  } else {
+                    return this.name === keyAction.action;
+                  }
+                }, menuEntry.actions[0]);
+              } else {
+                keyAction.action = {};
+                keyAction.action.name = "";
+                keyAction.action.label = "";
               }
-            } else {
-              keyAction.action = _.find(vm.keyActions, function (keyAction) {
-                return (keyAction.name === 'phoneMenuPlaySubmenu');
-              });
+              vm.selectedActions.push(keyAction);
             }
-            vm.selectedActions.push(keyAction);
           }
         }
         // remove keys that are in use from the selection widget
@@ -259,8 +219,6 @@
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
-
-      AAScrollBar.resizeBuilderScrollBar(AAScrollBar.delay.LONG); // delay resize for all transitions to finish (from action change)
     }
 
     function setPhonemenuFormDirty() {
@@ -285,11 +243,14 @@
     /////////////////////
 
     function activate() {
+      var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      vm.menuEntry = menu.entries[$scope.keyIndex];
+      vm.menuId = vm.menuEntry.id;
+
       addAvailableFeatures();
       vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
-        // If this is a new phone menu, add button zero
         if (_.has(vm.menuEntry, 'headers.length') && vm.menuEntry.headers.length === 0 &&
           _.has(vm.menuEntry, 'entries.length') && vm.menuEntry.entries.length === 0) {
           addButtonZero();
@@ -298,29 +259,6 @@
       }
     }
 
-    /*
-     * Splitted original activate() into init() and activate() for submenu FeatureToggle.
-     * Need to combine them again when Feature Toggle is removed.
-     */
-    function init() {
-      vm.schedule = $scope.schedule;
-      var ui = AAUiModelService.getUiModel();
-      vm.uiMenu = ui[vm.schedule];
-      vm.entries = vm.uiMenu.entries;
-      vm.menuEntry = vm.entries[$scope.index];
-      vm.menuId = vm.menuEntry.id;
-
-      FeatureToggleService.supports(FeatureToggleService.features.huronAASubmenu).then(function (result) {
-        if (result) {
-          vm.keyActions.push({
-            label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-            name: 'phoneMenuPlaySubmenu',
-            action: 'runActionsOnInput'
-          });
-        }
-      }).finally(activate);
-    }
-
-    init();
+    activate();
   }
 })();
