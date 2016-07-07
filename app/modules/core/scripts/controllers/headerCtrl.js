@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($translate, Utils, FeatureToggleService) {
+  function HeaderCtrl($translate, Utils, FeatureToggleService, Authinfo) {
     var vm = this;
     vm.newTabDisplay = false;
 
@@ -39,7 +39,7 @@
     }
 
     function showOrgName() {
-      return isOriginalTabDisplay() && Utils.isAdminPage();
+      return (isOriginalTabDisplay() || Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && Utils.isAdminPage();
     }
 
     function showFirstTimeSetupDropDown() {
@@ -55,7 +55,7 @@
     }
 
     function showMyCompany() {
-      return !!vm.newTabDisplay;
+      return !!vm.newTabDisplay && Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
     }
   }
 })();
