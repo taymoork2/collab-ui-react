@@ -32,7 +32,7 @@
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
-      careServices: null,
+      careServices: [],
       conferenceServicesWithoutSiteUrl: null,
       cmrServices: null,
       hasAccount: false,
@@ -345,7 +345,7 @@
         return this.hasRole('Full_Admin');
       },
       isCSB: function () {
-        return (_.contains(authData.customerType, ['APP_DIRECT', 'CSB']));
+        return (_.contains(authData.customerType, ['CSB']));
       },
       isDirectCustomer: function () {
         return (_.contains(authData.commerceRelation, ['Direct']));

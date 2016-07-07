@@ -117,6 +117,7 @@
     }
 
     function closePanel() {
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
       });

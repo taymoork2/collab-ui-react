@@ -45,6 +45,7 @@
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }
+  
   .cs-card > article graphheader {
    padding-right: 1rem;
       padding-left: .1rem;
@@ -169,14 +170,11 @@
     }
   }
 }
-@media only screen {
+@media only screen and (max-width: 1200px) {
   .metrics-reports {
-    .report-card {
-      .report-section-header  {
-         padding-right: 1rem;
-         padding-left: .1rem;
-         padding-top: .1rem;
-        
+      .cs-card-layout {
+        .cs-card {
+          height: 350px;
       }
     }
   }

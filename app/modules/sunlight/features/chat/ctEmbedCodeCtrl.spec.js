@@ -5,6 +5,7 @@ describe('Chat template embed code control', function () {
   var controller, $scope, CTService, createController, createControllerWithNoTemplateId;
 
   beforeEach(module('Sunlight'));
+  beforeEach(module('Hercules'));
 
   beforeEach(inject(function ($controller, $rootScope, _CTService_) {
     $scope = $rootScope.$new();
