@@ -26,15 +26,16 @@
       </div>
       <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.expiresOn }"></p>
       <div class="qrCodeButtons">
-        <a class="qrCodeLeftButton" sq-clipboard="showActivationCode.wizardData.activationCode">
+        <a sq-clipboard="showActivationCode.wizardData.activationCode">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
         </a>
 
-        <a class="qrCodeLeftButton" cr-print print-element-id="printActivationCode">
+        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
           <span translate="generateActivationCodeModal.print"></span>
         </a>
 
         <a
+          class="qrCodeRightButton"
           ng-show="showActivationCode.wizardData.deviceType==='huron'"
           ng-disabled="genAuthCode.showEmail"
           ng-click="showActivationCode.activateEmail()"
