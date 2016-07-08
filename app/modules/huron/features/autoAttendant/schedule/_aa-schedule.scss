@@ -24,16 +24,6 @@
     display: inline-block;
   }
   
-  .modal-division {
-   float: left;
-   width: "90%";
-  }
-  
-  
-  .modal-icon-division {
-  float: left;
-  margin-top: 12px
-  }
  
   .modal-body &-subtitle {
     font-size: 1.25rem;
@@ -55,10 +45,6 @@
       color: $aa-builder-icon-click-color;
     }
   }
-
-  .button-division {
-    float: right;
-   }
 
   .aa-help-icon {
    color:$color-primary-lighter;
