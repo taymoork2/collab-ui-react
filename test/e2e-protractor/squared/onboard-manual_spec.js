@@ -10,7 +10,7 @@ describe('Onboard users through Manual Invite', function () {
     login.login('account-admin', '#/users');
   });
 
-  xit('should Manually Invite multiple users by email address (Message On).', function () {
+  it('should Manually Invite multiple users by email address (Message On).', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
     utils.click(navigation.addUsers);
