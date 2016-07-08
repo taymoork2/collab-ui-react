@@ -2467,12 +2467,17 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
+    "requestConfirmMsg": "A purchase request message was sent to all partner administrators",
+    "requestConfirmPartialFailMsg": "A purchase request message was not sent to some of your parter administrators",
+    "requestConfirmTotalFailMsg": "A purchase request message was not sent",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "requestConfirmNotifyMsg": "Notification has been sent to all partner admins of your intent to purchase",
+    "requestConfirmPartialFailNotifyMsg": "Due to error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
+    "requestConfirmTotalFailNotifyMsg": "Due to error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
-    "callServiceDisabled": "This service is temporarily unavailable for trial."
+    "callServiceDisabled": "This service is temporarily unavailable for trial.",
+    "allPartnerAdmins": "all partner admins"
   },
 
   "status": {
