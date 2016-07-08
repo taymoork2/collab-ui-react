@@ -2,8 +2,10 @@
   'use strict';
 
   angular.module('Core')
-    .controller('BrandingCtrl', BrandingCtrl);
+    .controller('BrandingCtrl', BrandingCtrl)
+    .controller('BrandingExampleCtrl', BrandingExampleCtrl);
 
+  /* @ngInject */
   function BrandingCtrl($state, $modal, $scope, $translate, $timeout, Authinfo, Notification, Log, UserListService, WebexClientVersion, BrandService, Orgservice) {
     var brand = this;
     var orgId = Authinfo.getOrgId();
@@ -12,7 +14,6 @@
     brand.usePartnerLogo = true;
     brand.allowCustomerLogos = false;
     brand.progress = 0;
-    brand.modalType = $state.params.modalType;
     brand.isDirectCustomer = Authinfo.isDirectCustomer();
     brand.logoCriteria = {
       'pattern': '.png',
@@ -268,6 +269,12 @@
     function uploadProgress(evt) {
       brand.progress = parseInt(100.0 * evt.loaded / evt.total);
     }
+  }
+
+  /* @ngInject */
+  function BrandingExampleCtrl($state, $translate) {
+    this.modalType = $state.params.modalType;
+    this.name = this.modalType === 'Partner' ? $translate.instant('branding.partner') : $translate.instant('branding.customer');
   }
 
 })();
