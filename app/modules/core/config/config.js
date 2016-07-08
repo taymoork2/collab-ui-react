@@ -296,6 +296,7 @@
         'huronfeatures',
         'huronnewfeature',
         'huronHuntGroup',
+        'huronCallPark',
         'huntgroupedit',
         'devices',
         'device-overview',
