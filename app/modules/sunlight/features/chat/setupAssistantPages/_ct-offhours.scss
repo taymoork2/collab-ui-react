@@ -78,9 +78,13 @@
     }
 
     .no-message {
-      background-color: $color-attention-lighter;
-      border-color: $color-attention-base;
+      background-color: $color-alerts-lighter;
+      border-color: $color-alerts-base;
     }
+  }
+
+  .error-description {
+    color: $color-alerts-base;
   }
 
   .business-hours-label {

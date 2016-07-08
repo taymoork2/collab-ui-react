@@ -17,6 +17,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
   var EMBED_CODE_PAGE_INDEX = 8;
   var OrgName = 'Test-Org-Name';
+  var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName)
@@ -49,12 +50,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   };
 
-  var selectedDaysByDefault = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  var defaultTimeZone = {
-    label: 'United States: America/New_York',
-    value: 'America/New_York'
-  };
-  var defaultDayPreview = 'Monday - Friday';
+  var selectedDaysByDefault = businessHours.selectedDaysByDefault;
+  var defaultTimeZone = businessHours.defaultTimeZone;
+  var defaultDayPreview = businessHours.defaultDayPreview;
+  var startTimeOptions = businessHours.startTimeOptions;
+  var defaultTimings = businessHours.defaultTimings;
 
   beforeEach(module('Sunlight'));
   beforeEach(module('Hercules'));
@@ -387,6 +387,29 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     it('should disable the right btn if off hours message is empty', function () {
       controller.template.configuration.pages.offHours.message = '';
       expect(controller.nextButton()).toBe(false);
+    });
+
+    it('should select start time and end time correctly', function () {
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '09:00',
+        value: '09:00'
+      };
+      var endTime = {
+        label: '09:30',
+        value: '09:30'
+      };
+      expect(controller.timings).toEqual(defaultTimings);
+      controller.timings.startTime = startTime;
+      controller.setEndTimeOptions();
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: endTime
+      });
+      var startOfEndTimeOptions = _.filter(_.map(controller.startTimeOptions, 'label'), function (timeOption) {
+        return timeOption > startTime.label;
+      })[0];
+      expect(startOfEndTimeOptions).toEqual('09:30');
     });
 
   });
