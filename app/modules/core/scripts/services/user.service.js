@@ -271,6 +271,9 @@
     }
 
     function getUsersEmailStatus(orgId, userId) {
+      if (userId === null) {
+        $q.reject('No User ID was passed');
+      }
       var emailUrl = userUrl + 'organization/' + orgId + '/email/' + userId;
 
       return $http.get(emailUrl);
