@@ -76,6 +76,7 @@
     $scope.showUserDetails = showUserDetails;
     $scope.getUserLicenses = getUserLicenses;
     $scope.canShowUserDelete = canShowUserDelete;
+    $scope.canShowResendInvite = canShowResendInvite;
     $scope.handleDeleteUser = handleDeleteUser;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
@@ -398,6 +399,14 @@
       return false;
     }
 
+    function canShowResendInvite(user) {
+      var isHuronUser = Userservice.isHuronUser(user.entitlements);
+      if ((user.userStatus === 'pending' || isHuronUser || $scope.emailError) && !$scope.isCSB) {
+        return true;
+      }
+      return false;
+    }
+
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
       Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
         .then(function () {
@@ -436,7 +445,7 @@
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
-        '<li ng-if="(row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements) || grid.appScope.emailError) && !grid.appScope.isCSB" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
+        '<li ng-if="grid.appScope.canShowResendInvite(row.entity)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && grid.appScope.canShowUserDelete(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="grid.appScope.handleDeleteUser($event, row.entity, (row.entity.displayName === grid.appScope.userName))"><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
