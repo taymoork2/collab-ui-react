@@ -1,4 +1,4 @@
-.ct-agentunavailable {
+.ct-agent-unavailable {
   align-items: center;
 
   @mixin placeholder {
@@ -31,113 +31,60 @@
     }
   }
 
-  .cardScroll {
-    @include vr-spacing(pt, 1);
-    @include vr-spacing(pr, 3.75);
-    @include vr-spacing(pb, 3.125);
-    @include vr-spacing(pl, 2);
+  .ct-agent-unavailable-icon {
+    color: $alert-color;
   }
 
-  .ct-agent-unavailable-label-text {
-    @include vr-spacing(pt, 0.75);
-  }
-
-  .ct-agent-unavailable-textOverflow{
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: normal;
-  }
-
-  .ct-agent-unavailable-msg-field {
-    @include vr-spacing(mt, 0.5);
-    @include vr-spacing(mh, 1);
-    @include vr-spacing(mb, 0.1);
-    @include vr-spacing(pt, 0.5);
-    @include vr-spacing(pl, 0.5);
-
-    height: rem-calc(86px);
-    width: 90%;
+  .unavailable-header {
+    text-align: center;
     color: $gray-dark-1;
-    font-size: $h6-font-size;
-    line-height: rem-calc(19px);
-    resize: none;
   }
 
-  .ct-footer {
-    color: $gray-light-1;
-    border-top: 1px solid $gray-light-3;
-    @include vr-spacing(pv, 0.75);
-    @include vr-spacing(pl, 0.5);
-  }
-
-  .ct-flex-topleft {
-    justify-content: flex-start;
-    align-content: flex-start;
-    align-items: flex-start;
-  }
-
-  .ct-attribute-field-label {
-    @include vr-spacing(mb, 0);
-    @include vr-spacing(ml, 1);
-    font-family: $brand-font-cisco-TT-Regular;
-  }
-
-  .ct-attribute-section {
+  .unavailable-preview {
     display: flex;
-    flex-flow: column;
-    background-color: $gray-light-4;
-    .ct-default-msg {
-      max-width: 60%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    @include vr-spacing(mt,5);
+
+    > button {
+      width: 7rem;
+    }
+
+    .unavailable {
+      display: flex;
       text-align: center;
-      flex: 0;
-      color: $gray-dark-1;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      width: 80%;
+      color: $alert-color;
+    }
+
+    .unavailable-msg {
+      height: 15rem;
+      @include vr-spacing(pv, 1);
+      font-family: $brand-font-cisco-TT-Light;
     }
   }
 
-  .ct-attribute-screen {
-    background-color: $color-white;
+  .cs-card article.attributes {
+    background-color: $gray-light-4;
   }
 
-  .ct-attribute-row {
-    width: 100%;
+  .unavailable-attributes {
+    @include vr-spacing(pl, 1);
+    > textarea {
+      height: 5rem;
+      width: 90%;
+      resize: none;
+      color: $gray-dark-1;
+      font-size: $h6-font-size;
+      line-height: 1.4rem;
+      @include vr-spacing(p, 1);
+    }
   }
 
-  .ct-agent-unavailable-msg {
-    font-size: $h5-font-size;
-    font-family: $brand-font-cisco-TT-Light;
-    color: #F05D3B;
-    text-align: center;
-    align-self: center;
-    padding-bottom: rem-calc(98px);
-    width: 80%;
-    height: rem-calc(185px);
-  }
-
-  .ct-agent-unavailable-close-button-div {
-    align-self: center;
-  }
-
-  .ct-agent-unavailable-icon {
-    padding-top: rem-calc(80px);
-    padding-bottom: rem-calc(12px);
-    color: #F05D3B;
-    position: relative;
-    align-self: center;
-  }
-
-  .ct-agent-unavailable-close-btn {
-    @include vr-spacing(p, 0.3125);
-    @include vr-spacing(mt, 1);
-    @include vr-spacing(mr, 0.3125);
-    @include vr-spacing(mb, 0.625);
-    @include vr-spacing(ml, 0.5);
-    border: medium none;
-    border-radius: 0.25rem;
-    color: $white;
-    font-size: $h6-font-size;
-    height: rem-calc(35px);
-    position: relative;
-    text-align: center;
-    width: rem-calc(141px);
+  .unavailable-attributes-label{
+    font-family: $brand-font-cisco-TT-Regular;
   }
 }

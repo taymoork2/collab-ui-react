@@ -26,7 +26,7 @@
     vm.submitChatTemplate = submitChatTemplate;
 
     // Setup Assistant pages with index
-    vm.states = ['name',
+    vm.states = [ 'name',
       'profile',
       'overview',
       'customerInformation',
