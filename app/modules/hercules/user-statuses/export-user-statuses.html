@@ -7,16 +7,17 @@
 
 <div class="modal-body">
   <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
-  <form name="userStatusesExport">
-    <div class="cs-checkbox-group">
-      <div ng-hide="item.unselectable" ng-repeat="item in exportUserStatusesCtrl.statusTypes">
+  <form name="userStatusesExport" class="userStatusesExport-form">
+    <div class="cs-checkbox-group" ng-repeat="(serviceIndex, service) in exportUserStatusesCtrl.statusTypes">
+      <h5 translate="{{'hercules.cloudExtensions.serviceNames.'+service[0].id}}"></h5>
+      <div ng-hide="item.unselectable" ng-repeat="(itemIndex, item) in service">
         <input
           cs-input
           type="checkbox"
-          id="{{'ckid_' + item.stateType}}"
+          id="{{'ckid_' + item.id + '_' + item.stateType}}"
           name="{{item.stateType}}"
-          ng-model="exportUserStatusesCtrl.statusTypes[$index].selected"
-          cs-input-label="{{item.text}} ({{item.count}})">
+          ng-model="exportUserStatusesCtrl.statusTypes[serviceIndex][itemIndex].selected"
+          cs-input-label="{{item.text}}: {{item.count}} // {{serviceIndex}} {{itemIndex}}">
       </div>
     </div>
    </form>
