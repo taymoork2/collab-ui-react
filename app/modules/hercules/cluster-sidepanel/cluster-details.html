@@ -31,7 +31,7 @@
               ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
               translate="hercules.softwareUpgrade.upgradeNow">
       </button>
-      <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.hasUpgradeWarning"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeWarning" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
+      <p ng-if="clusterDetailsCtrl.softwareUpgrade.showUpgradeWarning()"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeWarning" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
     </div>
     <div ng-if="clusterDetailsCtrl.showUpgradeProgress">
       <div ng-if="clusterDetailsCtrl.fakeUpgrade">
