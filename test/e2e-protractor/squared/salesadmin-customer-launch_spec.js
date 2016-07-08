@@ -12,7 +12,7 @@ describe('Launch customer as a sales admin', function () {
       customers.clickViewCustomer('Atlas_Test_Sales_Admin_Org_Create');
       utils.click(customers.viewCustomer);
       utils.switchToNewWindow().then(function () {
-        utils.expectIsDisplayed(landing.serviceSetup);
+        utils.expectIsDisplayed(landing.overviewPage);
       });
     });
   });
