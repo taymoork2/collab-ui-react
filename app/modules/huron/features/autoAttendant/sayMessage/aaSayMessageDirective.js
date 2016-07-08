@@ -10,6 +10,7 @@
       restrict: 'E',
       scope: {
         schedule: '@aaSchedule',
+        menuId: '@aaMenuId',
         index: '=aaIndex',
         isMenuHeader: '=aaHeader',
         menuKeyIndex: '@aaKeyIndex'

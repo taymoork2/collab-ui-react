@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($translate, Utils, FeatureToggleService) {
+  function HeaderCtrl($translate, Utils, FeatureToggleService, Authinfo) {
     var vm = this;
     vm.newTabDisplay = false;
 
@@ -28,18 +28,18 @@
 
     function initFeatureToggles() {
       if (Utils.isAdminPage()) {
-        FeatureToggleService.supports(FeatureToggleService.features.myCompanyPage).then(function (support) {
+        FeatureToggleService.supports(FeatureToggleService.features.atlasSettingsPage).then(function (support) {
           vm.newTabDisplay = !!support;
         });
       }
     }
 
-    function originalTabDisplay() {
+    function isOriginalTabDisplay() {
       return !_.isUndefined(vm.newTabDisplay) && !vm.newTabDisplay;
     }
 
     function showOrgName() {
-      return originalTabDisplay() && Utils.isAdminPage();
+      return (isOriginalTabDisplay() || Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && Utils.isAdminPage();
     }
 
     function showFirstTimeSetupDropDown() {
@@ -47,7 +47,7 @@
     }
 
     function showLicenseUsageDropDown() {
-      return originalTabDisplay() && Utils.isAdminPage();
+      return isOriginalTabDisplay() && Utils.isAdminPage();
     }
 
     function showUserDropDown() {
@@ -55,7 +55,7 @@
     }
 
     function showMyCompany() {
-      return !!vm.newTabDisplay;
+      return !!vm.newTabDisplay && Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
     }
   }
 })();

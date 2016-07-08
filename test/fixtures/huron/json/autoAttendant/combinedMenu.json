@@ -112,5 +112,815 @@
       "password": "",
       "url": ""
     }]
+  },
+  "ceCombinedInputWithSubmenu": {
+    "callExperienceName": "Philip AA Test 1",
+    "assignedResources": [{
+      "id": "81005005",
+      "number": "5005",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "playList": [
+
+            ],
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "playList": [
+
+                  ],
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "inputs": [{
+                  "description": "",
+                  "input": "*",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": -1
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "0",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": 0
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "1",
+                  "actions": [{
+                    "say": {
+                      "value": "Connecting to Apple iPhones specialist.",
+                      "voice": ""
+                    }
+                  }, {
+                    "routeToExtension": {
+                      "destination": "3001"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "2",
+                  "actions": [{
+                    "goto": {
+                      "ceid": "81752d83-4a82-4c35-924b-9b471bb3ef08"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "3",
+                  "actions": [{
+                    "routeToUser": {
+                      "id": "285603ae-1d8a-476a-98ba-9ff67c80ba5f"
+                    }
+                  }]
+                }, {
+                  "description": "Input Option 4: dial by extension",
+                  "input": "4",
+                  "actions": [{
+                    "runActionsOnInput": {
+                      "inputType": 2,
+                      "repeats": 2,
+                      "language": "en_US",
+                      "voice": "",
+                      "prompts": {
+                        "playList": [
+
+                        ],
+                        "sayList": [{
+                          "value": "If you know your party's extension, please enter it now."
+                        }]
+                      },
+                      "attempts": 3,
+                      "minNumberOfCharacters": 4,
+                      "maxNumberOfCharacters": 4,
+                      "inputs": [
+
+                      ],
+                      "incompleteInputActions": [
+
+                      ],
+                      "rawInputActions": [{
+                        "routeToExtension": {
+                          "description": "",
+                          "destination": "$Input"
+                        }
+                      }]
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "5",
+                  "actions": [{
+                    "routeToVoiceMail": {
+                      "id": "285603ae-1d8a-476a-98ba-9ff67c80ba5f"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "6",
+                  "actions": [{
+                    "route": {
+                      "destination": "+14084742358"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "7",
+                  "actions": [{
+                    "routeToHuntGroup": {
+                      "id": "631a8f4e-7e1b-4d36-93c6-2ed583eff867"
+                    }
+                  }]
+                }],
+                "incompleteInputActions": [
+
+                ],
+                "rawInputActions": [
+
+                ]
+              }
+            }]
+          }],
+          "incompleteInputActions": [
+
+          ],
+          "rawInputActions": [
+
+          ]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  },
+  "ceCombinedWithSubmenu": {
+    "callExperienceName": "AA Combined",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "81005005",
+      "number": "5005"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "inputs": [{
+                  "description": "",
+                  "input": "*",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": -1
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "0",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": 0
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "1",
+                  "actions": [{
+                    "say": {
+                      "value": "Connecting to Apple iPhones specialist.",
+                      "voice": ""
+                    }
+                  }, {
+                    "routeToExtension": {
+                      "destination": "3001"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "2",
+                  "actions": [{
+                    "goto": {
+                      "ceid": "81752d83-4a82-4c35-924b-9b471bb3ef08"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "3",
+                  "actions": [{
+                    "routeToUser": {
+                      "id": "285603ae-1d8a-476a-98ba-9ff67c80ba5f"
+                    }
+                  }]
+                }, {
+                  "description": "Input Option 4: dial by extension",
+                  "input": "4",
+                  "actions": [{
+                    "runActionsOnInput": {
+                      "inputType": 2,
+                      "repeats": 2,
+                      "language": "en_US",
+                      "voice": "",
+                      "prompts": {
+                        "sayList": [{
+                          "value": "If you know your party's extension, please enter it now."
+                        }]
+                      },
+                      "attempts": 3,
+                      "minNumberOfCharacters": 4,
+                      "maxNumberOfCharacters": 4,
+                      "rawInputActions": [{
+                        "routeToExtension": {
+                          "description": "",
+                          "destination": "$Input"
+                        }
+                      }]
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "5",
+                  "actions": [{
+                    "routeToVoiceMail": {
+                      "id": "285603ae-1d8a-476a-98ba-9ff67c80ba5f"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "6",
+                  "actions": [{
+                    "route": {
+                      "destination": "+14084742358"
+                    }
+                  }]
+                }, {
+                  "description": "",
+                  "input": "7",
+                  "actions": [{
+                    "routeToHuntGroup": {
+                      "id": "631a8f4e-7e1b-4d36-93c6-2ed583eff867"
+                    }
+                  }]
+                }]
+              }
+            }]
+          }]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  },
+  "combinedMenuWithSubmenu": {
+    "type": "MENU_WELCOME",
+    "headers": [],
+    "entries": [{
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "say",
+        "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+        "description": "",
+        "voice": ""
+      }],
+      "timeout": "",
+      "language": "",
+      "voice": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }, {
+      "type": "MENU_OPTION",
+      "headers": [{
+        "description": "",
+        "type": "MENU_OPTION_ANNOUNCEMENT",
+        "key": "",
+        "actions": [{
+          "name": "say",
+          "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.",
+          "description": "",
+          "voice": ""
+        }, {
+          "name": "say",
+          "value": "To repeat this menu, press 0.",
+          "description": "",
+          "voice": ""
+        }],
+        "timeout": "",
+        "language": "en_US",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }, {
+        "description": "",
+        "type": "MENU_OPTION_DEFAULT",
+        "key": "",
+        "actions": [],
+        "timeout": "",
+        "language": "",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }],
+      "entries": [{
+        "description": "",
+        "type": "MENU_OPTION",
+        "key": "0",
+        "actions": [{
+          "name": "repeatActionsOnInput",
+          "value": "",
+          "description": "",
+          "voice": "",
+          "level": 0
+        }],
+        "timeout": "",
+        "language": "",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }, {
+        "type": "MENU_OPTION",
+        "headers": [{
+          "description": "",
+          "type": "MENU_OPTION_ANNOUNCEMENT",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones.",
+            "description": "",
+            "voice": ""
+          }, {
+            "name": "say",
+            "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "en_US",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION_DEFAULT",
+          "key": "",
+          "actions": [],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }],
+        "entries": [{
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "*",
+          "actions": [{
+            "name": "repeatActionsOnInput",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "level": -1
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "0",
+          "actions": [{
+            "name": "repeatActionsOnInput",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "level": 0
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "1",
+          "actions": [{
+            "name": "say",
+            "value": "Connecting to Apple iPhones specialist.",
+            "description": "",
+            "voice": ""
+          }, {
+            "name": "routeToExtension",
+            "value": "3001",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "2",
+          "actions": [{
+            "name": "goto",
+            "value": "81752d83-4a82-4c35-924b-9b471bb3ef08",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "3",
+          "actions": [{
+            "name": "routeToUser",
+            "value": "285603ae-1d8a-476a-98ba-9ff67c80ba5f",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "Input Option 4: dial by extension",
+          "type": "MENU_OPTION",
+          "key": "4",
+          "actions": [{
+            "name": "runActionsOnInput",
+            "value": "If you know your party's extension, please enter it now.",
+            "description": "",
+            "voice": "",
+            "inputType": 2,
+            "maxNumberOfCharacters": 4,
+            "minNumberOfCharacters": 4
+          }],
+          "timeout": "",
+          "language": "en_US",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": "",
+          "attempts": 3
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "5",
+          "actions": [{
+            "name": "routeToVoiceMail",
+            "value": "285603ae-1d8a-476a-98ba-9ff67c80ba5f",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "6",
+          "actions": [{
+            "name": "route",
+            "value": "+14084742358",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "7",
+          "actions": [{
+            "name": "routeToHuntGroup",
+            "value": "631a8f4e-7e1b-4d36-93c6-2ed583eff867",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }],
+        "id": "menu2",
+        "attempts": 2,
+        "key": "1"
+      }],
+      "id": "menu1",
+      "attempts": 3
+    }],
+    "id": "menu0"
+  },
+  "combinedMenuWithSubmenu2": {
+    "type": "MENU_WELCOME",
+    "headers": [],
+    "entries": [{
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "say",
+        "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+        "description": "",
+        "voice": ""
+      }],
+      "timeout": "",
+      "language": "",
+      "voice": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }, {
+      "type": "MENU_OPTION",
+      "headers": [{
+        "description": "",
+        "type": "MENU_OPTION_ANNOUNCEMENT",
+        "key": "",
+        "actions": [{
+          "name": "say",
+          "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions.",
+          "description": "",
+          "voice": ""
+        }, {
+          "name": "say",
+          "value": "To repeat this menu, press 0.",
+          "description": "",
+          "voice": ""
+        }],
+        "timeout": "",
+        "language": "en_US",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }, {
+        "description": "",
+        "type": "MENU_OPTION_DEFAULT",
+        "key": "",
+        "actions": [],
+        "timeout": "",
+        "language": "",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }],
+      "entries": [{
+        "description": "",
+        "type": "MENU_OPTION",
+        "key": "0",
+        "actions": [{
+          "name": "repeatActionsOnInput",
+          "value": "",
+          "description": "",
+          "voice": "",
+          "level": 0
+        }],
+        "timeout": "",
+        "language": "",
+        "voice": "",
+        "username": "",
+        "password": "",
+        "url": ""
+      }, {
+        "type": "MENU_OPTION",
+        "headers": [{
+          "description": "",
+          "type": "MENU_OPTION_ANNOUNCEMENT",
+          "key": "",
+          "actions": [{
+            "name": "say",
+            "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones.",
+            "description": "",
+            "voice": ""
+          }, {
+            "name": "say",
+            "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "en_US",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION_DEFAULT",
+          "key": "",
+          "actions": [],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }],
+        "entries": [{
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "*",
+          "actions": [{
+            "name": "repeatActionsOnInput",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "level": -1
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "0",
+          "actions": [{
+            "name": "repeatActionsOnInput",
+            "value": "",
+            "description": "",
+            "voice": "",
+            "level": 0
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "",
+          "type": "MENU_OPTION",
+          "key": "1",
+          "actions": [{
+            "name": "routeToUser",
+            "value": "285603ae-1d8a-476a-98ba-9ff67c80ba5f",
+            "description": "",
+            "voice": ""
+          }],
+          "timeout": "",
+          "language": "",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": ""
+        }, {
+          "description": "Input Option 4: dial by extension",
+          "type": "MENU_OPTION",
+          "key": "2",
+          "actions": [{
+            "name": "runActionsOnInput",
+            "value": "If you know your party's extension, please enter it now.",
+            "description": "",
+            "voice": "",
+            "inputType": 2,
+            "maxNumberOfCharacters": 4,
+            "minNumberOfCharacters": 4
+          }],
+          "timeout": "",
+          "language": "en_US",
+          "voice": "",
+          "username": "",
+          "password": "",
+          "url": "",
+          "attempts": 3
+        }],
+        "id": "menu2",
+        "attempts": 2,
+        "key": "1"
+      }],
+      "id": "menu1",
+      "attempts": 3
+    }],
+    "id": "menu0"
   }
 }

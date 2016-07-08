@@ -89,6 +89,10 @@
       margin-left: rem(5);
       margin-top: rem(-15);
     }
+    .retry-label span {
+      @extend .progressbar-progress;
+      float: none;
+    }
   }
   .time-duration {
     margin-top: rem(5);

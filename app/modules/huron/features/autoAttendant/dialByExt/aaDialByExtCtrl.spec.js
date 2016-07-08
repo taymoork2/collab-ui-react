@@ -18,6 +18,7 @@ describe('Controller: AADialByExtCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
+  var menuId = 'menu1';
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
@@ -62,11 +63,13 @@ describe('Controller: AADialByExtCtrl', function () {
     beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = '0';
+      $scope.menuId = menuId;
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 

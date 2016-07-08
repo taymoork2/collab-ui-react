@@ -1,0 +1,52 @@
+$overlay-panel-height: 93px;
+
+@import 'setupAssistantPages/cp-number-lookup';
+@import 'setupAssistantPages/cp-member-lookup';
+//@import 'edit/cp-edit';
+
+.callpark {
+  &.overlay-panel {
+    & cs-setup-assistant {
+      width: 100%;
+    }
+  }
+  .panel-content {
+    flex : 1;
+    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+///// Type ahead input box styling with icon ///////
+.typeahead-large {
+  .input-hint {
+    border: 0;
+    border-top: solid rem(1px) $gray-light;
+    width: 100%;
+    text-align: center;
+    @include vr-spacing(p, 1);
+    color: $gray;
+    font-style: italic;
+  }
+
+  // Input control.
+  input {
+    height: 44px; // prevents Firefox from clipping top of text
+    &:focus ~ .input-hint {
+      border-top: solid rem(1px) $brand-primary;
+    }
+  }
+}
+.cs-setupassistant {
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 0 1rem;
+}
+.cs-setupassistant--content {
+  height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+}
+

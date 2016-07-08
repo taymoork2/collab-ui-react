@@ -1,0 +1,6 @@
+<div class="assignedTo">
+  <span ng-if="!row.entity.status" class="feature-name">{{row.entity.userId}}</span>
+  <span ng-if="row.entity.status" class="feature-name">{{row.entity.status}}
+    <i ng-if="row.entity.tooltip" class="icon icon-info info-tooltip" tooltip-placement="top" tooltip="{{row.entity.tooltip}}" tooltip-animation="false"  tooltip-append-to-body="true"></i>
+  </span>
+</div>

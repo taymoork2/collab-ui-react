@@ -14,7 +14,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var FEEDBACK_PAGE_INDEX = 4;
   var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
   var OFF_HOURS_PAGE_INDEX = 6;
-  var CHAT_STRING_PAGE_INDEX = 7;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
   var EMBED_CODE_PAGE_INDEX = 8;
   var OrgName = 'Test-Org-Name';
   var spiedAuthinfo = {
@@ -42,6 +42,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   };
 
   beforeEach(module('Sunlight'));
+  beforeEach(module('Hercules'));
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
@@ -386,4 +387,36 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect($state.go).toHaveBeenCalled();
     });
   });
+
+  describe('Chat Status Messages Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      resolveLogoPromise();
+    });
+    it("should have previous and next button enabled", function () {
+      checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
+    });
+  });
+
+  describe('Agent Unavailable Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[AGENT_UNAVAILABLE_PAGE_INDEX];
+    });
+
+    it('next and previous buttons should be enabled by default', function () {
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+
+    it("next button should be disabled when unavailable msg is not present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '';
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
+    });
+
+    it("next button should be enabled when unavailable msg is present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = templateName;
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+  });
+
 });

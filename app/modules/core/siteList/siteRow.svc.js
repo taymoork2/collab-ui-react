@@ -58,10 +58,10 @@
     this.logSiteRows = function () {
       var funcName = "logSiteRows()";
       var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
-      //$log.log(logMsg);
-      //$log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
-      //$log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
-      //$log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
+      //      $log.log(logMsg);
+      //      $log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
+      //      $log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
+      //      $log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
 
     };
 
@@ -128,11 +128,11 @@
 
     this.getConferenceServices = function () {
       var funcName = "getConferenceServices()";
-      var logMsg = funcName + "\n" +
-        "conferenceServices=\n" + JSON.stringify(conferenceServices);
-      //$log.log(logMsg);
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+      var logMsg = funcName + "\n" +
+        "conferenceServices=\n" + JSON.stringify(conferenceServices);
+      //      $log.log(logMsg);
 
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
@@ -165,12 +165,14 @@
             conferenceService.showSiteLinks = false;
             conferenceService.isError = false;
             conferenceService.isWarn = false;
+            conferenceService.isCI = false;
             conferenceService.isCSVSupported = false;
             conferenceService.adminEmailParam = null;
             conferenceService.userEmailParam = null;
             conferenceService.advancedSettings = null;
             conferenceService.webexAdvancedUrl = null;
             conferenceService.siteUrl = newSiteUrl;
+            conferenceService.siteAdminUrl = null;
 
             conferenceService.showLicenseTypes = false;
             conferenceService.multipleWebexServicesLicensed = false;
@@ -563,6 +565,12 @@
       var siteUrl = siteRow.siteUrl;
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+
+      var siteAdminProtocol = "https://";
+      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
+      siteRow.siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + WebExUtilsFact.getSiteName(siteUrl);
+
+      siteRow.isCI = isCISite;
 
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "\n" +
