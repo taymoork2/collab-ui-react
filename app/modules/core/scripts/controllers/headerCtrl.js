@@ -43,7 +43,7 @@
     }
 
     function showFirstTimeSetupDropDown() {
-      return Utils.isAdminPage() && isOriginalTabDisplay();
+      return Utils.isAdminPage();
     }
 
     function showLicenseUsageDropDown() {
