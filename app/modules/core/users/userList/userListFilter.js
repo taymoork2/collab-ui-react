@@ -11,7 +11,7 @@
       } else if (status === 'pending') {
         return $filter('translate')('usersPage.pending');
       } else if (status === 'error') {
-      	return $filter('translate')('usersPage.error');
+        return $filter('translate')('usersPage.error');
       }
     };
   }

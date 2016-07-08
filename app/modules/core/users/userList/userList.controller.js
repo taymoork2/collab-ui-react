@@ -61,6 +61,7 @@
     $scope.totalUsers = 0;
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
+    $scope.isEmailStatusToggled = false;
     $scope.emailError = false;
 
     // Functions
@@ -84,9 +85,10 @@
 
     $scope.getUserList = getUserList;
 
-    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
+    FeatureToggleService.supports([FeatureToggleService.features.csvEnhancement, FeatureToggleService.features.atlasEmailStatus])
       .then(function (result) {
-        $scope.isCsvEnhancementToggled = result;
+        $scope.isCsvEnhancementToggled = result[0];
+        $scope.isEmailStatusToggled = result[1];
       });
 
     init();
@@ -223,11 +225,11 @@
               }
               // get email status here
               _.map($scope.userList.allUsers, function (user) {
-                if (!user.active) {
+                if (!user.active && $scope.isEmailStatusToggled) {
                   Userservice.getUsersEmailStatus(Authinfo.getOrgId(), user.id).then(function (response) {
                     var eventStatus = response.data.items[0].event;
                     if (eventStatus === 'rejected' || eventStatus === 'failed') {
-                      user.userStatus = 'Error';
+                      user.userStatus = 'error';
                       $scope.emailError = true;
                     }
                   }).catch(function (error) {
