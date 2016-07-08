@@ -88,7 +88,6 @@
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
       muteByDefault: 'mute-by-default',
-      myCompanyPage: 'atlas-my-company-page',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
