@@ -249,7 +249,7 @@ Special stuff currently used for out own mail input field...
   margin-top: 0;
   margin-right: 5px;
   font-size: 0.75rem;
-  color: orange;
+  color: $color-alerts-base;
 }
 
 .hercules-btn-deregister {
@@ -289,4 +289,8 @@ Special stuff currently used for out own mail input field...
   & > div {
     margin-right: 5rem;
   }
+}
+
+.hercules-capitalize {
+  text-transform: capitalize
 }
