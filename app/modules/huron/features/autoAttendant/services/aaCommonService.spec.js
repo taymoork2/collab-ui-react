@@ -87,9 +87,9 @@
 
       it('is making properly formatted key', function () {
 
-        var k = AACommonService.makeKey('openHours', '0', 'someTag');
+        var k = AACommonService.makeKey('openHours', 'someTag');
 
-        expect(k).toEqual('openHours' + '-' + '0' + '-' + 'someTag');
+        expect(k).toEqual('openHours' + '-' + 'someTag');
 
       });
 
