@@ -37,6 +37,9 @@
   @include vr-spacing(mh, 1);
   @include vr-spacing(mv, 1.25);
   @include vr-spacing(p, 0);
+  .cs-card-layout {
+    @include vr-spacing(mt, 1.25);
+  }
   .subscriptions.detail-view {
     @include vr-spacing(mb, 1.25);
     .subscription-column {
