@@ -81,11 +81,6 @@
       .license-quantity {
         @include vr-spacing(pr, 1.25);
       }
-      .subscription-id {
-        bottom: vr-adjust(21);
-        position: absolute;
-        right: vr-adjust(40);
-      }
     }
   }
   .subscriptions {
