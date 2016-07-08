@@ -3544,13 +3544,16 @@
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
     "useOwnLogo": "Use your own logo",
+    "logoPlaceholder": "Drag and drop your logo here or click to upload",
     "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
-    "companyLogo": "{{partner}} Company Logos",
-    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
-    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
-    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
-    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+    "companyLogo": "{{name}} Logos",
+    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples",
+    "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
+    "partner": "Partner",
+    "customer": "Customer"
   },
   "fileUpload": {
     "uploading": "Uploading File",
