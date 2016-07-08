@@ -236,7 +236,12 @@
             }
           },
           agentUnavailable: {
-            enabled: true
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
           },
           offHours: {
             enabled: true,
@@ -329,10 +334,7 @@
     }
 
     function isNamePageValid() {
-      if (vm.template.name === '') {
-        return false;
-      }
-      return true;
+      return (vm.template.name !== '');
     }
 
     function isProfilePageValid() {
@@ -341,6 +343,10 @@
         return true;
       }
       return false;
+    }
+
+    function isAgentUnavailablePageValid() {
+      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
     }
 
     function isOffHoursPageValid() {
@@ -354,6 +360,8 @@
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
+      case 'agentUnavailable':
+        return isAgentUnavailablePageValid();
       case 'offHours':
         return isOffHoursPageValid();
       case 'summary':

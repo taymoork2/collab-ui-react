@@ -166,6 +166,11 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfAgentUnavailablePage() {
     validateTitleAndDesc('Agent Unavailable', 'This screen is shown to a customer when no agent is available to assist');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.sendKeys(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
   }
 
   function validateContentsOfOffHoursPage() {
@@ -202,7 +207,7 @@ describe('Care admin should be able to', function () {
 
   function validateChatStatusMessagesDefaultPage() {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Connecting you to an Agent");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join…");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join...");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has entered the chat room");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3), "Agent has left the chat room");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4), "You are chatting with our agent");
@@ -217,7 +222,7 @@ describe('Care admin should be able to', function () {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0),
       "Connecting you to an Agent named Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1),
-      "Waiting for an Agent to join… His name is Joy");
+      "Waiting for an Agent to join... His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2),
       "Agent has entered the chat room His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3),
