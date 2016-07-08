@@ -74,6 +74,7 @@
     vm.nextTab = nextTab;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.goToStep = goToStep;
     vm.getRequiredTabs = getRequiredTabs;
 
     vm.isFirstTab = isFirstTab;
@@ -325,6 +326,20 @@
           setStep(steps[index + 1]);
         } else if (index + 1 === steps.length) {
           nextTab();
+        }
+      }
+    }
+
+    function goToStep(requestedStep) {
+      var steps = getSteps();
+      if (angular.isArray(steps)) {
+        var index = _.map(steps, function (step) {
+          return step.name;
+        }).indexOf(requestedStep);
+        if (index === -1 || index >= steps.length) {
+          nextStep();
+        } else if (index < steps.length) {
+          setStep(steps[index]);
         }
       }
     }
