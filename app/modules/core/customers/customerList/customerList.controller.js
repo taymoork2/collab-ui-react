@@ -153,12 +153,43 @@
       },
       multiFields: {
         meeting: [{
-          columnName: 'conferencing',
-          tooltip: $translate.instant('customerPage.meeting')
-        }, {
-          columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webex')
-        }]
+            columnGroup: 'conferencing',
+            columnName: 'conferencing',
+            offerCode: 'CF',
+            tooltip: $translate.instant('customerPage.meeting')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'EE',
+            columnName: 'webexEEConferencing',
+            tooltip: $translate.instant('customerPage.webex')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'CMR',
+            columnName: 'webexCMR',
+            tooltip: $translate.instant('customerPage.webex')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'MC',
+            columnName: 'webexMeetingCenter',
+            tooltip: $translate.instant('customerPage.webex')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'SC',
+            columnName: 'webexSupportCenter',
+            tooltip: $translate.instant('customerPage.webex')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'TC',
+            columnName: 'webexTrainingCenter',
+            tooltip: $translate.instant('customerPage.webex')
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'EC',
+            columnName: 'webexEventCenter',
+            tooltip: $translate.instant('customerPage.webex')
+          }
+
+        ]
       },
       columnDefs: $scope.gridColumns
     };
@@ -190,10 +221,17 @@
 
     }
 
-    function getSubfields(name) {
-
-      var fields = $scope.gridOptions.multiFields[name];
-      return fields;
+    function getSubfields(entry, name) {
+      var groupedFields = _.groupBy($scope.gridOptions.multiFields[name], 'columnGroup');
+      //get licenses
+      var licenses = _.map(entry.licenseList, 'offerName');
+      var result = _.map(groupedFields, function (group) {
+        //or return the one with license OR the first
+        return (_.find(group, function (field) {
+          return _.contains(licenses, field.offerCode);
+        }) || group[0]);
+      });
+      return result;
     }
 
     function isOrgSetup(customer) {
@@ -331,7 +369,6 @@
               licenseType: "CONFERENCING",
               offerName: "EE"
             }));
-
             resolve(myOrg);
           } else {
             reject('Unable to query for signed-in users org');
