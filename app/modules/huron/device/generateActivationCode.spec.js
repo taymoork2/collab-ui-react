@@ -38,7 +38,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
 
     spyOn($previousState, 'go');
     spyOn($state, 'go').and.returnValue($q.when());
-    spyOn(Notification, 'errorResponse');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
     spyOn(OtpService, 'generateOtp').and.returnValue($q.when(otp));
 
@@ -131,8 +131,8 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       beforeEach(initController);
 
       it('should notify not found error', function () {
-        expect(Notification.errorResponse).toHaveBeenCalled();
-        expect(Notification.errorResponse.calls.mostRecent().args[1]).toEqual('generateActivationCodeModal.generateErrorNotFound');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId.calls.mostRecent().args[1]).toEqual('generateActivationCodeModal.generateErrorNotFound');
       });
     });
 
@@ -143,14 +143,14 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       beforeEach(initController);
 
       it('should notify error', function () {
-        expect(Notification.errorResponse).toHaveBeenCalled();
-        expect(Notification.errorResponse.calls.mostRecent().args[1]).toEqual('generateActivationCodeModal.generateError');
+        expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+        expect(Notification.errorWithTrackingId.calls.mostRecent().args[1]).toEqual('generateActivationCodeModal.generateError');
       });
     });
 
-    function initOtpError(errorResponse) {
+    function initOtpError(errorWithTrackingId) {
       return function () {
-        OtpService.generateOtp.and.returnValue($q.reject(errorResponse));
+        OtpService.generateOtp.and.returnValue($q.reject(errorWithTrackingId));
       };
     }
 

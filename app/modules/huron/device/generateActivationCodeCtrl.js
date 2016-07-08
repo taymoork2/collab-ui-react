@@ -21,7 +21,7 @@
     vm.clipboardFallback = clipboardFallback;
 
     function handleError(response) {
-      Notification.errorResponse(response,
+      Notification.errorWithTrackingId(response,
         _.get(response, 'status') === 404 ? 'generateActivationCodeModal.generateErrorNotFound' : 'generateActivationCodeModal.generateError'
       );
       $previousState.go();
