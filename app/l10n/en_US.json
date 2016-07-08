@@ -1440,7 +1440,8 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule"
+        "upgrade-schedule": "Upgrade Schedule",
+        "cannot-find-upgrade-schedule": "Could not find upgrade schedule for {{clusterName}}."
       }
     }
   },
@@ -1963,9 +1964,9 @@
   },
   "callPark": {
     "code": "CP",
-    "title": "Call Parking",
+    "title": "Call Park",
     "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
-    "newCallPark": "New Call Park",
+    "newCallPark": "Create Call Park",
     "callParkInformation": "Call Park information",
     "information1": "The Call Park feature allows you to place a call on hold, so it can be retrieved from another phone in the system. If you are on an active call at your phone, you can park the call to a call park extension by pressing the Park softkey or the Call Park button. Someone on another phone in your system can then dial the call park extension to retrieve the call.",
     "information2": "You can define either a single directory number or a range of directory numbers for use as call park extension numbers. You can park only one call at each call park extension number.",
@@ -1984,13 +1985,23 @@
     "callReversion": "Call Reversion Rule",
     "callReversionDescription": "If the call is not answered, send it to this destination.",
     "callparkInitLine": "Line Number that initiated the Call Park",
-    "namePlaceholder": "Type the Name",
+    "selectParkNumber": "Select Call Park Number",
+    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are used for individual uses.",
+    "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
+    "memberPlaceholder": "Select Call Park Members",
+    "memberHint": "These users or or places' devices will be part of this call park.",
+    "removeMem": "Remove Member",
+    "nameHint": "The call park name appears on the call park members' devices.",
     "singleNumberPlaceholder": "Enter Single Number",
     "to": "to",
     "lessThan": "{{rangeMin}}  must be less than or equal to {{rangeMax}}.",
     "greaterThan": "{{rangeMax}}  must be greater than or equal to {{rangeMin}}.",
-    "required": "This field is required"
+    "required": "This field is required",
+    "cancelHeader": "Cancel Call Park Creation",
+    "cancelDialog": "Are you sure you wish to cancel call park creation? This call park will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation"
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -2730,7 +2741,9 @@
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful."
+    "emailError": "Email unsuccessful.",
+    "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
+    "generateError": "Unable to generate activation code. Please try again."
   },
   "rolesPanel": {
     "editUser": "Edit User",
@@ -3539,13 +3552,16 @@
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
     "useOwnLogo": "Use your own logo",
+    "logoPlaceholder": "Drag and drop your logo here or click to upload",
     "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
-    "companyLogo": "{{partner}} Company Logos",
-    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
-    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
-    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
-    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+    "companyLogo": "{{name}} Logos",
+    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples",
+    "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
+    "partner": "Partner",
+    "customer": "Customer"
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3775,18 +3791,8 @@
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
   "contactCenterUserConfig": {
-    "channels": "Channels",
-    "contactCenterProfile": "Care Profile",
-    "chat": "Chat",
-    "voice": "Voice",
-    "email": "Email",
-    "role": "Role",
     "alias": "Alias",
     "attributes": "Attributes",
-    "userRoles": {
-      "user": "User",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
@@ -4011,10 +4017,12 @@
     "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
     "errorCreateChatTemplate": "Error generating embed code, please try again.",
+    "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
+    "message": "Message",
     "connecting": "Connecting",
     "connectingMessage": "Connecting you to an Agent",
     "waiting": "Waiting",
-    "waitingMessage": "Waiting for an Agent to join…",
+    "waitingMessage": "Waiting for an Agent to join...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
     "leaveRoom": "Left the Room",
@@ -4303,14 +4311,20 @@
     "order": "Order History"
   },
   "subscriptions": {
+    "licenseSummary": "License Summary",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
-    "subscription": "Subscription: ",
+    "subscription": "Subscription ID: ",
+    "defaultName": "Your Subscription",
+    "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "more": "More",
+    "less": "Less",
+    "quantity": "Qty: ",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4320,8 +4334,7 @@
       "EC": "WebEx Event Center",
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
-      "CO": "Call",
-      "ST": "Storage",
+      "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
   },

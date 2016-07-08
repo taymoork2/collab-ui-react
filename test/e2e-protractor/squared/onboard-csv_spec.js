@@ -27,7 +27,7 @@ describe('Onboard Users using CSV File', function () {
   });
 
   it('should open add users tab', function () {
-    utils.click(landing.serviceSetup);
+    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.bulkUpload);

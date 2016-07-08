@@ -1,0 +1,90 @@
+.ct-agent-unavailable {
+  align-items: center;
+
+  @mixin placeholder {
+    ::-webkit-input-placeholder {
+      @content
+    }
+    :-moz-placeholder {
+      @content
+    }
+    ::-moz-placeholder {
+      @content
+    }
+    :-ms-input-placeholder {
+      @content
+    }
+  }
+
+  .cs-card {
+    @include vr-spacing(ml, 2);
+    width: rem-calc(366px);
+    height: rem-calc(458px);
+    display: flex;
+    flex-flow: column;
+    .cardHeader1 {
+      text-align: center;
+      color: $gray-dark-1;
+    }
+    .articleHeight {
+      height: 100%;
+    }
+  }
+
+  .ct-agent-unavailable-icon {
+    color: $alert-color;
+  }
+
+  .unavailable-header {
+    text-align: center;
+    color: $gray-dark-1;
+  }
+
+  .unavailable-preview {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    @include vr-spacing(mt,5);
+
+    > button {
+      width: 7rem;
+    }
+
+    .unavailable {
+      display: flex;
+      text-align: center;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      width: 80%;
+      color: $alert-color;
+    }
+
+    .unavailable-msg {
+      height: 15rem;
+      @include vr-spacing(pv, 1);
+      font-family: $brand-font-cisco-TT-Light;
+    }
+  }
+
+  .cs-card article.attributes {
+    background-color: $gray-light-4;
+  }
+
+  .unavailable-attributes {
+    @include vr-spacing(pl, 1);
+    > textarea {
+      height: 5rem;
+      width: 90%;
+      resize: none;
+      color: $gray-dark-1;
+      font-size: $h6-font-size;
+      line-height: 1.4rem;
+      @include vr-spacing(p, 1);
+    }
+  }
+
+  .unavailable-attributes-label{
+    font-family: $brand-font-cisco-TT-Regular;
+  }
+}

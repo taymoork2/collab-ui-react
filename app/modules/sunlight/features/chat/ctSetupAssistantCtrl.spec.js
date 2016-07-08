@@ -397,4 +397,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
   });
+
+  describe('Agent Unavailable Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[AGENT_UNAVAILABLE_PAGE_INDEX];
+    });
+
+    it('next and previous buttons should be enabled by default', function () {
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+
+    it("next button should be disabled when unavailable msg is not present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '';
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
+    });
+
+    it("next button should be enabled when unavailable msg is present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = templateName;
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+  });
+
 });
