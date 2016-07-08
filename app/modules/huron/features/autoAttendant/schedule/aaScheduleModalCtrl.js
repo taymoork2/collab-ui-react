@@ -40,6 +40,7 @@
       compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
     };
     vm.messageHours = {
+      required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
     vm.monthOptions = [];
@@ -51,11 +52,76 @@
     vm.openhours = [];
 
     function addRange() {
+      //if there were any invalid hours, we want to
+      //not add a new range to the DOM
+      if (isAnyHoursInvalid()) {
+        return;
+      }
       var openhour = AAICalService.getDefaultRange();
       _.each(openhour.days, function (day) {
         day.label = moment.weekdays(day.index);
       });
       vm.openhours.push(angular.copy(openhour));
+    }
+
+    //check each hours form that exist in the DOM for validity
+    //return true if there were errors found, else return false
+    //this method actually works through each section and prints
+    //out all of the error messages as well as performing the check
+    function isAnyHoursInvalid() {
+      var errors = false;
+      _.forEach(vm.openhours, function (value, index) {
+        if (isOpenHoursEmpty(index)) {
+          errors = true;
+        }
+        if (isClosedHoursEmptyOrInvalid(index)) {
+          errors = true;
+        }
+        if (isDayEmpty(index)) {
+          errors = true;
+        }
+      });
+      return errors;
+    }
+
+    //check each day in the day portion of the form for emptiness
+    //note: it was determined no error message for an invalid
+    //day selection would pop up at this stage, so this method
+    //will simply prohibit the user from making more open hours forms
+    //until they fix the issue (a silent warning is issued)
+    function isDayEmpty(index) {
+      var atLeastOneDaySet = _.find(vm.openhours[index].days, {
+        'active': true
+      });
+      return angular.isUndefined(atLeastOneDaySet);
+    }
+
+    //check the start time portion of the form for emptiness, return true if
+    //the open hours was empty, false otherwise
+    function isOpenHoursEmpty(index) {
+      if (_.isEmpty(vm.openhours[index].starttime)) {
+        setRequiredHours('starttime' + index);
+        return true;
+      }
+      return false;
+    }
+
+    //check the closed hours portion of the form for emptiness, or for invalidity,
+    //return true if empty or invalid and return false if neither
+    function isClosedHoursEmptyOrInvalid(index) {
+      if (_.isEmpty(vm.openhours[index].endtime)) {
+        setRequiredHours('endtime' + index);
+        return true;
+      }
+      return vm.hoursForm['endtime' + index].$error.compareTo;
+    }
+
+    //handle the production of the error message, using value as the
+    //form name and index, value guaranteed to be valid
+    function setRequiredHours(value) {
+      vm.hoursForm[value].$error.required = true;
+      vm.hoursForm[value].$setDirty();
+      vm.hoursForm[value].$validate();
     }
 
     function deleteRange(index) {
@@ -153,7 +219,8 @@
       }
     }
 
-    function forceOpenBeforeCloseCheck(index) {
+    function forceOpenBeforeCloseCheck(index, value) {
+      delete vm.hoursForm[value + index].$error.required;
       if (vm.isOpenHoursAfterCloseHours(vm.openhours[index].starttime, vm.openhours[index].endtime)) {
         vm.hoursForm['endtime' + index].$error.compareTo = true;
       } else {
@@ -260,6 +327,8 @@
           vm.toggleHolidays = !vm.toggleHolidays;
         }
       } else {
+        //print out any of the error messages
+        isAnyHoursInvalid();
         vm.forceCheckHoliday();
       }
     }
@@ -308,7 +377,7 @@
         savePromise.then(
           function (response) {
             if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
-              //To avoid notification when a CE update fails during calendar creation, 
+              //To avoid notification when a CE update fails during calendar creation,
               //and the newly created orphaned calendar is deleted.
               return;
             }
@@ -411,7 +480,7 @@
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
-          // success removing ScheduleId from CE, delete the calendar 
+          // success removing ScheduleId from CE, delete the calendar
           return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
             delete vm.ui.ceInfo.scheduleId;
           });

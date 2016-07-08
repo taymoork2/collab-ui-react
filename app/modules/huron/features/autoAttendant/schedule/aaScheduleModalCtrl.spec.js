@@ -193,6 +193,50 @@ describe('Controller: AAScheduleModalCtrl', function () {
       });
     });
 
+    //tests the required error message print outs using addRange (for both start and endtime)
+    it('should print out required errors on addRange function call because of undefined start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: undefined,
+        endtime: undefined
+      }];
+      $scope.$apply();
+      //test the end time prints
+      spyOn(controller.hoursForm.endtime0, '$setDirty');
+      spyOn(controller.hoursForm.endtime0, '$validate');
+      //test the start time prints
+      spyOn(controller.hoursForm.starttime0, '$setDirty');
+      spyOn(controller.hoursForm.starttime0, '$validate');
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      expect(controller.openhours.length).toEqual(1);
+      controller.addRange();
+      expect(controller.hoursForm.endtime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.starttime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$validate).toHaveBeenCalled();
+      //ensure that an extra range was not created
+      expect(controller.openhours.length).toEqual(1);
+    });
+
     it('should add a range', function () {
       expect(controller.openhours.length).toEqual(0);
       controller.addRange();
@@ -381,6 +425,74 @@ describe('Controller: AAScheduleModalCtrl', function () {
         AAUiModelService: AAUiModelService,
         sectionToToggle: 'hours'
       });
+    });
+
+    //tests the required error message print outs using addRange (for both start and endtime)
+    it('should print out required errors on toggleSection function call because of undefined start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $setDirty: function () {},
+          $validate: function () {},
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: undefined,
+        endtime: undefined
+      }];
+      $scope.$apply();
+      //test the end time prints
+      spyOn(controller.hoursForm.endtime0, '$setDirty');
+      spyOn(controller.hoursForm.endtime0, '$validate');
+      //test the start time prints
+      spyOn(controller.hoursForm.starttime0, '$setDirty');
+      spyOn(controller.hoursForm.starttime0, '$validate');
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      controller.toggleSection('hours');
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$error.required).toBeTruthy();
+      expect(controller.hoursForm.starttime0.$setDirty).toHaveBeenCalled();
+      expect(controller.hoursForm.starttime0.$validate).toHaveBeenCalled();
+    });
+
+    it('should not print out required errors on toggleSection function call with valid start and end times ', function () {
+      controller.hoursForm = {
+        endtime0: {
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        },
+        starttime0: {
+          $error: {
+            compareTo: undefined,
+            required: undefined
+          }
+        }
+      };
+      controller.openhours = [{
+        starttime: starttime,
+        endtime: endtime
+      }];
+      $scope.$apply();
+      controller.toggleSection('hours');
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.hoursForm.endtime0.$error.required).toBeFalsy();
+      expect(controller.hoursForm.starttime0.$error.required).toBeFalsy();
     });
 
     it('should toggle the sections holidays', function () {
@@ -784,7 +896,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('hours valid should have no error', function () {
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(false);
-      controller.forceOpenBeforeCloseCheck(0);
+      controller.forceOpenBeforeCloseCheck(0, 'endtime');
       expect(controller.hoursForm.endtime0.$error.compareTo).toBeFalsy();
       expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
       expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
@@ -792,7 +904,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('hours invalid should have error', function () {
       spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
-      controller.forceOpenBeforeCloseCheck(0);
+      controller.forceOpenBeforeCloseCheck(0, 'endtime');
       expect(controller.hoursForm.endtime0.$error.compareTo).toBeTruthy();
       expect(controller.hoursForm.endtime0.$setDirty).toHaveBeenCalled();
       expect(controller.hoursForm.endtime0.$validate).toHaveBeenCalled();
