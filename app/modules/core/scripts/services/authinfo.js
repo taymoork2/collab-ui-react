@@ -5,7 +5,7 @@
     .service('Authinfo', Authinfo);
 
   /* @ngInject */
-  function Authinfo($rootScope, $translate, Config, Localytics) {
+  function Authinfo($rootScope, $translate, Config) {
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -133,9 +133,6 @@
         authData.isInitialized = true;
         authData.setupDone = data.setupDone;
         $rootScope.$broadcast('AuthinfoUpdated');
-
-        Localytics.setOrgId(authData.orgId);
-        Localytics.setUserId(authData.userId);
       },
       clear: function () {
         authData.username = null;
