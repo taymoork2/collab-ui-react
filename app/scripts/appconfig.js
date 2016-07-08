@@ -231,6 +231,110 @@
         }
 
         $stateProvider
+          .state('addDeviceFlow', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseDeviceType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseAccountType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseAccountTypeCtrl',
+                controllerAs: 'chooseAccountType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseAccountTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.choosePersonal', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChoosePersonalCtrl',
+                controllerAs: 'choosePersonal',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChoosePersonalTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseSharedSpaceCtrl',
+                controllerAs: 'choosePlace',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addServices', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddServicesCtrl',
+                controllerAs: 'addServices',
+                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addLines', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddLinesCtrl',
+                controllerAs: 'addLines',
+                templateUrl: 'modules/squared/devices/addDeviceNew/AddLinesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.showActivationCode', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ShowActivationCodeCtrl',
+                controllerAs: 'showActivationCode',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -379,7 +483,12 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasSettingsPageGetStatus();
+              }
+            }
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -443,6 +552,7 @@
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
+            controllerAs: 'processOrder',
             parent: 'main',
             authenticate: false
           })
@@ -819,7 +929,7 @@
               site: {}
             }
           })
-          .state('user-overview.conferencing.webex2', {
+          .state('user-overview.conferencing.webex.webex2', {
             templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
             controller: 'WebExUserSettings2Ctrl',
             data: {
@@ -1117,8 +1227,57 @@
         /*
           devices
         */
-
-        .state('devices', {
+        .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
+          .state('place-overview', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'PlaceOverviewCtrl',
+                controllerAs: 'placeOverview',
+                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+              },
+              'header@place-overview': {
+                templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
+              }
+            },
+            params: {
+              currentPlace: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
+          })
+          .state('place-overview.csdmDevice', {
+            views: {
+              '': {
+                controller: 'DeviceOverviewCtrl',
+                controllerAs: 'deviceOverview',
+                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html'
+              }
+            },
+            resolve: {
+              channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+                return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+              }
+            },
+            params: {
+              currentDevice: {},
+              huronDeviceService: {}
+            },
+            data: {
+              displayName: 'Device Configuration'
+            }
+          })
+          .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
             controller: 'DevicesCtrl',
@@ -1161,51 +1320,6 @@
               }
             }
           })
-
-        /*
-         devices
-         prototypes
-        */
-        .state('main-redux', {
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/mainRedux/main-redux.html'
-              }
-            },
-            abstract: true,
-            sticky: true
-          })
-          .state('devices-redux', {
-            abstract: true,
-            templateUrl: 'modules/squared/devicesRedux/devices.html',
-            controller: 'DevicesReduxCtrl',
-            controllerAs: 'devices',
-            parent: 'main-redux'
-          })
-          .state('devices-redux.search', {
-            url: '/devices-redux',
-            views: {
-              'leftPanel': {
-                templateUrl: 'modules/squared/devicesRedux/list.html'
-              }
-            }
-          })
-          .state('devices-redux.details', {
-            url: '/devices-redux/details',
-            views: {
-              'leftPanel': {
-                controllerAs: 'deviceDetails',
-                controller: 'DevicesReduxDetailsCtrl',
-                templateUrl: 'modules/squared/devicesRedux/details.html'
-              }
-            },
-            params: {
-              device: null
-            }
-          })
-          /*
-            end: devices redux prototypes
-          */
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
@@ -1890,6 +2004,13 @@
               detailsDependsList: null
             }
           })
+          .state('huronCallPark', {
+            url: '/huronCallPark',
+            parent: 'hurondetails',
+            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
+            controller: 'CallParkSetupAssistantCtrl',
+            controllerAs: 'callParkSA'
+          })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
@@ -2275,24 +2396,13 @@
             controller: 'HostDetailsControllerV2',
             controllerAs: 'hostDetails',
             data: {
-              displayName: 'Host'
+              displayName: 'Node'
             },
             params: {
               clusterId: null,
               connector: null,
-              hostLength: null
-            }
-          })
-          .state('connector-details-v2.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-settings.html',
-            controller: 'GroupSettingsControllerV2',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
+              hostLength: null,
+              selectedCluster: null
             }
           });
       }
@@ -2331,7 +2441,7 @@
           })
           .state('ediscovery.reports', {
             url: '/reports',
-            controller: 'EdiscoveryController',
+            controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });

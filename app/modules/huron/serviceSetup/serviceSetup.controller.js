@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, FeatureToggleService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -24,17 +24,6 @@
 
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-
-    var mohOptions = [{
-      label: $translate.instant('serviceSetupModal.ciscoDefault'),
-      value: 'ciscoDefault'
-    }, {
-      label: $translate.instant('serviceSetupModal.fall'),
-      value: 'fall'
-    }, {
-      label: $translate.instant('serviceSetupModal.winter'),
-      value: 'winter'
-    }];
 
     vm.processing = true;
     vm.externalNumberPool = [];
@@ -63,13 +52,11 @@
       previousLength: DEFAULT_EXT_LEN,
       //var to hold ranges in view display
       displayNumberRanges: [],
-      globalMOH: mohOptions[0],
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
       },
       ftswSteeringDigit: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -80,7 +67,6 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
-    vm.timeZoneToggleEnabled = false;
     vm.previousTimeZone = DEFAULT_TZ;
     vm.extensionLengthChanged = false;
 
@@ -215,14 +201,6 @@
           }, function (timeZones) {
             $scope.to.options = timeZones;
           });
-        },
-        expressionProperties: {
-          'templateOptions.required': function () {
-            return vm.timeZoneToggleEnabled;
-          },
-          'templateOptions.disabled': function () {
-            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
-          }
         }
       }, {
         key: 'steeringDigit',
@@ -307,11 +285,6 @@
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.model.disableExtensions;
-        },
-        // hide function added to expressionProperties because hideExpression does not dependably hide
-        // the element on load, and will evaluate only after the model updates after first load
-        'hideExpression': function () {
-          return vm.model.hideExtensionLength;
         }
       }
     }, {
@@ -590,26 +563,6 @@
           }
         }]
       }
-    }, {
-      key: 'globalMOH',
-      type: 'select',
-      className: 'service-setup',
-      templateOptions: {
-        inputClass: 'service-setup-moh',
-        label: $translate.instant('serviceSetupModal.globalMOH'),
-        description: $translate.instant('serviceSetupModal.mohDescription'),
-        options: mohOptions,
-        labelfield: 'label',
-        valuefield: 'value'
-      },
-      hideExpression: function ($viewValue, $modelValue, scope) {
-        return vm.firstTimeSetup;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return !vm.firstTimeSetup;
-        }
-      }
     }];
 
     vm.addInternalNumberRange = addInternalNumberRange;
@@ -639,12 +592,6 @@
         });
       }).catch(function (response) {
         errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
-      }).then(function () {
-        // Get the timezone feature toggle setting
-        return enableTimeZoneFeatureToggle();
-      }).then(function () {
-        // Get the extemsion length feature toggle setting
-        return enableExtensionLengthFeatureToggle();
       }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
@@ -729,24 +676,6 @@
         if (vm.hasVoicemailService) {
           return listVoicemailTimezone(timezones);
         }
-      });
-    }
-
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
       });
     }
 

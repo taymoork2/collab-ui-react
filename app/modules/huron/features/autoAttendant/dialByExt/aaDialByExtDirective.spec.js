@@ -14,6 +14,7 @@ describe('Directive: aaDialByExt', function () {
   var schedule = 'schedule';
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
@@ -24,6 +25,7 @@ describe('Directive: aaDialByExt', function () {
     $scope.schedule = 'OpenHours';
     $scope.index = '0';
     $scope.keyIndex = '0';
+    $scope.menuId = 'menu1';
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -32,13 +34,14 @@ describe('Directive: aaDialByExt', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel.openHours.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenu());
 
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
+    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aaDialByExtCtrl");
   });

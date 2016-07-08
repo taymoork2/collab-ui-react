@@ -5,12 +5,12 @@
     .controller('HostDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $state, MediaClusterServiceV2, XhrNotificationService, $modal) {
+      function ($stateParams, $log, MediaClusterServiceV2, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.connector = $stateParams.connector;
         vm.hostscount = $stateParams.hostLength;
-        vm.cluster = MediaClusterServiceV2.getClusters()[vm.clusterId];
+        vm.cluster = $stateParams.selectedCluster;
         vm.options = ["Switching", "Transcoding"];
         vm.selectPlaceholder = 'Select One';
         vm.organization = '';
@@ -26,28 +26,21 @@
             resolve: {
               cluster: function () {
                 return vm.cluster;
+              },
+              connector: function () {
+                return vm.connector;
               }
             },
+            type: 'small',
             controller: 'ReassignClusterControllerV2',
             controllerAs: "reassignClust",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-cluster-dialog.html'
           });
         };
 
-        vm.deleteHost = function () {
-          return MediaClusterServiceV2.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
-            if (MediaClusterServiceV2.getClusters()[vm.clusterId]) {
-              $state.go('connector-details', {
-                clusterId: vm.clusterId
-              });
-            } else {
-              $state.sidepanel.close();
-            }
-          }, XhrNotificationService.notify);
-        };
-
         vm.showDeregisterHostDialog = function () {
           if (vm.hostscount == 1) {
+            $log.log("cluster details ", vm.cluster);
             $modal.open({
               resolve: {
                 orgName: function () {
@@ -55,8 +48,10 @@
                 },
                 cluster: function () {
                   return vm.cluster;
-                }
-
+                },
+                connector: function () {
+                  return vm.connector;
+                },
               },
               type: 'dialog',
               controller: 'HostClusterDeregisterControllerV2',
@@ -71,6 +66,9 @@
                 },
                 orgName: function () {
                   return vm.organization.displayName;
+                },
+                connector: function () {
+                  return vm.connector;
                 }
               },
               type: 'dialog',

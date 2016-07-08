@@ -13,6 +13,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _FeatureToggleService_, _WebExSiteRowService_) {

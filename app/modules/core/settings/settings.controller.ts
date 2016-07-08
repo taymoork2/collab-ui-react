@@ -1,7 +1,7 @@
 /// <reference path="authenticationSetting.component.ts"/>
 /// <reference path="securitySetting.component.ts"/>
 /// <reference path="domainsSetting.component.ts"/>
-/// <reference path="dataPolicySetting.component.ts"/>
+/// <reference path="retentionSetting.component.ts"/>
 /// <reference path="sipDomainSetting.component.ts"/>
 /// <reference path="supportSection/supportSetting.component.ts"/>
 /// <reference path="brandingSetting.component.ts"/>
@@ -17,42 +17,48 @@ namespace globalsettings {
     public authentication:SettingSection;
     public branding:SettingSection;
     public support:SettingSection;
-    public dataPolicy:SettingSection;
+    public retention:SettingSection;
 
     /* @ngInject */
-    constructor(Authinfo, private Orgservice, private FeatureToggleService) {
-      if (Authinfo.isPartner()) {
-        //Add setting sections for partner admins here.
-        this.initBranding();
-      } else {
+    constructor($state, private Authinfo, private Orgservice, private FeatureToggleService, private hasFeatureToggle) {
+      if(!hasFeatureToggle) {
+        $state.go('login');
+      }
+      // provide these settings to everyone
+      this.initBranding();
+      this.support = new SupportSetting();
+
+      // if they are not a partner, provide everything else
+      if(!this.Authinfo.isPartner()) {
         this.initSecurity();
-        this.domains = new DomainsSetting();
-        this.sipDomain = new SipDomainSetting();
         this.authentication = new AuthenticationSetting();
-        this.support = new SupportSetting();
-        this.initBrandingForNonPartner();
+        this.domains = new DomainsSetting();
         this.privacy = new PrivacySetting();
-        this.dataPolicy = new DataPolicySetting();
+        this.sipDomain = new SipDomainSetting();
+        this.retention = new RetentionSetting();
       }
     }
 
-    private initBrandingForNonPartner(){
-      this.Orgservice.getOrg(data => {
-        if (_.get(data, 'orgSettings.allowCustomerLogos')) {
-          this.initBranding();
-        }
-      });
-    }
-
     private initBranding() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.brandingWordingChange).then(() => {
-        //this is done to prevent flashing between the two branding templates, it will be revealed after toggle is resolved
+      if(this.Authinfo.isPartner()) {
+        this.FeatureToggleService.brandingWordingChangeGetStatus().then(() => {
+          // this is done to prevent flashing between the two branding templates,
+          // it will be revealed after toggle is resolved
+          this.branding = new BrandingSetting();
+        });
+      } else if(this.Authinfo.isPartnerUser()) {
+        this.Orgservice.getOrg(_.noop).then(data => {
+          if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+            this.branding = new BrandingSetting();
+          }
+        });
+      } else if(this.Authinfo.isDirectCustomer()) {
         this.branding = new BrandingSetting();
-      });
+      }
     }
 
     private initSecurity() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then(toggle=> {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then((toggle) => {
         if (toggle) {
           this.security = new SecuritySetting();
         }

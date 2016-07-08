@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -38,11 +38,16 @@
     vm.searchData = searchData;
     vm.openService = openService;
     vm.openSettings = openSettings;
+    vm._helpers = {
+      formatTimeAndDate: formatTimeAndDate,
+      hasServices: hasServices
+    };
 
     loadClusters();
 
     function loadClusters() {
       FusionClusterService.getAll()
+        .then(addMissingUpgradeScheduleToClusters)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
@@ -59,6 +64,25 @@
         .uniq()
         .size()
         .value();
+    }
+
+    function addMissingUpgradeScheduleToClusters(clusters) {
+      // .clusterUpgradeSchedule is populated when getting the list of clusters
+      // only when the upgrade schedule has been explicitely set by the admin.
+      // Otherwise it's not there but we can get it by fetching directly the
+      // cluster data…
+      var promises = clusters.map(function (cluster) {
+        if (cluster.clusterUpgradeSchedule) {
+          return cluster;
+        } else {
+          return FusionClusterService.getUpgradeSchedule(cluster.id)
+            .then(function (upgradeSchedule) {
+              cluster.clusterUpgradeSchedule = upgradeSchedule;
+              return cluster;
+            });
+        }
+      });
+      return $q.all(promises);
     }
 
     function updateFilters() {
@@ -108,6 +132,47 @@
     function openSettings(type, id) {
       $state.go(type + '-settings', {
         id: id
+      });
+    }
+
+    function formatTimeAndDate(clusterUpgradeSchedule) {
+      var time = labelForTime(clusterUpgradeSchedule.scheduleTime);
+      var day;
+      if (clusterUpgradeSchedule.scheduleDays.length === 7) {
+        day = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+      } else {
+        day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+      }
+      return time + ' ' + day;
+    }
+
+    function labelForTime(time) {
+      var currentLanguage = $translate.use();
+      if (currentLanguage === 'en_US') {
+        return moment(time, 'HH:mm').format('hh:mm A');
+      } else {
+        return time;
+      }
+    }
+
+    function labelForDay(day) {
+      var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      var keys = _.reduce(days, function (result, day, i) {
+        // the days in shcedule upgrade starts at 1 == monday and ends with 7 == sunday
+        // (API made by a British :))
+        result[i + 1] = day;
+        return result;
+      }, {});
+      return $translate.instant('weekDays.everyDay', {
+        day: $translate.instant('weekDays.' + keys[day])
+      });
+    }
+
+    function hasServices(cluster) {
+      return cluster.servicesStatuses.some(function (serviceStatus) {
+        return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
       });
     }
   }

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification, XhrNotificationService) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -36,17 +36,19 @@
         state: 'media-service-v2.settings',
       }
     ];
-    vm.clusters = _.values(MediaClusterServiceV2.getClusters());
-    vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters());
+    vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt'); //_.values(MediaClusterServiceV2.getClusters());
+    //vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters());
+    vm.getSeverity = MediaClusterServiceV2.getRunningStateSeverity;
     vm.clusterLength = clusterLength;
     vm.showClusterDetails = showClusterDetails;
+    vm.sortByProperty = sortByProperty;
     vm.addResourceButtonClicked = addResourceButtonClicked;
     vm.clusterList = [];
-
+    vm.clustersUpdated = clustersUpdated;
     var clustersCache = [];
 
     vm.clusterListGridOptions = {
-      data: 'med.aggregatedClusters',
+      data: 'med.clusters',
       enableSorting: false,
       multiSelect: false,
       enableRowHeaderSelection: false,
@@ -84,45 +86,26 @@
       return _.size(vm.clusters);
     }
 
+    /**
+     * This will sort the string array based on the property passed.
+     */
+    function sortByProperty(property) {
+      return function (a, b) {
+        return a[property].toLocaleUpperCase().localeCompare(b[property].toLocaleUpperCase());
+      };
+    }
+
     function clustersUpdated() {
 
-      MediaClusterServiceV2.getAll()
-        .then(function (clusters) {
-          clustersCache = clusters;
-          vm.clusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
-          vm.aggregatedClusters = vm.clusters;
-          $log.log("Clusters is using getall", clustersCache);
-          $log.log("aggregatedClusters is using getall", vm.aggregatedClusters);
-        }, XhrNotificationService.notify);
-
-      /*MediaClusterServiceV2.getClustersV2().then(function (cluster) {
-        $log.log("Clusters is using getc2", cluster);
-        vm.clusters = cluster.clusters;
-        _.each(cluster.clusters, function (cluster) {
-          if (cluster.targetType === "mf_mgmt") {
-            vm.clusterList.push(cluster.name);
-          }
-        });
-        vm.aggregatedClusters = _.values(MediaClusterServiceV2.getClusterAlarmAggregate(vm.clusters));
-      });*/
-
-      /*MediaClusterServiceV2.getGroups().then(function (group) {
-        // vm.groups = group;
-        vm.clusterList = [];
-        _.each(group, function (group) {
-          vm.clusterList.push(group.name);
-        });
-        vm.clusters = _.values(MediaClusterServiceV2.getClusters());
-        //$log.log("clustersUpdated clusters :", vm.clusters);
-        vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters(vm.clusters, vm.clusterList));
-        //$log.log("clustersUpdated aggregatedClusters :", vm.aggregatedClusters);
-      });*/
+      vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
+      vm.clusters.sort(sortByProperty('name'));
+      vm.loadingClusters = false;
+      $log.log("aggregatedClusters", vm.clusters);
 
     }
 
     function showClusterDetails(cluster) {
       if (vm.showPreview) {
-        $log.log("cluster details ", cluster);
         $state.go('connector-details-v2', {
           clusterName: cluster.name,
           nodes: cluster.connectors,
@@ -134,6 +117,7 @@
 
     function addResourceButtonClicked() {
       $modal.open({
+        type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
         templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',

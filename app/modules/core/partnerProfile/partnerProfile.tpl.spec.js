@@ -20,6 +20,7 @@ describe('Template: partnerProfile', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);

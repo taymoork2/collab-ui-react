@@ -152,7 +152,8 @@ describe('Controller: AddResourceController', function () {
       connectorType: newConnectorType,
       servicesId: 'squared-fusion-cal',
       ClusterService: clusterServiceMock,
-      FusionClusterService: fusionClusterServiceMock
+      FusionClusterService: fusionClusterServiceMock,
+      firstTimeSetup: false
     });
     $scope.$apply();
   }

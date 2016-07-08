@@ -56,6 +56,24 @@ describe('Service: FusionClusterService', function () {
         });
     });
 
+    // state (fused, defused, etc.) will soon be removed from the API reponse!
+    // the API will only return fused clusters
+    it('should not crash if clusters do not have a state', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond({
+          clusters: [{
+            connectors: []
+          }, {
+            connectors: []
+          }]
+        });
+      FusionClusterService.getAll()
+        .then(function (clusters) {
+          expect(clusters.length).toBe(2);
+        });
+    });
+
     it('should add a type property to clusters', function () {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
@@ -409,6 +427,25 @@ describe('Service: FusionClusterService', function () {
       expect(result.hosts[1].connectors.length).toBe(2);
       expect(result.hosts[0].connectors[0].state).toBe('running');
       expect(result.hosts[0].connectors[0].hostSerial).toBe(result.hosts[0].connectors[1].hostSerial);
+    });
+
+  });
+
+  describe('.getReleaseNotes', function () {
+
+    it('should return release notes', function () {
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/0FF1C3/channels/GA/packages/c_cal?fields=@wide')
+        .respond({
+          releaseNotes: 'Example calendar connector release notes.'
+        });
+
+      var callback = sinon.stub();
+      FusionClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+      expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
     });
 
   });

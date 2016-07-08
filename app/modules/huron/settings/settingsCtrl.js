@@ -7,8 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService,
-    InternationalDialing) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing) {
 
     var vm = this;
     vm.loading = true;
@@ -32,7 +31,6 @@
 
     var savedModel = null;
     var errors = [];
-    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -93,7 +91,6 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -231,14 +228,6 @@
       },
       controller: /* @ngInject */ function ($scope) {
         _buildTimeZoneOptions($scope);
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.timeZoneToggleEnabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.timeZoneToggleEnabled;
-        }
       }
 
     }, {
@@ -284,9 +273,6 @@
           vm.model.site.extensionLength = vm.model.previousLength;
           vm.extensionLengthChanged = true;
         }
-      },
-      hideExpression: function () {
-        return vm.model.hideExtensionLength;
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -1265,8 +1251,6 @@
       errors = [];
 
       var promises = [];
-      promises.push(enableTimeZoneFeatureToggle());
-      promises.push(enableExtensionLengthFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1528,24 +1512,6 @@
         } else {
           vm.model.callerId.callerIdNumber = '';
         }
-      });
-    }
-
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
       });
     }
 

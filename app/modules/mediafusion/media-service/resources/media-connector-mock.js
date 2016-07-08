@@ -202,8 +202,6 @@
     ];
   };
 
-  ////console.info(JSON.stringify(mockData(), null, '  '));
-
   angular
     .module('Mediafusion')
     .service('MediaConnectorMock', MediaConnectorMock);

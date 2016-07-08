@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskUserController', HelpdeskUserController);
+
   /* @ngInject */
   function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
@@ -48,17 +52,18 @@
       }, XhrNotificationService.notify);
     }
 
-    function openExtendedInformation(title, message) {
+    function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
-              return title;
+              return 'helpdesk.userDetails';
             },
-            message: function () {
-              return message;
+            data: function () {
+              return vm.user;
             }
           }
         });
@@ -67,7 +72,6 @@
 
     function initUserView(user) {
       vm.user = user;
-      vm.userStringified = JSON.stringify(user, null, 4);
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
@@ -120,7 +124,7 @@
     }
 
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+      return Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isReadOnlyAdmin());
     }
 
     function downloadLog(filename) {
@@ -135,22 +139,17 @@
       }
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
-        $window.history.back();
+      if (!modalVisible()) {
+        if (event.keyCode === 27) { // Esc
+          $window.history.back();
+        }
       }
     }
   }
 
-  /* @ngInject */
-  function HelpdeskExtendedInformationCtrl(title, message) {
-    var vm = this;
-    vm.message = message;
-    vm.title = title;
-  }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController)
-    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
 }());

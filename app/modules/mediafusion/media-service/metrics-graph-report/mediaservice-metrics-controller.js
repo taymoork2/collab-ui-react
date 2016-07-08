@@ -22,13 +22,18 @@
     vm.setCallVolumeData = setCallVolumeData;
     vm.setAvailabilityData = setAvailabilityData;
     vm.setUtilizationData = setUtilizationData;
+    vm.setCPUUtilizationData = setCPUUtilizationData;
+    vm.setClusterAvailability = setClusterAvailability;
+    //vm.averageUtilization = vm.REFRESH;
+    //vm.clusterAvailability = vm.REFRESH;
+    //vm.card = vm.REFRESH;
     vm.resizeCards = resizeCards;
     vm.delayedResize = delayedResize;
     vm.setDummyData = setDummyData;
     vm.callVolumeStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.utilizationStatus = vm.REFRESH;
-    vm.clusterOptions = ['All'];
+    vm.clusterOptions = ['All Clusters'];
     vm.clusterSelected = vm.clusterOptions[0];
     getClusters();
     vm.timeOptions = [{
@@ -49,14 +54,50 @@
       description: $translate.instant('mediaFusion.metrics.threeMonths2')
     }];
     vm.timeSelected = vm.timeOptions[0];
+    vm.displayDate = displayDate;
 
     init();
+    displayDate();
 
     function init() {
       $timeout(function () {
         setDummyData();
         setAllGraphs();
       }, 30);
+    }
+
+    function displayDate() {
+      var date1 = new Date();
+      var date2 = new Date();
+      var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      if (vm.timeSelected.value === 0) {
+
+        vm.label = vm.timeSelected.label;
+        vm.date = date1.getHours() + ':' + (date1.getMinutes() < 10 ? '0' : '') + date1.getMinutes() + ' ' + month[date1.getMonth()] + ' ' + date1.getDate() + ',' + date1.getFullYear();
+
+      } else if (vm.timeSelected.value === 1) {
+
+        vm.label = vm.timeSelected.label;
+        date1.setDate(date1.getDate() - 7);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      } else if (vm.timeSelected.value === 2) {
+
+        vm.label = vm.timeSelected.label;
+        date1.setMonth(date1.getMonth() - 1);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      } else {
+
+        vm.label = vm.timeSelected.label;
+        date1.setMonth(date1.getMonth() - 3);
+        var prevdate = new Date(date1);
+        vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
+
+      }
     }
 
     function getClusters() {
@@ -80,6 +121,7 @@
     }
 
     function timeUpdate() {
+      displayDate();
       vm.callVolumeStatus = vm.REFRESH;
       vm.availabilityStatus = vm.REFRESH;
       vm.utilizationStatus = vm.REFRESH;
@@ -96,6 +138,9 @@
     }
 
     function setAllGraphs() {
+      setTotalCallsData();
+      setCPUUtilizationData();
+      setClusterAvailability();
       setUtilizationData();
       setCallVolumeData();
       setAvailabilityData();
@@ -125,6 +170,7 @@
       setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
       setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
       resizeCards();
+      //delayedResize();
     }
 
     function setCallVolumeGraph(data) {
@@ -145,6 +191,7 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
+        //delayedResize();
       });
     }
 
@@ -166,6 +213,7 @@
           vm.availabilityStatus = vm.SET;
         }
         resizeCards();
+        //delayedResize();
       });
     }
 
@@ -184,7 +232,78 @@
           vm.utilizationStatus = vm.EMPTY;
         } else {
           setUtilizationGraph(response.graphData);
+          vm.card = '';
           vm.utilizationStatus = vm.SET;
+        }
+        resizeCards();
+        //delayedResize();
+      });
+    }
+
+    function setTotalCallsData() {
+      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (vm.clusterSelected === 'All Clusters') {
+          if (response === vm.ABORT) {
+            return;
+          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = vm.EMPTY;
+            vm.cloud = vm.EMPTY;
+            vm.onprem = '';
+            vm.cloud = '';
+            vm.total = '';
+          } else {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = response.data.callsOverflow;
+            vm.total = vm.onprem + vm.cloud;
+
+          }
+        } else {
+          if (response === vm.ABORT) {
+            return;
+          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = vm.EMPTY;
+            vm.cloud = vm.EMPTY;
+            vm.onprem = '';
+            vm.cloud = '';
+            vm.total = '';
+          } else {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = response.data.callsRedirect;
+            vm.total = vm.onprem + vm.cloud;
+
+          }
+        }
+        resizeCards();
+      });
+
+    }
+
+    function setCPUUtilizationData() {
+      MetricsReportService.getCPUUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.avgCpu) || !angular.isDefined(response.data.peakCpu)) {
+          vm.averageUtilization = vm.EMPTY;
+          vm.peakUtilization = vm.EMPTY;
+          vm.averageUtilization = '';
+          vm.peakUtilization = '';
+        } else {
+          vm.averageUtilization = response.data.avgCpu + '%';
+          vm.peakUtilization = response.data.peakCpu + '%';
+        }
+        resizeCards();
+      });
+    }
+
+    function setClusterAvailability() {
+      MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (response === vm.ABORT) {
+          return;
+        } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.availabilityPercent)) {
+          vm.clusterAvailability = vm.EMPTY;
+          vm.clusterAvailability = '';
+        } else {
+          vm.clusterAvailability = response.data.availabilityPercent + '%';
         }
         resizeCards();
       });

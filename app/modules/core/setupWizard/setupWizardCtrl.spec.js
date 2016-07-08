@@ -3,6 +3,7 @@
 describe('SetupWizardCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
 
@@ -131,25 +132,6 @@ describe('SetupWizardCtrl', function () {
     });
     $scope.$apply();
   }
-
-  /**
-   * convenience fn to see the proper ordering of setup tabs:
-   * shows tab name, subtab name (if present), and [step names]
-   *
-  function print() {
-    _.forEach($scope.tabs, function (macroStep) {
-      var microSteps = _.map(macroStep.steps, 'name');
-      if (microSteps.length !== 0) {
-        console.log(macroStep.name, microSteps);
-      } else {
-        _.forEach(macroStep.subTabs, function (subTab) {
-          var microSteps = _.map(subTab.steps, 'name');
-          console.log(macroStep.name, subTab.name, microSteps);
-        });
-      }
-    });
-  }
-  */
 
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);

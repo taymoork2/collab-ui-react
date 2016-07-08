@@ -11,7 +11,6 @@
     left: 0px;
     top: 3.3rem;
     height: 3rem;
-    z-index: 9999;
     text-align: left;
     font-size: 1rem;
     padding-left: 6.3rem;
@@ -83,15 +82,16 @@
     height: 100vh;
     background-color: $brand-white;
     padding-top: 9rem;
-    @media only screen and (max-height: 800px) {
+    @media only screen and (max-height: 950px) {
       padding-top: 7rem;
     }
     div.search-result-area {
       background-color: $gray-light-4;
       min-height: calc(100% - 145px);
       padding-top: 2.25rem;
-      @media only screen and (max-width: 640px) {
+      @media only screen and (max-height: 950px) {
         padding-top: 1rem;
+        min-height: calc(100% - 113px);
       }
     }
     div.search-error {
@@ -106,7 +106,7 @@
     .ediscovery-search-bar {
       text-align: center;
       padding-bottom: 3rem;
-      @media only screen and (max-width: 640px) {
+      @media only screen and (max-height: 950px) {
         padding-bottom: 1rem;
       }
       .pointer {
@@ -138,6 +138,9 @@
         position: relative;
         margin-top: 1rem;
         max-width: 100%;
+        @media only screen and (max-width: 640px) {
+          max-width: 90%;
+        };
         .searchInputForm {
           margin-bottom: 0;
         }
@@ -188,36 +191,6 @@
         padding-top: 0.5rem;
       }
     }
-    .create-report {
-      padding-left: 9rem;
-      box-shadow: 2px 3px 10px 2px rgba(0,0,0,0.18);
-      border-radius: 2px;
-      margin-top: 2rem;
-
-      .cs-form__section .section__info {
-        margin-top: 2rem;
-      }
-
-      .content {
-        margin-left: 30px;
-        border:1px solid red;
-        font-weight: bold;
-      }
-
-      .progress-container {
-        width: 80%;
-        margin-top: 3.1rem;
-        button {
-          margin-top: 1rem;
-          margin-left: 3rem;
-        }
-      }
-
-      .fit {
-        margin-left: 0;
-      }
-    }
-
     .cs-form__section .section__content .sub-section {
       margin-bottom: 0.5rem;
       h5.large {
@@ -227,18 +200,21 @@
         margin-top: 1rem;
       }
     }
-
     .cs-form__section .section__content .sub-section__label {
       line-height: 0.5rem;
       margin-bottom: 0.5rem;
       margin-top: 1rem;
     }
-
     .search-result {
       .create-form {
         padding: 2.5rem 2.5rem 5rem 0;
         @media only screen and (max-width: 800px) {
-          padding: 1.25rem 1.25rem 2.5rem 0;
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+        @media only screen and (max-height: 950px) {
+          padding-top: 1.25rem;
+          padding-bottom: 2.5rem;
         }
         @media only screen and (max-width: 640px) {
           padding-left: 1rem;
@@ -281,17 +257,30 @@
         .result-section {
           padding-bottom: 1.5rem;
           h6 {
+            font-size: 14px;
             padding-bottom: 0.25rem;
-            color: $gray-light-1;
-            text-transform: uppercase;
+            color: $gray-base;
           }
           .progressbar-info {
             padding-top: 0.5rem;
           }
+          i.icon-warning {
+            color: $color-attention-base
+          }
+          .report-timeout {
+            padding-top: 1rem;
+          }
+          .failure {
+            color: $gray-base;
+            font-size: 16px;
+            padding: 0;
+          }
         }
-        .input-section-last {
-          padding-top: 0.75rem;
-          padding-right: 2rem;
+        .expiry-info {
+          padding-top: 1.5rem;
+        }
+        .last-input-row {
+          padding-bottom: 0.75rem;
         }
       }
       .report-logo-column {
@@ -313,10 +302,14 @@
           height: 5rem;
         }
       }
+      span.cancel-icon {
+        position: relative;
+        top: 2rem;
+        font-size: 2rem;
+        color: $gray-light-1;
+        cursor: pointer;
+      }
     }
-  }
-  .failure {
-    color: $color-negative-base;
   }
   .ediscovery-reports {
     padding-top: 9.5rem;
@@ -330,13 +323,50 @@
     .action-icons {
       font-size: 1.1rem;
       vertical-align: middle;
+      top: 5px;
+      padding-right: 1rem;
+      color: $gray-light-1;
+    }
+    .action-icons.disabled {
+      color: $gray-light-3;
+    }
+    .action-icons.disabled:hover {
+      color: $gray-light-3;
     }
     .action-icons:hover {
       color: $color-primary-base;
     }
+    .download-wait {
+      position: relative;
+      .icon-download {
+        color: $color-primary-darker;
+      }
+      .icon-spinner {
+        position: absolute;
+        top: -3px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
+    }
+    .cancel-wait {
+      position: relative;
+      .icon-exit {
+        color: $color-primary-darker;
+      }
+      .icon-spinner {
+        position: absolute;
+        top: -5px;
+        left: -7px;
+        font-size: 1.8rem;
+      }
+    }
     .column-air {
-      margin-left:2rem;
-      margin-right:2rem;
+      margin-left: 6.3rem;
+      margin-right: 6.3rem;
+      @media only screen and (max-width: 1280px) {
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
     }
     .search-spinner {
       position:relative;
@@ -362,6 +392,17 @@
     .fit-in-cell {
       line-height: 35px;
     }
-
+    .progressbar-info {
+      padding-top: 0.5rem;
+    }
+    i.icon-warning {
+      font-size: 1.0rem;
+      color: $color-attention-base;
+      vertical-align: middle;
+      padding-right: 0.3rem;
+    }
+    span.progressbar-progress {
+      color: $gray-dark-1
+    }
   }
 }

@@ -70,7 +70,4 @@ $overlay-panel-height: 93px;
 }
 .cs-setupassistant--content {
   height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
-  .typeahead-large {
-    margin-top: calc(51vh - #{$top-bar-height + $overlay-panel-height});
-  }
 }

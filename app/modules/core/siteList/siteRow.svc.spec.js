@@ -192,6 +192,7 @@ describe('Service: WebExSiteRowService', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
@@ -236,7 +237,13 @@ describe('Service: WebExSiteRowService', function () {
     spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
     spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
-
+    spyOn(WebExUtilsFact, "isCIEnabledSite").and.callFake(function (siteUrl) {
+      if (siteUrl === "sjsite04.webex.com") {
+        return true;
+      } else if (siteUrl === "t30citestprov9.webex.com") {
+        return false;
+      }
+    });
   }));
 
   ////////
@@ -620,6 +627,29 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.licenseTypeContentDisplay).toBe("siteList.multipleLicenses");
     expect(searchResult.licenseTooltipDisplay).toBe("helpdesk.licenseDisplayNames.MC<br>helpdesk.licenseDisplayNames.CMR");
 
+  });
+
+  //test to determine CI sites 
+  it('can correctly determine CI sites and display the actions column in sitelist page', function () {
+    var fakeSiteUrl = "sjsite04.webex.com";
+    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    expect(searchResult).toBe(true);
+
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    });
+  });
+
+  it('can correctly determine non CI sites and give cross launch link in the actions column', function () {
+    var fakeSiteUrl = "t30citestprov9.webex.com";
+    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    expect(searchResult).toBe(false);
+
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
+    });
   });
 
 });

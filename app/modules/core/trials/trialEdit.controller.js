@@ -17,8 +17,10 @@
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
+    vm.showCare = false;
 
     var _messageTemplateOptionId = 'messageTrial';
+    var _careDefaultQuantity = 15;
 
     vm.trialData = TrialService.getData();
     vm.details = vm.trialData.details;
@@ -29,7 +31,7 @@
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
-    vm.setDeviceModal = setDeviceModal;
+    vm.careTrial = vm.trialData.trials.careTrial;
     vm.hasUserServices = hasUserServices;
 
     vm.preset = {
@@ -41,12 +43,16 @@
       roomSystems: hasOfferType(Config.offerTypes.roomSystems),
       roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
       licenseDuration: _.get(vm, 'currentTrial.duration', 0),
+      care: hasOfferType(Config.offerTypes.care),
+      careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
       context: false // we don't know this yet, so default to false
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
     vm.details.licenseDuration = vm.preset.licenseDuration;
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
+    vm.careTrial.details.quantity = vm.preset.careLicenseValue;
+    vm.canSeeDevicePage = true;
 
     vm.trialStates = [{
       name: 'trialEdit.webex',
@@ -156,6 +162,59 @@
       }
     }];
 
+    vm.careFields = [{
+      // Care Trial
+      model: vm.careTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: '',
+      templateOptions: {
+        id: 'careTrial',
+        label: $translate.instant('trials.care')
+      },
+      hideExpression: function () {
+        return !vm.showCare;
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.messageTrial.enabled; // Since, it depends on Message Offer
+        },
+        'templateOptions.disabled': function () {
+          return messageOfferDisabledExpression();
+        }
+      }
+    }, {
+      model: vm.careTrial.details,
+      key: 'quantity',
+      type: 'input',
+      name: 'trialCareLicenseCount',
+      className: '',
+      templateOptions: {
+        id: 'trialCareLicenseCount',
+        inputClass: 'medium-5 small-offset-1',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.careTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return careLicenseInputDisabledExpression();
+        }
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return validateCareLicense($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialCareQuantity');
+          }
+        }
+      }
+    }];
+
     vm.licenseCountFields = [{
       model: vm.details,
       key: 'licenseCount',
@@ -192,8 +251,16 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          },
+          }
         },
+        countWithCare: {
+          expression: function () {
+            return careLicenseCountLessThanTotalCount();
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.careLicenseCountExceedsTotalCount');
+          }
+        }
       },
     }];
 
@@ -221,8 +288,7 @@
       className: '',
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: 'trialRoomSystem',
-        class: '',
+        id: 'trialRoomSystem'
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -243,7 +309,7 @@
       className: '',
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'medium-5',
+        inputClass: 'medium-5 small-offset-1',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -285,7 +351,13 @@
       hasEnabledWebexTrial: hasEnabledWebexTrial,
       hasEnabledCallTrial: hasEnabledCallTrial,
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
-      hasEnabledAnyTrial: hasEnabledAnyTrial
+      hasEnabledCareTrial: hasEnabledCareTrial,
+      hasEnabledAnyTrial: hasEnabledAnyTrial,
+
+      messageOfferDisabledExpression: messageOfferDisabledExpression,
+      careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
+      validateCareLicense: validateCareLicense,
+      careLicenseCountLessThanTotalCount: careLicenseCountLessThanTotalCount
     };
 
     init();
@@ -293,36 +365,41 @@
     ///////////////////////
 
     function init() {
+      var isTestOrg = false;
+      var overrideTestOrg = false;
       $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
-        TrialContextService.trialHasService(vm.currentTrial.customerOrgId)
+        TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        FeatureToggleService.supports('atlasTrialsShipDevices'),
+        Orgservice.getAdminOrg(_.noop)
       ]).then(function (results) {
-        // TODO: override atlasCloudberryTrials globally to true for now (US11974)
-        //vm.showRoomSystems = results[0];
-        //vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
         vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = true && vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[1] && vm.preset.webex;
+        vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+        vm.webexTrial.enabled = results[0] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[1];
+        vm.showWebex = results[0];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.showContextServiceTrial = results[3];
-        vm.contextTrial.enabled = results[4];
-        vm.preset.context = results[4];
-        // TODO: override atlasDeviceTrials to show Ship devices to all partners
-        //       and do not show to test orgs (US12063)
-        //vm.canSeeDevicePage = results[2];
-        setDeviceModal();
+        vm.showContextServiceTrial = results[1];
+        vm.contextTrial.enabled = results[2];
+        vm.preset.context = results[2];
+        vm.showCare = results[3];
+        vm.careTrial.enabled = vm.preset.care;
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
         }
+
+        // To determine whether to display the ship devices page
+        overrideTestOrg = results[4];
+        if (results[5].data.success) {
+          isTestOrg = results[5].data.isTestOrg;
+        }
       }).finally(function () {
+        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
         $scope.$watch(function () {
           return vm.trialData.trials;
         }, function (newVal, oldVal) {
@@ -561,6 +638,7 @@
         hasEnabledAnyTrial(vm, vm.preset),
         vm.preset.context !== vm.contextTrial.enabled,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
+        vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
         vm.preset.licenseDuration !== vm.details.licenseDuration,
         canAddDevice()
@@ -609,13 +687,45 @@
       return hasEnabled(trial.enabled, preset.roomSystems);
     }
 
+    function hasEnabledCareTrial(vmCareTrial, vmPreset) {
+      var trial = vmCareTrial || vm.careTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.care);
+    }
+
     function hasEnabledAnyTrial(vm, vmPreset) {
       // TODO: look into discrepancy for 'roomSystem' vs. 'roomSystems'
       return hasEnabledMessageTrial(vm.messageTrial, vmPreset) ||
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
         hasEnabledWebexTrial(vm.webexTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
-        hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset);
+        hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
+        hasEnabledCareTrial(vm.careTrial, vmPreset);
+    }
+
+    function messageOfferDisabledExpression() {
+      if (!vm.messageTrial.enabled) {
+        vm.careTrial.enabled = false;
+      }
+      return !vm.messageTrial.enabled;
+    }
+
+    function careLicenseInputDisabledExpression() {
+      if (!vm.careTrial.enabled) {
+        vm.careTrial.details.quantity = 0;
+      } else {
+        vm.careTrial.details.quantity = vm.careTrial.details.quantity || _careDefaultQuantity;
+      }
+      return !vm.careTrial.enabled;
+    }
+
+    function validateCareLicense($viewValue, $modelValue) {
+      return !vm.careTrial.enabled || ValidationService.trialCareQuantity(
+        $viewValue, $modelValue, vm.details.licenseCount);
+    }
+
+    function careLicenseCountLessThanTotalCount() {
+      return (!vm.careTrial.enabled || +vm.details.licenseCount >= +vm.careTrial.details.quantity);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
@@ -638,24 +748,6 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
-    }
-
-    function setDeviceModal() {
-      var overrideTestOrg = false;
-      var isTestOrg = false;
-
-      $q.all([
-        FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        overrideTestOrg = results[0];
-        if (results[1].data.success) {
-          isTestOrg = results[1].data.isTestOrg;
-        }
-      }).finally(function () {
-        // Display devices modal if not a test org or if toggle is set
-        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
-      });
     }
   }
 })();

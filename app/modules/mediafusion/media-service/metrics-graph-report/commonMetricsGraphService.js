@@ -65,7 +65,7 @@
       'markerType': 'square',
       'markerSize': 10,
       'position': 'absolute',
-      'left': 300,
+      'left': 350,
       'equalWidths': false,
       'horizontalGap': 5,
       'valueAlign': 'left',
@@ -131,6 +131,7 @@
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis) {
       return angular.copy({
         'type': 'serial',
+        'pathToImages': './images/',
         'startEffect': 'easeOutSine',
         'addClassNames': true,
         'fontFamily': 'CiscoSansTT Extra Light',
@@ -185,6 +186,7 @@
     function getGanttGraph(data, valueAxis, legendData) {
       return angular.copy({
         'type': 'gantt',
+        'pathToImages': './images/',
         'theme': 'light',
         'marginRight': 70,
         'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',

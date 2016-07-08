@@ -1,6 +1,7 @@
 @import 'callVolume/_call-volume';
 @import 'availability/_availability';
 @import 'utilization/_utilization';
+@import 'metricsInfoCard/_metrics-info';
 
 @keyframes graphAxisFade {
   0%   { opacity: 0; }
@@ -44,6 +45,13 @@
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }
+  
+  .cs-card > article graphheader {
+   padding-right: 1rem;
+      padding-left: .1rem;
+      padding-top: .1rem;
+  }
+  
   .report-card.hideCard {
     height: 0;
     margin: 0;
@@ -58,7 +66,7 @@
     }
   }
   .report-card {
-    min-width: rem-calc(650);
+    
     animation: scaleUpCard .5s linear;
     article {
       min-height: vr-adjust(390);
@@ -67,12 +75,17 @@
       animation: scaleUpCard .5s linear;
     }
     .report-section-header {
+      
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
       text-align: left;
+      
     }
     .report-description {
       position: relative;
+      padding-right: 1rem;
+      padding-left: .1rem;
+      padding-top: .1rem;
       z-index: 100;
     }
     .timechartDiv {
@@ -86,8 +99,8 @@
     }
     .barchart {
       font-size: rem-calc(11);
-      height: vr-adjust(375);
-      width: 85%;
+      height: vr-adjust(400);
+      width: 100%;
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
@@ -151,29 +164,18 @@
         margin: 0;
       }
     }
-    .utilization-chart
-    {
-    margin-right: 1rem;
-    height: 400px;
-    width: 100%
-
-    }
-    .availability-chart
-    {
-    margin-right: 1rem;
-    height: 400px;
-    width: 100%
-
-    }
-    .call-volume-chart
-    {
-    margin-right: 1rem;
-    height: 400px;
-    width: 100%
-    }
      .amcharts-value-axis .amcharts-axis-label {
       opacity: 0;
       animation: graphAxisFade 2s ease-in-out 1 forwards;
+    }
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .metrics-reports {
+      .cs-card-layout {
+        .cs-card {
+          height: 350px;
+      }
     }
   }
 }

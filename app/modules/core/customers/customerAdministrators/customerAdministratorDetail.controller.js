@@ -5,7 +5,7 @@
     .controller('CustomerAdministratorDetailCtrl', CustomerAdministratorDetail);
 
   /* @ngInject */
-  function CustomerAdministratorDetail($stateParams, $translate, CustomerAdministratorService, Notification, ModalService) {
+  function CustomerAdministratorDetail($stateParams, $translate, Analytics, CustomerAdministratorService, Notification, ModalService) {
     var vm = this;
     var currentCustomer = $stateParams.currentCustomer;
     var customerOrgId = currentCustomer.customerOrgId;
@@ -78,6 +78,9 @@
       vm.administrators.push(adminProfile);
       patchSalesAdminRole(email);
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
+      Analytics.trackEvent('Partner Admin Assigning', {
+        uuid: uuid
+      });
     }
 
     function filterList(newValue, oldValue) {
@@ -119,6 +122,9 @@
             var index = vm.administrators.indexOf(someUser);
             vm.administrators.splice(index, 1);
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
+            Analytics.trackEvent('Partner Admin Removal', {
+              uuid: uuid
+            });
           })
           .catch(function () {
             Notification.error('customerAdminPanel.customerAdministratorRemoverFailure');

@@ -8,7 +8,7 @@
           src="images/devices-hi/activation_code.png"
       />
       <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
-      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires" translate-values="{inXDays: deviceOverview.currentDevice.expiryTime}"></div>
+      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires" translate-values="{inXDays: deviceOverview.currentDevice.friendlyExpiryTime}"></div>
     </div>
     <div class="activationButtons">
       <button
@@ -62,8 +62,8 @@
               ng-model="deviceOverview.newTag"
               ng-show="deviceOverview.isAddingTag"
               focus-on="deviceOverview.isAddingTag"
-              ng-blur="deviceOverview.isAddingTag = false"
-              ng-keyup="deviceOverview.addTag($event)" />
+              ng-blur="deviceOverview.addTag()"
+              ng-keyup="deviceOverview.addTagOnEnter($event)" />
         </div>
       </div>
     </cs-sp-section>
@@ -157,7 +157,7 @@
         </div>
       </div>
 
-      <div class="form-group" ng-show="deviceOverview.timeZone && deviceOverview.csdmTz">
+      <div class="form-group" ng-show="deviceOverview.timeZone">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
         <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
@@ -167,7 +167,7 @@
               options="deviceOverview.timeZoneOptions"
               is-disabled="deviceOverview.updatingTimeZone"
               labelfield="label"
-              valuefield="value"
+              valuefield="id"
               on-change-fn="deviceOverview.saveTimeZoneAndWait()"
               input-placeholder="deviceOverview.searchTimeZonePlaceholder"
               filter="true">
@@ -198,7 +198,7 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>
-      <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
+      <div class="form-group" ng-show="deviceOverview.showRemoteSupportButton()">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>

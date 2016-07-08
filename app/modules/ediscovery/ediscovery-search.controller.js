@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window) {
+  function EdiscoverySearchController($stateParams, $translate, $timeout, $scope, EdiscoveryService, $window, EdiscoveryNotificationService,
+    Notification) {
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
     });
@@ -17,12 +18,14 @@
     vm.reportProgress = reportProgress;
     vm.keyPressHandler = keyPressHandler;
     vm.searchButtonDisabled = searchButtonDisabled;
-    vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.downloadReport = downloadReport;
+    vm.retrySearch = retrySearch;
+    vm.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     vm.createReportInProgress = false;
     vm.searchingForRoom = false;
     vm.searchInProgress = false;
     vm.currentReportId = null;
+    vm.ongoingSearch = false;
 
     init($stateParams.report, $stateParams.reRun);
 
@@ -101,6 +104,7 @@
     });
 
     function searchForRoom(roomId) {
+      vm.ongoingSearch = true;
       disableAvalonPolling();
       vm.roomInfo = null;
       vm.report = null;
@@ -118,14 +122,24 @@
           vm.searchCriteria.displayName = result.displayName;
         })
         .catch(function (err) {
-          if (err.status === 400) {
-            vm.error = $translate.instant("ediscovery.invalidRoomId", {
+          var status = err && err.status ? err.status : 500;
+          switch (status) {
+          case 400:
+            vm.error = $translate.instant("ediscovery.search.invalidRoomId", {
               roomId: roomId
             });
-          } else {
-            vm.error = $translate.instant("ediscovery.searchError", {
+            break;
+          case 404:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
               roomId: roomId
             });
+            break;
+          default:
+            vm.error = $translate.instant("ediscovery.search.roomNotFound", {
+              roomId: roomId
+            });
+            Notification.error($translate.instant("ediscovery.search.roomLookupError"));
+            break;
           }
         })
         .finally(function () {
@@ -134,22 +148,20 @@
     }
 
     function createReport() {
+      disableAvalonPolling();
       vm.report = {
         displayName: vm.searchCriteria.displayName,
         state: 'INIT',
         progress: 0
       };
-      disableAvalonPolling();
-      vm.errors = [];
-
       EdiscoveryService.createReport(vm.searchCriteria.displayName, vm.searchCriteria.roomId, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .then(function (res) {
           vm.currentReportId = res.id;
           runReport(res.runUrl, res.url);
         })
         .catch(function (err) {
-          vm.errors = err.data.errors;
-          vm.report = {};
+          Notification.error($translate.instant('ediscovery.search.createReportFailed'));
+          vm.report = null;
           vm.createReportInProgress = false;
         });
     }
@@ -170,30 +182,28 @@
     }
 
     function pollAvalonReport() {
-      // TODO: Implement proper handling of error when final API is in place
       EdiscoveryService.getReport(vm.currentReportId).then(function (report) {
         vm.report = report;
         vm.createReportInProgress = false;
         if (report.state != 'COMPLETED' && report.state != 'FAILED' && report.state != 'ABORTED') {
-          avalonPoller = $timeout(pollAvalonReport, 2000);
+          avalonPoller = $timeout(pollAvalonReport, 5000);
         } else {
+          EdiscoveryNotificationService.notify(report);
           disableAvalonPolling();
         }
-      }).catch(function (err) {
-        // TODO: Proper error handling when final API is ready
-        disableAvalonPolling();
       });
     }
 
     function runReport(runUrl, url) {
-      // Expect this API to be changed when Avalon updates their API
-      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url)
-        .then(function (res) {
-          enableAvalonPolling();
-        })
+      EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .catch(function (err) {
-          // TODO: Proper error handling when final API is ready
-          disableAvalonPolling();
+          Notification.error($translate.instant('ediscovery.search.runFailed'));
+          EdiscoveryService.patchReport(vm.currentReportId, {
+            state: "FAILED",
+            failureReason: "UNEXPECTED_FAILURE"
+          });
+        }).finally(function () {
+          enableAvalonPolling();
         });
     }
 
@@ -206,10 +216,20 @@
     }
 
     function cancelReport(id) {
+      vm.cancellingReport = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
       }).then(function (res) {
+        if (!EdiscoveryNotificationService.notificationsEnabled()) {
+          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+        }
         pollAvalonReport();
+      }, function (err) {
+        if (err.status !== 410) {
+          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+        }
+      }).finally(function () {
+        vm.cancellingReport = false;
       });
     }
 
@@ -237,9 +257,16 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
+        .catch(function (err) {
+          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+        })
         .finally(function () {
           vm.downloadingReport = false;
         });
+    }
+
+    function retrySearch() {
+      vm.report = null;
     }
   }
   angular

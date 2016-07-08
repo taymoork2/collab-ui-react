@@ -1,128 +1,189 @@
 'use strict';
 
-/*global webEx, sitelist*/
+/* global webExSiteList */
+/* global webEx */
+/* global webExCommon */
 
-xdescribe('WebEx Site List: CSV Export/Import : ', function () {
-
-  beforeAll(function () {
-    login.loginUsingIntegrationBackend('t31CSVToggleUser');
-  });
-
-  it('should login as ' + sitelist.t31CSVToggleUser.testAdminUsername + ' and navigate to site list page', function () {
-    navigation.clickServicesTab();
-    utils.click(sitelist.conferencingLink);
-    utils.wait(sitelist.siteListPageId);
-  });
-
-  it('should detect the CSV column', function () {
-    utils.wait(sitelist.csvColumnId);
-  });
-
-  /*
-      xit('should detect CSV Export & Import status is given', function () {
-        utils.wait(sitelist.csvImportId);
-        utils.wait(sitelist.csvExportId);
-      });
-  */
-  afterAll(function () {
-    navigation.logout();
-  });
-});
-
-//Start tests to detect 'Not Available' and warning icon conditions
-xdescribe("WebEx Site List: test CSV 'Not Anavailable' condition: ", function () {
+// Start of site list tests
+describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", function () {
+  var setup = false;
 
   beforeAll(function () {
-    login.loginUsingIntegrationBackend('t30csvNotAvailableUser');
-  });
+    var promise = webEx.setup(
+      1,
+      'wbx-singleCenterLicenseTestAdmin',
+      webExCommon.t30citestprov9Info.testAdminUsername,
+      webExCommon.t30citestprov9Info.testAdminPassword,
+      webExCommon.t30citestprov9Info.siteUrl
+    );
 
-  it('should login as ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ' and navigate to site list page', function () {
-    navigation.clickServicesTab();
-    utils.click(sitelist.conferencingLink);
-  });
+    promise.then(
+      function success(ticket) {
+        setup = (null !== ticket);
+      },
 
-  it("should detect 'Not Available' for T30 site", function () {
-    utils.wait(sitelist.t30csvNotAvail);
-  });
+      function error() {
+        setup = false;
+      }
+    );
+  }); // beforeAll()
 
   afterAll(function () {
     navigation.logout();
+  }); //afterAll
+
+  it('should allow login as ' + webExCommon.t30citestprov9Info.testAdminUsername + ' and navigate to webex site list page', function () {
+    if (setup) {
+      navigation.clickServicesTab();
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
+    }
   });
+
+  it('should detect single licensed site', function () {
+    if (setup) {
+      utils.wait(webExCommon.t30citestprov9Info.licenseID);
+    }
+  });
+
+  it('should detect ' + webExCommon.t30citestprov9Info.siteUrl + ' is a CI site', function () {
+    if (setup) {
+      utils.wait(webExCommon.t30citestprov9Info.isCIID);
+    }
+  });
+
+  it('should not detect WebEx CSV operation icon', function () {
+    if (setup) {
+      expect(webExCommon.t30csvCogDisabled.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvCogEnabled.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvSpinner.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvResult.isPresent()).toBeFalsy();
+      expect(webExCommon.t30csvIcon.isPresent()).toBeFalsy();
+    }
+  });
+
 });
 
-xdescribe('WebEx Site List: test CSV warning icon condition: ', function () {
+describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", function () {
+  var setup = false;
 
   beforeAll(function () {
-    login.loginUsingIntegrationBackend('t30csvWbxNotEntitledUser');
-  });
+    var promise = webEx.setup(
+      1,
+      'wbx-multipleCenterLicenseTestAdmin',
+      webExCommon.t30citestprov6Info.testAdminUsername,
+      webExCommon.t30citestprov6Info.testAdminPassword,
+      webExCommon.t30citestprov6Info.siteUrl
+    );
 
-  it('should login as ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ' and navigate to site list page', function () {
-    navigation.clickServicesTab();
-    utils.click(sitelist.conferencingLink);
-  });
+    promise.then(
+      function success(ticket) {
+        setup = (null !== ticket);
+      },
 
-  it('should detect warning icon due to entitlement authentication failure', function () {
-    utils.wait(sitelist.siteEntitlementAuthFailure);
-  });
+      function error() {
+        setup = false;
+      }
+    );
+  }); // beforeAll()
 
   afterAll(function () {
     navigation.logout();
+  }); //afterAll
+
+  it('should allow login as ' + webExCommon.t30citestprov6Info.testAdminUsername + ' and navigate to webex site list page', function () {
+    if (setup) {
+      navigation.clickServicesTab();
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
+    }
   });
+
+  it('should detect multiple licensed site', function () {
+    if (setup) {
+      utils.wait(webExCommon.t30citestprov6Info.licenseID);
+    }
+  });
+
+  it('should detect ' + webExCommon.t30citestprov6Info.siteUrl + ' is a CI site', function () {
+    if (setup) {
+      utils.wait(webExCommon.t30citestprov6Info.isCIID);
+    }
+  });
+
+  it('should detect WebEx CSV operation icon', function () {
+    if (setup) {
+      var csvCogDisabled = webExCommon.t31csvCogDisabled.isPresent();
+      var csvCogEnabled = webExCommon.t31csvCogEnabled.isPresent();
+      expect(webExCommon.t31csvIcon.isPresent()).toBeTruthy();
+      expect(csvCogDisabled || csvCogEnabled).toBe(true);
+    }
+  });
+
 });
 
-/*
-    //Start multi center license tests
-    xdescribe(': License Types - Single : ', function () {
+/**
+ * ********************* IMPORTANT *********************
+ * The following account is a Dev DMZ User - To be deleted once BTS is ready.
+ * Keep these tests disabled
+ * ********************* IMPORTANT *********************
+ */
+//Start dev dmz tests
+xdescribe('WebEx Sitelist: ' + webExCommon.devDmzInfo.siteUrl + ": ", function () {
+  var setup = false;
 
-      it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
-        //TODO:  If and when we want to enable this test, need to create this user login credential in the test_helper.js
-        login.login('multiCenterLicenseUser_single');
-      });
+  beforeAll(function () {
+    var promise = webEx.setup(
+      1,
+      'wbx-siteCsvTestAdmin',
+      webExCommon.devDmzInfo.testAdminUsername,
+      webExCommon.devDmzInfo.testAdminPassword,
+      webExCommon.devDmzInfo.siteUrl
+    );
 
-      it('should navigate to webex site list page', function () {
-        navigation.clickServicesTab();
-        utils.click(sitelist.conferencingLink);
-        utils.wait(sitelist.siteListPageId);
-      });
+    promise.then(
+      function success(ticket) {
+        setup = (null !== ticket);
+        //If this doesn't happen, then login is not successful.
+      },
 
-      it('should detect the license types column', function () {
-        utils.wait(sitelist.licenseTypesColumnId);
-      });
+      function error() {
+        setup = false;
+      }
+    );
+  }); // beforeAll()
 
-      it('should detect text MC 100', function () {
-        var mc100 = "Meeting Center 100";
-        utils.expectText(sitelist.singleLicenseSiteId, mc100);
-      });
+  afterAll(function () {
+    navigation.logout();
+  }); //afterAll
 
-      it('should log out', function () {
-        navigation.logout();
-      });
-    });
+  it('should detect checking services spinner and then WebEx CSV operation icon', function () {
+    if (setup) {
+      navigation.clickServicesTab();
+      utils.click(webExSiteList.conferencingLink);
+      utils.wait(webExSiteList.siteListPageId);
 
-    xdescribe(': License Types - Multiple : ', function () {
+      //WebEx CSV tests, currently pointing to dev dmz
+      utils.wait(webExCommon.devDmzInfo.checkingServicesSpinner);
+      utils.wait(webExCommon.devDmzInfo.csvCogEnabled);
+      expect(webExCommon.devDmzInfo.checkingServicesSpinner.isPresent()).toBeFalsy();
+    }
+  });
 
-      it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
-        //TODO:  If and when we want to enable this test, need to create this user login credential in the test_helper.js
-        login.login('multiCenterLicenseUser_multiple');
-      });
+  it('should check import/export modal', function () {
+    if (setup) {
+      //Click on the csv icon
+      utils.click(webExCommon.devDmzInfo.csvCogEnabled);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalHeader);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalBody);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalCloseButton);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalExportIcon);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportCard);
+      utils.expectIsDisplayed(webExCommon.devDmzInfo.csvModalImportIcon);
+    }
+  });
 
-      it('should navigate to webex site list page', function () {
-        navigation.clickServicesTab();
-        utils.click(sitelist.conferencingLink);
-        utils.wait(sitelist.siteListPageId);
-      });
+}); //End dev dmz tests
 
-      it('should detect the license types column', function () {
-        utils.wait(sitelist.licenseTypesColumnId);
-      });
-
-      it('should detect text multiple', function () {
-        var multiple = "Multiple...";
-        utils.expectText(sitelist.multiLicenseSiteId, multiple);
-      });
-
-      it('should log out', function () {
-        navigation.logout();
-      });
-    });
-*/
+// End of site list tests

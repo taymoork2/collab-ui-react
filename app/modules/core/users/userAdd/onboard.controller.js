@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -73,6 +73,11 @@
 
     $scope.shouldAddCallService = shouldAddCallService;
     var currentUserHasCall = false;
+
+    $scope.isCareEnabled = false;
+    FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+      $scope.isCareEnabled = careStatus;
+    });
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -247,7 +252,7 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Mixpanel.trackEvent("CMR checkbox unselected", {
+          Analytics.trackEvent("CMR checkbox unselected", {
             licenseId: licenseId
           });
         }
@@ -359,10 +364,12 @@
     $scope.messageFeatures = [];
     $scope.conferenceFeatures = [];
     $scope.communicationFeatures = [];
+    $scope.careFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -374,12 +381,24 @@
     $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
     $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.mtgFree'), 0, 'confRadio', new FakeLicense('freeConferencing')));
     $scope.communicationFeatures.push(new ServiceFeature($translate.instant('onboardModal.callFree'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
+    $scope.careFeatures.push(new ServiceFeature($translate.instant('onboardModal.careFree'), 0, 'careRadio', new FakeLicense('freeCareService')));
     $scope.currentUser = $stateParams.currentUser;
 
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+    }
+
+    function checkMessageVisibility(licenses, selectedSubscription) {
+      if (licenses.length === 1) {
+        var license = licenses[0];
+        if (license.billingServiceId && selectedSubscription) {
+          return license.billingServiceId === selectedSubscription;
+        }
+        return true;
+      }
+      return false;
     }
 
     function populateConf() {
@@ -425,7 +444,8 @@
 
     $scope.radioStates = {
       commRadio: false,
-      msgRadio: false
+      msgRadio: false,
+      careRadio: false
     };
 
     if (userEnts) {
@@ -435,6 +455,8 @@
           currentUserHasCall = true;
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
+        } else if (userEnts[x] === 'cloud-contact-center') {
+          $scope.radioStates.careRadio = true;
         }
       }
     }
@@ -578,7 +600,8 @@
       var services = {
         message: Authinfo.getMessageServices(),
         conference: Authinfo.getConferenceServices(),
-        communication: Authinfo.getCommunicationServices()
+        communication: Authinfo.getCommunicationServices(),
+        care: Authinfo.getCareServices()
       };
       if (services.message) {
         services.message = mergeMultipleLicenseSubscriptions(services.message);
@@ -600,6 +623,9 @@
       }
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
+      }
+      if (services.care) {
+        $scope.careFeatures = $scope.careFeatures.concat(services.care);
       }
     };
 
@@ -866,6 +892,19 @@
           licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
         } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
           licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
+        }
+
+        // Care: straightforward license, for now
+        var careIndex = $scope.radioStates.careRadio ? 1 : 0;
+        var selCareService = $scope.careFeatures[careIndex];
+        var licenseId = _.get(selCareService, 'license.licenseId', null);
+        if (licenseId) {
+          licenseList.push(new LicenseFeature(licenseId, true));
+        } else if (action === 'patch') {
+          licenseId = _.get($scope, 'careFeatures[1].license.licenseId', null);
+          if (licenseId) {
+            licenseList.push(new LicenseFeature(licenseId, false));
+          }
         }
       }
 
@@ -1201,8 +1240,20 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && user.message === '400096') {
+          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400110')) {
             userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400108') {
+            userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400109') {
+            userResult.message = $translate.instant('usersPage.unableToMigrateError', {
+              email: userResult.email
+            });
+          } else if (userStatus === 403 && user.message === '400111') {
+            userResult.message = $translate.instant('usersPage.insufficientEntitlementsError', {
               email: userResult.email
             });
           } else if (userStatus === 400 && user.message === '400087') {

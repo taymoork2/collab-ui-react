@@ -8,6 +8,7 @@ namespace globalsettings {
 
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     function dependencies(_$controller_, $rootScope, _Authinfo_, _FeatureToggleService_, _Orgservice_, _$q_) {
       $controller = _$controller_;
@@ -21,12 +22,16 @@ namespace globalsettings {
     function initSpies() {
       spyOn(Orgservice, 'getOrg');
       spyOn(FeatureToggleService, 'supports');
-      spyOn(Authinfo, 'isPartner')
+      spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
+      spyOn(Authinfo, 'isPartner');
+      spyOn(Authinfo, 'isPartnerUser');
+      spyOn(Authinfo, 'isDirectCustomer');
     }
 
     function initController() {
       controller = $controller('SettingsCtrl', {
-        $scope: $scope
+        $scope: $scope,
+        hasFeatureToggle: true
       });
 
       $scope.$apply();
@@ -35,6 +40,7 @@ namespace globalsettings {
     beforeEach(inject(dependencies));
     beforeEach(initSpies);
     beforeEach(setFeatureToggle);
+    beforeEach(setBranding);
 
     describe('for partner admin', () => {
 
@@ -46,16 +52,34 @@ namespace globalsettings {
         expect(controller.domains).toBeFalsy();
         expect(controller.sipDomain).toBeFalsy();
         expect(controller.authentication).toBeFalsy();
-        expect(controller.support).toBeFalsy();
+        expect(controller.support).toBeTruthy();
         expect(controller.branding).toBeTruthy();
         expect(controller.privacy).toBeFalsy();
-        expect(controller.dataPolicy).toBeFalsy();
+        expect(controller.retention).toBeFalsy();
+      });
+    });
+
+    describe('for direct customer', () => {
+
+      beforeEach(setAuthinfoIsDirectCustomerSpy(true));
+      beforeEach(initController);
+
+      it('should create the ctrl and add the direct customer setting sections', () => {
+        expect(controller.security).toBeTruthy();
+        expect(controller.domains).toBeTruthy();
+        expect(controller.sipDomain).toBeTruthy();
+        expect(controller.authentication).toBeTruthy();
+        expect(controller.support).toBeTruthy();
+        expect(controller.branding).toBeTruthy();
+        expect(controller.privacy).toBeTruthy();
+        expect(controller.retention).toBeTruthy();
       });
     });
 
     describe('for normal admin', () => {
 
       beforeEach(setAuthinfoIsPartnerSpy(false));
+      beforeEach(setAuthinfoIsPartnerUserSpy(true));
 
       describe('with allowCustomerLogos set to true', () => {
 
@@ -70,7 +94,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeTruthy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
 
@@ -87,7 +111,7 @@ namespace globalsettings {
           expect(controller.support).toBeTruthy();
           expect(controller.branding).toBeFalsy();
           expect(controller.privacy).toBeTruthy();
-          expect(controller.dataPolicy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
         });
       });
     });
@@ -97,15 +121,31 @@ namespace globalsettings {
         Authinfo.isPartner.and.returnValue(isPartner);
       };
     }
-    function setGetOrgSpy(allowBranding) {
+
+    function setAuthinfoIsPartnerUserSpy(isPartnerUser) {
       return () => {
-        Orgservice.getOrg.and.callFake(function (callback) {
-          callback({orgSettings: {allowCustomerLogos: allowBranding}});
-        });
+        Authinfo.isPartnerUser.and.returnValue(isPartnerUser);
       };
     }
+
+    function setAuthinfoIsDirectCustomerSpy(isDirectCustomer) {
+      return () => {
+        Authinfo.isDirectCustomer.and.returnValue(isDirectCustomer);
+      };
+    }
+
+    function setGetOrgSpy(allowBranding) {
+      return () => {
+        Orgservice.getOrg.and.returnValue($q.when({orgSettings: {allowCustomerLogos: allowBranding}}));
+      };
+    }
+
     function setFeatureToggle() {
       FeatureToggleService.supports.and.returnValue($q.when(true));
+    }
+
+    function setBranding() {
+      FeatureToggleService.brandingWordingChangeGetStatus.and.returnValue($q.when(true));
     }
   });
 }

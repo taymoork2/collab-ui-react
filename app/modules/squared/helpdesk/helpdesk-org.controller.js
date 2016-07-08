@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskOrgController', HelpdeskOrgController);
+
   /* @ngInject */
   function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
@@ -38,11 +42,11 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
 
+    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
     FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
-
-    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
     scrollToTop();
 
@@ -75,17 +79,18 @@
       return eft;
     }
 
-    function openExtendedInformation(title, message) {
+    function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
-          controller: 'HelpdeskExtendedInformationCtrl as modal',
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
-              return title;
+              return 'helpdesk.customerDetails';
             },
-            message: function () {
-              return message;
+            data: function () {
+              return vm.org;
             }
           }
         });
@@ -94,7 +99,6 @@
 
     function initOrgView(org) {
       vm.org = org;
-      vm.orgStringified = JSON.stringify(org, null, 4);
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
@@ -175,14 +179,20 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      switch (event.keyCode) {
-      case 27: // Esc
-        $window.history.back();
-        break;
-      case 83: // S
-        gotoSearchUsersAndDevices();
-        break;
+      if (!modalVisible()) {
+        switch (event.keyCode) {
+        case 27: // Esc
+          $window.history.back();
+          break;
+        case 83: // S
+          gotoSearchUsersAndDevices();
+          break;
+        }
       }
     }
 
@@ -217,16 +227,4 @@
         });
     }
   }
-
-  /* @ngInject */
-  function HelpdeskExtendedInformationCtrl(title, message) {
-    var vm = this;
-    vm.message = message;
-    vm.title = title;
-  }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController)
-    .controller('HelpdeskExtendedInformationCtrl', HelpdeskExtendedInformationCtrl);
 }());

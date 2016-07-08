@@ -47,7 +47,7 @@
       valueAxes[0].stackType = 'regular';
       var catAxis = CommonMetricsGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
-      catAxis.dataDateFormat = 'YYYY-MM-DDTJJ:NN:SS.QQQZ';
+      //catAxis.dataDateFormat = 'YYYY-MM-DDTJJ:NN:SS.QQQZ';
       catAxis.parseDates = true;
       catAxis.startOnAxis = true;
       //catAxis.equalSpacing = true;
@@ -56,31 +56,6 @@
       catAxis.gridAlpha = 0.1;
       catAxis.minorGridAlpha = 0.1;
       catAxis.minorGridEnabled = false;
-      catAxis.dateFormats = [{
-        fff: 'period',
-        format: 'JJ:NN:SS'
-      }, {
-        period: 'ss',
-        format: 'JJ:NN:SS'
-      }, {
-        period: 'mm',
-        format: 'JJ:NN'
-      }, {
-        period: 'hh',
-        format: 'JJ:NN'
-      }, {
-        period: 'DD',
-        format: 'MM/DD/YYYY'
-      }, {
-        period: 'WW',
-        format: 'MM/W/YYYY'
-      }, {
-        period: 'MM',
-        format: 'MMM YYYY'
-      }, {
-        period: 'YYYY',
-        format: 'YYYY'
-      }];
       catAxis.minPeriod = "mm";
       //catAxis.twoLineMode = true;
       var startDuration = 1;
@@ -158,9 +133,11 @@
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
       valueAxes[0].minimum = 0;
+      valueAxes[0].maximum = 100;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
       valueAxes[0].title = '%';
+      valueAxes[0].titleRotation = 180;
       valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonMetricsGraphService.getBaseVariable(AXIS);
@@ -269,28 +246,52 @@
 
     }
 
-    function createLegendsForAvailabilty(selectedCluster) {
-      var legendData = [];
-      if (selectedCluster == 'All') {
-        var length = 3;
-        var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
-        var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];
+    function createLegendsForAvailabilty(dummydata, selectedCluster) {
+      if (dummydata === true) {
+        var legendData = [];
+        if (selectedCluster == 'All Clusters') {
+          var length = 3;
+          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
+          var colors = [chartColors.grayLight, chartColors.grayLight, chartColors.grayLight];
+        } else {
+          var length = 2;
+          var titles = [hostAvailableTitle, hostUnavailableTitle];
+          var colors = [chartColors.grayLight, chartColors.grayLight];
+        }
+        for (var i = 0; i < length; i++) {
+          var legend = {};
+          legendData.push(legend);
+          legendData[i].title = titles[i];
+          legendData[i].color = colors[i];
+        }
+        //      var legend = new AmCharts.AmLegend();
+        //     legend.align = 'right';
+        //    legend.position = 'top';
+        //   legend.data = legendData;
+        return legendData;
       } else {
-        var length = 2;
-        var titles = [hostAvailableTitle, hostUnavailableTitle];
-        var colors = [chartColors.colorGreen, chartColors.colorRed];
+        var legendData = [];
+        if (selectedCluster == 'All Clusters') {
+          var length = 3;
+          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
+          var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];
+        } else {
+          var length = 2;
+          var titles = [hostAvailableTitle, hostUnavailableTitle];
+          var colors = [chartColors.colorGreen, chartColors.colorRed];
+        }
+        for (var i = 0; i < length; i++) {
+          var legend = {};
+          legendData.push(legend);
+          legendData[i].title = titles[i];
+          legendData[i].color = colors[i];
+        }
+        //      var legend = new AmCharts.AmLegend();
+        //     legend.align = 'right';
+        //    legend.position = 'top';
+        //   legend.data = legendData;
+        return legendData;
       }
-      for (var i = 0; i < length; i++) {
-        var legend = {};
-        legendData.push(legend);
-        legendData[i].title = titles[i];
-        legendData[i].color = colors[i];
-      }
-      //      var legend = new AmCharts.AmLegend();
-      //     legend.align = 'right';
-      //    legend.position = 'top';
-      //   legend.data = legendData;
-      return legendData;
     }
 
     function createValueAxis(data) {
@@ -312,7 +313,14 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
-      var legend = createLegendsForAvailabilty(selectedCluster);
+      if (data.data[0].isDummy === true) {
+        var dummydata = data.data[0].isDummy;
+        var legend = createLegendsForAvailabilty(dummydata, selectedCluster);
+
+      } else {
+        var legend = createLegendsForAvailabilty(null, selectedCluster);
+
+      }
       var valueAxis = createValueAxis(data);
       var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, legend);
       var chart = AmCharts.makeChart(availabilitydiv, chartData);
