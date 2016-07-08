@@ -28,10 +28,13 @@ var RUN_KARMA_PARALLEL = 'run-karma-parallel-';
 var KARMA_CONFIG = 'karma-config-';
 
 var modules = _.keys(config.testFiles.spec);
+// 'custom' and 'ts' aren't really "modules" like the other modules, but they do represent a
+// reasonable means of grouping specs, so we include them in the list
+modules = modules.concat('custom', 'ts');
 
 var runKarmaParallelModules = _.chain(modules)
   .reject(function (module) {
-    return module === 'all';
+    return module === 'all' || module === 'custom';
   })
   .map(function (module) {
     return RUN_KARMA_PARALLEL + module;
@@ -137,37 +140,55 @@ gulp.task('karma-each', function (done) {
   runSeq.apply(this, karmaArgs);
 });
 
+function getKarmaDeps() {
+  return [].concat(
+    config.vendorFiles.js,
+    config.testFiles.js,
+    config.testFiles.app,
+    config.testFiles.notTs,
+    config.testFiles.global
+  );
+}
+
+function getKarmaSpecFilesFor(module) {
+  var filesToAdd;
+  var filesFrom;
+  switch (module) {
+  case 'ts':
+    var tsManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsManifest);
+    var tsTestManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
+    // typescript files are listed in build-time generated manifest files
+    filesToAdd = [].concat(
+      tsManifestFiles,
+      tsTestManifestFiles
+    );
+    break;
+  case 'custom':
+    // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated
+    // list of files relative to the project root dir
+    // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
+    filesFrom = args['files-from'];
+    if (!filesFrom) {
+      log($.util.colors.red('Error: missing \'--files-from\' argument'));
+      process.exit(1);
+    } else {
+      // parse each line item from file specified by '--files-from', and append to main list
+      filesToAdd = fileListParser.toList(filesFrom);
+    }
+    break;
+  default:
+    filesToAdd = config.testFiles.spec[module];
+  }
+  return filesToAdd;
+}
+
 function createGulpKarmaConfigModule(module) {
   // Compile the karma template so that changes
   // to its file array aren't managed manually
   return function (done) {
     if (!args.nounit) {
-      var unitTestFiles = [].concat(
-        config.vendorFiles.js,
-        config.testFiles.js,
-        config.testFiles.app,
-        config.testFiles.notTs,
-        config.testFiles.global
-      );
-
-      // any other 'specs' target should already be defined in 'gulp.config.js'
-      if (module !== 'custom') {
-        unitTestFiles = unitTestFiles.concat(config.testFiles.spec[module]);
-      } else {
-        // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated list of
-        // files relative to the project root dir
-        // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
-        var filesFrom = args['files-from'];
-        var flist;
-        if (!filesFrom) {
-          log($.util.colors.red('Error: missing \'--files-from\' argument'));
-          process.exit(1);
-        } else {
-          // parse each line item from file specified by '--files-from', and append to main list
-          flist = fileListParser.toList(filesFrom);
-          unitTestFiles = unitTestFiles.concat(flist);
-        }
-      }
+      var unitTestFiles = getKarmaDeps();
+      var filesToAdd = getKarmaSpecFilesFor(module);
 
       return gulp
         .src(config.testFiles.karmaTpl)
@@ -176,10 +197,7 @@ function createGulpKarmaConfigModule(module) {
             gulp.src(unitTestFiles, {
               read: false
             }),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsManifest), {
-              read: false
-            }),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest), {
+            gulp.src(filesToAdd, {
               read: false
             })
           ), {
@@ -249,7 +267,7 @@ function createGulpRunKarmaModule(module) {
 function karmaConfigParallelArray() {
   var karmaTasks = [];
   _.forEach(modules, function (module) {
-    if (module !== 'all') {
+    if (module !== 'all' && module !== 'custom') {
       karmaTasks.push(KARMA_CONFIG + module);
     }
   });
