@@ -7,7 +7,7 @@
 
   /* @ngInject */
   // TODO - check for removal of $q and FeatureToggleService when DX80 and MX300 are officially supported
-  function TrialDeviceController($q, $stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($stateParams, $translate, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -47,6 +47,7 @@
     vm.notifyLimits = notifyLimits;
     vm.getQuantityInputDefault = _getQuantityInputDefault;
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
+    vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     // TODO - Remove vm.showNewRoomSystems when DX80 and MX300 are officially supported
     vm.showNewRoomSystems = false;
 
@@ -136,7 +137,7 @@
           return vm.sx10.enabled;
         },
         'templateOptions.disabled': function () {
-          return !vm.sx10.enabled || vm.sx10.readonly;
+          return vm.areTemplateOptionsDisabled(vm.sx10);
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.sx10, minRoomSystems);
@@ -192,7 +193,7 @@
           return vm.dx80.enabled;
         },
         'templateOptions.disabled': function () {
-          return !vm.dx80.enabled || vm.dx80.readonly;
+          return vm.areTemplateOptionsDisabled(vm.dx80);
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.dx80, minRoomSystems);
@@ -250,7 +251,7 @@
           return vm.mx300.enabled;
         },
         'templateOptions.disabled': function () {
-          return !vm.mx300.enabled || vm.mx300.readonly;
+          return vm.areTemplateOptionsDisabled(vm.mx300);
         },
         'model.quantity': function () {
           return vm.getQuantityInputDefault(vm.mx300, minRoomSystems);
@@ -624,18 +625,13 @@
 
     function init() {
       var limitsPromise = TrialDeviceService.getLimitsPromise();
-      // TODO - remove showNewRoomSystems when DX80 and MX300 are officially supported
-      var showNewRoomSystems;
 
-      // TODO - check to remove $q.all when DX80 and MX300 are officially supported
-      $q.all(
-        // Hides the DX80 and MX300 under a feature toggle
-        FeatureToggleService.supports(FeatureToggleService.features.newRoomSystems)
-      ).then(function (results) {
-        showNewRoomSystems = results[0];
-      }).finally(function () {
-        vm.showNewRoomSystems = showNewRoomSystems;
-      });
+      // TODO - remove feature toggle when DX80 and MX300 are officially supported
+      // Hides the DX80 and MX300 under a feature toggle
+      FeatureToggleService.supports(FeatureToggleService.features.atlasNewRoomSystems)
+        .then(function (results) {
+          vm.showNewRoomSystems = results;
+        });
 
       vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
       if (!_.isUndefined(limitsPromise)) {
@@ -730,6 +726,10 @@
         })
         .map('quantity')
         .reduce(_.add) || 0;
+    }
+
+    function _areTemplateOptionsDisabled(device) {
+      return !device.enabled || device.readonly;
     }
 
     function _getQuantityInputDefault(device, defaultValue) {

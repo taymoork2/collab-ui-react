@@ -68,6 +68,14 @@
             "model": "CISCO_SX10",
             "enabled": false,
             "quantity": 0
+          }, {
+            "model": "CISCO_DX80",
+            "enabled": true,
+            "quantity": 0
+          }, {
+            "model": "CISCO_MX300",
+            "enabled": true,
+            "quantity": 0
           }]
         }
       },

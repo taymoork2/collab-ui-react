@@ -15,6 +15,7 @@
       atlasAppleFeatures: 'atlas-apple-features',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
@@ -132,8 +133,7 @@
       brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
-      atlasMediaServiceMetrics: 'atlas-media-service-metrics',
-      newRoomSystems: 'newRoomSystems'
+      atlasMediaServiceMetrics: 'atlas-media-service-metrics'
     };
 
     var toggles = {};

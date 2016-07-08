@@ -17,14 +17,18 @@ describe('Controller: TrialDeviceController', function () {
   });
 
   beforeEach(function () {
-    controller = $controller('TrialDeviceController');
-    // TODO - remove spyOn feature toggle and $httpBackend when DX80 and MX300 are officially supported
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    // TODO - remove $httpBackend when DX80 and MX300 are officially supported
     $httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});
-    $rootScope.$apply();
+
+    initController();
   });
+
+  function initController() {
+    controller = $controller('TrialDeviceController');
+    $rootScope.$apply();
+  }
 
   describe('controller data', function () {
     it('should be created successfully', function () {
@@ -45,6 +49,25 @@ describe('Controller: TrialDeviceController', function () {
       expect(roomSystems).toBeUndefined();
       expect(phones.length).toBe(0);
       expect(shippingInfo).toBeUndefined();
+    });
+
+    // TODO: remove when DX80 and MX300 support is official
+    describe('feature toggle for displaying new room systems', function () {
+      it('should show DX80 and MX300 when feature toggle is true', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+        initController();
+
+        expect(controller.showNewRoomSystems).toBe(true);
+        expect(FeatureToggleService.supports).toHaveBeenCalled();
+      });
+
+      it('should NOT show DX80 and MX300 when feature toggle is false', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+        initController();
+
+        expect(controller.showNewRoomSystems).toBe(false);
+        expect(FeatureToggleService.supports).toHaveBeenCalled();
+      });
     });
 
     // the back end expects this as an enum and enums cant start with numbers
@@ -74,6 +97,12 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true
       }, {
+        model: 'CISCO_DX80',
+        enabled: true,
+        quantity: 1,
+        readonly: false,
+        valid: true
+      }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
@@ -84,7 +113,7 @@ describe('Controller: TrialDeviceController', function () {
       var devices2 = [{
         model: 'CISCO_SX10',
         enabled: true,
-        quantity: 5,
+        quantity: 4,
         readonly: false,
         valid: true
 
@@ -97,6 +126,12 @@ describe('Controller: TrialDeviceController', function () {
         valid: true
 
       }, {
+        model: 'CISCO_MX300',
+        enabled: false,
+        quantity: 2,
+        readonly: false,
+        valid: true
+      }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
@@ -105,7 +140,7 @@ describe('Controller: TrialDeviceController', function () {
 
       }];
 
-      expect(controller.calcQuantity(devices1)).toEqual(2);
+      expect(controller.calcQuantity(devices1)).toEqual(3);
       expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
       expect(controller.calcQuantity(devices3)).toEqual(0);
     });
@@ -502,6 +537,44 @@ describe('Controller: TrialDeviceController', function () {
       var result = controller.areAdditionalDevicesAllowed();
       expect(result).toBe(true);
     });
+  });
 
+  describe('areTemplateOptionsDisabled function', function () {
+    it('should set to true if device.enabled is false', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_SX10',
+        enabled: false,
+        quantity: 3,
+        readonly: false,
+        valid: true
+      };
+
+      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+    });
+
+    it('should set to false if device.enabled is true', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_DX80',
+        enabled: true,
+        quantity: 3,
+        readonly: false,
+        valid: true
+      };
+      expect(controller.areTemplateOptionsDisabled(device)).toBeFalsy();
+    });
+
+    it('should set to false if device.readonly is true', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_MX300',
+        enabled: false,
+        quantity: 3,
+        readonly: true,
+        valid: true
+      };
+      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+    });
   });
 });
