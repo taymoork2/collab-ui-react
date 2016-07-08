@@ -19,6 +19,12 @@
 
 // Schedule Modal
 .aa-schedule {
+
+ h3 {
+    display: inline-block;
+  }
+  
+ 
   .modal-body &-subtitle {
     font-size: 1.25rem;
     line-height: 1;
@@ -38,6 +44,14 @@
     &:hover {
       color: $aa-builder-icon-click-color;
     }
+  }
+
+  .aa-help-icon {
+   color:$color-primary-lighter;
+   &:hover {
+     color: $white;
+     cursor: pointer;
+   }
   }
   .down {
     color: $aa-builder-icon-click-color;

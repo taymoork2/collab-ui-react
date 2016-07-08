@@ -2,45 +2,44 @@
   <button type="button" class="close" ng-click="$dismiss()"><span class="sr-only">close</span></button>
   <h3 class="modal-title" translate="generateActivationCodeModal.title"></h3>
 </div>
-<div class="loading" ng-if="!genAuthCode.otp.code">
-  <i class="icon icon-spinner"></i>
-</div>
-<div class="modal-body" id="printActivationCode" ng-if="genAuthCode.otp.code">
-  <div translate="generateActivationCodeModal.activateBody"></div>
-  <div class="row">
-    <div class="col-sm-5">
-      <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
-    </div>
-    <div class="col-sm-7">
-      <div class="activation-code">
-        {{genAuthCode.otp.friendlyCode}}
-      </div>
-      <div class="expiration">
-        <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
-      </div>
-    </div>
+<div class="modal-body generate-activation-code">
+  <div class="loading" ng-if="!genAuthCode.otp.code">
+    <i class="icon icon-spinner"></i>
   </div>
-  
-  <div ng-if="genAuthCode.otp.code">
-    <div class="pull-left">
-      <button class="btn btn--link btn--large" ngclipboard data-clipboard-text="{{::genAuthCode.otp.friendlyCode}}" ngclipboard-error="genAuthCode.clipboardFallback()"><span translate="generateActivationCodeModal.copyToClipboard"></span></button>
-      <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
-    </div>
-    <button class="btn btn--large pull-right" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
-  </div>
-  <div ng-show="genAuthCode.showEmail">
-
-    <div class="form-horizontal">
-      <div class="form-group">
-        <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
-        <div class="col-sm-6">
-          <input type="email" id="to" class="form-control" ng-model="genAuthCode.email.to">
+  <div id="printActivationCode" ng-if="genAuthCode.otp.code">
+    <div translate="generateActivationCodeModal.activateBody"></div>
+    <div class="row">
+      <div class="col-sm-5">
+        <img data-ng-src="data:image/JPEG;base64,{{genAuthCode.qrCode}}">
+      </div>
+      <div class="col-sm-7">
+        <div class="activation-code">
+          {{genAuthCode.otp.friendlyCode}}
+        </div>
+        <div class="expiration">
+          <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
         </div>
       </div>
     </div>
-
-    <div>
-      <button class="btn btn--primary btn--large pull-right" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
+    <div class="flex-space-between" ng-if="genAuthCode.otp.code">
+      <div>
+        <button class="btn btn--link btn--large" ngclipboard data-clipboard-text="{{::genAuthCode.otp.friendlyCode}}" ngclipboard-error="genAuthCode.clipboardFallback()"><span translate="generateActivationCodeModal.copyToClipboard"></span></button>
+        <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
+      </div>
+      <button class="btn btn--large" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
+    </div>
+    <div ng-show="genAuthCode.showEmail">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
+          <div class="col-sm-6">
+            <input type="email" id="to" class="form-control" ng-model="genAuthCode.email.to">
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="btn btn--primary btn--large pull-right" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>
+      </div>
     </div>
   </div>
 </div>

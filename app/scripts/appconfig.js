@@ -522,7 +522,7 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-                controller: 'BrandingCtrl',
+                controller: 'BrandingExampleCtrl',
                 controllerAs: 'brandEg',
               }
             },
@@ -1828,7 +1828,6 @@
           })
           .state('generateauthcode', {
             parent: 'modal',
-            url: '/generateauthcode',
             params: {
               currentUser: {},
               activationCode: {}
@@ -2003,6 +2002,13 @@
               detailsFeatureType: null,
               detailsDependsList: null
             }
+          })
+          .state('huronCallPark', {
+            url: '/huronCallPark',
+            parent: 'hurondetails',
+            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
+            controller: 'CallParkSetupAssistantCtrl',
+            controllerAs: 'callParkSA'
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
