@@ -5,6 +5,42 @@ var WebExCommon = function () {
     describeText: null
   };
 
+  //Webex BTS sites
+  //1. T30 CI unified with MC 25, CMR licensed
+  //2. T30 CI unified with MC200 licensed
+  //3. T30 CI unified with EC, TC, SC licensed (Enterprise Edition)
+  //4. T31 CI unified with MC200, CMR licensed
+  //5. T31 CI unified with MC25, CMR licensed
+  //6. T31 CI unified with EC, TC, SC licensed (Enterprise Edition)
+
+  //BTS 1 (reports)
+  this.BTS1 = {
+    siteUrl: 't30test-mc25.webex.com',
+    testAdminUsername: 'provteam+mc25@csgtrials.webex.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  //BTS 3 (configure)
+  this.BTS3 = {
+    siteUrl: 't30test-ee.webex.com',
+    testAdminUsername: 'provteam+ee@csgtrials.webex.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  //BTS 4 (reports)
+  this.BTS4 = {
+    siteUrl: 't31test-mc200-cmr.webex.com',
+    testAdminUsername: 'provteam+mc200@csgtrials.webex.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  //BTS 6 (configure)
+  this.BTS6 = {
+    siteUrl: 't31test-ee.webex.com',
+    testAdminUsername: 'provteam+t31ee@csgtrials.webex.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   //T30 CI enabled site
   this.t30citestprov9Info = {
     siteUrl: 't30citestprov9.webex.com',

@@ -1,4 +1,4 @@
-<aa-say-message aa-schedule="{{schedule}}" aa-index="index" aa-header="true"></aa-say-message>
+<aa-say-message aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-header="true"></aa-say-message>
 <div class="aa-phone-menu">
   <div class="panel">
     <div ng-if="aaPhoneMenu.selectedActions.length">
@@ -11,14 +11,15 @@
           <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
           <div ng-switch="keyAction.action.name" class="aa-key-action">
-            <aa-route-to-user ng-switch-when="phoneMenuRouteUser"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
-            <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox"  voicemail=true aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
-            <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
-            <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
-            <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
-            <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
-            <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
-            <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-queue>
+            <aa-route-to-user ng-switch-when="phoneMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
+            <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
+            <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
+            <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
+            <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
+            <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
+            <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
+            <aa-submenu ng-switch-when="phoneMenuPlaySubmenu" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-submenu>
+            <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-queue>
          </div>
         </div>
         <div class="small-1 columns">
@@ -29,12 +30,12 @@
     <div class="row">
       <div ng-show="aaPhoneMenu.selectedActions.length < 12" class="small-12 columns">
         <a class="aa-pm-primary-text aa-pm-add" ng-click="aaPhoneMenu.addKeyAction()">
-          <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
+          <i name="aa-phone-menu-add-action" class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
       </div>
     </div>
   </div>
   <!-- timeout/invalid action -->
   <div class="panel">
-    <aa-timeout-invalid aa-schedule="{{schedule}}" aa-index="index"></aa-timeout-invalid>
+    <aa-timeout-invalid aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index"></aa-timeout-invalid>
   </div>
 </div>

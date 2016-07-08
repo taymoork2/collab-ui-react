@@ -1,0 +1,403 @@
+{
+  "ceCombinedInputWithSubmenuGoBack": {
+    "callExperienceName": "AA Combined",
+    "assignedResources": [{
+      "id": "81005005",
+      "number": "5005",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "playList": [
+
+            ],
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "playList": [
+
+                  ],
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "inputs": [{
+                  "description": "",
+                  "input": "*",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": -1
+                    }
+                  }]
+                }],
+                "incompleteInputActions": [{
+                  "repeatActionsOnInput": {
+                    "level": -1
+                  }
+                }],
+                "rawInputActions": [
+
+                ]
+              }
+            }]
+          }],
+          "incompleteInputActions": [
+
+          ],
+          "rawInputActions": [
+
+          ]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  },
+  "ceCombinedWithSubmenuGoBack": {
+    "callExperienceName": "AA Combined",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "81005005",
+      "number": "5005"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "incompleteInputActions": [{
+                  "repeatActionsOnInput": {
+                    "level": -1
+                  }
+                }],
+                "inputs": [{
+                  "description": "",
+                  "input": "*",
+                  "actions": [{
+                    "repeatActionsOnInput": {
+                      "level": -1
+                    }
+                  }]
+                }]
+              }
+            }]
+          }]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  },
+  "ceCombinedInputWithSubmenuDialByExt": {
+    "callExperienceName": "AA Combined",
+    "assignedResources": [{
+      "id": "81005005",
+      "number": "5005",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "playList": [
+
+            ],
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "playList": [
+
+                  ],
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "inputs": [{
+                  "description": "Input Option 4: dial by extension",
+                  "input": "4",
+                  "actions": [{
+                    "runActionsOnInput": {
+                      "inputType": 2,
+                      "repeats": 2,
+                      "language": "en_US",
+                      "voice": "",
+                      "prompts": {
+                        "playList": [
+
+                        ],
+                        "sayList": [{
+                          "value": "If you know your party's extension, please enter it now."
+                        }]
+                      },
+                      "attempts": 3,
+                      "minNumberOfCharacters": 4,
+                      "maxNumberOfCharacters": 4,
+                      "inputs": [
+
+                      ],
+                      "incompleteInputActions": [
+
+                      ],
+                      "rawInputActions": [{
+                        "routeToExtension": {
+                          "description": "",
+                          "destination": "$Input"
+                        }
+                      }]
+                    }
+                  }]
+                }],
+                "incompleteInputActions": [{
+                  "repeatActionsOnInput": {
+                    "level": -1
+                  }
+                }],
+                "rawInputActions": [
+
+                ]
+              }
+            }]
+          }],
+          "incompleteInputActions": [
+
+          ],
+          "rawInputActions": [
+
+          ]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  },
+  "ceCombinedWithSubmenuDialByExt": {
+    "callExperienceName": "AA Combined",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "81005005",
+      "number": "5005"
+    }],
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "say": {
+          "value": "Welcome to User Story 1 9 2 8 9 4 demo. This demonstrates sub menus functionality",
+          "voice": ""
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "language": "en_US",
+          "voice": "",
+          "prompts": {
+            "description": "",
+            "sayList": [{
+              "value": "This is level one (main) menu. Press 1 for sales, press 2 for technical support, press 3 for current promotions."
+            }, {
+              "value": "To repeat this menu, press 0."
+            }]
+          },
+          "attempts": 3,
+          "inputs": [{
+            "description": "",
+            "input": "0",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "level": 0
+              }
+            }]
+          }, {
+            "input": "1",
+            "actions": [{
+              "runActionsOnInput": {
+                "description": "",
+                "language": "en_US",
+                "voice": "",
+                "prompts": {
+                  "description": "",
+                  "sayList": [{
+                    "value": "This is level two menu - Sales. Press 1 for Apple iPhones, press 2 for Android devices, press 3 for Windows phones."
+                  }, {
+                    "value": "If you know your party's extension, press 4. To repeat this menu, press 0. To go back to previous menu, press Star"
+                  }]
+                },
+                "attempts": 2,
+                "incompleteInputActions": [{
+                  "repeatActionsOnInput": {
+                    "level": -1
+                  }
+                }],
+                "inputs": [{
+                  "description": "Input Option 4: dial by extension",
+                  "input": "4",
+                  "actions": [{
+                    "runActionsOnInput": {
+                      "inputType": 2,
+                      "repeats": 2,
+                      "language": "en_US",
+                      "voice": "",
+                      "prompts": {
+                        "sayList": [{
+                          "value": "If you know your party's extension, please enter it now."
+                        }]
+                      },
+                      "attempts": 3,
+                      "minNumberOfCharacters": 4,
+                      "maxNumberOfCharacters": 4,
+                      "rawInputActions": [{
+                        "routeToExtension": {
+                          "description": "",
+                          "destination": "$Input"
+                        }
+                      }]
+                    }
+                  }]
+                }]
+              }
+            }]
+          }]
+        }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }]
+    }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    }
+  }
+}
