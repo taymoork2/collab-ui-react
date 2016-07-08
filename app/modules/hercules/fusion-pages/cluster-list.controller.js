@@ -72,9 +72,7 @@
         .map('hostname')
         .uniq()
         .sort()
-        .join()
-        .escape()
-        .split(',')
+        .map(_.escape)
         .join('<br />')
         .value();
     }
