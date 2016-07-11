@@ -1440,8 +1440,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule",
-        "cannot-find-upgrade-schedule": "Could not find upgrade schedule for {{clusterName}}."
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
