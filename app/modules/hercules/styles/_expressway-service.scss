@@ -282,6 +282,10 @@ Special stuff currently used for out own mail input field...
   display: flex;
   margin-top: 1rem;
 
+  h5 {
+    margin-bottom: 0.625rem;
+  }
+
   & > div {
     margin-right: 5rem;
   }
