@@ -26,6 +26,8 @@
       },
 
       eventType: {
+        contextServiceEnabled: 'CONTEXTSERVICEENABLED',
+        contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
         partnerLogin: 'PARTNERLOGIN',
         partnerCustomersPage: 'PARTNERCUSTOMERSPAGE',
