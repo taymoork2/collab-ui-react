@@ -6,7 +6,7 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
+  function GenerateActivationCodeCtrl($previousState, $stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $stateParams.currentUser.userName;
@@ -20,13 +20,20 @@
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
     vm.clipboardFallback = clipboardFallback;
 
+    function handleError(response) {
+      Notification.errorWithTrackingId(response,
+        _.get(response, 'status') === 404 ? 'generateActivationCodeModal.generateErrorNotFound' : 'generateActivationCodeModal.generateError'
+      );
+      $previousState.go();
+    }
+
     function activate() {
       if (vm.otp === 'new') {
         return OtpService.generateOtp(vm.userName).then(function (otpObj) {
           vm.otp = otpObj;
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
           setQRCode(vm.otp.code);
-        });
+        }).catch(handleError);
       } else if (vm.otp.code) {
         vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
         setQRCode(vm.otp.code);

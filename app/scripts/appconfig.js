@@ -522,7 +522,7 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-                controller: 'BrandingCtrl',
+                controller: 'BrandingExampleCtrl',
                 controllerAs: 'brandEg',
               }
             },
@@ -1828,7 +1828,6 @@
           })
           .state('generateauthcode', {
             parent: 'modal',
-            url: '/generateauthcode',
             params: {
               currentUser: {},
               activationCode: {}
