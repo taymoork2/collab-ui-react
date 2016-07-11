@@ -29,7 +29,8 @@ var KARMA_CONFIG = 'karma-config-';
 
 var modules = _.keys(config.testFiles.spec);
 // 'custom' and 'ts' aren't really "modules" like the other modules, but they do represent a
-// reasonable means of grouping specs, so we include them in the list
+// reasonable means of grouping specs, so we include them in the list, but exclude them where
+// appropriate
 modules = modules.concat('custom', 'ts');
 
 var runKarmaParallelModules = _.chain(modules)
