@@ -359,7 +359,7 @@
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      if(vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')){
+      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
         setOffHoursData();
         return true;
       }
@@ -508,7 +508,7 @@
       }
     }
 
-    function setOffHoursData(){
+    function setOffHoursData() {
       vm.template.configuration.pages.offHours.enabled = true;
       vm.template.configuration.pages.offHours.schedule.businessDays = _.map(_.filter(vm.days, 'isSelected'), 'label');
       vm.template.configuration.pages.offHours.schedule.timings.startTime = vm.timings.startTime.label;

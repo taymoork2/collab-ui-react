@@ -362,13 +362,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       resolveLogoPromise();
     });
 
-    function setTimings(startTime){
+    function setTimings(startTime) {
       expect(controller.timings).toEqual(defaultTimings);
       controller.timings.startTime = startTime;
       controller.setEndTimeOptions();
     }
 
-    function setTimezone(timeZoneValue){
+    function setTimezone(timeZoneValue) {
       controller.scheduleTimeZone = _.find(CTService.getTimezoneOptions(), {
         value: timeZoneValue
       });
@@ -422,7 +422,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       });
     });
 
-    it('should select end time as 11:59 PM if start time is 11:30 PM', function(){
+    it('should select end time as 11:59 PM if start time is 11:30 PM', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '11:30 PM',
@@ -439,7 +439,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       });
     });
 
-    it('should update templateJSON with the offHours data', function(){
+    it('should update templateJSON with the offHours data', function () {
       controller.template.configuration.pages.offHours.schedule.open24Hours = false;
       deSelectAllDays();
       controller.setDay(1); // set Monday
@@ -462,7 +462,10 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         schedule: {
           businessDays: ['Monday', 'Saturday'],
           open24Hours: false,
-          timings: { startTime: '10:30 AM', endTime: '05:30 PM' },
+          timings: {
+            startTime: '10:30 AM',
+            endTime: '05:30 PM'
+          },
           timezone: 'America/Nassau'
         }
       });
