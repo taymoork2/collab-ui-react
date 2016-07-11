@@ -361,9 +361,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       controller.currentState = controller.states[6]; // set to off hours view
       resolveLogoPromise();
     });
+
+    function setTimings(startTime){
+      expect(controller.timings).toEqual(defaultTimings);
+      controller.timings.startTime = startTime;
+      controller.setEndTimeOptions();
+    }
+
+    function setTimezone(timeZoneValue){
+      controller.scheduleTimeZone = _.find(CTService.getTimezoneOptions(), {
+        value: timeZoneValue
+      });
+    }
+
     it('should set off hours message and business hours by default', function () {
       expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.offHoursDefaultMessage');
-      expect(controller.open24Hours).toBe(true);
+      expect(controller.template.configuration.pages.offHours.schedule.open24Hours).toBe(true);
       expect(controller.isOffHoursMessageValid).toBe(true);
       expect(controller.isBusinessHoursDisabled).toBe(false);
       expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual(selectedDaysByDefault);
@@ -389,7 +402,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should disable the right btn if off hours message is empty', function () {
       controller.template.configuration.pages.offHours.message = '';
-      expect(controller.nextButton()).toBe(false);
+      expect(controller.nextButton()).toBe(undefined);
     });
 
     it('should select start time and end time correctly', function () {
@@ -402,9 +415,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         label: '09:30 AM',
         value: '09:30'
       };
-      expect(controller.timings).toEqual(defaultTimings);
-      controller.timings.startTime = startTime;
-      controller.setEndTimeOptions();
+      setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
         endTime: endTime
@@ -421,14 +432,42 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         label: '11:59 PM',
         value: '23:59'
       };
-      expect(controller.timings).toEqual(defaultTimings);
-      controller.timings.startTime = startTime;
-      controller.setEndTimeOptions();
+      setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
         endTime: endTime
       });
     });
+
+    it('should update templateJSON with the offHours data', function(){
+      controller.template.configuration.pages.offHours.schedule.open24Hours = false;
+      deSelectAllDays();
+      controller.setDay(1); // set Monday
+      controller.setDay(6); // set Saturday
+      var startTime = {
+        label: '10:30 AM',
+        value: '10:30'
+      };
+      var endTime = {
+        label: '05:30 PM',
+        value: '17:30'
+      };
+      setTimings(startTime);
+      controller.timings.endTime = endTime;
+      setTimezone('America/Nassau');
+      controller.nextButton();
+      expect(controller.template.configuration.pages.offHours).toEqual({
+        enabled: true,
+        message: 'careChatTpl.offHoursDefaultMessage',
+        schedule: {
+          businessDays: ['Monday', 'Saturday'],
+          open24Hours: false,
+          timings: { startTime: '10:30 AM', endTime: '05:30 PM' },
+          timezone: 'America/Nassau'
+        }
+      });
+    });
+
   });
 
   describe('Summary Page', function () {

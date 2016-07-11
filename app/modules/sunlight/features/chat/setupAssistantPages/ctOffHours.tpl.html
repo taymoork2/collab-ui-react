@@ -15,10 +15,10 @@
             <div class="h5 offhours-preview-message">{{careChatSA.template.configuration.pages.offHours.message}}</div>
             <div ng-if="!careChatSA.isBusinessHoursDisabled" class="business-hours">
               <div class="h5 message" translate="careChatTpl.businessHours"></div>
-              <div class="h6" ng-if="!careChatSA.open24Hours">{{careChatSA.scheduleTimeZone.label}}</div>
+              <div class="h6" ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours">{{careChatSA.scheduleTimeZone.label}}</div>
               <div class="h6 day-time-preview days" ng-model="careChatSA.daysPreview">{{careChatSA.daysPreview}}</div>
-              <div class="h6 day-time-preview" ng-if="careChatSA.open24Hours" translate="careChatTpl.open24Hours"></div>
-              <div class="h6 day-time-preview" ng-if="!careChatSA.open24Hours">
+              <div class="h6 day-time-preview" ng-if="careChatSA.template.configuration.pages.offHours.schedule.open24Hours" translate="careChatTpl.open24Hours"></div>
+              <div class="h6 day-time-preview" ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours">
                 <span>{{careChatSA.timings.startTime.label}} - </span>
                 <span>{{careChatSA.timings.endTime.label}}</span>
               </div>
@@ -50,9 +50,9 @@
                 <cs-checkbox class="h5"
                              ckid="ctOpen24Hours"
                              isdisabled="careChatSA.isBusinessHoursDisabled"
-                             ng-model="careChatSA.open24Hours"
+                             ng-model="careChatSA.template.configuration.pages.offHours.schedule.open24Hours"
                              label="{{:: 'careChatTpl.open24Hours' | translate}}"></cs-checkbox>
-                <div ng-if="!careChatSA.open24Hours && !careChatSA.isBusinessHoursDisabled">
+                <div ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours && !careChatSA.isBusinessHoursDisabled">
                   <div class="time-picker">
                     <div class="start-time">
                       <div class="h5" translate="careChatTpl.offHoursStartTime"></div>
