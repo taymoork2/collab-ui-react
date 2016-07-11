@@ -185,7 +185,7 @@
             firstTimeSetup: false
           },
           controller: 'AddResourceController',
-          controllerAs: 'addResource',
+          controllerAs: 'vm',
           templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
           type: 'small'
         });
@@ -225,7 +225,7 @@
           firstTimeSetup: true
         },
         controller: 'AddResourceController',
-        controllerAs: 'addResource',
+        controllerAs: 'vm',
         templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
         type: 'small'
       });
