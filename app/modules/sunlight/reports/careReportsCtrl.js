@@ -5,7 +5,7 @@
   function CareReportsController($translate) {
     var vm = this;
     vm.timeFilter = null;
-    var options = ["today", "yesterday", "week", "month", "threeMonths"];
+    var options = ['today', 'yesterday', 'week', 'month', 'threeMonths'];
     vm.timeOptions = _.map(options, function (name, i) {
       return {
         value: i,

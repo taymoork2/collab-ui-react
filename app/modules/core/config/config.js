@@ -347,9 +347,12 @@
       'webex-messenger': [
         'messenger'
       ],
+      'cloud-contact-center': [
+        'care',
+        'care-reports'
+      ],
       'contact-center-context': [
-        //TODO: Remove these states when sunlight trial stories are implemented and
-        // add back them to 'ccc_config' serviceState
+        //TODO: Remove this after all Care test and trial Orgs are entitled to cloud-contact-center
         'care',
         'care-reports'
       ]

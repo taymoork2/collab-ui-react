@@ -19,10 +19,10 @@
     vm.quality = 'quality';
     var currentFilter = vm.allReports;
 
-    vm.tab = $stateParams.tab;
-
     vm.displayEngagement = true;
     vm.displayQuality = true;
+
+    vm.tab = $stateParams.tab;
 
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
@@ -83,31 +83,27 @@
     vm.metricStatus = REFRESH;
     vm.metrics = {};
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMetrics).then(function (result) {
-      if (result) {
-        vm.headerTabs = [{
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
+    }];
+    var promises = {
+      mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
+      care: FeatureToggleService.atlasCareTrialsGetStatus()
+    };
+    $q.all(promises).then(function (features) {
+      if (features.mf) {
+        vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
-          state: 'reports-metrics',
-        }, {
-          title: $translate.instant('reportsPage.sparkReports'),
-          state: 'reports'
-        }];
-      } else {
-        vm.headerTabs = [{
-          title: $translate.instant('reportsPage.sparkReports'),
-          state: 'reports'
-        }];
+          state: 'reports-metrics'
+        });
       }
-
-    }).then(function () {
-      FeatureToggleService.atlasCareTrialsGetStatus().then(function (result) {
-        if (result) {
-          vm.headerTabs.push({
-            title: $translate.instant('tabs.careTab'),
-            state: 'care-reports'
-          });
-        }
-      });
+      if (features.care) {
+        vm.headerTabs.push({
+          title: $translate.instant('tabs.careTab'),
+          state: 'care-reports'
+        });
+      }
     });
 
     vm.timeOptions = [{
@@ -186,7 +182,7 @@
     };
 
     function init() {
-      if (vm.tab === null) {
+      if (!vm.tab) {
         setFilterBasedText();
         $timeout(function () {
           setDummyData();
