@@ -98,22 +98,7 @@ namespace globalsettings {
         });
       });
 
-      describe('with allowCustomerLogos set to false', () => {
-
-        beforeEach(setGetOrgSpy(false));
-        beforeEach(initController);
-
-        it('should create the ctrl and add the normal setting sections but filter out branding', ()=> {
-          expect(controller.security).toBeTruthy();
-          expect(controller.domains).toBeTruthy();
-          expect(controller.sipDomain).toBeTruthy();
-          expect(controller.authentication).toBeTruthy();
-          expect(controller.support).toBeTruthy();
-          expect(controller.branding).toBeFalsy();
-          expect(controller.privacy).toBeTruthy();
-          expect(controller.retention).toBeTruthy();
-        });
-      });
+      // direct customer also support branding log
     });
 
     function setAuthinfoIsPartnerSpy(isPartner) {

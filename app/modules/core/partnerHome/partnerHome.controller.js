@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $timeout, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function PartnerHomeCtrl($scope, $timeout, $state, $window, Analytics, Authinfo, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -43,7 +43,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Localytics.tagEvent(Localytics.events.startTrialButton, {
+        Analytics.trackEvent('Start Trial Button Click', {
           from: $state.current.name
         });
       }

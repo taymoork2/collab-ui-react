@@ -113,9 +113,9 @@ describe('UrlConfigSpec', function () {
   it('should return correct athena service url', function () {
     whenCalling('getAthenaServiceUrl').expectUrlToBe({
       dev: 'https://athena-integration.wbx2.com/athena/api/v1',
-      cfe: 'https://athena-integration.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-e.wbx2.com/athena/api/v1',
       integration: 'https://athena-integration.wbx2.com/athena/api/v1',
-      prod: 'https://athena-integration.wbx2.com/athena/api/v1',
+      prod: 'https://athena-a.wbx2.com/athena/api/v1',
     });
   });
 

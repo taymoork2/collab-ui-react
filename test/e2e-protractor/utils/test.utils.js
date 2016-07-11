@@ -473,9 +473,15 @@ exports.expectSwitchState = function (elem, value) {
 
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
-    log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
-    expect(input.isSelected()).toBe(value);
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for checkbox to be ' + value + ': ' + elem.locator());
   });
 };
 
@@ -536,7 +542,10 @@ exports.search = function (query, _searchCount) {
   if (searchCount > -1) {
     browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
   }
-  return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+
+  if (query) {
+    return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  }
 };
 
 exports.clickUser = function (query) {

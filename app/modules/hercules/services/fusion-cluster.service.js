@@ -22,7 +22,9 @@
       setUpgradeSchedule: setUpgradeSchedule,
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
-      setClusterName: setClusterName
+      setClusterName: setClusterName,
+      deregisterCluster: deregisterCluster,
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
@@ -220,6 +222,20 @@
       return $http.patch(url, {
         name: newClusterName
       });
+    }
+
+    function deregisterCluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
+      return $http.post(url);
+    }
+
+    function getReleaseNotes(releaseChannel, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
+      return $http.get(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          return data.releaseNotes;
+        });
     }
 
   }

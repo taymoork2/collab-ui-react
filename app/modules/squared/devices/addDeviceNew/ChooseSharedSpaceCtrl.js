@@ -16,6 +16,7 @@
     vm.isExistingCollapsed = true;
     vm.selected = null;
     vm.radioSelect = null;
+    vm.isLoading = false;
 
     vm.rooms = function () {
       if (vm.wizardData.showPlaces) {
@@ -61,6 +62,7 @@
       return vm.deviceName && vm.deviceName.length < 128;
     };
     vm.next = function () {
+      vm.isLoading = true;
       var nextOption = vm.wizardData.deviceType;
       if (nextOption == 'huron') {
         if (vm.wizardData.function == 'addPlace') {
@@ -72,6 +74,7 @@
 
       function success(code) {
         if (code.activationCode && code.activationCode.length > 0) {
+          vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.deviceName,
             activationCode: code.activationCode,
@@ -84,17 +87,22 @@
         }
       }
 
+      function error(err) {
+        XhrNotificationService.notify(err);
+        vm.isLoading = false;
+      }
+
       if (vm.place) {
         CsdmCodeService
           .createCodeForExisting(vm.place.cisUuid)
-          .then(success, XhrNotificationService.notify);
+          .then(success, error);
       } else {
         CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
           vm.place = place;
           CsdmCodeService
             .createCodeForExisting(place.cisUuid)
-            .then(success, XhrNotificationService.notify);
-        }, XhrNotificationService.notify);
+            .then(success, error);
+        }, error);
       }
 
     };

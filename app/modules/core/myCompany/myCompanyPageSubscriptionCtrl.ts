@@ -15,81 +15,111 @@ namespace myCompanyPage {
   let serviceStatusWeight:Array<String> = [ "undefined", "ok","warn", "error" ];
   let serviceStatusToCss:Array<String> = [ "warning", "success", "warning", "danger" ];
 
+  let licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD']
+
   class MyCompanyPageSubscriptionCtrl {
     private _hybridServices = [];
-    private _usageCategory = [];
+    private _licenseCategory = [];
+    private _subscriptionDetails = [];
+    private _visibleSubscriptions = false;
 
     get hybridServices() {
       return this._hybridServices;
     }
 
-    get usageCategory() {
-      return this._usageCategory;
+    get licenseCategory() {
+      return this._licenseCategory;
+    }
+
+    get subscriptionDetails() {
+      return this._subscriptionDetails;
+    }
+
+    get visibleSubscriptions() {
+      return this._visibleSubscriptions;
     }
 
     /* @ngInject */
     constructor($translate, Authinfo, Orgservice, ServiceDescriptor) {
       // message subscriptions
-      this._usageCategory[0] = angular.copy(baseCategory);
-      this._usageCategory[0].label = $translate.instant("subscriptions.message");
+      this._licenseCategory[0] = angular.copy(baseCategory);
+      this._licenseCategory[0].label = $translate.instant("subscriptions.message");
 
       // meeting subscriptions
-      this._usageCategory[1] = angular.copy(baseCategory);
-      this._usageCategory[1].label = $translate.instant("subscriptions.meeting");
-      this._usageCategory[1].borders = true;
+      this._licenseCategory[1] = angular.copy(baseCategory);
+      this._licenseCategory[1].label = $translate.instant("subscriptions.meeting");
+      this._licenseCategory[1].borders = true;
       
       // communication subscriptions
-      this._usageCategory[2] = angular.copy(baseCategory);
-      this._usageCategory[2].label = $translate.instant("subscriptions.call");
+      this._licenseCategory[2] = angular.copy(baseCategory);
+      this._licenseCategory[2].label = $translate.instant("subscriptions.call");
       
       // room system subscriptions
-      this._usageCategory[3] = angular.copy(baseCategory);
-      this._usageCategory[3].label = $translate.instant("subscriptions.room");
+      this._licenseCategory[3] = angular.copy(baseCategory);
+      this._licenseCategory[3].label = $translate.instant("subscriptions.room");
 
       Orgservice.getLicensesUsage()
         .then(subscriptions => {
           if (_.isArray(subscriptions)) {
             subscriptions.forEach((subscription, subIndex) => {
-              var subscriptionId = undefined;
+              let newSubscription = {
+                subscriptionId: undefined,
+                licenses: [],
+                viewAll: false
+              };
               if (subscription.subscriptionId && (subscription.subscriptionId !== "unknown")) {
-                subscriptionId = subscription.subscriptionId;
+                newSubscription.subscriptionId = subscription.subscriptionId;
               }
 
               subscription.licenses.forEach((license, licenseIndex) => {
-                var subscription = {
-                  licenseId: license.licenseId,
-                  licenseType: license.licenseType,
-                  offerName: license.offerName,
-                  subscription: subscriptionId,
-                  usage: license.usage,
-                  volume: license.volume,
-                  siteUrl: license.siteUrl,
-                  id: 'donutId' + subIndex + licenseIndex
-                };
+                if (_.includes(licenseTypes, license.offerName)) {
+                  this._visibleSubscriptions = true;
+                  newSubscription.licenses.push(license.offerName);
 
-                if (license.offerName === 'MS') {
-                  this._usageCategory[0].subscriptions = addSubscription(this._usageCategory[0].subscriptions, subscription);
-                } else if ((license.offerName === 'CF') || (license.offerName === 'MC') || (license.offerName === 'TC') || (license.offerName === 'EC') || (license.offerName === 'EE') || (license.offerName === 'CMR')) {
-                  let existingSite = checkForSite(subscription.siteUrl, this._usageCategory[1].subscriptions);
-                  if (existingSite) {
-                    this._usageCategory[1].subscriptions[existingSite].offers.push(subscription);
-                  } else if (subscription.siteUrl) {
-                    this._usageCategory[1].subscriptions.push({
-                      siteUrl: subscription.siteUrl,
-                      offers: [subscription]
-                    });
-                  } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
-                    this._usageCategory[1].subscriptions.unshift({
-                      siteUrl: subscription.siteUrl,
-                      offers: [subscription]
-                    });
-                  }
-                } else if (license.offerName === 'CO') {
-                  this._usageCategory[2].subscriptions = addSubscription(this._usageCategory[2].subscriptions, subscription);
-                } else if (license.offerName === 'SD') {
-                  this._usageCategory[3].subscriptions = addSubscription(this._usageCategory[3].subscriptions, subscription);
+                  let offer = {
+                    licenseId: license.licenseId,
+                    licenseType: license.licenseType,
+                    offerName: license.offerName,
+                    usage: license.usage,
+                    volume: license.volume,
+                    siteUrl: license.siteUrl,
+                    id: 'donutId' + subIndex + licenseIndex
+                  };
+
+                  _.forEach(licenseTypes, (type, index) => {
+                    if ((license.offerName === type) && (index === 0)) {
+                      this._licenseCategory[0].subscriptions = addSubscription(this._licenseCategory[0].subscriptions, offer);
+                    } else if ((license.offerName === type) && (index === 7)) {
+                      this._licenseCategory[2].subscriptions = addSubscription(this._licenseCategory[2].subscriptions, offer);
+                    } else if ((license.offerName === type) && (index === 8)) {
+                      this._licenseCategory[3].subscriptions = addSubscription(this._licenseCategory[3].subscriptions, offer);
+                    } else if (license.offerName === type) {
+                      let existingSite = checkForSite(offer.siteUrl, this._licenseCategory[1].subscriptions);
+                      if (existingSite) {
+                        this._licenseCategory[1].subscriptions[existingSite].offers = addSubscription(this._licenseCategory[1].subscriptions[existingSite].offers, offer);
+                      } else if (offer.siteUrl) {
+                        this._licenseCategory[1].subscriptions.push({
+                          siteUrl: offer.siteUrl,
+                          offers: [offer]
+                        });
+                      } else { // Meeting licenses not attached to a siteUrl should be grouped together at the front of the list
+                        this._licenseCategory[1].subscriptions.unshift({
+                          siteUrl: offer.siteUrl,
+                          offers: [offer]
+                        });
+                      }
+                    }
+                  });
                 }
               });
+              
+              if (newSubscription.licenses.length > 0) {
+                // sort licenses into display order/order for determining subscription name
+                newSubscription.licenses.sort((a, b) => {
+                  return licenseTypes.indexOf(a) - licenseTypes.indexOf(b)
+                });
+                this._subscriptionDetails.push(newSubscription);
+              }
             });
           }
         });
@@ -134,7 +164,7 @@ namespace myCompanyPage {
   }
 
   function checkForSite(siteUrl, siteArray) {
-    var found;
+    let found;
     if(_.isArray(siteArray)) {
       siteArray.forEach((sub, index) => {
         if (sub.siteUrl === siteUrl) {
@@ -146,11 +176,20 @@ namespace myCompanyPage {
   }
 
   function addSubscription(subscriptions, item) {
-    if (subscriptions.length < 1) {
+    let exists = false;
+
+    if(_.isArray(subscriptions)) {
+      subscriptions.forEach((subscription) => {
+        if(!exists && subscription.offerName === item.offerName){
+          subscriptions[0].usage += item.usage;
+          subscriptions[0].volume += item.volume;
+          exists = true;
+        }
+      });
+    }
+
+    if (!exists) {
       subscriptions.push(item);
-    } else {
-      subscriptions[0].usage += item.usage;
-      subscriptions[0].volume += item.volume;
     }
 
     return subscriptions;
