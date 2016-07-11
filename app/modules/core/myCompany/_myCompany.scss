@@ -46,16 +46,16 @@
       border: none;
       @include vr-spacing(ph, 0.75);
       @include vr-spacing(pv, 1.25);
-      .detail {
+      .detail span, .detail a {
         @include vr-spacing(ph, 0.75);
         @include vr-spacing(pv, 0);
         border-left: rem-calc(1) solid $gray;
       }
-      .detail:first-of-type {
+      .detail:first-of-type span, .detail:first-of-type a {
         @include vr-spacing(pl, 0);
         border-left: none;
       }
-      .detail:last-of-type {
+      .detail:last-of-type span, .detail:last-of-type a {
         @include vr-spacing(pr, 0);
       }
       .detail-expanded {

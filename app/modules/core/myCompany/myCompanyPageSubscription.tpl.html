@@ -10,11 +10,11 @@
           ng-class="{'detail': !subscription.viewAll || (subscription.licenses.length < 4), 'detail-expanded detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <span class="h6" translate="subscriptions.licenseTypes.{{::license}}"></span>
           </div>
-          <div ng-if="subscription.subscriptionId && ((subscription.licenses.length < 3) || (subscription.viewAll && (subscription.licenses.length >= 3)))" ng-class="{'detail': subscription.licenses.length < 3, 'detail-expanded detail-break': subscription.licenses.length >= 3, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
+          <div class="detail-expanded detail-break" ng-if="subscription.viewAll" ng-class="{'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <span class="h6" translate="subscriptions.subscription"></span>
             <span class="h6">{{::subscription.subscriptionId}}</span>
           </div>
-          <div ng-click="subscription.viewAll = !subscription.viewAll" ng-if="(subscription.subscriptionId && subscription.licenses.length > 2) || (subscription.subscriptionId === undefined && subscription.licenses.length > 3)" ng-class="{'detail': !subscription.viewAll, 'detail-expanded': subscription.viewAll, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
+          <div ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'detail': !subscription.viewAll, 'detail-expanded': subscription.viewAll, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <a class="h6" translate="subscriptions.more" ng-if="!subscription.viewAll"></a>
             <a class="h6" translate="subscriptions.less" ng-if="subscription.viewAll"></a>
           </div>
