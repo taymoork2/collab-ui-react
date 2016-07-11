@@ -367,13 +367,17 @@
     function init() {
       var isTestOrg = false;
       var overrideTestOrg = false;
+      var getAdminOrgError = false;
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
         TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
         FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop)
+        Orgservice.getAdminOrg(_.noop).catch(function (err) {
+          getAdminOrgError = true;
+          return err;
+        })
       ]).then(function (results) {
         vm.showRoomSystems = true;
         vm.roomSystemTrial.enabled = vm.preset.roomSystems;
@@ -395,7 +399,7 @@
 
         // To determine whether to display the ship devices page
         overrideTestOrg = results[4];
-        if (results[5].data.success) {
+        if (!getAdminOrgError && results[5].data.success) {
           isTestOrg = results[5].data.isTestOrg;
         }
       }).finally(function () {
