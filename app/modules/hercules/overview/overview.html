@@ -9,22 +9,12 @@
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
         <div ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
-          <a href="" ng-click="exp.openUserStatusReportModal(exp.servicesId[0])" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" translate="hercules.overview.report">User Status Report</a>
+          <a href="" ng-click="exp.openUserStatusReportModal(exp.servicesId[0])" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" translate="hercules.overview.report"></a>
         </div>
         <button class="btn btn--people add-resource-button" type="submit"
                 translate="hercules.overview.add-resource-button" ng-click="exp.openAddResourceModal()"></button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <div class="user-statuses-bar" ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
-      <div class="user-statuses-card" ng-repeat="summary in exp.userStatusSummary">
-        <div class="user-statuses-title"><span translate="{{'hercules.cloudExtensions.serviceNames.'+summary.serviceId}}"></span> - <span translate="hercules.overview.status"></span></div>
-        <ul class="user-statuses-content">
-          <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
-          <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
-          <li><span translate="hercules.overview.error"></span>: <span ng-class="{'red': summary.error > 0}">{{summary.error}}</span></li>
-        </ul>
-      </div>
-    </div>
     <div ui-view="fullPane" class="small-padding-top content-container"></div>
   </div>
 </div>
