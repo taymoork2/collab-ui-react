@@ -3,7 +3,7 @@
 describe('Care Chat Setup Assistant Ctrl', function () {
 
   var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
-  var Notification;
+  var Notification, $translate;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
@@ -72,12 +72,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$translate_,
     _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
     $timeout = _$timeout_;
+    $translate = _$translate_;
     $window = _$window_;
     Authinfo = _Authinfo_;
     CTService = _CTService_;
@@ -85,6 +86,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $state = _$state_;
     Notification = _Notification_;
 
+    // set language to en_US to show AM and PM for startTime and endTime
+    $translate.use(businessHours.userLang);
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
     spyOn($modal, 'open');
@@ -392,11 +395,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     it('should select start time and end time correctly', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
-        label: '09:00',
+        label: '09:00 AM',
         value: '09:00'
       };
       var endTime = {
-        label: '09:30',
+        label: '09:30 AM',
         value: '09:30'
       };
       expect(controller.timings).toEqual(defaultTimings);
@@ -406,12 +409,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         startTime: startTime,
         endTime: endTime
       });
-      var startOfEndTimeOptions = _.filter(_.map(controller.startTimeOptions, 'label'), function (timeOption) {
-        return timeOption > startTime.label;
-      })[0];
-      expect(startOfEndTimeOptions).toEqual('09:30');
     });
 
+    it('should select end time as 11:59 PM if start time is 11:30 PM', function(){
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '11:30 PM',
+        value: '23:30'
+      };
+      var endTime = {
+        label: '11:59 PM',
+        value: '23:59'
+      };
+      expect(controller.timings).toEqual(defaultTimings);
+      controller.timings.startTime = startTime;
+      controller.setEndTimeOptions();
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: endTime
+      });
+    });
   });
 
   describe('Summary Page', function () {

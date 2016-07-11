@@ -37,11 +37,6 @@
               <textarea class="h6 message" type="text" maxlength="100"
                         ng-model="careChatSA.template.configuration.pages.offHours.message"
                         ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
-              <!-- Commenting error message till the error validation story is completed -->
-              <!--<div class="error-description" ng-if="!careChatSA.isOffHoursMessageValid">-->
-                <!--<span><i class="icon icon-error"></i></span>-->
-                <!--<span translate="careChatTpl.offHoursWarningMessage"></span>-->
-              <!--</div>-->
             </div>
             <div>
               <div class="h4 business-hours-label" translate="careChatTpl.businessHours"></div>
@@ -50,11 +45,6 @@
                      ng-repeat=" dayObj in careChatSA.days"
                      ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
                      ng-click="careChatSA.setDay($index)">{{dayObj.day}}</div>
-                <!-- Commenting error message till the error validation story is completed -->
-                <!--<div class="error-description" ng-if="careChatSA.isBusinessHoursDisabled">-->
-                  <!--<span><i class="icon icon-error"></i></span>-->
-                  <!--<span translate="careChatTpl.offHoursDayWarningMessage"></span>-->
-                <!--</div>-->
               </div>
               <div class="time-and-timezone-picker">
                 <cs-checkbox class="h5"
