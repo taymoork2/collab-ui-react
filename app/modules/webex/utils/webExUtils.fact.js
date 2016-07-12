@@ -21,40 +21,49 @@
       var funcName = "isCIEnabledSite()";
       var logMsg = "";
 
+      var siteLicenses = null;
       var licenses = Authinfo.getLicenses();
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "licenses=" + JSON.stringify(licenses);
-      // $log.log(logMsg);
-
       var result = true;
 
-      licenses.forEach(
-        function checkLicense(license) {
-          var funcName = "checkLicense()";
-          var logMsg = "";
+      var confLicenses = _.where(licenses, {
+        siteUrl: siteUrl,
+        licenseType: 'CONFERENCING',
+        isCIUnifiedSite: false
+      });
 
-          if (
-            ("CONFERENCING" == license.licenseType) ||
-            ("CMR" == license.licenseType)
-          ) {
+      if (
+        (null != confLicenses) &&
+        (0 < confLicenses.length)
+      ) {
 
-            if (siteUrl == license.siteUrl) {
-              logMsg = funcName + "\n" +
-                "siteUrl=" + siteUrl + "\n" +
-                "license.licenseType=" + license.licenseType + "\n" +
-                "license.siteUrl=" + license.siteUrl + "\n" +
-                "license.isCI=" + license.isCI;
-              // $log.log(logMsg);
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "confLicenses=" + JSON.stringify(confLicenses);
+        $log.log(logMsg);
 
-              if (null != license.isCI) {
-                result = license.isCI;
-              }
-            }
-          }
-        } // checkLicense()
-      ); // licenses.forEach()
+        result = false;
+      }
+
+      if (result) {
+        var cmrLicenses = _.where(licenses, {
+          siteUrl: siteUrl,
+          licenseType: 'CMR',
+          isCIUnifiedSite: false
+        });
+
+        if (
+          (null != cmrLicenses) &&
+          (0 < cmrLicenses.length)
+        ) {
+
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "cmrLicenses=" + JSON.stringify(cmrLicenses);
+          $log.log(logMsg);
+
+          result = false;
+        }
+      }
 
       return result;
     }; // isCIEnabledSite()
