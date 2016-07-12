@@ -1111,11 +1111,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1277,7 +1278,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
