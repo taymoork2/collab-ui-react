@@ -90,11 +90,16 @@ module.exports = function () {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      app: [
-        build + '/scripts/**/*.js',
-        build + '/modules/**/*.module.js',
-        build + '/modules/**/*.js',
-      ],
+      app: {
+        all: [
+          build + '/scripts/**/*.js',
+          build + '/modules/**/*.module.js',
+          build + '/modules/**/*.js',
+        ],
+        bootstrap: build + '/scripts/**/!(types.ts).js',
+        moduleDecl: build + '/modules/**/*.module.js',
+        appJsFiles: build + '/modules/**/!(global.spec|*.ts).js'
+      },
       notTs: [
         '!' + build + '/scripts/**/*.ts.js',
         '!' + build + '/scripts/**/*.ts.spec.js',

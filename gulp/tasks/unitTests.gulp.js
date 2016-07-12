@@ -141,14 +141,30 @@ gulp.task('karma-each', function (done) {
   runSeq.apply(this, karmaArgs);
 });
 
-function getKarmaDeps() {
-  return [].concat(
+// use 'stream-series' module to properly order file glob lists into a file injection target
+function getFileListFor(module) {
+  var tsManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsManifest);
+  var karmaSpecFiles = getKarmaSpecFilesFor(module);
+
+  var fileGlobLists = [
     config.vendorFiles.js,
     config.testFiles.js,
-    config.testFiles.app,
-    config.testFiles.notTs,
-    config.testFiles.global
-  );
+    config.testFiles.app.bootstrap,
+    config.testFiles.app.moduleDecl,
+    config.testFiles.app.appJsFiles,
+    tsManifestFiles,
+    config.testFiles.global,
+    karmaSpecFiles
+  ];
+
+  // convert list of file glob lists -> list of file streams
+  var fileStreams = _.map(fileGlobLists, function (gulpSrcArg) {
+    return gulp.src(gulpSrcArg, {
+      read: false
+    });
+  });
+
+  return series.apply(null, fileStreams);
 }
 
 function getKarmaSpecFilesFor(module) {
@@ -156,13 +172,8 @@ function getKarmaSpecFilesFor(module) {
   var filesFrom;
   switch (module) {
   case 'ts':
-    var tsManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsManifest);
-    var tsTestManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
     // typescript files are listed in build-time generated manifest files
-    filesToAdd = [].concat(
-      tsManifestFiles,
-      tsTestManifestFiles
-    );
+    filesToAdd = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
     break;
   case 'custom':
     // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated
@@ -188,27 +199,18 @@ function createGulpKarmaConfigModule(module) {
   // to its file array aren't managed manually
   return function (done) {
     if (!args.nounit) {
-      var unitTestFiles = getKarmaDeps();
-      var filesToAdd = getKarmaSpecFilesFor(module);
+      var fileList = getFileListFor(module);
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(
-          series(
-            gulp.src(unitTestFiles, {
-              read: false
-            }),
-            gulp.src(filesToAdd, {
-              read: false
-            })
-          ), {
-            addRootSlash: false,
-            starttag: '// inject:unitTestFiles',
-            endtag: '// end-inject:unitTestFiles',
-            transform: function (filepath, file, i, length) {
-              return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-            }
-          }))
+        .pipe($.inject(fileList, {
+          addRootSlash: false,
+          starttag: '// inject:unitTestFiles',
+          endtag: '// end-inject:unitTestFiles',
+          transform: function (filepath, file, i, length) {
+            return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+          }
+        }))
         .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({
