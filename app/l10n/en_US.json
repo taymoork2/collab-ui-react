@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -4443,7 +4444,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",
