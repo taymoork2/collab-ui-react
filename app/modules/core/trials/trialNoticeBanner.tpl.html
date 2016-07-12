@@ -1,6 +1,6 @@
 <div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.hasRequested, 'has-success':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.SUCCESS, 'has-fail-partial':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.PARTIAL_FAILURE, 'has-fail-total':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.TOTAL_FAILURE}">
-  <i class="icon icon-information" ng-hide="!bannerCtrl.requestResult!==bannerCtrl.requestResultEnum.SUCCESS && bannerCtrl.hasRequested "></i>
-      <i class="icon icon-warning" ng-show="!bannerCtrl.requestResult!==bannerCtrl.requestResultEnum.SUCCESS  && bannerCtrl.hasRequested "></i>
+  <i class="icon icon-information" ng-show="requestResult===bannerCtrl.requestResultEnum.SUCCESS ||  brequestResult===bannerCtrl.requestResultEnum.NOT_REQUESTED"></i>
+  <i class="icon icon-warning" ng-show="requestResult===bannerCtrl.requestResultEnum.PARTIAL_FAILURE || bannerCtrl.requestResultEnum.TOTAL_FAILURE "></i>
   <span class="msg--default">
     <span
       translate="trials.expireWarningMsg"
@@ -11,14 +11,12 @@
       ng-show="bannerCtrl.daysLeft < 0"></span>
     <span translate="trials.requestPurchaseMsg"></span>
   </span>
-  <span class="msg--requested">
-    <span ng-show="bannerCtrl.requestResult===bannerCtrl.requestResultEnum.SUCCESS"
-      translate="trials.requestConfirmMsg"></span>
-       <span ng-show="bannerCtrl.requestResult===bannerCtrl.requestResultEnum.PARTIAL_FAILURE"
-      translate="trials.requestConfirmPartialFailMsg"></span>
-       <span ng-show="bannerCtrl.requestResult===bannerCtrl.requestResultEnum.TOTAL_FAILURE"
-      translate="trials.requestConfirmTotalFailMsg"></span>
+  <span ng-switch="bannerCtrl.requestResult" class="msg--requested">
+    <span ng-switch-when="0" translate = "trials.requestConfirmMsg"></span>
+    <span ng-switch-when="1" translate = "trials.requestConfirmPartialFailMsg"></span>
+    <span ng-switch-when="2" translate = "trials.requestConfirmTotalFailMsg"></span>
   </span>
+
   <button
     type="button"
     id="requestPurchaseBtn"

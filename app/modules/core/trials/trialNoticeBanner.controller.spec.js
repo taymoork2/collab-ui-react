@@ -145,15 +145,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('sendEmail():', function () {
       beforeEach(function () {
-        controller.partnerAdmin = [{
-          'userName': 'fake-partner-email@example.com',
-          'displayName': 'fakeuser admin1',
-        }, {
-          'userName': 'fake-partner-email2@example.com',
-          'displayName': 'fakeuser admin2',
-        }];
+        controller.partnerAdmin = fakePartnerInfoData.data.partners;
       });
-
       it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" once for each partner admin with correct userName', function () {
 
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
@@ -179,17 +172,14 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         });
         spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
         deferred.resolve({
-          'status': 400
+          status: 400
         });
         $scope.$apply();
 
-        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email').then(function (results)
-
-          {
-
-            expect(results[0].status).toBe(400);
-            expect(results.length).toBe(2);
-          });
+        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email').then(function (results) {
+          expect(results[0].status).toBe(400);
+          expect(results.length).toBe(2);
+        });
 
       });
     });
@@ -199,9 +189,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       it('should set requestResult to true when all emails were sent succesfully with status 200', function () {
 
         var emailResult = [{
-          'status': 200
+          status: 200
         }, {
-          'status': 200
+          status: 200
         }];
 
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
@@ -215,9 +205,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       it('should set requestResult to false when some emails were not sent with status 400', function () {
 
         var emailResult = [{
-          'status': 400
+          status: 400
         }, {
-          'status': 200
+          status: 200
         }];
 
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
@@ -233,9 +223,9 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       it('should set requestResult to false when all emails were rejected with status 400', function () {
 
         var emailResult = [{
-          'status': 400
+          status: 400
         }, {
-          'status': 400
+          status: 400
         }];
         spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
 

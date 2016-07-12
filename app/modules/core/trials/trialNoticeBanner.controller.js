@@ -10,15 +10,16 @@
     var primaryPartnerAdminId;
 
     vm.requestResultEnum = {
-      'SUCCESS': 0,
-      'PARTIAL_FAILURE': 1,
-      'TOTAL_FAILURE': 2
+      SUCCESS: 0,
+      PARTIAL_FAILURE: 1,
+      TOTAL_FAILURE: 2,
+      NOT_REQUESTED: 3
     };
 
     vm.canShow = canShow;
     vm.daysLeft = undefined;
     vm.hasRequested = false;
-    vm.requestResult = null;
+    vm.requestResult = vm.requestResultEnum.NOT_REQUESTED;
     vm.partnerAdmin = [];
 
     vm.sendRequest = sendRequest;
@@ -41,7 +42,7 @@
     }
 
     function canShow() {
-      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && primaryPartnerAdminId && (primaryPartnerAdminId !== Authinfo.getUserId());
+      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && (primaryPartnerAdminId !== Authinfo.getUserId());
 
     }
 
@@ -51,8 +52,9 @@
 
       return vm._helpers.sendEmail(partnerOrgName, customerEmail)
         .then(function (results) {
-          var emailError = _.filter(results, function (result) {
-            return result.status === 400;
+
+          var emailError = _.filter(results, {
+            status: 400
           });
           if (emailError.length === 0) {
             Notification.success('trials.requestConfirmNotifyMsg');
@@ -69,8 +71,6 @@
 
           }
           vm.hasRequested = true;
-        }, function (reason) {
-          //each promise has a catch so this should not happen
         });
     }
 
