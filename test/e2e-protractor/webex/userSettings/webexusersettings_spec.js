@@ -88,20 +88,20 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should allow click on site name ' + webExCommon.testT31SiteElement + ' in panel 2', function () {
+      it('should allow click on site name ' + webExCommon.t31SiteElement + ' in panel 2', function () {
         if (setup) {
-          utils.wait(webExCommon.testT31SiteElement);
-          expect(webExCommon.testT31SiteElement.isPresent()).toBeTruthy();
-          utils.click(webExCommon.testT31SiteElement);
+          utils.wait(webExCommon.t31SiteElement);
+          expect(webExCommon.t31SiteElement.isPresent()).toBeTruthy();
+          utils.click(webExCommon.t31SiteElement);
           utils.wait(webExUserSettings.userSettingsPanel);
         }
       });
     } else {
-      it('should allow click on site name ' + webExCommon.testT30SiteElement + ' in panel 2', function () {
+      it('should allow click on site name ' + webExCommon.t30SiteElement + ' in panel 2', function () {
         if (setup) {
-          utils.wait(webExCommon.testT30SiteElement);
-          expect(webExCommon.testT30SiteElement.isPresent()).toBeTruthy();
-          utils.click(webExCommon.testT30SiteElement);
+          utils.wait(webExCommon.t30SiteElement);
+          expect(webExCommon.t30SiteElement.isPresent()).toBeTruthy();
+          utils.click(webExCommon.t30SiteElement);
           utils.wait(webExUserSettings.userSettingsPanel);
         }
       });
@@ -121,6 +121,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     it('should click on privileges link in panel 3', function () {
+      webExUserSettings.scrollToBottom();
       utils.wait(webExUserSettings.userPrivilegesLink);
       utils.click(webExUserSettings.userPrivilegesLink);
     });

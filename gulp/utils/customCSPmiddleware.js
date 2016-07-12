@@ -7,52 +7,59 @@ var csp = require('helmet-csp');
 // but the one for Browser Sync changes too often (it contains the version number).
 // We use 'unsafe-inline' instead, but it should never make it to production! Production should only
 // use 'sha256-x+aZvuBn2wT79r4ro+BTMYyQJwOC/JIXRDq4dE+tp9k=', the SHA1 for the image preload script
-var onlyForDev = '\'unsafe-inline\'';
+var inlineScriptOnlyForDev = '\'unsafe-inline\'';
+// Localytics will load a pixel image using http when developing locally
+var localyticsOnlyForDev = 'http://*.localytics.com';
 module.exports = csp({
   reportOnly: false,
   browserSniff: false,
   directives: {
     defaultSrc: [
       '\'self\'',
-      '*.localytics.com',
-      '*.statuspage.io',
-      '*.wbx2.com',
-      '*.webex.com',
-      '*.webexconnect.com'
+      'https://*.localytics.com',
+      'https://*.statuspage.io',
+      'https://*.wbx2.com',
+      'https://*.webex.com',
+      'https://*.webexconnect.com',
+      'https://wbxdmz.admin.ciscospark.com',
+      'https://wbxbts.admin.ciscospark.com'
     ],
     connectSrc: [
       '\'self\'',
-      '*.cisco.com',
-      '*.ciscoccservice.com',
-      '*.huron-dev.com',
-      '*.huron-int.com',
-      '*.huron.uno',
-      '*.statuspage.io',
-      '*.wbx2.com',
-      '*.webex.com',
-      '*.webexconnect.com',
-      'api.mixpanel.com',
-      'cdn.mxpnl.com',
-      'http://127.0.0.1:8080',
-      'http://localhost:8080',
+      'https://*.cisco.com',
+      'https://*.ciscoccservice.com',
+      'https://*.huron-dev.com',
+      'https://*.huron-int.com',
+      'https://*.huron.uno',
+      'https://*.statuspage.io',
+      'https://*.wbx2.com',
+      'https://*.webex.com',
+      'https://*.webexconnect.com',
+      'https://api.mixpanel.com',
+      'https://cdn.mxpnl.com',
+      // Browser Sync:
       'ws://127.0.0.1:8000',
-      'ws://localhost:8000'
+      'ws://localhost:8000',
+      // Local Atlas Backend:
+      'http://127.0.0.1:8080',
+      'http://localhost:8080'
     ],
     imgSrc: [
       '\'self\'',
       'data:',
-      '*.clouddrive.com',
-      '*.localytics.com',
-      '*.rackcdn.com'
+      localyticsOnlyForDev,
+      'https://*.clouddrive.com',
+      'https://*.localytics.com',
+      'https://*.rackcdn.com'
     ],
     scriptSrc: [
       '\'self\'',
-      onlyForDev,
+      inlineScriptOnlyForDev,
       '\'unsafe-eval\'',
-      '*.localytics.com',
-      '*.webex.com',
-      'api.mixpanel.com',
-      'cdn.mxpnl.com'
+      'https://*.localytics.com',
+      'https://*.webex.com',
+      'https://api.mixpanel.com',
+      'https://cdn.mxpnl.com'
     ],
     styleSrc: [
       '\'self\'',

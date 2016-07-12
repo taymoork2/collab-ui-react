@@ -16,6 +16,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       'partners': [{
         'userName': 'fake-partner-email@example.com',
         'displayName': 'fakeuser admin1',
+        'id': '2'
       }]
     }
   };
@@ -64,7 +65,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     $httpBackend.whenGET(/organization\/trials$/).respond(fakeTrialPeriodData);
 
     controller = controller('TrialNoticeBannerCtrl', {
-      $q: $q,
       Authinfo: Authinfo,
       EmailService: EmailService,
       Notification: Notification,
@@ -95,14 +95,23 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     });
 
     describe('canShow():', function () {
-      it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty', function () {
+      it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty and the logged in user is not the partner', function () {
         spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
         spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
+        spyOn(Authinfo, 'getUserId').and.returnValue('1');
         expect(controller.canShow()).toBe(true);
       });
 
       it('should return true if "Authinfo.isUserAdmin()" is false', function () {
         spyOn(Authinfo, 'isUserAdmin').and.returnValue(false);
+        spyOn(Authinfo, 'getUserId').and.returnValue('1');
+        expect(controller.canShow()).toBe(false);
+      });
+
+      it('should return true if the logged in user is the partner', function () {
+        spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
+        spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
+        spyOn(Authinfo, 'getUserId').and.returnValue('2');
         expect(controller.canShow()).toBe(false);
       });
     });
@@ -121,40 +130,11 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('helper functions:', function () {
-    describe('getDaysLeft():', function () {
-      var getDaysLeft;
-
-      beforeEach(function () {
-        getDaysLeft = controller._helpers.getDaysLeft;
-        spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
-        spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
-        spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
-      });
-
-      it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(daysLeft).toBe(1);
-        });
-      });
-
-      it('should have called "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getTrialIds).toHaveBeenCalled();
-        });
-      });
-
-      it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith(['fake-uuid-value-1']);
-        });
-      });
-    });
-
     describe('getPrimaryPartnerInfo():', function () {
       describe('will resolve with partner data that...', function () {
         it('should have a "data.partners[0].displayName" property', function () {
-          controller._helpers.getPrimaryPartnerInfo().then(function (partnerInfo) {
-            expect(partnerInfo.data.partners[0].displayName).toBe('fakeuser admin1');
+          controller._helpers.getPrimaryPartnerInfo().then(function () {
+            expect(controller.partnerAdminDisplayName).toBe('fakeuser admin1');
           });
         });
       });

@@ -11,6 +11,9 @@ namespace globalsettings {
     public dataLoaded = false;
     private orgId:string;
 
+    // default is to keep until storage is full => -1
+    public RETENTION_DEFAULT:string = '-1';
+
     initialRetention:{
       value:string,
       label:string
@@ -39,16 +42,20 @@ namespace globalsettings {
     }];
 
     /* @ngInject */
-    constructor(private $translate, private $modal, private RetentionService, private Authinfo, private Notification) {
-      this.init();
-    }
-
-    private init() {
+    constructor(private $modal, private $translate, private Authinfo, private Notification, private RetentionService) {
       this.orgId = this.Authinfo.getOrgId();
 
-      this.RetentionService
-          .getRetention(this.orgId)
-          .then(this.gotRetention.bind(this));
+      this.RetentionService.getRetention(this.orgId)
+        .then((response) => {
+          var msgDataRetention = response.msgDataRetention || this.RETENTION_DEFAULT;
+          var retentionGuiOption = _.find(this.retentionOptions, {value: msgDataRetention});
+          if (retentionGuiOption) {
+            this.initialRetention = retentionGuiOption;
+            this.selectedRetention = retentionGuiOption;
+          }
+        }).finally(() => {
+          this.dataLoaded = true;
+        });
     }
 
     public updateRetention() {
@@ -86,17 +93,6 @@ namespace globalsettings {
             });
         }
       }
-    }
-
-    private gotRetention({data:{msgDataRetention:msgDataRetention}={msgDataRetention:null}}:RetentionResponse) {
-      if (msgDataRetention) {
-        var retentionGuiOption = _.find(this.retentionOptions, {value: msgDataRetention});
-        if (retentionGuiOption) {
-          this.initialRetention = retentionGuiOption;
-          this.selectedRetention = retentionGuiOption;
-        }
-      }
-      this.dataLoaded = true;
     }
   }
   angular.module('Core')

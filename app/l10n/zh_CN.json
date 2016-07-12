@@ -1421,8 +1421,8 @@
         "hosts": "{count, plural, one{# 个主机} other{# 主机}}",
         "settings": "设置",
         "all": "全部",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }

@@ -6,7 +6,7 @@
     .factory('TrialContextService', TrialContextService);
 
   /* @ngInject */
-  function TrialContextService($http, Config, UrlConfig) {
+  function TrialContextService($http, $q, Config, UrlConfig, LogMetricsService) {
     var _trialData;
     var service = {
       getData: getData,
@@ -42,6 +42,10 @@
       return [UrlConfig.getAdminServiceUrl(), 'organizations/', orgId, '/services/contactCenterContext'].join('');
     }
 
+    function _logMetric(response, message, eventType) {
+      LogMetricsService.logMetrics(message, LogMetricsService.getEventType(eventType), LogMetricsService.getEventAction('buttonClick'), response.status, moment(), 1);
+    }
+
     function trialHasService(orgId) {
       return $http.get(_getServiceUrl(orgId))
         .then(function () {
@@ -53,11 +57,28 @@
     }
 
     function addService(orgId) {
-      return $http.post(_getServiceUrl(orgId));
+      return $http.post(_getServiceUrl(orgId))
+        .then(function (response) {
+          _logMetric(response, 'Successfully enabled Context Service', 'contextServiceEnabled');
+          return response;
+        })
+        .catch(function (response) {
+          _logMetric(response, 'Failed to enable Context Service', 'contextServiceEnabled');
+          return $q.reject(response);
+        });
+
     }
 
     function removeService(orgId) {
-      return $http.delete(_getServiceUrl(orgId));
+      return $http.delete(_getServiceUrl(orgId))
+        .then(function (response) {
+          _logMetric(response, 'Successfully disabled Context Service', 'contextServiceDisabled');
+          return response;
+        })
+        .catch(function (response) {
+          _logMetric(response, 'Failed to disable Context Service', 'contextServiceDisabled');
+          return $q.reject(response);
+        });
     }
   }
 })();

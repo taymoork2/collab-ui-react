@@ -1,4 +1,4 @@
-<div class="modal-header" ng-style="{'background-color':'#129B87'}">
+<div class="modal-header">
   <button class="close" id="convertModalClose" ng-click="reassignClust.close()" type="button">
     <span class="sr-only" translate="common.close">
     </span>
@@ -8,7 +8,7 @@
     </h5>
   </div>
   <div ng-hide="loading || reassignClust.error">
-    <h5 class="modal-title" translate="mediaFusion.reassign.moveHost">
+    <h5 class="modal-title" translate="mediaFusion.reassign.moveNode">
     </h5>
   </div>
 </div>
@@ -36,7 +36,7 @@
 </div>
 <div class="modal-footer" ng-hide="reassignClust.error">
   <button class="btn btn--primary pull-right" id="convertActionButton" ng-click="reassignClust.reassign()" ng-disabled="loading || saving">
-    <span ng-hide="saving" translate="mediaFusion.reassign.moveHost">
+    <span ng-hide="saving" translate="mediaFusion.reassign.moveNode">
     </span>
     <span ng-show="saving">
       <i class="icon icon-spinner">

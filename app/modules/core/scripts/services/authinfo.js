@@ -5,7 +5,7 @@
     .service('Authinfo', Authinfo);
 
   /* @ngInject */
-  function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
+  function Authinfo($rootScope, $translate, Config) {
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -26,19 +26,19 @@
       entitlements: null,
       services: null,
       roles: [],
-      tabs: [],
       isInitialized: false,
       setupDone: false,
       licenses: [],
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
-      careServices: null,
+      careServices: [],
       conferenceServicesWithoutSiteUrl: null,
       cmrServices: null,
       hasAccount: false,
       emails: null,
-      customerType: null
+      customerType: null,
+      commerceRelation: null
     };
 
     var getTabTitle = function (title) {
@@ -88,41 +88,9 @@
           .includes(parentState)
           .value();
       });
-      if (stateAllowedByAService) {
-        return true;
-      }
+      return !!stateAllowedByAService;
 
-      return false;
     };
-
-    function isAllowedTab(tab) {
-      return isAllowedState(tab.state) && !isHideProdTab(tab);
-    }
-
-    function isHideProdTab(tab) {
-      return tab.hideProd && Config.isProd();
-    }
-
-    function initializeTabs() {
-      var tabs = angular.copy(tabConfig);
-      return _.chain(tabs)
-        .filter(function (tab) {
-          // Remove subPages whose parent tab is hideProd or states that aren't allowed
-          _.remove(tab.subPages, function (subTab) {
-            return isHideProdTab(tab) || !isAllowedTab(subTab);
-          });
-          // Filter allowed states or tabs with subPages
-          return isAllowedTab(tab) || _.size(tab.subPages);
-        })
-        .forEach(function (tab) {
-          tab.title = $translate.instant(tab.title);
-          _.forEach(tab.subPages, function (subTab) {
-            subTab.title = $translate.instant(subTab.title);
-            subTab.desc = $translate.instant(subTab.desc);
-          });
-        })
-        .value();
-    }
 
     var isEntitled = function (entitlement) {
       var services = authData.services;
@@ -165,12 +133,6 @@
         authData.isInitialized = true;
         authData.setupDone = data.setupDone;
         $rootScope.$broadcast('AuthinfoUpdated');
-
-        Localytics.setOrgId(authData.orgId);
-        Localytics.setUserId(authData.userId);
-      },
-      initializeTabs: function () {
-        authData.tabs = initializeTabs();
       },
       clear: function () {
         authData.username = null;
@@ -206,8 +168,8 @@
           var msgLicenses = [];
           var confLicenses = [];
           var commLicenses = [];
-          var careLicenses = [];
           var cmrLicenses = [];
+          var careLicenses = [];
           var confLicensesWithoutSiteUrl = [];
           var customerAccounts = data.customers || [];
 
@@ -216,6 +178,7 @@
           }
 
           authData.customerType = _.get(customerAccounts, '[0].customerType', '');
+          authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
 
           for (var x = 0; x < customerAccounts.length; x++) {
 
@@ -379,7 +342,10 @@
         return this.hasRole('Full_Admin');
       },
       isCSB: function () {
-        return authData.customerType === 'APP_DIRECT';
+        return (_.contains(authData.customerType, ['CSB']));
+      },
+      isDirectCustomer: function () {
+        return (_.contains(authData.commerceRelation, ['Direct']));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');
@@ -427,11 +393,7 @@
         return false;
       },
       isServiceAllowed: function (service) {
-        if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
-          return false;
-        } else {
-          return true;
-        }
+        return !(service === 'squaredTeamMember' && !this.isSquaredTeamMember());
       },
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);

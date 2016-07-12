@@ -2,7 +2,7 @@
 
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService;
+  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal;
 
   beforeEach(module('Hercules'));
   beforeEach(module('Squared'));
@@ -12,7 +12,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -20,6 +20,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
     CsdmConfigService = _CsdmConfigService_;
     CsdmDeviceService = _CsdmDeviceService_;
     CsdmCodeService = _CsdmCodeService_;
+    Authinfo = _Authinfo_;
+    Notification = _Notification_;
+    RemoteSupportModal = _RemoteSupportModal_;
   }
 
   function initSpies() {
@@ -45,6 +48,62 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   it('should init controller', function () {
     expect(controller).toBeDefined();
+  });
+
+  describe('remote support', function () {
+
+    it('should not show remote support modal when readonly', function () {
+      spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+      spyOn(Notification, 'notifyReadOnly');
+      spyOn(RemoteSupportModal, 'open');
+      controller.showRemoteSupportDialog();
+
+      expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
+      expect(Notification.notifyReadOnly).toHaveBeenCalledTimes(1);
+      expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+    });
+
+    it('should not show remote support modal when not supported for device', function () {
+      spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
+      spyOn(Notification, 'notifyReadOnly');
+      spyOn(RemoteSupportModal, 'open');
+
+      controller.currentDevice = {};
+      controller.showRemoteSupportDialog();
+
+      expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
+      expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
+      expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+    });
+
+    it('should show remote support modal when supported and not readonly', function () {
+      spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
+      spyOn(Notification, 'notifyReadOnly');
+      spyOn(RemoteSupportModal, 'open');
+
+      controller.currentDevice = {
+        hasRemoteSupport: true
+      };
+      controller.showRemoteSupportDialog();
+
+      expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
+      expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
+      expect(RemoteSupportModal.open).toHaveBeenCalled();
+    });
+
+    it('should not show remote support button when not supported', function () {
+      controller.currentDevice = {};
+
+      expect(controller.showRemoteSupportButton()).toBe(false);
+    });
+
+    it('should show remote support button when supported', function () {
+      controller.currentDevice = {
+        hasRemoteSupport: true
+      };
+      expect(controller.showRemoteSupportButton()).toBe(true);
+    });
+
   });
 
   describe('Tags', function () {
@@ -145,6 +204,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
     });
+
   });
 });
 

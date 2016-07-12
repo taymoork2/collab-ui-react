@@ -17,8 +17,8 @@
     <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>
     <cs-sp-section>
-      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people" 
-      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin" 
+      <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
+      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
       ng-click="customerOverview.launchCustomerPortal()">
         <span ng-if="customerOverview.isOrgSetup()" translate="customerPage.launchButton"></span>
         <span ng-if="!customerOverview.isOrgSetup()" translate="customerPage.setupButton"></span>
@@ -92,7 +92,7 @@
         </ul>
       </div>
     </cs-sp-section>
-    <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin && customerOverview.atlasPartnerAdminFeatureToggle"></uc-customer-administrator-overview>
+    <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin"></uc-customer-administrator-overview>
     <button id="deleteCustomer" cs-btn class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
       ng-click="customerOverview.deleteTestOrg()" loading="customerOverview.isDeleting">
         <span translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}"></span>

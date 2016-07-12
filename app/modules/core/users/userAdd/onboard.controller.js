@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -252,7 +252,7 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Mixpanel.trackEvent("CMR checkbox unselected", {
+          Analytics.trackEvent("CMR checkbox unselected", {
             licenseId: licenseId
           });
         }
@@ -369,6 +369,7 @@
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -387,6 +388,17 @@
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+    }
+
+    function checkMessageVisibility(licenses, selectedSubscription) {
+      if (licenses.length === 1) {
+        var license = licenses[0];
+        if (license.billingServiceId && selectedSubscription) {
+          return license.billingServiceId === selectedSubscription;
+        }
+        return true;
+      }
+      return false;
     }
 
     function populateConf() {

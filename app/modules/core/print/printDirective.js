@@ -54,7 +54,6 @@
     function printElement(elem) {
       // clones the element you want to print
       var domClone = elem.cloneNode(true);
-      //console.log(domClone);
       printSection.appendChild(domClone);
       $window.print();
     }

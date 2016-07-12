@@ -1421,8 +1421,8 @@
         "hosts": "{count, plural, one{호스트 #명} other{호스트 #명}}",
         "settings": "설정",
         "all": "모두",
-        "expressway-short": "EW",
-        "mediafusion-short": "MS",
+        "expressway-short": "E",
+        "mediafusion-short": "M",
         "expressway": "Expressway",
         "mediafusion": "Mediafusion"
       }

@@ -141,7 +141,7 @@ describe('Service: Trial Service:', function () {
           }];
           var dataJson = angular.fromJson(data);
           var devices = dataJson.details.devices;
-          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == "Enabled deal");
+          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]) && (dataJson.details.shippingInfo.dealId == 'Enabled deal');
         }).respond(200);
 
         TrialService.startTrial();
@@ -163,7 +163,7 @@ describe('Service: Trial Service:', function () {
     describe('start call trial state and country check', function () {
       var testData = trialData.enabled.trials.deviceTrial;
       it('should get state correcty from string', function () {
-        testData.shippingInfo.state = "TX";
+        testData.shippingInfo.state = 'TX';
         bard.mockService(TrialDeviceService, {
           getData: testData
         });
@@ -180,8 +180,8 @@ describe('Service: Trial Service:', function () {
 
       it('should get state correcty from object', function () {
         testData.shippingInfo.state = {
-          "abbr": "IL",
-          "state": "Illinois"
+          'abbr': 'IL',
+          'state': 'Illinois'
         };
         bard.mockService(TrialDeviceService, {
           getData: testData
@@ -198,7 +198,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should get country correcty from string', function () {
-        testData.shippingInfo.country = "Canada";
+        testData.shippingInfo.country = 'Canada';
         bard.mockService(TrialDeviceService, {
           getData: testData
         });
@@ -215,7 +215,7 @@ describe('Service: Trial Service:', function () {
 
       it('should get country correcty from object', function () {
         testData.shippingInfo.country = {
-          "country": "Germany"
+          'country': 'Germany'
         };
         bard.mockService(TrialDeviceService, {
           getData: testData
@@ -300,6 +300,35 @@ describe('Service: Trial Service:', function () {
         $rootScope.$apply();
       });
 
+      describe('getDaysLeftForCurrentUser():', function () {
+        var getDaysLeftForCurrentUser;
+
+        beforeEach(function () {
+          getDaysLeftForCurrentUser = TrialService.getDaysLeftForCurrentUser;
+          spyOn(TrialService, 'getTrialIds').and.returnValue([fakeTrialId]);
+          spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
+          spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
+        });
+
+        it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
+          getDaysLeftForCurrentUser().then(function (daysLeft) {
+            expect(daysLeft).toBe(1);
+          });
+        });
+
+        it('should have called "TrialService.getTrialIds()"', function () {
+          getDaysLeftForCurrentUser().then(function (daysLeft) {
+            expect(TrialService.getTrialIds).toHaveBeenCalled();
+          });
+        });
+
+        it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
+          getDaysLeftForCurrentUser().then(function (daysLeft) {
+            expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith([fakeTrialId]);
+          });
+        });
+      });
+
       describe('getTrialPeriodData():', function () {
         describe('successful fetch of trial data:', function () {
           beforeEach(function () {
@@ -342,7 +371,7 @@ describe('Service: Trial Service:', function () {
         describe('passed a trial id:', function () {
           describe('returns a promise that:', function () {
             beforeEach(function () {
-              fakeToday = new Date("2016-01-02T12:34:56.789Z");
+              fakeToday = new Date('2016-01-02T12:34:56.789Z');
             });
 
             it('should resolve with 29, given 1 day passed since the start date and trial period is 30', function () {
@@ -391,8 +420,8 @@ describe('Service: Trial Service:', function () {
 
     describe('calcDaysLeft():', function () {
       beforeEach(function () {
-        fakeStartDate = new Date("2016-01-01T00:00:00.000Z");
-        fakeToday = new Date("2016-02-01T00:00:00.000Z");
+        fakeStartDate = new Date('2016-01-01T00:00:00.000Z');
+        fakeToday = new Date('2016-02-01T00:00:00.000Z');
       });
 
       it('should return -1, if current date - start date is 31 and the trial period is 30', function () {
@@ -492,6 +521,83 @@ describe('Service: Trial Service:', function () {
         // no guard against future date is provided
         fakeStartDate = new Date('2016-02-02T00:00:00.000Z');
         expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(-1);
+      });
+    });
+
+    describe('shallow validation', function () {
+      var org = 'organizationName';
+      var email = 'endCustomerEmail';
+      var valData;
+
+      function expectShallowVal(type, result) {
+        TrialService.shallowValidation(type, 'Test Name').then(function (response) {
+          expect(response).toEqual(result);
+        });
+      }
+
+      beforeEach(function () {
+        valData = {
+          properties: [{
+            key: org,
+            value: 'Test Name',
+            isValid: 'true',
+            isExist: 'false'
+          }]
+        };
+      });
+
+      afterEach(function () {
+        $httpBackend.flush();
+      });
+
+      it('should return unique', function () {
+        $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          unique: true
+        });
+      });
+
+      it('should return error in use', function () {
+        valData.properties[0].isExist = 'true';
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorInUse'
+        });
+      });
+
+      it('should return error invalid name', function () {
+        valData.properties[0].isValid = 'false';
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorInvalidName'
+        });
+      });
+
+      it('should return error invalid', function () {
+        valData.properties[0].key = email;
+        valData.properties[0].isValid = 'false';
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(email, {
+          error: 'trialModal.errorInvalid'
+        });
+      });
+
+      it('should return error server down', function () {
+        valData = {};
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(angular.toJson(valData));
+        expectShallowVal(org, {
+          error: 'trialModal.errorServerDown'
+        });
+      });
+
+      it('should return error server down (501)', function () {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke', function (data) {
+          return valData;
+        }).respond(501);
+        expectShallowVal(org, {
+          error: 'trialModal.errorServerDown',
+          status: 501
+        });
       });
     });
   });

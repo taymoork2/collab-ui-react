@@ -3,8 +3,8 @@
   <span ng-if="!row.entity.isCI"
         id="{{row.entity.license.siteUrl}}_isNotCI"
         name="{{row.entity.license.siteUrl}}_isNotCI">
-        
-    Make a link here using siteList.nonCIWebExSiteAccess
+    
+    <a href= "{{row.entity.siteAdminUrl}}" id="{{row.entity.license.siteUrl}}_siteAdminUrl">Sign-in to manage</a>
   </span>
 
   <span ng-if="row.entity.isCI"
@@ -30,7 +30,9 @@
       &nbsp;&nbsp;&nbsp;
     </span>
     
-    <i class="icon icon-spinner grid-vcenter"></i>
+    <i id="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        name="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        class="icon icon-spinner grid-vcenter"></i>
     
     <span class="grid-vcenter"
           translate="siteList.checkingServices"></span>

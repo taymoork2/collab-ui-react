@@ -1,0 +1,138 @@
+.ct-offhours {
+
+  .cs-card {
+    @include vr-spacing(mt, 0);
+    @include vr-spacing(ml, 3);
+  }
+
+  .card-info {
+    text-align: center;
+    color: $gray-dark-1;
+  }
+
+  .cs-card article.offhours-preview {
+    height: 26.5rem;
+    width: 21.75rem;
+    text-align: center;
+  }
+
+  .cs-card article.off-hours-attributes {
+    height: 26.5rem;
+    width: 21.75rem;
+    box-shadow: 0;
+    background-color: $gray-light-4;
+    @include vr-spacing(pl, 1);
+  }
+
+  .offhours-icon {
+    font-size: 3rem;
+    line-height: 1;
+    color: $color-attention;
+    @include vr-spacing(pt, 2);
+  }
+
+  .offhours-preview-message {
+    height: 7rem;
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(mh, 4);
+  }
+
+  .business-hours {
+    height: 10rem;
+    @include vr-spacing(pt,1);
+    .message {
+      color: $color-people-base;
+    }
+  }
+
+  .day-time-preview {
+    @include vr-spacing(pt, 0.5);
+  }
+
+  .day-time-preview.days {
+    @include vr-spacing(mh, 2);
+  }
+
+  .offhours-closebtn {
+    @include vr-spacing(ph, 2);
+  }
+  .offhours-closebtn.no-business-hours {
+    @include vr-spacing(mt, 10);
+  }
+
+  .offhours-message {
+    height: 7.5rem;
+    .message-label {
+      line-height: $h5-line-height;
+      @include vr-spacing(pt, 0.75);
+    }
+    .message {
+      height: 4.5rem;
+      width: 20rem;
+      background-color: $white;
+      resize: none;
+      line-height: 1rem;
+      @include vr-spacing(p, 0.75);
+      @include vr-spacing(mt, 0);
+    }
+  }
+  .business-hours-label {
+    @include vr-spacing(pt, 0.5);
+  }
+
+
+  .day-picker {
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
+
+    .day {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 2.25rem;
+      width: 2.25rem;
+      margin-right: 1px;
+    }
+
+    .day-selected {
+      color: $white;
+      background-color: $color-primary-darker;
+    }
+
+    .day-unselected {
+      color: $gray-base;
+      &:hover {
+        background-color: $gray-light-2;
+      }
+      background-color: $white;
+      border: 1px solid $gray-light-2;
+    }
+  }
+
+  .time-and-timezone-picker {
+    .cs-checkbox {
+      @include vr-spacing(pt, 0.5);
+    }
+    .time-picker {
+      display: flex;
+      flex-direction: row;
+      .start-time {
+        @include vr-spacing(pr, 2);
+      }
+      .time {
+        width: 7rem;
+      }
+    }
+    .timezone-picker {
+      width: 20rem;
+      @include vr-spacing(pt, 0.5);
+    }
+  }
+}

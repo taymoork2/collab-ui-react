@@ -20,6 +20,7 @@
     .factory('UserSearchServiceV2', UserSearchServiceV2)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
+    .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
     .factory('VoicemailTimezoneService', VoicemailTimezoneService)
@@ -27,7 +28,6 @@
     .factory('CompanyNumberService', CompanyNumberService)
     // Will remove this service later
     .factory('CallRouterService', CallRouterService)
-    .factory('CallParkService', CallParkService)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
     .factory('AlternateNumberService', AlternateNumberService)
@@ -190,6 +190,22 @@
   }
 
   /* @ngInject */
+  function CallParkServiceV2($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/callparks/:callParkId', {
+      customerId: '@customerId',
+      callParkId: '@callParkId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      delete: {
+        method: 'DELETE'
+      }
+    });
+  }
+
+  /* @ngInject */
   function AssignAutoAttendantService($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
@@ -262,14 +278,6 @@
       update: {
         method: 'PUT'
       }
-    });
-  }
-
-  /* @ngInject */
-  function CallParkService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {
-      customerId: '@customerId',
-      callParkId: '@callParkId'
     });
   }
 

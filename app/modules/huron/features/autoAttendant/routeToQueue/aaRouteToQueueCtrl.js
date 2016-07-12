@@ -6,7 +6,7 @@
     .controller('AARouteToQueueCtrl', AARouteToQueueCtrl);
 
   /* @ngInject */
-  function AARouteToQueueCtrl($scope, $translate, QueueHelperService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AARouteToQueueCtrl($scope, $translate, QueueHelperService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
 
@@ -19,7 +19,6 @@
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.queues = [];
 
-    vm.aaModel = {};
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
@@ -69,12 +68,11 @@
     }
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      var ui = AAUiModelService.getUiModel();
-      vm.uiMenu = ui[$scope.schedule];
-      vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
       if ($scope.fromRouteCall) {
+        var ui = AAUiModelService.getUiModel();
+        vm.uiMenu = ui[$scope.schedule];
+        vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
 
         if (vm.menuEntry.actions.length === 0) {
@@ -88,6 +86,7 @@
           } // else let saved value be used
         }
       } else {
+        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {

@@ -13,25 +13,27 @@
     });
 
   /* @ngInject */
-  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $translate, $window, $modal, Authinfo, FusionClusterService, NotificationService, TimezoneService) {
+  function UpgradeScheduleConfigurationCtrl($rootScope, $scope, $q, $translate, $window, $modal, Authinfo, FusionClusterService, NotificationService, TimezoneService) {
     var vm = this;
     vm.$onInit = $onInit;
     vm.$onChanges = $onChanges;
-    vm.acknowledge = patch;
-    vm.openModal = openModal;
+    vm.acknowledge = updateUpgradeScheduleAndUI;
+    vm.postpone = postpone;
 
     ////////
 
     function $onInit() {
       vm.state = 'syncing'; // 'error' | 'idle'
-      vm.data = {}; // UI data
-      vm.isAcknowledged = true;
-      vm.postponed = false;
+      vm.formData = {}; // data formatted for the form
+      vm.formOptions = {
+        day: getDayOptions(),
+        time: getTimeOptions(),
+        timeZone: getTimeZoneOptions()
+      };
+      vm.upgradeSchedule = {
+        acknowledged: false
+      };
       vm.errorMessage = '';
-      vm.nextUpdate = null;
-      vm.timeOptions = getTimeOptions();
-      vm.dayOptions = getDayOptions();
-      vm.timezoneOptions = getTimezoneOptions();
     }
 
     function $onChanges(changes) {
@@ -42,35 +44,34 @@
         vm.daily = changes.daily.currentValue;
       }
       if (changes.clusterId) {
-        if (changes.clusterId.previousValue !== changes.clusterId.currentValue) {
-          init();
+        if (changes.clusterId.currentValue &&
+          changes.clusterId.previousValue !== changes.clusterId.currentValue) {
+          updateUI();
         }
         vm.clusterId = changes.clusterId.currentValue;
       }
     }
 
     $scope.$watch(function () {
-      return vm.data;
+      return vm.formData;
     }, function saveNewData(newValue, oldValue) {
-      if (newValue === oldValue || _.isEmpty(oldValue)) {
+      if (_.isEmpty(oldValue) || newValue === oldValue) {
         return;
       }
-      patch(newValue)
-        .then(function () {
-          vm.nextUpdate = findNextUpdate();
-        });
+      updateUpgradeScheduleAndUI(newValue);
     }, true);
 
-    function init() {
+    function updateUI() {
+      vm.state = 'syncing';
       return FusionClusterService.getUpgradeSchedule(vm.clusterId)
-        .then(function (response) {
-          vm.data = convertDataForUI(response);
-          vm.isAcknowledged = response.isAcknowledged;
-          vm.postponed = response.postponed;
-          vm.nextUpdate = findNextUpdate();
+        .then(function (upgradeSchedule) {
+          vm.formData = convertDataForUI(upgradeSchedule);
+          vm.upgradeSchedule = upgradeSchedule;
+          vm.nextUpdateOffset = moment.tz(upgradeSchedule.nextUpgradeWindow.startTime, upgradeSchedule.scheduleTimeZone).format('Z');
           vm.errorMessage = '';
           vm.state = 'idle';
-        }, function (error) {
+        })
+        .catch(function (error) {
           vm.errorMessage = error.message || error.statusText;
           vm.state = 'error';
         });
@@ -87,10 +88,37 @@
           value: data.scheduleDays[0]
         },
         scheduleTimeZone: {
-          label: labelForTimezone(data.scheduleTimeZone),
+          label: labelForTimeZone(data.scheduleTimeZone),
           value: data.scheduleTimeZone
         }
       };
+    }
+
+    function updateUpgradeScheduleAndUI(data) {
+      vm.state = 'syncing';
+      return FusionClusterService.setUpgradeSchedule(vm.clusterId, {
+          scheduleTime: data.scheduleTime.value,
+          scheduleTimeZone: data.scheduleTimeZone.value,
+          scheduleDays: [data.scheduleDay.value]
+        })
+        .then(function deleteMoratoria() {
+          var promises = vm.upgradeSchedule.moratoria.map(function (moratorium) {
+            return FusionClusterService.deleteMoratoria(vm.clusterId, moratorium.id);
+          });
+          return $q.all(promises);
+        })
+        .then(updateUI)
+        .catch(function (error) {
+          vm.errorMessage = error.message;
+          vm.state = 'error';
+        });
+    }
+
+    function postpone(event) {
+      event.preventDefault();
+      vm.state = 'syncing';
+      return FusionClusterService.postponeUpgradeSchedule(vm.clusterId, vm.upgradeSchedule.nextUpgradeWindow)
+        .then(updateUI);
     }
 
     function labelForTime(time) {
@@ -139,12 +167,12 @@
       }
     }
 
-    function labelForTimezone(zone) {
+    function labelForTimeZone(zone) {
       var map = TimezoneService.getCountryMapping();
       return map[zone] + ': ' + zone;
     }
 
-    function getTimezoneOptions() {
+    function getTimeZoneOptions() {
       var timezones = moment.tz.names()
         .filter(function (zone) {
           var map = TimezoneService.getCountryMapping();
@@ -152,7 +180,7 @@
         })
         .map(function (zone) {
           return {
-            'label': labelForTimezone(zone),
+            'label': labelForTimeZone(zone),
             'value': zone
           };
         })
@@ -160,67 +188,6 @@
           return a['label'].localeCompare(b['label']);
         });
       return timezones;
-    }
-
-    function patch(data) {
-      vm.state = 'syncing';
-      return FusionClusterService.setUpgradeSchedule(Authinfo.getOrgId(), {
-          scheduleTime: data.scheduleTime.value,
-          scheduleTimeZone: data.scheduleTimeZone.value,
-          scheduleDays: [data.scheduleDay.value]
-        })
-        .then(function (data) {
-          $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
-          vm.isAcknowledged = true;
-          vm.postponed = data.postponed;
-          vm.errorMessage = '';
-          vm.state = 'idle';
-        }, function (error) {
-          vm.errorMessage = error.message;
-          vm.state = 'error';
-        });
-    }
-
-    function openModal(event) {
-      event.preventDefault();
-      $window.alert('Not implemented yet');
-      // $modal.open({
-      //   templateUrl: 'modules/hercules/schedule-upgrade-configuration/postpone-modal.html',
-      //   controller: 'PostponeModalController',
-      //   controllerAs: 'postponeModal',
-      //   type: 'dialog',
-      //   resolve: {
-      //     data: function () {
-      //       return vm.data;
-      //     },
-      //     nextUpdate: function () {
-      //       return vm.nextUpdate;
-      //     }
-      //   }
-      // }).result.then(function (data) {
-      //   vm.postponed = data.postponed;
-      //   vm.nextUpdate = findNextUpdate();
-      // });
-    }
-
-    function findNextUpdate() {
-      var now = moment.tz(vm.data.scheduleTimeZone.value);
-      var time = vm.data.scheduleTime.value.split(':');
-      var nextUpdate = moment.tz(vm.data.scheduleTimeZone.value)
-        .isoWeekday(vm.data.scheduleDay.value)
-        .hours(Number(time[0]))
-        .minutes(Number(time[1]))
-        .seconds(0);
-
-      // the .isoWeekday() from moment.js is not made to ALWAYS get the NEXT $day (i.e. monday)
-      // and always doing a +7 is not the right thing to do either
-      if (nextUpdate.isBefore(now)) {
-        nextUpdate.add(7, 'day');
-      }
-      if (vm.postponed) {
-        nextUpdate.add(7, 'day');
-      }
-      return nextUpdate.toDate();
     }
   }
 })();

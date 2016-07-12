@@ -17,6 +17,7 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'ccc_config:admin',
+      'cloud-contact-center:admin',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write'

@@ -11,7 +11,8 @@
 
     vm.trial = TrialPstnService.getData();
 
-    vm.addressLoading = false;
+    vm.addressLoading = true;
+    vm.addressFound = false;
     vm.validation = false;
 
     vm.validateAddress = validateAddress;
@@ -22,20 +23,31 @@
       model: vm.trial.details.emergAddr,
       key: 'streetAddress',
       type: 'input',
-      className: 'medium-9 inline-row',
+      className: 'medium-9 inline-row left',
       templateOptions: {
+        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.address'),
         inputClass: 'medium-11'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
       key: 'unit',
       type: 'input',
-      className: 'medium-3 inline-row',
+      className: 'medium-3 inline-row left',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.unit')
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -43,8 +55,14 @@
       type: 'input',
       className: 'medium-12',
       templateOptions: {
+        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.city'),
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -52,6 +70,7 @@
       type: 'select',
       className: 'medium-8 inline-row left',
       templateOptions: {
+        required: true,
         label: $translate.instant('trialModal.pstn.state'),
         labelfield: 'name',
         valuefield: 'abbreviation',
@@ -63,22 +82,33 @@
         TerminusStateService.query().$promise.then(function (states) {
           $scope.to.options = states;
         });
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
       key: 'zip',
       type: 'input',
-      className: 'medium-4 inline-row',
+      className: 'medium-4 inline-row left',
       templateOptions: {
+        required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.zip'),
         onBlur: validateAddress
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }];
 
     function validateAddress() {
-      vm.validation = true;
       vm.addressLoading = true;
+      vm.validation = true;
       return PstnServiceAddressService.lookupAddress({
           streetAddress: vm.trial.details.emergAddr.streetAddress,
           unit: vm.trial.details.emergAddr.unit,
@@ -88,11 +118,14 @@
         })
         .then(function (response) {
           if (angular.isDefined(response)) {
+            vm.addressFound = true;
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
             Notification.error('trialModal.pstn.error.noAddress');
           }
+        })
+        .finally(function () {
           vm.addressLoading = false;
         });
     }
@@ -105,6 +138,7 @@
     function resetAddress() {
       TrialPstnService.resetAddress();
       vm.validation = false;
+      vm.addressFound = false;
     }
   }
 })();

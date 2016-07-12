@@ -5,17 +5,17 @@
     .controller('TrialNoticeBannerCtrl', TrialNoticeBannerCtrl);
 
   /* @ngInject */
-  function TrialNoticeBannerCtrl($q, Authinfo, EmailService, Notification, TrialService, UserListService) {
+  function TrialNoticeBannerCtrl(Authinfo, EmailService, Notification, TrialService, UserListService) {
     var vm = this;
+    var partnerAdminId;
 
     vm.canShow = canShow;
-    vm.daysLeft = null;
+    vm.daysLeft = undefined;
     vm.hasRequested = false;
-    vm.partnerAdminEmail = null;
-    vm.partnerAdminDisplayName = null;
+    vm.partnerAdminEmail = undefined;
+    vm.partnerAdminDisplayName = undefined;
     vm.sendRequest = sendRequest;
     vm._helpers = {
-      getDaysLeft: getDaysLeft,
       getPrimaryPartnerInfo: getPrimaryPartnerInfo,
       sendEmail: sendEmail,
       getWebexSiteUrl: getWebexSiteUrl
@@ -26,23 +26,14 @@
     ///////////////////////
 
     function init() {
-      return $q.all([
-          getDaysLeft(),
-          getPrimaryPartnerInfo()
-        ])
-        .then(function (results) {
-          var daysLeft = results[0],
-            partnerInfo = results[1];
-
-          vm.daysLeft = daysLeft;
-
-          vm.partnerAdminEmail = _.get(partnerInfo, 'data.partners[0].userName');
-          vm.partnerAdminDisplayName = _.get(partnerInfo, 'data.partners[0].displayName');
-        });
+      TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
+        vm.daysLeft = daysLeft;
+      });
+      getPrimaryPartnerInfo();
     }
 
     function canShow() {
-      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length;
+      return Authinfo.isUserAdmin() && !!TrialService.getTrialIds().length && partnerAdminId && (partnerAdminId !== Authinfo.getUserId());
     }
 
     function sendRequest() {
@@ -55,14 +46,13 @@
         });
     }
 
-    function getDaysLeft() {
-      var trialIds = TrialService.getTrialIds();
-      return TrialService.getExpirationPeriod(trialIds);
-    }
-
     function getPrimaryPartnerInfo() {
-      var custOrgId = Authinfo.getOrgId();
-      return UserListService.listPartnersAsPromise(custOrgId);
+      return UserListService.listPartnersAsPromise(Authinfo.getOrgId()).then(function (response) {
+        vm.partnerAdminEmail = _.get(response, 'data.partners[0].userName');
+        vm.partnerAdminDisplayName = _.get(response, 'data.partners[0].displayName');
+
+        partnerAdminId = _.get(response, 'data.partners[0].id');
+      });
     }
 
     function sendEmail() {

@@ -56,7 +56,9 @@
         fusion_mgmt: 'squared-fusion-mgmt',
         room_system: 'spark-room-system',
         fusion_ec: 'squared-fusion-ec',
-        messenger: 'webex-messenger'
+        messenger: 'webex-messenger',
+        care: 'cloud-contact-center',
+        context: 'contact-center-context'
       },
 
       offerTypes: {
@@ -294,9 +296,13 @@
         'huronfeatures',
         'huronnewfeature',
         'huronHuntGroup',
+        'huronCallPark',
         'huntgroupedit',
         'devices',
         'device-overview',
+        'addDeviceFlow',
+        'places',
+        'place-overview',
         'services-overview'
       ],
       'squared-fusion-mgmt': [
@@ -308,7 +314,10 @@
       ],
       'spark-room-system': [
         'devices',
-        'device-overview'
+        'device-overview',
+        'addDeviceFlow',
+        'places',
+        'place-overview'
       ],
       'squared-fusion-uc': [
         'cluster-list',

@@ -78,9 +78,9 @@ exports.sendRequest = function (options) {
     request(options, function (error, response, body) {
       var status = response && response.statusCode ? response.statusCode : 'unknown';
       if (error) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
+        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
       } else if (response && response.statusCode >= 400) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
       } else {
         defer.fulfill(body);
       }
@@ -384,6 +384,15 @@ exports.sendKeys = function (elem, value) {
   });
 };
 
+exports.sendKeysUpArrow = function (element, howMany) {
+  var len = howMany || 1;
+  var upSeries = '';
+  _.times(len, function () {
+    upSeries += protractor.Key.ARROW_UP;
+  });
+  return element.sendKeys(upSeries);
+};
+
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
@@ -464,9 +473,15 @@ exports.expectSwitchState = function (elem, value) {
 
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
-    log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
-    expect(input.isSelected()).toBe(value);
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        return input.evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for checkbox to be ' + value + ': ' + elem.locator());
   });
 };
 
@@ -527,7 +542,10 @@ exports.search = function (query, _searchCount) {
   if (searchCount > -1) {
     browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
   }
-  return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+
+  if (query) {
+    return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  }
 };
 
 exports.clickUser = function (query) {

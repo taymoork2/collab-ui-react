@@ -5,7 +5,7 @@
     .module('Messenger')
     .factory('CiService', CiService);
 
-  /** @ngInject */
+  /* @ngInject */
   function CiService($q, Authinfo, Log, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 

@@ -5,7 +5,7 @@
     .module('wx2AdminWebClientApp')
     .run(wx2AdminWebClientApp);
 
-  function wx2AdminWebClientApp($location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, Log, $interval, $window, Config, $state, SessionStorage, $translate, LogMetricsService, formlyValidationMessages, PreviousState, Localytics, TrackingId, $animate) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, formlyValidationMessages, Localize, Localytics, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -24,7 +24,8 @@
     var storedParams = 'storedParams';
     var queryParams = 'queryParams';
 
-    Auth.setAuthorizationHeader();
+    TokenService.init();
+    TokenService.setAuthorizationHeader();
 
     Config.setTestEnvConfig($location.search()['test-env-config']);
 
@@ -44,7 +45,7 @@
           }
         } else {
           e.preventDefault();
-          if (!_.isEmpty(Storage.get('accessToken'))) {
+          if (!_.isEmpty(TokenService.getAccessToken())) {
             Auth.authorize()
               .then(function () {
                 $state.go(to.name, toParams);
@@ -66,12 +67,12 @@
 
     $rootScope.status = 'init';
 
-    if (!Storage.get('accessToken')) {
+    if (!TokenService.getAccessToken()) {
       var params;
       if ($window.document.URL.indexOf('access_token') !== -1) {
         params = getFromGetParams($window.document.URL);
         $rootScope.status = 'loaded';
-        Storage.put('accessToken', params.access_token);
+        TokenService.setAccessToken(params.access_token);
       } else if ($window.document.URL.indexOf('code') !== -1) {
         params = getFromStandardGetParams($window.document.URL);
         $rootScope.status = 'loading';
@@ -79,6 +80,7 @@
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
+            TokenService.setAccessToken(token);
             $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
           }, function () {
             Auth.redirectToLogin();
@@ -96,7 +98,7 @@
 
     var delay = $interval(function () {
         $interval.cancel(delay);
-        if (Storage.get('accessToken')) {
+        if (TokenService.getAccessToken()) {
           Log.debug('starting refresh timer...');
           //start refresh cycle after 15 minutes
           refreshToken();
