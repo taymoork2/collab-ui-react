@@ -73,18 +73,16 @@
       }
 
       function success(code) {
-        if (code.activationCode && code.activationCode.length > 0) {
-          vm.isLoading = false;
-          $stateParams.wizard.next({
-            deviceName: vm.deviceName,
-            activationCode: code.activationCode,
-            expiryTime: code.expiryTime,
-            cisUuid: Authinfo.getUserId(),
-            userName: Authinfo.getUserName(),
-            displayName: Authinfo.getUserName(),
-            organizationId: Authinfo.getOrgId()
-          }, nextOption);
-        }
+        vm.isLoading = false;
+        $stateParams.wizard.next({
+          deviceName: vm.deviceName,
+          code: code,
+          // expiryTime: code.expiryTime,
+          cisUuid: Authinfo.getUserId(),
+          userName: Authinfo.getUserName(),
+          displayName: Authinfo.getUserName(),
+          organizationId: Authinfo.getOrgId()
+        }, nextOption);
       }
 
       function error(err) {
@@ -97,14 +95,17 @@
           .createCodeForExisting(vm.place.cisUuid)
           .then(success, error);
       } else {
-        CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
-          vm.place = place;
-          CsdmCodeService
-            .createCodeForExisting(place.cisUuid)
-            .then(success, error);
-        }, error);
+        if (vm.wizardData.deviceType === "cloudberry") {
+          CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
+            vm.place = place;
+            CsdmCodeService
+              .createCodeForExisting(place.cisUuid)
+              .then(success, error);
+          }, error);
+        } else { //New Place
+          success();
+        }
       }
-
     };
 
     vm.back = function () {

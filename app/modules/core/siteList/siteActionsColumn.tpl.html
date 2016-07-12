@@ -4,7 +4,7 @@
         id="{{row.entity.license.siteUrl}}_isNotCI"
         name="{{row.entity.license.siteUrl}}_isNotCI">
     
-    <a href= "{{row.entity.siteAdminUrl}}" id="{{row.entity.license.siteUrl}}_siteAdminUrl">Sign-in to manage</a>
+    <a href= "{{row.entity.siteAdminUrl}}" id="{{row.entity.license.siteUrl}}_siteAdminUrl">{{::'siteList.siteAdminUrl' | translate}}</a>
   </span>
 
   <span ng-if="row.entity.isCI"

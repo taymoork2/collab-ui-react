@@ -4,9 +4,19 @@
   @extend %page-background-white;
 }
 
+$user-statuses-bar-height: 7.25rem;
 .expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
+
+  &.with-user-statuses-bar {
+    // we have to override what `%grid-subheader` is doing
+    // That's a bit ugly, the toolkit should not have to enforce heights like this…
+    & .grid-container,
+    & .gridStyle {
+      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + #{$page-sub-header-height} + #{$user-statuses-bar-height}));
+    }
+  }
 }
 
 .hercules.call-service {
@@ -183,54 +193,42 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.hercules-export-list {
-  display: flex;
-  align-items: center;
-  color: $gray-light-1;
-
-  .icon-download-container {
-    color: inherit;
-
-    > i, span {
-      vertical-align: middle;
-    }
-  }
-
-  .icon-circle-user {
-    margin-right: 10px;
-  }
-
-  .icon-circle-user,
-  .icon-download {
-    font-size: 1.5em;
-  }
-
-  .export-number {
-    position: relative;
-    margin-right: 20px;
-
-    &:after {
-      content: '';
-      position: absolute;
-      top: 20%;
-      right: -10px;
-      width: 1px;
-      height: 60%;
-      background-color: $gray-light-1;
-    }
-
-    // &:last-of-type{
-    //   margin-right: 10px;
-    //
-    //   &:after {
-    //     display: none;
-    //   }
-    // }
-  }
-}
-
 .add-resource-button {
   margin-left: 25px;
+}
+
+.user-statuses-bar {
+  display: flex;
+  padding: 2rem 1.25rem;
+  border-bottom: 1px solid $gray-light-3;
+  height: $user-statuses-bar-height;
+}
+.user-statuses-card {
+  display: flex;
+  flex-direction: column;
+  margin-right: 3rem;
+}
+.user-statuses-title {
+  color: $gray-dark-2;
+}
+.user-statuses-content {
+  display: flex;
+  margin: 0;
+  color: $gray-dark-1;
+  font-size: 0.875rem;
+
+  .red {
+    color: $color-alerts-base;
+  }
+
+  span {
+    font-size: 0.875rem;
+  }
+
+  li {
+    list-style-type: none;
+    margin-right: 1rem;
+  }
 }
 
 .hercules-sip-settings {
@@ -262,7 +260,7 @@ Special stuff currently used for out own mail input field...
   margin-top: 0;
   margin-right: 5px;
   font-size: 0.75rem;
-  color: orange;
+  color: $color-alerts-base;
 }
 
 .hercules-btn-deregister {
@@ -289,4 +287,21 @@ Special stuff currently used for out own mail input field...
 
 .preserve-newlines {
   white-space: pre-wrap;
+}
+
+.userStatusesExport-form {
+  display: flex;
+  margin-top: 1rem;
+
+  h5 {
+    margin-bottom: 0.625rem;
+  }
+
+  & > div {
+    margin-right: 5rem;
+  }
+}
+
+.hercules-capitalize {
+  text-transform: capitalize;
 }

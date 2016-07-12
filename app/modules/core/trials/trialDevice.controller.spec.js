@@ -331,8 +331,8 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is between 2 and 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 2, 0, 7);
+    it('should validate when quantity is between 1 and 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
       var valid2 = controller.validateTotalQuantity(null, null, model);
@@ -341,14 +341,13 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid2).toBe(true);
     });
 
-    it('should not validate when quantity is less than 2 or greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 0);
+    // less than 1 condition is handled in controller by _getQuantityInputDefault
+    it('should not validate when quantity is greater than 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
-      var valid2 = controller.validateTotalQuantity(null, null, model);
 
       expect(valid1).toBe(false);
-      expect(valid2).toBe(false);
     });
 
     it('should validate when device is not enabled', function () {
