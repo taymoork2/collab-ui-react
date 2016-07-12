@@ -46,7 +46,7 @@ namespace globalsettings {
           // it will be revealed after toggle is resolved
           this.branding = new BrandingSetting();
         });
-      } else if(this.Authinfo.isPartnerUser()) {
+      } else if(this.Authinfo.isCustomerAdmin()) {
         this.Orgservice.getOrg(_.noop).then(data => {
           if (_.get(data, 'orgSettings.allowCustomerLogos')) {
             this.branding = new BrandingSetting();
