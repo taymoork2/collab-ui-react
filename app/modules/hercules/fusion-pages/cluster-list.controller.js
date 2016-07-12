@@ -91,9 +91,6 @@
               cluster.clusterUpgradeSchedule = upgradeSchedule;
               return cluster;
             }, function () {
-              XhrNotificationService.notify($translate.instant('hercules.fusion.list.cannot-find-upgrade-schedule', {
-                "clusterName": cluster.name
-              }));
               return cluster;
             });
         }
