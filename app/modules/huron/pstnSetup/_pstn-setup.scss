@@ -260,57 +260,54 @@
 }
 
 .pstn-next-steps {
+  .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .flex-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .icon-check-mark-success {
-    font-size: 100px;
-    color: $gray-dark;
-    margin-top: 20px;
-  }
-  .title {
-    font-family: $brand-font-regular;
-    color: $brand-info;
-    margin-top: 25px;
-    margin-bottom: 35px;
-  }
-  .success-message {
-    font-family: $brand-font-light;
-    font-size: 16px;
-    color: $gray-darkest;
-  }
-  .next-step-title {
-    font-family: $brand-font-light;
-    font-size: 20px;
-    color: $gray-darkest;
-    margin-top: 45px;
-    margin-bottom: 25px;
-  }
-  .next-steps {
-    display: flex;
-    align-items: flex-end;
-
-    .step {
-      width: 220px;
-      div {
-        font-family: $brand-font-light;
-        font-size: 16px;
-        line-height: 18px;
-        color: $gray-darkest;
-        text-align: center;
-        margin-bottom: 20px;
+    justify-content: center;
+    &> * {
+      @include vr-spacing(mb,3);
+      & ~ h3 {
+      @include vr-spacing(mb,2.5);
       }
     }
-    .conjunction {
-      font-family: $brand-font-light-Oblique;
-      font-size: 16px;
-      color: $gray-darkest;
-      margin: 0 20px;
-      text-align: center;
-      padding-bottom: 5px;
+    
+    &> div {
+      @include vr-spacing(pb,1);
     }
+
+    h2 {
+      & ~ h2 {
+      @include vr-spacing(mb,3.5);
+      }
+      &> * {
+        display:block;
+        clear:both;
+      }
+
+      &> span {
+        span {
+          /// Next Line Fix for Toolkit v 0.24. Issue fixed in 0.25.
+          line-height: vr-adjust(36px);
+          @include vr-spacing(ml,0.25);
+        }
+      }
+    }
+  }
+  .icon-check-mark-success {
+    font-size: vr-adjust(98px);
+    color: $color-people-base;
+  }
+ 
+
+  .icon-information {
+    color: $color-attention-base;
+    font-size: vr-adjust(36px);
   }
 }
 

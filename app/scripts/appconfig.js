@@ -1929,7 +1929,10 @@
           .state('pstnSetup.nextSteps', {
             templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
             controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps'
+            controllerAs: 'pstnNextSteps',
+            params: {
+              portOrders: null
+            }
           })
           .state('hurondetailsBase', {
             abstract: true,
