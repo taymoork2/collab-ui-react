@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
