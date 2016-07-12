@@ -20,6 +20,18 @@ var WebExCommon = function () {
     testAdminPassword: 'Cisco!23'
   };
 
+  this.BTS1.siteElement = element(by.id(this.BTS1.siteUrl));
+  this.BTS1.licenseID = element(by.id(this.BTS1.siteUrl + '_EE200-CMR25-license'));
+  this.BTS1.isCIID = element(by.id(this.BTS1.siteUrl + '_isCI'));
+  this.BTS1.reportsCog = element(by.id(this.BTS1.siteUrl + "_webex-site-reports"));
+  this.BTS1.configCog = element(by.id(this.BTS1.siteUrl + "_webex-site-settings"));
+  this.BTS1.cardSectionId = element(by.id(this.BTS1.siteUrl + "-cardsSection"));
+  this.BTS1.csvIcon = element(by.id(this.BTS1.siteUrl + "_csvIcon"));
+  this.BTS1.csvCogDisabled = element(by.id(this.BTS1.siteUrl + "_csvDisabled"));
+  this.BTS1.csvCogEnabled = element(by.id(this.BTS1.siteUrl + "_csvEnabled"));
+  this.BTS1.csvSpinner = element(by.id(this.BTS1.siteUrl + "_csvSpinner"));
+  this.BTS1.csvResult = element(by.id(this.BTS1.siteUrl + "_csvResult"));
+
   //BTS 3 (configure)
   this.BTS3 = {
     siteUrl: 't30test-ee.webex.com',
@@ -27,12 +39,36 @@ var WebExCommon = function () {
     testAdminPassword: 'Cisco!23'
   };
 
+  this.BTS3.siteElement = element(by.id(this.BTS3.siteUrl));
+  this.BTS3.licenseID = element(by.id(this.BTS3.siteUrl + '_EE200-CMR25-license'));
+  this.BTS3.isCIID = element(by.id(this.BTS3.siteUrl + '_isCI'));
+  this.BTS3.reportsCog = element(by.id(this.BTS3.siteUrl + "_webex-site-reports"));
+  this.BTS3.configCog = element(by.id(this.BTS3.siteUrl + "_webex-site-settings"));
+  this.BTS3.cardSectionId = element(by.id(this.BTS3.siteUrl + "-cardsSection"));
+  this.BTS3.csvIcon = element(by.id(this.BTS3.siteUrl + "_csvIcon"));
+  this.BTS3.csvCogDisabled = element(by.id(this.BTS3.siteUrl + "_csvDisabled"));
+  this.BTS3.csvCogEnabled = element(by.id(this.BTS3.siteUrl + "_csvEnabled"));
+  this.BTS3.csvSpinner = element(by.id(this.BTS3.siteUrl + "_csvSpinner"));
+  this.BTS3.csvResult = element(by.id(this.BTS3.siteUrl + "_csvResult"));
+
   //BTS 4 (reports)
   this.BTS4 = {
-    siteUrl: 't31test-mc200-cmr.webex.com',
+    siteUrl: 't30test-mc200-cmr.webex.com', //The sitename is misleading; its actually a T31 site
     testAdminUsername: 'provteam+mc200@csgtrials.webex.com',
     testAdminPassword: 'Cisco!23'
   };
+
+  this.BTS4.siteElement = element(by.id(this.BTS4.siteUrl));
+  this.BTS4.licenseID = element(by.id(this.BTS4.siteUrl + '_EE200-CMR25-license'));
+  this.BTS4.isCIID = element(by.id(this.BTS4.siteUrl + '_isCI'));
+  this.BTS4.reportsCog = element(by.id(this.BTS4.siteUrl + "_webex-site-reports"));
+  this.BTS4.configCog = element(by.id(this.BTS4.siteUrl + "_webex-site-settings"));
+  this.BTS4.cardSectionId = element(by.id(this.BTS4.siteUrl + "-cardsSection"));
+  this.BTS4.csvIcon = element(by.id(this.BTS4.siteUrl + "_csvIcon"));
+  this.BTS4.csvCogDisabled = element(by.id(this.BTS4.siteUrl + "_csvDisabled"));
+  this.BTS4.csvCogEnabled = element(by.id(this.BTS4.siteUrl + "_csvEnabled"));
+  this.BTS4.csvSpinner = element(by.id(this.BTS4.siteUrl + "_csvSpinner"));
+  this.BTS4.csvResult = element(by.id(this.BTS4.siteUrl + "_csvResult"));
 
   //BTS 6 (configure)
   this.BTS6 = {
@@ -40,6 +76,18 @@ var WebExCommon = function () {
     testAdminUsername: 'provteam+t31ee@csgtrials.webex.com',
     testAdminPassword: 'Cisco!23'
   };
+
+  this.BTS6.siteElement = element(by.id(this.BTS6.siteUrl));
+  this.BTS6.licenseID = element(by.id(this.BTS6.siteUrl + '_EE200-CMR25-license'));
+  this.BTS6.isCIID = element(by.id(this.BTS6.siteUrl + '_isCI'));
+  this.BTS6.reportsCog = element(by.id(this.BTS6.siteUrl + "_webex-site-reports"));
+  this.BTS6.configCog = element(by.id(this.BTS6.siteUrl + "_webex-site-settings"));
+  this.BTS6.cardSectionId = element(by.id(this.BTS6.siteUrl + "-cardsSection"));
+  this.BTS6.csvIcon = element(by.id(this.BTS6.siteUrl + "_csvIcon"));
+  this.BTS6.csvCogDisabled = element(by.id(this.BTS6.siteUrl + "_csvDisabled"));
+  this.BTS6.csvCogEnabled = element(by.id(this.BTS6.siteUrl + "_csvEnabled"));
+  this.BTS6.csvSpinner = element(by.id(this.BTS6.siteUrl + "_csvSpinner"));
+  this.BTS6.csvResult = element(by.id(this.BTS6.siteUrl + "_csvResult"));
 
   //T30 CI enabled site
   this.t30citestprov9Info = {
