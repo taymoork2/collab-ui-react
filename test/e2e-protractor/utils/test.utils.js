@@ -78,9 +78,9 @@ exports.sendRequest = function (options) {
     request(options, function (error, response, body) {
       var status = response && response.statusCode ? response.statusCode : 'unknown';
       if (error) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
+        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
       } else if (response && response.statusCode >= 400) {
-        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
       } else {
         defer.fulfill(body);
       }

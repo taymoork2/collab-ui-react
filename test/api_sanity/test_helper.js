@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var request = require('request');
+var testConfig = require('../e2e-protractor/utils/test.config');
 
 var auth = {
   'sqtest-admin': {
@@ -212,7 +213,7 @@ var getAuthCode = function (req, creds) {
         response_type: 'code',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         client_id: clientId,
-        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config cloudMeetings:login Identity:Organization ccc_config:admin',
+        scope: testConfig.oauth2Scope,
         realm: '/' + creds.org,
         state: rand_str
       }

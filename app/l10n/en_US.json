@@ -1111,11 +1111,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1277,7 +1278,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
@@ -1311,7 +1312,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1440,8 +1441,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule",
-        "cannot-find-upgrade-schedule": "Could not find upgrade schedule for {{clusterName}}."
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
@@ -2347,6 +2347,8 @@
       "meetingRoomCamera": "Spark Room System &nbsp;<span class='small-hint'>(Any mix up to 3 devices)</span>",
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to 5 devices)</span>",
       "sx10": "SX10",
+      "dx80": "DX80",
+      "mx300": "MX300",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -2542,6 +2544,7 @@
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
@@ -4208,8 +4211,8 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
-        "convertButton": "Convert",
-        "convertText": "Users who may belong to your organization"
+        "convertButton": "Review",
+        "convertText": "Users ready for license conversion review"
       },
       "message": {
         "title": "Message",

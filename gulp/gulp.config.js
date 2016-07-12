@@ -17,7 +17,6 @@ module.exports = function () {
   var tsSpecSuffix = '.spec.ts.js';
   var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
-  var prevCompiledTestFiles = app + '/**/*.ts.spec.js';
   var examples = 'examples';
   var cache = '.cache';
   var tsManifest = '/../ts/ts-manifest.txt';
@@ -39,7 +38,6 @@ module.exports = function () {
     css: 'styles',
     docs: 'docs',
     cssName: 'main',
-    jsIndexName: 'index.scripts',
     cache: cache,
     examples: examples,
     tsManifest: tsManifest,
@@ -74,8 +72,7 @@ module.exports = function () {
       testFiles: app + '/**/*.spec.ts',
       compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
-      compiledTestFiles: compiledTestFiles,
-      previousCompiledTestFiles: prevCompiledTestFiles
+      compiledTestFiles: compiledTestFiles
     },
 
     templateCache: {
@@ -121,7 +118,7 @@ module.exports = function () {
       spec: {
         all: app + '/**/*.spec.js',
         core: appModules + '/core/**/*.spec.js',
-        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
+        ediscovery: appModules + '/ediscovery/**/*.spec.js',
         example: [examples + '/unit/example.module.js', examples + '/unit/*'],
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',

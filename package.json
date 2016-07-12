@@ -164,7 +164,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "gulp/cz-atlas"
+      "path": "bin/helpers/cz-atlas"
     }
   }
 }

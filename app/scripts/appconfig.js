@@ -315,7 +315,7 @@
               'modal@': {
                 controller: 'AddLinesCtrl',
                 controllerAs: 'addLines',
-                templateUrl: 'modules/squared/devices/addDeviceNew/AddLinesTemplate.tpl.html'
+                templateUrl: 'modules/squared/common/AddLinesTemplate.tpl.html'
               }
             },
             params: {
@@ -324,15 +324,17 @@
           })
           .state('addDeviceFlow.showActivationCode', {
             parent: 'modalSmall',
+            params: {
+              currentUser: {},
+              activationCode: {},
+              wizard: null
+            },
             views: {
               'modal@': {
+                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
                 controller: 'ShowActivationCodeCtrl',
-                controllerAs: 'showActivationCode',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html'
+                controllerAs: 'showActivationCode'
               }
-            },
-            params: {
-              wizard: null
             }
           })
           .state('activate', {

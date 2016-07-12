@@ -50,6 +50,7 @@
 
     function labelForTime(time) {
       var currentLanguage = $translate.use();
+      // Need to check for other languages
       return (currentLanguage === 'en_US') ? moment(time, 'HH:mm').format('hh:mm A') : time;
     }
 
@@ -71,7 +72,13 @@
 
     function getEndTimeOptions(startTime) {
       var timeOptions = getTimeOptions();
+      // Push 11:59 PM as end time to handle the scenario where start time is 11:30 PM.
+      timeOptions.push({
+        label: labelForTime('23:59'),
+        value: '23:59'
+      });
       var index = _.findIndex(timeOptions, {
+        label: labelForTime(startTime.value),
         value: startTime.value
       });
       return timeOptions.slice(index + 1, timeOptions.length);

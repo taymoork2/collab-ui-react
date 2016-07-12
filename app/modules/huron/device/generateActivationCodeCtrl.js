@@ -14,6 +14,15 @@
     vm.email = {
       to: vm.userName
     };
+
+    vm.wizardData = ($stateParams.wizard) ? $stateParams.wizard.state().data : null;
+    if (vm.wizardData) {
+      vm.userName = vm.wizardData.userName;
+      vm.otp = angular.copy(vm.wizardData.code);
+      vm.otp.code = vm.wizardData.code.activationCode;
+      vm.otp.expiresOn = vm.otp.expiresOn;
+    }
+
     vm.qrCode = '';
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;

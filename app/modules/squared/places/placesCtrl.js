@@ -120,7 +120,7 @@
               'addDeviceFlow.addLines': {
                 next: 'addDeviceFlow.showActivationCode'
               },
-              'addDeviceFlow.showActivationCode': {}
+              'addDeviceFlow.generateAuthCode': {}
             }
           };
 

@@ -9,16 +9,16 @@
 
   <div id="addDnAndExtToUserOptionButtons" class="page-option-buttons">
     <div >
-      <i ng-if="isMapInProgress" class='icon icon-spinner did-map-spinner'></i>
-      <a id="mapDn" href translate="firstTimeWizard.mapDirectLineWithExt" ng-click="!isMapEnabled || mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
+      <i ng-if="addLines.isMapInProgress" class='icon icon-spinner did-map-spinner'></i>
+      <a id="mapDn" href translate="firstTimeWizard.mapDirectLineWithExt" ng-click="!addLines.isMapEnabled || addLines.mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
       <span class="option-separator-pipe">|</span>
       <i ng-if="isResetInProgress" class='icon icon-spinner did-map-spinner'></i>
-      <a href translate="firstTimeWizard.reset" ng-click="!isResetEnabled || resetDns()" ng-class="isResetEnabled ? 'primary' : 'disabled'" ></a>
+      <a href translate="firstTimeWizard.reset" ng-click="!addLines.isResetEnabled || addLines.resetDns()" ng-class="addLines.isResetEnabled ? 'primary' : 'disabled'" ></a>
     </div>
   </div>
 
   <div class="addDnToUser grid">
-    <div gridscrollbar class="gridStyle" ui-grid="addDnGridOptions"></div>
+    <div gridscrollbar class="gridStyle" ui-grid="addLines.addDnGridOptions"></div>
     <div class="grid-refresh" ng-if="gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>

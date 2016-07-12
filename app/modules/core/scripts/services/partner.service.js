@@ -225,11 +225,16 @@
       };
 
       // havent figured out what this is doing yet...
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
+      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
 
