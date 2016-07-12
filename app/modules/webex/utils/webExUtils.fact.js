@@ -22,12 +22,6 @@
       var logMsg = "";
 
       var licenses = Authinfo.getLicenses();
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "licenses=" + JSON.stringify(licenses);
-      // $log.log(logMsg);
-
       var result = true;
 
       licenses.forEach(
@@ -41,16 +35,15 @@
           ) {
 
             if (siteUrl == license.siteUrl) {
+              if (null != license.isCIUnifiedSite) {
+                result = license.isCIUnifiedSite;
+              }
+
               logMsg = funcName + "\n" +
                 "siteUrl=" + siteUrl + "\n" +
-                "license.licenseType=" + license.licenseType + "\n" +
-                "license.siteUrl=" + license.siteUrl + "\n" +
-                "license.isCI=" + license.isCI;
-              // $log.log(logMsg);
-
-              if (null != license.isCI) {
-                result = license.isCI;
-              }
+                "license=" + JSON.stringify(license) + "\n" +
+                "result=" + result;
+              $log.log(logMsg);
             }
           }
         } // checkLicense()
