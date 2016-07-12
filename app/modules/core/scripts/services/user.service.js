@@ -22,9 +22,10 @@
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
+      isHuronUser: isHuronUser,
+      isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
-      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
-      isInvitePending: isInvitePending
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail
     };
     var _helpers = {
       isSunlightUser: isSunlightUser,
@@ -271,6 +272,9 @@
     }
 
     function getUsersEmailStatus(orgId, userId) {
+      if (orgId === null) {
+        $q.reject('No Org ID was passed');
+      }
       if (userId === null) {
         $q.reject('No User ID was passed');
       }
@@ -512,7 +516,7 @@
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending' && !isHuronUser(entitlements)) {
+      if ((userStatus === 'pending' || userStatus === 'error') && !isHuronUser(entitlements)) {
         return sendSparkWelcomeEmail(userEmail, userName);
       } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
         return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);

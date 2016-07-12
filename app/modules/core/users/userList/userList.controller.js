@@ -62,7 +62,6 @@
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
     $scope.isEmailStatusToggled = false;
-    $scope.emailError = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -231,10 +230,7 @@
                     var eventStatus = response.data.items[0].event;
                     if (eventStatus === 'rejected' || eventStatus === 'failed') {
                       user.userStatus = 'error';
-                      $scope.emailError = true;
                     }
-                  }).catch(function (error) {
-                    Log.debug('User not found. Error: ' + error);
                   });
                 }
               });
@@ -401,10 +397,7 @@
 
     function canShowResendInvite(user) {
       var isHuronUser = Userservice.isHuronUser(user.entitlements);
-      if ((user.userStatus === 'pending' || isHuronUser || $scope.emailError) && !$scope.isCSB) {
-        return true;
-      }
-      return false;
+      return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser) && !$scope.isCSB;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
