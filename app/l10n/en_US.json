@@ -1111,11 +1111,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1277,7 +1278,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
@@ -1311,7 +1312,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1440,8 +1441,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule",
-        "cannot-find-upgrade-schedule": "Could not find upgrade schedule for {{clusterName}}."
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },

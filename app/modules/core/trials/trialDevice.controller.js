@@ -698,7 +698,9 @@
     function validateTotalQuantity($viewValue, $modelValue, scope) {
       var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
       var device = scope.model;
-      if (!device.enabled) {
+      // If quantity is 0, _getQuantityInputDefault will set quantity to minimum allowed value, so it is never 0.
+      // So when relative quantity equals 0, validation can be skipped.
+      if (!device.enabled || quantity === 0) {
         return true;
       } else {
         return !(quantity < minTotalDevices || quantity > maxTotalDevices);
