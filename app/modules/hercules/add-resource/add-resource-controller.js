@@ -191,7 +191,7 @@
         });
     }
 
-    vm.welcomeScreenStage = function () {
+    vm.inWelcomeScreen = function () {
       return !vm.welcomeScreenAccepted;
     };
 
@@ -199,11 +199,11 @@
       vm.welcomeScreenAccepted = true;
     };
 
-    vm.showCompleteNewOrExistingForm = function () {
+    vm.inChooseNewOrExistingScreen = function () {
       return !(vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted || !vm.welcomeScreenAccepted || vm.chooseClusterName);
     };
 
-    vm.enterHostnameStage = function () {
+    vm.inHostnameSelectionScreen = function () {
       return !(vm.chooseClusterName || vm.selectedAction === 'existing' || !vm.welcomeScreenAccepted);
     };
 
@@ -212,7 +212,7 @@
       vm.clustername = vm.hostname;
     };
 
-    vm.enterClusterNameStage = function () {
+    vm.inClusterNameSelectionScreen = function () {
       return vm.chooseClusterName && !vm.preregistrationCompleted;
     };
 
@@ -220,7 +220,7 @@
       vm.preregisterAndProvisionExpressway(vm.connectorType);
     };
 
-    vm.selectExistingExpresswayStage = function () {
+    vm.inSelectExistingExpresswayScreen = function () {
       return vm.selectedAction === 'existing' && !vm.provisioningToExistingExpresswayCompleted && vm.welcomeScreenAccepted;
     };
 
@@ -228,7 +228,7 @@
       provisionExpresswayWithNewConnector(vm.selectedCluster.value, vm.connectorType);
     };
 
-    vm.goToExpresswayToCompleteStage = function () {
+    vm.inFinalScreen = function () {
       return vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted;
     };
 
