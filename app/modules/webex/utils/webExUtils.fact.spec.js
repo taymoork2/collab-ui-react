@@ -92,7 +92,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     spyOn(Authinfo, 'getLicenses').and.returnValue(fakeLicenses);
   })); // beforeEach(inject())
 
-  it('can correct return true for licenseType=CONFERENCING', function () {
+  it('can correct return true for licenseType=CONFERENCING and isCIUnifiedSite=null', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencing.fake.com");
 
     expect(isCISite).toEqual(true);
@@ -110,7 +110,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     expect(isCISite).toEqual(false);
   });
 
-  it('can correct return true for licenseType=CMR', function () {
+  it('can correct return true for licenseType=CMR and isCIUnifiedSite=null', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMR.fake.com");
 
     expect(isCISite).toEqual(true);
