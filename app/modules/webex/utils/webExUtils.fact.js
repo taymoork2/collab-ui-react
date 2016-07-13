@@ -21,7 +21,6 @@
       var funcName = "isCIEnabledSite()";
       var logMsg = "";
 
-      var siteLicenses = null;
       var licenses = Authinfo.getLicenses();
       var result = true;
 
