@@ -6,12 +6,10 @@
 var ReportsPage = function () {
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
-  this.timeSelectCare = element(by.id('timeFilterCare'));
   this.customerSelect = element(by.id('customerFilter'));
   this.allTypes = element(by.id('allReports'));
   this.engagement = element(by.id('engagementReports'));
   this.quality = element(by.id('qualityReports'));
-  this.reportsCareTab = element(by.css('a[href="#/reports/care"]'));
 
   // Total Rooms
   this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));

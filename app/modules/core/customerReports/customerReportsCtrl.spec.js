@@ -80,10 +80,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       CustomerGraphService = _CustomerGraphService_;
       FeatureToggleService = _FeatureToggleService_;
 
-      FeatureToggleService.features = {
-        atlasMediaServiceMetrics: 'atlas-media-service-metrics'
-      };
-
       spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
         $q.when(true)
       );

@@ -21,7 +21,6 @@ var Navigation = function () {
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
   this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
-  this.reportsCareTab = element(by.css('a[href="#/reports/care"]'));
 
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
@@ -138,10 +137,6 @@ var Navigation = function () {
     this.expectCurrentUrl('/reports');
   };
 
-  this.clickReportsCare = function () {
-    utils.click(this.reportsCareTab);
-    this.expectCurrentUrl('/reports/care');
-  };
   this.clickSupport = function () {
     utils.click(this.supportTab);
     this.expectCurrentUrl('/support');
