@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, servicesId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
     var numberOfUsersPrUssRequest = 500;
@@ -25,14 +25,20 @@
 
     function exportCSV() {
       vm.exportingUserStatusReport = true;
-      var selectedTypes = _.chain(vm.statusTypes)
+      var selectedTuples = _.chain(vm.statusTypes)
+        .flatten()
         .filter(function (status) {
           return status.selected && status.count;
         })
-        .map('stateType')
+        .map(function (item) {
+          return {
+            service: item.id,
+            type: item.stateType
+          };
+        })
         .value();
 
-      return getAllUserStatuses(servicesId, selectedTypes)
+      return getAllUserStatuses(selectedTuples)
         .then(_.flatten)
         .then(addConnectorsDetails)
         .then(replaceWithDetails)
@@ -137,12 +143,10 @@
         });
     }
 
-    function getAllUserStatuses(services, types) {
-      var requestList = _.chain(services)
-        .map(function (service) {
-          return _.map(types, function (type) {
-            return getUserStatuses(service, type, 0, numberOfUsersPrUssRequest);
-          });
+    function getAllUserStatuses(tuples) {
+      var requestList = _.chain(tuples)
+        .map(function (tuple) {
+          return getUserStatuses(tuple.service, tuple.type, 0, numberOfUsersPrUssRequest);
         })
         .flatten()
         .value();
@@ -150,33 +154,40 @@
     }
 
     function getStatusTypes() {
-      return formatStatusTypes(userStatusSummary);
+      var a = formatStatusTypes(userStatusSummary);
+      return a;
     }
 
     function formatStatusTypes(summary) {
-      return [{
-        stateType: 'activated',
-        text: $translate.instant('hercules.activationStatus.activated'),
-        count: summary.activated,
-        selected: false,
-        unselectable: summary.activated === 0
-      }, {
-        stateType: 'notActivated',
-        text: $translate.instant('hercules.activationStatus.pending_activation'),
-        count: summary.notActivated,
-        selected: true,
-        unselectable: summary.notActivated === 0
-      }, {
-        stateType: 'error',
-        text: $translate.instant('hercules.activationStatus.error'),
-        count: summary.error,
-        selected: true,
-        unselectable: summary.error === 0
-      }];
+      return _.map(summary, function (service) {
+        return [{
+          id: service.serviceId,
+          stateType: 'activated',
+          text: $translate.instant('hercules.activationStatus.activated'),
+          count: service.activated,
+          selected: false,
+          unselectable: service.activated === 0
+        }, {
+          id: service.serviceId,
+          stateType: 'notActivated',
+          text: $translate.instant('hercules.activationStatus.pending_activation'),
+          count: service.notActivated,
+          selected: service.notActivated > 0,
+          unselectable: service.notActivated === 0
+        }, {
+          id: service.serviceId,
+          stateType: 'error',
+          text: $translate.instant('hercules.activationStatus.error'),
+          count: service.error,
+          selected: service.error > 0,
+          unselectable: service.error === 0
+        }];
+      });
     }
 
     function nothingToExport() {
       return _.chain(vm.statusTypes)
+        .flatten()
         .filter(function (status) {
           return !status.unselectable;
         })

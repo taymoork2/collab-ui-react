@@ -154,8 +154,6 @@
 
           if (isNewSiteUrl) {
 
-            conferenceService.isCI = true;
-
             conferenceService.showCSVInfo = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
@@ -165,7 +163,7 @@
             conferenceService.showSiteLinks = false;
             conferenceService.isError = false;
             conferenceService.isWarn = false;
-            conferenceService.isCI = false;
+            conferenceService.isCI = true;
             conferenceService.isCSVSupported = false;
             conferenceService.adminEmailParam = null;
             conferenceService.userEmailParam = null;

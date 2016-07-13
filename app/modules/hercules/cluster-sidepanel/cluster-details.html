@@ -18,7 +18,7 @@
 
   <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
     <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></div>
-      <p>{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
+      <p class="hercules-capitalize">{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -28,10 +28,10 @@
       <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
       <button class="btn btn--primary"
               ng-click="clusterDetailsCtrl.showUpgradeDialog()"
-              ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable || !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"
+              ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
               translate="hercules.softwareUpgrade.upgradeNow">
       </button>
-      <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeImpossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
+      <p ng-if="clusterDetailsCtrl.softwareUpgrade.showUpgradeWarning()"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeWarning" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
     </div>
     <div ng-if="clusterDetailsCtrl.showUpgradeProgress">
       <div ng-if="clusterDetailsCtrl.fakeUpgrade">

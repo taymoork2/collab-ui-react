@@ -52,6 +52,18 @@ var ChatTemplateCreation = function () {
   this.agentUnavailableMessageField = element(by.id('agentUnavailableMessageField'));
   this.agentUnavailableMessage = element(by.id('agentUnavailableMessage'));
   this.chatStatusMessages = element.all(by.css('.ct-attribute-field-textbox'));
+  this.offHoursMessage = element(by.css('.offhours-message textarea'));
+  this.days = element.all(by.css('.day-picker .day'));
+  this.wednesday = element.all(by.css('.day-picker .day')).get(3);
+  this.open24Hours = element(by.css('.time-and-timezone-picker [ckid=ctOpen24Hours]'));
+  this.timePicker = element(by.css('.time-picker'));
+  this.timezonePicker = element(by.css('.timezone-picker'));
+  this.startTimeDropDown = element(by.css('.time-picker .start-time'));
+  this.endTimeDropDown = element(by.css('.time-picker .end-time'));
+  this.startTime = element.all(by.css('.time-picker .start-time .time li')).first();
+  this.endTime = element.all(by.css('.time-picker .end-time .time li')).last();
+  this.timezoneInput = element(by.css('.timezone-picker input'));
+  this.selectATimezone = element(by.css('.timezone-picker [name="businessHours-timezonePicker"] .dropdown-menu li'));
 };
 
 module.exports = ChatTemplateCreation;

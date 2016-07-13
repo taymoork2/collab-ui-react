@@ -16,7 +16,6 @@
     vm.partnerAdminDisplayName = undefined;
     vm.sendRequest = sendRequest;
     vm._helpers = {
-      getDaysLeft: getDaysLeft,
       getPrimaryPartnerInfo: getPrimaryPartnerInfo,
       sendEmail: sendEmail,
       getWebexSiteUrl: getWebexSiteUrl
@@ -27,7 +26,9 @@
     ///////////////////////
 
     function init() {
-      getDaysLeft();
+      TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
+        vm.daysLeft = daysLeft;
+      });
       getPrimaryPartnerInfo();
     }
 
@@ -43,13 +44,6 @@
           });
           vm.hasRequested = true;
         });
-    }
-
-    function getDaysLeft() {
-      var trialIds = TrialService.getTrialIds();
-      return TrialService.getExpirationPeriod(trialIds).then(function (response) {
-        vm.daysLeft = response;
-      });
     }
 
     function getPrimaryPartnerInfo() {

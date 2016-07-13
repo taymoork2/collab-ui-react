@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -1111,11 +1112,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1277,7 +1279,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
@@ -1311,7 +1313,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1440,8 +1442,7 @@
         "expressway": "Expressway",
         "mediafusion": "Media Fusion",
         "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule",
-        "cannot-find-upgrade-schedule": "Could not find upgrade schedule for {{clusterName}}."
+        "upgrade-schedule": "Upgrade Schedule"
       }
     }
   },
@@ -1810,7 +1811,10 @@
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
-    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuAddDigit": "Add an input digit",
+    "phoneMenuAnotherDigit": "Add another input digit",
+    "phoneSubmenuAddDigit": "Add an input digit to submenu",
+    "phoneSubmenuAnotherDigit": "Add another input digit to submenu",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
     "phoneMenuRepeatContinue": "Repeat and Continue To Next Step",
@@ -3649,6 +3653,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
+    "siteAdminUrl": "Sign-in to manage",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
@@ -4211,8 +4216,8 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
-        "convertButton": "Convert",
-        "convertText": "Users who may belong to your organization"
+        "convertButton": "Review",
+        "convertText": "Users ready for license conversion review"
       },
       "message": {
         "title": "Message",
@@ -4439,7 +4444,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",

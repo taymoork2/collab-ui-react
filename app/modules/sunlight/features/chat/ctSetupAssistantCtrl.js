@@ -62,7 +62,6 @@
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
     vm.days = CTService.getDays();
-    vm.open24Hours = true;
     vm.isOffHoursMessageValid = true;
     vm.isBusinessHoursDisabled = false;
     vm.timings = CTService.getDefaultTimes();
@@ -245,7 +244,16 @@
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage')
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
           },
           feedback: {
             enabled: true,
@@ -351,7 +359,10 @@
 
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      return vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected');
+      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+        setOffHoursData();
+        return true;
+      }
     }
 
     function nextButton() {
@@ -495,6 +506,14 @@
           useAgentRealName: false
         };
       }
+    }
+
+    function setOffHoursData() {
+      vm.template.configuration.pages.offHours.enabled = true;
+      vm.template.configuration.pages.offHours.schedule.businessDays = _.map(_.filter(vm.days, 'isSelected'), 'label');
+      vm.template.configuration.pages.offHours.schedule.timings.startTime = vm.timings.startTime.label;
+      vm.template.configuration.pages.offHours.schedule.timings.endTime = vm.timings.endTime.label;
+      vm.template.configuration.pages.offHours.schedule.timezone = vm.scheduleTimeZone.value;
     }
 
     function setAgentProfile() {

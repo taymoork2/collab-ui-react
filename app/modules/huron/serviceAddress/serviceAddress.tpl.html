@@ -3,27 +3,27 @@
     <div class="row full">
       <div class="columns medium-9">
         <label for="streetAddress" translate="serviceAddress.streetAddress"></label>
-        <input type="text" id="streetAddress" ng-model="address.streetAddress" required>
+        <input type="text" id="streetAddress" ng-model="address.streetAddress" required ng-disabled="controller.isValid">
       </div>
       <div class="columns medium-3">
         <label for="unit" translate="serviceAddress.unit"></label>
-        <input type="text" id="unit" ng-model="address.unit">
+        <input type="text" id="unit" ng-model="address.unit" ng-disabled="controller.isValid">
       </div>
     </div>
     <div class="row full">
       <div class="columns medium-12">
         <label for="city" translate="serviceAddress.city"></label>
-        <input type="text" id="city" ng-model="address.city" required>
+        <input type="text" id="city" ng-model="address.city" required ng-disabled="controller.isValid">
       </div>
     </div>
     <div class="row full">
       <div class="columns medium-7">
         <label for="state" translate="serviceAddress.state"></label>
-        <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true"></cs-select>
+        <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true" is-disabled="controller.isValid"></cs-select>
       </div>
       <div class="columns medium-5">
         <label for="zip" translate="serviceAddress.zipCode"></label>
-        <input type="text" id="zip" ng-model="address.zip" required>
+        <input type="text" id="zip" ng-model="address.zip" required ng-disabled="controller.isValid">
       </div>
     </div>
       <button class="btn--primary search-custom" type="submit" ng-click="controller.validateAddress()" translate="organizationsPage.search"></button>
