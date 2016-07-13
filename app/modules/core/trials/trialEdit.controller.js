@@ -374,7 +374,7 @@
         TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
         FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
         FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop).catch(function (err) {
+        Orgservice.getAdminOrgAsPromise().catch(function (err) {
           getAdminOrgError = true;
           return err;
         })
