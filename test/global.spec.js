@@ -11,6 +11,15 @@ beforeEach(function () {
     });
   };
 
+  this.injectProviders = function () {
+    var providers = _.toArray(arguments);
+    _.forEach(providers, function (provider) {
+      module([provider, function providerCallback(_provider) {
+        this[provider] = _provider;
+      }.bind(this)]);
+    }, this);
+  }
+
   /**
    * Inject each argument and assign to this context
    */
