@@ -17,10 +17,7 @@
     vm.selectedAction = 'new';
     vm.closeSetupModal = closeSetupModal;
     vm.firstTimeSetup = firstTimeSetup;
-    vm.welcomeScreenAccepted = false;
-    if (!firstTimeSetup) {
-      vm.welcomeScreenAccepted = true;
-    }
+    vm.welcomeScreenAccepted = !firstTimeSetup;
 
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
@@ -57,14 +54,8 @@
     vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
     vm.getIconClassForService = getIconClassForService;
     vm.updateDropdownMenu = updateDropdownMenu;
-    vm.goToClusterNameSelection = goToClusterNameSelection;
 
     findAndPopulateExistingExpressways(vm.connectorType);
-
-    vm.redirectToTargetAndCloseWindowClicked = function (hostName) {
-      $modalInstance.close();
-      $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration");
-    };
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       preregisterCluster(vm.clustername)
@@ -200,10 +191,51 @@
         });
     }
 
-    function goToClusterNameSelection() {
+    vm.inWelcomeScreen = function () {
+      return !vm.welcomeScreenAccepted;
+    };
+
+    vm.completeWelcomeScreen = function () {
+      vm.welcomeScreenAccepted = true;
+    };
+
+    vm.inChooseNewOrExistingScreen = function () {
+      return !(vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted || !vm.welcomeScreenAccepted || vm.chooseClusterName);
+    };
+
+    vm.inHostnameSelectionScreen = function () {
+      return !(vm.chooseClusterName || vm.selectedAction === 'existing' || !vm.welcomeScreenAccepted);
+    };
+
+    vm.completeEnterHostnameScreen = function () {
       vm.chooseClusterName = true;
       vm.clustername = vm.hostname;
-    }
+    };
+
+    vm.inClusterNameSelectionScreen = function () {
+      return vm.chooseClusterName && !vm.preregistrationCompleted;
+    };
+
+    vm.completeClusterNameScreen = function () {
+      vm.preregisterAndProvisionExpressway(vm.connectorType);
+    };
+
+    vm.inSelectExistingExpresswayScreen = function () {
+      return vm.selectedAction === 'existing' && !vm.provisioningToExistingExpresswayCompleted && vm.welcomeScreenAccepted;
+    };
+
+    vm.completeExistingExpresswayScreen = function () {
+      provisionExpresswayWithNewConnector(vm.selectedCluster.value, vm.connectorType);
+    };
+
+    vm.inFinalScreen = function () {
+      return vm.preregistrationCompleted || vm.provisioningToExistingExpresswayCompleted;
+    };
+
+    vm.completeAddResourceModal = function () {
+      $modalInstance.close();
+      $window.open("https://" + encodeURIComponent(vm.hostname) + "/fusionregistration");
+    };
 
   }
 }());

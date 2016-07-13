@@ -62,7 +62,6 @@
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
     vm.days = CTService.getDays();
-    vm.open24Hours = true;
     vm.isOffHoursMessageValid = true;
     vm.isBusinessHoursDisabled = false;
     vm.timings = CTService.getDefaultTimes();
@@ -236,11 +235,25 @@
             }
           },
           agentUnavailable: {
-            enabled: true
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage')
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
           },
           feedback: {
             enabled: true,
@@ -329,10 +342,7 @@
     }
 
     function isNamePageValid() {
-      if (vm.template.name === '') {
-        return false;
-      }
-      return true;
+      return (vm.template.name !== '');
     }
 
     function isProfilePageValid() {
@@ -343,9 +353,16 @@
       return false;
     }
 
+    function isAgentUnavailablePageValid() {
+      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
+    }
+
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      return vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected');
+      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+        setOffHoursData();
+        return true;
+      }
     }
 
     function nextButton() {
@@ -354,6 +371,8 @@
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
+      case 'agentUnavailable':
+        return isAgentUnavailablePageValid();
       case 'offHours':
         return isOffHoursPageValid();
       case 'summary':
@@ -487,6 +506,14 @@
           useAgentRealName: false
         };
       }
+    }
+
+    function setOffHoursData() {
+      vm.template.configuration.pages.offHours.enabled = true;
+      vm.template.configuration.pages.offHours.schedule.businessDays = _.map(_.filter(vm.days, 'isSelected'), 'label');
+      vm.template.configuration.pages.offHours.schedule.timings.startTime = vm.timings.startTime.label;
+      vm.template.configuration.pages.offHours.schedule.timings.endTime = vm.timings.endTime.label;
+      vm.template.configuration.pages.offHours.schedule.timezone = vm.scheduleTimeZone.value;
     }
 
     function setAgentProfile() {

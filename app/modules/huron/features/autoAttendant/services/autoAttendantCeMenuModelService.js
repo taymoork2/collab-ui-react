@@ -637,10 +637,16 @@
               // do not expose timeout entry by default
               menu.addHeader(timeoutMenuEntry);
             } else {
+              // A displayable menu entry from CeDefinition must have both input (key) and
+              // actions array defined.  It is better to skip any entry with either one of these
+              // attributes missing to keep the UI stable.
               if (_.has(menuOption, 'input') && _.has(menuOption, 'actions')) {
+                // Looks for menu or submenu, i.e., a runActionsOnInput object that has an
+                // undefined runActionsOnInput.inputType or runActionsOnInput.inputType === 1.
+                // Note, runActionsOnInput.inputType equals 2 is dialByExt.
                 if (_.has(menuOption.actions[0], 'runActionsOnInput') &&
                   (!_.has(menuOption.actions[0], 'runActionsOnInput.inputType') ||
-                    menuOption.actions[0].runActionsOnInput.inputType !== 2)) {
+                    menuOption.actions[0].runActionsOnInput.inputType === 1)) {
                   menuEntry = getOptionMenuFromAction(menuOption.actions[0], actionSetName);
                   menuEntry.key = menuOption.input || '';
                 } else {
@@ -1245,7 +1251,7 @@
       var menu = ceMenuMap[menuId];
       if (menu) {
         _.forEach(menu.entries, function (entry) {
-          if (objectType(entry) === 'CeMenu') {
+          if (isCeMenu(entry)) {
             deleteCeMenuMap(entry.getId());
           }
         });

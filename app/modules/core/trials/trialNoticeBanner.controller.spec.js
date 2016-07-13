@@ -130,35 +130,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('helper functions:', function () {
-    describe('getDaysLeft():', function () {
-      var getDaysLeft;
-
-      beforeEach(function () {
-        getDaysLeft = controller._helpers.getDaysLeft;
-        spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
-        spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
-        spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
-      });
-
-      it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
-        getDaysLeft().then(function () {
-          expect(controller.daysLeft).toBe(1);
-        });
-      });
-
-      it('should have called "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getTrialIds).toHaveBeenCalled();
-        });
-      });
-
-      it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith(['fake-uuid-value-1']);
-        });
-      });
-    });
-
     describe('getPrimaryPartnerInfo():', function () {
       describe('will resolve with partner data that...', function () {
         it('should have a "data.partners[0].displayName" property', function () {

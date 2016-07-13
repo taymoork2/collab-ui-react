@@ -165,6 +165,7 @@
         this.cisUuid = obj.id;
         this.tags = getTags(obj.description);
         this.expiryTime = obj.expiryTime;
+        this.expiresOn = obj.expiryTime;
         this.friendlyExpiryTime = convertExpiryTime(obj.expiryTime);
         this.product = t('spacesPage.unactivatedDevice');
         this.tags = getTags(obj.description);

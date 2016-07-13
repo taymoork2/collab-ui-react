@@ -16,9 +16,8 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
-
     if (vm.wizardData.deviceType === 'huron') {
-      OtpService.getQrCodeUrl(vm.wizardData.activationCode).then(function (qrcode) {
+      OtpService.getQrCodeUrl(vm.wizardData.code.activationCode).then(function (qrcode) {
         var arrayData = '';
         for (var i in Object.keys(qrcode)) {
           if (qrcode.hasOwnProperty(i)) {
