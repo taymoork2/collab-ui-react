@@ -46,7 +46,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     state: 'reports'
   }, {
     title: 'tabs.careTab',
-    state: 'care-reports'
+    state: 'reports.care'
   }];
   var timeOptions = [{
     value: 0,

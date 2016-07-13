@@ -101,7 +101,7 @@
       if (features.care) {
         vm.headerTabs.push({
           title: $translate.instant('tabs.careTab'),
-          state: 'care-reports'
+          state: 'reports.care'
         });
       }
     });

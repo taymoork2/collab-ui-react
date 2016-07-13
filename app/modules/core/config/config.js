@@ -348,13 +348,11 @@
         'messenger'
       ],
       'cloud-contact-center': [
-        'care',
-        'care-reports'
+        'care'
       ],
       'contact-center-context': [
         //TODO: Remove this after all Care test and trial Orgs are entitled to cloud-contact-center
-        'care',
-        'care-reports'
+        'care'
       ]
     };
 
