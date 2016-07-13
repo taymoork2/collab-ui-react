@@ -75,12 +75,18 @@ function dirs_exist {
 
 function set_local_npm_path {
     export PATH="$PATH:./node_modules/.bin"
-    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/.bashrc
+    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/`get_bash_conf_file`
 }
 
 function set_global_npm_path {
     export PATH="$PATH:/usr/local/bin"
-    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/.bashrc
+    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/`get_bash_conf_file`
+}
+
+function set_atlas_web_bin_path {
+    local atlas_web_bin_path="$1"
+    export PATH="$PATH:${atlas_web_bin_path}"
+    echo '[[ "$PATH" == *"'${atlas_web_bin_path}'"* ]] || export PATH="$PATH:'${atlas_web_bin_path}'"' >> ~/`get_bash_conf_file`
 }
 
 # clean up all files, but leave most recently modified <num_to_leave> files
@@ -223,6 +229,10 @@ export_project_root_env_var
 
 # Check NPM global path
 [[ "$PATH" == *"/usr/local/bin"* ]] && echo "Global NPM path is set" || set_global_npm_path
+
+# Check Atlas web path
+atlas_web_bin_path="`get_top_dir`/bin"
+[[ "$PATH" == *"${atlas_web_bin_path}"* ]] && echo "Atlas web project bin path is set" || set_atlas_web_bin_path "${atlas_web_bin_path}"
 
 # setup .cache subdir
 mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"
