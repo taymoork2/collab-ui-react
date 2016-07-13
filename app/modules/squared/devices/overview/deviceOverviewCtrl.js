@@ -299,63 +299,42 @@
       });
     }
 
-    deviceOverview.save = function () {
-      deviceOverview.saveInProcess = true;
+    deviceOverview.saveKem = function () {
       var device = deviceOverview.currentDevice;
-      if (KemService.isKEMAvailable(deviceOverview.currentDevice.product)) {
-        CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-          function (data) {
-            deviceOverview.currentDevice.kem = data;
-          }
-        ).catch(function () {
-          Notification.error($translate.instant('deviceOverviewPage.retrieveKemFail'));
-        });
-        var previousKemNumber = deviceOverview.currentDevice.kem.length;
-        var newKemNumber = deviceOverview.kemNumber.value;
-        var diff = newKemNumber - previousKemNumber;
-        var promiseList = [];
-        if (diff > 0) {
-          _.times(diff, function (n) {
-            promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
-          });
-        } else {
-          _.times(-diff, function (n) {
-            var module = _.findWhere(device.kem, {
-              index: '' + (previousKemNumber - n)
-            });
-            promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
-          });
+      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
+        function (data) {
+          deviceOverview.currentDevice.kem = data;
         }
-        promiseList.push(CmiKemService.getKEM(device.huronId));
-        $q.all(promiseList).then(
-          function (data) {
-            device.kem = data[data.length - 1];
-            deviceOverview.saveInProcess = false;
-          },
-          function () {
-            deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
-            Notification.error($translate.instant('deviceOverviewPage.deviceChangesFailed'));
-            deviceOverview.saveInProcess = false;
-          }
-        );
+      ).catch(function () {
+        Notification.error($translate.instant('deviceOverviewPage.retrieveKemFail'));
+      });
+      var previousKemNumber = deviceOverview.currentDevice.kem.length;
+      var newKemNumber = deviceOverview.kemNumber.value;
+      var diff = newKemNumber - previousKemNumber;
+      var promiseList = [];
+      if (diff > 0) {
+        _.times(diff, function (n) {
+          promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
+        });
+      } else {
+        _.times(-diff, function (n) {
+          var module = _.findWhere(device.kem, {
+            index: '' + (previousKemNumber - n)
+          });
+          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
+        });
       }
-
-      deviceOverview.saveTimeZoneAndWait();
-      deviceOverview.addTag();
-
-      deviceOverview.saveInProcess = false;
-      deviceOverview.form.$setPristine();
-      deviceOverview.form.$setUntouched();
-    };
-
-    deviceOverview.reset = function () {
-      if (KemService.isKEMAvailable(deviceOverview.currentDevice.product)) {
-        deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-      }
-      deviceOverview.selectedTimeZone = deviceOverview.timeZone;
-      deviceOverview.newTag = undefined;
-      deviceOverview.form.$setPristine();
-      deviceOverview.form.$setUntouched();
+      promiseList.push(CmiKemService.getKEM(device.huronId));
+      $q.all(promiseList).then(
+        function (data) {
+          device.kem = data[data.length - 1];
+          Notification.success($translate.instant('deviceOverviewPage.kemUpdated'));
+        },
+        function () {
+          deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
+          Notification.error($translate.instant('deviceOverviewPage.kemChangesFailed'));
+        }
+      );
     };
   }
 })();

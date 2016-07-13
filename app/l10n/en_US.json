@@ -2674,7 +2674,8 @@
       "two": "Two",
       "three": "Three"
     },
-    "deviceChangesFailed": "Failed to save device changes."
+    "kemUpdated": "Number of KEM updated.",
+    "kemChangesFailed": "Failed to save KEM changes."
   },
   "addDeviceWizard": {
     "newDevice": "New Device",

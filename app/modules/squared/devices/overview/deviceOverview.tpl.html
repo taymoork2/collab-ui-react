@@ -27,19 +27,9 @@
     </div>
   </cs-sp-container>
   <cs-sp-container ng-if="!deviceOverview.currentDevice.needsActivation">
-    <form novalidate name="deviceOverview.form" role="form">
-      <cs-sp-buttons ng-if="deviceOverview.form.$dirty">
-        <button cs-btn loading="deviceOverview.saveInProcess" class="btn btn--primary" ng-click="deviceOverview.save()"
-                type="submit">
-          <span translate="common.save"></span>
-        </button>
-        <button cs-btn ng-click="deviceOverview.reset()">
-          <span translate="common.cancel"></span>
-        </button>
-      </cs-sp-buttons>
-      <cs-sp-section>
-        <div class="overview">
-          <img
+    <cs-sp-section>
+      <div class="overview">
+        <img
             class="overviewImage"
             ng-if="deviceOverview.currentDevice.image"
             ng-src="{{deviceOverview.currentDevice.image}}"
@@ -71,23 +61,28 @@
               placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
               ng-model="deviceOverview.newTag"
               ng-show="deviceOverview.isAddingTag"
-              focus-on="deviceOverview.isAddingTag"/>
+              focus-on="deviceOverview.isAddingTag"
+              ng-blur="deviceOverview.addTag()"
+              ng-keyup="deviceOverview.addTagOnEnter($event)"/>
           </div>
         </div>
       </cs-sp-section>
-      <cs-sp-section ng-show="deviceOverview.isKEMAvailable">
-        <div class="section-title-row">
-          <span class="section-name" translate="deviceOverviewPage.kem"></span>
-        </div>
-        <div><p translate="deviceOverviewPage.kemDescription"></p></div>
-        <div class="dropdown-container">
-          <cs-select
-            name="kem" ng-model="deviceOverview.kemNumber" options="deviceOverview.kemOptions" 
-            labelfield="label" is-error="{{deviceOverview.isError}}" error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
-            valuefield="value">
-          </cs-select>
-        </div>
-      </cs-sp-section>
+
+        <cs-sp-section ng-show="deviceOverview.isKEMAvailable">
+          <div class="section-title-row">
+            <span class="section-name" translate="deviceOverviewPage.kem"></span>
+          </div>
+          <div><p translate="deviceOverviewPage.kemDescription"></p></div>
+          <div class="dropdown-container">
+            <cs-select
+              name="kem" ng-model="deviceOverview.kemNumber" options="deviceOverview.kemOptions"
+              labelfield="label" is-error="{{deviceOverview.isError}}" error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
+              valuefield="value"
+              on-change-fn="deviceOverview.saveKem()">
+            </cs-select>
+          </div>
+        </cs-sp-section>
+
       <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
         <div class="section-title-row">
           <span class="section-name" translate="deviceOverviewPage.issues"></span>
@@ -188,6 +183,7 @@
               is-disabled="deviceOverview.updatingTimeZone"
               labelfield="label"
               valuefield="id"
+              on-change-fn="deviceOverview.saveTimeZoneAndWait()"
               input-placeholder="deviceOverview.searchTimeZonePlaceholder"
               filter="true">
             </cs-select>
@@ -224,6 +220,5 @@
           </div>
         </div>
       </cs-sp-section>
-    </form>
   </cs-sp-container>
 </div>
