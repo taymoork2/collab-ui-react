@@ -102,17 +102,6 @@
       }
     }
 
-    /*function getClusters() {
-      MediaFusionAnalyticsService.getClusters(function (data, status) {
-        if (data.success) {
-          vm.clusterData = data;
-          _.each(data, function (clusterData) {
-            vm.clusterOptions.push(clusterData.name);
-          });
-          vm.clusterSelected = vm.clusterOptions[0];
-        }
-      });
-    }*/
     MediaClusterServiceV2.getAll()
       .then(function (clusters) {
         vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
