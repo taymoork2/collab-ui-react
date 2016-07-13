@@ -4042,7 +4042,7 @@
     "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
     "embedCodeWarnMsgContd": "to verify your domains.",
     "clickHere": "Click here",
-    "embedCodeFor": "{{embedCode}} for "
+    "embedCodeFor": "Embed Code for "
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
