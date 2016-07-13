@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($scope, $translate, Authinfo, FeatureToggleService, TrialService) {
+  function PlanReviewCtrl($scope, $log, $translate, Authinfo, FeatureToggleService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -94,6 +94,19 @@
 
       vm.confServices.services = Authinfo.getConferenceServices() || [];
       angular.forEach(vm.confServices.services, function (service) {
+        var siteUrl = service.license.siteUrl;
+        var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+        var siteAdminProtocol = "https://";
+
+        var siteAdminLink = "/wbxadmin/default.do?siteurl=";
+        //        if (service.license.siteUrl === "t30citestprov9.webex.com") {
+        //          isCISite = false;
+        service.license.siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + WebExUtilsFact.getSiteName(siteUrl);
+        //        }
+
+        service.license.isCI = isCISite;
+        $log.log("--------" + siteUrl + " " + service.license.isCI);
+
         if (service.label.indexOf('Meeting Center') != -1) {
           service.label = $translate.instant('onboardModal.meetingCenter') + ' ' + service.license.capacity;
         }

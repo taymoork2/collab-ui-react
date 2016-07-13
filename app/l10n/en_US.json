@@ -145,6 +145,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
+    "siteAdminUrl": "Sign-in to manage",
     "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
