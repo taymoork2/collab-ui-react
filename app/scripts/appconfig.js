@@ -991,7 +991,6 @@
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
                 var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1435,9 +1434,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1469,6 +1466,15 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
             }
           })
           .state('devices', {

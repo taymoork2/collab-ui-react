@@ -7,12 +7,7 @@
   </div>
 
   <div class="header-info">
-    <div class="header-info-wrap">
-      <sq-editable-input
-          sq-save="placeOverview.save(newText)"
-          ng-model="placeOverview.currentPlace.displayName">
-      </sq-editable-input>
-    </div>
+    <div class="header-info-wrap">{{$ctrl.currentPlace.displayName}}</div>
   </div>
 
 </cs-sp-header>

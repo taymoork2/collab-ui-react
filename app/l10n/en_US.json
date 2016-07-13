@@ -2250,7 +2250,7 @@
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or",
+    "or": "or {{ directoryNumber }}",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
@@ -4187,7 +4187,15 @@
     "reloadMessage": "Please try reloading the page"
   },
   "placesPage": {
-    "placeError": "Add Place failed."
+    "nameHeader": "Name",
+    "typeHeader": "Type",
+    "deviceHeader": "No. of Devices",
+    "actionHeader": "Actions",
+    "featuresHeader": "Features",
+    "placeAdd": "Add Place",
+    "placeError": "Add Place failed.",
+    "deletePlace": "Delete Place",
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
   },
   "linesPage": {
     "manageLines": "Numbers",
