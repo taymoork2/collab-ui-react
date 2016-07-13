@@ -89,10 +89,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('primary behaviors:', function () {
-    it('should set "daysLeft"', function () {
-      // no mechanism to mock current day, to guarantee a consistent period, so just check null
-      expect(controller.daysLeft).not.toBeNull();
-    });
 
     describe('canShow():', function () {
       it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty and the logged in user is not the partner', function () {
@@ -198,7 +194,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         controller.sendRequest().then(function (results) {
           expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);
           expect(Notification.success).toHaveBeenCalled();
-          expect(controller.hasRequested).toBe(true);
+
         });
       });
 
@@ -214,9 +210,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
         controller.sendRequest().then(function (results) {
           expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
-
           expect(Notification.error).toHaveBeenCalled();
-          expect(controller.hasRequested).toBe(true);
         });
       });
 
@@ -232,7 +226,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         controller.sendRequest().then(function (results) {
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
           expect(Notification.error).toHaveBeenCalled();
-          expect(controller.hasRequested).toBe(true);
         });
       });
     });

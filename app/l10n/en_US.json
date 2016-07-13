@@ -2473,8 +2473,8 @@
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
     "requestConfirmNotifyMsg": "Notification has been sent to all partner admins of your intent to purchase",
-    "requestConfirmPartialFailNotifyMsg": "Due to error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
-    "requestConfirmTotalFailNotifyMsg": "Due to error, notification of your intent to purchase has failed. Please contact your partner directly",
+    "requestConfirmPartialFailNotifyMsg": "Due to an error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
+    "requestConfirmTotalFailNotifyMsg": "Due to an error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial."
   },

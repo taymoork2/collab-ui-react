@@ -18,10 +18,8 @@
 
     vm.canShow = canShow;
     vm.daysLeft = undefined;
-    vm.hasRequested = false;
     vm.requestResult = vm.requestResultEnum.NOT_REQUESTED;
     vm.partnerAdmin = [];
-
     vm.sendRequest = sendRequest;
     vm._helpers = {
       getPartnerInfo: getPartnerInfo,
@@ -70,7 +68,7 @@
             vm.requestResult = vm.requestResultEnum.PARTIAL_FAILURE;
 
           }
-          vm.hasRequested = true;
+
         });
     }
 

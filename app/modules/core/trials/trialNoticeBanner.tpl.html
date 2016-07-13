@@ -1,4 +1,4 @@
-<div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.hasRequested, 'has-success':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.SUCCESS, 'has-fail-partial':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.PARTIAL_FAILURE, 'has-fail-total':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.TOTAL_FAILURE}">
+<div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.requestResult !== bannerCtrl.requestResultEnum.NOT_REQUESTED, 'has-success':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.SUCCESS, 'has-fail-partial':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.PARTIAL_FAILURE, 'has-fail-total':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.TOTAL_FAILURE}">
   <i class="icon icon-information" ng-show="requestResult===bannerCtrl.requestResultEnum.SUCCESS ||  brequestResult===bannerCtrl.requestResultEnum.NOT_REQUESTED"></i>
   <i class="icon icon-warning" ng-show="requestResult===bannerCtrl.requestResultEnum.PARTIAL_FAILURE || bannerCtrl.requestResultEnum.TOTAL_FAILURE "></i>
   <span class="msg--default">
