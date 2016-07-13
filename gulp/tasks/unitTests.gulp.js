@@ -158,8 +158,8 @@ function getFileListFor(module) {
   ];
 
   // convert list of file glob lists -> list of file streams
-  var fileStreams = _.map(fileGlobLists, function (gulpSrcArg) {
-    return gulp.src(gulpSrcArg, {
+  var fileStreams = _.map(fileGlobLists, function (fileGlobList) {
+    return gulp.src(fileGlobList, {
       read: false
     });
   });
