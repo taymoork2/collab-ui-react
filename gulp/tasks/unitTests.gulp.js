@@ -44,6 +44,8 @@ var runKarmaParallelModules = _.chain(modules)
 // Allow run-karma-parallel-<module> tasks to be run in individual processes
 ll.tasks(runKarmaParallelModules);
 
+var moduleSuffix = '';
+
 /*
  * unitTests.gulp.js:
  *
@@ -200,6 +202,11 @@ function createGulpKarmaConfigModule(module) {
   return function (done) {
     if (!args.nounit) {
       var fileList = getFileListFor(module);
+      moduleSuffix = '';
+      if (module === 'custom') {
+        var filesFrom = args['files-from'];
+        moduleSuffix = moduleSuffix + '.' + path.basename(filesFrom);
+      }
 
       return gulp
         .src(config.testFiles.karmaTpl)
@@ -214,7 +221,7 @@ function createGulpKarmaConfigModule(module) {
         .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({
-          basename: 'karma-unit-' + module,
+          basename: 'karma-unit-' + module + moduleSuffix,
           extname: '.js'
         }))
         .pipe($.jsbeautifier({
@@ -235,7 +242,7 @@ function createGulpRunKarmaModule(module) {
   return function (done) {
     if (!args.nounit) {
       var options = {
-        configFile: path.resolve(__dirname, '../../test/karma-unit-' + module + '.js')
+        configFile: path.resolve(__dirname, '../../test/karma-unit-' + module + moduleSuffix + '.js')
       };
       if (args.watch) {
         options.autoWatch = true;
