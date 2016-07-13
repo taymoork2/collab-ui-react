@@ -1,4 +1,5 @@
 @import "setupAssistantPages/setup-assistant-pages";
+@import "embed-code-screen.scss";
 
 .careChatSetup {
   @extend %content-header;
@@ -36,15 +37,5 @@
   .ct-confirmation-message {
     @include vr-spacing(mt, 0.75);
   }
-}
-.ct-embed-code-area {
-	width: 100%;
-	margin: 0;
-	.embed-code-textarea {
-		width: 100%;
-		resize: none;
-		color: $gray-dark-4;
-    font-family: monospace;
-	}
 }
 
