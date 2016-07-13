@@ -13,8 +13,8 @@
 	  </div>
 	</div>
 	<div class="modal-footer">
-	  <button class="btn btn-default embed-code-close-btn" id="closeEmbedCodeBtn"
-	          ng-click="$dismiss()">{{:: 'common.close' | translate }}</button>
+	  <button class="btn btn-default" id="closeEmbedCodeBtn"
+	          ng-click="$dismiss()" translate="common.close"></button>
 	  <a id="downloadChatCodeTxt" download="Chat_Code_Snippet" ng-click="embedCodeCtrl.downloadEmbedCode(); $dismiss();">
 	  	<button class="btn btn--primary" id="copyEmbedCodeBtn" focus-on translate="careChatTpl.downloadEmbedCode"></button>
 	  </a>

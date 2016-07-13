@@ -8,7 +8,7 @@
     .service('CTService', CTService);
 
   /* @ngInject */
-  function CTService($http, $translate, $modal, Authinfo, BrandService, TimezoneService, UrlConfig) {
+  function CTService($http, $modal, $translate, Authinfo, BrandService, TimezoneService, UrlConfig) {
     var service = {
       getDays: getDays,
       getLogo: getLogo,
@@ -44,10 +44,10 @@
         "  bubbleScript.orgId = '" + orgId + "';\n" +
         "  bubbleScript.templateId = '" + templateId + "';\n" +
         "  bubbleScript.src = '" + appName + "/bubble.js';\n" +
-        "  bubbleScript.type = \"text/javascript\";\n" +
-        "  bubbleScript.setAttribute(\"charset\", \"utf-8\");\n" +
+        "  bubbleScript.type = 'text/javascript';\n" +
+        "  bubbleScript.setAttribute('charset', 'utf-8');\n" +
         "  e.parentNode.insertBefore(bubbleScript, e);\n" +
-        "  })(document, \"script\");\n" +
+        "  })(document, 'script');\n" +
         "</script>";
     }
 
