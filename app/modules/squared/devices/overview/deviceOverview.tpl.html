@@ -71,9 +71,7 @@
               placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
               ng-model="deviceOverview.newTag"
               ng-show="deviceOverview.isAddingTag"
-              focus-on="deviceOverview.isAddingTag"
-              ng-blur="deviceOverview.addTag()"
-              ng-keyup="deviceOverview.addTagOnEnter($event)"/>
+              focus-on="deviceOverview.isAddingTag"/>
           </div>
         </div>
       </cs-sp-section>
@@ -84,9 +82,9 @@
         <div><p translate="deviceOverviewPage.kemDescription"></p></div>
         <div class="dropdown-container">
           <cs-select
-              name="kem"   ng-model="deviceOverview.kemNumber"   options="deviceOverview.kemOptions"  
+            name="kem" ng-model="deviceOverview.kemNumber" options="deviceOverview.kemOptions" 
             labelfield="label" is-error="{{deviceOverview.isError}}" error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
-            valuefield="value"  >
+            valuefield="value">
           </cs-select>
         </div>
       </cs-sp-section>
@@ -190,7 +188,6 @@
               is-disabled="deviceOverview.updatingTimeZone"
               labelfield="label"
               valuefield="id"
-              on-change-fn="deviceOverview.saveTimeZoneAndWait()"
               input-placeholder="deviceOverview.searchTimeZonePlaceholder"
               filter="true">
             </cs-select>

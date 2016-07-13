@@ -16,7 +16,7 @@
       return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sipendpoints/:sipEndpointId/addonmodules', {
         customerId: '@customerId',
         sipEndpointId: '@sipEndpointId'
-      }).get({
+      }).query({
         customerId: Authinfo.getOrgId(),
         sipEndpointId: sipEndpointId
       }).$promise;
