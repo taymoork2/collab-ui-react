@@ -4,6 +4,19 @@
   /* @ngInject */
   function CareReportsController($translate) {
     var vm = this;
+
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    vm.currentFilter = vm.allReports;
+    vm.resetCards = resetCards;
+
+    function resetCards(filter) {
+      if (vm.currentFilter !== filter) {
+        vm.currentFilter = filter;
+      }
+    }
+
     vm.timeFilter = null;
     var options = ['today', 'yesterday', 'week', 'month', 'threeMonths'];
     vm.timeOptions = _.map(options, function (name, i) {

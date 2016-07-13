@@ -17,7 +17,7 @@
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
-    var currentFilter = vm.allReports;
+    vm.currentFilter = vm.allReports;
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
@@ -243,7 +243,7 @@
     }
 
     function resetCards(filter) {
-      if (currentFilter !== filter) {
+      if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
         vm.displayQuality = false;
         if (filter === vm.allReports || filter === vm.engagement) {
@@ -254,7 +254,7 @@
         }
         resizeCards();
         delayedResize();
-        currentFilter = filter;
+        vm.currentFilter = filter;
       }
     }
 

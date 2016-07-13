@@ -8,54 +8,22 @@
     <div ng-switch-when="metrics">
       <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
     </div>
+    <div ng-switch-when="care">
+      <div ng-controller="CareReportsController as nav" ng-include="'modules/sunlight/reports/careReports.tpl.html'"></div>
+    </div>
     <div ng-switch-default>
       <!-- Sub Header -->
       <cs-page-sub-header>
         <cs-page-sub-header-left>
-          <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-            <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-              <span class="name" ng-class="{'active' : nav.displayEngagement && nav.displayQuality}" translate="reportsPage.all"></span>
-              <span class="name" ng-class="{'active' : nav.displayEngagement && !nav.displayQuality}" translate="reportsPage.engagement"></span>
-              <span class="name" ng-class="{'active' : !nav.displayEngagement && nav.displayQuality}" translate="reportsPage.quality"></span>
-              <i class="icon icon-chevron-down"></i>
-            </div>
-            <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
-              <li class="filter" ng-class="{'active' : nav.displayEngagement && nav.displayQuality}" ng-click="nav.resetCards(nav.allReports);">
-                <a id="allReports"  >
-                  <span class="name" translate="reportsPage.all"></span>
-                </a>
-              </li>
-              <li class="filter" ng-class="{'active' : nav.displayEngagement && !nav.displayQuality}" ng-click="nav.resetCards(nav.engagement);">
-                <a id="engagementReports" >
-                  <span class="name" translate="reportsPage.engagement"></span>
-                </a>
-              </li>
-              <li class="filter" ng-class="{'active' : !nav.displayEngagement && nav.displayQuality}" ng-click="nav.resetCards(nav.quality);">
-                <a id="qualityReports" >
-                  <span class="name" translate="reportsPage.quality"></span>
-                </a>
-              </li>
-            </ul>
-          </div>
+          <reports-filter></reports-filter>
         </cs-page-sub-header-left>
         <cs-page-sub-header-right>
-          <div ng-switch on="nav.tab">
-            <div ng-switch-when="care" ng-controller="CareReportsController as nav">
-              <cs-select id="timeFilterCare" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
-            </div>
-            <div ng-switch-default>
-              <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
-            </div>
-          </div>
+          <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
         </cs-page-sub-header-right>
       </cs-page-sub-header>
 
       <!-- Reports -->
       <div ng-switch on="nav.tab">
-        <div ng-switch-when="care" class="content-container">
-          <cs-card-layout>
-          </cs-card-layout>
-        </div>
         <!-- WebEx reports content -->
         <div ng-switch-when="webex">
           <!-- webex siteUrl dropdown list -->
