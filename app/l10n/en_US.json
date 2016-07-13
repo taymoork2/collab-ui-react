@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -3652,6 +3653,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
+    "siteAdminUrl": "Sign-in to manage",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
@@ -4442,7 +4444,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",
