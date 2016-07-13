@@ -1,62 +1,46 @@
 'use strict';
 
 describe('Template: Example', function () {
-  var $compile, $scope, $templateCache, $controller, controller;
-  var view;
   var DISABLED = 'disabled';
   var READ_ONLY = 'readonly';
   var INCREMENT_BUTTON = '#increment-button';
   var COUNT_INPUT = '#count-input';
 
-  beforeEach(module('AtlasExample'));
-  beforeEach(inject(dependencies));
-  beforeEach(compileView);
-
-  function dependencies(_$compile_, $rootScope, _$templateCache_, _$controller_) {
-    $compile = _$compile_;
-    $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
-    $controller = _$controller_;
-  }
-
-  function compileView() {
-    var template = $templateCache.get('examples/unit/example.tpl.html');
-
-    controller = $controller('ExampleController', {
-      $scope: $scope
+  function init() {
+    this.initModules('AtlasExample');
+    this.compileView('ExampleController', 'examples/unit/example.tpl.html', {
+      controllerAs: 'example'
     });
-    $scope.example = controller;
-
-    view = $compile(angular.element(template))($scope);
-    $scope.$apply();
   }
+
+  beforeEach(init);
 
   describe('init', function () {
     it('should have an enabled increment button', function () {
-      expect(view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(false);
+      expect(this.view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(false);
     });
 
     it('should have 0 count', function () {
-      expect(view.find(COUNT_INPUT).val()).toBe('0');
+      expect(this.view.find(COUNT_INPUT).val()).toBe('0');
     });
 
     it('should have a readonly count input', function () {
-      expect(view.find(COUNT_INPUT).prop(READ_ONLY)).toBe(true);
+      expect(this.view.find(COUNT_INPUT).prop(READ_ONLY)).toBe(true);
     });
   });
 
   describe('increment button', function () {
     it('should increment the count', function () {
-      view.find(INCREMENT_BUTTON).click();
-      expect(view.find(COUNT_INPUT).val()).toBe('1');
+      this.view.find(INCREMENT_BUTTON).click();
+      expect(this.view.find(COUNT_INPUT).val()).toBe('1');
     });
 
     it('should become disabled after incrementing twice', function () {
-      view.find(INCREMENT_BUTTON).click();
-      expect(view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(false);
-      view.find(INCREMENT_BUTTON).click();
-      expect(view.find(COUNT_INPUT).val()).toBe('2');
-      expect(view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(true);
+      this.view.find(INCREMENT_BUTTON).click();
+      expect(this.view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(false);
+      this.view.find(INCREMENT_BUTTON).click();
+      expect(this.view.find(COUNT_INPUT).val()).toBe('2');
+      expect(this.view.find(INCREMENT_BUTTON).prop(DISABLED)).toBe(true);
     });
   });
 });

@@ -46,7 +46,9 @@
         </div>
         <div class="large-7 columns details-value">
           <span ng-repeat="status in helpdeskUserCtrl.user.statuses" style="margin-right: 1rem;" >{{status | translate}}{{$last ? '' : ', '}}</span>
-          <button class="action secondary small details-button" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"  ng-if="helpdeskUserCtrl.resendInviteEnabled" translate="helpdesk.resend"></button>
+          <span>
+            <a ng-click="helpdeskUserCtrl.resendInviteEmail()" ng-if="helpdeskUserCtrl.resendInviteEnabled">{{'helpdesk.resend' | translate}}</a>
+          </span>
         </div>
       </div>
 

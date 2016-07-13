@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core').service('WizardFactory', WizardFactory);
+  angular.module('Squared').service('WizardFactory', WizardFactory);
 
   function WizardFactory($injector) {
     function create(state) {

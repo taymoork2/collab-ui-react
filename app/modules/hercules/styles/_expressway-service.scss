@@ -4,9 +4,19 @@
   @extend %page-background-white;
 }
 
+$user-statuses-bar-height: 7.25rem;
 .expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
+
+  &.with-user-statuses-bar {
+    // we have to override what `%grid-subheader` is doing
+    // That's a bit ugly, the toolkit should not have to enforce heights like this…
+    & .grid-container,
+    & .gridStyle {
+      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + #{$page-sub-header-height} + #{$user-statuses-bar-height}));
+    }
+  }
 }
 
 .hercules.call-service {
@@ -191,6 +201,7 @@ Special stuff currently used for out own mail input field...
   display: flex;
   padding: 2rem 1.25rem;
   border-bottom: 1px solid $gray-light-3;
+  height: $user-statuses-bar-height;
 }
 .user-statuses-card {
   display: flex;

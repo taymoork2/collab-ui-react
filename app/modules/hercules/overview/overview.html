@@ -1,5 +1,6 @@
 <div ng-if="exp.serviceEnabled === true || exp.featureToggled">
-  <div class="expressway-service hercules hercules-fix-paragraphs">
+  <div class="expressway-service hercules hercules-fix-paragraphs"
+       ng-class="{'with-user-statuses-bar': exp.servicesId[0] !== 'squared-fusion-mgmt'}">
     <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs"></cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-left>
