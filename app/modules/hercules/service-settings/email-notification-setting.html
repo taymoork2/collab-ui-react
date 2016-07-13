@@ -1,6 +1,6 @@
-<h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
+<h5 translate="hercules.settings.emailNotificationsHeading"></h5>
 <h6><strong translate="hercules.settings.emailAdministratorHeading"></strong></h6>
-<p><span translate="{{'hercules.settings.emailAdministratorNotification'}}"></span><br>
+<p><span translate="hercules.settings.emailAdministratorNotification"></span><br>
 </p>
 
 <tags-input add-on-blur="true"
@@ -15,12 +15,12 @@
 <span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
 
 <h6><strong translate="hercules.settings.emailUserHeading"></strong></h6>
-<p><span translate="{{'hercules.settings.emailUserNotification'}}"></span><br>
+<p><span translate="hercules.settings.emailUserNotification"></span><br>
 </p>
 
-<cs-toggle-switch ng-model="expresswayServiceSettings.disableEmailSendingToUser"
-                  ng-click="expresswayServiceSettings.setDisableEmailSendingToUser()"
-                  toggle-id="toggleDisableEmailSendingToUser"
-                  name="toggleDisableEmailSendingToUser"
+<cs-toggle-switch ng-model="expresswayServiceSettings.enableEmailSendingToUser"
+                  ng-click="expresswayServiceSettings.setEnableEmailSendingToUser()"
+                  toggle-id="toggleEnableEmailSendingToUser"
+                  name="toggleEnableEmailSendingToUser"
                   size="small">
 </cs-toggle-switch>

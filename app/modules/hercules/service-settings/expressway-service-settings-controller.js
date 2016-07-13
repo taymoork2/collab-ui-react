@@ -97,26 +97,25 @@
       }
     };
 
-    vm.disableEmailSendingToUser = false;
-    ServiceDescriptor.getDisableEmailSendingToUser()
-      .then(function (settings) {
-        vm.disableEmailSendingToUser = !(settings.calSvcDisableEmailSendingToEndUser);
-      });
+    function init() {
+      ServiceDescriptor.getDisableEmailSendingToUser()
+        .then(function (calSvcDisableEmailSendingToEndUser) {
+          vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
+        });
+    }
 
-    vm.toggleDisableEmailSendingToUser = _.debounce(function (value) {
-      ServiceDescriptor.setDisableEmailSendingToUser(value, function (err) {
-        if (err) {
-          return XhrNotificationService.notify(err);
-        }
-      });
+    vm.enableEmailSendingToUser = false;
+    init();
 
+    vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
+      ServiceDescriptor.setDisableEmailSendingToUser(value);
     }, 2000, {
       'leading': true,
       'trailing': false
     });
 
-    vm.setDisableEmailSendingToUser = function () {
-      vm.toggleDisableEmailSendingToUser(vm.disableEmailSendingToUser);
+    vm.setEnableEmailSendingToUser = function () {
+      vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
     vm.disableService = function (serviceId) {

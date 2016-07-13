@@ -6,7 +6,7 @@
     .service('ServiceDescriptor', ServiceDescriptor);
 
   /* @ngInject */
-  function ServiceDescriptor($http, $q, UrlConfig, Authinfo, Orgservice) {
+  function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice, XhrNotificationService) {
     var services = function (callback, includeStatus) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
@@ -86,35 +86,23 @@
     };
 
     var getDisableEmailSendingToUser = function () {
-      return $q(function (resolve, reject) {
-        Orgservice.getOrg(function (data, status) {
-          if (data.success) {
-            var settings = data.orgSettings;
-            if (!_.isEmpty(settings)) {
-              resolve({
-                'calSvcDisableEmailSendingToEndUser': settings.calSvcDisableEmailSendingToEndUser
-              });
-            } else {
-              reject();
-            }
-          } else {
-            reject();
+      return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+        .then(function (response) {
+          var settings = response.data.orgSettings;
+          if (!_.isEmpty(settings)) {
+            return settings.calSvcDisableEmailSendingToEndUser;
           }
-        }, Authinfo.getOrgId(), true);
-      });
+        });
     };
 
-    var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser, callback) {
+    var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser) {
       var settings = {
-        'calSvcDisableEmailSendingToEndUser': (calSvcDisableEmailSendingToEndUser ? true : false)
+        calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
       };
 
-      Orgservice.setOrgSettings(Authinfo.getOrgId(), settings)
-        .then(function () {
-          callback(null);
-        })
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings)
         .catch(function () {
-          callback("error in setting disable email sending for Org.");
+          return XhrNotificationService.notify("error in setting disable email sending for Org.");
         });
     };
 
