@@ -45,7 +45,7 @@
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
     }
 
-    vm.friendlyActivationCode = formatActivationCode(vm.wizardData.activationCode);
+    vm.friendlyActivationCode = formatActivationCode(vm.wizardData.code.activationCode);
 
     vm.activateEmail = function () {
       vm.showEmail = true;
@@ -102,7 +102,7 @@
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
-        oneTimePassword: vm.wizardData.activationCode,
+        oneTimePassword: vm.wizardData.code.activationCode,
         expiresOn: vm.expiresOn,
         userId: vm.wizardData.cisUuid,
         customerId: vm.wizardData.organizationId

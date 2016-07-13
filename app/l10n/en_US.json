@@ -3853,7 +3853,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },
-
+  "placesPage": {
+    "placeError": "Add Place failed."
+  },
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
