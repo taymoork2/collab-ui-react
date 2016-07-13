@@ -43,7 +43,8 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
 gulp.task('eslint', [
   'eslint:tooling',
   'eslint:app',
-  'eslint:e2e'
+  'eslint:e2e',
+  'eslint:examples'
 ]);
 
 gulp.task('eslint:tooling', function () {
@@ -62,6 +63,14 @@ gulp.task('eslint:app', function () {
     config.appFiles.js
   );
   messageLogger('Running ESLint on the app files', files);
+  return createESLintTask(files);
+});
+
+gulp.task('eslint:examples', function () {
+  var files = [].concat(
+    config.examples + '/**/*.js'
+  );
+  messageLogger('Running ESLint on the example files', files);
   return createESLintTask(files);
 });
 

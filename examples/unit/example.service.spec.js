@@ -1,29 +1,26 @@
 'use strict';
 
 describe('Service: ExampleService', function () {
-  var ExampleService, $httpBackend;
-
-  beforeEach(module('AtlasExample'));
-  beforeEach(inject(dependencies));
-  afterEach(verifyHttpBackend);
-
-  function dependencies(_$httpBackend_, _ExampleService_) {
-    $httpBackend = _$httpBackend_;
-    ExampleService = _ExampleService_;
+  function init() {
+    this.initModules('AtlasExample');
+    this.injectDependencies('$httpBackend', 'ExampleService');
   }
 
   function verifyHttpBackend() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    this.$httpBackend.verifyNoOutstandingExpectation();
+    this.$httpBackend.verifyNoOutstandingRequest();
   }
+
+  beforeEach(init);
+  afterEach(verifyHttpBackend);
 
   describe('getAndAddSomething()', function () {
     it('should make a parametrized GET and modify the response', function () {
-      $httpBackend.expectGET('/example/test').respond({
+      this.$httpBackend.expectGET('/example/test').respond({
         name: 'exampleTest'
       });
 
-      ExampleService.getAndAddSomething('test')
+      this.ExampleService.getAndAddSomething('test')
         .then(function (response) {
           expect(response).toEqual(jasmine.objectContaining({
             name: 'exampleTest',
@@ -31,18 +28,18 @@ describe('Service: ExampleService', function () {
           }));
         });
 
-      $httpBackend.flush();
+      this.$httpBackend.flush();
     });
 
     it('should make a parametrized GET and return empty object on error', function () {
-      $httpBackend.expectGET('/example/test').respond(500);
+      this.$httpBackend.expectGET('/example/test').respond(500);
 
-      ExampleService.getAndAddSomething('test')
+      this.ExampleService.getAndAddSomething('test')
         .then(function (response) {
           expect(response).toEqual({});
         });
 
-      $httpBackend.flush();
+      this.$httpBackend.flush();
     });
   });
 });
