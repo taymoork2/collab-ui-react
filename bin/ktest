@@ -68,6 +68,8 @@ if [ -s "$flist" ]; then
 fi
 
 # tidy up
+custom_karma_conf_file="${WX2_ADMIN_WEB_CLIENT_HOME}/test/karma-unit-custom.$(basename "$flist").js"
+rm -f "$custom_karma_conf_file"
 rm -f "$flist"
 
 # pass back exit status from gulp command
