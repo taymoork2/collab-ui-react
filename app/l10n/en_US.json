@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -373,6 +374,10 @@
     "activeUsers": "Active Users",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "today": "Today",
+    "today2": "today",
+    "yesterday": "Yesterday",
+    "yesterday2": "yesterday",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -1715,6 +1720,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
     "tosTermsAndConditions": "terms and conditions"
@@ -1810,7 +1816,10 @@
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
-    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuAddDigit": "Add an input digit",
+    "phoneMenuAnotherDigit": "Add another input digit",
+    "phoneSubmenuAddDigit": "Add an input digit to submenu",
+    "phoneSubmenuAnotherDigit": "Add another input digit to submenu",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
     "phoneMenuRepeatContinue": "Repeat and Continue To Next Step",
@@ -3649,6 +3658,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
+    "siteAdminUrl": "Sign-in to manage",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
@@ -3847,7 +3857,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },
-
+  "placesPage": {
+    "placeError": "Add Place failed."
+  },
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -4031,7 +4043,12 @@
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent"
+    "chattingMessage": "You are chatting with our agent",
+    "downloadEmbedCode": "Download Embed Code",
+    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embedCodeWarnMsgContd": "to verify your domains.",
+    "clickHere": "Click here",
+    "embedCodeFor": "Embed Code for "
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -4439,7 +4456,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",

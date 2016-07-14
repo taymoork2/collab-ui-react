@@ -16,9 +16,8 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
-
     if (vm.wizardData.deviceType === 'huron') {
-      OtpService.getQrCodeUrl(vm.wizardData.activationCode).then(function (qrcode) {
+      OtpService.getQrCodeUrl(vm.wizardData.code.activationCode).then(function (qrcode) {
         var arrayData = '';
         for (var i in Object.keys(qrcode)) {
           if (qrcode.hasOwnProperty(i)) {
@@ -46,7 +45,7 @@
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
     }
 
-    vm.friendlyActivationCode = formatActivationCode(vm.wizardData.activationCode);
+    vm.friendlyActivationCode = formatActivationCode(vm.wizardData.code.activationCode);
 
     vm.activateEmail = function () {
       vm.showEmail = true;
@@ -103,7 +102,7 @@
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
-        oneTimePassword: vm.wizardData.activationCode,
+        oneTimePassword: vm.wizardData.code.activationCode,
         expiresOn: vm.expiresOn,
         userId: vm.wizardData.cisUuid,
         customerId: vm.wizardData.organizationId

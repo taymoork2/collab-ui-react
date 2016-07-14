@@ -1,16 +1,16 @@
 <aa-say-message aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-header="true"></aa-say-message>
 <div class="aa-phone-menu">
   <div class="panel">
-    <div ng-if="aaPhoneMenu.selectedActions.length">
-      <div class="row aa-pm-vertical-line" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
-        <div class="small-3 columns">
+    <div ng-if="aaPhoneMenu.selectedActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
+      <div class="row">
+        <div class="small-2 columns">
           <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaPhoneMenu.selectPlaceholder" on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
           </cs-select>
         </div>
-        <div class="small-8 columns">
+        <div class="small-9 columns">
           <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
-          <div ng-switch="keyAction.action.name" class="aa-key-action">
+          <div ng-switch="keyAction.action.name" class="aa-pm-action">
             <aa-route-to-user ng-switch-when="phoneMenuRouteUser" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-user ng-switch-when="phoneMenuRouteMailbox" voicemail=true aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
@@ -18,20 +18,23 @@
             <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
             <aa-route-to-ext-num ng-switch-when="phoneMenuRouteToExtNum" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-ext-num>
             <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
-            <aa-submenu ng-switch-when="phoneMenuPlaySubmenu" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-submenu>
+            <!--- submenu is not handled by switch statement; see ng-if on row below -->
             <aa-route-to-queue ng-switch-when="phoneMenuRouteQueue" aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-queue>
-         </div>
+          </div>
         </div>
         <div class="small-1 columns">
-          <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></span>
+          <i class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></i>
+        </div>
+      </div>
+      <div class="row" ng-if="keyAction.action.name === 'phoneMenuPlaySubmenu'">
+        <div class="small-10 small-offset-2 columns">
+          <aa-submenu aa-schedule="{{schedule}}" aa-menu-id="{{aaPhoneMenu.menuId}}" aa-index="index" aa-key-index="{{$index}}"></aa-submenu>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div ng-show="aaPhoneMenu.selectedActions.length < 12" class="small-12 columns">
-        <a class="aa-pm-primary-text aa-pm-add" ng-click="aaPhoneMenu.addKeyAction()">
-          <i name="aa-phone-menu-add-action" class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
-      </div>
+    <div class="row" ng-if="aaPhoneMenu.selectedActions.length < 12">
+      <a class="aa-pm-add-text" ng-click="aaPhoneMenu.addKeyAction()">
+        <i name="aa-phone-menu-add-action" class="icon icon-plus-circle"></i>{{(aaPhoneMenu.selectedActions.length === 0 ?  'autoAttendant.phoneMenuAddDigit' : 'autoAttendant.phoneMenuAnotherDigit') | translate }}</a>
     </div>
   </div>
   <!-- timeout/invalid action -->

@@ -25,7 +25,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t31RegressionTestAdmin',
+          'wbx-t31BTSTestAdmin-Reports-Configure',
           webExCommon.BTS4.testAdminUsername,
           webExCommon.BTS4.testAdminPassword,
           webExCommon.BTS4.siteUrl
@@ -45,7 +45,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t30RegressionTestAdmin',
+          'wbx-t30BTSTestAdmin-Reports-Configure',
           webExCommon.BTS1.testAdminUsername,
           webExCommon.BTS1.testAdminPassword,
           webExCommon.BTS1.siteUrl
@@ -73,9 +73,9 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
       it('should click on reports icon for ' + webExCommon.BTS4.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.t31ReportsCog);
+          utils.click(webExCommon.BTS4.reportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
-          utils.wait(webExCommon.t31CardsSectionId);
+          utils.wait(webExCommon.BTS4.cardSectionId);
         }
       });
     } else {
@@ -88,9 +88,9 @@ while (1 >= webExCommon.testInfo.describeCount) {
 
       it('should click on reports icon for ' + webExCommon.BTS1.siteUrl + ' and navigate to webex reports index', function () {
         if (setup) {
-          utils.click(webExCommon.t30ReportsCog);
+          utils.click(webExCommon.BTS1.reportsCog);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
-          utils.wait(webExCommon.t30CardsSectionId);
+          utils.wait(webExCommon.BTS1.cardSectionId);
         }
       });
     }
@@ -106,7 +106,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
         if (setup) {
           utils.click(webExSiteReports.webexReportsLink);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
-          utils.wait(webExCommon.t31CardsSectionId);
+          utils.wait(webExCommon.BTS4.cardSectionId);
         }
       });
     } else {
@@ -114,7 +114,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
         if (setup) {
           utils.click(webExSiteReports.webexReportsLink);
           utils.wait(webExSiteReports.webexSiteReportsPanel);
-          utils.wait(webExCommon.t30CardsSectionId);
+          utils.wait(webExCommon.BTS1.cardSectionId);
         }
       });
     }

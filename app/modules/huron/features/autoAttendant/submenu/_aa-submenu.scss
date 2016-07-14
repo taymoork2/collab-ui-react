@@ -1,0 +1,64 @@
+.aa-submenu-header {
+  @include vr-spacing(pr, .5);
+  @include vr-spacing(mb, 0);
+
+  & textarea {
+    @extend %aa-menu-textarea;
+    @include vr-spacing(mb, 0);
+  }
+
+  & .control-label {
+    @extend %aa-menu-control-label;
+  }
+}
+
+.aa-submenu {
+  $aa-sm-action-max-width: 260px;
+  width: 100%;
+
+  & .row:first-child {
+    @include vr-spacing(pt, 1);
+  }
+
+  & .aa-sm-collapse-left {
+    @include vr-spacing(pl, 0);
+  }
+
+  & .aa-sm-action {
+    @extend %aa-menu-actions;
+    max-width: $aa-sm-action-max-width;
+  }
+
+  & .aa-sm-vertical-line {
+    @extend %aa-menu-vertical-line;
+    &:before {
+      left: -.9rem;
+    }
+  }
+
+  & .aa-sm-vertical-line-half {
+    @extend %aa-menu-vertical-line;
+    &:before {
+      left: -.9rem;
+      height: 50%;
+    }
+    @include vr-spacing(pb, 0);
+  }
+
+  & .aa-sm-key-select, .aa-sm-action-select {
+    @extend %aa-menu-select;
+  }
+
+  & .aa-sm-key-select {
+    @include aa-menu-key-button($color-primary-darker);
+  }
+
+  & .aa-sm-action-select {
+    max-width: $aa-sm-action-max-width;
+  }
+
+  & .aa-sm-add-text {
+    @extend %aa-menu-add-text;
+    @include vr-spacing(ml, .25);
+  }
+}
