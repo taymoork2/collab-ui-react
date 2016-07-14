@@ -13,6 +13,8 @@
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
+      atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasPinSettings: 'atlas-pin-settings',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',

@@ -2,7 +2,7 @@ namespace globalsettings {
 
   interface RetentionResponse {
     data: {
-      msgDataRetention:string
+      sparkDataRetentionDays:string
     }
   }
 
@@ -47,8 +47,8 @@ namespace globalsettings {
 
       this.RetentionService.getRetention(this.orgId)
         .then((response) => {
-          var msgDataRetention = response.msgDataRetention || this.RETENTION_DEFAULT;
-          var retentionGuiOption = _.find(this.retentionOptions, {value: msgDataRetention});
+          var sparkDataRetentionDays = response.sparkDataRetentionDays || this.RETENTION_DEFAULT;
+          var retentionGuiOption = _.find(this.retentionOptions, {value: sparkDataRetentionDays});
           if (retentionGuiOption) {
             this.initialRetention = retentionGuiOption;
             this.selectedRetention = retentionGuiOption;
