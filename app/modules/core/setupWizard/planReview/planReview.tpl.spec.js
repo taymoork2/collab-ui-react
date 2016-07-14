@@ -7,6 +7,7 @@ describe('Template: planReview', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
+  beforeEach(module('WebExApp'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
@@ -25,9 +26,8 @@ describe('Template: planReview', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(compileView);
-  beforeEach(WebExUtilsFact);
 
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
