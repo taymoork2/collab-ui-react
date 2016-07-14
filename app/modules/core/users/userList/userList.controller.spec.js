@@ -69,8 +69,9 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'csvEnhancementGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
 
   }));
 
