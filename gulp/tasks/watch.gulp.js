@@ -146,7 +146,7 @@ gulp.task('karma-config-watch', function () {
     config.vendorFiles.js,
     config.testFiles.js,
     config.testFiles.notTs,
-    config.testFiles.app,
+    config.testFiles.app.all,
     config.testFiles.global,
     testFiles
   );

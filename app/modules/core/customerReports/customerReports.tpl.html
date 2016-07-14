@@ -1,65 +1,54 @@
 <!-- dont show if there is only one option, aka if webex does not show -->
 <div class="customer-reports">
+  <!-- Header - Common to all tabs -->
   <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
-  <div ng-if='nav.showMFMetrics'>
-    <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
-  </div>
-  <cs-page-sub-header ng-if="nav.showEngagement">
-    <cs-page-sub-header-left>
-      <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-class="{'active' : nav.displayEngagement && nav.displayQuality}" translate="reportsPage.all"></span>
-          <span class="name" ng-class="{'active' : nav.displayEngagement && !nav.displayQuality}" translate="reportsPage.engagement"></span>
-          <span class="name" ng-class="{'active' : !nav.displayEngagement && nav.displayQuality}" translate="reportsPage.quality"></span>
-          <i class="icon icon-chevron-down"></i>
-        </div>
-        <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
-          <li class="filter" ng-class="{'active' : nav.displayEngagement && nav.displayQuality}" ng-click="nav.resetCards(nav.allReports);">
-           <a id="allReports"  >
-              <span class="name" translate="reportsPage.all"></span>
-            </a>
-          </li>
-          <li class="filter" ng-class="{'active' : nav.displayEngagement && !nav.displayQuality}" ng-click="nav.resetCards(nav.engagement);">
-             <a id="engagementReports" >
-              <span class="name" translate="reportsPage.engagement"></span>
-            </a>
-          </li>
-          <li class="filter" ng-class="{'active' : !nav.displayEngagement && nav.displayQuality}" ng-click="nav.resetCards(nav.quality);">
-            <a id="qualityReports" >
-              <span class="name" translate="reportsPage.quality"></span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </cs-page-sub-header-left>
-    <cs-page-sub-header-right>
-      <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
-    </cs-page-sub-header-right>
-  </cs-page-sub-header>
- <div ng-if='!nav.showMFMetrics'>  
-  <div class="content-container">
-    <div class="row" ng-if='nav.showEngagement'>
-      <cs-card-layout>
-        <uc-avg-rooms></uc-avg-rooms>
-        <uc-active-user-customer></uc-active-user-customer>
-        <uc-files-shared></uc-files-shared>
-        <uc-devices-customer></uc-devices-customer>
-        <uc-media-quality-customer></uc-media-quality-customer>
-        <uc-call-metrics-customer></uc-call-metrics-customer>
-      </cs-card-layout>
+
+  <!-- Sub Header and Reports -->
+  <div ng-switch on="nav.tab">
+    <div ng-switch-when="metrics">
+      <div ng-controller="MediaServiceMetricsContoller as nav" ng-include="'modules/mediafusion/media-service/metrics-graph-report/mediaServiceMetricsReports.tpl.html'"></div>
     </div>
-    <!-- WebEx reports content -->
-    <div ng-if="nav.showWebexReports">
-      <!-- webex siteUrl dropdown list -->
-      <div class="row" ng-show="webexOptions.length > 1">
-        <div class="large-4 columns webexPage">
-          <cs-select ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()">
-          </cs-select>
+    <div ng-switch-when="care">
+      <div ng-controller="CareReportsController as nav" ng-include="'modules/sunlight/reports/careReports.tpl.html'"></div>
+    </div>
+    <div ng-switch-default>
+      <!-- Sub Header -->
+      <cs-page-sub-header>
+        <cs-page-sub-header-left>
+          <reports-filter></reports-filter>
+        </cs-page-sub-header-left>
+        <cs-page-sub-header-right>
+          <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+        </cs-page-sub-header-right>
+      </cs-page-sub-header>
+
+      <!-- Reports -->
+      <div ng-switch on="nav.tab">
+        <!-- WebEx reports content -->
+        <div ng-switch-when="webex">
+          <!-- webex siteUrl dropdown list -->
+          <div class="row" ng-show="webexOptions.length > 1">
+            <div class="large-4 columns webexPage">
+              <cs-select ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()">
+              </cs-select>
+            </div>
+          </div>
+          <!-- webex site reports index -->
+          <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
+        </div>
+        <div ng-switch-default class="content-container">
+          <div class="row">
+            <cs-card-layout>
+              <uc-avg-rooms></uc-avg-rooms>
+              <uc-active-user-customer></uc-active-user-customer>
+              <uc-files-shared></uc-files-shared>
+              <uc-devices-customer></uc-devices-customer>
+              <uc-media-quality-customer></uc-media-quality-customer>
+              <uc-call-metrics-customer></uc-call-metrics-customer>
+            </cs-card-layout>
+          </div>
         </div>
       </div>
-      <!-- webex site reports index -->
-      <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
     </div>
   </div>
- </div>  
 </div>
