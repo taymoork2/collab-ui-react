@@ -34,6 +34,7 @@ module.exports = csp({
       'https://*.wbx2.com',
       'https://*.webex.com',
       'https://*.webexconnect.com',
+      'http://api.mixpanel.com',
       'https://api.mixpanel.com',
       'https://cdn.mxpnl.com',
       // Browser Sync:
