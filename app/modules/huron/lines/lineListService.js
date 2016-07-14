@@ -114,10 +114,9 @@
     } // end of function getLineList
 
     function dedupGrid(newLine, grid) {
-      var gridData = _.cloneDeep(grid);
-      _.forEach(gridData, function (row, $index) {
+      grid = _.remove(grid, function (row) {
         if (row.externalNumber === newLine.externalNumber) {
-          grid.splice($index, 1);
+          return true;
         }
       });
     }
