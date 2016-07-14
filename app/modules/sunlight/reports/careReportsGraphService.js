@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Sunlight')
-    .service('CareReportsGraphService', careReportsGraphService);
+  angular.module('Sunlight').service('CareReportsGraphService', careReportsGraphService);
 
   /* @ngInject */
   function careReportsGraphService($translate, chartColors) {
@@ -40,7 +39,8 @@
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20
+      'verticalGap': 20,
+      'dashLength': 5
     };
 
     baseVariables['balloon'] = {
@@ -57,8 +57,6 @@
       'valueLineAlpha': 0,
       'balloonPointerOrientation': 'vertical',
       'cursorColor': '#AEAEAF',
-      //'fullWidth':true,
-      //'cursorPosition': 'start',
       'categoryBalloonEnabled': false,
       'valueLineBalloonEnabled': false,
       'cursorAlpha': 1
@@ -88,13 +86,16 @@
       }
     }
 
-    function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor) {
-      return angular.copy({
-        'type': 'serial',
-        'theme': 'light',
-        'colors': data.colors,
-        'marginRight': 30,
-        'legend': {
+    function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor, selectedIndex) {
+      var legend = {};
+      if (selectedIndex == 0) {
+        legend = {
+          'useGraphSettings': true,
+          'equalWidths': true,
+          'position': 'bottom'
+        };
+      } else {
+        legend = {
           'data': [{
             title: data.legendTitles[1],
             color: data.colors[1]
@@ -104,17 +105,25 @@
           }],
           'equalWidths': false,
           'position': 'bottom'
-        },
-        'dataProvider': data.data,
-        'valueAxes': valueAxes,
-        'graphs': graphs,
-        'balloon': baseVariables['balloon'],
-        'plotAreaBorderAlpha': 0,
-        'marginTop': 40,
-        'marginLeft': 50,
-        'chartCursor': chartCursor,
-        'categoryField': categoryField,
-        'categoryAxis': catAxis,
+        };
+      }
+      return angular.copy({
+        "type": "serial",
+        "theme": "light",
+        "colors": data.colors,
+        "path": "./images/",
+        "marginRight": 30,
+        "legend": u,
+        "dataProvider": data.data,
+        "valueAxes": valueAxes,
+        "graphs": graphs,
+        "balloon": baseVariables['balloon'],
+        "plotAreaBorderAlpha": 0,
+        "marginTop": 40,
+        "marginLeft": 50,
+        "chartCursor": chartCursor,
+        "categoryField": categoryField,
+        "categoryAxis": catAxis,
         'export': exportReport
       });
     }
