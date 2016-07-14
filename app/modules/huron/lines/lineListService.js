@@ -114,10 +114,8 @@
     } // end of function getLineList
 
     function dedupGrid(newLine, grid) {
-      grid = _.remove(grid, function (row) {
-        if (row.externalNumber === newLine.externalNumber) {
-          return true;
-        }
+      _.remove(grid, function (row) {
+        return row.externalNumber === newLine.externalNumber;
       });
     }
 
