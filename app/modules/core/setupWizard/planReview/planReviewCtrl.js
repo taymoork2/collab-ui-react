@@ -96,14 +96,12 @@
       angular.forEach(vm.confServices.services, function (service) {
         var siteUrl = service.license.siteUrl;
         var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
-        var siteAdminProtocol = "https://";
-        var siteAdminLink = "/wbxadmin/default.do?siteurl=";
 
         service.license.isCI = isCISite;
 
         if (service.label.indexOf('Meeting Center') != -1) {
           service.label = $translate.instant('onboardModal.meetingCenter') + ' ' + service.license.capacity;
-          service.license.siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + WebExUtilsFact.getSiteName(siteUrl);
+          service.license.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
         }
         if (service.license.isTrial) {
           vm.trialExists = true;
