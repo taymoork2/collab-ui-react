@@ -29,9 +29,13 @@
       justify-content: space-between;
       background-color: $gray-light-4;
 
-      .name {
+      .profile-name {
         flex: 0 1 65%;
         @include vr-spacing(pb, 0.5);
+
+        .agent {
+          opacity: 0.5;
+        }
       }
       .img {
         .agent {

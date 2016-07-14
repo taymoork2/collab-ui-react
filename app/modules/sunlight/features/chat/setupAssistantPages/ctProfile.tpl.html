@@ -20,11 +20,11 @@
                   <i class="icon icon-user icon-2x"></i>
                 </div>
               </div>
-              <div class="h5 name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
+              <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
                    title="{{ careChatSA.orgName | translate}}">{{careChatSA.orgName | translate}}</div>
-                <div class="h5 name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+                <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
                 <div>{{careChatSA.agentNamePreview | translate}}</div>
-                <div translate="careChatTpl.agent"></div>
+                <div class="agent" translate="careChatTpl.agent"></div>
               </div>
               <div class="right actions">
                 <i class="icon icon-minus"></i>
@@ -85,4 +85,3 @@
     </div>
   </div>
 </div>
-
