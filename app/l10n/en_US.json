@@ -374,6 +374,10 @@
     "activeUsers": "Active Users",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "today": "Today",
+    "today2": "today",
+    "yesterday": "Yesterday",
+    "yesterday2": "yesterday",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -1716,6 +1720,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
     "tosTermsAndConditions": "terms and conditions"
@@ -3852,7 +3857,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },
-
+  "placesPage": {
+    "placeError": "Add Place failed."
+  },
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",

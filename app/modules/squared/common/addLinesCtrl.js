@@ -64,7 +64,10 @@
               data.uuid = headers('location').split("/").pop();
               return data;
             }).$promise
-            .then(successcb);
+            .then(successcb)
+            .catch(function (error) {
+              Notification.errorResponse(error, 'placesPage.placeError');
+            });
         });
       }
       //This is temp code to be removed when CMI GDS code is ready

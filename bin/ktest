@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+function ex_usage {
+    echo "Run a one-off karma single-run test for a given karma spec file."
+    echo ""
+    echo "usage: `basename $0` [--help|-h|-?] <karma_spec_file>"
+    echo ""
+    echo "ex. single karma spec file"
+    echo "  `basename $0` trial.service.spec.js"
+    echo ""
+    echo "ex. all spec files in the parent dir"
+    echo "  `basename $0` ../*.spec.js"
+    echo ""
+    echo "ex. all spec files found under the './app' dir"
+    echo "  find ./app -iname \\*spec.js | `basename $0`"
+}
+
+if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "-?" ]]; then
+    ex_usage
+    exit 1
+fi
+
+# remap stdin to positional params
+set -- "${1:-$(</dev/stdin)}" "${@:2}"
+
+flist=`mktemp tmp.XXXXX`
+
+for arg in $@; do
+    ls -1 `pwd`/$arg >> $flist 2>/dev/null
+done
+if [ -s $flist ]; then
+    gulp karma-custom --files-from=`pwd`/$flist
+fi
+
+rm $flist
