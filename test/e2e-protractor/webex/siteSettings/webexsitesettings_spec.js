@@ -63,7 +63,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     }
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('shsetupould sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteSettings.conferencing);
