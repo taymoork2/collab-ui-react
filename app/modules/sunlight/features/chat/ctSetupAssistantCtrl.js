@@ -541,17 +541,7 @@
       Notification.success('careChatTpl.createSuccessText', {
         featureName: vm.template.name
       });
-      $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-        size: 'lg',
-        controller: 'EmbedCodeCtrl',
-        controllerAs: 'embedCodeCtrl',
-        resolve: {
-          templateId: function () {
-            return responseTemplateId;
-          }
-        }
-      });
+      CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
     }
 
     function setDay(index) {
