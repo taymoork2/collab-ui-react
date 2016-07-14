@@ -17,7 +17,7 @@
     };
     return service;
 
-    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
+    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData) {
       var wildcard = "%";
 
       var queryString = {
@@ -74,6 +74,7 @@
                     return (number.e164 && number.e164 === line.externalNumber);
                   });
                   if (lineFound) {
+                    dedupGrid(lineFound, gridData);
                     lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
                     lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
                     pendingLines.push(lineFound);
@@ -86,6 +87,10 @@
                   }
                 });
               });
+
+              if (startIndex !== 0) {
+                return lines;
+              }
 
               if (filterType === 'pending') {
                 return pendingLines.concat(nonProvisionedPendingLines);
@@ -107,6 +112,15 @@
         });
 
     } // end of function getLineList
+
+    function dedupGrid(newLine, grid) {
+      var gridData = _.cloneDeep(grid);
+      _.forEach(gridData, function (row, $index) {
+        if (row.externalNumber === newLine.externalNumber) {
+          grid.splice($index, 1);
+        }
+      });
+    }
 
     function exportCSV(scope) {
       // add export code here
