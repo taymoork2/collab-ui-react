@@ -38,7 +38,7 @@
       'chatStatusMessages',
       'summary'
     ];
-    vm.currentState = vm.states[0];
+    vm.currentState = vm.states[1];
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
 
