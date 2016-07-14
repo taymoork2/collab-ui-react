@@ -3558,7 +3558,7 @@
   "branding": {
     "customTitle": "Custom Branding",
     "tenantTitle": "Tenant Branding",
-    "partnerInfo": "Brand your customer’s experience with Cisco applications by uploading your company logo below.",
+    "partnerInfo": "Brand your customer's experience with Cisco applications by uploading your company logo below.",
     "customInfo": "Brand your employee's experience with Cisco applications by uploading your company logo below.",
     "exampleLink": "&nbsp;(see example)",
     "useCiscoLogo": "Use default Cisco logos",
