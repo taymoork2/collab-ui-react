@@ -31,13 +31,6 @@
     }
   }
 
-  .cardScroll {
-    @include vr-spacing(pt, 1);
-    @include vr-spacing(pr, 3.75);
-    @include vr-spacing(pb, 3.125);
-    @include vr-spacing(pl, 2);
-  }
-
   .ct-feedback-rating {
     width: 100%;
   }

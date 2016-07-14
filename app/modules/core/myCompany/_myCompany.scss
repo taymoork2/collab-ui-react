@@ -34,103 +34,135 @@
 
 // My Company - Subscriptions
 .subscriptions-container {
-  margin: rem-calc(32) rem-calc(24);
-  padding: 0;
-  width: calc(100% - 50px);
+  @include vr-spacing(mh, 1);
+  @include vr-spacing(mv, 1.25);
+  @include vr-spacing(p, 0);
+  .cs-card-layout {
+    @include vr-spacing(mt, 1.25);
+  }
+  .subscriptions.detail-view {
+    @include vr-spacing(mb, 1.25);
+    .subscription-column {
+      border: none;
+      @include vr-spacing(ph, 0.75);
+      @include vr-spacing(pv, 1.25);
+      .detail span, .detail a {
+        @include vr-spacing(ph, 0.75);
+        @include vr-spacing(pv, 0);
+        border-left: rem-calc(1) solid $gray;
+      }
+      .detail:first-of-type span, .detail:first-of-type a {
+        @include vr-spacing(pl, 0);
+        border-left: none;
+      }
+      .detail:last-of-type span, .detail:last-of-type a {
+        @include vr-spacing(pr, 0);
+      }
+      .detail-expanded {
+        @include vr-spacing(mr, 2);
+      }
+      .detail-expanded.detail-space {
+        @include vr-spacing(mr, 0);
+        width: 50%;
+      }
+      .detail-break {
+        break-before: always;
+        page-break-before: always;
+      }
+      a.h6 {
+        color: $color-primary-base;
+      }
+    }
+    .subscription-upgrade {
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pv, 1.25);
+      position: relative;
+      height: 100%;
+      .license-quantity {
+        @include vr-spacing(pr, 1.25);
+      }
+    }
+  }
   .subscriptions {
-    padding: 0;
-    margin: 0;
-    min-width: rem-calc(1200);
+    @include vr-spacing(p, 0);
+    @include vr-spacing(m, 0);
+    min-width: vr-adjust(1200);
     width: 100%;
-    article {
-      min-height: rem-calc(20);
-      .row {
+    .row {
+      border-bottom: rem-calc(1) solid $gray-light-3;
+    }
+    .row:last-of-type {
+      border-bottom: none;
+    }
+    .subscription-type {
+      @include vr-spacing(p, 1.5);
+      color: $gray-dark-1;
+    }
+    .sub-name {
+      color: $gray-dark-1;
+      @include vr-spacing(m, 1);
+      width: auto;
+    }
+    .subscription-interior, .subscription-column, .subscription-item {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .subscription-column {
+      @include vr-spacing(p, 0);
+      border-left: rem-calc(1) solid $gray-light-3;
+      .subscription-item {
+        @include vr-spacing(p, 1.5);
+        width: 50%;
+      }
+      .subscription-item:nth-child(1), .subscription-item:nth-child(2) {
+        @include vr-spacing(pt, 1.5);
+      }
+      .subscription-item:nth-child(odd):nth-last-of-type(2), .subscription-item:last-of-type {
+        @include vr-spacing(pb, 1.5);
+      }
+      .subscription-item.item-with-borders {
+        display: block;
+        @include vr-spacing(p, 1.5);
+        border-right: rem-calc(1) solid $gray-light-3;
         border-bottom: rem-calc(1) solid $gray-light-3;
       }
-      .row:last-of-type {
-        border-bottom: none;
+      .subscription-item.item-with-borders:nth-child(even), .subscription-item.item-with-borders:last-of-type {
+        border-right: 0;
       }
-      .subscription-type {
-        padding: rem-calc(24);
-        width: rem-calc(215);
-        font-family: "CiscoSansTT Light";
-        font-size: 16px;
-        line-height: 1.5;
-        color: $gray-dark-1;
+      .subscription-item.item-with-borders:nth-child(odd):nth-last-of-type(2), .subscription-item.item-with-borders:last-of-type {
+        border-bottom: 0;
       }
-      .subscription-interior, .subscription-column, .subscription-item {
-        display: flex;
-        flex-wrap: wrap;
+      .subscription-site {
+        color: $gray-dark-2;
+        @include vr-spacing(mb, 0.75);
       }
-      .subscription-column {
-        width: calc(100% - 215px);
-        padding: 0;
-        border-left: rem-calc(1) solid $gray-light-3;
-        .subscription-item {
-          padding: 0 rem-calc(24);
-          width: 50%;
+      .hybrid-ul, .subscription-description {
+        span {
+          color: $gray-base;
         }
-        .subscription-item:nth-child(1), .subscription-item:nth-child(2) {
-          padding-top: rem-calc(24);
+      }
+      .hybrid-ul {
+        @include vr-spacing(p, 1.5);
+        @include vr-spacing(m, 0);
+        .icon-circle {
+          font-size: vr-adjust(8);
+          @include vr-spacing(pr, 0.5);
+          position: relative;
+          top: rem-calc(-2);
         }
-        .subscription-item:nth-child(odd):nth-last-of-type(2), .subscription-item:last-of-type {
-          padding-bottom: rem-calc(24);
+      }
+      .subscription-description {
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mb, 1);
+        span.name {
+          color: $gray-dark-1;
         }
-        .subscription-item.item-with-borders {
-          display: block;
-          padding: rem-calc(24);
-          border-right: rem-calc(1) solid $gray-light-3;
-          border-bottom: rem-calc(1) solid $gray-light-3;
+        span.warning {
+          color: $color-negative-base;
         }
-        .subscription-item.item-with-borders:nth-child(even), .subscription-item.item-with-borders:last-of-type {
-          border-right: 0;
-        }
-        .subscription-item.item-with-borders:nth-child(odd):nth-last-of-type(2), .subscription-item.item-with-borders:last-of-type {
-          border-bottom: 0;
-        }
-        .subscription-site {
-          font-family: "CiscoSansTT Light";
-          font-size: 16px;
-          line-height: 1.5;
-          color: $gray-dark-2;
-          margin-bottom: rem-calc(12);
-        }
-        .hybrid-ul, .subscription-description {
-          .description-line {
-            height: vr-adjust(24);
-            span {
-              font-family: "CiscoSansTT Light";
-              font-size: rem-calc(14);
-              line-height: 1.7;
-              color: $gray-base;
-            }
-          }
-        }
-        .hybrid-ul {
-          padding: rem-calc(24);
-          margin: 0;
-          .icon-circle {
-            font-size: rem-calc(8);
-            padding-right: rem-calc(6);
-            position: relative;
-            top: rem-calc(-2);
-          }
-        }
-        .subscription-description {
-          margin-left: rem-calc(16);
-          margin-bottom: rem-calc(16);
-        }
-        .subscription-description .description-line {
-          span.name {
-            color: $gray-dark-1;
-          }
-          span.warning {
-            color: $color-negative-base;
-          }
-        }
-        .subscription-interior:last-of-type .subscription-description, .subscription-item:last-of-type .subscription-description {
-          margin-bottom: 0;
-        }
+      }
+      .subscription-interior:last-of-type .subscription-description, .subscription-item:last-of-type .subscription-description {
+        @include vr-spacing(mb, 0);
       }
     }
   }

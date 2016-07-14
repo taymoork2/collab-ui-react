@@ -17,7 +17,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "features": ["cloudmeetings"],
     "volume": 25,
     "isTrial": false,
-    "isCI": true,
+    "isCIUnifiedSite": true,
     "status": "ACTIVE",
     "capacity": 200,
     "siteUrl": "fakeConferencingIsCITrue.fake.com"
@@ -29,7 +29,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "features": ["cloudmeetings"],
     "volume": 25,
     "isTrial": false,
-    "isCI": false,
+    "isCIUnifiedSite": false,
     "status": "ACTIVE",
     "capacity": 200,
     "siteUrl": "fakeConferencingIsCIFalse.fake.com"
@@ -52,7 +52,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "features": [],
     "volume": 100,
     "isTrial": false,
-    "isCI": true,
+    "isCIUnifiedSite": true,
     "status": "ACTIVE",
     "capacity": 100,
     "siteUrl": "fakeCMRIsCITrue.fake.com"
@@ -64,7 +64,7 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     "features": [],
     "volume": 100,
     "isTrial": false,
-    "isCI": false,
+    "isCIUnifiedSite": false,
     "status": "ACTIVE",
     "capacity": 100,
     "siteUrl": "fakeCMRIsCIFalse.fake.com"
@@ -92,37 +92,37 @@ describe('WebExUtilsFact: isCIEnabledSite() test', function () {
     spyOn(Authinfo, 'getLicenses').and.returnValue(fakeLicenses);
   })); // beforeEach(inject())
 
-  it('can correct return true for CONFERENCING', function () {
+  it('can correct return true for licenseType=CONFERENCING and isCIUnifiedSite=null', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencing.fake.com");
 
     expect(isCISite).toEqual(true);
   });
 
-  it('can correct return true for CONFERENCING and isCI=true', function () {
+  it('can correct return true for licenseType=CONFERENCING and isCIUnifiedSite=true', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencingIsCITrue.fake.com");
 
     expect(isCISite).toEqual(true);
   });
 
-  it('can correct return false for CONFERENCING and isCI=false', function () {
+  it('can correct return false for licenseType=CONFERENCING and isCIUnifiedSite=false', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeConferencingIsCIFalse.fake.com");
 
     expect(isCISite).toEqual(false);
   });
 
-  it('can correct return true for CMR', function () {
+  it('can correct return true for licenseType=CMR and isCIUnifiedSite=null', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMR.fake.com");
 
     expect(isCISite).toEqual(true);
   });
 
-  it('can correct return true for CMR and isCI=true', function () {
+  it('can correct return true for licenseType=CMR and isCIUnifiedSite=true', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMRIsCITrue.fake.com");
 
     expect(isCISite).toEqual(true);
   });
 
-  it('can correct return false for CMR and isCI=false', function () {
+  it('can correct return false for licenseType=CMR and isCIUnifiedSite=false', function () {
     var isCISite = WebExUtilsFact.isCIEnabledSite("fakeCMRIsCIFalse.fake.com");
 
     expect(isCISite).toEqual(false);

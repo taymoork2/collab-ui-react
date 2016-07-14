@@ -24,7 +24,7 @@ namespace globalsettings {
       spyOn(FeatureToggleService, 'supports');
       spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
       spyOn(Authinfo, 'isPartner');
-      spyOn(Authinfo, 'isPartnerUser');
+      spyOn(Authinfo, 'isCustomerAdmin');
       spyOn(Authinfo, 'isDirectCustomer');
     }
 
@@ -79,7 +79,7 @@ namespace globalsettings {
     describe('for normal admin', () => {
 
       beforeEach(setAuthinfoIsPartnerSpy(false));
-      beforeEach(setAuthinfoIsPartnerUserSpy(true));
+      beforeEach(setAuthinfoIsCustomerAdminSpy(true));
 
       describe('with allowCustomerLogos set to true', () => {
 
@@ -103,7 +103,7 @@ namespace globalsettings {
         beforeEach(setGetOrgSpy(false));
         beforeEach(initController);
 
-        it('should create the ctrl and add the normal setting sections but filter out branding', ()=> {
+        it('should create the ctrl and add the normal setting sections', ()=> {
           expect(controller.security).toBeTruthy();
           expect(controller.domains).toBeTruthy();
           expect(controller.sipDomain).toBeTruthy();
@@ -122,9 +122,9 @@ namespace globalsettings {
       };
     }
 
-    function setAuthinfoIsPartnerUserSpy(isPartnerUser) {
+    function setAuthinfoIsCustomerAdminSpy(isCustomerAdmin) {
       return () => {
-        Authinfo.isPartnerUser.and.returnValue(isPartnerUser);
+        Authinfo.isCustomerAdmin.and.returnValue(isCustomerAdmin);
       };
     }
 

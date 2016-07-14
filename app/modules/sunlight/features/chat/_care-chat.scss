@@ -1,7 +1,15 @@
 @import "setupAssistantPages/setup-assistant-pages";
+@import "embed-code-screen";
 
 .careChatSetup {
   @extend %content-header;
+  .cs-setupassistant {
+    margin: 0 auto;
+    max-width: 1080px;
+  }
+  .cs-setupassistant--content {
+    height: calc(100vh - #{$top-bar-height + $overlay-panel-height});
+  }
 }
 .care-chat {
   &.overlay-panel {
@@ -29,48 +37,5 @@
   .ct-confirmation-message {
     @include vr-spacing(mt, 0.75);
   }
-}
-.ct-embed-code-area {
-	width: 100%;
-	margin: 0;
-	.embed-code-textarea {
-		width: 100%;
-		resize: none;
-		color: $gray-dark-4;
-    font-family: monospace;
-	}
-}
-
-.ct-finish-btn-div {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-  text-align: center;
-}
-
-.ct-finish-btn {
-  @include vr-spacing(p, 0.3125);
-  width : rem-calc(150px);
-  height : rem-calc(30px);
-  text-align: center;
-}
-
-.ct-status-div{
-  height: rem-calc(250px);
-}
-.ct-error-desc{
-  text-align: center;
-  color: $color-negative-dark;
-}
-
-.ct-success-icon {
-  color: $color-cta-base;
-  font-size: rem-calc(64px);
-}
-
-.ct-success-color {
-  color: $color-cta-base;
-  font-size: rem-calc(64px);
-
 }
 

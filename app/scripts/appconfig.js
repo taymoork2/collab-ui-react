@@ -5,8 +5,8 @@
 
   angular
     .module('wx2AdminWebClientApp')
-    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
+      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider, languagesProvider) {
         var sidepanelMemo = 'sidepanelMemo';
 
         // sidepanel helper
@@ -173,8 +173,8 @@
           suffix: '.json'
         });
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-        $translateProvider.preferredLanguage('en_US');
-        $translateProvider.fallbackLanguage('en_US');
+        $translateProvider.preferredLanguage(languagesProvider.getPreferredLanguage());
+        $translateProvider.fallbackLanguage(languagesProvider.getFallbackLanguage());
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
@@ -315,7 +315,7 @@
               'modal@': {
                 controller: 'AddLinesCtrl',
                 controllerAs: 'addLines',
-                templateUrl: 'modules/squared/devices/addDeviceNew/AddLinesTemplate.tpl.html'
+                templateUrl: 'modules/squared/common/AddLinesTemplate.tpl.html'
               }
             },
             params: {
@@ -324,15 +324,17 @@
           })
           .state('addDeviceFlow.showActivationCode', {
             parent: 'modalSmall',
+            params: {
+              currentUser: {},
+              activationCode: {},
+              wizard: null
+            },
             views: {
               'modal@': {
+                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
                 controller: 'ShowActivationCodeCtrl',
-                controllerAs: 'showActivationCode',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html'
+                controllerAs: 'showActivationCode'
               }
-            },
-            params: {
-              wizard: null
             }
           })
           .state('activate', {
@@ -522,7 +524,7 @@
             views: {
               'modal@': {
                 templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
-                controller: 'BrandingCtrl',
+                controller: 'BrandingExampleCtrl',
                 controllerAs: 'brandEg',
               }
             },
@@ -1159,6 +1161,17 @@
             parent: 'main',
             params: {
               tab: 'webex',
+              siteUrl: null
+            }
+          })
+          .state('reports.care', {
+            url: '/reports/care',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'care',
               siteUrl: null
             }
           })
@@ -1828,7 +1841,6 @@
           })
           .state('generateauthcode', {
             parent: 'modal',
-            url: '/generateauthcode',
             params: {
               currentUser: {},
               activationCode: {}
@@ -2003,6 +2015,13 @@
               detailsFeatureType: null,
               detailsDependsList: null
             }
+          })
+          .state('huronCallPark', {
+            url: '/huronCallPark',
+            parent: 'hurondetails',
+            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
+            controller: 'CallParkSetupAssistantCtrl',
+            controllerAs: 'callParkSA'
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',

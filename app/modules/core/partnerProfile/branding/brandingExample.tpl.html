@@ -7,12 +7,12 @@
   </div>
   <div class="modal-body trials">
     <header class="item-space">
-      <h4 translate="branding.companyLogo" translate-value-partner="{{brandEg.modalType}}"></h4>
-      <p translate="branding.brandingExampleIntro" translate-value-partner="{{brandEg.modalType}}"></p>
+      <h4 translate="branding.companyLogo" translate-value-name="{{brandEg.name}}"></h4>
+      <p translate="branding.brandingExampleIntro" translate-value-name="{{brandEg.name}}"></p>
     </header>
     <div class="row item-space">
         <div class="columns small-6 left">
-          <p translate="branding.logoOnAbout" translate-value-partner="{{brandEg.modalType}}"></p>
+          <p translate="branding.logoOnAbout" translate-value-name="{{brandEg.name}}"></p>
           <cs-card class="full">
             <article>
               <img ng-src="./images/branding/{{brandEg.modalType}}-About.png">  
@@ -20,7 +20,7 @@
           </cs-card>
         </div>
         <div class="columns small-6 right">
-          <p translate="branding.logoOnAbout" translate-value-partner="{{brandEg.modalType}}"></p>
+          <p translate="branding.logoOnAbout" translate-value-name="{{brandEg.modalType}}"></p>
           <cs-card class="full">
             <article>
               <img ng-src="./images/branding/{{brandEg.modalType}}-Support.png">
@@ -29,8 +29,8 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="item-space">
-      <p translate="branding.logoOnWebEx" translate-value-partner="{{brandEg.modalType}}"></p>
+    <div class="item-space item-padding-space">
+      <p translate="branding.logoOnWebEx" translate-value-name="{{brandEg.name}}"></p>
       <cs-card class="full">
         <article>
           <img ng-src="./images/branding/{{brandEg.modalType}}-Webex.com.png">  
