@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $q, $modal, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -191,11 +191,34 @@
     }
 
     function addResource() {
-      $modal.open({
-        controller: 'AddFusionResourceController',
-        controllerAs: 'addResource',
-        templateUrl: 'modules/hercules/fusion-pages/add-resource-modal.html',
-        type: 'small'
+      var initialState = {
+        data: {
+          targetType: null
+        },
+        history: [],
+        currentStateName: 'add-resource.type-selector',
+        wizardState: {
+          'add-resource.type-selector': {
+            nextOptions: {
+              expressway: 'add-resource.expressway.service-selector',
+              mediafusion: 'add-resource.mediafusion.something'
+            }
+          },
+          'add-resource.expressway.service-selector': {
+            next: 'add-resource.expressway.hostname'
+          },
+          'add-resource.expressway.hostname': {
+            next: 'add-resource.expressway.name'
+          },
+          'add-resource.expressway.name': {
+            next: 'add-resource.expressway.name'
+          },
+          'add-resource.expressway.end': {}
+        }
+      };
+      var wizard = WizardFactory.create(initialState);
+      $state.go('add-resource.type-selector', {
+        wizard: wizard
       });
     }
   }

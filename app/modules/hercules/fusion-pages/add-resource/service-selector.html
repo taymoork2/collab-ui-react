@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title">Add Resource</h3>
+</div>
+<div class="modal-body add-resource-modal" ng-switch="vm.UIstate">
+  <div ng-switch-when="loading">
+    <span class="spinner--large">
+      <i class="icon icon-spinner"></i>
+    </span>
+  </div>
+  <div ng-switch-when="error">Error fetching the service types.</div>
+  <div ng-switch-when="success">
+    <h4>What services do you want the Expressway to run?</h4>
+    vm.selectedServices: {{vm.selectedServices}}
+    <form name="servicesSelector">
+      <div class="cs-checkbox-group">
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.selectedServices.call"
+          name="call"
+          id="service_call"
+          ng-show="vm.isEntitledTo.call"
+          ng-disabled="!vm.hasSetup.call"
+          cs-input-label="Call Service">
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.selectedServices.calendar"
+          name="calendar"
+          id="service_calendar"
+          ng-show="vm.isEntitledTo.calendar"
+          ng-disabled="!vm.hasSetup.calendar"
+          cs-input-label="Calendar Service">
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="vm.back()" translate="common.back"></button>
+  <button class="btn btn-primary" ng-click="vm.next()" ng-disabled="!vm.canGoNext()" translate="common.next"></button>
+</div>
