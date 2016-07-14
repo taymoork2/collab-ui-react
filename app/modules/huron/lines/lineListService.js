@@ -90,9 +90,7 @@
 
               if (startIndex !== 0) {
                 return lines;
-              }
-
-              if (filterType === 'pending') {
+              } else if (filterType === 'pending') {
                 return pendingLines.concat(nonProvisionedPendingLines);
               } else if (filterType === 'all') {
                 return lines.concat(nonProvisionedPendingLines);
