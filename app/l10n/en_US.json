@@ -1047,7 +1047,7 @@
   "spacesPage": {
     "addTag": "Add tag",
     "title": "Devices",
-    "addBtn": "Add Device",
+    "addBtn": "New Device",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
