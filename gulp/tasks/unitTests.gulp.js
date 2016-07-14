@@ -219,7 +219,7 @@ function createGulpKarmaConfigModule(module) {
           }
         }))
         .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage'"))
-        .pipe($.replace('<module>', module))
+        .pipe($.replace('<module>', moduleSuffix ? module + moduleSuffix : module))
         .pipe($.rename({
           basename: 'karma-unit-' + module + moduleSuffix,
           extname: '.js'
