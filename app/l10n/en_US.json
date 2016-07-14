@@ -3558,8 +3558,8 @@
   "branding": {
     "customTitle": "Custom Branding",
     "tenantTitle": "Tenant Branding",
-    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
-    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "partnerInfo": "Brand your customer's experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Brand your employee's experience with Cisco applications by uploading your company logo below.",
     "exampleLink": "&nbsp;(see example)",
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
@@ -3567,8 +3567,8 @@
     "logoPlaceholder": "Drag and drop your logo here or click to upload",
     "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
-    "companyLogo": "{{name}} Logos",
-    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples",
+    "companyLogo": "{{name}} Logo",
+    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples.",
     "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
     "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
     "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
@@ -4043,7 +4043,12 @@
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent"
+    "chattingMessage": "You are chatting with our agent",
+    "downloadEmbedCode": "Download Embed Code",
+    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embedCodeWarnMsgContd": "to verify your domains.",
+    "clickHere": "Click here",
+    "embedCodeFor": "Embed Code for "
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",

@@ -136,7 +136,7 @@ namespace globalsettings {
 
     function setGetOrgSpy(allowBranding) {
       return () => {
-        Orgservice.getOrg.and.returnValue($q.when({orgSettings: {allowCustomerLogos: allowBranding}}));
+        Orgservice.getOrg.and.returnValue($q.when({data: {orgSettings: {allowCustomerLogos: allowBranding}}}));
       };
     }
 

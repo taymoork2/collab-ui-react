@@ -509,11 +509,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
       expect($modal.open).toHaveBeenCalledWith({
         templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-        size: 'lg',
+        type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
         resolve: {
-          templateId: jasmine.any(Function)
+          templateId: jasmine.any(Function),
+          templateHeader: jasmine.any(Function)
         }
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
