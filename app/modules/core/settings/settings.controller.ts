@@ -46,15 +46,15 @@ namespace globalsettings {
           // it will be revealed after toggle is resolved
           this.branding = new BrandingSetting();
         });
+      } else if(this.Authinfo.isDirectCustomer()) {
+        this.branding = new BrandingSetting();
       } else if(this.Authinfo.isCustomerAdmin()) {
-        this.Orgservice.getOrg(_.noop).then(data => {
-          if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+        this.Orgservice.getOrg(_.noop).then(response => {
+          if (_.get(response, 'data.orgSettings.allowCustomerLogos')) {
             this.branding = new BrandingSetting();
           }
         });
-      } else if(this.Authinfo.isDirectCustomer()) {
-        this.branding = new BrandingSetting();
-      }
+      } 
     }
 
     private initSecurity() {

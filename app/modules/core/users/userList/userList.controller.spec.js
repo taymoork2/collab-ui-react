@@ -67,9 +67,9 @@ describe('UserListCtrl: Ctrl', function () {
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
 
   }));

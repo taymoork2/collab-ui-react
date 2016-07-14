@@ -14,6 +14,7 @@
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
       atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
