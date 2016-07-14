@@ -174,9 +174,9 @@ describe('orgService', function () {
   it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
 
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
-    var funct = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
     httpBackend.flush();
-    funct.then(function (data) {
+    promise.then(function (data) {
       expect(data.success).toBe(true);
     });
   });
@@ -184,9 +184,9 @@ describe('orgService', function () {
   it('should fail to get an admin organization for getOrgId provided by Authinfo pwhen called as a promise', function () {
 
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
-    var funct = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
     httpBackend.flush();
-    funct.then(function (data) {
+    promise.then(function (data) {
       expect(data.success).toBe(false);
     });
   });
