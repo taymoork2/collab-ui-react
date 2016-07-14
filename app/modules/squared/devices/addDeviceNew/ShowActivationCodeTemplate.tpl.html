@@ -13,7 +13,10 @@
       <span ng-if="showActivationCode.activationFlowType()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
       <span ng-if="showActivationCode.activationFlowType()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
     </p>
-    <div class="qrCodeSection">
+    <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
+      <i class="loading space icon icon-spinner"></i>
+    </div>
+    <div class="qrCodeSection" ng-if="!showActivationCode.isLoading">
       <div class="qrCodePlaceholder"></div>
       <img class="qrCodeImage"
            ng-show="showActivationCode.wizardData.deviceType==='huron'"

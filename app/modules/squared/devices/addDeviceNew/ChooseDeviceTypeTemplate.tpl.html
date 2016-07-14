@@ -5,11 +5,12 @@
 </div>
 <div class="modal-body choose-device-type device-wizard">
   <div>
-    <h5 translate="addDeviceWizard.chooseDeviceType.deviceType"></h5>
-    <p class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
-
+    <h5 ng-if="!chooseDeviceType.wizardData.showPlaces" translate="addDeviceWizard.chooseDeviceType.deviceType"></h5>
+    <h5 ng-if="chooseDeviceType.wizardData.showPlaces" translate="addDeviceWizard.chooseDeviceType.deviceTypeNewPlace"></h5>
+    <p ng-if="!chooseDeviceType.wizardData.showPlaces" class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
+    <p ng-if="chooseDeviceType.wizardData.showPlaces" class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructionsNewPlace"></p>
     <div class="typeChoice">
-      <div class="typeButtonWrapper typeButtonWrapperLeft">
+    <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'huron'}"
              ng-click="chooseDeviceType.huron()"
@@ -17,10 +18,10 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
           </div>
-          <h4 ng-if="chooseDeviceType.wizardData.showPlaces"
+          <h4
               translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
-          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
-              translate="addDeviceWizard.chooseDeviceType.newDeskPhone"></h4>
+          <!--<h4 ng-if="!chooseDeviceType.wizardData.showPlaces"-->
+              <!--translate="addDeviceWizard.chooseDeviceType.newDeskPhone"></h4>-->
           <span class="buttonBottom" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.huronError">
@@ -36,10 +37,10 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/room-system.png"/>
           </div>
-          <h4 ng-if="chooseDeviceType.wizardData.showPlaces"
+          <h4
               translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
-          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
-              translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>
+          <!--<h4 ng-if="!chooseDeviceType.wizardData.showPlaces"-->
+              <!--translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>-->
           <span class="buttonBottom" translate="addDeviceWizard.chooseDeviceType.roomSystemExamples"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">
@@ -52,8 +53,16 @@
 </div>
 <div class="modal-footer">
   <button
+    id="back-button"
+    class="btn"
+    ng-hide="chooseDeviceType.hideBackButton"
+    sq-click-promise="chooseDeviceType.back()"
+    translate="common.back">
+  </button>
+  <button
     type="button"
     class="btn"
+    ng-hide="chooseDeviceType.hideCancelButton"
     ng-click="$dismiss()"
     translate="common.cancel">
   </button>

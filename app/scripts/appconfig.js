@@ -296,6 +296,19 @@
               wizard: null
             }
           })
+          .state('addDeviceFlow.newSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'NewSharedSpaceCtrl',
+                controllerAs: 'newPlace',
+                templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('addDeviceFlow.addServices', {
             parent: 'modalSmall',
             views: {

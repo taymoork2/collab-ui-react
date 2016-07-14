@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ShowActivationCodeCtrl', ShowActivationCodeCtrl);
   /* @ngInject */
-  function ShowActivationCodeCtrl($q, UserListService, OtpService, $stateParams, ActivationCodeEmailService, $translate, Notification) {
+  function ShowActivationCodeCtrl($q, UserListService, OtpService, CsdmPlaceService, CsdmCodeService, $stateParams, XhrNotificationService, ActivationCodeEmailService, $translate, Notification) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.hideBackButton = vm.wizardData.function == "showCode";
@@ -26,6 +26,35 @@
         }
         vm.qrCode = arrayData;
       });
+    } else if (!vm.wizardData.code || !vm.wizardData.code.activationCode) {
+      var success = function success(code) {
+        vm.isLoading = false;
+        vm.wizardData.code = code;
+        vm.activationCode = code.activationCode;
+        vm.friendlyActivationCode = formatActivationCode(code.activationCode);
+      };
+      var error =
+        function error(err) {
+          XhrNotificationService.notify(err);
+          vm.isLoading = false;
+        };
+      if (vm.place) {
+        CsdmCodeService
+          .createCodeForExisting(vm.place.cisUuid)
+          .then(success, error);
+      } else {
+        if (vm.wizardData.deviceType === "cloudberry") {
+          vm.isLoading = true;
+          CsdmPlaceService.createPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+            vm.place = place;
+            CsdmCodeService
+              .createCodeForExisting(place.cisUuid)
+              .then(success, error);
+          }, error);
+        } else { //New Place
+          success();
+        }
+      }
     }
 
     vm.activationFlowType = function () {

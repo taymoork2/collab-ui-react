@@ -2671,6 +2671,8 @@
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup so that it can be assigned to either a user or a place. What kind of device do you want to activate?",
+      "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
+      "deviceTypeInstructionsNewPlace": "A place containing desk phones will be assigned a Spark Call license. A place containing a room system will be assigned a Spark Room System license. Proceeding acknowledges that a license will be assigned.",
       "deskPhone": "Desk Phone",
       "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
@@ -2712,6 +2714,12 @@
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+      "insertRoomName": "Insert name of room or shared space"
+    },
+    "newSharedSpace": {
+      "title": "Add Place",
+      "newPlace": "Name of Place",
+      "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain a room system or up to 10 desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
       "insertRoomName": "Insert name of room or shared space"
     },
     "assignPhoneNumber": {
