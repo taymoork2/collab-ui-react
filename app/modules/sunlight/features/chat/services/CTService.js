@@ -40,7 +40,7 @@
         "  e = document.getElementsByTagName(script)[0];\n" +
         "  bubbleScript.async = true;\n" +
         "  bubbleScript.CiscoAppId =  'cisco-chat-bubble-app';\n" +
-        "  bubbleScript.DC = 'rciad.ciscoccservice.com';\n" +
+        "  bubbleScript.DC = '" + appName.split('https://bubble.')[1] + "';\n" +
         "  bubbleScript.orgId = '" + orgId + "';\n" +
         "  bubbleScript.templateId = '" + templateId + "';\n" +
         "  bubbleScript.src = '" + appName + "/bubble.js';\n" +

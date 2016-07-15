@@ -6,7 +6,7 @@
       .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
     /* @ngInject */
-    function MessagingSetupCtrl($scope, $translate, AccountOrgService, Analytics, Authinfo, FeatureToggleService, Notification) {
+    function MessagingSetupCtrl($q, $scope, $translate, AccountOrgService, Analytics, Authinfo, FeatureToggleService, Notification) {
       var msgIntFlag = false;
       var currentDataRetentionPeriod = null;
       var orgId = Authinfo.getOrgId();
@@ -18,7 +18,7 @@
       vm.appSecurity = false;
       vm.currentAppSecurity = false;
       // US11663 - Hide data retention content for now.  Will be restored in the future.
-      vm.showDrContent = false;
+      vm.showDataRetentionContent = false;
 
       vm.placeholder = $translate.instant('firstTimeWizard.messagingSetupPlaceholder');
       vm.selected = {
@@ -42,11 +42,15 @@
         value: 'indefinite'
       }];
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
-        vm.showAppSecurity = result;
-      });
+      var promises = {
+        atlasPinSettings: FeatureToggleService.atlasPinSettingsGetStatus(),
+        atlasDataRetentionSettings: FeatureToggleService.atlasDataRetentionSettingsGetStatus()
+      };
 
-      init();
+      $q.all(promises).then(function (results) {
+        vm.showAppSecurity = results.atlasPinSettings;
+        vm.showDataRetentionContent = results.atlasDataRetentionSettings;
+      }).finally(init);
 
       function init() {
         getServices();
@@ -83,11 +87,11 @@
           });
       }
 
-      // Calls AppSecuritySetting service to get device security enforcement from enforceClientSecurity API
+      // Calls AppSecuritySetting service to get device security enforcement from clientSecurityPolicy API
       function getAppSecurity() {
         return AccountOrgService.getAppSecurity(orgId)
           .then(function (response) {
-            _.set(vm, 'appSecurity', response.data.enforceClientSecurity);
+            _.set(vm, 'appSecurity', response.data.clientSecurityPolicy);
             vm.currentAppSecurity = vm.appSecurity;
           });
       }
@@ -114,7 +118,7 @@
             });
         }
 
-        FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
+        FeatureToggleService.supports(FeatureToggleService.features.atlasPinSettings).then(function (result) {
           vm.showAppSecurity = result;
 
           if (result) {
@@ -123,7 +127,7 @@
               AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
                 .then(function (response) {
                   Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
-                  Analytics.trackEvent('Device enforceClientSecurity', {
+                  Analytics.trackEvent('Device clientSecurityPolicy', {
                     orgId: orgId
                   });
                 })
