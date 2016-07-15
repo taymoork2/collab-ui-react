@@ -135,7 +135,7 @@ gulp.task('karma-parallel', ['clean:coverage'], function (done) {
 gulp.task('karma-each', function (done) {
   var karmaArgs = [];
   _.forEach(modules, function (module) {
-    if (module !== 'all') {
+    if (module !== 'all' && module !== 'custom') {
       karmaArgs.push('karma-' + module);
     }
   });
