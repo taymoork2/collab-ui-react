@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('OnboardCtrl: Ctrl', function () {
+describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
