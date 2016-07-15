@@ -1240,7 +1240,7 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400110')) {
+          } else if (userStatus === 403 && user.message === '400110') {
             userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
               email: userResult.email
             });
@@ -1248,7 +1248,7 @@
             userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && user.message === '400109') {
+          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
             userResult.message = $translate.instant('usersPage.unableToMigrateError', {
               email: userResult.email
             });

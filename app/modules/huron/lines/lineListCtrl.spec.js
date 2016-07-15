@@ -63,7 +63,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines', $scope.gridData);
     });
 
     it('should call getLineList with filter unassignedLines', function () {
@@ -73,7 +73,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines', $scope.gridData);
     });
   });
 
@@ -94,7 +94,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$emit('lineListUpdated', {});
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'all');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'all', $scope.gridData);
     });
   });
 
@@ -108,7 +108,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$emit('ngGridEventSorted', data);
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-desc', '', 'all');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-desc', '', 'all', $scope.gridData);
     });
 
     it('should not getLineList when sort parameters do not change', function () {
@@ -136,7 +136,7 @@ describe('Controller: LineListCtrl', function () {
       $timeout.flush();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', $scope.gridData);
     });
   });
 

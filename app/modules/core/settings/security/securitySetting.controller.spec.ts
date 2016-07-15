@@ -67,8 +67,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return enforceClientSecurity set to true', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: true}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to true', ()=> {
+        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: true}}));
         beforeEach(initController);
 
         it('should set dataloaded and true for requireProtectedDevices', () => {
@@ -77,8 +77,8 @@ namespace globalsettings {
         });
       });
 
-      describe('when getAppSecurity return enforceClientSecurity set to false', ()=> {
-        beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: false}}));
+      describe('when getAppSecurity return clientSecurityPolicy set to false', ()=> {
+        beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
         beforeEach(initController);
 
         it('should set dataloaded and true for requireProtectedDevices', () => {
@@ -90,7 +90,7 @@ namespace globalsettings {
     });
 
     describe('requireProtectedDevicesUpdate', ()=> {
-      beforeEach(initGetAppSecWithResult({data: {enforceClientSecurity: false}}));
+      beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
       beforeEach(initSetAppSec);
       beforeEach(initController);
 

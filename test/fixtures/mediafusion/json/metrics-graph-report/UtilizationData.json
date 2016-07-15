@@ -1,0 +1,30 @@
+{
+  "utilization": [{
+    "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
+    "application": "media_agent",
+    "metricName": "average_cpu ,peak_cpu",
+    "cpuUtilValues": [{
+      "timestamp": "2016-07-10T06:30:00Z",
+      "average_cpu": 0.19,
+      "peak_cpu": 0.76
+    }, {
+      "timestamp": "2016-07-10T06:40:00Z",
+      "average_cpu": 0.19,
+      "peak_cpu": 0.76
+    }, {
+      "timestamp": "2016-07-10T06:50:00Z",
+      "average_cpu": 0.19,
+      "peak_cpu": 0.76
+    }, {
+      "timestamp": "2016-07-10T11:30:00Z",
+      "average_cpu": 0.19,
+      "peak_cpu": 0.76
+    }, {
+      "timestamp": "2016-07-10T11:40:00Z",
+      "average_cpu": 0.19,
+      "peak_cpu": 0.76
+    }],
+    "startTime": "2016-07-10T06:28:22Z",
+    "endTime": "2016-07-11T06:28:22Z"
+  }]
+}

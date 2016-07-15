@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  var DEFAULT_LANGUAGE = 'en_US';
 
   var languages = [{
     value: 'da_DK',
@@ -8,11 +9,11 @@
     value: 'de_DE',
     label: 'languages.german'
   }, {
-    value: 'en_GB',
-    label: 'languages.englishBritish'
-  }, {
     value: 'en_US',
     label: 'languages.englishAmerican'
+  }, {
+    value: 'en_GB',
+    label: 'languages.englishBritish'
   }, {
     value: 'es_ES',
     label: 'languages.spanishSpain'
@@ -66,8 +67,77 @@
     label: 'languages.chineseTraditional'
   }];
 
+  /* @ngInject */
+  function LanguagesProvider($windowProvider) {
+
+    this.$get = $get;
+    this.getFallbackLanguage = getFallbackLanguage;
+    this.getPreferredLanguage = getPreferredLanguage;
+
+    function $get() {
+      return languages;
+    }
+
+    function getFallbackLanguage() {
+      return DEFAULT_LANGUAGE;
+    }
+
+    function getPreferredLanguage() {
+      var browserLanguages = _.flatten([
+        getBrowserLanguage(),
+        DEFAULT_LANGUAGE,
+      ]);
+      var languageKeys = _.map(languages, 'value');
+      var browserLanguage;
+      var language;
+      var i;
+
+      for (i = 0; i < browserLanguages.length; i++) {
+        browserLanguage = browserLanguages[i];
+        language = _.find(languageKeys, function (language) {
+          return language === browserLanguage;
+        }) || _.find(languageKeys, function (language) {
+          return _.startsWith(language, browserLanguage);
+        });
+        if (language) {
+          return language;
+        }
+      }
+
+      return DEFAULT_LANGUAGE;
+    }
+
+    function getBrowserLanguage() {
+      var browserLanguageProperties = [
+        'languages',
+        'language',
+        'browserLanguage',
+        'systemLanguage',
+        'userLanguage',
+      ];
+      var navigator = $windowProvider.$get().navigator;
+      var language;
+      var i;
+
+      for (i = 0; i < browserLanguageProperties.length; i++) {
+        language = _.get(navigator, browserLanguageProperties[i]);
+        if (_.isArray(language)) {
+          return _.map(language, formatLanguage);
+        } else if (_.isString(language)) {
+          return formatLanguage(language);
+        }
+      }
+
+      return DEFAULT_LANGUAGE;
+    }
+
+    function formatLanguage(language) {
+      return language.replace('-', '_');
+    }
+  }
+
   angular
     .module('Core')
-    .value('languages', languages);
+    .provider('languages', LanguagesProvider);
 
 }());

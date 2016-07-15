@@ -61,7 +61,7 @@ var AutoAttendantPage = function () {
   this.phoneMenuAction = element.all(by.css('div.aa-pm-action-select .icon-chevron-down'));
   this.phoneMenuActionContent = element.all(by.css('div.aa-pm-action-select .select-toggle'));
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
-  this.phoneMenuActionTargets = element.all(by.css('div.aa-key-action'));
+  this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();

@@ -1,0 +1,74 @@
+#!/bin/bash
+
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+function ex_usage {
+    echo "Run a one-off karma single-run test for a given karma spec file."
+    echo ""
+    echo "usage: $(basename "$0") [--help|-h|-?] [--debug] <karma_spec_file>"
+    echo ""
+    echo "ex. single karma spec file"
+    echo "  $(basename "$0") trial.service.spec.js"
+    echo ""
+    echo "ex. all spec files in the parent dir"
+    echo "  $(basename "$0") ../*.spec.js"
+    echo ""
+    echo "ex. all spec files found under the './app' dir"
+    echo "  find ./app -iname \\*spec.js | $(basename "$0")"
+}
+
+# early out if looking for usage
+if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "-?" ]]; then
+    ex_usage
+    exit 1
+fi
+
+# otherwise collect '--*' args for passing through to gulp
+pass_through_opts=
+args=( $@ )
+i=0
+for opt in "${args[@]}"; do
+    case "$opt" in
+        --* )
+            pass_through_opts="$pass_through_opts ${args[$i]}"
+            unset -v args[$i]
+            ;;
+    esac
+    let "i += 1"
+done
+
+# update positional params after filtering out '--*' args
+set -- "${args[@]}"
+
+# remap stdin to positional params
+set -- "${1:-$(</dev/stdin)}" "${@:2}"
+
+cache_dir=$WX2_ADMIN_WEB_CLIENT_HOME/.cache
+
+# tidy up cache dir (in case previous runs exit badly)
+rm -f "$cache_dir"/tmp.ktest.*
+
+flist=$(mktemp "$cache_dir"/tmp.ktest.XXXXX)
+
+# shellcheck disable=SC2068
+# generate a file list
+for arg in $@; do
+    ls -1 "$(pwd)/$arg" >> "$flist" 2>/dev/null
+done
+
+# use it for a test run
+exit_status=
+if [ -s "$flist" ]; then
+    # shellcheck disable=SC2086
+    gulp karma-custom --files-from="$flist" $pass_through_opts
+    exit_status=$?
+fi
+
+# tidy up
+rm -f "$flist"
+
+# pass back exit status from gulp command
+exit $exit_status

@@ -6,82 +6,82 @@
   <div class="ct-profile-body ct-sa-content">
     <div class="cs-card-container">
       <cs-card-layout>
-        <cs-card class="medium header-border">
+        <cs-card>
           <div class="h4 card-info" translate="careChatTpl.screen"></div>
-          <article class="ct-profile-preview">
+          <article class="profile-preview">
             <header>
-               <div class="img-details">
-                 <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
+              <div class="img">
+                <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
                   <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careChatSA.logoUploaded"></i>
-                  <img class="org-img" ngf-size="{{careChatSA.imgDetails.imageDim}}"ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
-                 </div>
-                 <div class="agent-img" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                    <i class="icon icon-user icon-2x"></i>
-                 </div>
-              </div>
-              <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
-               <div title="{{ careChatSA.orgName | translate}}" class="orgName">{{careChatSA.orgName | translate}}</div>
-              </div>
-               <div class="h5 name-details" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                  <div class="agentName">{{careChatSA.agentNamePreview | translate}}</div>
-                  <div class="desc" translate="careChatTpl.agent"></div>
+                  <img ngf-size="{{careChatSA.imgDetails.imageDim}}"ng-src="{{careChatSA.logoFile}}"
+                       ng-show="careChatSA.logoUploaded"/>
                 </div>
-              <div class="right action-details">
+                <div class="agent" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+                  <i class="icon icon-user icon-2x"></i>
+                </div>
+              </div>
+              <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
+                   title="{{ careChatSA.orgName | translate}}">{{careChatSA.orgName | translate}}</div>
+                <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+                <div>{{careChatSA.agentNamePreview | translate}}</div>
+                <div class="agent" translate="careChatTpl.agent"></div>
+              </div>
+              <div class="right actions">
                 <i class="icon icon-minus"></i>
                 <i class="icon icon-close"></i>
               </div>
             </header>
             <section>
-              <div class="agent-chat">
-                <span class="agent-msg" translate="careChatTpl.agentMsg"></span>
+              <div class="customer-details">
+                <span class="customer-message" translate="careChatTpl.agentMsg"></span>
                 <span class="speech-bubble"><span class="top right"></span></span>
-                <div class="body-smallest timer" translate="careChatTpl.agentMsgTime"></div>
+                <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
               </div>
-              <div class="customer-chat">
-                <span class="speech-bubble">
-                  <span class="top left"></span>
-                </span>
-                <span class="customer-msg" translate="careChatTpl.customerMsg"></span>
-                <div class="body-smallest timer" translate="careChatTpl.agentMsgTime"></div>
-                <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
+              <div class="agent-message-details">
+                <span class="speech-bubble"><span class="top left"></span></span>
+                <span class="message" translate="careChatTpl.customerMsg"></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+              <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
               </div>
-
             </section>
             <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
           </article>
         </cs-card>
-        <cs-card class="medium section-background">
-          <div class="h4 card-info" translate="careChatTpl.attributes"></div>
-          <article>
-            <section class="ct-profile-attributes">
+        <cs-card>
+          <div class="h4 card-info" translate="careChatTpl.attributesCard"></div>
+          <article class="profile-attributes">
+            <section>
               <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
-              <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles" label="profile" value="profile" name="{{profile}}" id="profile" ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
-              <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
+                <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles"
+                          label="profile" value="profile" name="{{profile}}" id="profile"
+                          ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
+              <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
                 <div class="h4 subheader-text" translate="careChatTpl.image"></div>
-                <div class="ct-profile-img">
-                  <i class="icon icon-circle-computer-blank preview-img" ng-hide="careChatSA.logoUploaded"></i>
-                  <img class="uploaded-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
+                <div class="img-common">
+                  <i class="icon icon-circle-computer-blank preview-org-img" ng-hide="careChatSA.logoUploaded"></i>
+                  <img class="uploaded-org-img" ng-src="{{careChatSA.logoFile}}" ng-show="careChatSA.logoUploaded"/>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
-                <input focus-on class="h6" cs-input type="text" placeholder="Enter organization name" ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
+                <input focus-on class="h6" cs-input type="text" placeholder="Enter organization name"
+                       ng-model="careChatSA.orgName" cs-input-group-size="medium-14">
               </div>
-              <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
-                <div>
-                  <div class="h4 subheader-text" translate="careChatTpl.image"></div>
-                  <div class="ct-profile-agent-img">
-                    <i class="agent-img icon icon-user"></i>
-                  </div>
+              <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+                <div class="h4 subheader-text" translate="careChatTpl.image"></div>
+                <div class="img-common agent-img">
+                    <i class="icon icon-user"></i>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
                 <div focus-on class="agent-name-options">
-                  <cs-radio ng-repeat="(key, name) in careChatSA.agentNames" label="name" value="name" name="{{name}}" id="name" ng-model="careChatSA.selectedAgentProfile" ng-click="careChatSA.setAgentProfile()"></cs-radio>
+                  <cs-radio ng-repeat="(key, name) in careChatSA.agentNames" label="name" value="name" name="{{name}}"
+                            id="name" ng-model="careChatSA.selectedAgentProfile"
+                            ng-click="careChatSA.setAgentProfile()"></cs-radio>
                 </div>
               </div>
             </section>
           </article>
         </cs-card>
       </cs-card-layout>
+
     </div>
   </div>
 </div>
-

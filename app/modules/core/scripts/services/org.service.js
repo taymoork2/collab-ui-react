@@ -10,6 +10,7 @@
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
+      getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
@@ -88,6 +89,25 @@
           data.success = false;
           data.status = status;
           callback(data, status);
+        });
+    }
+
+    function getAdminOrgAsPromise(oid, disableCache) {
+      return getAdminOrg(_.noop, oid, disableCache)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          return $q.reject(data);
+
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
         });
     }
 

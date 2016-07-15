@@ -138,7 +138,7 @@
       valueAxes[0].position = 'left';
       valueAxes[0].title = '%';
       valueAxes[0].titleRotation = 180;
-      valueAxes[0].guides.label = 'Utilization High';
+      //valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonMetricsGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';

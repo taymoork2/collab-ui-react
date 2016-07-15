@@ -154,6 +154,10 @@
         border-top-color: $color-meetings-base;
       }
     }
+
+    .no-connectors {
+      opacity: 0.6;
+    }
   }
 }
 

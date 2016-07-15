@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -373,6 +374,10 @@
     "activeUsers": "Active Users",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "today": "Today",
+    "today2": "today",
+    "yesterday": "Yesterday",
+    "yesterday2": "yesterday",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -1111,11 +1116,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1277,7 +1283,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
@@ -1311,7 +1317,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1714,6 +1720,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
     "tosTermsAndConditions": "terms and conditions"
@@ -1809,7 +1816,10 @@
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
-    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuAddDigit": "Add an input digit",
+    "phoneMenuAnotherDigit": "Add another input digit",
+    "phoneSubmenuAddDigit": "Add an input digit to submenu",
+    "phoneSubmenuAnotherDigit": "Add another input digit to submenu",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
     "phoneMenuRepeatContinue": "Repeat and Continue To Next Step",
@@ -1832,11 +1842,17 @@
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
+    "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuSubmenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input Digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
+    "phoneMenuSubmenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Hunt Group target.",
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
+    "phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} has a missing or invalid Route To Phone Number target.",
     "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
+    "phoneMenuSubmenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To User target.",
     "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
+    "phoneMenuSubmenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Voicemail target.",
     "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
     "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
     "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
@@ -2340,6 +2356,8 @@
       "meetingRoomCamera": "Spark Room System &nbsp;<span class='small-hint'>(Any mix up to 3 devices)</span>",
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to 5 devices)</span>",
       "sx10": "SX10",
+      "dx80": "DX80",
+      "mx300": "MX300",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -2449,10 +2467,14 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
+    "requestConfirmMsg": "A purchase request message was sent to all partner administrators",
+    "requestConfirmPartialFailMsg": "A purchase request message was not sent to some of your parter administrators",
+    "requestConfirmTotalFailMsg": "A purchase request message was not sent",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "requestConfirmNotifyMsg": "Notification has been sent to all partner admins of your intent to purchase",
+    "requestConfirmPartialFailNotifyMsg": "Due to an error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
+    "requestConfirmTotalFailNotifyMsg": "Due to an error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
@@ -2535,6 +2557,7 @@
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
@@ -2734,7 +2757,9 @@
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful."
+    "emailError": "Email unsuccessful.",
+    "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
+    "generateError": "Unable to generate activation code. Please try again."
   },
   "rolesPanel": {
     "editUser": "Edit User",
@@ -3554,19 +3579,22 @@
   "branding": {
     "customTitle": "Custom Branding",
     "tenantTitle": "Tenant Branding",
-    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
-    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "partnerInfo": "Brand your customer's experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Brand your employee's experience with Cisco applications by uploading your company logo below.",
     "exampleLink": "&nbsp;(see example)",
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
     "useOwnLogo": "Use your own logo",
+    "logoPlaceholder": "Drag and drop your logo here or click to upload",
     "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
-    "companyLogo": "{{partner}} Company Logos",
-    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
-    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
-    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
-    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+    "companyLogo": "{{name}} Logo",
+    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples.",
+    "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
+    "partner": "Partner",
+    "customer": "Customer"
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3651,6 +3679,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
+    "siteAdminUrl": "Sign-in to manage",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
@@ -3849,7 +3878,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },
-
+  "placesPage": {
+    "placeError": "Add Place failed."
+  },
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -4033,7 +4064,12 @@
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent"
+    "chattingMessage": "You are chatting with our agent",
+    "downloadEmbedCode": "Download Embed Code",
+    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embedCodeWarnMsgContd": "to verify your domains.",
+    "clickHere": "Click here",
+    "embedCodeFor": "Embed Code for "
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -4213,8 +4249,8 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
-        "convertButton": "Convert",
-        "convertText": "Users who may belong to your organization"
+        "convertButton": "Review",
+        "convertText": "Users ready for license conversion review"
       },
       "message": {
         "title": "Message",
@@ -4316,14 +4352,20 @@
     "order": "Order History"
   },
   "subscriptions": {
+    "licenseSummary": "License Summary",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
-    "subscription": "Subscription: ",
+    "subscription": "Subscription ID: ",
+    "defaultName": "Your Subscription",
+    "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "more": "More",
+    "less": "Less",
+    "quantity": "Qty: ",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4333,8 +4375,7 @@
       "EC": "WebEx Event Center",
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
-      "CO": "Call",
-      "ST": "Storage",
+      "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
   },
@@ -4436,7 +4477,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",
