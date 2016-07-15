@@ -14,6 +14,8 @@
     .factory('TerminusCarrierInventorySearch', TerminusCarrierInventorySearch)
     .factory('TerminusCarrierInventoryReserve', TerminusCarrierInventoryReserve)
     .factory('TerminusCarrierInventoryRelease', TerminusCarrierInventoryRelease)
+    .factory('TerminusCarrierTollFreeInventoryCount', TerminusCarrierTollFreeInventoryCount)
+    .factory('TerminusCarrierTollFreeInventorySearch', TerminusCarrierTollFreeInventorySearch)
     .factory('TerminusCustomerCarrierInventoryReserve', TerminusCustomerCarrierInventoryReserve)
     .factory('TerminusCustomerCarrierInventoryRelease', TerminusCustomerCarrierInventoryRelease)
     .factory('TerminusStateService', TerminusStateService)
@@ -85,6 +87,16 @@
   /* @ngInject */
   function TerminusCarrierInventoryRelease($resource, HuronConfig) {
     return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
+  }
+
+  /* @ngInject */
+  function TerminusCarrierTollFreeInventoryCount($resource) {
+    return $resource('modules/huron/pstnSetup/tollFreeAreaCodesDummyResults.json', {}, {});
+  }
+
+  /* @ngInject */
+  function TerminusCarrierTollFreeInventorySearch($resource) {
+    return $resource('modules/huron/pstnSetup/tollFreeSearchDummyResults.json', {}, {});
   }
 
   /* @ngInject */
