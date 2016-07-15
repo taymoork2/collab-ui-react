@@ -564,9 +564,7 @@
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
-      var siteAdminProtocol = "https://";
-      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
-      siteRow.siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + WebExUtilsFact.getSiteName(siteUrl);
+      siteRow.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
 
       siteRow.isCI = isCISite;
 
