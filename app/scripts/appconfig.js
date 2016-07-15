@@ -548,12 +548,16 @@
             parent: 'main'
           })
           .state('my-company', {
-            // url: '/my-company',
             templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
             controller: 'MyCompanyPageCtrl',
             controllerAs: 'mcp',
             parent: 'main',
-            abstract: true
+            abstract: true,
+            resolve: {
+              supportsMyCompany: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasSettingsPage);
+              }
+            }
           })
           .state('my-company.subscriptions', {
             url: '/my-company/subscriptions',
@@ -579,9 +583,7 @@
             url: '/my-company/orders',
             views: {
               'tabContent': {
-                controllerAs: 'mcpOrder',
-                controller: 'MyCompanyPageOrderCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+                template: '<my-company-orders></my-company-orders>'
               }
             }
           })
