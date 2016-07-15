@@ -22,7 +22,7 @@
       }, XhrNotificationService.notify);
 
     vm.reassignText = $translate.instant(
-      'mediaFusion.reassign.reassignText', {
+      'mediaFusion.reassign.reassignTextV2', {
         clusterName: connector.hostname,
         displayName: cluster.name
       });
