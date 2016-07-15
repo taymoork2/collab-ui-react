@@ -5,12 +5,12 @@
 </div>
 <div class="modal-body choose-device-type device-wizard">
   <div>
-    <h5 ng-if="!chooseDeviceType.wizardData.showPlaces" translate="addDeviceWizard.chooseDeviceType.deviceType"></h5>
-    <h5 ng-if="chooseDeviceType.wizardData.showPlaces"
+    <h5 ng-if="!chooseDeviceType.isNewPlaceFlow()" translate="addDeviceWizard.chooseDeviceType.deviceType"></h5>
+    <h5 ng-if="chooseDeviceType.isNewPlaceFlow()"
         translate="addDeviceWizard.chooseDeviceType.deviceTypeNewPlace"></h5>
-    <p ng-if="!chooseDeviceType.wizardData.showPlaces" class="wizardDescription"
+    <p ng-if="!chooseDeviceType.isNewPlaceFlow()" class="wizardDescription"
        translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
-    <p ng-if="chooseDeviceType.wizardData.showPlaces" class="wizardDescription"
+    <p ng-if="chooseDeviceType.isNewPlaceFlow()" class="wizardDescription"
        translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructionsNewPlace"></p>
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
