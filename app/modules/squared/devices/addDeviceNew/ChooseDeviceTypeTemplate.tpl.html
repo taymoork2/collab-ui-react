@@ -21,7 +21,10 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
           </div>
-          <h4 translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
+          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
+              translate="addDeviceWizard.chooseDeviceType.newDeskPhone"></h4>
+          <h4 ng-if="chooseDeviceType.wizardData.showPlaces"
+              translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
           <span translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.huronError">
@@ -37,7 +40,9 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/room-system.png"/>
           </div>
-          <h4 translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
+          <h4 ng-if="!chooseDeviceType.wizardData.showPlaces"
+              translate="addDeviceWizard.chooseDeviceType.newRoomSystem"></h4>
+          <h4 ng-if="chooseDeviceType.wizardData.showPlaces" translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
           <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamples"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">
