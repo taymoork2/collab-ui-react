@@ -18,6 +18,7 @@
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasMediaSericeOnboarding: 'atlas-media-service-onboarding',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasSettingsPage: 'atlas-settings-page',
