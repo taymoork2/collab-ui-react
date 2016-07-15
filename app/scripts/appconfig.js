@@ -578,8 +578,8 @@
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
-                controller: 'MyCompanyPageSubscriptionCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+                controller: 'MySubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
               }
             }
           })

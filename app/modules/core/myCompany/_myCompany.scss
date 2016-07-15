@@ -13,22 +13,21 @@
 }
 
 .company-left-tabs{
+  position: relative;
+  top: 4px;
+  .page-header__left{
+    display: none;
+  }
   .page-header__right{
-    padding-top: 1.5rem;
-    padding-left: 0.75rem;
-
-    -webkit-align-items: flex-start !important;
-    -webkit-box-pack: start !important;
-
-    -webkit-box-justify-content: flex-start !important;
-
-    -ms-flex-align: start !important;
-    -ms-box-pack: start !important;
-
-    align-items:flex-start !important;
-    justify-content: flex-start !important;
-
-    order: -1 !important;
+    @include vr-spacing(mt, 0.75);
+    @include vr-spacing(mh, 0);
+    order: -1;
+    li.current.active:first-of-type a.nav-link {
+      @include vr-spacing(ml, 0);
+    }
+    li.current.active a.nav-link, li a.nav-link {
+      @include vr-spacing(pb, .5);
+    }
   }
 }
 
@@ -45,7 +44,7 @@
     .subscription-column {
       border: none;
       @include vr-spacing(ph, 0.75);
-      @include vr-spacing(pv, 1.25);
+      @include vr-spacing(pv, 1);
       .detail span, .detail a {
         @include vr-spacing(ph, 0.75);
         @include vr-spacing(pv, 0);
@@ -75,7 +74,7 @@
     }
     .subscription-upgrade {
       @include vr-spacing(ph, 1.5);
-      @include vr-spacing(pv, 1.25);
+      @include vr-spacing(pv, 1);
       position: relative;
       height: 100%;
       .license-quantity {
