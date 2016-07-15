@@ -538,7 +538,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.holidays.length).toEqual(0);
     });
 
-    it('should open a modal for importing and send analytics', function () {
+    it('should open a modal for importing', function () {
       controller.openImportModal();
       $scope.$apply();
       expect($modal.open).toHaveBeenCalled();

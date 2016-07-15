@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AAScheduleImportCtrl', function () {
-  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q, $httpBackend, Analytics;
+  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q, Analytics;
   var aaModel = {
     aaRecord: {
       scheduleId: 'url-1'
