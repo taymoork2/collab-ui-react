@@ -44,15 +44,11 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
       vm.showAppSecurity = result;
-    });
-
-    init();
-
-    function init() {
+    }).finally(function () {
       getServices();
       getOrgSettings();
       getAppSecurity();
-    }
+    });
 
     function getServices() {
       AccountOrgService.getServices(orgId, null)
@@ -96,20 +92,20 @@
       if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
           .then(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionSuccess')], 'success');
+            Notification.success($translate.instant('firstTimeWizard.messengerRetentionSuccess'));
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionError')], 'error');
+            Notification.error($translate.instant('firstTimeWizard.messengerRetentionError'));
           });
       }
 
       if (!_.isEmpty(vm.selected.value) && currentDataRetentionPeriod && currentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
           .then(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditSuccess')], 'success');
+            Notification.success($translate.instant('firstTimeWizard.messengerRetentionEditSuccess'));
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditError')], 'error');
+            Notification.error($translate.instant('firstTimeWizard.messengerRetentionEditError'));
           });
       }
 
@@ -121,13 +117,13 @@
           if (vm.currentAppSecurity !== vm.appSecurity) {
             AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
               .then(function (response) {
-                Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
+                Notification.success($translate.instant('firstTimeWizard.messengerAppSecuritySuccess'));
                 Analytics.trackEvent('Device enforceClientSecurity', {
                   orgId: orgId
                 });
               })
               .catch(function (response) {
-                Notification.notify([$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
+                Notification.error($translate.instant('firstTimeWizard.messengerAppSecurityError'));
               });
           }
         }
@@ -136,19 +132,19 @@
       if (vm.msgIntegration && !msgIntFlag) {
         AccountOrgService.addMessengerInterop(orgId)
           .then(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexSuccess')], 'success');
+            Notification.success($translate.instant('firstTimeWizard.messengerEnableWebexSuccess'));
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexError')], 'error');
+            Notification.error($translate.instant('firstTimeWizard.messengerEnableWebexError'));
           });
 
       } else if (!vm.msgIntegration && msgIntFlag) {
         AccountOrgService.deleteMessengerInterop(orgId)
           .then(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
+            Notification.success($translate.instant('firstTimeWizard.messengerDisableWebexError'));
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
+            Notification.error($translate.instant('firstTimeWizard.messengerDisableWebexError'));
           });
       }
     };
