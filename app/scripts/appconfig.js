@@ -1393,7 +1393,13 @@
             },
             resolve: {
               customerListToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCustomerListUpdate);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCustomerListUpdate)
+                  .then(function (result) {
+                    return result;
+                  })
+                  .catch(function () {
+                    return false;
+                  });
               }
             }
           })
