@@ -405,15 +405,28 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.nextButton()).toBe(undefined);
     });
 
-    it('should select start time and end time correctly', function () {
+    it('should select start time and end time correctly if startTime is less than endTime', function () {
       expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
       var startTime = {
         label: '09:00 AM',
         value: '09:00'
       };
+      setTimings(startTime);
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: controller.timings.endTime
+      });
+    });
+
+    it('should select start time and end time correctly if startTime is greater than endTime', function () {
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '05:00 PM',
+        value: '17:00'
+      };
       var endTime = {
-        label: '09:30 AM',
-        value: '09:30'
+        label: '05:30 PM',
+        value: '17:30'
       };
       setTimings(startTime);
       expect(controller.timings).toEqual({
