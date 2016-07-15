@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -54,12 +54,22 @@
       vm.isNewCollapsed = vm.radioSelect == "existing";
       vm.isExistingCollapsed = vm.radioSelect == "create";
     };
-
+    var minlength = 3;
+    var maxlength = 64;
+    vm.message = {
+      required: $translate.instant('common.invalidRequired'),
+      min: $translate.instant('common.invalidMinLength', {
+        'min': minlength
+      }),
+      max: $translate.instant('common.invalidMaxLength', {
+        'max': maxlength
+      }),
+    };
     vm.isNameValid = function () {
       if (vm.place) {
         return true;
       } // hack;
-      return vm.deviceName && vm.deviceName.length < 128;
+      return vm.deviceName && vm.deviceName.length >= minlength && vm.deviceName.length < maxlength;
     };
     vm.next = function () {
       vm.isLoading = true;

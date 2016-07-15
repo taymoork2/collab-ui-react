@@ -5,8 +5,8 @@
 
   angular
     .module('wx2AdminWebClientApp')
-    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
+      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider, languagesProvider) {
         var sidepanelMemo = 'sidepanelMemo';
 
         // sidepanel helper
@@ -173,8 +173,8 @@
           suffix: '.json'
         });
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-        $translateProvider.preferredLanguage('en_US');
-        $translateProvider.fallbackLanguage('en_US');
+        $translateProvider.preferredLanguage(languagesProvider.getPreferredLanguage());
+        $translateProvider.fallbackLanguage(languagesProvider.getFallbackLanguage());
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
@@ -1174,6 +1174,17 @@
             parent: 'main',
             params: {
               tab: 'webex',
+              siteUrl: null
+            }
+          })
+          .state('reports.care', {
+            url: '/reports/care',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'care',
               siteUrl: null
             }
           })

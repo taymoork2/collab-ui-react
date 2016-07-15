@@ -127,7 +127,7 @@ gulp.task('json:verify', function () {
 
 gulp.task('languages:verify', function (done) {
   var L10N_DIR = 'app/l10n';
-  var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/ig;
+  var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/g;
   var L10N_SOURCE = 'app/modules/core/l10n/languages.js';
 
   var languages = fs.readFileSync(L10N_SOURCE, 'utf8').match(L10N_SOURCE_REGEX);
