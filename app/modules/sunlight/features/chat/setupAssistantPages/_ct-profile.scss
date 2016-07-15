@@ -32,6 +32,9 @@
       .profile-name {
         flex: 0 1 65%;
         @include vr-spacing(pb, 0.5);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
 
         .agent {
           opacity: 0.5;
