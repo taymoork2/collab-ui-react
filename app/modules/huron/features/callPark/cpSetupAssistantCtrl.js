@@ -8,7 +8,7 @@
     .controller('CallParkSetupAssistantCtrl', CallParkSetupAssistantCtrl);
 
   /* @ngInject */
-  function CallParkSetupAssistantCtrl($q, $state, $modal, $timeout, $translate,
+  function CallParkSetupAssistantCtrl($window, $q, $state, $modal, $timeout, $translate,
     Authinfo, Notification, CallParkService, CallParkMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
@@ -24,7 +24,9 @@
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
     vm.saveCallPark = saveCallPark;
+    vm.createHelpText = createHelpText;
     vm.pageIndex = 0;
+    vm.submitted = false;
     vm.animation = 'slide-left';
 
     vm.callParkName = '';
@@ -91,19 +93,28 @@
     }
 
     function nextButton($index) {
-      switch ($index) {
-      case 0:
-        return vm.callParkName !== '';
-        break;
-      case 1:
-        return vm.selectedSingleNumber !== '';
-        break;
-      case 2:
-        return vm.selectedMembers.length !== 0;
-        break;
-      default:
-        return true;
-      }
+      var buttonStates = {
+        0: function () {
+          return vm.callParkName !== '';
+        },
+        1: function () {
+          return vm.selectedSingleNumber !== '';
+        },
+        2: function () {
+          if (vm.selectedMembers.length !== 0) {
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'enabled', 'add');
+            return true;
+          } else {
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'enabled', 'remove');
+            return false;
+          }
+        },
+        'default': function () {
+          return false;
+        }
+      };
+
+      return buttonStates[$index]() || buttonStates['default']();
     }
 
     function previousButton($index) {
@@ -116,7 +127,15 @@
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
-        vm.pageIndex++;
+        if (getPageIndex() === 2) {
+          vm.saveCallPark();
+        } else {
+          vm.pageIndex++;
+          if (getPageIndex() === 2) {
+            applyElement($window.document.getElementsByClassName("btn--circle btn--primary btn--right"), 'saveCallPark', 'add');
+            applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'active', 'add');
+          }
+        }
       }, 10);
     }
 
@@ -124,6 +143,8 @@
       vm.animation = 'slide-right';
       $timeout(function () {
         vm.pageIndex--;
+        applyElement($window.document.getElementsByClassName("btn--circle btn--primary btn--right"), 'saveCallPark', 'remove');
+        applyElement($window.document.getElementsByClassName("helptext-btn--right"), 'active', 'remove');
       }, 10);
     }
 
@@ -203,6 +224,10 @@
       });
     }
 
+    function createHelpText() {
+      return $translate.instant('callPark.createHelpText');
+    }
+
     function getDisplayName(user) {
       return CallParkMemberDataService.getDisplayName(user);
     }
@@ -211,12 +236,15 @@
 
     // this function will be used in future milestones
     function saveCallPark() {
+      vm.submitted = true;
       vm.saveProgress = true;
       var data = {
-        name: vm.callParkName
+        name: vm.callParkName,
+        startRange: vm.selectedSingleNumber,
+        endRange: vm.selectedSingleNumber,
+        members: vm.selectedMembers
       };
 
-      populateNumbers(data);
       populateMembers(data);
 
       CallParkService.saveCallPark(customerId, data).then(function (data) {
@@ -230,6 +258,7 @@
         Notification.errorResponse(error, $translate.instant('callPark.errorSave', {
           callParkName: vm.callParkName
         }));
+        vm.submitted = false;
       });
     }
 
@@ -249,7 +278,23 @@
     }
 
     function populateMembers(data) {
-      data.members = CallParkMemberDataService.getMembersNumberUuidJSON();
+      data.members = CallParkMemberDataService.getMembersUuidJSON();
+    }
+
+    function applyElement(element, appliedClass, method) {
+      var domElement = _.get(element, '[0]');
+      if (domElement) {
+        switch (method) {
+        case 'add':
+          domElement.classList.add(appliedClass);
+          break;
+        case 'remove':
+          domElement.classList.remove(appliedClass);
+          break;
+        case 'default':
+          return true;
+        }
+      }
     }
   }
 })();
