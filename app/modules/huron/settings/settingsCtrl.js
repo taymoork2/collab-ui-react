@@ -739,9 +739,8 @@
     }
 
     function updateVoicemailUserTimeZone() {
-      // TODO: This is not a good way to determine when to update the timezone, get site doesn't
-      // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
+        (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -959,14 +958,15 @@
       if (vm.hasVoicemailService) {
         return ServiceSetup.listVoicemailTimezone()
           .then(function (userTemplates) {
-            if (angular.isArray(userTemplates) && userTemplates.length > 0) {
+            if (_.isArray(userTemplates) && userTemplates.length > 0) {
               vm.voicemailUserTemplate = {
-                timeZone: '' + userTemplates[0].timeZone,
-                objectId: userTemplates[0].objectId
+                objectId: userTemplates[0].objectId,
+                timeZone: _.toString(userTemplates[0].timeZone),
+                timeZoneName: userTemplates[0].timeZoneName
               };
 
               vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.id === vm.voicemailUserTemplate.timeZone;
+                return timezone.id === _.get(vm, 'voicemailUserTemplate.timeZoneName');
               });
 
             }
