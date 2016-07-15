@@ -411,10 +411,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
         label: '09:00 AM',
         value: '09:00'
       };
+      var oldEndTime = controller.timings.endTime;
       setTimings(startTime);
       expect(controller.timings).toEqual({
         startTime: startTime,
-        endTime: controller.timings.endTime
+        endTime: oldEndTime
+
       });
     });
 
