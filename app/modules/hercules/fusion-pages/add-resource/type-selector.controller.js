@@ -12,7 +12,7 @@
       expressway: Authinfo.isEntitled(Config.entitlements.fusion_mgmt),
       mediafusion: Authinfo.isEntitled(Config.entitlements.mediafusion)
     };
-    vm.selectedType = null;
+    vm.selectedType = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
 
@@ -45,7 +45,7 @@
     }
 
     function canGoNext() {
-      return vm.selectedType !== null;
+      return vm.selectedType !== '';
     }
 
     function hasAConnector(clusters, type) {

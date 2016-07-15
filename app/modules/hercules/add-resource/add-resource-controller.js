@@ -93,8 +93,8 @@
         });
     }
 
-    function addPreregisteredClusterToAllowList(clusterId) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
+    function addPreregisteredClusterToAllowList(cluster) {
+      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, cluster.id)
         .catch(function () {
           $translate.instant('hercules.addResourceDialog.cannotFinalizeAllowlisting');
         });

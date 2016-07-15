@@ -145,33 +145,31 @@
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          "name": name,
-          "releaseChannel": releaseChannel,
-          "targetType": managementConnectorType
-        }).then(extractDataFromResponse)
-        .then(function (data) {
-          return data.id;
-        });
+          name: name,
+          releaseChannel: releaseChannel,
+          targetType: managementConnectorType
+        })
+        .then(extractDataFromResponse);
     }
 
     function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http.post(url, {
-        "hostname": hostname,
-        "ttlInSeconds": ttlInSeconds,
-        "clusterId": clusterId
+        hostname: hostname,
+        ttlInSeconds: ttlInSeconds,
+        clusterId: clusterId
       });
     }
 
     function provisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/add/invoke?connectorType=' + connectorType;
       return $http.post(url);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
       return $http.post(url);
     }
 

@@ -2081,14 +2081,17 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'AddExpresswayEndController',
+                controller: 'EndController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway-end.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/end.html'
               }
             },
             params: {
               wizard: null
             }
+          })
+          .state('add-resource.mediafusion', {
+            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',

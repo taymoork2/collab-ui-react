@@ -5,10 +5,12 @@
   <h3 class="modal-title">Add Resource</h3>
 </div>
 <div class="modal-body add-resource-modal" ng-switch="vm.UIstate">
-  <div ng-switch-when="loading">
-    <span class="spinner--large">
-      <i class="icon icon-spinner"></i>
-    </span>
+  <div ng-switch-when="loading" class="loading">
+    <div>
+      <span class="spinner--large">
+        <i class="icon icon-spinner"></i>
+      </span>
+    </div>
   </div>
   <div ng-switch-when="error">Error fetching the cluster types.</div>
   <div ng-switch-when="success">
@@ -25,7 +27,7 @@
           ng-show="vm.isEntitledTo.expressway"
           ng-disabled="!vm.hasSetup.expressway"
           cs-input-label="Expressway"
-          cs-input-help-text="Can run Call Service, Calendar Service">
+          cs-input-help-text="{{vm.hasSetup.expressway ? 'Can run Call Service, Calendar Service' : 'Expressway no set  up'}}">
         <input
           cs-input
           type="radio"
@@ -36,7 +38,7 @@
           ng-show="vm.isEntitledTo.mediafusion"
           ng-disabled="!vm.hasSetup.mediafusion"
           cs-input-label="Media Node"
-          cs-input-help-text="Can run Media Service">
+          cs-input-help-text="{{vm.hasSetup.mediafusion ? 'Can run Media Service' : 'Media Service no set  up'}}">
       </div>
     </form>
   </div>

@@ -16,7 +16,6 @@
       call: false,
       calendar: false
     };
-    vm.back = back;
     vm.next = next;
     vm.canGoNext = canGoNext;
 
@@ -48,10 +47,6 @@
           selectedServices: vm.selectedServices
         }
       });
-    }
-
-    function back() {
-      $stateParams.wizard.back();
     }
 
     function canGoNext() {

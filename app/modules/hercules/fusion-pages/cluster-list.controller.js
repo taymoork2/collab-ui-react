@@ -193,7 +193,8 @@
     function addResource() {
       var initialState = {
         data: {
-          targetType: null
+          targetType: '',
+          expressway: {}
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -211,13 +212,13 @@
             next: 'add-resource.expressway.name'
           },
           'add-resource.expressway.name': {
-            next: 'add-resource.expressway.name'
+            next: 'add-resource.expressway.end'
           },
           'add-resource.expressway.end': {}
         }
       };
       var wizard = WizardFactory.create(initialState);
-      $state.go('add-resource.type-selector', {
+      $state.go(initialState.currentStateName, {
         wizard: wizard
       });
     }
