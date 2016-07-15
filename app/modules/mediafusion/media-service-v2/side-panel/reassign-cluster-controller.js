@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance) {
+  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, Notification) {
     var vm = this;
 
     vm.options = [];
@@ -40,6 +40,7 @@
       MediaClusterServiceV2.moveV2Host(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
         $modalInstance.close();
         vm.saving = false;
+        Notification.notify($translate.instant('mediaFusion.moveHostSuccess'), 'success');
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
           hostName: vm.selectedCluster,

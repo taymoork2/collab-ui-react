@@ -78,7 +78,7 @@
     }
 
     function moveNodesTocluster() {
-    
+
       for (var i = 0; i < vm.hosts.length; i++) {
         var hostname = vm.hosts[i].hostname;
         var toClusterName = vm.selectModel[hostname];
@@ -146,7 +146,6 @@
           'mediaFusion.clusters.unabletomovenodes', {
             nodes: nodesString
           });
-      } else if ((vm.successCount + vm.errorCount) < vm.noOfHost) {
       }
     }
 
