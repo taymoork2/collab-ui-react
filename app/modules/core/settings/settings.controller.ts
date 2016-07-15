@@ -58,7 +58,7 @@ namespace globalsettings {
     }
 
     private initSecurity() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then((toggle) => {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPinSettings).then((toggle) => {
         if (toggle) {
           this.security = new SecuritySetting();
         }
