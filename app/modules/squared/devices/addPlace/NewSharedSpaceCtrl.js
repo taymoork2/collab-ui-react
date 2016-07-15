@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('NewSharedSpaceCtrl', NewSharedSpaceCtrl);
   /* @ngInject */
-  function NewSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, Authinfo) {
+  function NewSharedSpaceCtrl($stateParams, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
