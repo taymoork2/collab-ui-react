@@ -21,6 +21,7 @@
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
+    vm.isAnyHoursInvalid = isAnyHoursInvalid;
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
@@ -54,7 +55,7 @@
     function addRange() {
       //if there were any invalid hours, we want to
       //not add a new range to the DOM
-      if (isAnyHoursInvalid()) {
+      if (vm.isAnyHoursInvalid()) {
         return;
       }
       var openhour = AAICalService.getDefaultRange();
@@ -66,10 +67,10 @@
 
     //check each hours form that exist in the DOM for validity
     //return true if there were errors found, else return false
-    //this method actually works through each section and prints
-    //out all of the error messages as well as performing the check
+    //this method prints error messages from performing the checks
     function isAnyHoursInvalid() {
       var errors = false;
+      var daysErr = false;
       _.forEach(vm.openhours, function (value, index) {
         if (isOpenHoursEmpty(index)) {
           errors = true;
@@ -77,7 +78,8 @@
         if (isClosedHoursEmptyOrInvalid(index)) {
           errors = true;
         }
-        if (isDayEmpty(index)) {
+        if (daysErr || isDayEmpty(index)) {
+          daysErr = true;
           errors = true;
         }
       });
@@ -85,15 +87,17 @@
     }
 
     //check each day in the day portion of the form for emptiness
-    //note: it was determined no error message for an invalid
-    //day selection would pop up at this stage, so this method
-    //will simply prohibit the user from making more open hours forms
-    //until they fix the issue (a silent warning is issued)
+    //if there was not at least one day set, then notify the user
+    //with a single toaster error message, otherwise, return no error found
     function isDayEmpty(index) {
       var atLeastOneDaySet = _.find(vm.openhours[index].days, {
         'active': true
       });
-      return angular.isUndefined(atLeastOneDaySet);
+      if (angular.isUndefined(atLeastOneDaySet)) {
+        AANotificationService.error("At least one open hours form does not have any days of the week checked.");
+        return true;
+      }
+      return false;
     }
 
     //check the start time portion of the form for emptiness, return true if
@@ -328,7 +332,7 @@
         }
       } else {
         //print out any of the error messages
-        isAnyHoursInvalid();
+        vm.isAnyHoursInvalid();
         vm.forceCheckHoliday();
       }
     }
