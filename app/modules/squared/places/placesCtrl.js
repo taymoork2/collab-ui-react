@@ -97,24 +97,24 @@
             data: {
               function: "addPlace",
               accountType: 'shared',
-              title: "New Place",
+              showPlaces: true,
+              title: 'addDeviceWizard.newSharedSpace.title',
               isEntitledToHuron: vm.isEntitledToHuron(),
               isEntitledToRoomSystem: vm.isEntitledToRoomSystem(),
               allowUserCreation: false
             },
             history: [],
-            currentStateName: 'addDeviceFlow.chooseDeviceType',
+            currentStateName: 'addDeviceFlow.newSharedSpace',
             wizardState: {
+              'addDeviceFlow.newSharedSpace': {
+                next: 'addDeviceFlow.chooseDeviceType',
+                cloudberry: 'addDeviceFlow.showActivationCode',
+                huron_create: 'addDeviceFlow.addLines'
+              },
               'addDeviceFlow.chooseDeviceType': {
                 nextOptions: {
-                  cloudberry: 'addDeviceFlow.chooseSharedSpace',
-                  huron: 'addDeviceFlow.chooseSharedSpace'
-                }
-              },
-              'addDeviceFlow.chooseSharedSpace': {
-                nextOptions: {
                   cloudberry: 'addDeviceFlow.showActivationCode',
-                  huron_create: 'addDeviceFlow.addLines'
+                  huron: 'addDeviceFlow.addLines'
                 }
               },
               'addDeviceFlow.addLines': {
@@ -125,7 +125,7 @@
           };
 
           var wizard = WizardFactory.create(wizardState);
-          $state.go('addDeviceFlow.chooseDeviceType', {
+          $state.go(wizardState.currentStateName, {
             wizard: wizard
           });
         };

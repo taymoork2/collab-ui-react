@@ -29,13 +29,13 @@
 
     // Setup Assistant pages with index
     vm.states = ['name',
-      'profile',
       'overview',
+      'profile',
+      'chatStatusMessages',
       'customerInformation',
       'feedback',
       'agentUnavailable',
       'offHours',
-      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -551,7 +551,9 @@
 
     function setEndTimeOptions() {
       vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
-      vm.timings.endTime = vm.endTimeOptions[0];
+      if (vm.timings.endTime.value < vm.endTimeOptions[0].value) {
+        vm.timings.endTime = vm.endTimeOptions[0];
+      }
     }
 
     function setDayPreview() {
