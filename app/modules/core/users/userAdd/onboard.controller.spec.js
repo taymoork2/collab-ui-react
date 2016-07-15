@@ -1,6 +1,6 @@
 'use strict';
 
-describe('OnboardCtrl: Ctrl', function () {
+fdescribe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
@@ -44,7 +44,6 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
 
-    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return this.$q.when(this.mock.headers);
@@ -54,9 +53,14 @@ describe('OnboardCtrl: Ctrl', function () {
     }.bind(this));
 
     spyOn(this.Notification, 'notify');
+
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback, status) {
+      callback({}, 200);
+    });
 
     spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
     spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));

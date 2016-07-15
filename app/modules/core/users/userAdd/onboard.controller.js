@@ -836,7 +836,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackEvent('Convert User Search', {
+          Analytics.trackEvent("Convert User Search", {
             from: $state.current.name
           });
         }
