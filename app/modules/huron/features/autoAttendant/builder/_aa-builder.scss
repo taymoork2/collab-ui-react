@@ -77,6 +77,14 @@ $aa-builder-text-color: $gray-dark-1;
   justify-content: center;
 }
 
+.aa-setupassistant {
+.cs-setupassistant--content {
+height: inherit;
+width: 65vw;
+}
+}
+
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $color-white;
