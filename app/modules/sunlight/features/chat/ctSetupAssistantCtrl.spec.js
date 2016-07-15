@@ -8,13 +8,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
   var NAME_PAGE_INDEX = 0;
-  var PROFILE_PAGE_INDEX = 1;
-  var OVERVIEW_PAGE_INDEX = 2;
-  var CUSTOMER_PAGE_INDEX = 3;
-  var FEEDBACK_PAGE_INDEX = 4;
-  var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
-  var OFF_HOURS_PAGE_INDEX = 6;
-  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
+  var OVERVIEW_PAGE_INDEX = 1;
+  var PROFILE_PAGE_INDEX = 2;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 3;
+  var CUSTOMER_PAGE_INDEX = 4;
+  var FEEDBACK_PAGE_INDEX = 5;
+  var AGENT_UNAVAILABLE_PAGE_INDEX = 6;
+  var OFF_HOURS_PAGE_INDEX = 7;
   var EMBED_CODE_PAGE_INDEX = 8;
   var OrgName = 'Test-Org-Name';
   var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
@@ -165,7 +165,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   describe('Feedback Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.currentState = controller.states[4];
+      controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
     });
 
     it('next and previous buttons should be enabled by default', function () {
@@ -179,7 +179,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   describe('Profile Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.currentState = controller.states[1];
+      controller.currentState = controller.states[PROFILE_PAGE_INDEX];
     });
     it('set Organization name and prev/next should be enabled', function () {
       resolveLogoPromise();
@@ -358,7 +358,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   describe('Off Hours Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.currentState = controller.states[6]; // set to off hours view
+      controller.currentState = controller.states[OFF_HOURS_PAGE_INDEX]; // set to off hours view
       resolveLogoPromise();
     });
 
