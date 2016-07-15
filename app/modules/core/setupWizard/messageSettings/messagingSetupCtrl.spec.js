@@ -30,7 +30,7 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(AccountOrgService, 'getAppSecurity').and.returnValue($q.when({
       data: {
-        enforceClientSecurity: true
+        clientSecurityPolicy: true
       }
     }));
 
@@ -38,6 +38,8 @@ describe('Controller: messagingSetupCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'notify');
+    spyOn(FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue($q.when(true));
   }));
 
   function initController() {
@@ -55,10 +57,10 @@ describe('Controller: messagingSetupCtrl', function () {
     });
   });
 
-  describe('atlasAppleFeatures Feature Toggle', function () {
+  describe('atlasPinSettings Feature Toggle', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasAppleFeatures) {
+        if (val === FeatureToggleService.features.atlasPinSettings) {
           return $q.when(true);
         }
         return $q.when(false);
@@ -71,7 +73,7 @@ describe('Controller: messagingSetupCtrl', function () {
     });
   });
 
-  describe('test that getAppSecurity function and sets enforceClientSecurity: ', function () {
+  describe('test that getAppSecurity function and sets clientSecurityPolicy: ', function () {
     beforeEach(initController);
 
     it('should check if getAppSecurity in return sets AppSecurity to true', function () {

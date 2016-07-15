@@ -81,18 +81,5 @@
       </a>
     </div>
   </cs-sp-section>
-
-  <cs-sp-section ng-if="groupDetails.nodeList.length == 0">
-    <div>
-      <button id="btn--primary"
-              ng-disabled="saving"
-              class="btn"
-              style="margin-top: 15px;"
-              ng-click="sp.close(); groupDetails.deleteGroup();"
-              translate="mediaFusion.deleteCluster">
-      </button>
-    </div>
-  </cs-sp-section>
-
 </cs-sp-container>
 
