@@ -18,7 +18,7 @@
     vm.timeLeft = '';
 
     vm.getActivationCode = function () {
-      return vm.wizardData.activationCode || (vm.wizardData.code  && vm.wizardData.code.activationCode) || '';
+      return vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
     };
 
     if (vm.wizardData.deviceType === 'huron') {
@@ -89,7 +89,7 @@
     if (timezone === null || angular.isUndefined(timezone)) {
       timezone = 'UTC';
     }
-    vm.getExpiresOn  = function (){
+    vm.getExpiresOn = function () {
       return moment(vm.wizardData.expiryTime || (vm.wizardData.code && vm.wizardData.code.expiresOn) || undefined).local().tz(timezone).format('LLL (z)');
     };
 
