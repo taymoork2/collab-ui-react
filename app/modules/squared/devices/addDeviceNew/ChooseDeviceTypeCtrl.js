@@ -7,9 +7,6 @@
   function ChooseDeviceTypeCtrl($stateParams) {
     var vm = this;
 
-    vm.hideCancelButton = !$stateParams.wizard.showPlaces;
-    vm.hideBackButton = !!$stateParams.wizard.showPlaces;
-
     vm.resetErrors = function () {
       vm.huronError = false;
       vm.cloudberryError = false;
@@ -21,6 +18,10 @@
     vm.isNewPlaceFlow = function () {
       return vm.wizardData.showPlaces && vm.wizardData.function !== 'addDevice';
     };
+
+    vm.hideCancelButton = vm.isNewPlaceFlow();
+    vm.hideBackButton = !vm.isNewPlaceFlow();
+
     vm.next = function () {
       $stateParams.wizard.next({
         deviceType: vm.selectedDeviceType,
