@@ -39,45 +39,23 @@
         };
 
         vm.showDeregisterHostDialog = function () {
-          if (vm.hostscount == 1) {
-            $log.log("cluster details ", vm.cluster);
-            $modal.open({
-              resolve: {
-                orgName: function () {
-                  return vm.organization.displayName;
-                },
-                cluster: function () {
-                  return vm.cluster;
-                },
-                connector: function () {
-                  return vm.connector;
-                },
+          $modal.open({
+            resolve: {
+              cluster: function () {
+                return vm.cluster;
               },
-              type: 'dialog',
-              controller: 'HostClusterDeregisterControllerV2',
-              controllerAs: "hostClusterDeregister",
-              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-cluster-delete-dialog.html'
-            });
-          } else {
-            $modal.open({
-              resolve: {
-                cluster: function () {
-                  return vm.cluster;
-                },
-                orgName: function () {
-                  return vm.organization.displayName;
-                },
-                connector: function () {
-                  return vm.connector;
-                }
+              orgName: function () {
+                return vm.organization.displayName;
               },
-              type: 'dialog',
-              controller: 'HostDeregisterControllerV2',
-              controllerAs: "hostDeregister",
-              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'
+              connector: function () {
+                return vm.connector;
+              }
+            },
+            type: 'dialog',
+            controller: 'HostDeregisterControllerV2',
+            controllerAs: "hostDeregister",
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'
             });
-          }
-
         };
 
       }
