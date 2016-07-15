@@ -44,7 +44,9 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
       vm.showAppSecurity = result;
-    }).finally(function () {
+    }).finally(init);
+    
+    function init() {
       getServices();
       getOrgSettings();
       getAppSecurity();
