@@ -94,20 +94,20 @@
       if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
           .then(function (response) {
-            Notification.success($translate.instant('firstTimeWizard.messengerRetentionSuccess'));
+            Notification.success('firstTimeWizard.messengerRetentionSuccess');
           })
           .catch(function (response) {
-            Notification.error($translate.instant('firstTimeWizard.messengerRetentionError'));
+            Notification.error('firstTimeWizard.messengerRetentionError');
           });
       }
 
       if (!_.isEmpty(vm.selected.value) && currentDataRetentionPeriod && currentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
           .then(function (response) {
-            Notification.success($translate.instant('firstTimeWizard.messengerRetentionEditSuccess'));
+            Notification.success('firstTimeWizard.messengerRetentionEditSuccess');
           })
           .catch(function (response) {
-            Notification.error($translate.instant('firstTimeWizard.messengerRetentionEditError'));
+            Notification.error('firstTimeWizard.messengerRetentionEditError');
           });
       }
 
@@ -119,13 +119,13 @@
           if (vm.currentAppSecurity !== vm.appSecurity) {
             AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
               .then(function (response) {
-                Notification.success($translate.instant('firstTimeWizard.messengerAppSecuritySuccess'));
+                Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
                 Analytics.trackEvent('Device enforceClientSecurity', {
                   orgId: orgId
                 });
               })
               .catch(function (response) {
-                Notification.error($translate.instant('firstTimeWizard.messengerAppSecurityError'));
+                Notification.error('firstTimeWizard.messengerAppSecurityError');
               });
           }
         }
@@ -134,19 +134,19 @@
       if (vm.msgIntegration && !msgIntFlag) {
         AccountOrgService.addMessengerInterop(orgId)
           .then(function (response) {
-            Notification.success($translate.instant('firstTimeWizard.messengerEnableWebexSuccess'));
+            Notification.success('firstTimeWizard.messengerEnableWebexSuccess');
           })
           .catch(function (response) {
-            Notification.error($translate.instant('firstTimeWizard.messengerEnableWebexError'));
+            Notification.error('firstTimeWizard.messengerEnableWebexError');
           });
 
       } else if (!vm.msgIntegration && msgIntFlag) {
         AccountOrgService.deleteMessengerInterop(orgId)
           .then(function (response) {
-            Notification.success($translate.instant('firstTimeWizard.messengerDisableWebexError'));
+            Notification.success('firstTimeWizard.messengerDisableWebexError');
           })
           .catch(function (response) {
-            Notification.error($translate.instant('firstTimeWizard.messengerDisableWebexError'));
+            Notification.error('firstTimeWizard.messengerDisableWebexError');
           });
       }
     };
