@@ -27,9 +27,9 @@
           {{showActivationCode.friendlyActivationCode}}
         </h4>
       </div>
-      <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.expiresOn }"></p>
+      <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.getExpiresOn() }"></p>
       <div class="qrCodeButtons">
-        <a sq-clipboard="showActivationCode.wizardData.activationCode">
+        <a sq-clipboard="showActivationCode.getActivationCode()">
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
         </a>
 

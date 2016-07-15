@@ -16,6 +16,11 @@
     };
     vm.qrCode = undefined;
     vm.timeLeft = '';
+
+    vm.getActivationCode = function () {
+      return vm.wizardData.activationCode || (vm.wizardData.code  && vm.wizardData.code.activationCode) || '';
+    };
+
     if (vm.wizardData.deviceType === 'huron') {
       OtpService.getQrCodeUrl(vm.wizardData.code.activationCode).then(function (qrcode) {
         var arrayData = '';
@@ -74,7 +79,7 @@
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
     }
 
-    vm.friendlyActivationCode = formatActivationCode(vm.wizardData.activationCode);
+    vm.friendlyActivationCode = formatActivationCode(vm.getActivationCode());
 
     vm.activateEmail = function () {
       vm.showEmail = true;
@@ -84,7 +89,9 @@
     if (timezone === null || angular.isUndefined(timezone)) {
       timezone = 'UTC';
     }
-    vm.expiresOn = moment(vm.wizardData.expiryTime).local().tz(timezone).format('LLL (z)');
+    vm.getExpiresOn  = function (){
+      return moment(vm.wizardData.expiryTime || (vm.wizardData.code && vm.wizardData.code.expiresOn) || undefined).local().tz(timezone).format('LLL (z)');
+    };
 
     vm.onTextClick = function ($event) {
       $event.target.select();
@@ -131,8 +138,8 @@
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
-        oneTimePassword: vm.wizardData.activationCode,
-        expiresOn: vm.expiresOn,
+        oneTimePassword: vm.getActivationCode(),
+        expiresOn: vm.getExpiresOn(),
         userId: vm.wizardData.cisUuid,
         customerId: vm.wizardData.organizationId
       };
