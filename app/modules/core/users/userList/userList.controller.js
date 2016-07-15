@@ -90,10 +90,10 @@
       atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus()
     };
 
-    $q.all(promises).then(function (results) {
+    $q.when(promises).then(function (results) {
       $scope.isCsvEnhancementToggled = results.csvEnhancement;
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
-    }).finally(init);
+    }).then(init);
 
     ////////////////
 
