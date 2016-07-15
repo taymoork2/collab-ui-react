@@ -49,8 +49,6 @@
         }
         .agent {
           @include vr-spacing(mb, 0.5);
-          height: 3rem;
-          width: 3rem;
           border-radius: 50%;
           border: 1px solid $gray-light-1;
           background: $white;
