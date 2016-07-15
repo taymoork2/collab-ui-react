@@ -5,7 +5,7 @@
     .controller('HostDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $log, MediaClusterServiceV2, $modal) {
+      function ($stateParams, MediaClusterServiceV2, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.connector = $stateParams.connector;
@@ -55,7 +55,7 @@
             controller: 'HostDeregisterControllerV2',
             controllerAs: "hostDeregister",
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-deregister-dialog.html'
-            });
+          });
         };
 
       }
