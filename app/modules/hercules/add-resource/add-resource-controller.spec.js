@@ -61,7 +61,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_ucmc'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-uc',
           state: {
@@ -93,7 +93,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_ucmc'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-uc',
           state: {
@@ -132,7 +132,7 @@ describe('Controller: AddResourceController', function () {
         }, {
           connectorType: 'c_cal'
         }],
-        type: 'expressway',
+        targetType: 'c_mgmt',
         servicesStatuses: [{
           serviceId: 'squared-fusion-cal',
           state: {
