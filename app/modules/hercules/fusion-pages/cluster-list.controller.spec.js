@@ -17,7 +17,6 @@ describe('Controller: FusionClusterListController', function () {
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
-    spyOn(FusionClusterService, 'getUpgradeSchedule');
     spyOn(XhrNotificationService, 'notify');
   }
 
@@ -73,7 +72,6 @@ describe('Controller: FusionClusterListController', function () {
           hostname: 'a.elg.no'
         }]
       }]));
-      FusionClusterService.getUpgradeSchedule.and.returnValue($q.resolve({}));
       initController();
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);

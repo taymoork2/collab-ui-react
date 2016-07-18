@@ -38,26 +38,6 @@ describe('Service: FusionClusterService', function () {
       FusionClusterService.getAll();
     });
 
-    it('should filter out non-fused clusters', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond({
-          clusters: [{
-            state: 'fused',
-            targetType: 'c_mgmt',
-            connectors: []
-          }, {
-            state: 'defused',
-            targetType: 'c_mgmt',
-            connectors: []
-          }]
-        });
-      FusionClusterService.getAll()
-        .then(function (clusters) {
-          expect(clusters.length).toBe(1);
-        });
-    });
-
     // state (fused, defused, etc.) will soon be removed from the API reponse!
     // the API will only return fused clusters
     it('should not crash if clusters do not have a state', function () {
