@@ -14,7 +14,7 @@
     vm.clusters = null;
     vm.groups = null;
     vm.combo = true;
-    vm.selectPlaceholder = 'Add new / Select existing Cluster';
+    vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.redirectPopUpAndClose = redirectPopUpAndClose;
