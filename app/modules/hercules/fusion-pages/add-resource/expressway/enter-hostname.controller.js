@@ -37,6 +37,7 @@
     }
 
     function handleKeypress(event) {
+      console.warn('handleKeypress hostname');
       if (event.keyCode === 13 && canGoNext()) {
         next();
       }

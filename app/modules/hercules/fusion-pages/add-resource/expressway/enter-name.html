@@ -6,12 +6,12 @@
 </div>
 <div class="modal-body add-resource-modal">
   <h4 translate="hercules.addResourceDialog.enterDisplayName"></h4>
-  <form name="name">
+  <form name="nameForm">
     <div class="row">
       <div class="cs-input-group medium-12 columns">
         <input
           cs-input
-          autofocus
+          ng-focus="true"
           type="text"
           name="name"
           placeholder="{{vm._translation.placeholder}}"

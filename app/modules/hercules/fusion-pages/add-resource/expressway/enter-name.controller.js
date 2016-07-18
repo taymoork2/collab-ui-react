@@ -10,6 +10,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.name = wizardData.expressway.hostname;
     vm.next = next;
+    vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
       help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
@@ -27,8 +28,10 @@
 
     function provisionCluster(data) {
       vm.provisioning = true;
+      var clusterId = null;
       return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
         .then(function (cluster) {
+          clusterId = cluster.id;
           var promises = [];
           if (data.selectedServices.call) {
             promises.push(FusionClusterService.provisionConnector(cluster.id, 'c_ucmc'));
@@ -38,8 +41,8 @@
           }
           return $q.all(promises);
         })
-        .then(function (cluster) {
-          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, cluster.id);
+        .then(function () {
+          return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');

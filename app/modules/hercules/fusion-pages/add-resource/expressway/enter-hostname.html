@@ -6,16 +6,17 @@
 </div>
 <div class="modal-body add-resource-modal">
   <h4 translate="hercules.addResourceDialog.enterHostname"></h4>
-  <form name="hostname">
+  <form name="hostnameForm">
     <div class="row">
       <div class="cs-input-group medium-12 columns">
         <input
           cs-input
-          autofocus
+          ng-focus="true"
           type="text"
           name="hostname"
           placeholder="{{vm._translation.placeholder}}"
           cs-input-group-size="medium-10"
+          cs-input-help-text="plop"
           cs-input-messages="vm.validationMessages"
           ng-minlength="{{vm.minlength}}"
           ng-keypress="vm.handleKeypress($event)"
