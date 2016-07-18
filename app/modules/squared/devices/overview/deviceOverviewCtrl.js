@@ -20,18 +20,8 @@
         deviceOverview.currentDevice.kem = [];
         deviceOverview.isError = true;
       }
-
-      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-        function (data) {
-          deviceOverview.currentDevice.kem = data;
-          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
-          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
-        }
-      ).catch(function () {
-        Notification.error($translate.instant('deviceOverviewPage.retrieveKemFail'));
-      });
-
-      deviceOverview.saveInProcess = false;
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+      deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
     }
 
     if (deviceOverview.currentDevice.isHuronDevice) {
@@ -301,14 +291,7 @@
 
     deviceOverview.saveKem = function () {
       var device = deviceOverview.currentDevice;
-      CmiKemService.getKEM(deviceOverview.currentDevice.huronId).then(
-        function (data) {
-          deviceOverview.currentDevice.kem = data;
-        }
-      ).catch(function () {
-        Notification.error($translate.instant('deviceOverviewPage.retrieveKemFail'));
-      });
-      var previousKemNumber = deviceOverview.currentDevice.kem.length;
+      var previousKemNumber = device.kem.length;
       var newKemNumber = deviceOverview.kemNumber.value;
       var diff = newKemNumber - previousKemNumber;
       var promiseList = [];
@@ -324,11 +307,16 @@
           promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
         });
       }
-      promiseList.push(CmiKemService.getKEM(device.huronId));
       $q.all(promiseList).then(
-        function (data) {
-          device.kem = data[data.length - 1];
-          Notification.success($translate.instant('deviceOverviewPage.kemUpdated'));
+        function () {
+          CmiKemService.getKEM(device.huronId).then(
+            function (data) {
+              deviceOverview.currentDevice.kem = data;
+              Notification.success($translate.instant('deviceOverviewPage.kemUpdated'));
+            }
+          ).catch(function () {
+            Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+          });
         },
         function () {
           deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
