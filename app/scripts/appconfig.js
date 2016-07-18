@@ -2028,7 +2028,7 @@
               'modal@': {
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/type-selector.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
               }
             },
             params: {
@@ -2044,7 +2044,7 @@
               'modal@': {
                 controller: 'ServiceSelectorController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/service-selector.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/service-selector.html'
               }
             },
             params: {
@@ -2057,7 +2057,7 @@
               'modal@': {
                 controller: 'EnterHostnameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/enter-hostname.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html'
               }
             },
             params: {
@@ -2070,7 +2070,7 @@
               'modal@': {
                 controller: 'EnterNameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/enter-name.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'
               }
             },
             params: {
@@ -2083,7 +2083,7 @@
               'modal@': {
                 controller: 'EndController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/end.html'
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/end.html'
               }
             },
             params: {
