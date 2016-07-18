@@ -126,15 +126,15 @@
       });
     }
 
-    function formatTimeAndDate(clusterUpgradeSchedule) {
-      var time = labelForTime(clusterUpgradeSchedule.scheduleTime);
+    function formatTimeAndDate(upgradeSchedule) {
+      var time = labelForTime(upgradeSchedule.scheduleTime);
       var day;
-      if (clusterUpgradeSchedule.scheduleDays.length === 7) {
+      if (upgradeSchedule.scheduleDays.length === 7) {
         day = $translate.instant('weekDays.everyDay', {
           day: $translate.instant('weekDays.day')
         });
       } else {
-        day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+        day = labelForDay(upgradeSchedule.scheduleDays[0]);
       }
       return time + ' ' + day;
     }
@@ -149,15 +149,8 @@
     }
 
     function labelForDay(day) {
-      var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      var keys = _.reduce(days, function (result, day, i) {
-        // the days in schedule upgrade starts at 1 == Monday and ends with 7 == Sunday
-        // (API made by an European! :))
-        result[i + 1] = day;
-        return result;
-      }, {});
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + keys[day])
+        day: $translate.instant('weekDays.' + day)
       });
     }
 

@@ -60,7 +60,10 @@
 
     function updateUI() {
       vm.state = 'syncing';
-      return FusionClusterService.getUpgradeSchedule(vm.clusterId)
+      return FusionClusterService.get(vm.clusterId)
+        .then(function (cluster) {
+          return cluster.upgradeSchedule;
+        })
         .then(function (upgradeSchedule) {
           vm.formData = convertDataForUI(upgradeSchedule);
           vm.upgradeSchedule = upgradeSchedule;
@@ -147,7 +150,7 @@
     }
 
     function getDayOptions() {
-      if (vm.upgradeSchedule.scheduleDays && vm.upgradeSchedule.scheduleDays.length === 7) {
+      if (vm.upgradeSchedule && vm.upgradeSchedule.scheduleDays.length === 7) {
         var label = $translate.instant('weekDays.everyDay', {
           day: $translate.instant('weekDays.day')
         });
