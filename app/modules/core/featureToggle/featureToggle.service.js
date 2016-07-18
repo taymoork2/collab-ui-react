@@ -15,7 +15,7 @@
       atlasAppleFeatures: 'atlas-apple-features',
       atlasDataRetentionSettings: 'atlas-data-retention-settings',
       atlasPinSettings: 'atlas-pin-settings',
-      atlasCustomerListUpdate: 'atlas-customerlist-update',
+      atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
