@@ -14,6 +14,6 @@
   </div>
   <div class="modal-footer">
     <button class="btn" ng-if="::pstnServiceAddress.hasBackButton()" ng-click="pstnServiceAddress.goBack()" translate="common.back"></button>
-    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateAddress()" ng-disabled="pstnServiceAddress.form.$invalid || !pstnServiceAddress.isValid"><span translate="common.next"></span></button>
+    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateNext()" ng-disabled="pstnServiceAddress.form.$invalid || !pstnServiceAddress.isValid"><span translate="common.next"></span></button>
   </div>
 </div>

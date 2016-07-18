@@ -6,7 +6,7 @@
   <div class="cs-card-container ct-sa-content ct-offhours">
     <cs-card-layout >
       <cs-card>
-        <div class="h4 card-info" translate="careChatTpl.screen"></div>
+        <div class="h4 card-info" translate="careChatTpl.preview"></div>
         <article class="offhours-preview">
           <section>
             <div class="offhours-icon">
@@ -15,10 +15,10 @@
             <div class="h5 offhours-preview-message">{{careChatSA.template.configuration.pages.offHours.message}}</div>
             <div ng-if="!careChatSA.isBusinessHoursDisabled" class="business-hours">
               <div class="h5 message" translate="careChatTpl.businessHours"></div>
-              <div class="h6" ng-if="!careChatSA.open24Hours">{{careChatSA.scheduleTimeZone.label}}</div>
+              <div class="h6" ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours">{{careChatSA.scheduleTimeZone.label}}</div>
               <div class="h6 day-time-preview days" ng-model="careChatSA.daysPreview">{{careChatSA.daysPreview}}</div>
-              <div class="h6 day-time-preview" ng-if="careChatSA.open24Hours" translate="careChatTpl.open24Hours"></div>
-              <div class="h6 day-time-preview" ng-if="!careChatSA.open24Hours">
+              <div class="h6 day-time-preview" ng-if="careChatSA.template.configuration.pages.offHours.schedule.open24Hours" translate="careChatTpl.open24Hours"></div>
+              <div class="h6 day-time-preview" ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours">
                 <span>{{careChatSA.timings.startTime.label}} - </span>
                 <span>{{careChatSA.timings.endTime.label}}</span>
               </div>
@@ -29,7 +29,7 @@
         </article>
       </cs-card >
       <cs-card>
-        <div class="h4 card-info" translate="careChatTpl.attributesCard"></div>
+        <div class="h4 card-info" translate="careChatTpl.attributes"></div>
         <article class="off-hours-attributes">
           <section>
             <div class="offhours-message">
@@ -37,10 +37,6 @@
               <textarea class="h6 message" type="text" maxlength="100"
                         ng-model="careChatSA.template.configuration.pages.offHours.message"
                         ng-class="{'no-message': !careChatSA.isOffHoursMessageValid}"/>
-              <div class="warning" ng-if="!careChatSA.isOffHoursMessageValid">
-                <span><i class="icon icon-warning"></i></span>
-                <span translate="careChatTpl.offHoursWarningMessage"></span>
-              </div>
             </div>
             <div>
               <div class="h4 business-hours-label" translate="careChatTpl.businessHours"></div>
@@ -49,18 +45,14 @@
                      ng-repeat=" dayObj in careChatSA.days"
                      ng-class="{ 'day-selected': dayObj.isSelected, 'day-unselected': !dayObj.isSelected }"
                      ng-click="careChatSA.setDay($index)">{{dayObj.day}}</div>
-                <div class="warning" ng-if="careChatSA.isBusinessHoursDisabled">
-                  <span><i class="icon icon-warning"></i></span>
-                  <span translate="careChatTpl.offHoursDayWarningMessage"></span>
-                </div>
               </div>
               <div class="time-and-timezone-picker">
                 <cs-checkbox class="h5"
                              ckid="ctOpen24Hours"
                              isdisabled="careChatSA.isBusinessHoursDisabled"
-                             ng-model="careChatSA.open24Hours"
+                             ng-model="careChatSA.template.configuration.pages.offHours.schedule.open24Hours"
                              label="{{:: 'careChatTpl.open24Hours' | translate}}"></cs-checkbox>
-                <div ng-if="!careChatSA.open24Hours && !careChatSA.isBusinessHoursDisabled">
+                <div ng-if="!careChatSA.template.configuration.pages.offHours.schedule.open24Hours && !careChatSA.isBusinessHoursDisabled">
                   <div class="time-picker">
                     <div class="start-time">
                       <div class="h5" translate="careChatTpl.offHoursStartTime"></div>
@@ -87,6 +79,7 @@
                             labelfield="label"
                             valuefield="value"
                             filter="true"
+                            name="businessHours-timezonePicker"
                             ng-model="careChatSA.scheduleTimeZone"
                             options="careChatSA.timezoneOptions"
                             placeholder="'Select a timezone'"></cs-select>

@@ -81,7 +81,7 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
         .then(function (response) {
 
           $timeout(function () {

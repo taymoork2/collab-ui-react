@@ -46,19 +46,19 @@ namespace globalsettings {
           // it will be revealed after toggle is resolved
           this.branding = new BrandingSetting();
         });
-      } else if(this.Authinfo.isPartnerUser()) {
-        this.Orgservice.getOrg(_.noop).then(data => {
-          if (_.get(data, 'orgSettings.allowCustomerLogos')) {
+      } else if(this.Authinfo.isDirectCustomer()) {
+        this.branding = new BrandingSetting();
+      } else if(this.Authinfo.isCustomerAdmin()) {
+        this.Orgservice.getOrg(_.noop).then(response => {
+          if (_.get(response, 'data.orgSettings.allowCustomerLogos')) {
             this.branding = new BrandingSetting();
           }
         });
-      } else if(this.Authinfo.isDirectCustomer()) {
-        this.branding = new BrandingSetting();
-      }
+      } 
     }
 
     private initSecurity() {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasAppleFeatures).then((toggle) => {
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPinSettings).then((toggle) => {
         if (toggle) {
           this.security = new SecuritySetting();
         }

@@ -28,10 +28,14 @@ var RUN_KARMA_PARALLEL = 'run-karma-parallel-';
 var KARMA_CONFIG = 'karma-config-';
 
 var modules = _.keys(config.testFiles.spec);
+// 'custom' and 'ts' aren't really "modules" like the other modules, but they do represent a
+// reasonable means of grouping specs, so we include them in the list, but exclude them where
+// appropriate
+modules = modules.concat('custom', 'ts');
 
 var runKarmaParallelModules = _.chain(modules)
   .reject(function (module) {
-    return module === 'all';
+    return module === 'all' || module === 'custom';
   })
   .map(function (module) {
     return RUN_KARMA_PARALLEL + module;
@@ -39,6 +43,8 @@ var runKarmaParallelModules = _.chain(modules)
   .value();
 // Allow run-karma-parallel-<module> tasks to be run in individual processes
 ll.tasks(runKarmaParallelModules);
+
+var moduleSuffix = '';
 
 /*
  * unitTests.gulp.js:
@@ -137,63 +143,85 @@ gulp.task('karma-each', function (done) {
   runSeq.apply(this, karmaArgs);
 });
 
+// use 'stream-series' module to properly order file glob lists into a file injection target
+function getFileListFor(module) {
+  var tsManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsManifest);
+  var karmaSpecFiles = getKarmaSpecFilesFor(module);
+
+  var fileGlobLists = [
+    config.vendorFiles.js,
+    config.testFiles.js,
+    config.testFiles.app.bootstrap,
+    config.testFiles.app.moduleDecl,
+    config.testFiles.app.appJsFiles,
+    tsManifestFiles,
+    config.testFiles.global,
+    karmaSpecFiles
+  ];
+
+  // convert list of file glob lists -> list of file streams
+  var fileStreams = _.map(fileGlobLists, function (fileGlobList) {
+    return gulp.src(fileGlobList, {
+      read: false
+    });
+  });
+
+  return series.apply(null, fileStreams);
+}
+
+function getKarmaSpecFilesFor(module) {
+  var filesToAdd;
+  var filesFrom;
+  switch (module) {
+  case 'ts':
+    // typescript files are listed in build-time generated manifest files
+    filesToAdd = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
+    break;
+  case 'custom':
+    // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated
+    // list of files relative to the project root dir
+    // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
+    filesFrom = args['files-from'];
+    if (!filesFrom) {
+      log($.util.colors.red('Error: missing \'--files-from\' argument'));
+      process.exit(1);
+    } else {
+      // parse each line item from file specified by '--files-from', and append to main list
+      filesToAdd = fileListParser.toList(filesFrom);
+    }
+    break;
+  default:
+    filesToAdd = config.testFiles.spec[module];
+  }
+  return filesToAdd;
+}
+
 function createGulpKarmaConfigModule(module) {
   // Compile the karma template so that changes
   // to its file array aren't managed manually
   return function (done) {
     if (!args.nounit) {
-      var unitTestFiles = [].concat(
-        config.vendorFiles.js,
-        config.testFiles.js,
-        config.testFiles.app,
-        config.testFiles.notTs,
-        config.testFiles.global
-      );
-
-      // any other 'specs' target should already be defined in 'gulp.config.js'
-      if (module !== 'custom') {
-        unitTestFiles = unitTestFiles.concat(config.testFiles.spec[module]);
-      } else {
-        // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated list of
-        // files relative to the project root dir
-        // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
+      var fileList = getFileListFor(module);
+      moduleSuffix = '';
+      if (module === 'custom') {
         var filesFrom = args['files-from'];
-        var flist;
-        if (!filesFrom) {
-          log($.util.colors.red('Error: missing \'--files-from\' argument'));
-          process.exit(1);
-        } else {
-          // parse each line item from file specified by '--files-from', and append to main list
-          flist = fileListParser.toList(filesFrom);
-          unitTestFiles = unitTestFiles.concat(flist);
-        }
+        moduleSuffix = moduleSuffix + '.' + path.basename(filesFrom);
       }
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(
-          series(
-            gulp.src(unitTestFiles, {
-              read: false
-            }),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsManifest), {
-              read: false
-            }),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest), {
-              read: false
-            })
-          ), {
-            addRootSlash: false,
-            starttag: '// inject:unitTestFiles',
-            endtag: '// end-inject:unitTestFiles',
-            transform: function (filepath, file, i, length) {
-              return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-            }
-          }))
-        .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
-        .pipe($.replace('<module>', module))
+        .pipe($.inject(fileList, {
+          addRootSlash: false,
+          starttag: '// inject:unitTestFiles',
+          endtag: '// end-inject:unitTestFiles',
+          transform: function (filepath, file, i, length) {
+            return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+          }
+        }))
+        .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage'"))
+        .pipe($.replace('<module>', moduleSuffix ? module + moduleSuffix : module))
         .pipe($.rename({
-          basename: 'karma-unit-' + module,
+          basename: 'karma-unit-' + module + moduleSuffix,
           extname: '.js'
         }))
         .pipe($.jsbeautifier({
@@ -214,7 +242,7 @@ function createGulpRunKarmaModule(module) {
   return function (done) {
     if (!args.nounit) {
       var options = {
-        configFile: path.resolve(__dirname, '../../test/karma-unit-' + module + '.js')
+        configFile: path.resolve(__dirname, '../../test/karma-unit-' + module + moduleSuffix + '.js')
       };
       if (args.watch) {
         options.autoWatch = true;
@@ -249,7 +277,7 @@ function createGulpRunKarmaModule(module) {
 function karmaConfigParallelArray() {
   var karmaTasks = [];
   _.forEach(modules, function (module) {
-    if (module !== 'all') {
+    if (module !== 'all' && module !== 'custom') {
       karmaTasks.push(KARMA_CONFIG + module);
     }
   });
@@ -265,7 +293,7 @@ function karmaCombineCoverage(done) {
       collector.add(JSON.parse(fs.readFileSync(file, 'utf8')));
     });
 
-    reporter.addAll(['html', 'cobertura']);
+    reporter.addAll(['cobertura']);
     reporter.write(collector, true, done);
   });
 }

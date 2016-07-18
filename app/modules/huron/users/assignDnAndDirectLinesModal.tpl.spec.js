@@ -1,96 +1,43 @@
 'use strict';
 
 describe('Template: assignDnAndDirectLinesModal', function () {
-  var $compile, $q, $scope, $templateCache, $controller, controller;
-  var Orgservice, TelephonyInfoService, DialPlanService, Userservice, FeatureToggleService, CsvDownloadService;
-  var internalNumbers, externalNumbers, externalNumberPool, externalNumberPoolMap, getUserMe;
-  var getMigrateUsers, getMyFeatureToggles, sites, fusionServices, headers, getMessageServices;
-  var view;
+
+  function init() {
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
+    this.injectDependencies('$q', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService');
+    initDependencySpies.apply(this);
+    this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
+  }
+
+  function initDependencySpies() {
+    this.mock = {};
+    this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
+    this.mock.headers = getJSONFixture('core/json/users/headers.json');
+
+    spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
+      if (type === 'headers') {
+        return this.$q.when(this.mock.headers);
+      } else {
+        return this.$q.when({});
+      }
+    }.bind(this));
+
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
+    spyOn(this.Orgservice, 'getUnlicensedUsers');
+  }
+
+  function initSpies() {
+    spyOn(this.$scope, 'updateUserLicense');
+  }
 
   var ONBOARD_BUTTON = '#btnOnboard';
   var CONVERT_BUTTON = '#btnConvert';
   var EDIT_SERVICES_BUTTON = '#btnEditServices';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
-  beforeEach(inject(dependencies));
-  beforeEach(initDependencySpies);
-  beforeEach(compileView);
+  beforeEach(init);
   beforeEach(initSpies);
-
-  function dependencies(_$compile_, $rootScope, _$q_, _$templateCache_, _$controller_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _CsvDownloadService_) {
-    $compile = _$compile_;
-    $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
-    $controller = _$controller_;
-    $q = _$q_;
-
-    DialPlanService = _DialPlanService_;
-    Userservice = _Userservice_;
-    Orgservice = _Orgservice_;
-    TelephonyInfoService = _TelephonyInfoService_;
-    FeatureToggleService = _FeatureToggleService_;
-    CsvDownloadService = _CsvDownloadService_;
-  }
-
-  function initDependencySpies() {
-    internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
-    externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
-    externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
-    externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
-    getUserMe = getJSONFixture('core/json/users/me.json');
-    getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    sites = getJSONFixture('huron/json/settings/sites.json');
-    fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
-    headers = getJSONFixture('core/json/users/headers.json');
-    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
-
-    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
-    spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
-      if (type === 'headers') {
-        return $q.when(headers);
-      } else {
-        return $q.when({});
-      }
-    });
-    spyOn(Orgservice, 'getUnlicensedUsers');
-
-    spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
-    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
-    spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
-      extensionGenerated: 'false'
-    }));
-    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
-    spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
-
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
-
-    spyOn(Userservice, 'onboardUsers');
-    spyOn(Userservice, 'bulkOnboardUsers');
-    spyOn(Userservice, 'updateUsers');
-  }
-
-  function initSpies() {
-    spyOn($scope, 'updateUserLicense');
-  }
-
-  function compileView() {
-    controller = $controller('OnboardCtrl', {
-      $scope: $scope
-    });
-
-    var template = $templateCache.get('modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
-    view = $compile(angular.element(template))($scope);
-    $scope.$apply();
-  }
 
   describe('Onboard Flow', function () {
     beforeEach(initOnboardFlow);
@@ -115,32 +62,32 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     it('should not show the convert button', expectButtonToExist(CONVERT_BUTTON, false));
     it('should show the edit services button', expectButtonToExist(EDIT_SERVICES_BUTTON, true));
     it('should call updateUserLicense() on click', function () {
-      view.find(EDIT_SERVICES_BUTTON).click();
-      expect($scope.updateUserLicense).toHaveBeenCalled();
+      this.view.find(EDIT_SERVICES_BUTTON).click();
+      expect(this.$scope.updateUserLicense).toHaveBeenCalled();
     });
   });
 
   function expectButtonToExist(button, shouldExist) {
     return function () {
-      expect(view.find(button).length).toBe(shouldExist ? 1 : 0);
+      expect(this.view.find(button).length).toBe(shouldExist ? 1 : 0);
     };
   }
 
   function initOnboardFlow() {
-    $scope.convertUsersFlow = false;
-    $scope.editServicesFlow = false;
-    $scope.$apply();
+    this.$scope.convertUsersFlow = false;
+    this.$scope.editServicesFlow = false;
+    this.$scope.$apply();
   }
 
   function initConvertFlow() {
-    $scope.convertUsersFlow = true;
-    $scope.editServicesFlow = false;
-    $scope.$apply();
+    this.$scope.convertUsersFlow = true;
+    this.$scope.editServicesFlow = false;
+    this.$scope.$apply();
   }
 
   function initEditServicesFlow() {
-    $scope.convertUsersFlow = false;
-    $scope.editServicesFlow = true;
-    $scope.$apply();
+    this.$scope.convertUsersFlow = false;
+    this.$scope.editServicesFlow = true;
+    this.$scope.$apply();
   }
 });

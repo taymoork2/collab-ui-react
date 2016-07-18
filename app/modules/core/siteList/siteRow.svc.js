@@ -154,8 +154,6 @@
 
           if (isNewSiteUrl) {
 
-            conferenceService.isCI = true;
-
             conferenceService.showCSVInfo = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
@@ -165,7 +163,7 @@
             conferenceService.showSiteLinks = false;
             conferenceService.isError = false;
             conferenceService.isWarn = false;
-            conferenceService.isCI = false;
+            conferenceService.isCI = true;
             conferenceService.isCSVSupported = false;
             conferenceService.adminEmailParam = null;
             conferenceService.userEmailParam = null;
@@ -566,9 +564,7 @@
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
-      var siteAdminProtocol = "https://";
-      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
-      siteRow.siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + WebExUtilsFact.getSiteName(siteUrl);
+      siteRow.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
 
       siteRow.isCI = isCISite;
 

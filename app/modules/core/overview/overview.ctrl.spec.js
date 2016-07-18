@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo;
+  var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var services = getJSONFixture('squared/json/services.json');
 
@@ -27,6 +27,10 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
+    });
+
+    it('should have properly set trialDaysLeft', function () {
+      expect(controller.trialDaysLeft).toEqual(1);
     });
   });
 
@@ -236,7 +240,7 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _Authinfo_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _Authinfo_, _TrialService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -245,6 +249,7 @@ describe('Controller: OverviewCtrl', function () {
     Log = _Log_;
     Config = _Config_;
     Authinfo = _Authinfo_;
+    TrialService = _TrialService_;
 
     ServiceDescriptor = {
       services: function (eventHandler) {}
@@ -293,6 +298,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getLicenses').and.returnValue([{}]);
     spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Authinfo, 'getServices').and.returnValue(services);
+    spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
@@ -305,7 +311,8 @@ describe('Controller: OverviewCtrl', function () {
       Orgservice: Orgservice,
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
-      Config: Config
+      Config: Config,
+      TrialService: TrialService
     });
     $scope.$apply();
   }

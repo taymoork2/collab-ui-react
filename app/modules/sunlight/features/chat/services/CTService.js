@@ -8,7 +8,7 @@
     .service('CTService', CTService);
 
   /* @ngInject */
-  function CTService($http, $translate, Authinfo, BrandService, TimezoneService, UrlConfig) {
+  function CTService($http, $modal, $translate, Authinfo, BrandService, TimezoneService, UrlConfig) {
     var service = {
       getDays: getDays,
       getLogo: getLogo,
@@ -18,7 +18,8 @@
       getDefaultTimes: getDefaultTimes,
       getTimezoneOptions: getTimezoneOptions,
       getDefaultTimeZone: getDefaultTimeZone,
-      generateCodeSnippet: generateCodeSnippet
+      generateCodeSnippet: generateCodeSnippet,
+      openEmbedCodeModal: openEmbedCodeModal
     };
     return service;
 
@@ -33,23 +34,26 @@
     function generateCodeSnippet(templateId) {
       var appName = UrlConfig.getSunlightBubbleUrl();
       var orgId = Authinfo.getOrgId();
-      return "<script>(function(document, script) {" +
-        "var bubbleScript = document.createElement(script);" +
-        "e = document.getElementsByTagName(script)[0];" +
-        "bubbleScript.async = true;" +
-        "bubbleScript.CiscoAppId =  'cisco-chat-bubble-app';" +
-        "bubbleScript.DC = 'rciad.ciscoccservice.com';" +
-        "bubbleScript.orgId = '" + orgId + "';" +
-        "bubbleScript.templateId = '" + templateId + "';" +
-        "bubbleScript.src = '" + appName + "/bubble.js';" +
-        "bubbleScript.type = \"text/javascript\";" +
-        "bubbleScript.setAttribute(\"charset\", \"utf-8\");" +
-        "e.parentNode.insertBefore(bubbleScript, e);" +
-        "})(document, \"script\");         </script>";
+      return "<script>\n" +
+        "  (function(document, script) {\n" +
+        "  var bubbleScript = document.createElement(script);\n" +
+        "  e = document.getElementsByTagName(script)[0];\n" +
+        "  bubbleScript.async = true;\n" +
+        "  bubbleScript.CiscoAppId =  'cisco-chat-bubble-app';\n" +
+        "  bubbleScript.DC = '" + appName.split('https://bubble.')[1] + "';\n" +
+        "  bubbleScript.orgId = '" + orgId + "';\n" +
+        "  bubbleScript.templateId = '" + templateId + "';\n" +
+        "  bubbleScript.src = '" + appName + "/bubble.js';\n" +
+        "  bubbleScript.type = 'text/javascript';\n" +
+        "  bubbleScript.setAttribute('charset', 'utf-8');\n" +
+        "  e.parentNode.insertBefore(bubbleScript, e);\n" +
+        "  })(document, 'script');\n" +
+        "</script>";
     }
 
     function labelForTime(time) {
       var currentLanguage = $translate.use();
+      // Need to check for other languages
       return (currentLanguage === 'en_US') ? moment(time, 'HH:mm').format('hh:mm A') : time;
     }
 
@@ -71,7 +75,13 @@
 
     function getEndTimeOptions(startTime) {
       var timeOptions = getTimeOptions();
+      // Push 11:59 PM as end time to handle the scenario where start time is 11:30 PM.
+      timeOptions.push({
+        label: labelForTime('23:59'),
+        value: '23:59'
+      });
       var index = _.findIndex(timeOptions, {
+        label: labelForTime(startTime.value),
         value: startTime.value
       });
       return timeOptions.slice(index + 1, timeOptions.length);
@@ -160,6 +170,24 @@
         label: 'Saturday',
         isSelected: false
       }];
+    }
+
+    function openEmbedCodeModal(templateId, templateName) {
+      var header = $translate.instant('careChatTpl.embedCodeFor');
+      $modal.open({
+        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
+        type: 'small',
+        controller: 'EmbedCodeCtrl',
+        controllerAs: 'embedCodeCtrl',
+        resolve: {
+          templateId: function () {
+            return templateId;
+          },
+          templateHeader: function () {
+            return header + templateName;
+          }
+        }
+      });
     }
   }
 })();

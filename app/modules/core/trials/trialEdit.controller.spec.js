@@ -52,7 +52,7 @@ describe('Controller: TrialEditCtrl:', function () {
         return $q.when(true);
       }
     });
-    spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
       data: {
         success: true,
         isTestOrg: true

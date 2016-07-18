@@ -2,7 +2,7 @@ namespace globalsettings {
 
   interface GetAppSecurityResponse {
     data:{
-      enforceClientSecurity:boolean
+      clientSecurityPolicy:boolean
     }
   }
   export class SecuritySettingController {
@@ -23,9 +23,9 @@ namespace globalsettings {
         .then(this.appSecuritySettingLoaded.bind(this));
     }
 
-    private appSecuritySettingLoaded({data:{enforceClientSecurity:enforceClientSecurity}={enforceClientSecurity: null}}:GetAppSecurityResponse) {
-      if (enforceClientSecurity != null) {
-        this.requireProtectedDevices = enforceClientSecurity;
+    private appSecuritySettingLoaded({data:{clientSecurityPolicy:clientSecurityPolicy}={clientSecurityPolicy: null}}:GetAppSecurityResponse) {
+      if (clientSecurityPolicy != null) {
+        this.requireProtectedDevices = clientSecurityPolicy;
         this.requireProtectedDevicesIsLoaded = true;
       }
     }
