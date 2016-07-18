@@ -2,14 +2,25 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title">Add Resource</h3>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
 </div>
 <div class="modal-body add-resource-modal">
-  <h4>Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.</h4>
+  <h4 translate="hercules.addResourceDialog.enterHostname"></h4>
   <form name="hostname">
     <div class="row">
-      <div class="cs-input-group medium-6 columns">
-        <input class="cs-input" type="text" placeholder="Enter Expressway hostname" autofocus="true" ng-model="vm.hostname">
+      <div class="cs-input-group medium-12 columns">
+        <input
+          cs-input
+          autofocus
+          type="text"
+          name="hostname"
+          placeholder="{{vm._translation.placeholder}}"
+          cs-input-group-size="medium-10"
+          cs-input-messages="vm.validationMessages"
+          ng-minlength="{{vm.minlength}}"
+          ng-keypress="vm.handleKeypress($event)"
+          ng-required="true"
+          ng-model="vm.hostname">
       </div>
     </div>
   </form>

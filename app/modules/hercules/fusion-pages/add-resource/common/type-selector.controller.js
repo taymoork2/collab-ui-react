@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($stateParams, Authinfo, Config, FusionClusterService) {
+  function TypeSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -15,12 +15,20 @@
     vm.selectedType = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
+    vm.handleKeypress = handleKeypress;
+    vm._translation = {};
 
     ///////////////
 
     getSetupState()
       .then(function (setup) {
         vm.hasSetup = setup;
+        vm._translation = {
+          expressway: $translate.instant('hercules.fusion.types.expressway'),
+          mediafusion: $translate.instant('hercules.fusion.types.mediafusion'),
+          expresswayHelpText: vm.hasSetup.expressway ? $translate.instant('hercules.fusion.add-resource.type.expressway-description') : $translate.instant('hercules.fusion.add-resource.type.expressway-not-setup'),
+          mediafusionHelpText: vm.hasSetup.mediafusion ? $translate.instant('hercules.fusion.add-resource.type.mediafusion-description') : $translate.instant('hercules.fusion.add-resource.type.mediafusion-not-setup')
+        };
         vm.UIstate = 'success';
       })
       .catch(function () {
@@ -42,6 +50,12 @@
       $stateParams.wizard.next({
         targetType: vm.selectedType
       }, vm.selectedType);
+    }
+
+    function handleKeypress(event) {
+      if (event.keyCode === 13 && canGoNext()) {
+        next();
+      }
     }
 
     function canGoNext() {

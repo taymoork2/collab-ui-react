@@ -5,7 +5,7 @@
     .controller('ServiceSelectorController', ServiceSelectorController);
 
   /* @ngInject */
-  function ServiceSelectorController($stateParams, Authinfo, Config, FusionClusterService) {
+  function ServiceSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -18,12 +18,18 @@
     };
     vm.next = next;
     vm.canGoNext = canGoNext;
+    vm.handleKeypress = handleKeypress;
+    vm._translation = {};
 
     ///////////////
 
     getSetupState()
       .then(function (setup) {
         vm.hasSetup = setup;
+        vm._translation = {
+          call: vm.hasSetup.call ? $translate.instant('hercules.serviceNames.squared-fusion-uc') : $translate.instant('hercules.fusion.add-resource.expressway.services.call-not-setup'),
+          calendar: vm.hasSetup.calendar ? $translate.instant('hercules.serviceNames.squared-fusion-cal') : $translate.instant('hercules.fusion.add-resource.expressway.services.calendar-not-setup')
+        };
         vm.UIstate = 'success';
       })
       .catch(function () {
@@ -51,6 +57,12 @@
 
     function canGoNext() {
       return vm.selectedServices.call || vm.selectedServices.calendar;
+    }
+
+    function handleKeypress(event) {
+      if (event.keyCode === 13 && canGoNext()) {
+        next();
+      }
     }
 
     function hasServiceSetUp(clusters, type) {

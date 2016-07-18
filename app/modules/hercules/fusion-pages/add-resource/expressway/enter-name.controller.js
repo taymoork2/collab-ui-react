@@ -11,12 +11,22 @@
     vm.name = wizardData.expressway.hostname;
     vm.next = next;
     vm.provisioning = false;
+    vm._translation = {
+      help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
+      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
+    };
+    vm.minlength = 3;
+    vm.validationMessages = {
+      required: $translate.instant('common.invalidRequired'),
+      minlength: $translate.instant('common.invalidMinLength', {
+        min: vm.minlength
+      })
+    };
 
     ///////////////
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      debugger;
       return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
         .then(function (cluster) {
           var promises = [];
@@ -33,27 +43,36 @@
         })
         .catch(function () {
           throw $translate.instant('hercules.addResourceDialog.cannotCreateCluster');
+        })
+        .finally(function () {
+          vm.provisioning = false;
         });
     }
 
+    function canGoNext() {
+      return isValidName(vm.name);
+    }
+
+    function handleKeypress(event) {
+      if (event.keyCode === 13 && canGoNext()) {
+        next();
+      }
+    }
+
+    function isValidName(name) {
+      return name && name.length >= 3;
+    }
+
     function next() {
-      // wizardData.expressway.name = vm.name;
-      // provisionCluster(wizardData.expressway)
-      //   .then(function () {
-      //     $stateParams.wizard.next({
-      //       expressway: {
-      //         name: vm.name
-      //       }
-      //     });
-      //   })
-      //   .catch(function (error) {
-      //     console.error(error);
-      //   });
-      $stateParams.wizard.next({
-        expressway: {
-          name: vm.name
-        }
-      });
+      wizardData.expressway.name = vm.name;
+      provisionCluster(wizardData.expressway)
+        .then(function () {
+          $stateParams.wizard.next({
+            expressway: {
+              name: vm.name
+            }
+          });
+        });
     }
   }
 })();

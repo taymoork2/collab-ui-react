@@ -2,7 +2,7 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title">Add Resource</h3>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
 </div>
 <div class="modal-body add-resource-modal" ng-switch="vm.UIstate">
   <div ng-switch-when="loading" class="loading">
@@ -12,9 +12,9 @@
       </span>
     </div>
   </div>
-  <div ng-switch-when="error">Error fetching the service types.</div>
+  <div ng-switch-when="error" translate="hercules.fusion.add-resource.expressway.services.error"></div>
   <div ng-switch-when="success">
-    <h4>What services do you want the Expressway to run?</h4>
+    <h4 translate="hercules.fusion.add-resource.expressway.services.title"></h4>
     <form name="servicesSelector">
       <div class="cs-checkbox-group">
         <input
@@ -25,7 +25,8 @@
           id="service_call"
           ng-show="vm.isEntitledTo.call"
           ng-disabled="!vm.hasSetup.call"
-          cs-input-label="{{vm.hasSetup.call ? 'Call Service' : 'Call Service not set up'}}">
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.call}}">
         <input
           cs-input
           type="checkbox"
@@ -34,7 +35,8 @@
           id="service_calendar"
           ng-show="vm.isEntitledTo.calendar"
           ng-disabled="!vm.hasSetup.calendar"
-          cs-input-label="{{vm.hasSetup.calendar ? 'Calendar Service' : 'Calendar Service not set up'}}">
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.calendar}}">
       </div>
     </form>
   </div>

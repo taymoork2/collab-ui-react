@@ -2,7 +2,7 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title">Add Resource</h3>
+  <h3 class="modal-title" translate="hercules.fusion.add-resource.title"></h3>
 </div>
 <div class="modal-body add-resource-modal" ng-switch="vm.UIstate">
   <div ng-switch-when="loading" class="loading">
@@ -12,10 +12,10 @@
       </span>
     </div>
   </div>
-  <div ng-switch-when="error">Error fetching the cluster types.</div>
+  <div ng-switch-when="error" translate="hercules.fusion.add-resource.type.error"></div>
   <div ng-switch-when="success">
-    <h4>What type of resource do you want to add?</h4>
-    <form name="resourcesType">
+    <h4 translate="hercules.fusion.add-resource.type.title"></h4>
+    <form name="resourcesType" ng-submit="vm.plop()">
       <div class="cs-radio-group">
         <input
           cs-input
@@ -26,8 +26,9 @@
           id="selectedType_expressway"
           ng-show="vm.isEntitledTo.expressway"
           ng-disabled="!vm.hasSetup.expressway"
-          cs-input-label="Expressway"
-          cs-input-help-text="{{vm.hasSetup.expressway ? 'Can run Call Service, Calendar Service' : 'Expressway no set  up'}}">
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.expressway}}"
+          cs-input-help-text="{{vm._translation.expresswayHelpText}}">
         <input
           cs-input
           type="radio"
@@ -37,8 +38,9 @@
           id="selectedType_mediafusion"
           ng-show="vm.isEntitledTo.mediafusion"
           ng-disabled="!vm.hasSetup.mediafusion"
-          cs-input-label="Media Node"
-          cs-input-help-text="{{vm.hasSetup.mediafusion ? 'Can run Media Service' : 'Media Service no set  up'}}">
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.mediafusion}}"
+          cs-input-help-text="{{vm._translation.mediafusionHelpText}}">
       </div>
     </form>
   </div>
