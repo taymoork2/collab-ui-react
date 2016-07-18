@@ -94,6 +94,12 @@
             $scope.gridData = $scope.gridData.concat(response);
           }
 
+          //function for sorting based on which piece of data the row has
+          angular.forEach($scope.gridData, function (row) {
+            row.displayField = function () {
+              return this.userId || this.status;
+            };
+          });
           vm.gridRefresh = false;
         })
         .catch(function (response) {
@@ -126,6 +132,22 @@
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
+        gridApi.core.on.sortChanged($scope, function (sortColumns) {
+          if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+            return;
+          }
+
+          if (vm.load) {
+            vm.load = false;
+            var sortBy = sortColumns[0].name === 'displayField()' ? 'userId' : sortColumns[0].name;
+            var sortOrder = '-' + sortColumns[0].sort.direction;
+            if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
+              vm.sort.by = sortBy.toLowerCase();
+              vm.sort.order = sortOrder.toLowerCase();
+            }
+            getLineList();
+          }
+        });
       },
       columnDefs: [{
         field: 'internalNumber',
@@ -140,7 +162,7 @@
         cellClass: 'externalNumberColumn',
         width: '20%'
       }, {
-        field: 'userId',
+        field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
         cellTemplate: vm.tooltipTemplate,
         sortable: true,
@@ -148,31 +170,22 @@
           direction: 'asc',
           priority: 0
         },
-        sortCellFiltered: true
+        sortCellFiltered: true,
+        sortingAlgoithmn: function (a, b, $scope) {
+          var aSort = a === null ? a : a.toLowerCase();
+          var bSort = b === null ? b : b.toLowerCase();
+
+          if (aSort > bSort) {
+            return 1;
+          } else if (aSort < bSort) {
+            return -1;
+          } else {
+            return 0;
+          }
+        }
       }]
     };
 
-    $scope.$on('ngGridEventSorted', function (event, data) {
-      // assume event data will always contain sort fields and directions
-      var sortBy = data.fields[0].toLowerCase();
-      var sortOrder = '-' + data.directions[0].toLowerCase();
-
-      if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
-        vm.sort.by = sortBy;
-        vm.sort.order = sortOrder;
-
-        if (vm.load) {
-          vm.load = false;
-          getLineList();
-        }
-      }
-    });
-
     getLineList();
-
-    // list is updated by adding or entitling a user
-    $scope.$on('lineListUpdated', function () {
-      getLineList();
-    });
   }
 })();

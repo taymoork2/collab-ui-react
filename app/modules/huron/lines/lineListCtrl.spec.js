@@ -88,40 +88,6 @@ describe('Controller: LineListCtrl', function () {
     });
   });
 
-  describe('getLineList lineListUpdate event', function () {
-    it('should update line list', function () {
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('lineListUpdated', {});
-
-      expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'all', $scope.gridData);
-    });
-  });
-
-  describe('getLineList sort event', function () {
-    it('should getLineList with sort parameters', function () {
-      var data = {};
-      data.fields = ["internalNumber"];
-      data.directions = ["desc"];
-
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('ngGridEventSorted', data);
-
-      expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-desc', '', 'all', $scope.gridData);
-    });
-
-    it('should not getLineList when sort parameters do not change', function () {
-      var data = {};
-      data.fields = ["userId"];
-      data.directions = ["asc"];
-
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('ngGridEventSorted', data);
-      expect(LineListService.getLineList).not.toHaveBeenCalled();
-    });
-  });
-
   describe('search pattern filter', function () {
     beforeEach(function () {
       LineListService.getLineList.calls.reset();
