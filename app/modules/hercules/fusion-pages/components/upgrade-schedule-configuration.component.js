@@ -141,26 +141,36 @@
     }
 
     function labelForDay(day) {
-      var keys = ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + keys[day])
+        day: $translate.instant('weekDays.' + day)
       });
     }
 
     function getDayOptions() {
-      var currentLanguage = $translate.use();
-      var days = _.range(1, 8).map(function (day) {
-        return {
-          label: labelForDay(day),
-          value: day
-        };
-      });
-      // if USA, put Sunday first
-      if (currentLanguage === 'en_US') {
-        var sunday = days.pop();
-        return [sunday].concat(days);
+      if (vm.upgradeSchedule.scheduleDays && vm.upgradeSchedule.scheduleDays.length === 7) {
+        var label = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+        return [{
+          label: label,
+          value: 'everyDay'
+        }];
       } else {
-        return days;
+        var currentLanguage = $translate.use();
+        var keys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        var days = _.map(keys, function (day) {
+          return {
+            label: labelForDay(day),
+            value: day
+          };
+        });
+        // if USA, put Sunday first
+        if (currentLanguage === 'en_US') {
+          var sunday = days.pop();
+          return [sunday].concat(days);
+        } else {
+          return days;
+        }
       }
     }
 
