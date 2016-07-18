@@ -108,12 +108,10 @@
 
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
-        var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
-        var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-        var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-        var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
-        if (mgmtConnectors.length > 0) {
-          cluster.type = 'expressway';
+        if (cluster.targetType === 'c_mgmt') {
+          var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
+          var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
+          var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -127,11 +125,11 @@
             state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
             total: calConnectors.length
           }];
-        } else if (mediaConnectors.length > 0) {
-          cluster.type = 'mediafusion';
+        } else if (cluster.targetType === 'mf_mgmt') {
+          var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
-            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length
           }];
         }

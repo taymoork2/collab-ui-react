@@ -113,7 +113,7 @@
     function getAllExpressways(data) {
       var allExpressways = [];
       data.forEach(function (cluster) {
-        if (cluster.type === 'expressway') {
+        if (cluster.targetType === 'c_mgmt') {
           allExpressways.push({
             'id': cluster.id,
             'name': cluster.name,
