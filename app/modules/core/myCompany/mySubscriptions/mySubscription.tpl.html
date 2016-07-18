@@ -8,7 +8,7 @@
         <div class="columns medium-8 subscription-column">
           <div ng-repeat="license in subscription.licenses" ng-if="subscription.viewAll || ($index < 3)" 
           ng-class="{'detail': !subscription.viewAll || (subscription.licenses.length < 4), 'detail-expanded detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
-            <span class="h6" translate="subscriptions.licenseTypes.{{::license}}"></span>
+            <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
           </div>
           <div class="detail-expanded detail-break" ng-if="subscription.viewAll" ng-class="{'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <span class="h6" translate="subscriptions.subscription"></span>

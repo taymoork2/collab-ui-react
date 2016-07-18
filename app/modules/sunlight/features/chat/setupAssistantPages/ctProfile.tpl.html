@@ -7,13 +7,13 @@
     <div class="cs-card-container">
       <cs-card-layout>
         <cs-card>
-          <div class="h4 card-info" translate="careChatTpl.screen"></div>
+          <div class="h4 card-info" translate="careChatTpl.preview"></div>
           <article class="profile-preview">
             <header>
               <div class="img">
                 <div ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
                   <i class="icon icon-circle-computer-blank icon-3x" ng-hide="careChatSA.logoUploaded"></i>
-                  <img ngf-size="{{careChatSA.imgDetails.imageDim}}"ng-src="{{careChatSA.logoFile}}"
+                  <img class="uploded-org-img" ngf-size="{{careChatSA.imgDetails.imageDim}}"ng-src="{{careChatSA.logoFile}}"
                        ng-show="careChatSA.logoUploaded"/>
                 </div>
                 <div class="agent" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
@@ -22,7 +22,7 @@
               </div>
               <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org"
                    title="{{ careChatSA.orgName | translate}}">{{careChatSA.orgName | translate}}</div>
-                <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
+              <div class="h5 profile-name" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
                 <div>{{careChatSA.agentNamePreview | translate}}</div>
                 <div class="agent" translate="careChatTpl.agent"></div>
               </div>
@@ -40,21 +40,21 @@
               <div class="agent-message-details">
                 <span class="speech-bubble"><span class="top left"></span></span>
                 <span class="message" translate="careChatTpl.customerMsg"></span>
-              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
-              <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
+                <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+                <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
               </div>
             </section>
             <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
           </article>
         </cs-card>
         <cs-card>
-          <div class="h4 card-info" translate="careChatTpl.attributesCard"></div>
+          <div class="h4 card-info" translate="careChatTpl.attributes"></div>
           <article class="profile-attributes">
             <section>
               <div class="h4 subheader-text" translate="careChatTpl.profileSelector"></div>
-                <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles"
-                          label="profile" value="profile" name="{{profile}}" id="profile"
-                          ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
+              <cs-radio class="h6" ng-repeat="(key, profile) in careChatSA.profiles"
+                        label="profile" value="profile" name="{{profile}}" id="profile"
+                        ng-model="careChatSA.selectedTemplateProfile"></cs-radio>
               <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.org">
                 <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                 <div class="img-common">
@@ -68,7 +68,7 @@
               <div class="profile-image" ng-if="careChatSA.selectedTemplateProfile === careChatSA.profiles.agent">
                 <div class="h4 subheader-text" translate="careChatTpl.image"></div>
                 <div class="img-common agent-img">
-                    <i class="icon icon-user"></i>
+                  <i class="icon icon-user"></i>
                 </div>
                 <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
                 <div focus-on class="agent-name-options">

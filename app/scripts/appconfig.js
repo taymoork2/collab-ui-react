@@ -296,6 +296,19 @@
               wizard: null
             }
           })
+          .state('addDeviceFlow.newSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'NewSharedSpaceCtrl',
+                controllerAs: 'newPlace',
+                templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
           .state('addDeviceFlow.addServices', {
             parent: 'modalSmall',
             views: {
@@ -578,8 +591,8 @@
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
-                controller: 'MyCompanyPageSubscriptionCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+                controller: 'MySubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
               }
             }
           })
@@ -1916,7 +1929,10 @@
           .state('pstnSetup.nextSteps', {
             templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
             controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps'
+            controllerAs: 'pstnNextSteps',
+            params: {
+              portOrders: null
+            }
           })
           .state('hurondetailsBase', {
             abstract: true,

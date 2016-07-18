@@ -14,9 +14,11 @@ describe('Care admin should be able to', function () {
   it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfOverviewPage();
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfOverviewPage();
+    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
@@ -25,8 +27,6 @@ describe('Care admin should be able to', function () {
     validateContentsOfAgentUnavailablePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
-    utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
     validateDismissOfCTSetupWizard();

@@ -1,3 +1,10 @@
 <cs-page-header title="{{::mcp.title}}"></cs-page-header>
-<cs-page-header title="" tabs="mcp.tabs" class="company-left-tabs"></cs-page-header>
+<cs-page-sub-header>
+  <cs-page-sub-header-left>
+    <cs-page-header title="" tabs="mcp.tabs" class="company-left-tabs"></cs-page-header>
+  </cs-page-sub-header-left>
+  <cs-page-sub-header-right>
+    <div ui-view="headerRight"></div>
+  </cs-page-sub-header-right>
+</cs-page-sub-header>
 <div ui-view="tabContent" class="my-company-content"></div>
