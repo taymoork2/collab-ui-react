@@ -124,35 +124,25 @@
     }
 
     function enableMediaService(serviceId) {
-      //function enableMediaService(serviceId) {
-      //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
         function success() {
-          //$log.log("media service enabled successfully");
           vm.enableOrpheusForMediaFusion();
         },
         function error(data, status) {
-          //$log.log("Problems enabling media service");
           Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
         });
-      //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
-      //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
     }
 
     vm.enableOrpheusForMediaFusion = function () {
-      //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
-          //$log.log("Identity Org Id:", response.data.identityOrgId);
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
@@ -166,7 +156,6 @@
           }
 
           if (updateMediaAgentOrgId) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           }
         },
