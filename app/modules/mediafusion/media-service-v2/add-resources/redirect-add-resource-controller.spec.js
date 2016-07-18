@@ -1,7 +1,7 @@
   'use strict';
   describe('RedirectAddResourceControllerV2', function () {
     beforeEach(module('wx2AdminWebClientApp'));
-    var vm, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock, $scope;
+    var vm, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
     var hostname = "MFA";
     var enteredCluster = "blr-ecp-246";
     var $rootScope, getClusterListDiffered, getGroupsDiffered, addRedirectTargetDiffered, httpBackend;
@@ -10,6 +10,7 @@
       $scope = _$rootScope_.$new();
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
+      firstTimeSetup = false;
       redirectTargetPromise = {
         then: sinon.stub()
       };
@@ -44,7 +45,8 @@
         XhrNotificationService: XhrNotificationService,
         log: log,
         $modal: $modal,
-        $scope: $scope
+        $scope: $scope,
+        firstTimeSetup: firstTimeSetup
       });
     }));
     it('controller should be defined', function () {
