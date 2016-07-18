@@ -18,7 +18,6 @@
       getAll: getAll,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
-      getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
@@ -30,9 +29,6 @@
     return service;
 
     ////////////////
-
-    // TODO: maybe cache data for the cluster list and
-    // poll new data every 30 seconds
 
     function get(clusterId) {
       return $http
@@ -47,28 +43,6 @@
         .then(onlyKeepFusedClusters)
         .then(addServicesStatuses)
         .then(sort);
-    }
-
-    function getUpgradeSchedule(id) {
-      var orgId = Authinfo.getOrgId();
-      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
-        .then(extractData)
-        .then(function (upgradeSchedule) {
-          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria')
-            .then(extractData)
-            .then(function (moratoria) {
-              upgradeSchedule.moratoria = moratoria;
-              return upgradeSchedule;
-            });
-        })
-        .then(function (upgradeSchedule) {
-          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/nextUpgradeWindow')
-            .then(extractData)
-            .then(function (nextUpgradeWindow) {
-              upgradeSchedule.nextUpgradeWindow = nextUpgradeWindow;
-              return upgradeSchedule;
-            });
-        });
     }
 
     function setUpgradeSchedule(id, params) {

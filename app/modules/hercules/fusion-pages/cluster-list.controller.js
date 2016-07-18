@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -48,7 +48,6 @@
 
     function loadClusters() {
       FusionClusterService.getAll()
-        .then(addMissingUpgradeScheduleToClusters)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
@@ -75,27 +74,6 @@
         .map(_.escape)
         .join('<br />')
         .value();
-    }
-
-    function addMissingUpgradeScheduleToClusters(clusters) {
-      // .clusterUpgradeSchedule is populated when getting the list of clusters
-      // only when the upgrade schedule has been explicitly set by the admin.
-      // Otherwise it's not there but we can get it by fetching directly the
-      // cluster data…
-      var promises = clusters.map(function (cluster) {
-        if (cluster.clusterUpgradeSchedule) {
-          return cluster;
-        } else {
-          return FusionClusterService.getUpgradeSchedule(cluster.id)
-            .then(function (upgradeSchedule) {
-              cluster.clusterUpgradeSchedule = upgradeSchedule;
-              return cluster;
-            }, function () {
-              return cluster;
-            });
-        }
-      });
-      return $q.all(promises);
     }
 
     function updateFilters() {
