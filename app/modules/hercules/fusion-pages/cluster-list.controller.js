@@ -138,7 +138,7 @@
           'clusterId': clusterId
         });
       } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service.list');
+        $state.go('media-service-v2.list');
       }
     }
 
