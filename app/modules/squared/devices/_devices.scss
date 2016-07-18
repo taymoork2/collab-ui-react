@@ -273,8 +273,8 @@
     margin-bottom: 8px;
   }
 
-  .wizardDescription {
-    max-width: 518px;
+  p {
+    max-width: 580px;
   }
 
   .scrollSpace {
@@ -350,7 +350,7 @@
   }
 
   .createNewPlaceForm, .chooseExistingPlaceForm {
-    flex-basis: 50%;
+    //flex-basis: 50%;
     display: flex;
     flex-direction: column;
     margin-bottom: 0;
@@ -393,10 +393,6 @@
     flex-grow: 1;
   }
 
-  .chooseExistingUserForm {
-    flex-basis: 50%;
-  }
-
   .chooseExistingUserForm input {
     width: 250px;
   }
@@ -435,6 +431,10 @@
 
     .qrCodePlaceholder {
       height: 16px;
+    }
+
+    .loading{
+      font-size: 3em;
     }
 
     .qrCodeImage {

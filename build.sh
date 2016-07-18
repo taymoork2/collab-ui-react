@@ -97,7 +97,7 @@ gulp jsb:verify || exit $?
 gulp build --nolint --nounit
 
 # - unit tests - run in parallel
-time gulp karma-parallel || exit $?
+time ktest-all || exit $?
 gulp karma-combine-coverage || exit $?
 
 # - e2e tests

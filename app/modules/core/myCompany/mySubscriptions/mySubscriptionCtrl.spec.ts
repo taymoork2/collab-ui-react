@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: MyCompanyPageSubscriptionCtrl', function () {
+describe('Controller: MySubscriptionCtrl', function () {
   var $scope, controller, Orgservice, ServiceDescriptor;
   var data = getJSONFixture('core/json/myCompany/subscriptionData.json');
   data.licensesFormatted[0].subscriptions[0].siteUrl = undefined;
@@ -8,6 +8,11 @@ describe('Controller: MyCompanyPageSubscriptionCtrl', function () {
   data.licensesFormatted[1].subscriptions[0].offers[0].siteUrl = undefined;
   data.licensesFormatted[2].subscriptions[0].siteUrl = undefined;
   data.licensesFormatted[3].subscriptions[0].siteUrl = undefined;
+
+  data.subscriptionsFormatted[0].licenses[0].siteUrl = undefined;
+  data.subscriptionsFormatted[0].licenses[1].siteUrl = undefined;
+  data.subscriptionsFormatted[0].licenses[7].siteUrl = undefined;
+  data.subscriptionsFormatted[0].licenses[8].siteUrl = undefined;
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Hercules'));
@@ -20,7 +25,7 @@ describe('Controller: MyCompanyPageSubscriptionCtrl', function () {
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(data.subscriptionsResponse));
     spyOn(ServiceDescriptor, 'servicesInOrg').and.returnValue($q.when(data.servicesResponse));
 
-    controller = $controller('MyCompanyPageSubscriptionCtrl', {
+    controller = $controller('MySubscriptionCtrl', {
       $scope: $scope,
       Orgservice: Orgservice,
       ServiceDescriptor: ServiceDescriptor

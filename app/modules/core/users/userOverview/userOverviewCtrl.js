@@ -17,7 +17,6 @@
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
-    vm.atlasInvitePendingStatusToggle = false;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
     vm.isCSB = Authinfo.isCSB();
@@ -60,10 +59,7 @@
       userId: '@userId'
     });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
-      .then(function (result) {
-        vm.atlasInvitePendingStatusToggle = result;
-      }).finally(init);
+    init();
 
     function init() {
       vm.services = [];
@@ -251,7 +247,7 @@
       vm.currentUser.pendingStatus = false;
       Userservice.getUser(currentUserId, function (data, status) {
         if (data.success) {
-          vm.pendingStatus = (vm.atlasInvitePendingStatusToggle && _.indexOf(data.accountStatus, 'pending') >= 0);
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0);
           vm.currentUser.pendingStatus = vm.pendingStatus;
           if (vm.pendingStatus) {
             invitationResource.get({
