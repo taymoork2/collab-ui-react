@@ -30,14 +30,14 @@
       vm.provisioning = true;
       var clusterId = null;
       return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
-        .then(function (cluster) {
-          clusterId = cluster.id;
+        .then(function (id) {
+          clusterId = id;
           var promises = [];
           if (data.selectedServices.call) {
-            promises.push(FusionClusterService.provisionConnector(cluster.id, 'c_ucmc'));
+            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_ucmc'));
           }
           if (data.selectedServices.calendar) {
-            promises.push(FusionClusterService.provisionConnector(cluster.id, 'c_cal'));
+            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_cal'));
           }
           return $q.all(promises);
         })

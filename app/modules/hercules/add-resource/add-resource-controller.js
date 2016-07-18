@@ -59,6 +59,7 @@
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       preregisterCluster(vm.clustername)
+        .then(_.partialRight(_.get, 'id'))
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(pregistrationSucceeded)
@@ -78,9 +79,6 @@
 
     function provisionConnector(connectorType, clusterId) {
       return FusionClusterService.provisionConnector(clusterId, connectorType)
-        .then(function () {
-          return clusterId;
-        })
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {

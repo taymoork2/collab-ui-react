@@ -164,13 +164,15 @@
     function provisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/add/invoke?connectorType=' + connectorType;
-      return $http.post(url);
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
         '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
-      return $http.post(url);
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function getAllProvisionedConnectorTypes(clusterId) {
@@ -216,13 +218,15 @@
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-        name: newClusterName
-      });
+          name: newClusterName
+        })
+        .then(extractDataFromResponse);
     }
 
     function deregisterCluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
-      return $http.post(url);
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function getReleaseNotes(releaseChannel, connectorType) {
