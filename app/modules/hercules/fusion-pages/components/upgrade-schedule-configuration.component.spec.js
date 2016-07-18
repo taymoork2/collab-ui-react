@@ -15,7 +15,6 @@ describe('Component: upgradeScheduleConfiguration', function () {
       startTime: '2016-06-29T15:00:57.332Z',
       endTime: '2016-06-29T16:00:57.332Z'
     },
-    acknowledged: true,
     moratoria: [{
       timeWindow: {
         startTime: '2016-06-29T15:00:35Z',

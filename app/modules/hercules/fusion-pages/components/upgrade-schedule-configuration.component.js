@@ -17,7 +17,6 @@
     var vm = this;
     vm.$onInit = $onInit;
     vm.$onChanges = $onChanges;
-    vm.acknowledge = updateUpgradeScheduleAndUI;
     vm.postpone = postpone;
 
     ////////
@@ -30,9 +29,7 @@
         time: getTimeOptions(),
         timeZone: getTimeZoneOptions()
       };
-      vm.upgradeSchedule = {
-        acknowledged: false
-      };
+      vm.upgradeSchedule = {};
       vm.errorMessage = '';
     }
 
