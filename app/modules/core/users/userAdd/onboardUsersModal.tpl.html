@@ -2,14 +2,24 @@
   <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
     <span class="sr-only" translate="common.close"></span>
   </button>
-  <h3 class="modal-title" translate="onboardModal.onboardUsers"></h3>
+  <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body onboard-users">
+  <h4 ng-if="!isDirSyncEnabled" translate="userManage.manual.titleAddModify"></h4>
+  <h4 ng-if="isDirSyncEnabled" translate="userManage.manual.titleModify"></h4>
+  <p translate="userManage.manual.instructions" translate-values="{maxUsers: obc.maxUsersInManual}"></p>
+  <br>
   <cr-onboard-users></cr-onboard-users>
+    <div class="unsynced-users" ng-if="invalidDirSyncUsersCount > 0">
+      <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.ad.unsyncedUsers"></p>
+    </div>
+    <div class="unsynced-users" ng-if="getNumUsersInTokenField() > obc.maxUsersInManual">
+      <span class="icon icon-error icon-lg"></span><p translate="userManage.manual.tooManyUsers" translate-values="{ maxUsers: obc.maxUsersInManual }"></p>
+    </div>
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="clearPanel()"><span translate="onboardModal.clear"></span></button>
-  <button type="button" class="btn btn--primary" ng-click="validateTokensBtn()" ng-disabled="!model.userList"><span translate="common.next"></span></button>
+  <button type="button" id="btnBack" class="btn" ng-click="onBack()"><span translate="common.back"></span></button>
+  <button type="button" class="btn btn--primary" ng-click="validateTokensBtn()" ng-disabled="!allowNext()"><span translate="common.next"></span></button>
 </div>
