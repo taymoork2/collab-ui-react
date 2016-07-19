@@ -1,0 +1,22 @@
+<cs-card id='call-volume-card' class="full report-card">
+  <article>
+    <graphheader>
+      <h4 class='report-section-header' translate='mediaFusion.metrics.callVolumes'></h4>
+    </graphheader>
+    <section>
+      <div class="metrics-call-volume">
+        <p class="report-description" translate='mediaFusion.metrics.callVolumesDescription'></p>
+        <div id="callVolumediv" class="barchart" ng-class="{'call-volume-chart': !nav.isEmpty(nav.callVolumeStatus) && !nav.isRefresh(nav.callVolumeStatus)}"></div>
+        <div class="spinner-position" ng-if="nav.isRefresh(nav.callVolumeStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="nav.isEmpty(nav.callVolumeStatus)">
+          <h3 class="no-data"> 
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='reportsPage.noCustomerData'></span>
+          </h3>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>

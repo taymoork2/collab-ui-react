@@ -7,25 +7,30 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
-      atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasPinSettings: 'atlas-pin-settings',
+      atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasMediaSericeOnboarding: 'atlas-media-service-onboarding',
+      atlasNewRoomSystems: 'atlas-new-roomSystems',
+      atlasNurturingEmails: 'atlas-nurturing-emails',
+      atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
-      atlasDeviceTrials: 'atlas-device-trials',
-      atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
-      atlasTrialConversion: 'atlas-trial-conversion',
+      atlasPstnTfn: 'atlas-pstn-tfn',
+      huronAASubmenu: 'huron-aa-submenu',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      huronAASchedules: 'huronAASchedules',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
@@ -39,6 +44,7 @@
       bridgeMaxConvParticipants: 'bridge-max-conv-participants',
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
+      callParkService: 'call-park-service',
       clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',
@@ -88,7 +94,6 @@
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
       muteByDefault: 'mute-by-default',
-      myCompanyPage: 'atlas-my-company-page',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
@@ -127,8 +132,10 @@
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
       enableCrashLogs: 'csdm-enable-crash-logs',
-      csdmTz: 'csdm-timezone',
+      csdmPlaces: 'csdm-places',
       readonlyAdmin: 'atlas-read-only-admin',
+      helpdeskExt: 'atlas-helpdesk-extended-information',
+      brandingWordingChange: 'atlas-branding-wording-change',
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list',
       atlasCareTrials: 'atlas-care-trials',
       atlasMediaServiceMetrics: 'atlas-media-service-metrics'
@@ -171,7 +178,18 @@
       features: features
     };
 
+    init();
+
     return service;
+
+    function init() {
+      return _.reduce(features, function (status, feature, key) {
+        status[key + 'GetStatus'] = function () {
+          return supports(features[key]);
+        };
+        return status;
+      }, service);
+    }
 
     function getFeatureForUser(id, feature) {
       return getFeature(true, id, feature);

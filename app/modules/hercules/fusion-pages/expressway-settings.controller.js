@@ -6,9 +6,42 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController);
 
   /* @ngInject */
-  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, ClusterService, $modal, $state, $translate) {
+  function ExpresswayClusterSettingsController($stateParams, FusionClusterService, XhrNotificationService, Notification, $modal, $state, $translate) {
     var vm = this;
     vm.backUrl = 'cluster-list';
+    vm.usersPlaceholder = 'Default';
+    vm.usersSelected = '';
+    vm.usersOptions = ['Default'];
+    vm.enabledServices = [];
+    vm.newClusterName = '';
+    vm.upgradeSchedule = {
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+    };
+    vm.releasechannel = {
+      title: 'hercules.expresswayClusterSettings.releasechannelHeader',
+      description: 'hercules.expresswayClusterSettings.releasechannelParagraph'
+    };
+    vm.deactivateServices = {
+      title: 'hercules.expresswayClusterSettings.deactivateServicesHeader'
+    };
+    vm.deregisterClusterSection = {
+      title: 'hercules.expresswayClusterSettings.deregisterClusterHeader'
+    };
+    vm.renameClusterSection = {
+      title: 'hercules.expresswayClusterSettings.clusterMainSectionHeader'
+    };
+    vm.localizedCallServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_ucmc');
+    vm.localizedCalendarServiceName = $translate.instant('hercules.serviceNameFromConnectorType.c_cal');
+    vm.localizedClusterNameWatermark = $translate.instant('hercules.expresswayClusterSettings.clusterNameWatermark');
+    vm.nameUpdated = false;
+    vm.setClusterName = setClusterName;
+    vm.deactivateService = deactivateService;
+    vm.deregisterCluster = deregisterCluster;
+
+    FusionClusterService.getAllProvisionedConnectorTypes($stateParams.id)
+      .then(function (allConnectorTypes) {
+        vm.enabledServices = allConnectorTypes;
+      });
 
     loadCluster($stateParams.id);
 
@@ -25,20 +58,9 @@
           vm.localizedTitle = $translate.instant('hercules.expresswayClusterSettings.pageTitle', {
             clusterName: cluster.name
           });
+          vm.newClusterName = vm.cluster.name;
         }, XhrNotificationService.notify);
     }
-
-    vm.usersPlaceholder = 'Default';
-    vm.usersSelected = '';
-    vm.usersOptions = ['Default'];
-
-    vm.enabledServices = [];
-    ClusterService.getAllConnectorTypesForCluster($stateParams.id)
-      .then(function (allConnectorTypes) {
-        vm.enabledServices = allConnectorTypes;
-      });
-
-    vm.deactivateService = deactivateService;
 
     function deactivateService(serviceId, cluster) {
       $modal.open({
@@ -67,14 +89,13 @@
       });
     }
 
-    vm.deregisterCluster = deregisterCluster;
-
     function deregisterCluster(cluster) {
       $modal.open({
           resolve: {
             cluster: function () {
               return vm.cluster;
-            }
+            },
+            isF410enabled: true
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',
@@ -83,6 +104,20 @@
         })
         .result.then(function (data) {
           $state.go('cluster-list');
+        });
+    }
+
+    function setClusterName(newClusterName) {
+      if (newClusterName.length === 0) {
+        Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotByEmpty'));
+        return;
+      }
+      FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
+        .then(function () {
+          vm.cluster.name = newClusterName;
+          Notification.success($translate.instant('hercules.expresswayClusterSettings.clusterNameSaved'));
+        }, function () {
+          Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotBeSaved'));
         });
     }
 

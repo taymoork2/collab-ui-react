@@ -7,17 +7,15 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    FeatureToggleService, ModalService, InternalNumberPoolService, CeService, HuntGroupServiceV2,
-    InternationalDialing) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing) {
 
     var vm = this;
     vm.loading = true;
 
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
-      value: 'America/Los_Angeles',
-      label: $translate.instant('timeZones.America/Los_Angeles'),
-      timezoneid: '4'
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
     };
     var DEFAULT_SD = '9';
     var DEFAULT_SITE_SD = '8';
@@ -33,7 +31,6 @@
 
     var savedModel = null;
     var errors = [];
-    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -55,6 +52,7 @@
     vm.timeZoneOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
+    vm.extensionLengthChanged = false;
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
@@ -93,7 +91,6 @@
       serviceNumber: undefined,
       serviceNumberWarning: false,
       voicemailTimeZone: undefined,
-      hideExtensionLength: true,
       disableExtensions: false
     };
 
@@ -225,20 +222,12 @@
         description: $translate.instant('serviceSetupModal.tzDescription'),
         options: [],
         labelfield: 'label',
-        valuefield: 'value',
+        valuefield: 'id',
         inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
         filter: true
       },
       controller: /* @ngInject */ function ($scope) {
         _buildTimeZoneOptions($scope);
-      },
-      expressionProperties: {
-        'templateOptions.required': function () {
-          return vm.timeZoneToggleEnabled;
-        },
-        'templateOptions.disabled': function () {
-          return !vm.timeZoneToggleEnabled;
-        }
       }
 
     }, {
@@ -279,12 +268,11 @@
               vm.model.displayNumberRanges[i].endNumber = adjustExtensionRanges(vm.form['formly_formly_ng_repeat' + i]['formly_formly_ng_repeat' + i + '_input_endNumber_2'].$viewValue, '9');
             }
             scope.resetModel();
+            scope.formControl.$setDirty();
           }
           vm.model.site.extensionLength = vm.model.previousLength;
+          vm.extensionLengthChanged = true;
         }
-      },
-      hideExpression: function () {
-        return vm.model.hideExtensionLength;
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -294,6 +282,7 @@
     }, {
       className: 'service-setup service-setup-extension',
       fieldGroup: [{
+        className: 'extension-list',
         key: 'displayNumberRanges',
         type: 'repeater',
         hideExpression: function () {
@@ -350,7 +339,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
                 'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
@@ -410,7 +399,7 @@
               },
               expressionProperties: {
                 'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                  return vm.model.disableExtensions;
+                  return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'data.validate': function (viewValue, modelValue, scope) {
                   return scope.fc && scope.fc.$validate();
@@ -474,7 +463,7 @@
           $scope.$watch(function () {
             return vm.form.$invalid;
           }, function () {
-            $scope.options.templateOptions.disabled = (vm.form.$invalid || vm.model.disableExtensions) ? true : false;
+            $scope.options.templateOptions.disabled = vm.form.$invalid;
           });
         }
       }]
@@ -750,9 +739,8 @@
     }
 
     function updateVoicemailUserTimeZone() {
-      // TODO: This is not a good way to determine when to update the timezone, get site doesn't
-      // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.timezoneid') !== _.get(vm, 'model.voicemailTimeZone.timezoneid'))) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
+        (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -804,8 +792,12 @@
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
 
-      if (vm.model.site.timeZone.timezoneid !== savedModel.site.timeZone.timezoneid) {
-        siteData.timeZone = vm.model.site.timeZone.value;
+      if (vm.model.site.timeZone.id !== savedModel.site.timeZone.id) {
+        siteData.timeZone = vm.model.site.timeZone.id;
+      }
+
+      if (vm.model.site.extensionLength !== savedModel.site.extensionLength) {
+        siteData.extensionLength = vm.model.site.extensionLength;
       }
 
       // Save the existing site voicemail pilot number, before overwritting with the new value
@@ -827,8 +819,8 @@
     }
 
     function updateVoicemailUserTemplate() {
-      if (_.get(vm, 'model.site.timeZone.timezoneid') && _.get(vm, 'voicemailUserTemplate.objectId')) {
-        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.voicemailUserTemplate.objectId)
+      if (_.get(vm, 'model.site.timeZone.id') && _.get(vm, 'voicemailUserTemplate.objectId')) {
+        return ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.id, vm.voicemailUserTemplate.objectId)
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -909,12 +901,12 @@
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
-              vm.model.site.extensionLength = site.extensionLength;
+              vm.model.site.extensionLength = vm.model.previousLength = site.extensionLength;
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
               vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.value === site.timeZone;
+                return timezone.id === site.timeZone;
               });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -966,15 +958,17 @@
       if (vm.hasVoicemailService) {
         return ServiceSetup.listVoicemailTimezone()
           .then(function (userTemplates) {
-            if (angular.isArray(userTemplates) && userTemplates.length > 0) {
+            if (_.isArray(userTemplates) && userTemplates.length > 0) {
               vm.voicemailUserTemplate = {
-                timeZone: '' + userTemplates[0].timeZone,
-                objectId: userTemplates[0].objectId
+                objectId: userTemplates[0].objectId,
+                timeZone: _.toString(userTemplates[0].timeZone),
+                timeZoneName: userTemplates[0].timeZoneName
               };
 
               vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.timezoneid === vm.voicemailUserTemplate.timeZone;
+                return timezone.id === _.get(vm, 'voicemailUserTemplate.timeZoneName');
               });
+
             }
           })
           .catch(_.noop);
@@ -1136,16 +1130,32 @@
           var hasNewInternalNumberRange = false;
 
           if (angular.isArray(vm.model.displayNumberRanges)) {
-            _.filter(vm.model.displayNumberRanges, function (internalNumberRange) {
-              return angular.isUndefined(internalNumberRange.uuid);
-            }).forEach(function (internalNumberRange) {
-              hasNewInternalNumberRange = true;
-              promises.push(ServiceSetup.createInternalNumberRange(internalNumberRange)
-                .catch(function (response) {
-                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
+            _.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
+              if (angular.isUndefined(internalNumberRange.uuid)) {
+                hasNewInternalNumberRange = true;
+                promises.push(ServiceSetup.createInternalNumberRange(internalNumberRange)
+                  .catch(function (response) {
+                    errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
+                      extension: this.name
+                    }));
+                  }));
+              } else if (vm.extensionLengthChanged) {
+                promises.push(ServiceSetup.deleteInternalNumberRange(internalNumberRange).then(function () {
+                  internalNumberRange.uuid = undefined;
+                  internalNumberRange.links = undefined;
+                  internalNumberRange.url = undefined;
+                  ServiceSetup.createInternalNumberRange(internalNumberRange)
+                    .catch(function (response) {
+                      errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
+                        extension: this.name
+                      }));
+                    });
+                }).catch(function (response) {
+                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionUpdateError', {
                     extension: this.name
                   }));
                 }));
+              }
             });
           }
 
@@ -1241,8 +1251,6 @@
       errors = [];
 
       var promises = [];
-      promises.push(enableTimeZoneFeatureToggle());
-      promises.push(enableExtensionLengthFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1303,6 +1311,7 @@
       vm.model.site.vmCluster = savedModel.site.vmCluster;
       vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
       vm.model.site.uuid = savedModel.site.uuid;
+      vm.model.site.extensionLength = savedModel.site.extensionLength;
 
       angular.copy(savedModel.numberRanges, vm.model.numberRanges);
       angular.copy(savedModel.displayNumberRanges, vm.model.displayNumberRanges);
@@ -1506,35 +1515,14 @@
       });
     }
 
-    function enableTimeZoneFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-        if (result) {
-          vm.timeZoneToggleEnabled = result;
-        }
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
-      });
-    }
-
-    function enableExtensionLengthFeatureToggle() {
-      return FeatureToggleService.supports(FeatureToggleService.features.extensionLength).then(function (result) {
-        vm.model.hideExtensionLength = !result;
-      }).catch(function (response) {
-        // extension length feature toggle not enabled for customer
-      });
-    }
-
     function testForExtensions() {
-      return InternalNumberPoolService.query({
+      return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId()
         }).$promise
         .then(function (extensionList) {
-          _.forEach(extensionList, function (value, key) {
-            if (value.directoryNumber !== null) {
-              vm.model.disableExtensions = true;
-              // value.directoryNumber is not null if assigned, hence extension exists
-            }
-          });
+          if (angular.isArray(extensionList) && extensionList.length > 0) {
+            vm.model.disableExtensions = true;
+          }
         });
     }
 

@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($interval, $q, $scope, $state, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, PstnSetupService, TelephoneNumberService) {
+  function ExternalNumberDetail($interval, $scope, $stateParams, $translate, DialPlanService, ExternalNumberService, ModalService, Notification, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 

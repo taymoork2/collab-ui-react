@@ -5,7 +5,7 @@
     .controller('PstnOrderOverviewCtrl', PstnOrderOverviewCtrl);
 
   /* @ngInject */
-  function PstnOrderOverviewCtrl($scope, $stateParams, $translate, PstnSetupService) {
+  function PstnOrderOverviewCtrl($stateParams, PstnSetupService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.orders = [];

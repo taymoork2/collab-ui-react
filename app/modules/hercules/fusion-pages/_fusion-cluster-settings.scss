@@ -1,20 +1,20 @@
 .fusion-cluster-settings {
-  .clusterid {
-    background: white;
-    font-size: 14px;
-  }
+  background-color: #fff;
 
-  h5 {
-    margin-top: 10px;
-    margin-left: 5px;
-  }
-
-  p {
-    margin-left: 5px;
+  setting-section {
+    border-top: none;
   }
 
   button {
-    margin-top: 15px;
+    margin-top: 10px;
+  }
+
+  .sub-section {
+    margin-bottom: 25px !important;
+  }
+
+  .cap-long-names {
+    @include text-overflow;
   }
 }
 
@@ -23,4 +23,5 @@
     vertical-align: middle;
     margin-left: 8px;
   }
+
 }

@@ -6,7 +6,7 @@
     .service('AccountOrgService', AccountOrgService);
 
   /* @ngInject */
-  function AccountOrgService($http, $q, $rootScope, Config, Auth, UrlConfig) {
+  function AccountOrgService($http, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -123,27 +123,27 @@
       return $http.get(url);
     }
 
-    // Get the account App Security Status from the enforceClientSecurity API(boolean)
+    // Get the account App Security Status from the clientSecurityPolicy API(boolean)
     function getAppSecurity(org) {
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
       }
-      var url = getDeviceSettingsUrl(org) + '/enforceClientSecurity';
+      var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
 
       return $http.get(url);
 
     }
 
-    // Sets the updated App Security Status to enforceClientSecurity API on Save button event
+    // Sets the updated App Security Status to clientSecurityPolicy API on Save button event
     function setAppSecurity(org, appSecurityStatus) {
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
       }
 
-      var url = getDeviceSettingsUrl(org) + '/enforceClientSecurity';
+      var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
 
       return $http.put(url, {
-        enforceClientSecurity: appSecurityStatus
+        clientSecurityPolicy: appSecurityStatus
       });
 
     }

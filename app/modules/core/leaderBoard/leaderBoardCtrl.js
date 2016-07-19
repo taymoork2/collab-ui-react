@@ -6,13 +6,14 @@
     .directive('crLeaderBoardBucket', crLeaderBoardBucket);
 
   /* @ngInject */
-  function leaderBoardCtrl($scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
+  function leaderBoardCtrl($scope, $translate, Authinfo, Orgservice, TrialService) {
 
     // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
     $scope.label = $translate.instant('leaderBoard.licenseUsage');
 
     $scope.state = 'license'; // Possible values are license, warning or error
     $scope.icon = 'check-gear';
+    $scope.trialDaysLeft = undefined;
 
     $scope.bucketKeys = [
       'messaging',
@@ -50,13 +51,14 @@
                 subscription[bucket].unlimited = true;
               });
             } else {
-              licenses.forEach(function (license) {
+              licenses.forEach(function (license, licenseIndex) {
                 var bucket = license.licenseType.toLowerCase();
                 if (!(bucket === 'cmr' || bucket === 'conferencing')) {
                   subscription[bucket] = {};
                   var a = subscription[bucket];
                   a['services'] = [];
                 }
+                license.id = bucket + index + licenseIndex;
                 if (license.offerName !== 'CF') {
                   if (license.siteUrl) {
                     if (!subscription['sites']) {
@@ -85,12 +87,10 @@
     };
 
     function init() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion)
-        .then(function (enabled) {
-          $scope.isAtlasTrialConversion = enabled;
-        });
-
       getLicenses();
+      TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
+        $scope.trialDaysLeft = daysLeft;
+      });
     }
 
     init();

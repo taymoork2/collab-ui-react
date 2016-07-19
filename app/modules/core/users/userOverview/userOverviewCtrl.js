@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, $resource, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -17,10 +17,9 @@
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
-    vm.atlasInvitePendingStatusToggle = false;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
-    vm.isCSB = false;
+    vm.isCSB = Authinfo.isCSB();
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -60,13 +59,7 @@
       userId: '@userId'
     });
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
-      ])
-      .then(function (result) {
-        vm.isCSB = Authinfo.isCSB() && result[0];
-        vm.atlasInvitePendingStatusToggle = result[1];
-      }).finally(init);
+    init();
 
     function init() {
       vm.services = [];
@@ -254,7 +247,7 @@
       vm.currentUser.pendingStatus = false;
       Userservice.getUser(currentUserId, function (data, status) {
         if (data.success) {
-          vm.pendingStatus = (vm.atlasInvitePendingStatusToggle && _.indexOf(data.accountStatus, 'pending') >= 0);
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0);
           vm.currentUser.pendingStatus = vm.pendingStatus;
           if (vm.pendingStatus) {
             invitationResource.get({

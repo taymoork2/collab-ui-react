@@ -5,24 +5,12 @@
     .controller('SunlightUserOverviewCtrl', SunlightUserOverviewCtrl);
 
   /* @ngInject */
-  function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
+  function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, Log) {
 
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;
     vm.userData = {};
-
-    /* Contact center media cannels */
-    vm.mediaInfo = [{
-      "name": "chat",
-      "enabled": false
-    }, {
-      "name": "email",
-      "enabled": false
-    }, {
-      "name": "voice",
-      "enabled": false
-    }];
 
     /* User alias */
     vm.aliasFormModel = [];
@@ -91,13 +79,6 @@
     vm.setUserInfoView = function (data) {
       vm.hideSaveCancel();
 
-      for (var i = 0; i < vm.mediaInfo.length; i++) {
-        if (data.media.lastIndexOf(vm.mediaInfo[i].name) !== -1) {
-          vm.mediaInfo[i].enabled = true;
-        } else {
-          vm.mediaInfo[i].enabled = false;
-        }
-      }
       vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.' + data.role);
       vm.aliasFormModel.sunlightUserAlias = data.alias;
       vm.currentUser.teamId = data.teamId;
@@ -127,19 +108,9 @@
       userData.alias = vm.aliasFormModel.sunlightUserAlias;
       userData.teamId = vm.currentUser.teamId;
       userData.attributes = [];
-      userData.media = [];
+      userData.media = ['chat'];
+      userData.role = 'user';
 
-      if (vm.roleSelected === $translate.instant('contactCenterUserConfig.userRoles.supervisor')) {
-        userData.role = 'supervisor';
-      } else {
-        userData.role = 'user';
-      }
-
-      for (var i = 0; i < vm.mediaInfo.length; i++) {
-        if (vm.mediaInfo[i].enabled) {
-          userData.media.push(vm.mediaInfo[i].name);
-        }
-      }
       return userData;
     }
   }

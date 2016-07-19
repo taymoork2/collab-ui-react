@@ -7,17 +7,18 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
   var expectedCsvHttpsObj;
   var csvConstructHttpsObj;
 
-  var WebExApiGatewayConstsService, Storage, $log;
+  var WebExApiGatewayConstsService, SessionStorage, $log;
 
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (
     _WebExApiGatewayConstsService_,
-    _Storage_,
+    _SessionStorage_,
     _$log_
   ) {
+
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
-    Storage = _Storage_;
+    SessionStorage = _SessionStorage_;
     $log = _$log_;
 
     WebExApiGatewayConstsService.csvAPIs = [{
@@ -52,7 +53,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     expectedCsvHttpsObj = null;
     csvConstructHttpsObj = null;
 
-    spyOn(Storage, 'get').and.returnValue('someFakeBearer');
+    spyOn(SessionStorage, 'get').and.returnValue('someFakeBearer');
   }));
 
   it('can construct https obj for csvStatus', inject(function (WebExApiGatewayService) {
@@ -112,8 +113,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
     expect(csvConstructHttpsObj.headers).toEqual(expectedCsvHttpsObj.headers);
   }));
-
-});
+}); // describe()
 
 describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function () {
   var $q;
@@ -455,9 +455,9 @@ describe('WebExApiGatewayService.csvStatus() and csvImport() tests', function ()
     deferredCsvApiRequest.resolve(fakeResult);
     $rootScope.$apply();
   }));
-});
+}); // describe()
 
-describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
+describe('WebExApiGatewayService.siteFunctions() test', function () {
   var $q;
   var $rootScope;
 
@@ -499,13 +499,12 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
 
       spyOn(WebExXmlApiFact, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
       spyOn(WebExXmlApiFact, "getSiteVersion").and.returnValue(deferredVersionXml.promise);
-      spyOn(WebExXmlApiFact, "getEnableT30UnifiedAdminInfo").and.returnValue(deferredEnableT30UnifiedAdminXml.promise);
       spyOn(WebExXmlApiFact, "getSiteInfo").and.returnValue(deferredSiteInfoXml.promise);
     })
   );
 
   it('can check if site iframe supported (release order >= 400)', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.siteFunctions("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -534,7 +533,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is iframe supported (release order < 400; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.siteFunctions("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -560,11 +559,10 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
     expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
   it('can check if site is iframe supported (release order = null; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.siteFunctions("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -590,101 +588,10 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
     expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
-  }));
-
-  it('can check if site is not iframe supported (release order < 400; and enableT30UnifiedAdmin = false', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
-      function isSiteSupportsIframeSuccess(response) {
-        var isIframeSupported = response.isIframeSupported;
-        expect(isIframeSupported).toBe(false);
-      },
-
-      function isSiteSupportsIframeError(response) {
-        this.fail();
-      }
-    );
-
-    deferredSessionTicket.resolve("ticket");
-    $rootScope.$apply();
-
-    deferredVersionXml.resolve(isNotIframeSupportedReleaseOrderXml);
-    $rootScope.$apply();
-
-    deferredEnableT30UnifiedAdminXml.resolve(isNotEnableT30UnfiedAdminXml);
-    $rootScope.$apply();
-
-    deferredSiteInfoXml.resolve(isAdminReportEnabledXml);
-    $rootScope.$apply();
-
-    expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
-  }));
-
-  it('can check if site is not iframe supported (release order < 400; and enableT30UnifiedAdmin = null', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
-      function isSiteSupportsIframeSuccess(response) {
-        var isIframeSupported = response.isIframeSupported;
-        expect(isIframeSupported).toBe(false);
-      },
-
-      function isSiteSupportsIframeError(response) {
-        this.fail();
-      }
-    );
-
-    deferredSessionTicket.resolve("ticket");
-    $rootScope.$apply();
-
-    deferredVersionXml.resolve(isNotIframeSupportedReleaseOrderXml);
-    $rootScope.$apply();
-
-    deferredEnableT30UnifiedAdminXml.resolve(isNullEnableT30UnfiedAdminXml);
-    $rootScope.$apply();
-
-    deferredSiteInfoXml.resolve(isAdminReportEnabledXml);
-    $rootScope.$apply();
-
-    expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
-  }));
-
-  it('can check if site is not iframe supported (release order = null; and enableT30UnifiedAdmin = null)', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
-      function isSiteSupportsIframeSuccess(response) {
-        var isIframeSupported = response.isIframeSupported;
-        expect(isIframeSupported).toBe(false);
-      },
-
-      function isSiteSupportsIframeError(response) {
-        this.fail();
-      }
-    );
-
-    deferredSessionTicket.resolve("ticket");
-    $rootScope.$apply();
-
-    deferredVersionXml.resolve(isNullIframeSupportedReleaseOrderXml);
-    $rootScope.$apply();
-
-    deferredEnableT30UnifiedAdminXml.resolve(isNullEnableT30UnfiedAdminXml);
-    $rootScope.$apply();
-
-    deferredSiteInfoXml.resolve(isAdminReportEnabledXml);
-    $rootScope.$apply();
-
-    expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
   it('can check if site report is enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.siteFunctions("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(true);
@@ -713,7 +620,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site report is not enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.siteFunctions("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(false);

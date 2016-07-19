@@ -1,0 +1,15 @@
+<script type="text/ng-template" id="numberTemplate.html">
+  <a>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query" ></span>
+  </a>
+</script>
+
+<div class="select-number-details">
+  <div class="typeahead-large cpselect large">
+    <div class="title" translate="callPark.selectParkNumber"></div>
+    <div class="desc" translate="callPark.selectParkHint"></div>
+    <input class="form-control" placeholder="{{:: 'callPark.patternSingle' | translate}}"
+           ng-model="callParkSA.selectedSingleNumber" ng-keypress="callParkSA.enterNextPage($event.keyCode)" focus-on>
+    <p class="input-hint"></p>
+  </div>
+</div>

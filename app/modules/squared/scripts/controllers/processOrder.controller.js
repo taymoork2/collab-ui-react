@@ -6,22 +6,22 @@
     .controller('ProcessorderCtrl', ProcessorderCtrl);
 
   /* @ngInject */
-  function ProcessorderCtrl($scope, $location, $timeout, WindowLocation, Orgservice, Localytics) {
-    // Note: only keep $timeout and Localytics until we gathered enough data usage
-    Localytics.tagEvent('Display /processorder', {
-      enc: !!$location.search().enc
-    });
-    $scope.isProcessing = true;
-    $scope.enc = $location.search().enc;
-    Orgservice.createOrg($scope.enc, function (data, status) {
-      $scope.isProcessing = false;
-      if (data.success) {
-        $timeout(function () {
-          WindowLocation.set(data.redirectUrl);
-        }, 2000);
-      } else {
+  function ProcessorderCtrl($location, Auth, Orgservice) {
+    var vm = this;
+    var enc = $location.search().enc;
+
+    vm.isProcessing = true;
+
+    // 'createOrg()' provisions a limited-privilege access token in order to perform this operation,
+    // so we currently use 'logoutAndRedirectTo()' to clear tokens before allowing redirection
+    Orgservice.createOrg(enc)
+      .then(function (data) {
+        vm.isProcessing = false;
+        Auth.logoutAndRedirectTo(data.redirectUrl);
+      })
+      .catch(function () {
+        vm.isProcessing = false;
         $('#processOrderErrorModal').modal('show');
-      }
-    });
+      });
   }
 })();

@@ -27,6 +27,7 @@ describe('Controller: CustomerListCtrl', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
@@ -60,6 +61,10 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
 
+    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+      $q.when(false)
+    );
+
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
@@ -86,7 +91,6 @@ describe('Controller: CustomerListCtrl', function () {
 
   describe('Controller', function () {
     beforeEach(initController);
-
     it('should initialize', function () {
       expect($scope.activeFilter).toBe('all');
     });
@@ -148,34 +152,46 @@ describe('Controller: CustomerListCtrl', function () {
   describe('getSubfields', function () {
     beforeEach(initController);
 
-    it('should return a proper list of subfields given the field type', function () {
-      $scope.gridOptions.multiFields = {
-        meeting: ['conferencing', 'webexEEConferencing']
+    it('should return the column from columnGroup for single column group', function () {
+      var entry = {
+        'licenseList': [{
+          'licenseId': 'MS_3c4b0cda-7315-430d-b3d6-97fd5b09991b',
+          'licenseType': 'MESSAGING',
+        }, {
+          'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
+          'licenseType': 'CONFERENCING',
+        }]
       };
-      var result = $scope.getSubfields('meeting');
-      expect(result[0]).toBe('conferencing');
-      expect(result[1]).toBe('webexEEConferencing');
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[0].columnGroup).toBe('conferencing');
     });
-  });
 
-  describe('addCorrectMeetingColumn function', function () {
+    it('should return the EE for 2nd webex column if there is no webex license', function () {
+      var entry = {
+        'licenseList': [{}]
+      };
 
-    it('should add a meeting column if FeatureToggle is true', function () {
-      initController();
-      $scope.addCorrectMeetingColumn();
-      expect($scope.gridColumns[2].field).toBe('meeting');
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('EE');
     });
-  });
 
-  describe('addCorrectMeetingColumn function', function () {
+    it('should return webex with license for 2nd webex column if there is one', function () {
+      var entry = {
+        'licenseList': [{
+          'offerName': 'MC',
+          'licenseType': 'CONFERENCING',
+          'status': 'ACTIVE',
+        }, {
+          'licenseId': 'CMR_34302adb-1cb4-4501-a6aa-69b31b7e9558_algendel01.webex.com',
+          'offerName': 'CMR',
+          'licenseType': 'CMR',
+          'status': 'ACTIVE',
+        }]
+      };
 
-    it('should add a conferencing column if FeatureToggle is false', function () {
-      FeatureToggleService.supports.and.callFake(function (val) {
-        return $q.when(false);
-      });
-      initController();
-      $scope.addCorrectMeetingColumn();
-      expect($scope.gridColumns[2].field).toBe('conferencing');
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('CMR');
     });
   });
 
@@ -268,6 +284,16 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       $scope.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  describe('atlasCareTrialsGetStatus should be called, careField should be removed from gridOptions if atlasCareTrials feature toggle is disabled', function () {
+    beforeEach(initController);
+
+    it('should have called FeatureToggleService.atlasCareTrialsGetStatus', function () {
+      expect(FeatureToggleService.atlasCareTrialsGetStatus).toHaveBeenCalled();
+      //care column to be removed if feature toggle is disabled
+      expect($scope.gridColumns.length).toEqual(7);
     });
   });
 });

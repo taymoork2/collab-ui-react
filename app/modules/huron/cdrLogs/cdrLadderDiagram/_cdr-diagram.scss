@@ -10,22 +10,37 @@
       transform: translate(-50%, -50%);
     }
   }
+
+  .icon {
+    @include vr-spacing(mt, 0.2, 0.5px, true);
+    &.icon-download {
+      @include vr-spacing(mr, 0.5);
+    }
+  }
+
+  [id="filterDropdown"]{
+    @include vr-spacing(ml, 1, 1px);
+  }
+
   .download {
-    padding-top: rem-calc(10);
+    @include vr-spacing(pv, 1);
   }
-  .filter {
-    padding-top: rem-calc(10);
-  }
+   .flow-filter {
+       @include vr-spacing(pt, 0.25);
+   }
   .options {
-    padding-bottom: rem-calc(15);
+    @include vr-spacing(pb, 0.75, -2px);
+    &:first-child{
+        @include vr-spacing(pb, 1);
+    }
   }
   .diagram {
     overflow: auto;
   }
   .item-pad {
-    padding-left: rem-calc(25);
+    @include vr-spacing(pl, 1.5);
   }
   .filter-label {
-    padding-left: rem-calc(8);
+    @include vr-spacing(pl, 0.5);
   }
 }

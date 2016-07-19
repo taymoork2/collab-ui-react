@@ -17,7 +17,10 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'ccc_config:admin',
-      'compliance:spark_conversations_read'
+      'cloud-contact-center:admin',
+      'compliance:spark_conversations_read',
+      'contact-center-context:pod_read',
+      'contact-center-context:pod_write'
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));

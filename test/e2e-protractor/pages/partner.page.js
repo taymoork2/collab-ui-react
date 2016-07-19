@@ -52,7 +52,7 @@ var PartnerHomePage = function () {
   this.startTrialButton = element(by.id('startTrialButton'));
   this.startTrialWithSqUCButton = element(by.id('startTrial'));
   this.trialDoneButton = element(by.id('trialDone'));
-  this.customerNameInput = element(by.id('input_customerName'));
+  this.customerNameInput = element(by.id('customerName'));
   this.didAddModal = element(by.id('didAddModal'));
   this.addDidButton = element(by.id('addDidButton'));
   this.removeDidPanel = element(by.id('removeDidPanel'));
@@ -61,7 +61,7 @@ var PartnerHomePage = function () {
   this.notifyCustLaterLink = element(by.id('notifyCustLaterLink'));
   this.customerDidAdd = element(by.css('.did-input .tokenfield'));
   this.customerDidInput = element(by.id('didAddField-tokenfield'));
-  this.customerEmailInput = element(by.id('input_customerEmail'));
+  this.customerEmailInput = element(by.id('customerEmail'));
   this.licenseCount = element(by.id('licenseCount'));
   this.licenseCountInput = element(by.id('input_licenseCount'));
   this.trialRoomSystemsAmount = element(by.id('trialRoomSystemsAmount'));
@@ -99,11 +99,13 @@ var PartnerHomePage = function () {
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="callTrial"]'));
   this.roomSystemsTrialCheckbox = element(by.css('label[for="roomSystemsTrial"]'));
+  this.careTrialCheckbox = element(by.css('label[for="careTrial"]'));
+  this.careLicenseCountTextbox = element(by.css('input[name="input_trialCareLicenseCount"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
-  this.closeBtnOnModal = element(by.id('btnCloseModal'));
+  this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
@@ -130,6 +132,8 @@ var PartnerHomePage = function () {
   };
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
+  this.deleteCustomerButton = element(by.id('deleteCustomer'));
+  this.deleteCustomerOrgConfirm = element(by.css('.btn--alert'));
 
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {

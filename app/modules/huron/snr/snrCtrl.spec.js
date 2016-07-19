@@ -12,6 +12,7 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();

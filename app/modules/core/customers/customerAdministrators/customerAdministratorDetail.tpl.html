@@ -3,10 +3,35 @@
     <div class="section-title-row">
       <span class="section-name" translate="customerAdminPanel.addAdministrators"></span>
     </div>
-
-  
+    <div class="search">
+  	  <i class="icon icon-search"></i>
+  	  <div class="align-search-inputs">
+	      <input id="stateInput" type="text" ng-model="customerAdmin.selected"
+	            typeahead-template-url="stateTemplate.html"
+	            typeahead="searchUser for searchUser in customerAdmin.searchUsers | filter:$viewValue | limitTo:8"
+	            typeahead-on-select="customerAdmin.selectAdmin($item)"
+	            placeholder="Enter Administrator name"
+	            typeahead-wait-ms="0"
+              ng-change="customerAdmin.filterList(customerAdmin.selected, '{{customerAdmin.selected}}')"
+	            ng-disabled="customerAdmin.disableAdminSearch" />
+        <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
+      </div>
+     </div>
     <div class="section-title-row">
-      <span class="section-name" translate="customerAdminPanel.assignedAdministrators"></span>
+      <span class="section-name" translate="customerAdminPanel.administrators"></span>
     </div>
-  </div>
+    <div class="feature-list">
+    	<ul>
+    		<li class="feature" ng-repeat= "administrator in customerAdmin.administrators | orderBy: 'fullName'">
+    			<a>
+    				<span class="feature-name">{{administrator.fullName}}</span>
+    				<span type="button" class="icon icon-close close-icon-height" ng-click="customerAdmin.removeSalesAdmin(administrator.uuid, administrator.fullName)">
+    				</span>
+    			</a>
+    		</li>
+    	</ul>
+  	</div>
+   <script type="text/ng-template" id="stateTemplate.html">
+      <a><span ng-bind-html="match.label | typeaheadHighlight:query"></span></a>
+   </script>
 </cs-sp-container>

@@ -22,7 +22,9 @@
       getCsvStat: getCsvStat,
       setCsvStat: setCsvStat,
       getBulkErrorResponse: getBulkErrorResponse,
-      addErrorWithTrackingID: addErrorWithTrackingID
+      addErrorWithTrackingID: addErrorWithTrackingID,
+      chunkSizeWithSparkCall: 2,
+      chunkSizeWithoutSparkCall: 10
     };
 
     return service;
@@ -76,8 +78,20 @@
           responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
             email: email
           });
-        } else if (messageCode === '400096') {
+        } else if (messageCode === '400110') {
           responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
+            email: email
+          });
+        } else if (messageCode === '400108') {
+          responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
+            email: email
+          });
+        } else if (messageCode === '400096' || messageCode === '400109') {
+          responseMessage = $translate.instant('usersPage.unableToMigrateError', {
+            email: email
+          });
+        } else if (messageCode === '400111') {
+          responseMessage = $translate.instant('usersPage.insufficientEntitlementsError', {
             email: email
           });
         } else {

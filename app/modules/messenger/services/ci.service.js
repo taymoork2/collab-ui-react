@@ -5,8 +5,8 @@
     .module('Messenger')
     .factory('CiService', CiService);
 
-  /** @ngInject */
-  function CiService($q, $rootScope, Authinfo, Log, UserListService, Userservice) {
+  /* @ngInject */
+  function CiService($q, Authinfo, Log, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage

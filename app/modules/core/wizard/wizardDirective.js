@@ -47,8 +47,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo,
-    SessionStorage, $stateParams, $state, FeatureToggleService, Userservice, ModalService, ServiceSetup) {
+  function WizardCtrl($controller, $modal, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -110,6 +109,13 @@
       } else {
         vm.current.tab = getTabs()[0];
       }
+
+      if ($stateParams.currentSubTab) {
+        vm.current.subTab = _.findWhere(getTab().subTabs, {
+          name: $stateParams.currentSubTab
+        });
+      }
+
       var steps = getSteps();
       if (steps.length) {
         var index = _.findIndex(steps, {
@@ -289,37 +295,18 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
-        //TODO remove these broadcasts
-        if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
-          $rootScope.$broadcast('wizard-messenger-setup-event');
-          updateStep();
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
-          updateStep();
-          vm.isNextDisabled = true;
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
-          $rootScope.$broadcast('wizard-set-sso-event');
-          vm.nextText = $translate.instant('common.save');
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
-          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
-          updateStep();
-        } else {
-          updateStep();
+        var steps = getSteps();
+        if (angular.isArray(steps)) {
+          var index = steps.indexOf(getStep());
+          if (index + 1 < steps.length) {
+            setStep(steps[index + 1]);
+          } else if (index + 1 === steps.length) {
+            nextTab();
+          }
         }
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
-    }
-
-    function updateStep() {
-      var steps = getSteps();
-      if (angular.isArray(steps)) {
-        var index = steps.indexOf(getStep());
-        if (index + 1 < steps.length) {
-          setStep(steps[index + 1]);
-        } else if (index + 1 === steps.length) {
-          nextTab();
-        }
-      }
     }
 
     function getRequiredTabs() {

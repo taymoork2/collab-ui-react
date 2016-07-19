@@ -43,6 +43,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeService_) {
@@ -159,10 +160,10 @@ describe('Controller: aaBuilderNameCtrl', function () {
     controller.name = testGroupName;
     expect(controller.nextButton()).toEqual(true);
   });
-  
+
   it("should test the previous  Button", function () {
-	    controller.name = testGroupName;
-	    expect(controller.previousButton()).toEqual("hidden");
-	  });
+    controller.name = testGroupName;
+    expect(controller.previousButton()).toEqual("hidden");
+  });
 
 });

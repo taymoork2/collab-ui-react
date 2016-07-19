@@ -5,8 +5,8 @@
 
   angular
     .module('wx2AdminWebClientApp')
-    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+    .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
+      function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider, languagesProvider) {
         var sidepanelMemo = 'sidepanelMemo';
 
         // sidepanel helper
@@ -173,8 +173,8 @@
           suffix: '.json'
         });
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
-        $translateProvider.preferredLanguage('en_US');
-        $translateProvider.fallbackLanguage('en_US');
+        $translateProvider.preferredLanguage(languagesProvider.getPreferredLanguage());
+        $translateProvider.fallbackLanguage(languagesProvider.getFallbackLanguage());
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
         $httpProvider.interceptors.push('ResponseInterceptor');
@@ -186,8 +186,8 @@
 
   angular
     .module('Squared')
-    .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
-      function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
+    .config(['$stateProvider',
+      function ($stateProvider) {
         var modalMemo = 'modalMemo';
         var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -202,12 +202,11 @@
             }
             $state.modal = $modal.open({
               template: '<div ui-view="modal"></div>',
-              size: options.size,
               windowClass: options.windowClass,
               backdrop: options.backdrop || 'static',
               modalClass: $state.params.modalClass,
               modalId: $state.params.modalId,
-              type: $state.params.modalType
+              type: options.type
             });
             $state.modal.result.finally(function () {
               if (!this.stopPreviousState) {
@@ -231,6 +230,125 @@
         }
 
         $stateProvider
+          .state('addDeviceFlow', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseDeviceType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseDeviceTypeCtrl',
+                controllerAs: 'chooseDeviceType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseAccountType', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseAccountTypeCtrl',
+                controllerAs: 'chooseAccountType',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseAccountTypeTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.choosePersonal', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChoosePersonalCtrl',
+                controllerAs: 'choosePersonal',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChoosePersonalTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.chooseSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ChooseSharedSpaceCtrl',
+                controllerAs: 'choosePlace',
+                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.newSharedSpace', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'NewSharedSpaceCtrl',
+                controllerAs: 'newPlace',
+                templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addServices', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddServicesCtrl',
+                controllerAs: 'addServices',
+                templateUrl: 'modules/squared/devices/addDeviceNew/AddServicesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.addLines', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'AddLinesCtrl',
+                controllerAs: 'addLines',
+                templateUrl: 'modules/squared/common/AddLinesTemplate.tpl.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('addDeviceFlow.showActivationCode', {
+            parent: 'modalSmall',
+            params: {
+              currentUser: {},
+              activationCode: {},
+              wizard: null
+            },
+            views: {
+              'modal@': {
+                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
+                controller: 'ShowActivationCodeCtrl',
+                controllerAs: 'showActivationCode'
+              }
+            }
+          })
           .state('activate', {
             url: '/activate',
             views: {
@@ -262,17 +380,12 @@
             parent: 'main'
           })
           .state('domainmanagement.add', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageAddCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/add.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/add.tpl.html'
               }
             },
             params: {
@@ -280,17 +393,12 @@
             }
           })
           .state('domainmanagement.instructions', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageInstructionsCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/instructions.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
               }
             },
             params: {
@@ -299,17 +407,12 @@
             }
           })
           .state('domainmanagement.delete', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/delete.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/delete.tpl.html'
               }
             },
             params: {
@@ -318,17 +421,12 @@
             }
           })
           .state('domainmanagement.unclaim', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
               }
             },
             params: {
@@ -337,17 +435,12 @@
             }
           })
           .state('domainmanagement.claim', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageClaimCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/claim.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/claim.tpl.html'
               }
             },
             params: {
@@ -356,17 +449,12 @@
             }
           })
           .state('domainmanagement.verify', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'DomainManageVerifyCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/verify.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                templateUrl: 'modules/core/domainManagement/verify.tpl.html'
               }
             },
             params: {
@@ -379,7 +467,12 @@
             templateUrl: 'modules/core/settings/settings.tpl.html',
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
-            parent: 'main'
+            parent: 'main',
+            resolve: {
+              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasSettingsPageGetStatus();
+              }
+            }
           })
           .state('authentication.enable3rdPartyAuth', {
             parent: 'modal',
@@ -396,6 +489,31 @@
             templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
             controller: 'PartnerProfileCtrl',
             parent: 'main'
+          })
+          .state('brandingUpload', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+                controller: 'BrandingCtrl',
+                controllerAs: 'brandupload',
+              }
+            },
+            authenticate: false
+          })
+          .state('brandingExample', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
+                controller: 'BrandingExampleCtrl',
+                controllerAs: 'brandEg',
+              }
+            },
+            authenticate: false,
+            params: {
+              modalType: 'Partner'
+            }
           })
           .state('invite', {
             url: '/invite',
@@ -414,24 +532,11 @@
             parent: 'main',
             authenticate: false
           })
-          .state('applauncher', {
-            url: '/applauncher',
-            templateUrl: 'modules/squared/views/applauncher.html',
-            controller: 'ApplauncherCtrl',
-            parent: 'main',
-            authenticate: false
-          })
-          .state('appdownload', {
-            url: '/appdownload',
-            templateUrl: 'modules/squared/views/appdownload.html',
-            controller: 'AppdownloadCtrl',
-            parent: 'main',
-            authenticate: false
-          })
           .state('processorder', {
             url: '/processorder',
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
+            controllerAs: 'processOrder',
             parent: 'main',
             authenticate: false
           })
@@ -455,8 +560,8 @@
             views: {
               'tabContent': {
                 controllerAs: 'mcpSubscription',
-                controller: 'MyCompanyPageSubscriptionCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+                controller: 'MySubscriptionCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
               }
             }
           })
@@ -494,7 +599,7 @@
             }
           })
           .state('users.delete', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'UserDeleteCtrl',
@@ -504,7 +609,6 @@
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
                     $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
                   }
                 }
               }
@@ -516,7 +620,7 @@
             }
           })
           .state('users.deleteSelf', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'UserDeleteCtrl',
@@ -526,7 +630,6 @@
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
                     $state.params.modalClass = 'modalContent';
-                    $state.params.modalType = 'dialog';
                   }
                 }
               }
@@ -538,7 +641,7 @@
             }
           })
           .state('users.add', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -576,7 +679,7 @@
             }
           })
           .state('users.convert', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -608,7 +711,7 @@
             }
           })
           .state('users.csv', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'UserCsvCtrl',
@@ -628,7 +731,7 @@
             }
           })
           .state('editService', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -923,7 +1026,7 @@
             }
           })
           .state('organization-overview.add', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'OrganizationAddCtrl',
@@ -947,13 +1050,6 @@
               currentOrg: {}
             }
           })
-          /**.state('site-list', {
-            url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
-            controller: 'SiteListCtrl',
-            controllerAs: 'siteList',
-            parent: 'main'
-          })**/
           .state('site-list', {
             url: '/site-list',
             templateUrl: 'modules/core/siteList/siteList.tpl.html',
@@ -962,17 +1058,12 @@
             parent: 'main'
           })
           .state('site-csv', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
                 templateUrl: 'modules/webex/siteCSVModal/siteCSVModal.tpl.html',
-                controllerAs: 'siteCSVModalCtrl',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                controllerAs: 'siteCSVModalCtrl'
               }
             },
             params: {
@@ -980,17 +1071,12 @@
             }
           })
           .state('site-csv-results', {
-            parent: 'modal',
+            parent: 'modalSmall',
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
                 templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
-                controllerAs: 'siteCSVResult',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'small';
-                  }
-                }
+                controllerAs: 'siteCSVResult'
               }
             },
             params: {
@@ -1045,6 +1131,17 @@
             parent: 'main',
             params: {
               tab: 'webex',
+              siteUrl: null
+            }
+          })
+          .state('reports.care', {
+            url: '/reports/care',
+            templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+            controller: 'CustomerReportsCtrl',
+            controllerAs: 'nav',
+            parent: 'main',
+            params: {
+              tab: 'care',
               siteUrl: null
             }
           })
@@ -1113,8 +1210,57 @@
         /*
           devices
         */
-
-        .state('devices', {
+        .state('places', {
+            url: '/places',
+            templateUrl: 'modules/squared/places/places.html',
+            controller: 'PlacesCtrl',
+            controllerAs: 'sc',
+            parent: 'main',
+            data: {
+              bodyClass: 'places-page'
+            }
+          })
+          .state('place-overview', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'PlaceOverviewCtrl',
+                controllerAs: 'placeOverview',
+                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+              },
+              'header@place-overview': {
+                templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
+              }
+            },
+            params: {
+              currentPlace: {}
+            },
+            data: {
+              displayName: 'Overview'
+            }
+          })
+          .state('place-overview.csdmDevice', {
+            views: {
+              '': {
+                controller: 'DeviceOverviewCtrl',
+                controllerAs: 'deviceOverview',
+                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html'
+              }
+            },
+            resolve: {
+              channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+                return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+              }
+            },
+            params: {
+              currentDevice: {},
+              huronDeviceService: {}
+            },
+            data: {
+              displayName: 'Device Configuration'
+            }
+          })
+          .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
             controller: 'DevicesCtrl',
@@ -1150,58 +1296,13 @@
             }
           })
           .state('video', {
-            parent: 'modalLarge',
+            parent: 'modal',
             views: {
               'modal@': {
                 templateUrl: 'modules/core/video/videoModal.tpl.html'
               }
             }
           })
-
-        /*
-         devices
-         prototypes
-        */
-        .state('main-redux', {
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/mainRedux/main-redux.html'
-              }
-            },
-            abstract: true,
-            sticky: true
-          })
-          .state('devices-redux', {
-            abstract: true,
-            templateUrl: 'modules/squared/devicesRedux/devices.html',
-            controller: 'DevicesReduxCtrl',
-            controllerAs: 'devices',
-            parent: 'main-redux'
-          })
-          .state('devices-redux.search', {
-            url: '/devices-redux',
-            views: {
-              'leftPanel': {
-                templateUrl: 'modules/squared/devicesRedux/list.html'
-              }
-            }
-          })
-          .state('devices-redux.details', {
-            url: '/devices-redux/details',
-            views: {
-              'leftPanel': {
-                controllerAs: 'deviceDetails',
-                controller: 'DevicesReduxDetailsCtrl',
-                templateUrl: 'modules/squared/devicesRedux/details.html'
-              }
-            },
-            params: {
-              device: null
-            }
-          })
-          /*
-            end: devices redux prototypes
-          */
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
@@ -1288,10 +1389,10 @@
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmins',
+            controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
             data: {
-              displayName: 'Administrators'
+              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
@@ -1319,28 +1420,22 @@
           })
           .state('modal', {
             abstract: true,
-            onEnter: modalOnEnter(),
+            onEnter: modalOnEnter({
+              type: 'full'
+            }),
             onExit: modalOnExit
           })
-          .state('modalLarge', {
+          .state('modalDialog', {
             abstract: true,
             onEnter: modalOnEnter({
-              size: 'lg'
+              type: 'dialog'
             }),
             onExit: modalOnExit
           })
           .state('modalSmall', {
             abstract: true,
             onEnter: modalOnEnter({
-              size: 'sm'
-            }),
-            onExit: modalOnExit
-          })
-          .state('modalFull', {
-            abstract: true,
-            onEnter: modalOnEnter({
-              windowClass: 'modal-full',
-              backdrop: 'static'
+              type: 'small'
             }),
             onExit: modalOnExit
           })
@@ -1398,6 +1493,7 @@
             },
             params: {
               currentTab: {},
+              currentSubTab: '',
               currentStep: '',
               onlyShowSingleTab: false
             },
@@ -1519,7 +1615,7 @@
             }
           })
           .state('cdrladderdiagram', {
-            parent: 'modalFull',
+            parent: 'modal',
             views: {
               'modal@': {
                 templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
@@ -1585,7 +1681,7 @@
             template: '<div></div>'
           })
           .state('mediaonhold', {
-            parent: 'modalLarge',
+            parent: 'modal',
             url: '/mediaonhold',
             views: {
               'modal@': {
@@ -1709,7 +1805,6 @@
           })
           .state('generateauthcode', {
             parent: 'modal',
-            url: '/generateauthcode',
             params: {
               currentUser: {},
               activationCode: {}
@@ -1737,7 +1832,7 @@
             }
           })
           .state('pstnSetup', {
-            parent: 'modalFull',
+            parent: 'modal',
             params: {
               customerId: {},
               customerName: {},
@@ -1785,7 +1880,10 @@
           .state('pstnSetup.nextSteps', {
             templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
             controller: 'PstnNextStepsCtrl',
-            controllerAs: 'pstnNextSteps'
+            controllerAs: 'pstnNextSteps',
+            params: {
+              portOrders: null
+            }
           })
           .state('hurondetailsBase', {
             abstract: true,
@@ -1845,17 +1943,12 @@
             controllerAs: 'aaBuilderMain'
           })
           .state('huronfeatures.deleteFeature', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'HuronFeatureDeleteCtrl',
                 controllerAs: 'huronFeatureDelete',
-                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
               }
             },
             params: {
@@ -1865,17 +1958,12 @@
             }
           })
           .state('huronfeatures.aaListDepends', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'HuronFeatureAADependsCtrl',
                 controllerAs: 'huronFeatureAADepends',
-                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
               }
             },
             params: {
@@ -1884,6 +1972,13 @@
               detailsFeatureType: null,
               detailsDependsList: null
             }
+          })
+          .state('huronCallPark', {
+            url: '/huronCallPark',
+            parent: 'hurondetails',
+            templateUrl: 'modules/huron/features/callPark/cpSetupAssistant.tpl.html',
+            controller: 'CallParkSetupAssistantCtrl',
+            controllerAs: 'callParkSA'
           })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
@@ -1950,6 +2045,9 @@
             data: {
               connectorType: 'c_cal'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main',
             abstract: true
           })
@@ -1959,6 +2057,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('calendar-service.settings', {
@@ -1978,6 +2079,9 @@
             data: {
               connectorType: 'c_ucmc'
             },
+            params: {
+              clusterId: null
+            },
             parent: 'main'
           })
           .state('call-service.list', {
@@ -1986,6 +2090,9 @@
               fullPane: {
                 templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
               }
+            },
+            params: {
+              clusterId: null
             }
           })
           .state('call-service.settings', {
@@ -2044,6 +2151,29 @@
             params: {
               clusterId: null,
               connectorType: null
+            },
+            resolve: {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              }
+            }
+          })
+          .state('management-connector-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/management-connector-details.html',
+                controller: 'ExpresswayHostDetailsController',
+                controllerAs: 'hostDetailsCtrl'
+              }
+            },
+            data: {
+              displayName: 'Management Connector'
+            },
+            params: {
+              host: null,
+              clusterId: null,
+              connectorType: 'c_mgmt'
             }
           })
           .state('cluster-details.alarm-details', {
@@ -2111,17 +2241,8 @@
               }
             }
           })
-          /*.state('media-service.metrics', {
-            url: '/mediaservice/metrics',
-            views: {
-              'fullPane': {
-                controllerAs: 'GraphUtilCtrl',
-                controller: 'AnalyticsUtilizationGraphController',
-                templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html'
-              }
-            }
-          })*/
-          .state('connector-details', {
+
+        .state('connector-details', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
@@ -2178,6 +2299,80 @@
               clusterList: null,
               dispName: null
             }
+          })
+
+        //V2 API changes
+        .state('media-service-v2', {
+            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            controller: 'MediaServiceControllerV2',
+            controllerAs: 'med',
+            parent: 'main'
+          })
+          .state('media-service-v2.list', {
+            url: '/mediaserviceV2',
+            views: {
+              'fullPane': {
+                templateUrl: 'modules/mediafusion/media-service-v2/resources/cluster-list.html'
+              }
+            }
+          })
+          .state('media-service-v2.settings', {
+            url: '/mediaserviceV2/settings',
+            views: {
+              'fullPane': {
+                controllerAs: 'mediaServiceSettings',
+                controller: 'MediaServiceSettingsControllerV2',
+                templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html'
+              }
+            }
+          })
+
+        .state('connector-details-v2', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'groupDetails',
+                controller: 'GroupDetailsControllerV2',
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
+              },
+              'header@connector-details-v2': {
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
+              }
+            },
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterName: {},
+              nodes: {},
+              cluster: {}
+            }
+          })
+          .state('connector-details-v2.alarm-details', {
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
+            controller: 'MediaAlarmControllerV2',
+            controllerAs: 'alarmCtrl',
+            data: {
+              displayName: 'Alarm Details'
+            },
+            params: {
+              alarm: null,
+              host: null
+            }
+          })
+          .state('connector-details-v2.host-details', {
+            templateUrl: 'modules/mediafusion/media-service-v2/side-panel/host-details.html',
+            controller: 'HostDetailsControllerV2',
+            controllerAs: 'hostDetails',
+            data: {
+              displayName: 'Node'
+            },
+            params: {
+              clusterId: null,
+              connector: null,
+              hostLength: null,
+              selectedCluster: null
+            }
           });
       }
     ]);
@@ -2191,8 +2386,6 @@
           .state('ediscovery-main', {
           views: {
             'main@': {
-              controller: 'EdiscoveryHeaderController',
-              controllerAs: 'ediscoveryHeaderCtrl',
               templateUrl: 'modules/ediscovery/ediscovery.tpl.html'
             }
           },
@@ -2209,11 +2402,15 @@
             url: '/search',
             controller: 'EdiscoverySearchController',
             controllerAs: 'ediscoverySearchCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-search.html'
+            templateUrl: 'modules/ediscovery/ediscovery-search.html',
+            params: {
+              report: null,
+              reRun: false,
+            }
           })
           .state('ediscovery.reports', {
             url: '/reports',
-            controller: 'EdiscoveryController',
+            controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             templateUrl: 'modules/ediscovery/ediscovery-reports.html'
           });
@@ -2282,17 +2479,12 @@
             controllerAs: 'careChatSA'
           })
           .state('care.Features.DeleteFeature', {
-            parent: 'modal',
+            parent: 'modalDialog',
             views: {
               'modal@': {
                 controller: 'CareFeaturesDeleteCtrl',
                 controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalType = 'dialog';
-                  }
-                }
+                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'
               }
             },
             params: {

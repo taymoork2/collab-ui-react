@@ -1,0 +1,36 @@
+<div ng-if="med.serviceEnabled === true || med.featureToggled">
+  <div class="media-service mediafusion mediafusion-fix-paragraphs">
+    <cs-page-header title="{{med.pageTitle}}" tabs="med.tabs"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
+        <div style="position:relative">
+          <hercules-notifications filter-tag="med.notificationTag"></hercules-notifications>
+        </div>	
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <button class="btn btn--people add-resource-button" type="submit"
+                translate="mediaFusion.add-resource-button" ng-click="med.addResourceButtonClicked()"></button>
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
+
+    <div ui-view="fullPane" class="small-padding-top">
+    </div>
+  </div>	
+</div>	
+
+<div ng-if="med.serviceEnabled === false && !med.featureToggled">
+  <div class="mediafusion">
+    <div class="centered-info-pane full-height">
+      <div ng-include src="'modules/mediafusion/media-service/activation/activate-media-service.html'"></div>
+    </div>
+  </div>
+</div>
+
+<div ng-if="med.serviceEnabled === null && !med.featureToggled">
+  <div class="mediafusion">
+    <div class="centered-info-pane full-height">
+      <i class="icon icon-spinner icon-2x"></i>
+      <p>Loading, please wait...</p>
+    </div>
+  </div>
+</div>

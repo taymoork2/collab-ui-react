@@ -16,12 +16,19 @@
   }
 
   /* @ngInject */
-  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService, $translate) {
     var vm = this;
     var cluster = ClusterService.getCluster($stateParams.connectorType, $stateParams.clusterId);
+    vm.clustername = cluster.name;
     vm.host = _.find(cluster.connectors, {
       hostname: $stateParams.host
     });
+    vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.host.connectorType);
+    vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
+      connectorName: vm.localizedConnectorName,
+      hostname: vm.host.hostname
+    });
+    vm.getSeverity = ClusterService.getRunningStateSeverity;
 
     vm.deleteHost = function () {
       return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
@@ -35,5 +42,6 @@
           }
         }, XhrNotificationService.notify);
     };
+
   }
 }());

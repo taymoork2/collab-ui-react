@@ -2,12 +2,12 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory, Utils) {
+  function CsdmDeviceService($http, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, Utils) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=true';
     var devicesFastUrl = devicesUrl + "&checkDisplayName=false";
 
     var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
-      return CsdmConverter.convertDevices(res.data);
+      return CsdmConverter.convertCloudberryDevices(res.data);
     });
 
     var deviceCache = CsdmCacheFactory.create({
@@ -34,12 +34,12 @@
       },
       get: function (url) {
         return $http.get(url).then(function (res) {
-          return CsdmConverter.convertDevice(res.data);
+          return CsdmConverter.convertCloudberryDevice(res.data);
         });
       },
       fetch: function () {
         return $http.get(devicesUrl).then(function (res) {
-          return CsdmConverter.convertDevices(res.data);
+          return CsdmConverter.convertCloudberryDevices(res.data);
         });
       },
       initializeData: initialDataPromise

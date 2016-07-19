@@ -26,6 +26,13 @@
     state: 'users',
     link: '/users'
   }, {
+    tab: 'placeTab',
+    icon: 'icon-meeting-room',
+    title: 'tabs.placeTab',
+    feature: 'csdm-places',
+    state: 'places',
+    link: '/places'
+  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
@@ -114,13 +121,14 @@
     icon: 'icon-sliders',
     title: 'tabs.accountTab',
     state: 'profile',
+    feature: '!atlas-settings-page',
     link: '/profile'
   }, {
     tab: 'settingsTab',
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-global-settings",
+    feature: "atlas-settings-page",
     link: '/settings'
   }, {
     tab: 'organizationTab',
@@ -147,8 +155,8 @@
     }, {
       title: 'tabs.metricsDetailsTab',
       //desc: 'tabs.metricsDetailsTabDesc',
-      state: 'metrics',
-      link: '#metrics'
+      state: 'media-service-v2',
+      link: '#mediaserviceV2'
     }]
   }];
 

@@ -1,0 +1,34 @@
+{
+  "callvolume": [{
+    "orgId": "2c3c9f9e-73d9-4460-a668-047162ff1bac",
+    "application": "media_agent",
+    "metricName": "active_calls ,call_reject",
+    "values": [{
+      "timestamp": "2016-06-07T07:15:48.169Z",
+      "call_reject": 0.0,
+      "active_calls": 4.0
+    }, {
+      "timestamp": "2016-06-07T07:20:48.039Z",
+      "call_reject": 0.0,
+      "active_calls": 4.0
+    }, {
+      "timestamp": "2016-06-07T07:30:48.045Z",
+      "call_reject": 0.0,
+      "active_calls": 0.0
+    }, {
+      "timestamp": "2016-06-07T07:35:48.053Z",
+      "call_reject": 0.0,
+      "active_calls": 0.0
+    }, {
+      "timestamp": "2016-06-07T07:40:48.153Z",
+      "call_reject": 0.0,
+      "active_calls": 0.0
+    }, {
+      "timestamp": "2016-06-08T07:10:53.048Z",
+      "call_reject": 0.0,
+      "active_calls": 0.0
+    }],
+    "startTime": "2016-06-07T07:10:22Z",
+    "endTime": "2016-06-08T07:28:22Z"
+  }]
+}

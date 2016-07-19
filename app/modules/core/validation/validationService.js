@@ -13,12 +13,14 @@
     var factory = {
       trialLicenseCount: trialLicenseCount,
       trialRoomSystemQuantity: trialRoomSystemQuantity,
+      trialCareQuantity: trialCareQuantity,
       nonPrintable: nonPrintable,
       alertingName: alertingName,
       callForward: callForward,
       numeric: numeric,
       positiveNumber: positiveNumber,
-      maxNumber100: maxNumber100
+      maxNumber100: maxNumber100,
+      phoneUS: phoneUS
     };
 
     return factory;
@@ -26,6 +28,11 @@
     function trialLicenseCount(viewValue, modelValue) {
       var value = modelValue || viewValue;
       return /^[1-9][0-9]{0,2}$/.test(value);
+    }
+
+    function trialCareQuantity(viewValue, modelValue, totalCount) {
+      var value = +modelValue || +viewValue;
+      return (value >= 0 && value <= 50 && totalCount >= value);
     }
 
     function trialRoomSystemQuantity(viewValue, modelValue) {
@@ -62,5 +69,11 @@
       var value = modelValue || viewValue;
       return value <= 100;
     }
+
+    function phoneUS(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return /^(\(?1\)?[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(value);
+    }
+
   }
 })();

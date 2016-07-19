@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskOrgController', HelpdeskOrgController);
+
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $state, Authinfo, $window, UrlConfig) {
+  function HelpdeskOrgController($location, $anchorScroll, $stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $modal, $state, Authinfo, $window, UrlConfig, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -33,22 +37,30 @@
     vm.launchAtlasReadonly = launchAtlasReadonly;
     vm.isTrials = isTrials;
     vm.allowLaunchAtlas = false;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+    vm.adminUsersAvailable = false;
+
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-    function isWhitelistedOrg(orgData) {
-      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36");
-      var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
-        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36");
-      });
-      return (isWhitelisted || managedByWhitelisted);
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
+
+    scrollToTop();
+
+    function scrollToTop() {
+      if ($location && $anchorScroll) {
+        $location.hash('helpdeskPageTop');
+        $anchorScroll();
+      }
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36") {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36" && Authinfo.getOrgId() != "1eb65fdf-9643-417f-9974-ad72cae0e10f" && Authinfo.getOrgId() != "6f631c7b-04e5-4dfe-b359-47d5fa9f4837") {
         vm.allowLaunchAtlas = false;
       } else if (orgData.id == Authinfo.getOrgId()) {
-        vm.allowLaunchAtlas = false;
-      } else if (!isWhitelistedOrg(orgData)) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;
@@ -56,7 +68,6 @@
         var orgSettings = JSON.parse(_.last(orgData.orgSettings));
         vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
       }
-
     }
 
     function isTrials(orgSettings) {
@@ -66,6 +77,24 @@
         eft = orgSettingsJson.isEFT;
       }
       return eft;
+    }
+
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
+          resolve: {
+            title: function () {
+              return 'helpdesk.customerDetails';
+            },
+            data: function () {
+              return vm.org;
+            }
+          }
+        });
+      }
     }
 
     function initOrgView(org) {
@@ -92,6 +121,7 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.cardsAvailable = true;
     }
 
     function findManagedByOrgs(org) {
@@ -124,6 +154,7 @@
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
         });
+        vm.adminUsersAvailable = true;
       }, XhrNotificationService.notify);
     }
 
@@ -148,14 +179,20 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      switch (event.keyCode) {
-      case 27: // Esc
-        $window.history.back();
-        break;
-      case 83: // S
-        gotoSearchUsersAndDevices();
-        break;
+      if (!modalVisible()) {
+        switch (event.keyCode) {
+        case 27: // Esc
+          $window.history.back();
+          break;
+        case 83: // S
+          gotoSearchUsersAndDevices();
+          break;
+        }
       }
     }
 
@@ -190,8 +227,4 @@
         });
     }
   }
-
-  angular
-    .module('Squared')
-    .controller('HelpdeskOrgController', HelpdeskOrgController);
 }());

@@ -1,6 +1,15 @@
 'use strict';
 
 var AutoAttendantPage = function () {
+  this.repeatMenu = 'Repeat this Menu';
+  this.playSubmenu = 'Play Submenu';
+  this.goBack = 'Go Back';
+  this.key0 = '0';
+  this.key1 = '1';
+  this.key2 = '2';
+
+  this.searchBox = element(by.id('searchFilter'));
+  this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
   this.newFeatureButton = element(by.css('.new-feature-button'));
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
@@ -18,8 +27,9 @@ var AutoAttendantPage = function () {
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+  this.aaCard = element(by.css('.card-body'));
 
-  this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
+  this.deleteModalConfirmText = element(by.css('.modal-body')).element(by.css('span'));
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
 
@@ -44,15 +54,38 @@ var AutoAttendantPage = function () {
   this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.addPlus = element(by.css('.aa-add-step-icon'));
-  this.repeatPlus = element(by.css('.icon-plus-circle'));
+  this.repeatPlus = element(by.name('aa-phone-menu-add-action'));
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
+  this.phoneMenuKeysContent = element.all(by.css('div.aa-pm-key-select .select-toggle'));
   this.phoneMenuKeyOptions = element.all(by.css('div.aa-pm-key-select .dropdown-menu'));
   this.phoneMenuAction = element.all(by.css('div.aa-pm-action-select .icon-chevron-down'));
+  this.phoneMenuActionContent = element.all(by.css('div.aa-pm-action-select .select-toggle'));
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
-  this.phoneMenuActionTargets = element.all(by.css('div.aa-key-action'));
+  this.phoneMenuActionTargets = element.all(by.css('div.aa-pm-action'));
 
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
+
+  this.submenuRepeatPlus = element.all(by.css('aa-submenu .icon-plus-circle'));
+  this.submenuSayMessage = element.all(by.css('aa-say-message[name="aa-submenu-say-message"]'));
+  this.submenuKeys = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .icon-chevron-down'));
+  }
+  this.submenuKeysContent = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .select-toggle'));
+  }
+  this.submenuKeyOptions = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-key-select .dropdown-menu'));
+  }
+  this.submenuAction = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-action-select .icon-chevron-down'));
+  }
+  this.submenuActionContent = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-action-select .select-toggle'));
+  }
+  this.submenuActionOptions = function (submenuI) {
+    return element.all(by.css('aa-submenu')).get(submenuI).all(by.css('div.aa-sm-action-select div.dropdown-menu'));
+  }
 
   this.addStepFirst = element.all(by.css('div.aa-panel-round')).first();
   this.addStepLast = element.all(by.css('div.aa-panel-round')).last();
@@ -70,24 +103,24 @@ var AutoAttendantPage = function () {
   }).first().all(by.css("div.aa-flex-row")).last();
 
   // first item in newStep dropdown: Say Message
-  this.newStepSelectFirst = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+  this.newStepSelectSayMessage = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
-  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).first();
+  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(3);
 
   // second item in newStep dropdown: Phone Menu
-  this.newStepSelectSecond = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+  this.newStepSelectPhoneMenu = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(1);
 
-  // third item in newStep dropdown: Dial By Extension 
-  this.newStepSelectThird = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+  // third item in newStep dropdown: Dial By Extension
+  this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+    return el.isDisplayed();
+  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(0);
+
+  // last/third item in newStep dropdown: Route Call
+  this.newStepSelectRouteCall = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(2);
-
-  // last/third item in newStep dropdown: Route Call 
-  this.newStepSelectLast = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
-    return el.isDisplayed();
-  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).last();
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:

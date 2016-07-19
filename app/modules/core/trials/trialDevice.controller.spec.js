@@ -1,19 +1,34 @@
-/* globals $controller, $q, $rootScope, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
+/* globals $controller, $httpBackend, $q, $rootScope, FeatureToggleService, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
   var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+    // TODO - check for removal of $httpBackend and FeatureToggleService when DX80 and MX300 are officially supported
+    bard.inject(this, '$controller', '$httpBackend', '$q', '$rootScope', 'FeatureToggleService', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
+  });
 
+  beforeEach(function () {
+    // TODO - remove $httpBackend when DX80 and MX300 are officially supported
+    $httpBackend
+      .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
+      .respond({});
+
+    initController();
+  });
+
+  function initController() {
     controller = $controller('TrialDeviceController');
     $rootScope.$apply();
-  });
+  }
 
   describe('controller data', function () {
     it('should be created successfully', function () {
@@ -34,6 +49,25 @@ describe('Controller: TrialDeviceController', function () {
       expect(roomSystems).toBeUndefined();
       expect(phones.length).toBe(0);
       expect(shippingInfo).toBeUndefined();
+    });
+
+    // TODO: remove when DX80 and MX300 support is official
+    describe('feature toggle for displaying new room systems', function () {
+      it('should show DX80 and MX300 when feature toggle is true', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+        initController();
+
+        expect(controller.showNewRoomSystems).toBe(true);
+        expect(FeatureToggleService.supports).toHaveBeenCalled();
+      });
+
+      it('should NOT show DX80 and MX300 when feature toggle is false', function () {
+        spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+        initController();
+
+        expect(controller.showNewRoomSystems).toBe(false);
+        expect(FeatureToggleService.supports).toHaveBeenCalled();
+      });
     });
 
     // the back end expects this as an enum and enums cant start with numbers
@@ -63,6 +97,12 @@ describe('Controller: TrialDeviceController', function () {
         readonly: false,
         valid: true
       }, {
+        model: 'CISCO_DX80',
+        enabled: true,
+        quantity: 1,
+        readonly: false,
+        valid: true
+      }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
@@ -73,7 +113,7 @@ describe('Controller: TrialDeviceController', function () {
       var devices2 = [{
         model: 'CISCO_SX10',
         enabled: true,
-        quantity: 5,
+        quantity: 4,
         readonly: false,
         valid: true
 
@@ -86,6 +126,12 @@ describe('Controller: TrialDeviceController', function () {
         valid: true
 
       }, {
+        model: 'CISCO_MX300',
+        enabled: false,
+        quantity: 2,
+        readonly: false,
+        valid: true
+      }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
@@ -94,7 +140,7 @@ describe('Controller: TrialDeviceController', function () {
 
       }];
 
-      expect(controller.calcQuantity(devices1)).toEqual(2);
+      expect(controller.calcQuantity(devices1)).toEqual(3);
       expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
       expect(controller.calcQuantity(devices3)).toEqual(0);
     });
@@ -285,8 +331,8 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is between 2 and 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 2, 0, 7);
+    it('should validate when quantity is between 1 and 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 1, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
       var valid2 = controller.validateTotalQuantity(null, null, model);
@@ -295,14 +341,13 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid2).toBe(true);
     });
 
-    it('should not validate when quantity is less than 2 or greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 1);
+    // less than 1 condition is handled in controller by _getQuantityInputDefault
+    it('should not validate when quantity is greater than 7', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
-      var valid2 = controller.validateTotalQuantity(null, null, model);
 
       expect(valid1).toBe(false);
-      expect(valid2).toBe(false);
     });
 
     it('should validate when device is not enabled', function () {
@@ -322,8 +367,8 @@ describe('Controller: TrialDeviceController', function () {
       }
     };
 
-    it('should validate when quantity is 5 or less', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(5);
+    it('should validate when quantity is 3 or less', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(3);
 
       var valid = controller.validateRoomSystemsQuantity(null, null, model);
 
@@ -338,8 +383,8 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(false);
     });
 
-    it('should not validate when quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(1);
+    it('should not validate when quantity is less than 1', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(0);
 
       var valid = controller.validateRoomSystemsQuantity(null, null, model);
 
@@ -379,8 +424,8 @@ describe('Controller: TrialDeviceController', function () {
       expect(valid).toBe(false);
     });
 
-    it('should not validate when phone quantity is less than 2', function () {
-      spyOn(controller, 'calcQuantity').and.returnValue(1);
+    it('should not validate when phone quantity is less than 1', function () {
+      spyOn(controller, 'calcQuantity').and.returnValue(0);
 
       var valid = controller.validatePhonesQuantity(null, null, model);
 
@@ -454,6 +499,81 @@ describe('Controller: TrialDeviceController', function () {
         }
       });
       expect(valid).toBe(false);
+    });
+  });
+
+  describe('areAdditionalDevicesAllowed  function ', function () {
+    it('should return false when limit is reached', function () {
+
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 20,
+          maxDeviceTrials: 20
+        })
+      });
+
+      controller = $controller('TrialDeviceController');
+      controller.canAddMoreDevices = false;
+      $rootScope.$apply();
+
+      var result = controller.areAdditionalDevicesAllowed();
+      expect(result).toBe(false);
+    });
+
+    it('should return true when the limit is not reached', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 15,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      controller.canAddMoreDevices = false;
+      $rootScope.$apply();
+
+      var result = controller.areAdditionalDevicesAllowed();
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('areTemplateOptionsDisabled function', function () {
+    it('should set to true if device.enabled is false', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_SX10',
+        enabled: false,
+        quantity: 3,
+        readonly: false,
+        valid: true
+      };
+
+      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
+    });
+
+    it('should set to false if device.enabled is true', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_DX80',
+        enabled: true,
+        quantity: 3,
+        readonly: false,
+        valid: true
+      };
+      expect(controller.areTemplateOptionsDisabled(device)).toBeFalsy();
+    });
+
+    it('should set to false if device.readonly is true', function () {
+      var controller = $controller('TrialDeviceController');
+      var device = {
+        model: 'CISCO_MX300',
+        enabled: false,
+        quantity: 3,
+        readonly: true,
+        valid: true
+      };
+      expect(controller.areTemplateOptionsDisabled(device)).toBeTruthy();
     });
   });
 });

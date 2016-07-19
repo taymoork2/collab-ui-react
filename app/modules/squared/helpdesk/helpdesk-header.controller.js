@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskHeaderController($interval, $scope, HelpdeskSearchHistoryService, Config, HelpdeskSparkStatusService, UrlConfig) {
+  function HelpdeskHeaderController($interval, $scope, HelpdeskSearchHistoryService, HelpdeskSparkStatusService, UrlConfig) {
 
     var vm = this;
     vm.clearSearchHistory = clearSearchHistory;

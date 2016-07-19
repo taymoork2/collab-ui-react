@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var errorRetrieveKEM = false;
+
   angular
     .module('Squared')
     .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
@@ -13,6 +15,7 @@
         devicesUrl: devicesUrl
       });
     }
+
     return {
       create: create
     };
@@ -25,12 +28,14 @@
         devicesUrl: devicesUrl
       });
     }
+
     return {
       create: create
     };
   }
+
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
@@ -69,8 +74,23 @@
         return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
-        }, function (err) {
+          _.forEach(deviceList, function (device) {
+            if (KemService.isKEMAvailable(device.product)) {
+              CmiKemService.getKEM(device.huronId).then(
+                function (data) {
+                  device.kem = data;
+                }
+              ).catch(function () {
+                if (!errorRetrieveKEM) {
+                  errorRetrieveKEM = true;
+                  Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+                }
+              });
+            }
+          });
+        }, function () {
           loadedData = true;
+          Notification.error($translate.instant('spacesPage.retrieveDevicesFail'));
         });
       });
     }

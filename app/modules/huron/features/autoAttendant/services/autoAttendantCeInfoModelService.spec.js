@@ -30,6 +30,7 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AACeDependenciesService_, _AAModelService_, _$rootScope_, _$q_, _$timeout_) {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;

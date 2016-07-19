@@ -6,7 +6,7 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($q, $filter) {
+  function HuronFeaturesListService($filter) {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,

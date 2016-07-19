@@ -6,10 +6,11 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig, Utils) {
+  function Orgservice($http, $q, Auth, Authinfo, Config, Log, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
+      getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
@@ -26,20 +27,19 @@
       setEftSetting: setEftSetting
     };
 
+    var savedOrgSettingsCache = [];
+
     return service;
 
-    function getOrg(callback, oid, disableCache) {
-      var scomUrl = null;
-      if (oid) {
-        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
-      } else {
-        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
+    function getOrg(callback, orgId, disableCache) {
+      if (!orgId) {
+        orgId = Authinfo.getOrgId();
       }
+      var scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
       if (disableCache) {
         scomUrl = scomUrl + '?disableCache=true';
       }
-
       return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
@@ -51,6 +51,7 @@
           } else {
             data.orgSettings = JSON.parse(_.last(data.orgSettings));
           }
+          _.assign(data.orgSettings, getCachedOrgSettings(orgId));
 
           callback(data, status);
         })
@@ -88,6 +89,25 @@
           data.success = false;
           data.status = status;
           callback(data, status);
+        });
+    }
+
+    function getAdminOrgAsPromise(oid, disableCache) {
+      return getAdminOrg(_.noop, oid, disableCache)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          return $q.reject(data);
+
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
         });
     }
 
@@ -194,16 +214,33 @@
       });
     }
 
+    function getCachedOrgSettings(orgId) {
+      return _.chain(savedOrgSettingsCache)
+        .filter(function (cache) {
+          return cache.orgId === orgId && moment(cache.propertySaveTimeStamp).isAfter(moment().subtract(5, 'minutes'));
+        })
+        .map(function (cache) {
+          return cache.setting;
+        })
+        .reduce(function (result, setting) {
+          return _.merge(result, setting);
+        }, {})
+        .value();
+    }
+
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
     function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
-
-      return getOrg(_.noop, orgId, true)
+      savedOrgSettingsCache.push({
+        orgId: orgId,
+        propertySaveTimeStamp: new Date(),
+        setting: _.clone(settings)
+      });
+      return getOrg(_.noop, orgId, true) //get retrieves the pushed value above, no need to re assign to orgSettings
         .then(function (response) {
           var orgSettings = _.get(response, 'data.orgSettings', {});
-          _.assign(orgSettings, settings);
 
           return $http({
             method: 'PATCH',
@@ -213,25 +250,15 @@
         });
     }
 
-    function createOrg(enc, callback) {
+    function createOrg(enc) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
         'encryptedQueryString': enc
       };
-
-      Auth.setAccessToken().then(function () {
-        $http.post(orgUrl, orgRequest)
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
-          });
+      return Auth.setAccessToken().then(function () {
+        return $http.post(orgUrl, orgRequest).then(function (response) {
+          return response.data;
+        });
       });
     }
 

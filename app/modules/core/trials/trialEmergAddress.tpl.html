@@ -9,40 +9,46 @@
 </div>
 
 <!-- body -->
-<section class="modal-body">
-  <form id="callTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
-    <h5 translate="trialModal.pstn.esa"></h5>
-    <h6 translate="trialModal.pstn.esaDesc" class="indent"></h6>
-    <section class="medium-12 columns">
-      <formly-form model="eAddressTrial.emergencyAddress" fields="eAddressTrial.emergencyAddressFields">
-        </formly-form>
-    </section>
-    <section class="row" ng-show="eAddressTrial.validation === true">
-      <div class="text-center" ng-show="eAddressTrial.addressLoading">
+<div class="modal-body trials">
+  <form class="trial-modal" id="callTrialForm" name="trialForm" novalidate>
+    <div class="cs-form__section" style="">
+      <div class="section__info">
+        <h4 class="section__title" translate="trialModal.pstn.esa"></h4>
+        <h6 class="section__description" translate="trialModal.pstn.esaDesc"></h6>
+      </div>
+      <div class="section__content">
+        <formly-form model="eAddressTrial.emergencyAddress" fields="eAddressTrial.emergencyAddressFields">
+          </formly-form>
+      </div>
+    </div>
+    <div class="cs-form__section center">
+      <div class="cs-form__content" ng-show="eAddressTrial.validation === true">
+        <div class="text-center" ng-show="eAddressTrial.addressLoading">
           <i class="icon icon-spinner icon-2x text-center"></i>
+        </div>
+        <div ng-show="eAddressTrial.addressFound">    
+          <h6 translate="trialModal.pstn.addrFound"></h6>
+          <h5>{{eAddressTrial.trial.details.emergAddr.streetAddress}} {{eAddressTrial.trial.details.emergAddr.unit}}</h5>
+          <h5>{{eAddressTrial.trial.details.emergAddr.city}}, {{eAddressTrial.trial.details.emergAddr.state}}, {{eAddressTrial.trial.details.emergAddr.zip}}</h5>
+          <a href="" class="primary" ng-click="eAddressTrial.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
+        </div>
       </div>
-      <div ng-hide="eAddressTrial.addressLoading">    
-        <h6 translate="trialModal.pstn.addrFound"></h6>
-        <h5>{{eAddressTrial.trial.details.emergAddr.streetAddress}} {{eAddressTrial.trial.details.emergAddr.unit}}</h5>
-        <h5>{{eAddressTrial.trial.details.emergAddr.city}}, {{eAddressTrial.trial.details.emergAddr.state}}, {{eAddressTrial.trial.details.emergAddr.zip}}</h5>
-        <a href="" class="primary pull-left" ng-click="eAddressTrial.resetAddress()" translate="trialModal.pstn.addrRetry"></a>
-      </div>
-    </section>
+    </div>
   </form>
-</section>
+</div>
 
 <!-- footer -->
-<div class="modal-footer">
-  <a class="pull-left" ng-click="eAddressTrial.skip(true); trial.nextStep()" translate="trialModal.pstn.skip"></a>
+<div class="modal-footer trials">
+  <a class="skip_numbers" ng-click="eAddressTrial.skip(true); trial.nextStep()" translate="trialModal.pstn.skip"></a>
   <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
     translate="common.back">
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-  ng-click="eAddressTrial.validateAddress()" ng-disabled="trialForm.$invalid" ng-if="!eAddressTrial.validation">
+  ng-click="eAddressTrial.validateAddress()" ng-disabled="trialForm.$invalid" ng-if="!eAddressTrial.addressFound">
       <span translate="common.next"></span>
   </button>
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-  ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid" ng-if="eAddressTrial.validation">
+  ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid" ng-if="eAddressTrial.addressFound">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>

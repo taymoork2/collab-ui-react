@@ -13,7 +13,8 @@
       controller: ServiceAddressCtrl,
       scope: {
         address: '=',
-        readOnly: '='
+        readOnly: '=',
+        controller: '='
       }
     };
 

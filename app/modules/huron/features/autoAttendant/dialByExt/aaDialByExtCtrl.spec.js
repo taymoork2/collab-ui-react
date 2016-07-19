@@ -18,6 +18,7 @@ describe('Controller: AADialByExtCtrl', function () {
   var schedule = 'openHours';
   var index = '0';
   var keyIndex = '0';
+  var menuId = 'menu1';
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
@@ -35,6 +36,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _FeatureToggleService_) {
     $translate = _$translate_;
@@ -58,14 +60,16 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('AADialByExt', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = '0';
+      $scope.menuId = menuId;
 
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
       spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
@@ -131,7 +135,7 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 
@@ -204,7 +208,7 @@ describe('Controller: AADialByExtCtrl', function () {
   describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
     var controller;
 
-    beforeEach(inject(function ($controller, _$rootScope_) {
+    beforeEach(inject(function ($controller) {
       $scope = $rootScope;
       $scope.keyIndex = undefined;
 

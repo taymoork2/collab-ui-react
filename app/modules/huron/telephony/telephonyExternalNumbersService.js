@@ -6,7 +6,7 @@
       .factory('ExternalNumberPool', ExternalNumberPool);
 
     /* @ngInject */
-    function ExternalNumberPool($q, ExternalNumberPoolService, Log) {
+    function ExternalNumberPool($q, ExternalNumberPoolService) {
 
       var service = {
         create: create,

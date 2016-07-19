@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConfigService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptor, UrlConfig, USSService2) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -69,7 +69,7 @@
     }
 
     function extractDevice(res) {
-      return CsdmConverter.convertDevice(res.data);
+      return CsdmConverter.convertCloudberryDevice(res.data);
     }
 
     function extractOrg(res) {
@@ -209,7 +209,7 @@
 
     function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
-        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices), limit));
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), limit));
       }
       var devices = devicesInOrgCache.get(orgId);
       if (devices) {
@@ -218,7 +218,7 @@
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          var devices = CsdmConverter.convertDevices(res.data);
+          var devices = CsdmConverter.convertCloudberryDevices(res.data);
           devicesInOrgCache.put(orgId, devices);
           return filterDevices(searchString, devices, limit);
         });
@@ -226,7 +226,7 @@
 
     function getCloudberryDevice(orgId, deviceId) {
       if (useMock()) {
-        var device = _.find(CsdmConverter.convertDevices(HelpdeskMockData.devices), function (val, key) {
+        var device = _.find(CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), function (val, key) {
           var id = _.last(key.split('/'));
           return id === deviceId;
         });
@@ -243,7 +243,7 @@
       var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(
-            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+            macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1 || (device.cisUuid || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -308,9 +308,27 @@
       }
     }
 
+    function isEmailBlocked(email) {
+      return $http.get(urlBase + 'email/bounces?email=' + encodeURIComponent(email));
+    }
+
     function resendInviteEmail(displayName, email) {
-      return $http
-        .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
+        return isEmailBlocked(email).then(function () {
+          $http.delete(urlBase + 'email/bounces?email=' + email)
+            .then(function (response) {
+              return invokeInviteEmail(displayName, email);
+            });
+        }).catch(function () {
+          return invokeInviteEmail(displayName, email);
+        });
+      } else {
+        return invokeInviteEmail(displayName, email);
+      }
+    }
+
+    function invokeInviteEmail(displayName, email) {
+      return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
           inviteList: [{
             displayName: displayName,
             email: email
@@ -370,6 +388,7 @@
       searchOrgs: searchOrgs,
       getUser: getUser,
       getOrg: getOrg,
+      isEmailBlocked: isEmailBlocked,
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,

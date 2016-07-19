@@ -1,9 +1,10 @@
-%aa-pm-vertical-line {
+%aa-menu-vertical-line {
   position: relative;
+  @include vr-spacing(pb, 1);
 
   &:before {
     top: 0;
-    left: 0;
+    left: -.4rem;
     position: absolute;
     display: inline-block;
     content: '';
@@ -11,37 +12,139 @@
     border-left: $aa-builder-border-size solid $aa-builder-border-color;
     height: 100%;
   }
+
+  &:nth-child(n+12) {
+    @include vr-spacing(pb, 0);
+  }
+}
+
+%aa-menu-textarea {
+  line-height: 1.25rem;
+  width: 100%;
+  @include vr-spacing(pv, .50);
+  @include vr-spacing(ph, .75);
+  resize: none;
+}
+
+%aa-menu-control-label {
+  @include vr-spacing(pl, .25);
+  @include vr-spacing(mt, .25);
+  @include vr-spacing(mb, 0);
+}
+
+%aa-menu-add-text {
+  display: inline-block;
+  line-height: 1.25rem;
+
+  @include vr-spacing(ml, .75);
+  @include vr-spacing(mt, -.25);
+
+  @include vr-spacing(pb, 0);
+
+  .icon {
+    @include vr-spacing(pr, .5);
+    @include vr-spacing(pl, .25);
+    vertical-align: middle;
+    &:before {
+      background-color: $gray-light-3;
+    }
+    font-size: 1.25rem;
+  }
+}
+
+%aa-menu-select {
+
+  & .select-options, & .dropdown-menu {
+    height: inherit;
+    max-height: inherit;
+  }
+
+  & .select-toggle {
+    position: relative;
+    z-index: 1;
+
+    & > i {
+      @include vr-spacing(mr, 0);
+      @include vr-spacing(ml, -0.5);
+    }
+  }
+}
+
+%aa-menu-actions {
+  width: 100%;
+  & .csSelect-container {
+    @include vr-spacing(pt, 1);
+  }
+
+  & textarea {
+    @extend %aa-menu-textarea;
+  }
+
+  & .control-label {
+    @extend %aa-menu-control-label;
+  }
+
+  & form {
+    @include vr-spacing(mb, 0);
+
+    & .form-group {
+      @include vr-spacing(mb, .25);
+    }
+  }
+}
+
+@mixin aa-menu-key-button($background_color) {
+  & .select-toggle {
+    padding-left: .8rem;
+    padding-top: .5rem;
+    width: vr-adjust(56);;
+  }
+
+  // selected option
+  &:not(.not-selected) {
+    a {
+      &.select-toggle {
+        color: $color-white;
+
+        &:after {
+          position: absolute;
+          display: inline-block;
+          content: " ";
+          width: calc(1.75em + 1px);
+          top: 0.2em;
+          left: 0.3em;
+          height: calc(1.75em + 1px);
+          background-color: $background_color;
+          z-index: -1;
+
+          @include radius(1em);
+        }
+      }
+    }
+  }
 }
 
 .aa-phone-menu {
-  min-width: vr-adjust(340);
+  $aa-pm-action-max-width: vr-adjust(340);
 
-  > .row:first-child {
-    @include vr-spacing(mt, 0.5);
-  }
+  min-width: $aa-pm-action-max-width;
 
-  & select {
-    color: $input-font-color;
-    background-color: $color-white;
-  }
-
-  .panel {
+  & .panel {
     @include vr-spacing(m, 0);
 
     @include vr-spacing(pt, 1);
-    @include vr-spacing(pl, .25);
-    @include vr-spacing(pr, .25);
-    @include vr-spacing(pb, 0);
+    @include vr-spacing(ph, 0);
+    @include vr-spacing(pb, 1);
 
     background-color: $gray-light-3;
 
-    & ~ .panel {
+     & ~ .panel {
       @include vr-spacing(mt, 0.5);
     }
+  }
 
-    .aa-pm-vertical-line {
-      @extend %aa-pm-vertical-line;
-    }
+  & .aa-pm-vertical-line {
+    @extend %aa-menu-vertical-line;
   }
 
   & .select-list {
@@ -53,185 +156,50 @@
     & .select-options > li > a {
       @include vr-spacing(pr, 1);
     }
-
   }
 
   & .select-toggle {
-    width: 100%;
-    max-width: vr-adjust(320);
 
     @include vr-spacing(pr, 1.75);
 
     & > i {
       &.icon {
-        right: -0.25rem;
+        right: -0.3rem;
       }
     }
   }
 
   & .aa-trash-icon {
-    padding-left: 0;
-    padding-top: 0;
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pt, 0);
     top: 0.5rem;
   }
 
-  & .aa-key-action {
-    & .csSelect-container {
-      @include vr-spacing(pt, 1);
-    }
+  & .aa-pm-action {
+    @extend %aa-menu-actions;
+    max-width: $aa-pm-action-max-width;
+  }
 
-    & textarea {
-      line-height: 1.25rem;
-      width: 100%;
-      @include vr-spacing(pt, .50);
-      @include vr-spacing(pb, .50);
-      @include vr-spacing(pl, .75);
-      @include vr-spacing(pr, .75);
-      resize: none;
-    }
-
-    & .control-label {;
-      @include vr-spacing(pl, .25);
-      @include vr-spacing(mt, .25);
-      @include vr-spacing(mb, 0);
-    }
-
-    & form {
-      @include vr-spacing(mb, 0);
-
-      & .form-group {
-        @include vr-spacing(mb, .25);
-      }
+  & .aa-pm-timeout {
+    & .control-label {
+      @extend %aa-menu-control-label;
+      @include vr-spacing(mt, .5);
     }
   }
 
-  .aa-pm-timeout {
-    @include vr-spacing(pb, 1);
+  & .aa-pm-key-select, .aa-pm-action-select {
+    @extend %aa-menu-select;
   }
 
-  .aa-pm-key-select, .aa-pm-action-select {
-    & .select-options, & .dropdown-menu {
-      height: inherit;
-      max-height: inherit;
-    }
-
-    & .select-toggle {
-      position: relative;
-      z-index: 1;
-
-      & > i {
-
-        @include vr-spacing(mr, 0);
-
-        @include vr-spacing(ml, -0.5);
-      }
-    }
+  & .aa-pm-action-select {
+    max-width: $aa-pm-action-max-width;
   }
 
-  .aa-pm-key-select {
-    & .select-toggle {
-      @include vr-spacing(pl, 1.25);
-      @include vr-spacing(pt, .5);
-    }
-
-    // selected option
-    &:not(.not-selected) {
-      a {
-        &.select-toggle {
-          color: $color-white;
-
-          &:after {
-            position: absolute;
-            display: inline-block;
-            content: " ";
-            width: calc(1.75em + 1px);
-            top: 0.2em;
-            left: 0.8em;
-            height: calc(1.75em + 1px);
-            background-color: $color-cta-base;
-            z-index: -1;
-
-            @include radius(1em);
-          }
-        }
-      }
-    }
+  & .aa-pm-key-select {
+    @include aa-menu-key-button($color-cta-base);
   }
 
-  .aa-pm-add {
-    @include vr-spacing(ml, .75);
-    @include vr-spacing(mt, -0.25);
-
-    .icon {
-      @include vr-spacing(pr, 0.5);
-      @include vr-spacing(pl, 0.25);
-
-      vertical-align: middle;
-      left: -1px;
-
-      &:before {
-        background-color: $gray-light-3;
-      }
-
-      font-size: 1.25rem;
-    }
-  }
-
-  .aa-pm-primary-text {
-    display: inline-block;
-
-    @include vr-spacing(mb, 1);
-  }
-
-  .aa-pm-add-key-icon {
-    &:before {
-      line-height: 1rem;
-      content: '+';
-    }
-
-    &.aa-pm-vertical-line {
-      position: relative;
-
-      &:after {
-        content: '';
-        position: absolute;
-        bottom: 100%;
-        left: 0;
-        width: 100%;
-        height: 1.05rem;
-
-        @extend %aa-pm-vertical-line;
-      }
-    }
-
-
-  }
-
-  .control-label {
-    @include vr-spacing(mv, 0.25);
-
-    &[disabled] {
-      cursor: default;
-    }
-  }
-
-  .control-text {
-    @include vr-spacing(mb, 1);
-  }
-}
-
-.aa-pm-vertical-line {
-  @include vr-spacing(pb, 1);
-
-  &:nth-child(n+12) {
-    @include vr-spacing(pb, 0);
-
-    @include vr-spacing(mb, 1);
-  }
-
-  &.aa-pm-primary-text {
-    @include vr-spacing(pb, 0);
-
-    @include vr-spacing(mb, 1);
+  & .aa-pm-add-text {
+    @extend %aa-menu-add-text;
   }
 }

@@ -1,21 +1,88 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').factory('WebExUtilsFact', WebExUtilsFact);
+  angular
+    .module('WebExApp')
+    .factory('WebExUtilsFact', WebExUtilsFact);
 
   /* @ngInject */
   function WebExUtilsFact(
     $q,
     $log,
     $rootScope,
-    $http,
-    $timeout,
     Authinfo,
     Orgservice,
-    WebExXmlApiFact,
-    WebExXmlApiInfoSvc
+    WebExXmlApiFact
   ) {
+
     var obj = {};
+
+    obj.getSiteAdminUrl = function (siteUrl) {
+      var funcName = "getSiteAdminUrl()";
+      var logMsg = "";
+
+      var siteAdminProtocol = "https://";
+      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
+
+      var siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + obj.getSiteName(siteUrl);
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "siteAdminURl=" + JSON.stringify(siteAdminUrl);
+      $log.log(logMsg);
+
+      return siteAdminUrl;
+    };
+
+    obj.isCIEnabledSite = function (siteUrl) {
+      var funcName = "isCIEnabledSite()";
+      var logMsg = "";
+
+      var licenses = Authinfo.getLicenses();
+      var result = true;
+
+      var confLicenses = _.where(licenses, {
+        siteUrl: siteUrl,
+        licenseType: 'CONFERENCING',
+        isCIUnifiedSite: false
+      });
+
+      if (
+        (null != confLicenses) &&
+        (0 < confLicenses.length)
+      ) {
+
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "confLicenses=" + JSON.stringify(confLicenses);
+        $log.log(logMsg);
+
+        result = false;
+      }
+
+      if (result) {
+        var cmrLicenses = _.where(licenses, {
+          siteUrl: siteUrl,
+          licenseType: 'CMR',
+          isCIUnifiedSite: false
+        });
+
+        if (
+          (null != cmrLicenses) &&
+          (0 < cmrLicenses.length)
+        ) {
+
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "cmrLicenses=" + JSON.stringify(cmrLicenses);
+          $log.log(logMsg);
+
+          result = false;
+        }
+      }
+
+      return result;
+    }; // isCIEnabledSite()
 
     obj.getSiteName = function (siteUrl) {
       var funcName = "getSiteName()";
@@ -271,7 +338,7 @@
                 var licenseInfo = {
                   'webexSite': webexSite,
                   'offerCode': offerCode,
-                  'capacity': capacity
+                  'capacity': capacity,
                 };
 
                 allSitesLicenseInfo.push(licenseInfo);

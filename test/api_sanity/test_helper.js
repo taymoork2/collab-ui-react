@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var request = require('request');
+var testConfig = require('../e2e-protractor/utils/test.config');
 
 var auth = {
   'sqtest-admin': {
@@ -58,7 +59,7 @@ var auth = {
   },
   'huron-e2e-partner': {
     user: 'admin@ucpartner.e2e.huronalpha.com',
-    pass: 'Cisco123!!',
+    pass: 'C1sco123!',
     org: '666a7b2f-f82e-4582-9672-7f22829e728d'
   },
   'account-admin': {
@@ -78,7 +79,7 @@ var auth = {
   },
   'support-admin': {
     user: 'sqtest-admin-support@squared.example.com',
-    pass: 'P@ssword123',
+    pass: 'C1sc0123!',
     org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
   },
   'media-super-admin': {
@@ -126,40 +127,60 @@ var auth = {
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539'
   },
-  't31CSVToggleUser': {
-    user: 't31r1-csvtoggle-adm@mailinator.com',
+  'wbx-t31BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc200@csgtrials.webex.com',
     pass: 'Cisco!23',
-    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+    org: '2039e7a3-6feb-4293-b87d-354ba68b0295'
   },
-  't30csvWbxNotEntitledUser': {
-    user: 't30citestprov9_csvadm2@mailinator.com',
+  'wbx-t30BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc25@csgtrials.webex.com',
     pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
   },
-  't30csvNotAvailableUser': {
-    user: 't30citestprov9_csvadm3@mailinator.com',
+  'wbx-t31BTSTestAdmin-UserSettings': {
+    user: 'provteam+t31ee@csgtrials.webex.com',
     pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
   },
-  't31RegressionTestAdmin': {
+  'wbx-t30BTSTestAdmin-UserSettings': {
+    user: 'provteam+ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42'
+  },
+  'wbx-t31RegressionTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e'
   },
-  't30RegressionTestAdmin': {
+  'wbx-t30RegressionTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
   },
-  'wbxUserSettingsTestAdmin': {
-    user: 't30citestprov9@mailinator.com',
+  'wbx-t30BTSTestAdmin-MultiLicense': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t30BTSTestAdmin-SingleLicense': {
+    user: 'provteam+mc@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3'
+  },
+  'wbx-singleCenterLicenseTestAdmin': {
+    user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
   },
-  'wbxUserSettingsTestUser': {
-    user: 'prov9usr@mailinator.com',
+  'wbx-multipleCenterLicenseTestAdmin': {
+    user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
-    org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+    org: 'b322c279-22d8-488f-a670-cdcb6380033e'
+  },
+  'wbx-siteCsvTestAdmin': {
+    user: 'dev-dmz-e2e@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15'
   }
 };
 
@@ -212,7 +233,7 @@ var getAuthCode = function (req, creds) {
         response_type: 'code',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         client_id: clientId,
-        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config cloudMeetings:login Identity:Organization ccc_config:admin',
+        scope: testConfig.oauth2Scope,
         realm: '/' + creds.org,
         state: rand_str
       }
