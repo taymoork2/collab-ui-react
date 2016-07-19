@@ -119,7 +119,7 @@
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
 
-    vm.init();
+    init();
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -136,7 +136,7 @@
             CiService.getCiNonAdmins(vm.ciUsers);
             getSyncStatus();
           }
-        }, function (errorMsg) {
+        }).catch( function (errorMsg) {
           var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
           Notification.error(error);
           Log.error(error);
@@ -157,6 +157,7 @@
 
     function checkUserType() {
       var defer = $q.defer();
+<<<<<<< HEAD
 
       // All users must have CI Full Admin role except new ReadAdmin
       //
@@ -200,6 +201,35 @@
           });
       }
 
+=======
+      // All users must have CI Full Admin role except new ReadAdmin
+      //
+      // Customer Success Admin     --> Ops Admin
+      // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
+      if (Authinfo.isReadOnlyAdmin()) {
+        setReadAdmin();
+        defer.resolve();
+      } else if(!Authinfo.isCustomerAdmin()){
+        defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
+      } else {
+        CiService.hasRole(customerSuccessRole)
+          .then(function (hasCSRole) {
+            if (hasCSRole) {
+              setOpsAdmin();
+              defer.resolve();
+            } else {
+              if(!(Authinfo.isWebexSquared() && Authinfo.isWebexMessenger())){
+                defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
+              } else {
+              setOrgAdmin();
+              defer.resolve();
+            }
+          }
+        }).catch(function (errorMsg) {
+          defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
+        });
+      }
+>>>>>>> 4b2e150... ci.sync refactori
       return defer.promise;
     }
 

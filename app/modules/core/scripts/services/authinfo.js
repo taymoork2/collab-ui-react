@@ -413,6 +413,12 @@
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);
       },
+      isWebexSquared: function () {
+        return isEntitled(Config.entitlements.squared);
+      },
+      isWebexMessenger: function () {
+        return isEntitled(Config.entitlements.messenger);
+      },
       hasAccount: function () {
         return authData.hasAccount;
       },
