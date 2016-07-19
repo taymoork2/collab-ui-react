@@ -1347,6 +1347,17 @@
             controller: 'CustomerListCtrl',
             params: {
               filter: null
+            },
+            resolve: {
+              customerListToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  })
+                  .catch(function () {
+                    return false;
+                  });
+              }
             }
           })
           .state('customer-overview', {

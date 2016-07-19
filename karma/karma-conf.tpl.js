@@ -6,7 +6,7 @@ module.exports = function (config) {
     basePath: '../',
 
     // time (ms) karma server waits for a browser message before disconnecting from it
-    browserNoActivityTimeout: 30000,  // default 10000
+    browserNoActivityTimeout: 15000,  // default 10000
 
     // if a browser disconnects from karma server, re-attempt N times
     //
@@ -17,8 +17,8 @@ module.exports = function (config) {
     //   - phantomjs-prebuilt@2.1.7
     // - ...exhibit what appears to be a race condition when spawning multiple tasks to
     //   run karma tests in parallel (either via 'gulp karma-parallel' or 'ktest-all')
-    // - to mitigate this, we increment the disconnect tolerance to 1
-    browserDisconnectTolerance: 1,    // default 0
+    // - to mitigate this, we increment the disconnect tolerance to 2
+    browserDisconnectTolerance: 2,    // default 0
 
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine', 'sinon'],

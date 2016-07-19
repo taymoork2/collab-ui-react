@@ -100,12 +100,17 @@
       }, true)[0];
 
       fromCluster = vm.cluster;
-      MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.id).success(incrementSuccessCount(host)).error(incrementFailureCount(host));
+      MediaClusterServiceV2.moveV2Host(host.id, fromCluster.id, toCluster.id).success(incrementSuccessCount(host, toCluster)).error(incrementFailureCount(host));
     }
 
-    function incrementSuccessCount(host) {
+    function incrementSuccessCount(host, toCluster) {
       return function (data, status, headers, config) {
         vm.successCount++;
+        vm.successMove = $translate.instant('mediaFusion.clusters.movedTo', {
+          nodeName: host.hostname,
+          clusterName: toCluster.name
+        });
+        Notification.notify(vm.successMove, 'success');
         deleteCluster();
       };
     }

@@ -5,7 +5,7 @@
     .module('wx2AdminWebClientApp')
     .run(wx2AdminWebClientApp);
 
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, formlyValidationMessages, Localize, Localytics, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, formlyValidationMessages, Localize, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -117,8 +117,6 @@
 
       PreviousState.set(fromState.name);
       PreviousState.setParams(fromParams);
-
-      Localytics.tagScreen(toState.name);
 
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

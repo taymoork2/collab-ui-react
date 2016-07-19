@@ -59,7 +59,7 @@
     cursor: pointer;
     border-radius: 0.25rem !important;
     & i {
-      @include vr-spacing(mr, 0.5, 0px, true);
+      @include vr-spacing(mr, 1, 0px, true);
     }
   }
 
