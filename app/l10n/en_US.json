@@ -2620,7 +2620,8 @@
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
-    "addNumbers": "Add Numbers"
+    "addNumbers": "Add Numbers",
+    "getCustomerOrgError": "Unable to get information for {{orgName}}. Message: {{message}}"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",

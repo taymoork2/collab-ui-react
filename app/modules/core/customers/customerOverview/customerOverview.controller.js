@@ -6,8 +6,9 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($http, $q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Auth, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
+    var deferred;
 
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -31,6 +32,7 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
+    vm.isSetupDone = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -206,10 +208,28 @@
       return false;
     }
 
+    function getCustomerOrgInfo() {
+      var custUrl = Auth.getAuthorizationUrl(vm.customerOrgId);
+      if (deferred) return deferred;
+
+      deferred = $http.get(custUrl)
+        .success(function (data, status) {
+          data = data || {};
+          vm.isSetupDone = data.setupDone;
+        })
+        .error(function (error) {
+          Notification.error('customerPage.deleteOrgError', {
+            orgName: vm.customerName,
+            message: error.data.message
+          });
+        });
+
+      return deferred;
+    }
+
     function isOrgSetup() {
-      return _.every(vm.currentCustomer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
+      getCustomerOrgInfo();
+      return vm.isSetupDone;
     }
 
     function isOwnOrg() {
