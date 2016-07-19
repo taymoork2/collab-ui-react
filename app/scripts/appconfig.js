@@ -1350,7 +1350,7 @@
             },
             resolve: {
               customerListToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCustomerListUpdate)
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
                   .then(function (result) {
                     return result;
                   })
