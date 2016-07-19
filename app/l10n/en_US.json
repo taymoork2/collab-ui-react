@@ -1999,7 +1999,7 @@
     "callReversionDescription": "If the call is not answered, send it to this destination.",
     "callparkInitLine": "Line Number that initiated the Call Park",
     "selectParkNumber": "Select Call Park Number",
-    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are used for individual uses.",
+    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
     "memberPlaceholder": "Select Call Park Members",
@@ -2014,7 +2014,12 @@
     "cancelHeader": "Cancel Call Park Creation",
     "cancelDialog": "Are you sure you wish to cancel call park creation? This call park will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "createHelpText": "Create",
+    "successSave": "'{{callParkName}}' call park has been created successfully",
+    "successUpdate": "'{{callParkName}}' call park has been updated successfully",
+    "errorSave": "Failed to create the '{{callParkName}}' Call Park",
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
   },
   "telephonyPreview": {
     "lines": "Lines",
