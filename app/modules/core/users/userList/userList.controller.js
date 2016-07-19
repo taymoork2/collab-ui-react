@@ -90,17 +90,18 @@
       atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus()
     };
 
-    $q.when(promises).then(function (results) {
+    $q.all(promises).then(function (results) {
       $scope.isCsvEnhancementToggled = results.csvEnhancement;
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
-    }).then(init);
+    }).finally(init);
 
     ////////////////
+
+    configureGrid();
 
     function init() {
       checkOrg();
       bind();
-      configureGrid();
       getUserList();
     }
 

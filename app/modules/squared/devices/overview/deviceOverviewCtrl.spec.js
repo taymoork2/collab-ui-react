@@ -2,7 +2,7 @@
 
 describe('Controller: DeviceOverviewCtrl', function () {
   var $scope, $controller, controller, $httpBackend;
-  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal;
+  var $q, CsdmConfigService, CsdmDeviceService, CsdmCodeService, Authinfo, Notification, RemoteSupportModal, HuronConfig;
 
   beforeEach(module('Hercules'));
   beforeEach(module('Squared'));
@@ -12,7 +12,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_) {
+  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _CsdmConfigService_, _CsdmDeviceService_, _CsdmCodeService_, _Authinfo_, _Notification_, _RemoteSupportModal_, _HuronConfig_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -23,17 +23,23 @@ describe('Controller: DeviceOverviewCtrl', function () {
     Authinfo = _Authinfo_;
     Notification = _Notification_;
     RemoteSupportModal = _RemoteSupportModal_;
+    HuronConfig = _HuronConfig_;
   }
 
   function initSpies() {
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/devices?checkOnline=true&checkDisplayName=false').respond(200);
     $httpBackend.whenGET(CsdmConfigService.getUrl() + '/organization/null/upgradeChannels').respond(200);
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
   }
 
   var $stateParams = {
     currentDevice: {
-      isHuronDevice: false
+      isHuronDevice: false,
+      product: 'Cisco 8865',
+      cisUuid: 2,
+      huronId: 3,
+      kem: []
     }
   };
 
@@ -103,7 +109,6 @@ describe('Controller: DeviceOverviewCtrl', function () {
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
     });
-
   });
 
   describe('Tags', function () {
