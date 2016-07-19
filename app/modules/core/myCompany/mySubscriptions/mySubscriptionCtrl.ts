@@ -15,7 +15,9 @@ namespace myCompanyPage {
   let serviceStatusWeight:Array<String> = [ "undefined", "ok","warn", "error" ];
   let serviceStatusToCss:Array<String> = [ "warning", "success", "warning", "danger" ];
 
-  let licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD']
+  let licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD'];
+  let subUrl = "http://gc.digitalriver.com/store?SiteID=ciscoctg&Action=DisplaySelfServiceSubscriptionLandingPage&futureAction=DisplaySelfServiceSubscriptionUpgradePage&subscriptionID=";
+  let trial = "trial"
 
   class MySubscriptionCtrl {
     private _hybridServices = [];
@@ -39,8 +41,12 @@ namespace myCompanyPage {
       return this._visibleSubscriptions;
     }
 
+    upgradeUrl(subId) {
+      return subUrl + subId;
+    }
+
     /* @ngInject */
-    constructor($translate, Authinfo, Orgservice, ServiceDescriptor) {
+    constructor($rootScope, $translate, Authinfo, Orgservice, ServiceDescriptor) {
       // message subscriptions
       this._licenseCategory[0] = angular.copy(baseCategory);
       this._licenseCategory[0].label = $translate.instant("subscriptions.message");
@@ -65,6 +71,7 @@ namespace myCompanyPage {
               let newSubscription = {
                 subscriptionId: undefined,
                 licenses: [],
+                isTrial: false,
                 viewAll: false
               };
               if (subscription.subscriptionId && (subscription.subscriptionId !== "unknown")) {
@@ -85,6 +92,8 @@ namespace myCompanyPage {
 
                   this._visibleSubscriptions = true;
                   newSubscription.licenses.push(offer);
+                  // if the subscription is a trial, all licenses will have isTrial set to true
+                  newSubscription.isTrial = license.isTrial;
 
                   _.forEach(licenseTypes, (type, index) => {
                     if ((license.offerName === type) && (index === 0)) {
@@ -121,6 +130,13 @@ namespace myCompanyPage {
                 this._subscriptionDetails.push(newSubscription);
               }
             });
+          }
+          if ((this._subscriptionDetails.length === 1) && this._subscriptionDetails[0].subscriptionId && !this._subscriptionDetails[0].isTrial) {
+            let broadcastData = {
+              display: true,
+              url: this.upgradeUrl(this._subscriptionDetails[0].subscriptionId)
+            };
+            $rootScope.$broadcast('SUBSCRIPTION::upgradeData', broadcastData);
           }
         });
 

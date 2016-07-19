@@ -7,14 +7,20 @@
   }
   .subscriptions.detail-view {
     @include vr-spacing(mb, 1.25);
+    .sub-name {
+      @include vr-spacing(mt, 1.25);
+    }
     .subscription-column {
       border: none;
-      @include vr-spacing(ph, 0.75);
-      @include vr-spacing(pv, 1);
-      .detail span, .detail a {
-        @include vr-spacing(ph, 0.75);
-        @include vr-spacing(pv, 0);
-        border-left: rem-calc(1) solid $gray;
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pv, 1.25);
+      .detail {
+        @include vr-spacing(pv, 0.5);
+        span, a {
+          @include vr-spacing(ph, 0.75);
+          @include vr-spacing(pv, 0);
+          border-left: rem-calc(1) solid $gray;
+        }
       }
       .detail:first-of-type span, .detail:first-of-type a {
         @include vr-spacing(pl, 0);
@@ -24,10 +30,12 @@
         @include vr-spacing(pr, 0);
       }
       .detail-expanded {
-        @include vr-spacing(mr, 2);
+        @include vr-spacing(pr, 2);
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pb, 0.25);
       }
       .detail-expanded.detail-space {
-        @include vr-spacing(mr, 0);
+        @include vr-spacing(pr, 0);
         width: 50%;
       }
       .detail-break {
@@ -41,10 +49,15 @@
     .subscription-upgrade {
       @include vr-spacing(ph, 1.5);
       @include vr-spacing(pv, 1);
-      position: relative;
-      height: 100%;
       .license-quantity {
-        @include vr-spacing(pr, 1.25);
+        @include vr-spacing(pr, 1);
+        @include vr-spacing(pv, 0.75);
+      }
+    }
+    .detail, .detail-expanded, .license-quantity {
+      line-height: vr-adjust(12);
+      span, a {
+        line-height: vr-adjust(12);
       }
     }
   }

@@ -10,16 +10,17 @@
           ng-class="{'detail': !subscription.viewAll || (subscription.licenses.length < 4), 'detail-expanded detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
           </div>
-          <div class="detail-expanded detail-break" ng-if="subscription.viewAll" ng-class="{'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
+          <div class="detail-expanded detail-break" ng-if="subscription.viewAll && subscription.subscriptionId  && !subscription.isTrial" ng-class="{'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
             <span class="h6" translate="subscriptions.subscription"></span>
             <span class="h6">{{::subscription.subscriptionId}}</span>
           </div>
-          <div ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'detail': !subscription.viewAll, 'detail-expanded': subscription.viewAll, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
+          <div ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'detail': !subscription.viewAll, 'detail-expanded': subscription.viewAll, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3), 'detail-break': subscription.isTrial && subscription.viewAll}">
             <a class="h6" translate="subscriptions.more" ng-if="!subscription.viewAll"></a>
             <a class="h6" translate="subscriptions.less" ng-if="subscription.viewAll"></a>
           </div>
         </div>
         <div class="columns medium-2 subscription-upgrade">
+          <a ng-if="subscription.subscriptionId && !subscription.isTrial" ng-href="{{::mcpSubscription.upgradeUrl(subscription.subscriptionId)}}" class="btn btn--primary pull-right" translate="subscriptions.upgrade"></a>
           <div class="license-quantity pull-right">
             <span class="h6" translate="subscriptions.quantity"></span>
             <span class="h6">{{::subscription.licenses.length}}</span>

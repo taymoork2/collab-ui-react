@@ -593,6 +593,11 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
+              },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
