@@ -1,5 +1,6 @@
-<div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.hasRequested }">
-  <i class="icon icon-information"></i>
+<div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.requestResult !== bannerCtrl.requestResultEnum.NOT_REQUESTED, 'has-success':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.SUCCESS, 'has-fail-partial':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.PARTIAL_FAILURE, 'has-fail-total':bannerCtrl.requestResult === bannerCtrl.requestResultEnum.TOTAL_FAILURE}">
+  <i class="icon icon-information" ng-show="requestResult===bannerCtrl.requestResultEnum.SUCCESS ||  brequestResult===bannerCtrl.requestResultEnum.NOT_REQUESTED"></i>
+  <i class="icon icon-warning" ng-show="requestResult===bannerCtrl.requestResultEnum.PARTIAL_FAILURE || bannerCtrl.requestResultEnum.TOTAL_FAILURE "></i>
   <span class="msg--default">
     <span
       translate="trials.expireWarningMsg"
@@ -10,11 +11,12 @@
       ng-show="bannerCtrl.daysLeft < 0"></span>
     <span translate="trials.requestPurchaseMsg"></span>
   </span>
-  <span class="msg--requested">
-    <span
-      translate="trials.requestConfirmMsg"
-      translate-values="{ partnerAdminDisplayName: bannerCtrl.partnerAdminDisplayName }"></span>
+  <span ng-switch="bannerCtrl.requestResult" class="msg--requested">
+    <span ng-switch-when="0" translate = "trials.requestConfirmMsg"></span>
+    <span ng-switch-when="1" translate = "trials.requestConfirmPartialFailMsg"></span>
+    <span ng-switch-when="2" translate = "trials.requestConfirmTotalFailMsg"></span>
   </span>
+
   <button
     type="button"
     id="requestPurchaseBtn"

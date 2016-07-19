@@ -1,3 +1,4 @@
+@import 'mySubscriptions/_mySubscription';
 
 #my-company-info{
   display: block;
@@ -13,126 +14,20 @@
 }
 
 .company-left-tabs{
-  .page-header__right{
-    padding-top: 1.5rem;
-    padding-left: 0.75rem;
-
-    -webkit-align-items: flex-start !important;
-    -webkit-box-pack: start !important;
-
-    -webkit-box-justify-content: flex-start !important;
-
-    -ms-flex-align: start !important;
-    -ms-box-pack: start !important;
-
-    align-items:flex-start !important;
-    justify-content: flex-start !important;
-
-    order: -1 !important;
+  position: relative;
+  top: 4px;
+  .page-header__left{
+    display: none;
   }
-}
-
-// My Company - Subscriptions
-.subscriptions-container {
-  margin: rem-calc(32) rem-calc(24);
-  padding: 0;
-  width: calc(100% - 50px);
-  .subscriptions {
-    padding: 0;
-    margin: 0;
-    min-width: rem-calc(1200);
-    width: 100%;
-    article {
-      min-height: rem-calc(20);
-      .row {
-        border-bottom: rem-calc(1) solid $gray-light-3;
-      }
-      .row:last-of-type {
-        border-bottom: none;
-      }
-      .subscription-type {
-        padding: rem-calc(24);
-        width: rem-calc(215);
-        font-family: "CiscoSansTT Light";
-        font-size: 16px;
-        line-height: 1.5;
-        color: $gray-dark-1;
-      }
-      .subscription-interior, .subscription-column, .subscription-item {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .subscription-column {
-        width: calc(100% - 215px);
-        padding: 0;
-        border-left: rem-calc(1) solid $gray-light-3;
-        .subscription-item {
-          padding: 0 rem-calc(24);
-          width: 50%;
-        }
-        .subscription-item:nth-child(1), .subscription-item:nth-child(2) {
-          padding-top: rem-calc(24);
-        }
-        .subscription-item:nth-child(odd):nth-last-of-type(2), .subscription-item:last-of-type {
-          padding-bottom: rem-calc(24);
-        }
-        .subscription-item.item-with-borders {
-          display: block;
-          padding: rem-calc(24);
-          border-right: rem-calc(1) solid $gray-light-3;
-          border-bottom: rem-calc(1) solid $gray-light-3;
-        }
-        .subscription-item.item-with-borders:nth-child(even), .subscription-item.item-with-borders:last-of-type {
-          border-right: 0;
-        }
-        .subscription-item.item-with-borders:nth-child(odd):nth-last-of-type(2), .subscription-item.item-with-borders:last-of-type {
-          border-bottom: 0;
-        }
-        .subscription-site {
-          font-family: "CiscoSansTT Light";
-          font-size: 16px;
-          line-height: 1.5;
-          color: $gray-dark-2;
-          margin-bottom: rem-calc(12);
-        }
-        .hybrid-ul, .subscription-description {
-          .description-line {
-            height: vr-adjust(24);
-            span {
-              font-family: "CiscoSansTT Light";
-              font-size: rem-calc(14);
-              line-height: 1.7;
-              color: $gray-base;
-            }
-          }
-        }
-        .hybrid-ul {
-          padding: rem-calc(24);
-          margin: 0;
-          .icon-circle {
-            font-size: rem-calc(8);
-            padding-right: rem-calc(6);
-            position: relative;
-            top: rem-calc(-2);
-          }
-        }
-        .subscription-description {
-          margin-left: rem-calc(16);
-          margin-bottom: rem-calc(16);
-        }
-        .subscription-description .description-line {
-          span.name {
-            color: $gray-dark-1;
-          }
-          span.warning {
-            color: $color-negative-base;
-          }
-        }
-        .subscription-interior:last-of-type .subscription-description, .subscription-item:last-of-type .subscription-description {
-          margin-bottom: 0;
-        }
-      }
+  .page-header__right{
+    @include vr-spacing(mt, 0.75);
+    @include vr-spacing(mh, 0);
+    order: -1;
+    li.current.active:first-of-type a.nav-link {
+      @include vr-spacing(ml, 0);
+    }
+    li.current.active a.nav-link, li a.nav-link {
+      @include vr-spacing(pb, 0.5);
     }
   }
 }
-

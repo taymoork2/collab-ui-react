@@ -7,7 +7,7 @@ namespace domainManagement {
     let Config, $q, $rootScope, DomainManagementAddCtrl, DomainManagementService;
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Hercules'));
-    beforeEach(inject(($injector, _$q_, _$rootScope_, $controller, $translate, _Config_, _DomainManagementService_)=> {
+    beforeEach(inject((_$q_, _$rootScope_, $controller, $translate, _Config_, _DomainManagementService_)=> {
       Config = _Config_;
       $q = _$q_;
       $rootScope = _$rootScope_;

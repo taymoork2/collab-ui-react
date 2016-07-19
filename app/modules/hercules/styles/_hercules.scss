@@ -1,5 +1,6 @@
 @import 'expressway-service';
 @import '../add-resource/add-resource';
+@import '../fusion-pages/components/upgrade-schedule-configuration.component';
 @import '../fusion-pages/fusion-cluster-list';
 @import '../fusion-pages/fusion-cluster-settings';
 @import '../hybridServices/hybrid-services';
@@ -8,3 +9,4 @@
 @import '../schedule-upgrade-configuration/schedule-upgrade-configuration';
 @import '../servicesOverview/servicesOverview';
 @import 'shared';
+@import '../fusion-pages/mediafusion-settings';

@@ -6,13 +6,7 @@
   /* @ngInject */
   function WebExRestApiFact(
     $http,
-    $log,
-    $interpolate,
     $q,
-    $timeout,
-    $rootScope,
-    Authinfo,
-    WebExUtilsFact,
     WebExApiGatewayConstsService
   ) {
 

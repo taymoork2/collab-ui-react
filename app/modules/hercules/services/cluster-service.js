@@ -16,7 +16,6 @@
     var poller = CsdmPoller.create(fetch, hub);
 
     var service = {
-      deleteCluster: deleteCluster,
       deleteHost: deleteHost,
       fetch: fetch,
       getCluster: getCluster,
@@ -27,12 +26,6 @@
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
       mergeRunningState: mergeRunningState,
-      getReleaseNotes: getReleaseNotes,
-      provisionConnector: provisionConnector,
-      deprovisionConnector: deprovisionConnector,
-      getAllConnectorTypesForCluster: getAllConnectorTypesForCluster,
-      preregisterCluster: preregisterCluster,
-      addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList
     };
 
     return service;
@@ -77,6 +70,7 @@
       case 'has_alarms':
       case 'offline':
       case 'stopped':
+      case 'not_operational':
       case 'unknown':
       default:
         label = 'error';
@@ -139,7 +133,7 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        upgradeWarning: upgradeAvailable && !_.any(cluster.connectors, 'state', 'offline'),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);
@@ -180,7 +174,9 @@
         .then(extractDataFromResponse)
         .then(function (response) {
           // only keep fused clusters
-          return _.filter(response.clusters, 'state', 'fused');
+          return _.filter(response.clusters, function (cluster) {
+            return cluster.state ? cluster.state === 'fused' : true;
+          });
         })
         .then(function (clusters) {
           // start modeling the response to match how the UI uses it, per connectorType
@@ -242,16 +238,6 @@
         });
     }
 
-    function deleteCluster(id) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
-      return $http.delete(url)
-        .then(extractDataFromResponse)
-        .then(function (data) {
-          poller.forceAction();
-          return data;
-        });
-    }
-
     function deleteHost(id, serial) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
@@ -265,55 +251,6 @@
     function getConnector(connectorId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
-    }
-
-    function getReleaseNotes(releaseChannel, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
-      return $http.get(url)
-        .then(extractDataFromResponse)
-        .then(function (data) {
-          return data.releaseNotes;
-        });
-    }
-
-    function preregisterCluster(name, releaseChannel) {
-      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
-      return $http.post(url, {
-          "name": name,
-          "releaseChannel": releaseChannel
-        }).then(extractDataFromResponse)
-        .then(function (data) {
-          return data.id;
-        });
-    }
-
-    function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
-      return $http.post(url, {
-        "hostname": hostname,
-        "ttlInSeconds": ttlInSeconds,
-        "clusterId": clusterId
-      });
-    }
-
-    function provisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
-      return $http.post(url);
-    }
-
-    function deprovisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
-      return $http.post(url);
-    }
-
-    function getAllConnectorTypesForCluster(clusterId) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId + "?fields=@wide";
-      return $http.get(url)
-        .then(function (response) {
-          return _.map(response.data.provisioning, 'connectorType');
-        });
     }
 
   }

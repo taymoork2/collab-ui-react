@@ -80,11 +80,8 @@
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers
         })
-        .success(function () {
-          callback(null);
-        })
-        .error(function () {
-          callback(arguments);
+        .then(function (res) {
+          callback(res.status);
         });
     };
 

@@ -8,15 +8,15 @@ namespace servicesOverview {
 
     private _setupButton:CardButton = {
       name: 'servicesOverview.genericButtons.setup',
-      link: 'mediaservice',
-      buttonClass: 'cta-btn'
+      link: 'mediaserviceV2',
+      buttonClass: 'btn'
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaservice', buttonClass: 'btn-link'},
+      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaserviceV2', buttonClass: 'btn-link'},
       {
         name: 'servicesOverview.cards.hybridMedia.buttons.settings',
-        link: 'mediaservice/settings',
+        link: 'mediaserviceV2/settings',
         buttonClass: 'btn-link'
       }];
 
@@ -32,7 +32,7 @@ namespace servicesOverview {
         description: 'servicesOverview.cards.hybridMedia.description',
         activeServices: ['squared-fusion-media'],
         statusServices: ['squared-fusion-media'],
-        statusLink: 'mediaservice',
+        statusLink: 'mediaserviceV2',
         active: false,
         cardClass: 'media',
         cardType: CardType.hybrid

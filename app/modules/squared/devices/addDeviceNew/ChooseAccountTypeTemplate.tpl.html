@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{chooseAccountType.wizardData.title}}"></h3>
+</div>
+<div class="modal-body device-wizard">
+  <div>
+    <h5 translate="addDeviceWizard.chooseAccountType.assignToUserOrPlace"></h5>
+    <p class="wizardDescription" translate="addDeviceWizard.chooseAccountType.userOrPlaceInstructions"></p>
+    <div class="typeChoice">
+      <div class="typeButtonWrapper typeButtonWrapperLeft">
+        <div class="typeButton"
+             ng-class="{'typeButtonClicked':chooseAccountType.radioSelect === 'personal'}"
+             ng-click="chooseAccountType.personal()"
+             ng-dblclick="chooseAccountType.next()">
+          <div class="typeImageBox">
+            <img class="typeImage" type="image" src="images/devices/user-illustration.png" />
+          </div>
+          <h4 translate="common.user"></h4>
+          <span translate="addDeviceWizard.chooseAccountType.personalUsage"></span>
+        </div>
+      </div>
+      <div class="typeButtonWrapper">
+        <div class="typeButton"
+             ng-class="{'typeButtonClicked':chooseAccountType.radioSelect === 'shared'}"
+             ng-click="chooseAccountType.shared()"
+             ng-dblclick="chooseAccountType.next()">
+          <div class="typeImageBox">
+            <img class="typeImage" type="image" src="images/devices/places-illustration.png" />
+          </div>
+          <h4 translate="addDeviceWizard.chooseAccountType.place"></h4>
+          <span translate="addDeviceWizard.chooseAccountType.sharedUsage"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+      id="back-button"
+      class="btn"
+      sq-click-promise="chooseAccountType.back()"
+      translate="common.back">
+  </button>
+  <button
+      class="btn btn--primary"
+      ng-disabled="!chooseAccountType.radioSelect"
+      sq-click-promise="chooseAccountType.next()"
+      translate="common.next">
+  </button>
+</div>

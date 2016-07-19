@@ -6,7 +6,6 @@
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
-
   .top-bar {
     .sparkstatus-info {
       @extend .user-info;
@@ -28,6 +27,9 @@
       }
     }
   }
+  .pointer {
+    cursor:pointer;
+  }
 }
 .helpdesk-content-view {
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -36,7 +38,7 @@
   margin-right: 2rem;
   padding-top: 4rem;
   padding-bottom: 2rem;
-  min-height: 95vh;
+  min-height: 100vh;
   a:focus {
     outline: none;
     box-shadow: none;
@@ -141,6 +143,14 @@
       font-size: 30px;
       line-height: 35px;
       bottom: -5px;
+    }
+    .light {
+      color: $gray-light-2;
+    }
+    .helpdesk-cards-loading {
+      font-size: 1.5rem;
+      padding-top: 2rem;
+      text-align: center;
     }
   }
 }
@@ -348,6 +358,9 @@
           }
         }
       }
+    }
+    .search-customer-results {
+      padding-left:1rem;
     }
     .search-user-results{
       .cs-card {
@@ -670,5 +683,14 @@
         min-width: 1.5rem;
       }
     }
+  }
+}
+.helpdesk-dialog-progress {
+  text-align:center;
+  margin-top:auto;
+  margin-bottom:auto;
+  font-size:3rem;
+  .status {
+    padding-right:1rem;
   }
 }

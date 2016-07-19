@@ -6,14 +6,15 @@
   <div class="modal-body">
     <div class="flex-container">
       <i class="icon icon-check-mark-success"></i>
-      <h1 class="title" translate="pstnSetup.thankYou"></h1>
-      <span class="success-message" translate="pstnSetup.setupSuccess"></span>
-      <h5 class="next-step-title" translate="pstnSetup.nextStep"></h5>
-      <div class="next-steps">
-        <div class="step">
-          <button class="btn btn--people btn--expand" ng-click="pstnNextSteps.launchCustomerPortal()" translate="pstnSetup.launchPortal">
-          </button>
-        </div>
+      <h3 translate="pstnSetup.thankYou"></h3>
+      <h2 translate="pstnSetup.OrderSubmitted"></h2>
+      <h2>
+      <span ng-show="pstnNextSteps.pstnOrders.length > 1"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt1"></span></span>
+      <span ng-hide="pstnNextSteps.portOrders.length"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt2"></span></span>
+      </h2>
+      <div>
+        <button class="left btn btn--people" ng-click="pstnNextSteps.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        </button>
       </div>
     </div>
   </div>

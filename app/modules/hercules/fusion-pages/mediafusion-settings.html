@@ -1,5 +1,35 @@
 <div class="fusion-cluster-settings">
-  <cs-page-header title="{{clusterSettings.localizedTitle}}" back="true" back-url="clusterSettings.backUrl"ng-if="clusterSettings.cluster.name">></cs-page-header>
-  <div class="clusterid">
+  <cs-page-header title="{{clusterSettings.localizedTitle}}" back="true" back-url="clusterSettings.backUrl" ng-if="clusterSettings.cluster.name">></cs-page-header>
+  <setting-section setting="clusterSettings.upgradeSchedule">
+    <upgrade-schedule-configuration can-postpone="false" daily="true" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
+  </setting-section>
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="mediaFusion.clusters.releaseChannel"></h4>
+      <p class="section__description" translate="mediaFusion.clusters.releaseChannelDesc"></p>
+    </div>
+    <div class="section__content">
+      <div class="sub-section">
+        <p translate="mediaFusion.clusters.releaseChannel"></p>
+        <div class="row">
+          <div class="large-3">
+            <cs-select ng-model="clusterSettings.selected" options="clusterSettings.options" placeholder="clusterSettings.selectPlaceholder" on-change-fn="clusterSettings.changeReleaseChanel()">
+            </cs-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deletesection">
+    <div class="row showgrid">
+      <div class="columns medium-4">
+        <h4 class="deleteclusterDesc" translate="mediaFusion.clusters.deleteclusterDesc"> </h4>
+      </div>
+      <div class="columns medium-4">
+        <button type="button" class="btn" style="margin-top: 15px;" translate="mediaFusion.clusters.deletecluster" ng-click="clusterSettings.deleteCluster();">
+        </button>
+      </div>
+      <div class="columns medium-4"></div>
+    </div>
   </div>
 </div>

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory) {
+  function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory) {
 
     var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 
@@ -65,11 +65,18 @@
       });
     }
 
+    function createCodeForExisting(cisUuid) {
+      return codeCache.create(codesUrl, {
+        cisUuid: cisUuid
+      });
+    }
+
     return {
       on: codeCache.on,
       updateTags: updateTags,
       deleteCode: deleteCode,
       createCode: createCode,
+      createCodeForExisting: createCodeForExisting,
       getCodeList: getCodeList,
       updateCodeName: updateCodeName
     };

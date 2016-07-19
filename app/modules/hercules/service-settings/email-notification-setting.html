@@ -1,10 +1,10 @@
 <h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
 <p translate="{{'hercules.settings.emailNotifications'}}"></p>
-<tags-input add-on-blur="false"
+<tags-input add-on-blur="true"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
             on-invalid-tag="expresswayServiceSettings.invalidEmail($tag)"
-            placeholder="Add email addresses"
+            placeholder={{expresswayServiceSettings.localizedAddEmailWatermark}}
             ng-disabled="expresswayServiceSettings.savingEmail"
             ng-model="expresswayServiceSettings.emailSubscribers"
             type="email"

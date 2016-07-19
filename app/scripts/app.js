@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* global window, document */
+  /* global window, document, MIXPANEL_CUSTOM_LIB_URL: false */
 
   /**
    * @ngdoc overview
@@ -19,7 +19,7 @@
     };
     l[i].t = +new Date();
     (s = y.createElement(t)).type = 'text/javascript';
-    s.src = '//web.localytics.com/v3/localytics.min.js';
+    s.src = 'https://web.localytics.com/v3/localytics.min.js';
     (c = y.getElementsByTagName(t)[0]).parentNode.insertBefore(s, c);
     window.ll('init', 'f725f885fe2646751d3c8a3-075b0c4e-a82c-11e5-c7e0-00d0fea82624', {});
   }(window, document, 'script', 'll'));
@@ -61,12 +61,11 @@
       a = e.createElement("script");
       a.type = "text/javascript";
       a.async = !0;
-      a.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" === e.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+      a.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
       f = e.getElementsByTagName("script")[0];
       f.parentNode.insertBefore(a, f);
     }
   })(document, window.mixpanel || []);
-  mixpanel.init("536df13b2664a85b06b0b6cf32721c24");
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 

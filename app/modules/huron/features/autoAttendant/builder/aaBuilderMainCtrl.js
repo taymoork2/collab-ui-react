@@ -118,6 +118,7 @@
     }
 
     function closePanel() {
+      AutoAttendantCeMenuModelService.clearCeMenuMap();
       unAssignAssigned().finally(function () {
         $state.go('huronfeatures');
       });
@@ -577,6 +578,7 @@
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
       AutoAttendantCeInfoModelService.getCeInfosList().finally(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);

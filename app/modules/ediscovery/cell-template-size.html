@@ -1,3 +1,5 @@
 <div class="ui-grid-cell-contents">
-  <span>{{grid.appScope.prettyPrintBytes(row.entity.sizeInBytes)}}</span>
+  <span class="fit-in-cell">
+    {{row.entity.sizeInBytes | bytesFilter : 2}}
+  </span>
 </div>

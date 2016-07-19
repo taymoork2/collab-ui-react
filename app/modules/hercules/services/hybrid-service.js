@@ -6,7 +6,7 @@
     .factory('HybridService', HybridService);
 
   /* @ngInject */
-  function HybridService($q, Authinfo, ServiceDescriptor) {
+  function HybridService(Authinfo, ServiceDescriptor) {
     var extensionIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',

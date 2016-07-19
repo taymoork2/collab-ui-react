@@ -2,7 +2,7 @@
 
 describe('Controller: FeatureCtrl', function () {
 
-  var controller, $scope, $modal, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, Log, Notification;
+  var controller, $scope, $modal, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, CallParkService, Log, Notification;
 
   var fakeModal = {
     result: {
@@ -20,8 +20,9 @@ describe('Controller: FeatureCtrl', function () {
   };
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _Log_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _CallParkService_, _Log_, _Notification_) {
     $scope = $rootScope.$new();
     $modal = _$modal_;
     $state = _$state_;
@@ -29,6 +30,7 @@ describe('Controller: FeatureCtrl', function () {
     $timeout = _$timeout_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
+    CallParkService = _CallParkService_;
     Log = _Log_;
     Notification = _Notification_;
 
@@ -40,6 +42,7 @@ describe('Controller: FeatureCtrl', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
+      CallParkService: CallParkService,
       Log: Log,
       Notification: Notification
     });

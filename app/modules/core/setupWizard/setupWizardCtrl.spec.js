@@ -3,6 +3,7 @@
 describe('SetupWizardCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
 
@@ -132,30 +133,11 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
   }
 
-  /**
-   * convenience fn to see the proper ordering of setup tabs:
-   * shows tab name, subtab name (if present), and [step names]
-   *
-  function print() {
-    _.forEach($scope.tabs, function (macroStep) {
-      var microSteps = _.map(macroStep.steps, 'name');
-      if (microSteps.length !== 0) {
-        console.log(macroStep.name, microSteps);
-      } else {
-        _.forEach(macroStep.subTabs, function (subTab) {
-          var microSteps = _.map(subTab.steps, 'name');
-          console.log(macroStep.name, subTab.name, microSteps);
-        });
-      }
-    });
-  }
-  */
-
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 5 macro-level steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 4 macro-level steps', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('planReview should have a single substep', function () {
@@ -166,19 +148,8 @@ describe('SetupWizardCtrl', function () {
       expectSubStepOrder('messagingSetup', ['setup']);
     });
 
-    it('enterpriseSettings should have five substeps', function () {
+    it('enterpriseSettings should have five steps', function () {
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-    });
-
-    it('addUsers should have 3 sub tabs with substeps having 4, 5, and 4 entries respectively', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['simple', 'csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'simple', ['init', 'manualEntry', 'assignServices', 'assignDnAndDirectLines']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
     });
 
     it('finish should have a single substep', function () {
@@ -193,7 +164,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should not have the finish step', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers']);
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
     });
   });
 
@@ -203,8 +174,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have the 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
@@ -224,8 +195,8 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 6 steps', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 5 steps', function () {
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
     it('serviceSetup should have a single substep', function () {
@@ -239,29 +210,15 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have 5 tabs', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
-    it('addUsers should have 2 sub steps - csv and advanced', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
-    });
   });
 
-  describe('When dirsync is enabled', function () {
+  describe('When Authinfo.isCSB is disabled', function () {
     beforeEach(function () {
-      FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
-          return $q.when(true);
-        }
-        return $q.when(false);
-      });
+      Authinfo.isCSB.and.returnValue(false);
       initController();
     });
 
@@ -269,15 +226,12 @@ describe('SetupWizardCtrl', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
-    it('enterpriseSettings should have five substeps', function () {
-      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-    });
   });
 
-  describe('When atlasTelstraCsb is enabled', function () {
+  describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasTelstraCsb) {
+        if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
           return $q.when(true);
         }
         return $q.when(false);
@@ -303,7 +257,6 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have a lot of settings', function () {
       expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
-
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
@@ -322,6 +275,20 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
 
     expectStepOrder(['messagingSetup']);
+  });
+
+  it('will filter steps if onlyShowSingleTab is true and currentStep is set.', function () {
+    controller = $controller('SetupWizardCtrl', {
+      $scope: $scope,
+      $stateParams: {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init',
+        onlyShowSingleTab: true
+      }
+    });
+    $scope.$apply();
+    expectStepOrder(['enterpriseSettings']);
+    expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
   });
 
 });

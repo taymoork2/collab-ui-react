@@ -237,7 +237,6 @@
           groups.push(group);
         }
         group.clusters.push(cluster);
-        // console.log("groups value: "+groups);
       }
 
       // Update aggregated service status for each group
@@ -248,7 +247,6 @@
 
       // Adding Empty groups
       //var groupList = 
-      // console.log("grroup list 5 : ", groupList);
       _.each(groupList, function (groupName) {
         if (presentGroupNameList.indexOf(groupName) <= -1) {
           group = {

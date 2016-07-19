@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, XhrNotificationService, $state, $stateParams, $log, $translate, Authinfo) {
+  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, $stateParams, $log) {
 
     var vm = this;
     vm.clusterName = 'default-cluster-name';
@@ -53,7 +53,6 @@
 
     if (!angular.equals($stateParams.endTime, {}) && $stateParams.endTime !== undefined && $stateParams.endTime != '') {
       vm.endTime = $stateParams.endTime;
-      //console.log("r we here here" + $stateParams.endTime);
       getClustersOnly();
       //getHostsOnly(vm.selectedCluster);
       getActiveMediaCounts(vm.selectedCluster, vm.startTime, vm.endTime);
@@ -66,7 +65,6 @@
     } else {
 
       getClusters();
-      //console.log("Inise here");
     }
 
     //vm.optionsCluster = 'GraphCtrl.clusterData';

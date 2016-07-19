@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService, DialPlanService) {
+  function LineSettingsCtrl($scope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, ValidationService, CallerId, DialPlanService) {
     var vm = this;
 
     vm.cfModel = {
@@ -603,7 +603,8 @@
 
       $modal.open({
         templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
-        scope: $scope
+        scope: $scope,
+        type: 'dialog'
       }).result.then(function () {
         if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
           return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)

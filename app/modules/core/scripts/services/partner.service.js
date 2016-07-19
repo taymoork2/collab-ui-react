@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -75,10 +75,7 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             patchManagedOrgs(uuid, customerOrgId);
-            Localytics.tagEvent('patch user call', {
-              by: response.data.orgId
-            });
-            Mixpanel.trackEvent('patch user call', {
+            Analytics.trackEvent('patch user call', {
               by: response.data.orgId
             });
           }
@@ -158,13 +155,13 @@
       }
     }
 
-    function loadRetrievedDataToList(list, isTrialData) {
+    function loadRetrievedDataToList(list, isTrialData, isCareEnabled) {
       return _.map(list, function (customer) {
-        return massageDataForCustomer(customer, isTrialData);
+        return massageDataForCustomer(customer, isTrialData, isCareEnabled);
       });
     }
 
-    function massageDataForCustomer(customer, isTrialData) {
+    function massageDataForCustomer(customer, isTrialData, isCareEnabled) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
@@ -185,6 +182,7 @@
         sparkConferencing: null,
         webexEEConferencing: null,
         webexCMR: null,
+        care: null,
         daysUsed: 0,
         percentUsed: 0,
         duration: customer.trialPeriod,
@@ -199,7 +197,7 @@
         isPartner: false
       };
 
-      var licensesAndOffersData = parseLicensesAndOffers(customer);
+      var licensesAndOffersData = parseLicensesAndOffers(customer, isCareEnabled);
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
@@ -227,12 +225,18 @@
       };
 
       // havent figured out what this is doing yet...
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
-      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
+      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
+      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -251,11 +255,10 @@
       return licensesGotten;
     }
 
-    function exportCSV() {
+    function exportCSV(isCareEnabled) {
       var deferred = $q.defer();
 
       var customers = [];
-
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
@@ -286,6 +289,9 @@
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
             });
+            var careLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.CARE
+            });
 
             if (messagingLicense && angular.isArray(messagingLicense.features)) {
               exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
@@ -298,6 +304,11 @@
             }
             if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
               exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
+            }
+            if (isCareEnabled) {
+              if (careLicense && angular.isArray(careLicense.features)) {
+                exportedCustomer.careEntitlements = careLicense.features.join(' ');
+              }
             }
             return exportedCustomer;
           });
@@ -313,12 +324,16 @@
           header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
           header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
 
+          if (isCareEnabled) {
+            header.careEntitlements = $translate.instant('customerPage.csvHeaderCareEntitlements');
+          }
+
           exportedCustomers.unshift(header);
           return exportedCustomers;
         });
     }
 
-    function parseLicensesAndOffers(customer) {
+    function parseLicensesAndOffers(customer, isCareEnabled) {
       var partial = {
         licenses: 0,
         deviceLicenses: 0,
@@ -348,9 +363,8 @@
         }
 
         partial.usage = offerInfo.usageCount;
-        if (offerInfo.id === Config.offerTypes.roomSystems) {
-          partial.deviceLicenses = offerInfo.licenseCount;
-        } else {
+        if (offerInfo.id !== Config.offerTypes.roomSystems &&
+          offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
 
@@ -374,6 +388,12 @@
           break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
+          partial.deviceLicenses = offerInfo.licenseCount;
+          break;
+        case Config.offerTypes.care:
+          if (isCareEnabled) {
+            userServices.push($translate.instant('trials.care'));
+          }
           break;
         }
       }

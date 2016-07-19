@@ -5,7 +5,7 @@
     .service('DirSyncService', DirSyncService);
 
   /* @ngInject */
-  function DirSyncService($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
+  function DirSyncService($http, Log, Authinfo, UrlConfig) {
 
     var dirsyncUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 

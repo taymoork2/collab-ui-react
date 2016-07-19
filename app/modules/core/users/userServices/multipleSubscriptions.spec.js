@@ -1,23 +1,24 @@
 'use strict';
 
 describe('MultipleSubscriptionsCtrl: Ctrl', function () {
-  var $scope, $httpBackend, controller, $q, Orgservice;
+  var $scope, $httpBackend, controller, $q, Orgservice, Authinfo;
   var getLicensesUsage;
   var $controller;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$httpBackend_, _$q_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$httpBackend_, _$q_, _Orgservice_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     Orgservice = _Orgservice_;
+    Authinfo = _Authinfo_;
 
     getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
-
+    spyOn(Authinfo, 'getLicenses').and.returnValue('anything');
   }));
 
   function initController() {
@@ -42,6 +43,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
       });
 
       it('should verify that there is one subscriptionId', function () {
+        expect('getLicenses').toBeDefined();
         expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
         expect(controller.oneBilling).toEqual(true);
         expect(controller.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);

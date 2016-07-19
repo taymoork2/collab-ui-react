@@ -1,4 +1,16 @@
+
 <p class="ui-grid-cell-contents">
+  <span ng-if="!row.entity.isCI"
+        id="{{row.entity.license.siteUrl}}_isNotCI"
+        name="{{row.entity.license.siteUrl}}_isNotCI">
+    
+    <a href= "{{row.entity.siteAdminUrl}}" id="{{row.entity.license.siteUrl}}_siteAdminUrl">{{::'siteList.siteAdminUrl' | translate}}</a>
+  </span>
+
+  <span ng-if="row.entity.isCI"
+        id="{{row.entity.license.siteUrl}}_isCI"
+        name="{{row.entity.license.siteUrl}}_isCI">
+		
   <!-- Reports icon -->
   <span ng-include="'modules/core/siteList/siteActionsReportsIcon.tpl.html'"></span>
 
@@ -18,7 +30,9 @@
       &nbsp;&nbsp;&nbsp;
     </span>
     
-    <i class="icon icon-spinner grid-vcenter"></i>
+    <i id="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        name="{{row.entity.license.siteUrl}}_checkingServicesSpinner"
+        class="icon icon-spinner grid-vcenter"></i>
     
     <span class="grid-vcenter"
           translate="siteList.checkingServices"></span>
@@ -54,4 +68,5 @@
     </span>
   </span>
   <!-- End of Error/warning indication -->
+  </span>
 </p>

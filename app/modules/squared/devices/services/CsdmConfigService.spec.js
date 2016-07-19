@@ -5,7 +5,7 @@ describe('CsdmConfigService', function () {
 
   var Service, rootPath;
 
-  beforeEach(inject(function ($injector, _CsdmConfigService_, UrlConfig) {
+  beforeEach(inject(function (_CsdmConfigService_, UrlConfig) {
     Service = _CsdmConfigService_;
     rootPath = UrlConfig.getCsdmServiceUrl();
   }));

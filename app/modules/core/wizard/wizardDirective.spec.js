@@ -7,6 +7,7 @@ describe('Controller: WizardCtrl', function () {
   var getUserMe, getMyFeatureToggles;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(module('Core'));
 
   tabs = [{

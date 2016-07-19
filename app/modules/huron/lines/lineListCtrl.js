@@ -6,10 +6,11 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $timeout, $translate, $q, FeatureToggleService, LineListService, Log, Config, Notification) {
+  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification) {
 
     var vm = this;
 
+    vm.tooltipTemplate = $templateCache.get('modules/huron/lines/tooltipTemplate.tpl.html');
     vm.currentDataPosition = 0;
     vm.gridRefresh = true; // triggers the spinner over the grid
     vm.searchStr = '';
@@ -80,7 +81,7 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
         .then(function (response) {
 
           $timeout(function () {
@@ -141,6 +142,7 @@
       }, {
         field: 'userId',
         displayName: $translate.instant('linesPage.assignedTo'),
+        cellTemplate: vm.tooltipTemplate,
         sortable: true,
         sort: {
           direction: 'asc',

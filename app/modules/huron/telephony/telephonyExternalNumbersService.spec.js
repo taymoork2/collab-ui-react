@@ -15,7 +15,7 @@ describe('Service: ExternalNumberPool', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, $resource, _ExternalNumberPool_, _HuronConfig_) {
+      function (_$httpBackend_, _ExternalNumberPool_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
         ExternalNumberPool = _ExternalNumberPool_;
         HuronConfig = _HuronConfig_;

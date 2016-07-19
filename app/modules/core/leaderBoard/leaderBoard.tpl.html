@@ -1,6 +1,5 @@
 <div class="leader-board row" ng-init="init()" ng-class="{
     'is-customer-admin': isCustomerAdmin,
-    'ft-atlas-trial-conversion': isAtlasTrialConversion,
     'has-active-trial': hasActiveTrial
   }">
   <cr-trial-notice-banner></cr-trial-notice-banner>
@@ -16,13 +15,14 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.messaging.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity" >{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
@@ -36,28 +36,30 @@
       </header>
       <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity" >{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
       </section>
       <!-- TODO: revisit after graduation (2016-02-17) - ng-show logic -->
-      <section  class="bucket-info" ng-show="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
+      <section  class="bucket-info" ng-if="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
         <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in subscription.sites">
           <div class="sub-item" ng-repeat="service in services">
-            <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+            <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
             </cs-donut>
             <div class="text-center">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span class="quantity" >{{service.volume}}</span>
               <p ng-show="service.isTrial" class="text-center trial">
-                <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+                <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
+                <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
               </p>
             </div>
             <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
@@ -67,13 +69,13 @@
           </div>
         </div>
       </section>
-      <section class="bucket-info" ng-show="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
+      <section class="bucket-info" ng-if="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
         <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
           <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
           <div ng-if="$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
           <div class="sub-item text-left" ng-repeat="service in services">
             <div class="service-bucket">
-              <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
+              <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
               </cs-donut>
               <div class="webex">
                 <div ng-if="service.offerName !== 'MC'" translate="leaderBoard.{{service.offerName}}"></div>
@@ -95,13 +97,14 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number" >
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity">{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>
@@ -115,13 +118,14 @@
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.shared_devices.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          <cs-donut name="service.id" value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
           <div class="text-center quantity number">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span  class="quantity">{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+              <span class="quantity-badge badge badge-warning" ng-show="trialDaysLeft > 0" translate="customerPage.trial"></span>
+              <span class="quantity-badge badge alert" ng-show="trialDaysLeft <= 0" translate="customerPage.expired"></span>
             </p>
           </div>
         </div>

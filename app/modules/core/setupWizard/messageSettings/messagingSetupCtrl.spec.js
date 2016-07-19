@@ -3,16 +3,18 @@
 describe('Controller: messagingSetupCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
-  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification;
+  var $controller, $scope, $q, AccountOrgService, Authinfo, controller, FeatureToggleService, Notification, Analytics;
 
-  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Notification_) {
+  beforeEach(inject(function (_$controller_, _$q_, $rootScope, _AccountOrgService_, _Authinfo_, _Analytics_, _FeatureToggleService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     AccountOrgService = _AccountOrgService_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Analytics = _Analytics_;
     Notification = _Notification_;
 
     spyOn(AccountOrgService, 'getOrgSettings').and.returnValue($q.when({
@@ -28,13 +30,16 @@ describe('Controller: messagingSetupCtrl', function () {
 
     spyOn(AccountOrgService, 'getAppSecurity').and.returnValue($q.when({
       data: {
-        enforceClientSecurity: true
+        clientSecurityPolicy: true
       }
     }));
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'notify');
+    spyOn(FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue($q.when(true));
   }));
 
   function initController() {
@@ -52,10 +57,10 @@ describe('Controller: messagingSetupCtrl', function () {
     });
   });
 
-  describe('atlasAppleFeatures Feature Toggle', function () {
+  describe('atlasPinSettings Feature Toggle', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
-        if (val === FeatureToggleService.features.atlasAppleFeatures) {
+        if (val === FeatureToggleService.features.atlasPinSettings) {
           return $q.when(true);
         }
         return $q.when(false);
@@ -68,7 +73,7 @@ describe('Controller: messagingSetupCtrl', function () {
     });
   });
 
-  describe('test that getAppSecurity function and sets enforceClientSecurity: ', function () {
+  describe('test that getAppSecurity function and sets clientSecurityPolicy: ', function () {
     beforeEach(initController);
 
     it('should check if getAppSecurity in return sets AppSecurity to true', function () {

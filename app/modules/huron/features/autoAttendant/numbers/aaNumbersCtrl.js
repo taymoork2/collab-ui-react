@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, AAScrollBar) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -71,7 +71,6 @@
           "label": "",
           "value": ""
         };
-
       }
 
     }
@@ -165,7 +164,7 @@
 
               sortAssignedResources(resources);
               AACommonService.setCENumberStatus(true);
-
+              AAScrollBar.resizeBuilderScrollBar();
             },
             function (response) {
               AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
@@ -207,6 +206,7 @@
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(function () {
         AACommonService.setCENumberStatus(true);
+        AAScrollBar.resizeBuilderScrollBar();
       }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */

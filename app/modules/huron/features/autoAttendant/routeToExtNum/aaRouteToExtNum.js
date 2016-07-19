@@ -6,7 +6,7 @@
     .controller('AARouteToExtNumCtrl', AARouteToExtNumCtrl);
 
   /* @ngInject */
-  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
 
     var vm = this;
 
@@ -25,15 +25,17 @@
       }
     }];
 
-    vm.aaModel = {};
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
     };
     vm.menuKeyEntry = {};
 
-    /* Using the tag 'RouteCall' to differentiate btw Phone Menu and Route Call, useful in aaValidateSuccess.js */
-    vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, $scope.index, ($scope.keyIndex ? $scope.keyIndex : "RouteCall"));
+    /* If Phone Menu then key looks like: closedHours-0menu3 
+     * if Route Call it is just closedHours-0 
+     * used in aaValidateSuccess.js */
+
+    vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, $scope.menuId ? $scope.keyIndex + $scope.menuId : $scope.index);
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
@@ -94,15 +96,12 @@
     );
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      var ui = AAUiModelService.getUiModel();
-
-      vm.uiMenu = ui[$scope.schedule];
-      vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
       if ($scope.fromRouteCall) {
+        var ui = AAUiModelService.getUiModel();
+        vm.uiMenu = ui[$scope.schedule];
+        vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
-
         // if our route is not there, add if no actions, or initialize
         if (vm.menuEntry.actions.length === 0) {
           action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
@@ -118,7 +117,7 @@
         }
 
       } else {
-
+        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {

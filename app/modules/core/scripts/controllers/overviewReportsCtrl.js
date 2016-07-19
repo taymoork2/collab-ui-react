@@ -5,7 +5,7 @@
     .controller('OverviewReportsCtrl', OverviewReportsCtrl);
 
   /* @ngInject */
-  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, Log, PartnerService, ReportsService, CannedDataService, chartColors, CommonGraphService) {
+  function OverviewReportsCtrl($scope, $translate, Authinfo, Notification, Log, PartnerService, ReportsService, chartColors, CommonGraphService) {
     var LINE = 'line';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
@@ -36,19 +36,11 @@
       $scope.entitlementStatus = REFRESH;
       angular.element('#' + entRefreshDiv).html('<i class=\'icon icon-spinner icon-2x\'/>');
 
-      if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
-        if ($scope.currentSelection.value === allCustomers.value) {
-          ReportsService.getPartnerMetrics(cacheValue, null, [partnerCharts[0]]);
-          ReportsService.getTotalPartnerCounts(cacheValue, customerList, [partnerCharts[1]]);
-        } else {
-          ReportsService.getPartnerMetrics(cacheValue, $scope.currentSelection.value, partnerCharts);
-        }
+      if ($scope.currentSelection.value === allCustomers.value) {
+        ReportsService.getPartnerMetrics(cacheValue, null, [partnerCharts[0]]);
+        ReportsService.getTotalPartnerCounts(cacheValue, customerList, [partnerCharts[1]]);
       } else {
-        if ($scope.currentSelection.value === allCustomers.value) {
-          CannedDataService.getAllCustomersData();
-        } else {
-          CannedDataService.getIndCustomerData($scope.currentSelection.value);
-        }
+        ReportsService.getPartnerMetrics(cacheValue, $scope.currentSelection.value, partnerCharts);
       }
     };
     $scope.getCustomerReports();

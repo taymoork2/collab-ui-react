@@ -15,6 +15,12 @@
     </div>
     <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
+
+  <cs-sp-section ng-if="!(clusterDetailsCtrl.cluster.releaseChannel === 'GA' || clusterDetailsCtrl.cluster.releaseChannel === 'stable')">
+    <div class="section-title-row section-name" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></div>
+      <p class="hercules-capitalize">{{clusterDetailsCtrl.cluster.releaseChannel}}</p>
+  </cs-sp-section>
+
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
     <div ng-if="!clusterDetailsCtrl.showUpgradeProgress">
@@ -22,10 +28,10 @@
       <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
       <button class="btn btn--primary"
               ng-click="clusterDetailsCtrl.showUpgradeDialog()"
-              ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable || !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"
+              ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
               translate="hercules.softwareUpgrade.upgradeNow">
       </button>
-      <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeImpossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
+      <p ng-if="clusterDetailsCtrl.softwareUpgrade.showUpgradeWarning()"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeWarning" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
     </div>
     <div ng-if="clusterDetailsCtrl.showUpgradeProgress">
       <div ng-if="clusterDetailsCtrl.fakeUpgrade">
@@ -46,7 +52,8 @@
       </div>
     </div>
   </cs-sp-section>
-  <cs-sp-section>
+
+  <cs-sp-section ng-hide="clusterDetailsCtrl.hasF410FeatureToggle">
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
       <ul>
@@ -66,7 +73,46 @@
       </ul>
     </div>
   </cs-sp-section>
-  <cs-sp-section>
+
+  <cs-sp-section ng-hide="!clusterDetailsCtrl.hasF410FeatureToggle">
+    <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
+    <div class="feature-list">
+      <div ng-repeat="host in clusterDetailsCtrl.F410cluster.hosts | orderBy: 'hostname'">
+        <h6 class="feature">{{host.hostname}}</h6>
+        <ul>
+          <li class="feature" ng-repeat="connector in host.connectors | orderBy: clusterDetailsCtrl.sortConnectors ">
+            <a ng-if="connector.connectorType === 'c_mgmt'"
+               ui-sref="management-connector-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: 'c_mgmt'})"
+            >
+              <i class="fa fa-circle status-icon"
+                 ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(connector.state).label"
+                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
+              <i class="fa fa-circle status-icon hercules-state-error"
+                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+              <span class="feature-name">{{clusterDetailsCtrl.localizedManagementConnectorName}}</span>
+              <span ng-if="connector.connectorType !== 'c_mgmt'" class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
+              <span class="feature-status">{{connector.runningVersion}}</span>
+              <i class="feature-status feature-arrow"></i>
+            </a>
+            <a ng-if="connector.connectorType !== 'c_mgmt'"
+               ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: connector.connectorType})"
+            >
+              <i class="fa fa-circle status-icon"
+                 ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(connector.state).label"
+                 ng-if="!clusterDetailsCtrl.hasConnectorAlarm(connector)"></i>
+              <i class="fa fa-circle status-icon hercules-state-error"
+                 ng-if="clusterDetailsCtrl.hasConnectorAlarm(connector)" ></i>
+              <span class="feature-name">{{clusterDetailsCtrl.localizedConnectorName}}</span>
+              <span class="feature-status">{{connector.runningVersion}}</span>
+              <i class="feature-status feature-arrow"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section ng-hide="clusterDetailsCtrl.hasF410FeatureToggle">
     <div class="section-title-row section-name" translate="hercules.clusters.deregisterSectionHeader"></div>
     <span translate="hercules.clusters.deregisterSectionBody"></span>
     <div>

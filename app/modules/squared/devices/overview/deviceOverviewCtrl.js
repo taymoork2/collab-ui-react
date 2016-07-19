@@ -6,23 +6,28 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal, ServiceSetup, FeatureToggleService) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService) {
     var deviceOverview = this;
-
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
-    deviceOverview.csdmTz = false;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
-
-    FeatureToggleService.supports(FeatureToggleService.features.csdmTz).then(function (result) {
-      deviceOverview.csdmTz = result;
-    });
+    deviceOverview.isError = false;
+    deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+    if (deviceOverview.isKEMAvailable) {
+      if (!_.has(deviceOverview.currentDevice, 'kem')) {
+        deviceOverview.currentDevice.kem = [];
+        deviceOverview.isError = true;
+      }
+      deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+      deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+    }
 
     if (deviceOverview.currentDevice.isHuronDevice) {
-      initTimeZoneOptions();
-      loadDeviceTimeZone();
+      initTimeZoneOptions().then(function () {
+        loadDeviceTimeZone();
+      });
       var huronPollInterval = $interval(pollLines, 30000);
       $scope.$on("$destroy", function () {
         $interval.cancel(huronPollInterval);
@@ -33,14 +38,14 @@
     function loadDeviceTimeZone() {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result;
-        deviceOverview.selectedTimeZone = getTimeZoneFromValue(result);
+        deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
         deviceOverview.tzIsLoaded = true;
       });
     }
 
-    function getTimeZoneFromValue(value) {
+    function getTimeZoneFromId(id) {
       return _.find(deviceOverview.timeZoneOptions, function (o) {
-        return o.value == value;
+        return o.id == id;
       });
     }
 
@@ -77,7 +82,7 @@
     }
 
     deviceOverview.saveTimeZoneAndWait = function () {
-      var newValue = deviceOverview.selectedTimeZone.value;
+      var newValue = deviceOverview.selectedTimeZone.id;
       if (newValue !== deviceOverview.timeZone) {
         deviceOverview.updatingTimeZone = true;
         setTimeZone(newValue)
@@ -154,25 +159,61 @@
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
       CsdmCodeService.deleteCode(deviceOverview.currentDevice);
+      $state.sidepanel.close();
       CsdmCodeService.createCode(displayName)
         .then(function (result) {
-          AddDeviceModal.open(result);
-        })
-        .then($state.sidepanel.close);
+          var wizardState = {
+            data: {
+              function: "showCode",
+              deviceType: "cloudberry",
+              deviceName: result.displayName,
+              expiryTime: result.friendlyExpiryTime,
+              activationCode: result.activationCode
+            },
+            history: [],
+            currentStateName: 'addDeviceFlow.showActivationCode',
+            wizardState: {
+              'addDeviceFlow.showActivationCode': {}
+            }
+          };
+          var wizard = WizardFactory.create(wizardState);
+          $state.go('addDeviceFlow.showActivationCode', {
+            wizard: wizard
+          });
+        });
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
-      RemoteSupportModal.open(deviceOverview.currentDevice);
+      if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
+        Notification.notifyReadOnly();
+        return;
+      }
+      if (deviceOverview.showRemoteSupportButton()) {
+        RemoteSupportModal.open(deviceOverview.currentDevice);
+      }
     };
 
-    deviceOverview.addTag = function ($event) {
+    deviceOverview.showRemoteSupportButton = function () {
+      return deviceOverview.currentDevice && !!deviceOverview.currentDevice.hasRemoteSupport;
+    };
+
+    deviceOverview.addTag = function () {
       var tag = _.trim(deviceOverview.newTag);
-      if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
+      if (tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
         var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
         return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
+      } else {
+        deviceOverview.isAddingTag = false;
+        deviceOverview.newTag = undefined;
+      }
+    };
+
+    deviceOverview.addTagOnEnter = function ($event) {
+      if ($event.keyCode == 13) {
+        deviceOverview.addTag();
       }
     };
 
@@ -247,5 +288,41 @@
         }, 1000);
       });
     }
+
+    deviceOverview.saveKem = function () {
+      var device = deviceOverview.currentDevice;
+      var previousKemNumber = device.kem.length;
+      var newKemNumber = deviceOverview.kemNumber.value;
+      var diff = newKemNumber - previousKemNumber;
+      var promiseList = [];
+      if (diff > 0) {
+        _.times(diff, function (n) {
+          promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
+        });
+      } else {
+        _.times(-diff, function (n) {
+          var module = _.findWhere(device.kem, {
+            index: '' + (previousKemNumber - n)
+          });
+          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
+        });
+      }
+      $q.all(promiseList).then(
+        function () {
+          CmiKemService.getKEM(device.huronId).then(
+            function (data) {
+              deviceOverview.currentDevice.kem = data;
+              Notification.success($translate.instant('deviceOverviewPage.kemUpdated'));
+            }
+          ).catch(function () {
+            Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+          });
+        },
+        function () {
+          deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
+          Notification.error($translate.instant('deviceOverviewPage.kemChangesFailed'));
+        }
+      );
+    };
   }
 })();

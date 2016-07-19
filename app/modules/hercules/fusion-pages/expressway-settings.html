@@ -1,85 +1,92 @@
 <div class="fusion-cluster-settings">
+
   <cs-page-header title="{{clusterSettings.localizedTitle}}" back="true" back-url="clusterSettings.backUrl"  ng-if="clusterSettings.cluster.name"></cs-page-header>
-  <div class="clusterid">
-    <div class="row">
-      <div class="columns medium-4">
-        <h5 translate="hercules.expresswayClusterSettings.releasechannelHeader"></h5>
-        <p translate="hercules.expresswayClusterSettings.releasechannelParagraph"></p>
-      </div>
-      <div class="columns medium-4">
-        <h6 translate="hercules.expresswayClusterSettings.releasechannelUsers"></h6>
-        <cs-select
-          ng-model="clusterSettings.usersSelected"
-          options="clusterSettings.usersOptions"
-          placeholder="clusterSettings.usersPlaceholder"
-          is-disabled="true"
-        >
-        </cs-select>
-        <h6 translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></h6>
-        <cs-select
-          ng-model="clusterSettings.releasechannelsSelected"
-          options="clusterSettings.releasechannelsOptions"
-          placeholder="clusterSettings.releasechannelsPlaceholder"
-        >
-        </cs-select>
-      </div>
-      <div class="columns medium-4"></div>
-    </div>
 
-    <hr />
-    <div class="row">
-      <div class="columns medium-4">
-        <h5 translate="hercules.expresswayClusterSettings.deactivateServicesHeader"></h5>
+  <div class="cs-form">
+
+    <setting-section setting="clusterSettings.upgradeSchedule">
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
+        <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
+        <upgrade-schedule-configuration can-postpone="true" daily="false" cluster-id="clusterSettings.cluster.id"></upgrade-schedule-configuration>
       </div>
-      <div class="columns medium-4">
+    </setting-section>
 
-        <div ng-if="clusterSettings.enabledServices.length > 1">
-          <p translate="hercules.expresswayClusterSettings.deactivateServicesParagraph"></p>
+    <setting-section setting="clusterSettings.releasechannel" ng-if="false">
+      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelUsers"></h5>
+      <cs-select
+        ng-model="clusterSettings.usersSelected"
+        options="clusterSettings.usersOptions"
+        placeholder="clusterSettings.usersPlaceholder"
+        is-disabled="true"
+      >
+      </cs-select>
+      <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.releasechannelReleasechannel"></h5>
+      <cs-select
+        ng-model="clusterSettings.releasechannelsSelected"
+        options="clusterSettings.releasechannelsOptions"
+        placeholder="clusterSettings.releasechannelsPlaceholder"
+      >
+      </cs-select>
+    </setting-section>
 
-          <div ng-repeat="service in clusterSettings.enabledServices">
-            <div ng-if="service === 'c_cal'">
-              <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="clusterSettings.deactivateService('c_cal', clusterSettings.cluster);" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarButton"></button>
-            </div>
-            <div ng-if="service === 'c_ucmc'">
-              <button type="button" class="btn btn--alert" ng-click="clusterSettings.deactivateService('c_ucmc', clusterSettings.cluster);" translate="hercules.expresswayClusterSettings.deactivateServicesCallButton"></button>
-            </div>
+    <setting-section setting="clusterSettings.deactivateServices">
+      <div ng-if="clusterSettings.enabledServices.length > 1">
+        <div ng-repeat="service in clusterSettings.enabledServices">
+          <div ng-if="service === 'c_cal'" class="sub-section">
+            <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarHeader"></h5>
+            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCalendarServiceName }"></p>
+            <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="clusterSettings.deactivateService('c_cal', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
+          </div>
+          <div ng-if="service === 'c_ucmc'" class="sub-section">
+            <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCallHeader"></h5>
+            <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCallServiceName }"></p>
+            <button type="button" class="btn btn--alert" ng-click="clusterSettings.deactivateService('c_ucmc', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>
           </div>
         </div>
-        <div ng-if="clusterSettings.enabledServices.length < 2">
-          <p translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
-        </div>
-
       </div>
-      <div class="columns medium-4"></div>
-    </div>
-
-    <hr />
-    <div class="row">
-      <div class="columns medium-4">
-        <h5 translate="hercules.expresswayClusterSettings.deregisterClusterHeader"></h5>
-      </div>
-      <div class="columns medium-4">
-
-        <div ng-if="clusterSettings.enabledServices.length > 1">
-        <p translate="hercules.expresswayClusterSettings.deregisterClusterParagraph"></p>
-
-          <button type="button" class="btn btn--alert" disabled="disabled" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
-
-        </div>
-
       <div ng-if="clusterSettings.enabledServices.length < 2">
-        <p translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
-        <button type="button" class="btn btn--alert" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="hercules.expresswayClusterSettings.deregisterClusterButton"></button>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.noHybridServicesProvisioned"></p>
+      </div>
+    </setting-section>
+
+    <setting-section setting="clusterSettings.renameClusterSection">
+
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="common.rename"></h5>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.renameClusterParagraph"></p>
+
+        <div class="row">
+          <input
+            cs-input
+            type="text"
+            placeholder={{clusterSettings.localizedClusterNameWatermark}}
+            ng-model="clusterSettings.newClusterName"
+            cs-input-group-size="medium-8"
+            cs-input-help-text="{{'hercules.expresswayClusterSettings.renameClusterDescription' | translate}}"
+          >
+        </div>
+        <button
+          type="button"
+          class="btn btn--primary"
+          ng-click="clusterSettings.setClusterName(clusterSettings.newClusterName)"
+          translate="common.save"
+        ></button>
 
       </div>
 
-
+      <div class="sub-section">
+        <h5 class="cap-long-names sub-section__label" translate="common.remove"></h5>
+        <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterExplanation"></p>
+        <div ng-if="clusterSettings.enabledServices.length > 1">
+          <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
+          <p class="cap-long-names sub-section__description" translate="hercules.expresswayClusterSettings.deregisterClusterParagraph" translate-values="{ ClusterName: clusterSettings.cluster.name}"></p>
+        </div>
+        <div ng-if="clusterSettings.enabledServices.length < 2">
+          <button type="button" class="btn" ng-click="clusterSettings.deregisterCluster(clusterSettings.cluster)" translate="common.remove"></button>
+        </div>
       </div>
-      <div class="columns medium-4"></div>
-    </div>
-    <hr />
+    </setting-section>
+
   </div>
-
-
-
 </div>

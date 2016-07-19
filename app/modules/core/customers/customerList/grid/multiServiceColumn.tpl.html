@@ -1,15 +1,16 @@
 <div class="ui-grid-cell-contents align-center">
-  <div ng-repeat="field in grid.appScope.getSubfields(col.field)" class="subcol">
-    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeActive(row.entity, field.columnName)"
+  <div ng-repeat="field in grid.appScope.getSubfields(row.entity,col.field)" class="subcol">
+    <span ng-if="grid.appScope.isLicenseTypeActive(row.entity, field.columnName)"
       class="badge"
       ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
       translate="customerPage.active" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
-    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeATrial(row.entity, field.columnName)"
+    <span ng-if="grid.appScope.isLicenseTypeATrial(row.entity, field.columnName)"
       class="badge"
       ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
       translate="customerPage.trial" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
-    <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && grid.appScope.isLicenseTypeFree(row.entity, field.columnName)"
+    <span ng-if="grid.appScope.isLicenseTypeFree(row.entity, field.columnName)"
       ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED', 'selected' : row.isSelected}"
       translate="customerPage.free" tooltip="{{::field.tooltip | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></span>
+    <span ng-if="grid.appScope.isNoLicense(row.entity, field.columnName)" ng-class="'no-license'">&nbsp;</span>
   </div>
 </div>

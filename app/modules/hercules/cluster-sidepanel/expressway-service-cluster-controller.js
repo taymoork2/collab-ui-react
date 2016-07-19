@@ -6,7 +6,7 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout) {
+  function ExpresswayServiceClusterController($scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout, hasF410FeatureToggle, FusionClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -19,6 +19,8 @@
     vm.showDeregisterDialog = showDeregisterDialog;
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
+    vm.hasF410FeatureToggle = hasF410FeatureToggle;
+    vm.hasConnectorAlarm = hasConnectorAlarm;
 
     var wasUpgrading = false;
     var promise = null;
@@ -31,8 +33,11 @@
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
         availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
         isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
-        isUpgradePossible: vm.cluster.aggregates.upgradePossible,
-        numberOfHosts: _.size(vm.cluster.aggregates.hosts)
+        hasUpgradeWarning: vm.cluster.aggregates.upgradeWarning,
+        numberOfHosts: _.size(vm.cluster.aggregates.hosts),
+        showUpgradeWarning: function () {
+          return vm.softwareUpgrade.isUpgradeAvailable && !vm.softwareUpgrade.hasUpgradeWarning;
+        }
       };
 
       if (isUpgrading) {
@@ -63,7 +68,8 @@
           resolve: {
             cluster: function () {
               return vm.cluster;
-            }
+            },
+            isF410enabled: false
           },
           controller: 'ClusterDeregisterController',
           controllerAs: 'clusterDeregister',
@@ -111,5 +117,32 @@
       // could be undefined if we only have upgraded and pending connectors
       return _.get(upgrading, 'hostname', 'some host');
     }
+
+    if (hasF410FeatureToggle) {
+
+      FusionClusterService.get(vm.clusterId)
+        .then(function (cluster) {
+          vm.F410cluster = FusionClusterService.buildSidepanelConnectorList(cluster, vm.connectorType);
+        });
+      vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
+      vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
+    }
+
+    function hasConnectorAlarm(connector) {
+      if (connector.alarms.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    vm.sortConnectors = function (connector) {
+      if (connector.connectorType === 'c_mgmt') {
+        return -1;
+      } else {
+        return connector.connectorType;
+      }
+    };
+
   }
 }());

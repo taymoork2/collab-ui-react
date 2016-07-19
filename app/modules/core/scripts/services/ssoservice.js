@@ -5,7 +5,7 @@
     .service('SSOService', SSOService);
 
   /* @ngInject */
-  function SSOService($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
+  function SSOService($http, Log, Authinfo, UrlConfig) {
 
     return {
       getMetaInfo: function (callback) {

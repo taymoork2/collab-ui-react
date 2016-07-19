@@ -11,7 +11,7 @@
   <div class="row full">
     <div class="columns large-4 medium-5">
 
-      <h3>
+      <h3 ng-class="{'pointer': helpdeskUserCtrl.supportsExtendedInformation}" ng-click="helpdeskUserCtrl.openExtendedInformation()">
         <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img">
           <i class="icon icon-user"></i>
         </span>
@@ -46,7 +46,9 @@
         </div>
         <div class="large-7 columns details-value">
           <span ng-repeat="status in helpdeskUserCtrl.user.statuses" style="margin-right: 1rem;" >{{status | translate}}{{$last ? '' : ', '}}</span>
-          <button class="action secondary small details-button" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"  ng-if="helpdeskUserCtrl.resendInviteEnabled" translate="helpdesk.resend"></button>
+          <span>
+            <a ng-click="helpdeskUserCtrl.resendInviteEmail()" ng-if="helpdeskUserCtrl.resendInviteEnabled">{{'helpdesk.resend' | translate}}</a>
+          </span>
         </div>
       </div>
 
@@ -153,7 +155,14 @@
 
     </div>
 
-    <div class="columns large-8 medium-7 card-panel" ng-include src="'modules/squared/helpdesk/user-cards.html'"></div>
+    <div ng-if="helpdeskUserCtrl.cardsAvailable"
+         class="columns large-8 medium-7 card-panel"
+         ng-include src="'modules/squared/helpdesk/user-cards.html'">
+    </div>
+    <div ng-if="!helpdeskUserCtrl.cardsAvailable"
+         class="columns large-8 medium-7 card-panel">
+      <div cs-loader class="helpdesk-cards-loading"></div>
+    </div>
 
   </div>
 

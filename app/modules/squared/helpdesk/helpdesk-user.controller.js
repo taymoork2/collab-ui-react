@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .controller('HelpdeskUserController', HelpdeskUserController);
+
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, $modal, WindowLocation, FeatureToggleService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -27,11 +31,26 @@
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
+    vm.cardsAvailable = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
+      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function (result) {
+        var prefix = 'helpdesk.userStatuses.';
+        for (var i = 0; i < vm.user.statuses.length; i++) {
+          var status = vm.user.statuses[i];
+          if (_.contains(prefix + 'rejected', status)) {
+            vm.user.statuses[i] = prefix + 'resent';
+          }
+        }
+      }, XhrNotificationService.notify);
     }
 
     function sendCode() {
@@ -41,9 +60,41 @@
       }, XhrNotificationService.notify);
     }
 
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
+          resolve: {
+            title: function () {
+              return 'helpdesk.userDetails';
+            },
+            data: function () {
+              return vm.user;
+            }
+          }
+        });
+      }
+    }
+
     function initUserView(user) {
       vm.user = user;
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
+      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
+        HelpdeskService.isEmailBlocked(user.userName)
+          .then(function () {
+            vm.resendInviteEnabled = true;
+            var prefix = 'helpdesk.userStatuses.';
+            var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'pending', prefix + 'resent'];
+            for (var i = 0; i < vm.user.statuses.length; i++) {
+              var status = vm.user.statuses[i];
+              if (_.contains(statusToReplace, status)) {
+                vm.user.statuses[i] = prefix + 'rejected';
+              }
+            }
+          });
+      }
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
@@ -90,11 +141,12 @@
         }, angular.noop);
       }
 
+      vm.cardsAvailable = true;
       angular.element(".helpdesk-details").focus();
     }
 
     function isAuthorizedForLog() {
-      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+      return Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin() || Authinfo.isReadOnlyAdmin());
     }
 
     function downloadLog(filename) {
@@ -109,14 +161,17 @@
       }
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
-        $window.history.back();
+      if (!modalVisible()) {
+        if (event.keyCode === 27) { // Esc
+          $window.history.back();
+        }
       }
     }
   }
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskUserController', HelpdeskUserController);
 }());
