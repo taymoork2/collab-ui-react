@@ -94,7 +94,7 @@
         'active': true
       });
       if (angular.isUndefined(atLeastOneDaySet)) {
-        AANotificationService.error("At least one open hours form does not have any days of the week checked.");
+        AANotificationService.error('autoAttendant.openHoursDaySelect');
         return true;
       }
       return false;
