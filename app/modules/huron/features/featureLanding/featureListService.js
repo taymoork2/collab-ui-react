@@ -74,8 +74,20 @@
       return orderByCardName(formattedList);
     }
 
-    function callParks() {
-      // TODO: Add callpark formatting service
+    function callParks(data) {
+      var formattedList = [];
+      _.forEach(data.callparks, function (callPark) {
+        formattedCard.cardName = callPark.name;
+        formattedCard.id = callPark.uuid;
+        formattedCard.startRange = callPark.startRange;
+        formattedCard.endRange = callPark.endRange;
+        formattedCard.memberCount = callPark.memberCount;
+        formattedCard.featureName = 'huronFeatureDetails.cp';
+        formattedCard.filterValue = 'CP';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return orderByCardName(formattedList);
     }
 
     function huntGroups(data) {
@@ -85,7 +97,7 @@
         formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
-        formattedCard.featureName = 'huronHuntGroup.hg';
+        formattedCard.featureName = 'huronFeatureDetails.hg';
         formattedCard.filterValue = 'HG';
         formattedList.push(formattedCard);
         formattedCard = {};
