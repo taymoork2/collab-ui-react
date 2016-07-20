@@ -55,8 +55,7 @@ describe('Controller: FusionClusterListController', function () {
 
     it('should update filters and displayed clusters', function () {
       FusionClusterService.getAll.and.returnValue($q.resolve([{
-        state: 'fused',
-        type: 'expressway',
+        targetType: 'c_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'c_mgmt',
@@ -64,8 +63,7 @@ describe('Controller: FusionClusterListController', function () {
           hostname: 'a.elg.no'
         }]
       }, {
-        state: 'fused',
-        type: 'mediafusion',
+        targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
