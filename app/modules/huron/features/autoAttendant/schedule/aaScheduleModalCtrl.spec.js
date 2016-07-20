@@ -544,6 +544,15 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect($modal.open).toHaveBeenCalled();
     });
 
+    it('should close a modal for importing and send analytics', inject(function ($q, Analytics) {
+      spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
+      controller.openImportModal();
+      fakeModal.dismiss('cancel');
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+      expect(Analytics.trackEvent).toHaveBeenCalled();
+    }));
+
     it('should add imported items', function () {
       fakeModal.close({
         holidays: [],
