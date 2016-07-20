@@ -1450,10 +1450,8 @@
         "settings": "Settings",
         "all": "All",
         "add-resource": "Add Resource",
-        "expressway-short": "E",
-        "mediafusion-short": "M",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion",
+        "mediafusion": "Media",
         "no-services": "No services",
         "upgrade-schedule": "Upgrade Schedule"
       },

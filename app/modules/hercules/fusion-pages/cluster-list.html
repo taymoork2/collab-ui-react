@@ -19,7 +19,7 @@
     </div>
     <div ng-if="!resourceList.loading && resourceList.displayedClusters.length === 0" class="empty-list" translate="hercules.fusion.list.empty"></div>
     <cs-card-layout block-view="true" ng-if="!resourceList.loading">
-      <cs-card class="medium header-bar {{'card-' + cluster.type}}" ng-repeat="cluster in resourceList.displayedClusters">
+      <cs-card class="medium header-bar {{'card-' + cluster.targetType}}" ng-repeat="cluster in resourceList.displayedClusters">
         <article>
           <header>
             <h4>{{::cluster.name}}</h4>
@@ -62,7 +62,7 @@
             </div>
           </div>
           <footer>
-              <a ng-click="resourceList.openSettings(cluster.type, cluster.id)" translate="hercules.fusion.list.settings"></a>
+              <a ng-click="resourceList.openSettings(cluster.targetType, cluster.id)" translate="hercules.fusion.list.settings"></a>
             </div>
           </footer>
         </article>

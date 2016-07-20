@@ -78,8 +78,8 @@
     }
 
     function updateFilters() {
-      var expresswayClusters = _.filter(clustersCache, 'type', 'expressway');
-      var mediafusionClusters = _.filter(clustersCache, 'type', 'mediafusion');
+      var expresswayClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
+      var mediafusionClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       vm.placeholder.count = clustersCache.length;
       vm.filters[0].count = expresswayClusters.length;
       vm.filters[1].count = mediafusionClusters.length;
@@ -88,9 +88,9 @@
     function setFilter(filter) {
       activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'expressway');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
       } else if (filter.filterValue === 'mediafusion') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'mediafusion');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       } else {
         vm.displayedClusters = clustersCache;
       }
@@ -122,9 +122,15 @@
     }
 
     function openSettings(type, id) {
-      $state.go(type + '-settings', {
-        id: id
-      });
+      if (type === 'c_mgmt') {
+        $state.go('expressway-settings', {
+          id: id
+        });
+      } else if (type === 'mf_mgmt') {
+        $state.go('mediafusion-settings', {
+          id: id
+        });
+      }
     }
 
     function formatTimeAndDate(upgradeSchedule) {

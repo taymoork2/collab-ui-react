@@ -41,7 +41,7 @@
         .then(function (clusters) {
           return {
             expressway: hasAConnector(clusters, 'c_mgmt'),
-            mediafusion: hasAConnector(clusters, 'mg_mgmt')
+            mediafusion: hasAConnector(clusters, 'mf_mgmt')
           };
         });
     }
