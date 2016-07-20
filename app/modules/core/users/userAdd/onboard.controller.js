@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -836,7 +836,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Localytics.tagEvent(Localytics.events.convertUserSearch, {
+          Analytics.trackEvent("Convert User Search", {
             from: $state.current.name
           });
         }
@@ -1240,7 +1240,7 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400110')) {
+          } else if (userStatus === 403 && user.message === '400110') {
             userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
               email: userResult.email
             });
@@ -1248,7 +1248,7 @@
             userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && user.message === '400109') {
+          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
             userResult.message = $translate.instant('usersPage.unableToMigrateError', {
               email: userResult.email
             });

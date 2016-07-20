@@ -51,8 +51,8 @@ describe('Service: TelephoneNumberService', function () {
     expect(TelephoneNumberService.getDIDLabel(invalidE164)).toEqual(invalidE164);
   });
 
-  it('should reject a toll free number', function () {
-    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(false);
+  it('should accept a toll free number', function () {
+    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(true);
   });
 
   it('should reject a premium rate number', function () {

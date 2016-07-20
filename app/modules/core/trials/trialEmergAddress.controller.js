@@ -29,6 +29,11 @@
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.address'),
         inputClass: 'medium-11'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -38,6 +43,11 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.unit')
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -48,6 +58,11 @@
         required: true,
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.city'),
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -67,6 +82,11 @@
         TerminusStateService.query().$promise.then(function (states) {
           $scope.to.options = states;
         });
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }, {
       model: vm.trial.details.emergAddr,
@@ -78,6 +98,11 @@
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.zip'),
         onBlur: validateAddress
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return vm.addressFound;
+        }
       }
     }];
 

@@ -14,9 +14,11 @@ describe('Care admin should be able to', function () {
   it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfOverviewPage();
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfOverviewPage();
+    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
@@ -25,8 +27,6 @@ describe('Care admin should be able to', function () {
     validateContentsOfAgentUnavailablePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
-    utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
     validateDismissOfCTSetupWizard();
@@ -175,6 +175,21 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfOffHoursPage() {
     validateTitleAndDesc('Off-Hours', 'This screen is shown to a customer during business off-hours');
+    utils.clear(careChatTemplateSetupPage.offHoursMessage);
+    utils.sendKeys(careChatTemplateSetupPage.offHoursMessage, 'We are currently offline, please try during our business hours.');
+    utils.expectIsDisplayed(careChatTemplateSetupPage.days);
+    utils.click(careChatTemplateSetupPage.wednesday);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.open24Hours);
+    utils.click(careChatTemplateSetupPage.open24Hours);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.timePicker);
+    utils.click(careChatTemplateSetupPage.startTimeDropDown);
+    utils.click(careChatTemplateSetupPage.startTime);
+    utils.click(careChatTemplateSetupPage.endTimeDropDown);
+    utils.click(careChatTemplateSetupPage.endTime);
+    utils.click(careChatTemplateSetupPage.timezonePicker);
+    utils.clear(careChatTemplateSetupPage.timezoneInput);
+    utils.sendKeys(careChatTemplateSetupPage.timezoneInput, 'New_York');
+    utils.click(careChatTemplateSetupPage.selectATimezone);
   }
 
   function validateContentsOfChatStatusMessagesPage() {

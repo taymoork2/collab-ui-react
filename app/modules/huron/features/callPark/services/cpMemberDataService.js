@@ -25,7 +25,7 @@
       fetchCallParkMembers: fetchCallParkMembers,
       getDisplayName: getDisplayName,
       toggleMemberPanel: toggleMemberPanel,
-      getMembersNumberUuidJSON: getMembersNumberUuidJSON,
+      getMembersUuidJSON: getMembersUuidJSON,
       reset: reset,
       setMemberJSON: setMemberJSON,
       getCallParkMembers: getCallParkMembers,
@@ -130,11 +130,11 @@
      * Return the JSON data format to be used for POST & PUT
      * operations.
      */
-    function getMembersNumberUuidJSON() {
+    function getMembersUuidJSON() {
       var members = [];
       selectedMembers.forEach(function (member) {
-        if (!_.contains(members, member.selectableNumber.uuid)) {
-          members.push(member.selectableNumber.uuid);
+        if (!_.contains(members, member.uuid)) {
+          members.push(member.uuid);
         }
       });
       return members;
@@ -203,7 +203,7 @@
 
     function memberFailureResponse(asyncTask) {
       return function (response) {
-        Notification.errorResponse(response, 'huronCallPark.memberFetchFailure');
+        Notification.errorResponse(response, 'callPark.memberFetchFailure');
         if (asyncTask) {
           asyncTask.reject();
         }

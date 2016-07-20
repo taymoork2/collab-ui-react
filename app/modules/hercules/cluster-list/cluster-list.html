@@ -1,3 +1,13 @@
+<div class="user-statuses-bar" ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
+  <div class="user-statuses-card" ng-repeat="summary in exp.userStatusSummary">
+    <div class="user-statuses-title"><span translate="{{'hercules.cloudExtensions.serviceNames.'+summary.serviceId}}"></span>&nbsp;–&nbsp;<span translate="hercules.overview.status"></span></div>
+    <ul class="user-statuses-content">
+      <li><span translate="hercules.overview.activated"></span>: {{summary.activated}}</li>
+      <li><span translate="hercules.overview.pending"></span>: {{summary.notActivated}}</li>
+      <li><span translate="hercules.overview.error"></span>: <span ng-class="{'red': summary.error > 0}">{{summary.error}}</span></li>
+    </ul>
+  </div>
+</div>
 <div class="hercules-clusters-list">
   <div ng-show="exp.loadingClusters" class="clusters-list-loading">
     <i class="icon icon-spinner icon-2x"></i>

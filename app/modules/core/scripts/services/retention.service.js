@@ -9,7 +9,7 @@
   function RetentionService($resource, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
-    var retentionResource = $resource(accountUrl + 'organizations/:orgId/settings/msgDataRetention', {
+    var retentionResource = $resource(accountUrl + 'organizations/:orgId/settings/sparkDataRetentionDays', {
       orgId: '@orgId'
     }, {
       get: {
@@ -43,7 +43,7 @@
         return $q.reject("No retention was provided.");
 
       var payload = {
-        msgDataRetention: days
+        sparkDataRetentionDays: days
       };
 
       return retentionResource.update({

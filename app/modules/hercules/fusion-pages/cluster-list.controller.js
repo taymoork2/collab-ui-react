@@ -91,9 +91,6 @@
               cluster.clusterUpgradeSchedule = upgradeSchedule;
               return cluster;
             }, function () {
-              XhrNotificationService.notify($translate.instant('hercules.fusion.list.cannot-find-upgrade-schedule', {
-                "clusterName": cluster.name
-              }));
               return cluster;
             });
         }
@@ -141,7 +138,7 @@
           'clusterId': clusterId
         });
       } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service.list');
+        $state.go('media-service-v2.list');
       }
     }
 

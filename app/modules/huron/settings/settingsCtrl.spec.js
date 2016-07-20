@@ -296,13 +296,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     };
 
     var userTemplate = [{
-      "timeZone": "America/Anchorage",
-      "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
+      timeZoneName: "America/Anchorage",
+      objectId: "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
 
     controller.model.site.timeZone = {
-      "id": "Pacific/Honolulu",
-      "label": "Pacific/Honolulu"
+      id: "Pacific/Honolulu",
+      label: "Pacific/Honolulu"
     };
 
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
@@ -421,8 +421,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.to = {};
 
     controller.timeZoneOptions = [{
-      "id": "America/Anchorage",
-      "label": "America/Anchorage"
+      id: "America/Anchorage",
+      label: "America/Anchorage"
     }];
 
     controller._buildTimeZoneOptions($scope);
@@ -787,10 +787,10 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(controller.model.callerId.callerIdName).toEqual('Cisco Org Name');
     });
 
-    it('should update timezone when timezone selection changes and feature toggle is ON', function () {
+    it('should update timezone when timezone selection changes', function () {
       var newTimeZone = {
-        "id": "America/Anchorage",
-        "label": "America/Anchorage"
+        id: "America/Anchorage",
+        label: "America/Anchorage"
       };
       controller.model.site.timeZone = newTimeZone;
       controller.save();
@@ -803,13 +803,13 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
-    it('should not update timezone when timezone selection did not change and Feature toggle is ON', function () {
+    it('should not update timezone when timezone selection did not change', function () {
       /* the default "value = 'America/Los_Angeles'" is loaded in the beginnig
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
       controller.model.site.timeZone = {
-        "id": "America/Los_Angeles",
-        "label": "America/Los_Angeles"
+        id: "America/Los_Angeles",
+        label: "America/Los_Angeles"
       };
       controller.save();
       $scope.$apply();

@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var request = require('request');
+var testConfig = require('../e2e-protractor/utils/test.config');
 
 var auth = {
   'sqtest-admin': {
@@ -126,6 +127,26 @@ var auth = {
     pass: 'Cisc0123!',
     org: '7e0f0f48-0582-444e-ac75-908a36b29539'
   },
+  'wbx-t31BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc200@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '2039e7a3-6feb-4293-b87d-354ba68b0295'
+  },
+  'wbx-t30BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t31BTSTestAdmin-UserSettings': {
+    user: 'provteam+t31ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad'
+  },
+  'wbx-t30BTSTestAdmin-UserSettings': {
+    user: 'provteam+ee@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42'
+  },
   'wbx-t31RegressionTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
@@ -135,6 +156,16 @@ var auth = {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84'
+  },
+  'wbx-t30BTSTestAdmin-MultiLicense': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7'
+  },
+  'wbx-t30BTSTestAdmin-SingleLicense': {
+    user: 'provteam+mc@csgtrials.webex.com',
+    pass: 'Cisco!23',
+    org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3'
   },
   'wbx-singleCenterLicenseTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
@@ -202,7 +233,7 @@ var getAuthCode = function (req, creds) {
         response_type: 'code',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         client_id: clientId,
-        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config cloudMeetings:login Identity:Organization ccc_config:admin',
+        scope: testConfig.oauth2Scope,
         realm: '/' + creds.org,
         state: rand_str
       }

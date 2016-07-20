@@ -247,12 +247,12 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    it('should say that upgrade is *not possible* when an upgrade available BUT at least one connector is in state not_configured', function () {
+    it('should warn about upgrades when an upgrade available BUT at least one connector is in state offline', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
           connector('c_mgmt', {
-            state: 'not_configured',
+            state: 'offline',
             hostname: 'host2.example.com'
           })
         ], {
@@ -271,7 +271,7 @@ describe('ClusterService', function () {
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
-      expect(managementCluster.aggregates.upgradePossible).toBe(false);
+      expect(managementCluster.aggregates.upgradeWarning).toBe(false);
     });
 
     it('should add hosts to aggregates', function () {

@@ -24,7 +24,7 @@ namespace globalsettings {
       spyOn(FeatureToggleService, 'supports');
       spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
       spyOn(Authinfo, 'isPartner');
-      spyOn(Authinfo, 'isPartnerUser');
+      spyOn(Authinfo, 'isCustomerAdmin');
       spyOn(Authinfo, 'isDirectCustomer');
     }
 
@@ -79,7 +79,7 @@ namespace globalsettings {
     describe('for normal admin', () => {
 
       beforeEach(setAuthinfoIsPartnerSpy(false));
-      beforeEach(setAuthinfoIsPartnerUserSpy(true));
+      beforeEach(setAuthinfoIsCustomerAdminSpy(true));
 
       describe('with allowCustomerLogos set to true', () => {
 
@@ -98,7 +98,22 @@ namespace globalsettings {
         });
       });
 
-      // direct customer also support branding log
+      describe('with allowCustomerLogos set to false', () => {
+
+        beforeEach(setGetOrgSpy(false));
+        beforeEach(initController);
+
+        it('should create the ctrl and add the normal setting sections', ()=> {
+          expect(controller.security).toBeTruthy();
+          expect(controller.domains).toBeTruthy();
+          expect(controller.sipDomain).toBeTruthy();
+          expect(controller.authentication).toBeTruthy();
+          expect(controller.support).toBeTruthy();
+          expect(controller.branding).toBeFalsy();
+          expect(controller.privacy).toBeTruthy();
+          expect(controller.retention).toBeTruthy();
+        });
+      });
     });
 
     function setAuthinfoIsPartnerSpy(isPartner) {
@@ -107,9 +122,9 @@ namespace globalsettings {
       };
     }
 
-    function setAuthinfoIsPartnerUserSpy(isPartnerUser) {
+    function setAuthinfoIsCustomerAdminSpy(isCustomerAdmin) {
       return () => {
-        Authinfo.isPartnerUser.and.returnValue(isPartnerUser);
+        Authinfo.isCustomerAdmin.and.returnValue(isCustomerAdmin);
       };
     }
 
@@ -121,7 +136,7 @@ namespace globalsettings {
 
     function setGetOrgSpy(allowBranding) {
       return () => {
-        Orgservice.getOrg.and.returnValue($q.when({orgSettings: {allowCustomerLogos: allowBranding}}));
+        Orgservice.getOrg.and.returnValue($q.when({data: {orgSettings: {allowCustomerLogos: allowBranding}}}));
       };
     }
 
