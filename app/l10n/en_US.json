@@ -2621,7 +2621,7 @@
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
-    "getCustomerOrgError": "Unable to get information for {{orgName}}. Message: {{message}}"
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",

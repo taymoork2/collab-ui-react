@@ -6,9 +6,8 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($http, $q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Auth, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
-    var deferred;
 
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -20,7 +19,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isOrgSetup = isOrgSetup;
+    vm.isSetupDone = isSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
 
@@ -32,7 +31,7 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
-    vm.isSetupDone = false;
+    vm.isOrgSetup = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -70,6 +69,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
+      isSetupDone().
+      then(function (results) {
+        vm.isOrgSetup = results;
+      });
     }
 
     function resetForm() {
@@ -208,28 +211,15 @@
       return false;
     }
 
-    function getCustomerOrgInfo() {
-      var custUrl = Auth.getAuthorizationUrl(vm.customerOrgId);
-      if (deferred) return deferred;
-
-      deferred = $http.get(custUrl)
-        .success(function (data, status) {
-          data = data || {};
-          vm.isSetupDone = data.setupDone;
-        })
-        .error(function (error) {
-          Notification.error('customerPage.deleteOrgError', {
+    function isSetupDone() {
+      return Orgservice.isSetupDone(vm.customerOrgId)
+        .catch(function (error) {
+          Notification.error('customerPage.isSetupDoneError', {
             orgName: vm.customerName,
             message: error.data.message
           });
+          return false;
         });
-
-      return deferred;
-    }
-
-    function isOrgSetup() {
-      getCustomerOrgInfo();
-      return vm.isSetupDone;
     }
 
     function isOwnOrg() {
