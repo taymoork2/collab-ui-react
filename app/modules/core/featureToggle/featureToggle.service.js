@@ -29,6 +29,7 @@
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasPstnTfn: 'atlas-pstn-tfn',
       huronAASubmenu: 'huron-aa-submenu',
+      huronKEM: 'huronKEM',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
