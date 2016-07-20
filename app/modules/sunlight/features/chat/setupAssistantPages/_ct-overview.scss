@@ -8,6 +8,7 @@
   height: rem-calc(220);
   box-shadow: 0px 0px 0px 0px !important;
   .ct-card-img {
+    font-size: 4rem !important;
     @include vr-spacing(mt, 1);
     text-align: center;
     color: $gray-base

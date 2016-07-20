@@ -14,13 +14,10 @@
     }
   }
 
-  @include vr-spacing(ml, 3);
-
   .ct-customer-card {
     width: rem-calc(414px);
     display: flex;
     flex-flow: column;
-    @include vr-spacing(mr, 1);
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;

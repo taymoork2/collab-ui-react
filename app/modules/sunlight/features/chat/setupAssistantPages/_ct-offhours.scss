@@ -25,10 +25,12 @@
   }
 
   .offhours-icon {
-    font-size: 3rem;
+    .icon-clock {
+      font-size: 3rem !important;
+    }
     line-height: 1;
     color: $color-attention;
-    @include vr-spacing(pt, 2);
+    @include vr-spacing(pt, 3);
   }
 
   .offhours-preview-message {

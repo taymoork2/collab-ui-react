@@ -1,4 +1,5 @@
 .ct-profile {
+  align-items: center;
   .ct-profile-body {
     display: flex;
     flex-direction: column;
@@ -41,6 +42,12 @@
         }
       }
       .img {
+        .icon-circle-computer-blank {
+          font-size: 3rem !important;
+        }
+        .icon-user {
+         font-size: 2rem !important;
+        }
         .uploded-org-img {
           height: 3rem;
           width: 3rem;
@@ -63,6 +70,9 @@
       }
       .actions {
         flex: 0 1 15%;
+        > i {
+          font-size: 1rem !important;
+        }
         .icon-minus {
           @include vr-spacing(pr, 0.5);
         }
@@ -70,7 +80,6 @@
     }
 
     > section {
-      @include vr-spacing(pt, 1);
       .customer-details {
         float: right;
 
@@ -119,7 +128,7 @@
         }
         .time {
           @include vr-spacing(mt, 0.5);
-          @include vr-spacing(mb, 8);
+          @include vr-spacing(mb, 8.5);
           @include vr-spacing(pr, 9.5);
         }
         .speech-bubble {
@@ -163,7 +172,6 @@
     background-color: $gray-light-4;
     @include vr-spacing(pt, 1);
     @include vr-spacing(ph, 1);
-    @include vr-spacing(pb, 1.25);
     .subheader-text{
       @include vr-spacing(pt, 0);
       @include vr-spacing(pb, 0.5);
