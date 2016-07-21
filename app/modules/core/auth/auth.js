@@ -142,8 +142,12 @@
 
     // authorize helpers
 
-    function getAuthorizationUrl() {
+    function getAuthorizationUrl(org) {
       var url = UrlConfig.getAdminServiceUrl();
+
+      if (org) {
+        return url + 'organization/' + org + '/userauthinfo';
+      }
 
       var customerOrgId = SessionStorage.get('customerOrgId');
       if (customerOrgId) {

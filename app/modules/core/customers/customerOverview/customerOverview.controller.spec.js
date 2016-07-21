@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
   var testOrg;
 
   function LicenseFeature(name, state) {
@@ -16,7 +16,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -55,6 +55,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     BrandService = {
       getSettings: function () {}
     };
+
     FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     PartnerService = _PartnerService_;
@@ -65,6 +66,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $window = _$window_;
     $q = _$q_;
     modal = _$modal_;
+    $controller = _$controller_;
 
     $state.modal = {
       result: $q.when()
@@ -82,6 +84,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+    spyOn(Orgservice, 'isSetupDone').and.returnValue($q.when(false));
     spyOn(PartnerService, 'modifyManagedOrgs').and.returnValue($q.when({}));
     spyOn($window, 'confirm').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
@@ -89,6 +92,10 @@ describe('Controller: CustomerOverviewCtrl', function () {
     );
     spyOn(modal, 'open').and.callThrough();
 
+    initController();
+  }));
+
+  function initController() {
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
@@ -100,7 +107,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
 
     $scope.$apply();
-  }));
+  }
 
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
@@ -112,6 +119,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
     expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
+  });
+
+  it('should display correct customer portal launch button via var isOrgSetup', function () {
+    // isOrgSetup is false from spyOn in beforeEach
+    expect(controller.isOrgSetup).toBe(false);
+
+    Orgservice.isSetupDone.and.returnValue($q.when(true));
+    initController();
+    expect(controller.isOrgSetup).toBe(true);
   });
 
   it('should display number of days left', function () {

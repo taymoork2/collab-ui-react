@@ -49,10 +49,6 @@ describe('Onboard users with Message Service', function () {
       users.createUserWithLicense(testUser, LICENSE);
     });
 
-    it('should disable the Messenger interop entitlement', function () {
-      checkAndClickInterop(true, false);
-    });
-
     it('should re-enable the Messenger interop entitlement', function () {
       checkAndClickInterop(false, true);
     });

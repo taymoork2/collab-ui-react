@@ -15,6 +15,7 @@
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
+      isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
@@ -378,6 +379,13 @@
           eft: setting
         }
       });
+    }
+
+    function isSetupDone(orgId) {
+      return $http.get(Auth.getAuthorizationUrl(orgId))
+        .then(function (data) {
+          return data.data.setupDone;
+        });
     }
   }
 })();
