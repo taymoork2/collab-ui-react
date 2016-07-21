@@ -131,6 +131,10 @@
     }
   }
 
+  .ct-left-cs-input:focus {
+    border-color: $gray-light-3 !important;
+  }
+
   .ct-footer {
     color: $gray-light-1;
     border-top: 1px solid $gray-light-3;
@@ -141,7 +145,6 @@
   .ct-selectable-element {
     &.active {
       color: $color-primary-darker;
-      border-color: $color-primary-darker;
     }
   }
 
