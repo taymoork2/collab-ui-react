@@ -234,7 +234,8 @@
         'cdrladderdiagram',
         'activateProduct',
         'settings',
-        'userRedirect'
+        'userRedirect',
+        'my-company'
       ],
       Readonly_Admin: [
         'overview',
@@ -252,7 +253,8 @@
         'editService',
         'trialExtInterest',
         'activateProduct',
-        'settings'
+        'settings',
+        'my-company'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
       WX2_User: ['overview', 'support', 'activateProduct'],
@@ -310,7 +312,6 @@
         'cluster-details',
         'management-service',
         'services-overview',
-        'my-company',
         'management-connector-details'
       ],
       'spark-room-system': [
