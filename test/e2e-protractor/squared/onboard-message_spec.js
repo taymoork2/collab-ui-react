@@ -49,18 +49,18 @@ describe('Onboard users with Message Service', function () {
       users.createUserWithLicense(testUser, LICENSE);
     });
 
-    it('should disable the Messenger interop entitlement', function () {
-      checkAndClickInterop(true, false);
-    });
-
     it('should re-enable the Messenger interop entitlement', function () {
       checkAndClickInterop(false, true);
+    });
+
+    it('should disable the Messenger interop entitlement', function () {
+      checkAndClickInterop(true, false);
     });
 
     it('should verify that the Messenger interop entitlement was re-enabled', function () {
       utils.clickUser(testUser);
       utils.click(users.messagingService);
-      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.expectCheckbox(users.messengerInteropCheckbox, false);
       utils.click(users.closeSidePanel);
     });
 
@@ -78,6 +78,7 @@ describe('Onboard users with Message Service', function () {
   });
 
   afterAll(function () {
+    console.log(testUser);
     deleteUtils.deleteUser(testUser, token);
   });
 });
