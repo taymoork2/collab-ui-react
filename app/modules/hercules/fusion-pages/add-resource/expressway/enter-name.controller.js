@@ -30,8 +30,8 @@
       vm.provisioning = true;
       var clusterId = null;
       return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
-        .then(function (id) {
-          clusterId = id;
+        .then(function (cluster) {
+          clusterId = cluster.id;
           var promises = [];
           if (data.selectedServices.call) {
             promises.push(FusionClusterService.provisionConnector(clusterId, 'c_ucmc'));
