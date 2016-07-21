@@ -20,6 +20,7 @@
     vm.userPreviewActive = false;
     vm.userDetailsActive = false;
     vm.load = false;
+    vm.sortColumn = sortColumn;
     $scope.gridData = [];
 
     vm.sort = {
@@ -133,20 +134,7 @@
           }
         });
         gridApi.core.on.sortChanged($scope, function (sortColumns) {
-          if (_.isUndefined(_.get(sortColumns, '[0]'))) {
-            return;
-          }
-
-          if (vm.load) {
-            vm.load = false;
-            var sortBy = sortColumns[0].name === 'displayField()' ? 'userId' : sortColumns[0].name;
-            var sortOrder = '-' + sortColumns[0].sort.direction;
-            if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
-              vm.sort.by = sortBy.toLowerCase();
-              vm.sort.order = sortOrder.toLowerCase();
-            }
-            getLineList();
-          }
+          sortColumn(sortColumns);
         });
       },
       columnDefs: [{
@@ -185,6 +173,23 @@
         }
       }]
     };
+
+    function sortColumn(sortColumns) {
+      if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+        return;
+      }
+
+      if (vm.load) {
+        vm.load = false;
+        var sortBy = sortColumns[0].name === 'displayField()' ? 'userId' : sortColumns[0].name;
+        var sortOrder = '-' + sortColumns[0].sort.direction;
+        if (vm.sort.by !== sortBy || vm.sort.order !== sortOrder) {
+          vm.sort.by = sortBy.toLowerCase();
+          vm.sort.order = sortOrder.toLowerCase();
+        }
+        getLineList();
+      }
+    }
 
     getLineList();
   }

@@ -88,6 +88,23 @@ describe('Controller: LineListCtrl', function () {
     });
   });
 
+  describe('getLineList sort event', function () {
+    it('should getLineList with sort parameters', function () {
+      LineListService.getLineList.calls.reset();
+
+      var sortColumns = [{
+        'name': 'internalnumber',
+        'sort': {
+          'direction': 'asc'
+        }
+      }];
+
+      controller.sortColumn(sortColumns);
+      expect(LineListService.getLineList.calls.count()).toEqual(1);
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-asc', '', 'all', $scope.gridData);
+    });
+  });
+
   describe('search pattern filter', function () {
     beforeEach(function () {
       LineListService.getLineList.calls.reset();
