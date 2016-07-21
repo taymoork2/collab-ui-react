@@ -829,14 +829,14 @@
                 endNumber: ''
               });
             }
-            Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {
+            Notification.success('serviceSetupModal.extensionDeleteSuccess', {
               extension: internalNumberRange.name
-            })], 'success');
+            });
           })
           .catch(function (response) {
-            Notification.errorResponse(response, $translate.instant('serviceSetupModal.extensionDeleteError', {
+            Notification.errorResponse(response, 'serviceSetupModal.extensionDeleteError', {
               extension: internalNumberRange.name
-            }));
+            });
           });
       } else {
         //delete the range from display list
@@ -906,7 +906,7 @@
 
     function initNext() {
       if (vm.form.$invalid) {
-        Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
+        Notification.error('serviceSetupModal.fieldValidationFailed');
         return $q.reject('Field validation failed.');
       }
 

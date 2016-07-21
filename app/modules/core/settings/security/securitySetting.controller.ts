@@ -13,7 +13,7 @@ namespace globalsettings {
     private orgId:string;
 
     /* @ngInject */
-    constructor(private Notification, private $translate, private AccountOrgService, Authinfo) {
+    constructor(private Notification, private AccountOrgService, Authinfo) {
       this.orgId = Authinfo.getOrgId();
       this.loadSetting();
     }
@@ -36,10 +36,10 @@ namespace globalsettings {
         // Calls AppSecuritySetting service to update device security enforcement
         this.AccountOrgService.setAppSecurity(this.orgId, this.requireProtectedDevices)
           .then((response) => {
-            this.Notification.notify([this.$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
+            this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
           })
           .catch((response) => {
-            this.Notification.notify([this.$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
+            this.Notification.error('firstTimeWizard.messengerAppSecurityError');
           });
       }
     }

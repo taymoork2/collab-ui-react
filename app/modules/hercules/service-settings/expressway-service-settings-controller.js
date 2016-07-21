@@ -88,9 +88,9 @@
         vm.savingEmail = true;
         ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
           if (statusCode === 204) {
-            Notification.success($translate.instant('hercules.settings.emailNotificationsSavingSuccess'));
+            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
           } else {
-            Notification.error($translate.instant('hercules.settings.emailNotificationsSavingError'));
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
           vm.savingEmail = false;
         });

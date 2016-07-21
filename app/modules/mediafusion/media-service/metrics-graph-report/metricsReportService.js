@@ -278,7 +278,7 @@
     function returnErrorCheck(error, debugMessage, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
-        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
+        Notification.error('reportsPage.unauthorizedError');
         return returnItem;
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
         if (error.status !== 0) {

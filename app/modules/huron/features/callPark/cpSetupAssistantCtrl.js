@@ -249,15 +249,15 @@
 
       CallParkService.saveCallPark(customerId, data).then(function (data) {
         vm.saveProgress = false;
-        Notification.success($translate.instant('callPark.successSave', {
+        Notification.success('callPark.successSave', {
           callParkName: vm.callParkName
-        }));
+        });
         $state.go('huronfeatures');
       }, function (error) {
         vm.saveProgress = false;
-        Notification.errorResponse(error, $translate.instant('callPark.errorSave', {
+        Notification.errorResponse(error, 'callPark.errorSave', {
           callParkName: vm.callParkName
-        }));
+        });
         vm.submitted = false;
       });
     }

@@ -25,7 +25,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
 
     url = HuronConfig.getCmiUrl() + '/voice/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id + '/features/restrictions';
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
     spyOn(InternationalDialing, 'listCosRestrictions').and.returnValue($q.when(cosRestrictionsObject));
     spyOn(InternationalDialing, 'updateCosRestriction').and.returnValue($q.when());
 
@@ -44,7 +44,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     $scope.$apply();
 
     expect(InternationalDialing.updateCosRestriction).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('internationalDialingPanel.success');
     expect(controller.model.internationalDialingEnabled.value).toEqual('1');
   });
 });
