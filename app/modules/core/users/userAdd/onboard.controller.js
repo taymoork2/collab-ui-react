@@ -552,9 +552,7 @@
       }
 
       populateConf();
-      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
-        populateConfInvitations();
-      }
+      populateConfInvitations();
     };
 
     $scope.isSubscribeable = function (license) {
