@@ -146,6 +146,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
+    "siteAdminUrl": "Sign-in to manage",
     "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
@@ -972,7 +973,12 @@
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
-    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
+    "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1081,7 +1087,10 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "retrieveDevicesFail": "Failed to load device information",
+    "retrieveKemFail": "Failed to retrieve key expansion module count."
+
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1432,21 +1441,54 @@
       }
     },
     "fusion": {
+      "types": {
+        "expressway": "Expressway",
+        "mediafusion": "Media Fusion"
+      },
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
-        "users": "Users:",
-        "releaseChannel": "Release Channel:",
-        "upgradeTime": "Upgrade Time:",
+        "upgrade-schedule": "Upgrade Schedule",
+        "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
-        "expressway-short": "E",
-        "mediafusion-short": "M",
+        "add-resource": "Add Resource",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion",
-        "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule"
+        "mediafusion": "Media",
+        "no-services": "No services"
+      },
+      "add-resource": {
+        "title": "Add Resource",
+        "type": {
+          "error": "Error fetching the different cluster types.",
+          "title": "What type of resource do you want to add?",
+          "expressway-description": "Can run Call Service, Calendar Service",
+          "expressway-not-setup": "Expressway no set up",
+          "mediafusion-description": "Can run Media Service",
+          "mediafusion-not-setup": "Media Service no set  up"
+        },
+        "expressway": {
+          "services": {
+            "error": "Error fetching the different service types.",
+            "title": "What services do you want the Expressway to run?",
+            "call-not-setup": "Call Service not set up",
+            "calendar-not-setup": "Calendar Service not set up"
+          },
+          "end": {
+            "line1": "You may now register the Expressway with the Cisco Collaboration Cloud.",
+            "line2": "Go to your Expressway to finish the registrration and configure the Call Connector and the Calendar Connector."
+          }
+        },
+        "mediafusion": {
+          "name": {
+            "title": "Enter a name for the Hybrid Media Node",
+            "help": "The cluster name is only used for display purposes."
+          },
+          "end": {
+
+          }
+        }
       }
     }
   },
@@ -1995,7 +2037,7 @@
     "callReversionDescription": "If the call is not answered, send it to this destination.",
     "callparkInitLine": "Line Number that initiated the Call Park",
     "selectParkNumber": "Select Call Park Number",
-    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are used for individual uses.",
+    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
     "memberPlaceholder": "Select Call Park Members",
@@ -2010,7 +2052,12 @@
     "cancelHeader": "Cancel Call Park Creation",
     "cancelDialog": "Are you sure you wish to cancel call park creation? This call park will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "createHelpText": "Create",
+    "successSave": "'{{callParkName}}' call park has been created successfully",
+    "successUpdate": "'{{callParkName}}' call park has been updated successfully",
+    "errorSave": "Failed to create the '{{callParkName}}' Call Park",
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -2338,7 +2385,7 @@
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
       "timeZonePlaceholder": "Select a time zone...",
-      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
@@ -2568,9 +2615,9 @@
     "ST": "Storage",
     "SD": "Spark Room System",
     "deleteOrgTitle": "Delete Customer",
-    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
-    "deleteOrg": "Delete '{{orgName}}'",
-    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrg": "Delete Customer",
+    "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
@@ -2676,7 +2723,18 @@
     "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
-    "timeZoneUpdateFailed": "Device did not update its Time Zone in time"
+    "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
+    "kem": "Key Expansion Module(s)",
+    "kemAbbreviation": "KEM",
+    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemOptions": {
+      "none": "None",
+      "one": "One",
+      "two": "Two",
+      "three": "Three"
+    },
+    "kemUpdated": "Number of KEM updated.",
+    "kemChangesFailed": "Failed to save KEM changes."
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
@@ -2920,7 +2978,7 @@
       "documentation_3V2": "for prerequisities and help installing and using the Hybrid Media Service.",
       "documentation_4": "Download Media Service OVA from",
       "documentation_4V2": "Download Hybrid Media Service software from",
-      "documentation_5": "software.cisco.com",
+      "documentation_5": "here",
       "cancelCaps": "CANCEL",
       "cancel": "Cancel",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
@@ -2951,10 +3009,10 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "Calls local to cluster",
-      "callReject": "Calls rejected by cluster",
+      "callVolumes": "Total Calls",
+      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callLocal": "On Premises",
+      "callReject": "Overflowed to Cloud",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
       "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
@@ -3050,14 +3108,15 @@
       "continue": "Continue",
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
-      "clusterdeleteSuccess": "Successfully deleted {{clustername}}"
+      "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignTextV2": "You are about to move the Hybrid Media Node {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "reassignErrorMessage": "Unable move to the Hybrid Media Node {{hostName}}. Please try again after some time.",
       "moveHost": "Move Host",
       "deregister_host": "Deregister Host",
       "moveNode": "Move Node",
@@ -3075,6 +3134,7 @@
       "description": "Description",
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
+      "nodeImpact": "Node Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3083,15 +3143,16 @@
       "text2": "Enter the hostname or IP address of the media server that you want to register to the cloud. Click Next, and then log in to your media server to confirm registration.",
       "register": "Go To Node",
       "cancel": "Cancel",
+      "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Hybrid media node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
-      "grant-registration-success-header-new-cluster": "You can now register the Hybrid media node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "errorTitle": "Registration Error",
-      "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
+      "errorOnlineText": "The Hybrid Media Node that you're registering already exists and is online.",
+      "errorOfflineText": "The Hybrid Media Node that you're registering already exists and is offline. Deregister the existing Hybrid Media Node before you try again.",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
@@ -4355,7 +4416,7 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
       "title": "Support",
@@ -4401,6 +4462,14 @@
       "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
+  },
+  "myCompanyOrders": {
+    "numberHeader": "Order Number",
+    "descriptionHeader": "Order Detail",
+    "priceHeader": "Price",
+    "dateHeader": "Order Date",
+    "actionsHeader": "Actions",
+    "downloadPdf": "Download PDF"
   },
   "ciRoles": {
     "atlas-portal.support": "Support",

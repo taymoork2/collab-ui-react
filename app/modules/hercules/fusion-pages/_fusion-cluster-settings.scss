@@ -1,16 +1,8 @@
 .fusion-cluster-settings {
   background-color: #fff;
 
-  setting-section {
-    border-top: none;
-  }
-
-  button {
-    margin-top: 10px;
-  }
-
-  .sub-section {
-    margin-bottom: 25px !important;
+  .sub-section + .sub-section {
+    margin-top: 24px;
   }
 
   .cap-long-names {
@@ -23,5 +15,4 @@
     vertical-align: middle;
     margin-left: 8px;
   }
-
 }

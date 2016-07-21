@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-    .module("Hercules")
-    .controller("AddResourceController", AddResourceController);
+    .module('Hercules')
+    .controller('AddResourceController', AddResourceController);
 
   /* @ngInject */
   function AddResourceController($modalInstance, $window, $translate, connectorType, servicesId, firstTimeSetup, XhrNotificationService, FusionClusterService, FusionUtils, $modal, $state) {
@@ -23,21 +23,21 @@
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway', {
-      "ConnectorName": vm.localizedConnectorName
+      ConnectorName: vm.localizedConnectorName
     });
     vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway', {
-      "ConnectorName": vm.localizedConnectorName
+      ConnectorName: vm.localizedConnectorName
     });
     vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
-      "ConnectorName": vm.localizedConnectorName,
-      "ServiceName": vm.localizedServiceName
+      ConnectorName: vm.localizedConnectorName,
+      ServiceName: vm.localizedServiceName
     });
     vm.localizedExpresswaysName = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-      "ConnectorName": vm.localizedConnectorName
+      ConnectorName: vm.localizedConnectorName
     });
     vm.localizedServiceIsReady = $translate.instant('hercules.addResourceDialog.serviceIsReady', {
-      "ServiceName": vm.localizedServiceName
+      ServiceName: vm.localizedServiceName
     });
     vm.chooseClusterName = false;
     vm.validationMessages = {
@@ -59,6 +59,7 @@
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       preregisterCluster(vm.clustername)
+        .then(_.partialRight(_.get, 'id'))
         .then(_.partial(provisionConnector, connectorType))
         .then(addPreregisteredClusterToAllowList)
         .then(pregistrationSucceeded)
@@ -78,23 +79,20 @@
 
     function provisionConnector(connectorType, clusterId) {
       return FusionClusterService.provisionConnector(clusterId, connectorType)
-        .then(function () {
-          return clusterId;
-        })
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-              "ConnectorName": vm.localizedManagementConnectorName
+              ConnectorName: vm.localizedManagementConnectorName
             });
           }
           throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-            "ConnectorName": vm.localizedConnectorName
+            ConnectorName: vm.localizedConnectorName
           });
         });
     }
 
-    function addPreregisteredClusterToAllowList(clusterId) {
-      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, clusterId)
+    function addPreregisteredClusterToAllowList(cluster) {
+      return FusionClusterService.addPreregisteredClusterToAllowList(vm.hostname, 3600, cluster.id)
         .catch(function () {
           $translate.instant('hercules.addResourceDialog.cannotFinalizeAllowlisting');
         });
@@ -113,11 +111,11 @@
     function getAllExpressways(data) {
       var allExpressways = [];
       data.forEach(function (cluster) {
-        if (cluster.type === 'expressway') {
+        if (cluster.targetType === 'c_mgmt') {
           allExpressways.push({
-            'id': cluster.id,
-            'name': cluster.name,
-            'provisionedConnectors': _.map(cluster.provisioning, 'connectorType')
+            id: cluster.id,
+            name: cluster.name,
+            provisionedConnectors: _.map(cluster.provisioning, 'connectorType')
           });
         }
       });
@@ -133,8 +131,8 @@
     function updateDropdownMenu(expressways) {
       expressways.forEach(function (expressway) {
         vm.expresswayOptions.push({
-          'value': expressway.id,
-          'label': expressway.name
+          value: expressway.id,
+          label: expressway.name
         });
       });
       if (vm.expresswayOptions.length === 0) {
@@ -151,7 +149,7 @@
           setHostNameForCluster(clusterId);
         }, function () {
           XhrNotificationService.notify($translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
-            "ConnectorName": vm.localizedConnectorName
+            ConnectorName: vm.localizedConnectorName
           }));
         });
     }

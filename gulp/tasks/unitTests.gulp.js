@@ -135,7 +135,7 @@ gulp.task('karma-parallel', ['clean:coverage'], function (done) {
 gulp.task('karma-each', function (done) {
   var karmaArgs = [];
   _.forEach(modules, function (module) {
-    if (module !== 'all') {
+    if (module !== 'all' && module !== 'custom') {
       karmaArgs.push('karma-' + module);
     }
   });
@@ -172,14 +172,23 @@ function getFileListFor(module) {
 function getKarmaSpecFilesFor(module) {
   var filesToAdd;
   var filesFrom;
+  var tsTestManifestFiles = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
   switch (module) {
   case 'ts':
     // typescript files are listed in build-time generated manifest files
-    filesToAdd = typeScriptUtil.getTsFilesFromManifest(config.tsTestManifest);
+    filesToAdd = tsTestManifestFiles;
+    break;
+  case 'all':
+    // 'all' module includes the default file glob from 'gulp.config.js', as well as the generated
+    // typescript spec files list
+    filesToAdd = [].concat(
+      config.testFiles.spec[module],
+      tsTestManifestFiles
+    );
     break;
   case 'custom':
-    // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated
-    // list of files relative to the project root dir
+    // for the 'custom' module, a '--files-from' option MUST be specified as a line-separated list
+    // of files relative to the project root dir
     // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
     filesFrom = args['files-from'];
     if (!filesFrom) {

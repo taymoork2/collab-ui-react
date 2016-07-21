@@ -6,7 +6,7 @@
     .controller('AATimeoutInvalidCtrl', AATimeoutInvalidCtrl);
 
   /* @ngInject */
-  function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, AutoAttendantCeMenuModelService, Localytics) {
+  function AATimeoutInvalidCtrl($scope, $translate, AAUiModelService, AACommonService, AAMetricNameService, Analytics, AutoAttendantCeMenuModelService) {
 
     var vm = this;
 
@@ -90,11 +90,11 @@
         }
       }
       if (_.has(entry, 'type') && entry.type === 'MENU_OPTION') {
-        Localytics.tagEvent(AAMetricNameService.TIMEOUT_PHONE_MENU, {
+        Analytics.trackEvent(AAMetricNameService.TIMEOUT_PHONE_MENU, {
           type: type
         });
       } else if (_.has(entry, 'actions[0].name') && entry.actions[0].name === runActionsOnInput && _.has(entry, 'actions[0].inputType') && entry.actions[0].inputType === 2) {
-        Localytics.tagEvent(AAMetricNameService.TIMEOUT_DIAL_BY_EXT, {
+        Analytics.trackEvent(AAMetricNameService.TIMEOUT_DIAL_BY_EXT, {
           type: type
         });
       }

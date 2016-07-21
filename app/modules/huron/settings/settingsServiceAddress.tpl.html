@@ -2,7 +2,21 @@
   <i class="icon icon-spinner"></i>
 </div>
 <div ng-if="!settingsServiceAddress.loadingInit">
-  <hr-service-address ng-form="settingsServiceAddress.form" isolate-form address="settingsServiceAddress.address" read-only="settingsServiceAddress.isValid"></hr-service-address>
+  <div ng-if="!settingsServiceAddress.isValid || (settingsServiceAddress.isValid && settingsServiceAddress.addressFound)">
+    <hr-service-address ng-form="settingsServiceAddress.form" isolate-form address="settingsServiceAddress.address" read-only="settingsServiceAddress.isValid" ::hide-search="true" address-validate="settingsServiceAddress.validate()" modify="settingsServiceAddress.modify()"></hr-service-address>
+  </div>
+  <div ng-if="settingsServiceAddress.isValid && !settingsServiceAddress.addressFound">
+    <div class="row collapse full">
+      <div class="columns medium-12">
+        {{settingsServiceAddress.address.streetAddress | uppercase}} {{settingsServiceAddress.address.unit | uppercase}}
+      </div>
+    </div>
+    <div class="row collapse full">
+        <div class="columns medium-12">
+          {{settingsServiceAddress.address.city | uppercase}}<span ng-if="settingsServiceAddress.address.state">, {{settingsServiceAddress.address.state}}</span>  {{settingsServiceAddress.address.zip}}
+        </div>
+      </div>
+  </div>
   <a ng-if="settingsServiceAddress.hasModify()" href ng-click="settingsServiceAddress.modify()" translate="common.modify"></a>
   <div ng-if="settingsServiceAddress.hasValidate()" class="service-address-buttons">
     <button ng-click="settingsServiceAddress.validate()" ng-disabled="settingsServiceAddress.form.$invalid" class="btn--primary" cs-btn loading="settingsServiceAddress.loadingValidate"><span translate="common.submit"></span></button>

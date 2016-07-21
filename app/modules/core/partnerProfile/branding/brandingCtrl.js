@@ -257,7 +257,12 @@
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(Authinfo.getOrgId());
+      BrandService.resetCdnLogo(Authinfo.getOrgId()).then(function () {
+        // load logo url after upload success
+        return BrandService.getLogoUrl(Authinfo.getOrgId());
+      }).then(function (logoUrl) {
+        brand.tempLogoUrl = logoUrl;
+      });
       brand.usePartnerLogo = false;
       brand.toggleLogo(false);
     }

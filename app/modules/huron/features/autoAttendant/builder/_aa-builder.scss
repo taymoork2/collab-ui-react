@@ -77,6 +77,13 @@ $aa-builder-text-color: $gray-dark-1;
   justify-content: center;
 }
 
+.aa-setup-assistant {
+.cs-setupassistant--content {
+height: auto;
+}
+}
+
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $color-white;
@@ -206,7 +213,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   @include aa-builder-height($h2-font-size);
 
-  width: 100vw;
+  width: 65vw;
   background-color: $color-white;
 
   #aa-name-detail {

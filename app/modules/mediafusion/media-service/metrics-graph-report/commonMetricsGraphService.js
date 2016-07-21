@@ -176,7 +176,7 @@
       });
     }
 
-    function getGanttGraph(data, valueAxis, legendData) {
+    function getGanttGraph(data, valueAxis) {
       return angular.copy({
         'type': 'gantt',
         'pathToImages': './images/',
@@ -215,16 +215,7 @@
           'zoomable': false,
           'valueZoomable': true
         },
-        'chartScrollbar': {
-          'offset': 30,
-          'scrollbarHeight': 20
-        },
-        'export': baseVariables['export'],
-        'legend': {
-          'align': 'right',
-          'position': 'top',
-          'data': legendData
-        }
+        'export': baseVariables['export']
       });
     }
   }

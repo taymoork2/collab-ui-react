@@ -156,16 +156,16 @@
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null
       };
       var startDate = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         call_reject: 0,
         active_calls: 0,
         timestamp: startTime
@@ -179,8 +179,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         timestamp: endTime
       };
       returnDataArray.push(endDate);
@@ -192,16 +192,16 @@
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         balloon: true,
         average_cpu: 0.0,
         peak_cpu: 0.0,
         timestamp: null
       };
       var startDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         average_cpu: 0.0,
         peak_cpu: 0.0,
         timestamp: startTime
@@ -215,8 +215,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         timestamp: endTime
       };
       returnDataArray.push(endDate);

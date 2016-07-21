@@ -71,4 +71,14 @@
         line-height: 1rem;
     }
   }
+
+  .btn--delete {
+    font-size: .875rem;
+    color:  $gray-light-1;
+    &:hover, &:active, &:focus {
+      color: $color-negative-base;
+      background-color: transparent;
+      outline: none;
+    }
+  }
 }

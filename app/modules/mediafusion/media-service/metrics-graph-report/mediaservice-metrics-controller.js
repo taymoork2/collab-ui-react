@@ -206,7 +206,18 @@
     }
 
     function setAvailabilityGraph(data) {
-      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(data, vm.availabilityChart, vm.clusterId);
+      var tempData = angular.copy(data);
+      if (vm.clusterId === 'All Clusters') {
+        angular.forEach(data.data[0].clusterCategories, function (clusterCategory, index) {
+          var clusterName = _.findKey(vm.Map, function (val) {
+            return val === clusterCategory.category;
+          });
+          if (angular.isDefined(clusterName)) {
+            tempData.data[0].clusterCategories[index].category = clusterName;
+          }
+        });
+      }
+      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId);
       if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }
@@ -251,7 +262,8 @@
     }
 
     function setTotalCallsData() {
-      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterId).then(function (response) {
+      //changing the cluster ID to clister name and this should be changed back to cluster ID in future 
+      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
