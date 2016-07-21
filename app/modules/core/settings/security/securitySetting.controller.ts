@@ -40,10 +40,9 @@ namespace globalsettings {
     }
 
     updateRequireProtectedDevices() {
-      var requireProtectedDevices = this._requireProtectedDevices;
-      if (requireProtectedDevices != undefined) {
+      if (this._requireProtectedDevices != undefined) {
         // Calls AppSecuritySetting service to update device security enforcement
-        this.AccountOrgService.setAppSecurity(this.orgId, requireProtectedDevices)
+        this.AccountOrgService.setAppSecurity(this.orgId, this._requireProtectedDevices)
           .then((response) => {
             this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
           })
