@@ -7,8 +7,8 @@ namespace globalsettings {
   }
   export class SecuritySettingController {
 
-    private _requireProtectedDevices:boolean = undefined;
-    requireProtectedDevicesIsLoaded:boolean = false;
+    private _isSparkClientSecurityEnabled:boolean = undefined;
+    isSparkClientSecurityLoaded:boolean = false;
 
     private orgId:string;
 
@@ -25,24 +25,24 @@ namespace globalsettings {
 
     private appSecuritySettingLoaded({data:{clientSecurityPolicy:clientSecurityPolicy}={clientSecurityPolicy: null}}:GetAppSecurityResponse) {
       if (clientSecurityPolicy != null) {
-        this._requireProtectedDevices = clientSecurityPolicy;
-        this.requireProtectedDevicesIsLoaded = true;
+        this._isSparkClientSecurityEnabled = clientSecurityPolicy;
+        this.isSparkClientSecurityLoaded = true;
       }
     }
 
-    get requireProtectedDevices():boolean {
-      return this._requireProtectedDevices;
+    get isSparkClientSecurityEnabled():boolean {
+      return this._isSparkClientSecurityEnabled;
     }
 
-    set requireProtectedDevices(value:boolean) {
-      this._requireProtectedDevices = value;
-      this.updateRequireProtectedDevices();
+    set isSparkClientSecurityEnabled(value:boolean) {
+      this._isSparkClientSecurityEnabled = value;
+      this.updateSparkClientSecuritySetting();
     }
 
-    updateRequireProtectedDevices() {
-      if (this._requireProtectedDevices != undefined) {
+    updateSparkClientSecuritySetting() {
+      if (this._isSparkClientSecurityEnabled != undefined) {
         // Calls AppSecuritySetting service to update device security enforcement
-        this.AccountOrgService.setAppSecurity(this.orgId, this._requireProtectedDevices)
+        this.AccountOrgService.setAppSecurity(this.orgId, this._isSparkClientSecurityEnabled)
           .then((response) => {
             this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
           })
