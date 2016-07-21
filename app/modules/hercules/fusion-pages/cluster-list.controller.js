@@ -171,7 +171,8 @@
       var initialState = {
         data: {
           targetType: '',
-          expressway: {}
+          expressway: {},
+          mediafusion: {}
         },
         history: [],
         currentStateName: 'add-resource.type-selector',
@@ -179,9 +180,10 @@
           'add-resource.type-selector': {
             nextOptions: {
               expressway: 'add-resource.expressway.service-selector',
-              mediafusion: 'add-resource.mediafusion.something'
+              mediafusion: 'add-resource.mediafusion.hostname'
             }
           },
+          // expressway
           'add-resource.expressway.service-selector': {
             next: 'add-resource.expressway.hostname'
           },
@@ -191,7 +193,15 @@
           'add-resource.expressway.name': {
             next: 'add-resource.expressway.end'
           },
-          'add-resource.expressway.end': {}
+          'add-resource.expressway.end': {},
+          // mediafusion
+          'add-resource.mediafusion.hostname': {
+            next: 'add-resource.mediafusion.name'
+          },
+          'add-resource.mediafusion.name': {
+            next: 'add-resource.mediafusion.end'
+          },
+          'add-resource.mediafusion.end': {}
         }
       };
       var wizard = WizardFactory.create(initialState);

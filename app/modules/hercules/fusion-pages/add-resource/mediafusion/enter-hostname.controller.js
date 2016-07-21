@@ -2,18 +2,15 @@
   'use strict';
 
   angular.module('Hercules')
-    .controller('ExpresswayEnterHostnameController', ExpresswayEnterHostnameController);
+    .controller('MediafusionEnterHostnameController', MediafusionEnterHostnameController);
 
   /* @ngInject */
-  function ExpresswayEnterHostnameController($stateParams, $translate) {
+  function MediafusionEnterHostnameController($stateParams, $translate) {
     var vm = this;
     vm.hostname = '';
     vm.next = next;
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
-    vm._translation = {
-      placeholder: $translate.instant('hercules.addResourceDialog.enterHostnamePlaceholder')
-    };
     vm.minlength = 3;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
@@ -26,7 +23,7 @@
 
     function next() {
       $stateParams.wizard.next({
-        expressway: {
+        mediafusion: {
           hostname: vm.hostname
         }
       });

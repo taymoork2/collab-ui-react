@@ -1474,6 +1474,15 @@
             "line1": "You may now register the Expressway with the Cisco Collaboration Cloud.",
             "line2": "Go to your Expressway to finish the registrration and configure the Call Connector and the Calendar Connector."
           }
+        },
+        "mediafusion": {
+          "name": {
+            "title": "Enter a name for the Hybrid Media Node",
+            "help": "The cluster name is only used for display purposes."
+          },
+          "end": {
+
+          }
         }
       }
     }

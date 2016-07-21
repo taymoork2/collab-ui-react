@@ -2,19 +2,19 @@
   'use strict';
 
   angular.module('Hercules')
-    .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
+    .controller('MediafusionEnterNameController', MediafusionEnterNameController);
 
   /* @ngInject */
-  function ExpresswayEnterNameController($q, $stateParams, $translate, FusionClusterService, XhrNotificationService) {
+  function MediafusionEnterNameController($stateParams, $translate, FusionClusterService, XhrNotificationService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
-    vm.name = wizardData.expressway.hostname;
+    var clusterId = null;
+    vm.name = wizardData.mediafusion.hostname;
     vm.next = next;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
-      help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
-      placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
+      help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help')
     };
     vm.minlength = 3;
     vm.validationMessages = {
@@ -28,18 +28,10 @@
 
     function provisionCluster(data) {
       vm.provisioning = true;
-      var clusterId = null;
-      return FusionClusterService.preregisterCluster(data.name, 'GA', 'c_mgmt')
-        .then(function (id) {
-          clusterId = id;
-          var promises = [];
-          if (data.selectedServices.call) {
-            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_ucmc'));
-          }
-          if (data.selectedServices.calendar) {
-            promises.push(FusionClusterService.provisionConnector(clusterId, 'c_cal'));
-          }
-          return $q.all(promises);
+      return FusionClusterService.preregisterCluster(data.name, 'GA', 'mf_mgmt')
+        .then(function (cluster) {
+          clusterId = cluster.id;
+          return cluster;
         })
         .then(function () {
           return FusionClusterService.addPreregisteredClusterToAllowList(data.hostname, 3600, clusterId);
@@ -67,12 +59,13 @@
     }
 
     function next() {
-      wizardData.expressway.name = vm.name;
-      provisionCluster(wizardData.expressway)
+      wizardData.mediafusion.name = vm.name;
+      provisionCluster(wizardData.mediafusion)
         .then(function () {
           $stateParams.wizard.next({
-            expressway: {
-              name: vm.name
+            mediafusion: {
+              name: vm.name,
+              id: clusterId
             }
           });
         })

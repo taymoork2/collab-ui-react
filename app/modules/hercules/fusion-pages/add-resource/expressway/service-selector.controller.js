@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('Hercules')
-    .controller('ServiceSelectorController', ServiceSelectorController);
+    .controller('ExpresswayServiceSelectorController', ExpresswayServiceSelectorController);
 
   /* @ngInject */
-  function ServiceSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
+  function ExpresswayServiceSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {

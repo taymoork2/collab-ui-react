@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('Hercules')
-    .controller('EndController', EndController);
+    .controller('ExpresswayEndController', ExpresswayEndController);
 
   /* @ngInject */
-  function EndController($stateParams, $window) {
+  function ExpresswayEndController($stateParams, $window) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     var hostname = wizardData.expressway.hostname;
@@ -14,7 +14,6 @@
     ///////////////
 
     function next() {
-      // $modalInstance.close();
       $window.open('https://' + encodeURIComponent(hostname) + '/fusionregistration');
     }
   }

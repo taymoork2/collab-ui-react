@@ -2042,7 +2042,7 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'ServiceSelectorController',
+                controller: 'ExpresswayServiceSelectorController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/service-selector.html'
               }
@@ -2055,7 +2055,7 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'EnterHostnameController',
+                controller: 'ExpresswayEnterHostnameController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html'
               }
@@ -2068,7 +2068,7 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'EnterNameController',
+                controller: 'ExpresswayEnterNameController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'
               }
@@ -2081,9 +2081,48 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                controller: 'EndController',
+                controller: 'ExpresswayEndController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEnterHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEnterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/end.html'
               }
             },
             params: {
