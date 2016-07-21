@@ -544,12 +544,12 @@ exports.search = function (query, _searchCount) {
   }
 
   if (query) {
-    return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+    return exports.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
   }
 };
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  return this.click(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).get(0));
 };
 
 exports.searchAndClick = function (query) {
@@ -558,7 +558,7 @@ exports.searchAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
+  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)).get(0));
 };
 
 exports.formatPhoneNumbers = function (value) {

@@ -6,5 +6,19 @@
   .modal-footer .btn + .btn {
     transition: initial;
   }
+
+  .radioNoTranform {
+    transition: initial;
+    display: inline-block;
+  }
+
+  .radioDisplay {
+    display: inline-block;
+    padding-right: 60px;
+  }
+
+  .small-font {
+  	font-size: .75rem;
+  }
 }
 

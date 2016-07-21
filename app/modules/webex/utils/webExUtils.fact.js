@@ -17,6 +17,23 @@
 
     var obj = {};
 
+    obj.getSiteAdminUrl = function (siteUrl) {
+      var funcName = "getSiteAdminUrl()";
+      var logMsg = "";
+
+      var siteAdminProtocol = "https://";
+      var siteAdminLink = "/wbxadmin/default.do?siteurl=";
+
+      var siteAdminUrl = siteAdminProtocol + siteUrl + siteAdminLink + obj.getSiteName(siteUrl);
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "siteAdminURl=" + JSON.stringify(siteAdminUrl);
+      $log.log(logMsg);
+
+      return siteAdminUrl;
+    };
+
     obj.isCIEnabledSite = function (siteUrl) {
       var funcName = "isCIEnabledSite()";
       var logMsg = "";

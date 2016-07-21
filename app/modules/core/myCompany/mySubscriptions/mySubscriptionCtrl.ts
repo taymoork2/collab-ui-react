@@ -17,7 +17,7 @@ namespace myCompanyPage {
 
   let licenseTypes = ['MS', 'CF', 'MC', 'TC', 'EC', 'EE', 'CMR', 'CO', 'SD']
 
-  class MyCompanyPageSubscriptionCtrl {
+  class MySubscriptionCtrl {
     private _hybridServices = [];
     private _licenseCategory = [];
     private _subscriptionDetails = [];
@@ -73,9 +73,6 @@ namespace myCompanyPage {
 
               subscription.licenses.forEach((license, licenseIndex) => {
                 if (_.includes(licenseTypes, license.offerName)) {
-                  this._visibleSubscriptions = true;
-                  newSubscription.licenses.push(license.offerName);
-
                   let offer = {
                     licenseId: license.licenseId,
                     licenseType: license.licenseType,
@@ -85,6 +82,9 @@ namespace myCompanyPage {
                     siteUrl: license.siteUrl,
                     id: 'donutId' + subIndex + licenseIndex
                   };
+
+                  this._visibleSubscriptions = true;
+                  newSubscription.licenses.push(offer);
 
                   _.forEach(licenseTypes, (type, index) => {
                     if ((license.offerName === type) && (index === 0)) {
@@ -116,7 +116,7 @@ namespace myCompanyPage {
               if (newSubscription.licenses.length > 0) {
                 // sort licenses into display order/order for determining subscription name
                 newSubscription.licenses.sort((a, b) => {
-                  return licenseTypes.indexOf(a) - licenseTypes.indexOf(b)
+                  return licenseTypes.indexOf(a.offerName) - licenseTypes.indexOf(b.offerName)
                 });
                 this._subscriptionDetails.push(newSubscription);
               }
@@ -197,5 +197,5 @@ namespace myCompanyPage {
 
   angular
     .module('Core')
-    .controller('MyCompanyPageSubscriptionCtrl', MyCompanyPageSubscriptionCtrl);
+    .controller('MySubscriptionCtrl', MySubscriptionCtrl);
 }

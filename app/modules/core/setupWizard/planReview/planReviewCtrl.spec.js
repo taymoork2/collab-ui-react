@@ -1,12 +1,13 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, $q, UrlConfig, Userservice, FeatureToggleService;
+  var $scope, controller, $httpBackend, $q, UrlConfig, Userservice, FeatureToggleService, WebExUtilsFact;
   var getUserMe;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
+  beforeEach(module('WebExApp'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
@@ -22,13 +23,14 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
 
@@ -38,6 +40,13 @@ describe('Controller: PlanReviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
+    spyOn(WebExUtilsFact, "isCIEnabledSite").and.callFake(function (siteUrl) {
+      if (siteUrl === "sjsite04.webex.com") {
+        return true;
+      } else if (siteUrl === "sitetransfer2.eng.webex.com") {
+        return false;
+      }
+    });
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope
@@ -119,6 +128,21 @@ describe('Controller: PlanReviewCtrl', function () {
       controller.confServices.services = [];
       var result = controller.getUserServiceRowClass(false);
       expect(result).toEqual('user-service-1');
+    });
+
+  });
+
+  describe('isCIEnabled function should return true/false for CI/non-CI sites in plan review page', function () {
+    it('can correctly determine CI sites and display the quantity in plan review panel', function () {
+      var fakeSiteUrl = "sjsite04.webex.com";
+      var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+      expect(searchResult).toBe(true);
+    });
+
+    it('can correctly determine non-CI sites and display the cross launch link in plan review panel', function () {
+      var fakeSiteUrl = "sitetransfer2.eng.webex.com";
+      var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+      expect(searchResult).toBe(false);
     });
 
   });

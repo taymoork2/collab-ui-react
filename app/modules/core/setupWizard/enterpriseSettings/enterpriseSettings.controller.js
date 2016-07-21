@@ -101,15 +101,6 @@
       }
     });
 
-    $scope.$on('wizard-set-sso-event', function () {
-      var ssoValue = $scope.options.enableSSORadioOption;
-      if (ssoValue === 0) {
-        deleteSSO();
-      } else if (ssoValue === 1) {
-        reEnableSSO();
-      }
-    });
-
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (_.isFunction(_.get($scope, 'wizard.nextTab')) && $scope.ssoEnabled) {
@@ -142,6 +133,15 @@
         }
       }
       return deferred.promise;
+    };
+
+    $scope.testSSONext = function () {
+      var ssoValue = $scope.options.enableSSORadioOption;
+      if (ssoValue === 0) {
+        deleteSSO();
+      } else if (ssoValue === 1) {
+        reEnableSSO();
+      }
     };
 
     $scope.idpFile = {};

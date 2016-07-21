@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -48,7 +48,6 @@
 
     function loadClusters() {
       FusionClusterService.getAll()
-        .then(addMissingUpgradeScheduleToClusters)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
@@ -75,27 +74,6 @@
         .map(_.escape)
         .join('<br />')
         .value();
-    }
-
-    function addMissingUpgradeScheduleToClusters(clusters) {
-      // .clusterUpgradeSchedule is populated when getting the list of clusters
-      // only when the upgrade schedule has been explicitly set by the admin.
-      // Otherwise it's not there but we can get it by fetching directly the
-      // cluster data…
-      var promises = clusters.map(function (cluster) {
-        if (cluster.clusterUpgradeSchedule) {
-          return cluster;
-        } else {
-          return FusionClusterService.getUpgradeSchedule(cluster.id)
-            .then(function (upgradeSchedule) {
-              cluster.clusterUpgradeSchedule = upgradeSchedule;
-              return cluster;
-            }, function () {
-              return cluster;
-            });
-        }
-      });
-      return $q.all(promises);
     }
 
     function updateFilters() {
@@ -138,7 +116,7 @@
           'clusterId': clusterId
         });
       } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service.list');
+        $state.go('media-service-v2.list');
       }
     }
 
@@ -148,15 +126,15 @@
       });
     }
 
-    function formatTimeAndDate(clusterUpgradeSchedule) {
-      var time = labelForTime(clusterUpgradeSchedule.scheduleTime);
+    function formatTimeAndDate(upgradeSchedule) {
+      var time = labelForTime(upgradeSchedule.scheduleTime);
       var day;
-      if (clusterUpgradeSchedule.scheduleDays.length === 7) {
+      if (upgradeSchedule.scheduleDays.length === 7) {
         day = $translate.instant('weekDays.everyDay', {
           day: $translate.instant('weekDays.day')
         });
       } else {
-        day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+        day = labelForDay(upgradeSchedule.scheduleDays[0]);
       }
       return time + ' ' + day;
     }
@@ -171,15 +149,8 @@
     }
 
     function labelForDay(day) {
-      var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      var keys = _.reduce(days, function (result, day, i) {
-        // the days in schedule upgrade starts at 1 == Monday and ends with 7 == Sunday
-        // (API made by an European! :))
-        result[i + 1] = day;
-        return result;
-      }, {});
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + keys[day])
+        day: $translate.instant('weekDays.' + day)
       });
     }
 

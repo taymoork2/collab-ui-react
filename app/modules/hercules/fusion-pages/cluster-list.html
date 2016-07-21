@@ -22,28 +22,36 @@
           <div class="row cluster-list-body">
             <div class="columns medium-6">
               <div class="cluster-list-cat" translate="hercules.fusion.list.upgrade-schedule"></div>
-              <div class="cluster-list-info" ng-if="!cluster.clusterUpgradeSchedule">&mdash;</div>
-              <div class="cluster-list-info" ng-if="cluster.clusterUpgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.clusterUpgradeSchedule)}}<br/>
-              <div class="cluster-list-timezone" title="{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}">{{cluster.clusterUpgradeSchedule.scheduleTimeZone}}</div></div>
+              <div class="cluster-list-info" ng-if="!cluster.upgradeSchedule">&mdash;</div>
+              <div class="cluster-list-info" ng-if="cluster.upgradeSchedule">{{resourceList._helpers.formatTimeAndDate(cluster.upgradeSchedule)}}<br/>
+              <div class="cluster-list-timezone" title="{{cluster.upgradeSchedule.scheduleTimeZone}}">{{cluster.upgradeSchedule.scheduleTimeZone}}</div></div>
             </div>
             <div class="columns medium-6 connection-status">
-              <div class="connection-status-column" ng-if="service.total > 0" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}">
-                <div class="connection-status-icon connection-status-cloud-icon"></div>
-                <div class="connection-status-cable connection-status-cable-cloud"></div>
-                <div class="connection-status-service">
-                  <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+              <div class="connection-status-column" ng-if="resourceList._helpers.hasServices(cluster)">
+                <div class="connection-status-eyecandy">
+                  <div class="connection-status-icon connection-status-cloud-icon"></div>
+                  <div class="connection-status-cable-vertical"></div>
+                  <div class="connection-status-cable-horizontal"></div>
+                  <div class=" connection-status-icon connection-status-premises-icon"></div>
                 </div>
-                <div class="connection-status-cable connection-status-cable-premises"></div>
-                <div class=" connection-status-icon connection-status-premises-icon"></div>
+                <div class="connection-status-services">
+                  <div class="connection-status-service" ng-repeat="service in cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'}" ng-if="service.total > 0">
+                    <a ng-click="resourceList.openService(service.serviceId, cluster.id)"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
+                  </div>
+                </div>
               </div>
               <div class="connection-status-column no-connectors" ng-if="!resourceList._helpers.hasServices(cluster)">
-                <div class="connection-status-icon connection-status-cloud-icon"></div>
-                <div class="connection-status-cable connection-status-cable-cloud"></div>
-                <div class="connection-status-service">
-                  <span translate="hercules.fusion.list.no-services"></span>
+                <div class="connection-status-eyecandy">
+                  <div class="connection-status-icon connection-status-cloud-icon"></div>
+                  <div class="connection-status-cable-vertical"></div>
+                  <div class="connection-status-cable-horizontal"></div>
+                  <div class=" connection-status-icon connection-status-premises-icon"></div>
                 </div>
-                <div class="connection-status-cable connection-status-cable-premises"></div>
-                <div class=" connection-status-icon connection-status-premises-icon"></div>
+                <div class="connection-status-services">
+                  <div class="connection-status-service">
+                    <span translate="hercules.fusion.list.no-services"></span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, customerListToggle, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -51,6 +51,8 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2
     };
 
+    customerListToggle = false;
+
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -83,7 +85,8 @@ describe('Controller: CustomerListCtrl', function () {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
-      Config: Config
+      Config: Config,
+      customerListToggle: customerListToggle
     });
 
     $scope.$apply();

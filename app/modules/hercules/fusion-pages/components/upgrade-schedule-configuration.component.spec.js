@@ -8,14 +8,13 @@ describe('Component: upgradeScheduleConfiguration', function () {
   beforeEach(inject(dependencies));
 
   var upgradeScheduleMock = {
-    scheduleDays: ['3'],
+    scheduleDays: ['wednesday'],
     scheduleTime: '05:00',
     scheduleTimeZone: 'Pacific/Tahiti',
     nextUpgradeWindow: {
       startTime: '2016-06-29T15:00:57.332Z',
       endTime: '2016-06-29T16:00:57.332Z'
     },
-    acknowledged: true,
     moratoria: [{
       timeWindow: {
         startTime: '2016-06-29T15:00:35Z',
@@ -40,22 +39,22 @@ describe('Component: upgradeScheduleConfiguration', function () {
 
     it('should fetch the upgrade schedule when there is a valid cluster id', function () {
       var controller = initController($scope);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(0);
+      expect(FusionClusterService.get.calls.count()).toBe(0);
       $scope.clusterId = '123';
       $scope.$apply();
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule).toHaveBeenCalledWith('123');
+      expect(FusionClusterService.get.calls.count()).toBe(1);
+      expect(FusionClusterService.get).toHaveBeenCalledWith('123');
       $scope.clusterId = '345';
       $scope.$apply();
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(2);
-      expect(FusionClusterService.getUpgradeSchedule).toHaveBeenCalledWith('345');
+      expect(FusionClusterService.get.calls.count()).toBe(2);
+      expect(FusionClusterService.get).toHaveBeenCalledWith('345');
     });
 
     it('should update and fetch new data when form data are changed', function () {
       $scope.clusterId = '123';
       var controller = initController($scope);
       expect(FusionClusterService.setUpgradeSchedule.calls.count()).toBe(0);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
+      expect(FusionClusterService.get.calls.count()).toBe(1);
       // modify the form
       controller.formData.scheduleTime = {
         label: '01:00',
@@ -66,7 +65,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
       // trigger the next tick
       $scope.$apply();
       expect(FusionClusterService.setUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(2);
+      expect(FusionClusterService.get.calls.count()).toBe(2);
     });
 
     it('should delete all moratoria when changing the schedule', function () {
@@ -90,7 +89,7 @@ describe('Component: upgradeScheduleConfiguration', function () {
         preventDefault: function () {}
       });
       expect(FusionClusterService.postponeUpgradeSchedule.calls.count()).toBe(1);
-      expect(FusionClusterService.getUpgradeSchedule.calls.count()).toBe(1);
+      expect(FusionClusterService.get.calls.count()).toBe(1);
     });
   });
 
@@ -119,7 +118,9 @@ describe('Component: upgradeScheduleConfiguration', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     FusionClusterService = _FusionClusterService_;
-    spyOn(FusionClusterService, 'getUpgradeSchedule').and.returnValue($q.resolve(upgradeScheduleMock));
+    spyOn(FusionClusterService, 'get').and.returnValue($q.resolve({
+      upgradeSchedule: upgradeScheduleMock
+    }));
     spyOn(FusionClusterService, 'postponeUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(FusionClusterService, 'setUpgradeSchedule').and.returnValue($q.resolve());
     spyOn(FusionClusterService, 'deleteMoratoria').and.returnValue($q.resolve());

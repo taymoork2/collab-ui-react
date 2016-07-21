@@ -146,6 +146,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
+    "siteAdminUrl": "Sign-in to manage",
     "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
@@ -972,7 +973,12 @@
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
-    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
+    "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1051,7 +1057,7 @@
   "spacesPage": {
     "addTag": "Add tag",
     "title": "Devices",
-    "addBtn": "Add Device",
+    "addBtn": "New Device",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
@@ -1081,7 +1087,10 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "retrieveDevicesFail": "Failed to load device information",
+    "retrieveKemFail": "Failed to retrieve key expansion module count."
+
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1995,7 +2004,7 @@
     "callReversionDescription": "If the call is not answered, send it to this destination.",
     "callparkInitLine": "Line Number that initiated the Call Park",
     "selectParkNumber": "Select Call Park Number",
-    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are used for individual uses.",
+    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
     "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
     "memberPlaceholder": "Select Call Park Members",
@@ -2010,7 +2019,12 @@
     "cancelHeader": "Cancel Call Park Creation",
     "cancelDialog": "Are you sure you wish to cancel call park creation? This call park will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "createHelpText": "Create",
+    "successSave": "'{{callParkName}}' call park has been created successfully",
+    "successUpdate": "'{{callParkName}}' call park has been updated successfully",
+    "errorSave": "Failed to create the '{{callParkName}}' Call Park",
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -2191,6 +2205,9 @@
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
+    "nextStepPrompt1": "The customer has to sign a PSTN Contract that will be emailed to them.",
+    "nextStepPrompt2": "The customer has to sign a PSTN Letter of Authorization that will be emailed to them.",
+    "OrderSubmitted": "Customer's order has been submitted.",
     "checkOrderStatus": "Check Order Status",
     "launchPortal": "Setup Spark Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
@@ -2565,9 +2582,9 @@
     "ST": "Storage",
     "SD": "Spark Room System",
     "deleteOrgTitle": "Delete Customer",
-    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
-    "deleteOrg": "Delete '{{orgName}}'",
-    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrg": "Delete Customer",
+    "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
@@ -2673,13 +2690,26 @@
     "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
-    "timeZoneUpdateFailed": "Device did not update its Time Zone in time"
+    "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
+    "kem": "Key Expansion Module(s)",
+    "kemAbbreviation": "KEM",
+    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemOptions": {
+      "none": "None",
+      "one": "One",
+      "two": "Two",
+      "three": "Three"
+    },
+    "kemUpdated": "Number of KEM updated.",
+    "kemChangesFailed": "Failed to save KEM changes."
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup so that it can be assigned to either a user or a place. What kind of device do you want to activate?",
+      "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
+      "deviceTypeInstructionsNewPlace": "A place containing desk phones will be assigned a Spark Call license. A place containing a room system will be assigned a Spark Room System license. Proceeding acknowledges that a license will be assigned.",
       "deskPhone": "Desk Phone",
       "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
@@ -2721,6 +2751,12 @@
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+      "insertRoomName": "Insert name of room or shared space"
+    },
+    "newSharedSpace": {
+      "title": "Add Place",
+      "newPlace": "Name of Place",
+      "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain a room system or up to 10 desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
       "insertRoomName": "Insert name of room or shared space"
     },
     "assignPhoneNumber": {
@@ -2909,7 +2945,7 @@
       "documentation_3V2": "for prerequisities and help installing and using the Hybrid Media Service.",
       "documentation_4": "Download Media Service OVA from",
       "documentation_4V2": "Download Hybrid Media Service software from",
-      "documentation_5": "software.cisco.com",
+      "documentation_5": "here",
       "cancelCaps": "CANCEL",
       "cancel": "Cancel",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
@@ -3039,14 +3075,15 @@
       "continue": "Continue",
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
-      "clusterdeleteSuccess": "Successfully deleted {{clustername}}"
+      "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignTextV2": "You are about to move the Hybrid Media Node {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "reassignErrorMessage": "Unable move to the Hybrid Media Node {{hostName}}. Please try again after some time.",
       "moveHost": "Move Host",
       "deregister_host": "Deregister Host",
       "moveNode": "Move Node",
@@ -3072,15 +3109,16 @@
       "text2": "Enter the hostname or IP address of the media server that you want to register to the cloud. Click Next, and then log in to your media server to confirm registration.",
       "register": "Go To Node",
       "cancel": "Cancel",
+      "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the Hybrid media node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
-      "grant-registration-success-header-new-cluster": "You can now register the Hybrid media node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "errorTitle": "Registration Error",
-      "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
+      "errorOnlineText": "The Hybrid Media Node that you're registering already exists and is online.",
+      "errorOfflineText": "The Hybrid Media Node that you're registering already exists and is offline. Deregister the existing Hybrid Media Node before you try again.",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
@@ -4389,6 +4427,14 @@
       "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
+  },
+  "myCompanyOrders": {
+    "numberHeader": "Order Number",
+    "descriptionHeader": "Order Detail",
+    "priceHeader": "Price",
+    "dateHeader": "Order Date",
+    "actionsHeader": "Actions",
+    "downloadPdf": "Download PDF"
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
