@@ -174,6 +174,13 @@
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms",
+    "licenseShortage": "Not enough licenses",
+    "reviewPlan": "Review your plan",
+    "reviewPlanMessage": "Review your plan and license usage. Upgrade your plan so you can select the licenses that you want.",
+    "proceedFree": "Proceed with free licenses",
+    "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
+    "reviewPlanButton": "Review your plan",
+    "proceedFreeButton": "Proceed with Free",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
