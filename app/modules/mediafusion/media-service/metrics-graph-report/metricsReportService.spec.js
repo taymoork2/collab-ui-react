@@ -2,24 +2,26 @@
 
 describe('Service: Metrics Reports Service', function () {
   var $httpBackend, MetricsReportService, Config, Notification;
-  var callVolumeUrl;
-
-  /* var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
-   var activeUserData = activeData.activeDetailed;
-   var responseActiveData = activeData.activeResponse;
-   var mostActiveData = activeData.mostActive;
-   var responseMostActiveData = activeData.mostActiveResponse;
-
-   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
-   var groupRoomData = roomData.groupRooms;
-   var avgRoomData = roomData.avgRooms;
-   var oneToOneRoomData = roomData.oneTwoOneRooms;
-   var responseRoomData = roomData.response;*/
+  var callVolumeUrl, UtilizationUrl, clusterAvailabilityUrl, totalCallsCard, availabilityCard, utilizationCard;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var callVolume = callVolumeData.callvolume;
   var callVolumeGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeGraphData.json');
   var responsedata = callVolumeGraphData.graphData;
+  var UtilizationData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationData.json');
+  var utilizationdata = UtilizationData.utilization;
+  var utilizationGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/UtilizationGraphData.json');
+  var utilizationresponse = utilizationGraphData.graphData;
+  var clusterAvailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
+  var clusterAvailability = clusterAvailabilityData.clusteravailability;
+  var clusterAvailabilityGraphData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityGraphData.json');
+  var clusteravailabilityresponse = clusterAvailabilityGraphData.graphData;
+  var totalCallsCardData = getJSONFixture('mediafusion/json/metrics-graph-report/totalCallsCardData.json');
+  var totalcallsdata = totalCallsCardData.totolcalls;
+  var availabilityCardData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityCardData.json');
+  var availabilitydata = availabilityCardData.availability;
+  var utilizationCardData = getJSONFixture('mediafusion/json/metrics-graph-report/utilizationCardData.json');
+  var utilizationcarddata = utilizationCardData.utilization;
 
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -30,23 +32,8 @@ describe('Service: Metrics Reports Service', function () {
     value: 0
   };
 
-  var updateDates = function (data, filter, altDate) {
-    for (var i = data.length - 1; i >= 0; i--) {
-      if (filter === null || angular.isUndefined(filter)) {
-        if (altDate === null || angular.isUndefined(altDate)) {
-          data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
-        } else {
-          data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
-        }
-      } else {
-        data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
-      }
-    }
-    return data;
-  };
-
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('2c3c9f9e-73d9-4460-a668-047162ff1bac')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
   var error = {
     message: 'error'
@@ -56,7 +43,7 @@ describe('Service: Metrics Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Config_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _MetricsReportService_, _Config_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     MetricsReportService = _MetricsReportService_;
     Config = _Config_;
@@ -64,11 +51,13 @@ describe('Service: Metrics Reports Service', function () {
 
     spyOn(Notification, 'notify');
 
-    var baseUrl = 'https://athena-integration.wbx2.com/athena/api/v1/organizations/' + Authinfo.getOrgId();
-    callVolumeUrl = baseUrl + '/call_volume?relativeTime=1d';
-
-    callVolume = updateDates(callVolume);
-    responsedata = updateDates(responsedata, dayFormat);
+    var baseUrl = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
+    callVolumeUrl = baseUrl + '/call_volume/?relativeTime=1d';
+    UtilizationUrl = baseUrl + '/cpu_utilization/?relativeTime=1d';
+    clusterAvailabilityUrl = baseUrl + '/clusters_availability/?relativeTime=1d';
+    totalCallsCard = baseUrl + '/total_calls/?relativeTime=1d';
+    availabilityCard = baseUrl + '/agg_availability/?relativeTime=1d';
+    utilizationCard = baseUrl + '/agg_cpu_utilization/?relativeTime=1d';
 
   }));
 
@@ -89,31 +78,150 @@ describe('Service: Metrics Reports Service', function () {
     expect(MetricsReportService.getAvailabilityData).toBeDefined();
   });
 
-  /* describe('Active User Services', function () {
-     it('should getActiveUserData', function () {
-       $httpBackend.whenGET(callVolumeUrl).respond(callVolume);
+  describe('Call Volume Graph Data', function () {
+    it('should get call volume data', function () {
+      $httpBackend.whenGET(callVolumeUrl).respond(callVolume);
 
-       MetricsReportService.getCallVolumeData('All', timeFilter).then(function (response) {
-         expect(response).toEqual({
-           graphData: responsedata
-         });
-       });
+      MetricsReportService.getCallVolumeData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual({
+          graphData: responsedata
+        });
+      });
 
-       $httpBackend.flush();
-     });
+      $httpBackend.flush();
+    });
 
-     it('should notify an error for getActiveUserData', function () {
-       $httpBackend.whenGET(callVolumeUrl).respond(500, error);
+    it('should notify an error for call volume data failure', function () {
+      $httpBackend.whenGET(callVolumeUrl).respond(500, error);
 
-       MetricsReportService.getCallVolumeData('All', timeFilter).then(function (response) {
-         expect(response).toEqual({
-           graphData: []
-         });
-         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-       });
+      MetricsReportService.getCallVolumeData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual({
+          graphData: []
+        });
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
 
-       $httpBackend.flush();
-     });
-   });*/
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Percentage of CPU utilization', function () {
+    it('should get percentage utilization data', function () {
+      $httpBackend.whenGET(UtilizationUrl).respond(utilizationdata);
+
+      MetricsReportService.getUtilizationData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual({
+          graphData: utilizationresponse
+        });
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for percentage utilization failure', function () {
+      $httpBackend.whenGET(UtilizationUrl).respond(500, error);
+
+      MetricsReportService.getUtilizationData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual({
+          graphData: []
+        });
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Cluster Availability Data', function () {
+    it('should get cluster availability data', function () {
+      $httpBackend.whenGET(clusterAvailabilityUrl).respond(clusterAvailability);
+
+      MetricsReportService.getAvailabilityData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response.data).toEqual(clusteravailabilityresponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for cluster availability data failure', function () {
+      $httpBackend.whenGET(clusterAvailabilityUrl).respond(500, error);
+
+      MetricsReportService.getAvailabilityData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Total Number of calls', function () {
+    it('should get total number of calls', function () {
+      $httpBackend.whenGET(totalCallsCard).respond(totalcallsdata);
+
+      MetricsReportService.getTotalCallsData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response.data).toEqual(totalcallsdata);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for total number of calls failure', function () {
+      $httpBackend.whenGET(totalCallsCard).respond(500, error);
+
+      MetricsReportService.getTotalCallsData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Cluster Availability Data on the Card', function () {
+    it('should get cluster availability percentage', function () {
+      $httpBackend.whenGET(availabilityCard).respond(availabilitydata);
+
+      MetricsReportService.getClusterAvailabilityData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response.data).toEqual(availabilitydata);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for cluster availability percentage failure', function () {
+      $httpBackend.whenGET(availabilityCard).respond(500, error);
+
+      MetricsReportService.getClusterAvailabilityData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Aggregated Utilization Data', function () {
+    it('should get Average and Peak Utilization data', function () {
+      $httpBackend.whenGET(utilizationCard).respond(utilizationcarddata);
+
+      MetricsReportService.getCPUUtilizationData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response.data).toEqual(utilizationcarddata);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for Utilization data failure', function () {
+      $httpBackend.whenGET(utilizationCard).respond(500, error);
+
+      MetricsReportService.getCPUUtilizationData(timeFilter, 'All Clusters').then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
 
 });

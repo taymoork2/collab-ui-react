@@ -171,6 +171,26 @@ describe('orgService', function () {
     expect(callback.args[0][0].success).toBe(false);
   });
 
+  it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
+
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    httpBackend.flush();
+    promise.then(function (data) {
+      expect(data.success).toBe(true);
+    });
+  });
+
+  it('should fail to get an admin organization for getOrgId provided by Authinfo pwhen called as a promise', function () {
+
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    httpBackend.flush();
+    promise.then(function (data) {
+      expect(data.success).toBe(false);
+    });
+  });
+
   it('should successfully get unlicensed users for random orgId', function () {
     var callback = sinon.stub();
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});

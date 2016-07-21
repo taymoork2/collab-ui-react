@@ -194,15 +194,6 @@
       "valueLineEnabled": true,
       "zoomable": false,
       "valueZoomable": true
-    },
-    "chartScrollbar": {
-      "offset": 30,
-      "scrollbarHeight": 20
-    },
-    "legend": {
-      "align": "right",
-      "position": "top",
-      "data": "dummyData"
     }
   }
 }

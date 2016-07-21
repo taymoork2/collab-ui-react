@@ -2,7 +2,7 @@
   'use strict';
 
   var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-  var Authinfo, FeatureToggleService, Orgservice, PartnerService, TrialService;
+  var Authinfo, customerListToggle, FeatureToggleService, Orgservice, PartnerService, TrialService;
 
   describe('Template: actionColumn.tpl.html', function () {
 
@@ -32,6 +32,8 @@
         CUSTOMER: 2
       };
 
+      customerListToggle = false;
+
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
       }));
@@ -51,7 +53,8 @@
 
     function compileViewWithMockData(mockData) {
       controller = $controller('CustomerListCtrl', {
-        $scope: $scope
+        $scope: $scope,
+        customerListToggle: customerListToggle
       });
 
       _.extend($scope, mockData);

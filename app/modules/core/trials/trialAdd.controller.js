@@ -99,7 +99,7 @@
         label: $translate.instant('partnerHomePage.customerName'),
         required: true,
         maxlength: 50,
-        onKeydown: function (value, options) {
+        onInput: function (value, options) {
           options.validation.show = false;
           vm.uniqueName = false;
         },
@@ -140,7 +140,7 @@
         label: $translate.instant('partnerHomePage.customerEmail'),
         type: 'email',
         required: true,
-        onKeydown: function (value, options) {
+        onInput: function (value, options) {
           options.validation.show = false;
           vm.uniqueEmail = false;
         },

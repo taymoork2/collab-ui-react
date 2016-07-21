@@ -47,14 +47,7 @@
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0,
-      "guides": [{
-        "inside": true,
-        "label": "Utilization High",
-        "lineColor": '#000000',
-        "lineAlpha": 0.5,
-        "value": 80
-      }]
+      'tickLength': 0
     };
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
@@ -184,7 +177,7 @@
       });
     }
 
-    function getGanttGraph(data, valueAxis, legendData) {
+    function getGanttGraph(data, valueAxis) {
       return angular.copy({
         'type': 'gantt',
         'pathToImages': amchartsImages,
@@ -223,16 +216,7 @@
           'zoomable': false,
           'valueZoomable': true
         },
-        'chartScrollbar': {
-          'offset': 30,
-          'scrollbarHeight': 20
-        },
-        'export': baseVariables['export'],
-        'legend': {
-          'align': 'right',
-          'position': 'top',
-          'data': legendData
-        }
+        'export': baseVariables['export']
       });
     }
   }

@@ -1,35 +1,38 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, $httpBackend, HuronConfig, FeatureToggleService, InternationalDialing;
-  var Authinfo;
-  var HuronCustomer, ServiceSetup, PstnSetupService, ModalService, modalDefer;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
-  var getDeferred;
+  var controller, $controller, $scope, $q, $httpBackend;
+  var Authinfo, Notification;
+  var ExternalNumberService, DialPlanService, FeatureToggleService, PstnSetupService, ModalService;
+  var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
+  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
+  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _PstnSetupService_, _ModalService_,
-    _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
+    _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
+    _CallerId_, _VoicemailMessageAction_) {
 
+    $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    CallerId = _CallerId_;
-    ExternalNumberService = _ExternalNumberService_;
+    $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
     Notification = _Notification_;
-    HuronCustomer = _HuronCustomer_;
+    ExternalNumberService = _ExternalNumberService_;
     DialPlanService = _DialPlanService_;
-    ServiceSetup = _ServiceSetup_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
+    ServiceSetup = _ServiceSetup_;
     InternationalDialing = _InternationalDialing_;
-    $httpBackend = _$httpBackend_;
+    HuronCustomer = _HuronCustomer_;
     HuronConfig = _HuronConfig_;
-    $q = _$q_;
+    CallerId = _CallerId_;
+    VoicemailMessageAction = _VoicemailMessageAction_;
+
     modalDefer = $q.defer();
-    Authinfo = _Authinfo_;
 
     customer = getJSONFixture('huron/json/settings/customer.json');
     timezones = getJSONFixture('huron/json/settings/timeZones.json');
@@ -41,9 +44,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
-
-    //create mock deferred object which will be used to return promises
-    getDeferred = $q.defer();
+    messageAction = getJSONFixture('huron/json/settings/messageAction.json');
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -79,6 +80,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(Notification, 'processErrorResponse').and.returnValue('');
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
+    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
+    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -272,6 +275,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.hasVoicemailService = true;
     controller.model.companyVoicemail.companyVoicemailEnabled = true;
     controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
+    controller.model.companyVoicemail.voicemailToEmail = true;
 
     controller.save();
     $scope.$apply();
@@ -279,6 +283,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
@@ -296,13 +301,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     };
 
     var userTemplate = [{
-      "timeZone": "America/Anchorage",
-      "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
+      timeZoneName: "America/Anchorage",
+      objectId: "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
 
     controller.model.site.timeZone = {
-      "id": "Pacific/Honolulu",
-      "label": "Pacific/Honolulu"
+      id: "Pacific/Honolulu",
+      label: "Pacific/Honolulu"
     };
 
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
@@ -317,6 +322,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
@@ -343,6 +349,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
@@ -389,12 +396,19 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.model.companyVoicemail.companyVoicemailEnabled = true;
     controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
 
+    controller.model.companyVoicemail.voicemailToEmail = true;
+    controller.voicemailMessageAction = {
+      objectId: '1',
+      voicemailAction: 3
+    };
+
     controller.save();
     $scope.$apply();
 
     expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
@@ -421,8 +435,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.to = {};
 
     controller.timeZoneOptions = [{
-      "id": "America/Anchorage",
-      "label": "America/Anchorage"
+      id: "America/Anchorage",
+      label: "America/Anchorage"
     }];
 
     controller._buildTimeZoneOptions($scope);
@@ -787,10 +801,10 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(controller.model.callerId.callerIdName).toEqual('Cisco Org Name');
     });
 
-    it('should update timezone when timezone selection changes and feature toggle is ON', function () {
+    it('should update timezone when timezone selection changes', function () {
       var newTimeZone = {
-        "id": "America/Anchorage",
-        "label": "America/Anchorage"
+        id: "America/Anchorage",
+        label: "America/Anchorage"
       };
       controller.model.site.timeZone = newTimeZone;
       controller.save();
@@ -803,13 +817,13 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
-    it('should not update timezone when timezone selection did not change and Feature toggle is ON', function () {
+    it('should not update timezone when timezone selection did not change', function () {
       /* the default "value = 'America/Los_Angeles'" is loaded in the beginnig
         so updating the timezone with same id will not result in any updates
         being sent to unity and updm */
       controller.model.site.timeZone = {
-        "id": "America/Los_Angeles",
-        "label": "America/Los_Angeles"
+        id: "America/Los_Angeles",
+        label: "America/Los_Angeles"
       };
       controller.save();
       $scope.$apply();

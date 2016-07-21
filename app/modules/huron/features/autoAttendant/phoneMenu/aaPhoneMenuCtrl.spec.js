@@ -2,13 +2,16 @@
 
 describe('Controller: AAPhoneMenuCtrl', function () {
   var controller;
+  var FeatureToggleService;
   var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope, $translate, $q;
   var aaUiModel = {
     openHours: {}
   };
   var schedule = 'openHours';
   var index = '0';
+  var menuId = 'menu1';
+  var attempts = 4;
 
   var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
@@ -24,8 +27,28 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     return _menuEntry;
   }
 
+  function raw2Menu(raw) {
+    var _menu = AutoAttendantCeMenuModelService.newCeMenu();
+    angular.extend(_menu, raw);
+    _menu.headers = [];
+    _menu.entries = [];
+    for (var i = 0; i < raw.headers.length; i++) {
+      _menu.headers[i] = raw2MenuEntry(raw.headers[i]);
+    }
+    for (var j = 0; j < raw.entries.length; j++) {
+      if (_.has(raw.entries[j], 'headers') && _.has(raw.entries[j], 'entries')) {
+        _menu.entries[j] = raw2Menu(raw.entries[j]);
+      } else {
+        _menu.entries[j] = raw2MenuEntry(raw.entries[j]);
+      }
+    }
+    return _menu;
+  }
+
   var sortedOptions = [{
     "name": 'phoneMenuDialExt',
+  }, {
+    "name": 'phoneMenuPlaySubmenu',
   }, {
     "name": 'phoneMenuRepeatMenu',
   }, {
@@ -48,24 +71,30 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $translate = _$translate_;
+    $q = _$q_;
 
+    FeatureToggleService = _FeatureToggleService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
+    $scope.menuId = menuId;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
     menu.type = 'MENU_OPTION';
+    menu.attempts = attempts;
     aaUiModel['openHours'].addEntryAt(index, menu);
 
     controller = $controller('AAPhoneMenuCtrl', {
@@ -173,6 +202,57 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
     });
 
+    it('Should remove the submenu from menu map when switching from Play Submenu action to other action', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
+      var expectEntry2 = raw2Menu(ceMenu.entries[2]);
+      var phoneMenu = {
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": [],
+        "attempts": 4
+      };
+      controller.menuEntry = phoneMenu;
+      controller.selectedActions = [];
+      controller.addKeyAction();
+
+      controller.keyChanged(0, '3');
+      controller.keyActionChanged(0, data.selectedActionsPlaySubmenu[0].action);
+      expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
+      var newSubmenuId = controller.menuEntry.entries[0].id;
+      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(true);
+
+      controller.keyChanged(0, '1');
+      controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
+      expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
+      expect(angular.isDefined(AutoAttendantCeMenuModelService.getCeMenu(newSubmenuId))).toBe(false);
+    });
+
+    it('should change Repeat-Menu to Play Submenu action in the model and copy the attempts from main menu', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
+      var expectEntry2 = raw2Menu(ceMenu.entries[2]);
+      var phoneMenu = {
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": [],
+        "attempts": attempts
+      };
+      controller.menuEntry = phoneMenu;
+      controller.selectedActions = [];
+      controller.addKeyAction();
+      controller.keyChanged(0, '1');
+
+      controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
+      expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
+
+      controller.keyChanged(0, '3');
+      controller.keyActionChanged(0, data.selectedActionsPlaySubmenu[0].action);
+      expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
+
+      expect(controller.menuEntry.attempts).toEqual(attempts);
+    });
+
     it('should successfully change a Say-Message button to a Route-To-User button', function () {
       var ceMenuWithSay = angular.copy(data.ceMenuWithSay);
       var ceMenuWithRouteToUser = angular.copy(data.ceMenuWithRouteToUser);
@@ -194,14 +274,17 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('addButtonZero', function () {
     it('should intialize CeMenu first entry with first available key', function () {
+      controller.menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
+      controller.selectedActions = [];
+
       controller.addButtonZero();
 
       var headkey = '0';
       expect(controller.entries[index].entries[0]).toBeDefined();
       expect(controller.entries[index].entries[0].key).toEqual(headkey);
     });
-
   });
+
   describe('populateUiMenu', function () {
     it('should read the CeMenu and populate the Option menu', function () {
       controller.menuEntry = angular.copy(data.ceMenu);
@@ -210,6 +293,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var expectedActions = [];
       expectedActions.push(data.selectedActionsRepeatMenu[0]);
       expectedActions.push(data.selectedActionsDialExt[0]);
+      expectedActions.push(data.selectedActionsPlaySubmenu[0]);
 
       expect(angular.equals(expectedActions, controller.selectedActions)).toEqual(true);
 
@@ -235,7 +319,11 @@ describe('Controller: AAPhoneMenuCtrl', function () {
    * name value is not read from properties file in unit test cases. It will treat the key provided into vm.keyActions for name
    * as text only. Sorting is based on the key itself and not on values of title.
    */
-  describe('Activate ', function () {
+  describe('activate', function () {
+    it('should define and export menuId to its child directives', function () {
+      expect(controller.menuId).toEqual('menu1');
+    });
+
     it('test for sorted options', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.keyActions[i].name).toEqual(sortedOptions[i].name);

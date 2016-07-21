@@ -4,4 +4,41 @@
     <span class="h2" translate="careChatTpl.agentUnavailable"></span>
   </div>
   <div class="h4 ct-title-desc" translate="careChatTpl.agentUnavailableDesc"></div>
+
+  <div class="ct-agent-unavailable ct-sa-content">
+    <cs-card-layout block-view="true">
+      <cs-card>
+        <div class="h4 unavailable-header" translate="careChatTpl.preview"></div>
+        <article class="articleHeight">
+          <section>
+            <div class="unavailable-preview">
+              <div class="unavailable">
+                <i class="icon icon-warning ct-agent-unavailable-icon icon-2x"></i>
+                <div id="agentUnavailableMessage" class="unavailable-msg">
+                  {{careChatSA.getAttributeValue('displayText', 'agentUnavailableMessage', 'agentUnavailable')}}
+                </div>
+              </div>
+              <button type="button" class="btn"  translate="common.close"></button>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card>
+        <div class="h4 unavailable-header" translate="careChatTpl.attributes"></div>
+        <article class="articleHeight attributes">
+          <section>
+            <div class="unavailable-attributes">
+              <div class="h4 unavailable-attributes-label">Message</div>
+            <textarea id="agentUnavailableMessageField" class="h6" maxlength="250"
+                      ng-model="careChatSA.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText">
+            </textarea>
+            </div>
+
+            </section>
+          </article>
+
+      </cs-card>
+    </cs-card-layout>
+  </div>
 </div>

@@ -11,7 +11,7 @@
     .name;
 
   /* @ngInject */
-  function Authinfo($rootScope, $translate, Config, Localytics) {
+  function Authinfo($rootScope, $translate, Config) {
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -38,7 +38,7 @@
       messageServices: null,
       conferenceServices: null,
       communicationServices: null,
-      careServices: null,
+      careServices: [],
       conferenceServicesWithoutSiteUrl: null,
       cmrServices: null,
       hasAccount: false,
@@ -139,9 +139,6 @@
         authData.isInitialized = true;
         authData.setupDone = data.setupDone;
         $rootScope.$broadcast('AuthinfoUpdated');
-
-        Localytics.setOrgId(authData.orgId);
-        Localytics.setUserId(authData.userId);
       },
       clear: function () {
         authData.username = null;

@@ -15,7 +15,8 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/places-illustration.png" />
           </div>
-          <h4 class="buttonBottom" translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
+          <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
+          <span>&nbsp;</span>
         </div>
       </div>
       <div class="typeButtonWrapper">
@@ -25,7 +26,8 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/new-illustration.png" />
           </div>
-          <h4 class="buttonBottom" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h4>
+          <h4 translate="addDeviceWizard.chooseSharedSpace.newPlace"></h4>
+          <span>&nbsp;</span>
         </div>
       </div>
     </div>
@@ -54,30 +56,39 @@
   </div>
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
-    <form class="createNewPlaceForm" onsubmit="$('#next-button').click()">
+    <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
       <h5 ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
       <h5 ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
       <p ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlaceInstructions"></p>
       <p ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions"></p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
-      <div>
+      <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
         <input
             required
             type="text"
             id="newPlace"
-            name="roomName"
+            name="newPlace"
             focus-on="true"
             ng-model="choosePlace.deviceName"
             placeholder="{{'addDeviceWizard.chooseSharedSpace.insertRoomName' | translate}}"
             class="form-control"
             autocomplete="off"
-            maxlength="127">
+            ng-minlength="3"
+            ng-maxlength="64"
+            required>
         </input>
+        <div class="cs-input__messages" ng-messages="placeForm.newPlace.$error" role="alert" ng-if='placeForm.newPlace.$touched'>
+          <div class="message" ng-message="required">{{choosePlace.message.required}}</div>
+          <div class="message" ng-message="minlength">{{choosePlace.message.min}}</div>
+          <div class="message" ng-message="maxlength">{{choosePlace.message.max}}</div>
+        </div>
+
       </div>
     </form>
   </div>
 </div>
 <div class="modal-footer">
+
   <button
       id="back-button"
       class="btn"
@@ -87,10 +98,13 @@
   </button>
 
   <button
+      cs-btn
+      loading="choosePlace.isLoading"
       id="next-button"
       class="btn btn--primary"
-      sq-click-promise="choosePlace.next()"
-      ng-disabled="!choosePlace.isNameValid()"
-      translate="common.next">
+      ng-click="choosePlace.next()"
+      ng-disabled="!choosePlace.isNameValid()">
+        <span translate="common.next"></span>
+    </button>
   </button>
 </div>

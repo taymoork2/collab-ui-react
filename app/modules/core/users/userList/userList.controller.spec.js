@@ -67,10 +67,11 @@ describe('UserListCtrl: Ctrl', function () {
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'csvEnhancementGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
 
   }));
 

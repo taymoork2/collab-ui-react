@@ -5,7 +5,7 @@ describe('FeatureToggleService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
+  var httpBackend, $q, $state, Config, Authinfo, Userservice, FeatureToggleService;
   var forOrg = false;
   var forUser = true;
   var userId = '1';
@@ -15,11 +15,12 @@ describe('FeatureToggleService', function () {
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
   var orgRegex = /.*\/features\/rules\.*/;
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
     $q = _$q_;
+    $state = _$state_;
     Config = _Config_;
-    AuthInfo = _Authinfo_;
+    Authinfo = _Authinfo_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
@@ -94,6 +95,35 @@ describe('FeatureToggleService', function () {
       expect(result).toBe(true);
     });
     httpBackend.flush();
+  });
+
+  describe('function stateSupportsFeature', function () {
+    beforeEach(function () {
+      spyOn($state, 'go');
+      spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+      httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
+      installPromiseMatchers();
+    });
+
+    it('should resolve successfully if a feature is supported', function () {
+      var promise = FeatureToggleService.stateSupportsFeature('android-add-guest-release');
+      httpBackend.flush();
+      expect(promise).toBeResolvedWith(true);
+    });
+
+    it('should reject if a feature is not supported while on a current state', function () {
+      $state.$current.name = 'some-state';
+      var promise = FeatureToggleService.stateSupportsFeature('non-existant-feature');
+      httpBackend.flush();
+      expect(promise).toBeRejected();
+    });
+
+    it('should redirect to login if a feature is not supported and no current state', function () {
+      $state.$current.name = '';
+      FeatureToggleService.stateSupportsFeature('non-existant-feature');
+      httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('login');
+    });
   });
 
 });

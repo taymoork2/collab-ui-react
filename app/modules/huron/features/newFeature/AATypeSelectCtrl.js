@@ -6,7 +6,7 @@
     .controller('AATypeSelectCtrl', AATypeSelectCtrl);
 
   /* @ngInject */
-  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state, AAMetricNameService, Localytics) {
+  function AATypeSelectCtrl($scope, $modalInstance, $translate, $state, AAMetricNameService, Analytics) {
     var vm = $scope;
     vm.cancel = cancel;
     vm.ok = okay;
@@ -36,7 +36,7 @@
       var aatype = {};
       aatype.aaName = '';
       aatype.aaTemplate = type.name;
-      Localytics.tagEvent(AAMetricNameService.CREATE_AA, {
+      Analytics.trackEvent(AAMetricNameService.CREATE_AA, {
         type: type.name
       });
       $state.go('huronfeatures.aabuilder', aatype);

@@ -4,15 +4,19 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard users through Manual Invite', function () {
+  var token;
   var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
   it('should login as an account admin', function () {
-    login.login('account-admin', '#/users');
+    login.login('account-admin', '#/users')
+      .then(function (_token) {
+        token = _token;
+      });
   });
 
   it('should Manually Invite multiple users by email address (Message On).', function () {
     // Select Invite from setup menu
-    utils.click(landing.serviceSetup);
+    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
 
@@ -48,6 +52,8 @@ describe('Onboard users through Manual Invite', function () {
   });
 
   afterAll(function () {
-    _.each(userList, deleteUtils.deleteUser);
+    _.each(userList, function (user) {
+      deleteUtils.deleteUser(user, token);
+    });
   });
 });

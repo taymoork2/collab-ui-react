@@ -1,0 +1,31 @@
+<div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+  <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+          <span class="name" ng-class="{'active' : nav.currentFilter === nav.allReports}"
+                translate="reportsPage.all"></span>
+          <span class="name" ng-class="{'active' : nav.currentFilter === nav.engagement}"
+                translate="reportsPage.engagement"></span>
+          <span class="name" ng-class="{'active' : nav.currentFilter === nav.quality}"
+                translate="reportsPage.quality"></span>
+    <i class="icon icon-chevron-down"></i>
+  </div>
+  <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+    <li class="filter" ng-class="{'active' : nav.currentFilter === nav.allReports}"
+        ng-click="nav.resetCards(nav.allReports);">
+      <a id="allReports">
+        <span class="name" translate="reportsPage.all"></span>
+      </a>
+    </li>
+    <li class="filter" ng-class="{'active' : nav.currentFilter === nav.engagement}"
+        ng-click="nav.resetCards(nav.engagement);">
+      <a id="engagementReports">
+        <span class="name" translate="reportsPage.engagement"></span>
+      </a>
+    </li>
+    <li class="filter" ng-class="{'active' : nav.currentFilter === nav.quality}"
+        ng-click="nav.resetCards(nav.quality);">
+      <a id="qualityReports">
+        <span class="name" translate="reportsPage.quality"></span>
+      </a>
+    </li>
+  </ul>
+</div>

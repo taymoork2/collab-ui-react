@@ -27,6 +27,7 @@
       error: error,
       notify: notify,
       errorResponse: errorResponse,
+      errorWithTrackingId: errorWithTrackingId,
       processErrorResponse: processErrorResponse,
       confirmation: confirmation,
       notifyReadOnly: notifyReadOnly
@@ -79,16 +80,29 @@
       });
     }
 
+    function errorWithTrackingId(response, errorKey, errorParams) {
+      var errorMsg = getErrorMessage(errorKey, errorParams);
+      errorMsg = addTrackingId(errorMsg, response);
+      notify(_.trim(errorMsg), 'error');
+    }
+
     function errorResponse(response, errorKey, errorParams) {
       var errorMsg = processErrorResponse(response, errorKey, errorParams);
-      notify(errorMsg.trim(), 'error');
+      notify(_.trim(errorMsg), 'error');
     }
 
     function processErrorResponse(response, errorKey, errorParams) {
-      var errorMsg = '';
-      if (errorKey) {
-        errorMsg += $translate.instant(errorKey, errorParams);
-      }
+      var errorMsg = getErrorMessage(errorKey, errorParams);
+      errorMsg = addResponseMessage(errorMsg, response);
+      errorMsg = addTrackingId(errorMsg, response);
+      return _.trim(errorMsg);
+    }
+
+    function getErrorMessage(key, params) {
+      return key ? $translate.instant(key, params) : '';
+    }
+
+    function addResponseMessage(errorMsg, response) {
       if (_.get(response, 'data.errorMessage')) {
         errorMsg += ' ' + response.data.errorMessage;
       } else if (_.get(response, 'data.error')) {
@@ -98,7 +112,10 @@
       } else if (_.isString(response)) {
         errorMsg += ' ' + response;
       }
+      return errorMsg;
+    }
 
+    function addTrackingId(errorMsg, response) {
       if (_.isFunction(_.get(response, 'headers'))) {
         var trackingId = response.headers('TrackingID');
         if (trackingId) {
@@ -108,7 +125,7 @@
           errorMsg += ' TrackingID: ' + trackingId;
         }
       }
-      return _.trim(errorMsg);
+      return errorMsg;
     }
 
     function confirmation(message) {

@@ -4,7 +4,7 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $location, $rootScope, Auth, Authinfo, Localize, Utils, Log, $interval, Config, $state, $window, SessionStorage, $translate, LogMetricsService, PreviousState, Localytics, TokenService, TrackingId) {
+  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config, Localize, Log, LogMetricsService, PreviousState, SessionStorage, TokenService, TrackingId, Utils) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -104,8 +104,6 @@
 
       PreviousState.set(fromState.name);
       PreviousState.setParams(fromParams);
-
-      Localytics.tagScreen(toState.name);
 
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

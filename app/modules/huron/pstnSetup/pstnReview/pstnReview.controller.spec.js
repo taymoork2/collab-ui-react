@@ -56,7 +56,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
 
       it('should contain one of each order', function () {
@@ -85,7 +87,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
 
@@ -104,7 +108,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
 
@@ -122,7 +128,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
   });

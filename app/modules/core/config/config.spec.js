@@ -119,7 +119,7 @@ describe('Config', function () {
 
   describe('service states', function () {
     it('spark-room-system should contain devices state', function () {
-      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
+      expect(Config.serviceStates['spark-room-system']).toContain('devices');
     });
   });
 

@@ -14,9 +14,11 @@ describe('Care admin should be able to', function () {
   it('create a chat template, assert chat template is listed and delete a chat template', function () {
     validateContentsOfNamePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfOverviewPage();
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProfilePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfOverviewPage();
+    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
@@ -25,8 +27,6 @@ describe('Care admin should be able to', function () {
     validateContentsOfAgentUnavailablePage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfOffHoursPage();
-    utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfChatStatusMessagesPage();
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfSummaryPage();
     validateDismissOfCTSetupWizard();
@@ -51,6 +51,10 @@ describe('Care admin should be able to', function () {
 
   function validateTitleAndDesc(expectedTitle, expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpTitle, expectedTitle);
+    validateDesc(expectedDesc)
+  }
+
+  function validateDesc(expectedDesc) {
     utils.expectTextToBeSet(careChatTemplateSetupPage.setUpDesc, expectedDesc);
   }
 
@@ -162,10 +166,30 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfAgentUnavailablePage() {
     validateTitleAndDesc('Agent Unavailable', 'This screen is shown to a customer when no agent is available to assist');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, "Sorry, we are unavailable at the moment. Please try again later.");
+    utils.sendKeys(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectValueToBeSet(careChatTemplateSetupPage.agentUnavailableMessageField, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.agentUnavailableMessage, careChatTemplateSetupPage.randomChatTemplateName);
   }
 
   function validateContentsOfOffHoursPage() {
-    validateTitleAndDesc('Off-Hours', 'This screen is shown during business off-hours');
+    validateTitleAndDesc('Off-Hours', 'This screen is shown to a customer during business off-hours');
+    utils.clear(careChatTemplateSetupPage.offHoursMessage);
+    utils.sendKeys(careChatTemplateSetupPage.offHoursMessage, 'We are currently offline, please try during our business hours.');
+    utils.expectIsDisplayed(careChatTemplateSetupPage.days);
+    utils.click(careChatTemplateSetupPage.wednesday);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.open24Hours);
+    utils.click(careChatTemplateSetupPage.open24Hours);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.timePicker);
+    utils.click(careChatTemplateSetupPage.startTimeDropDown);
+    utils.click(careChatTemplateSetupPage.startTime);
+    utils.click(careChatTemplateSetupPage.endTimeDropDown);
+    utils.click(careChatTemplateSetupPage.endTime);
+    utils.click(careChatTemplateSetupPage.timezonePicker);
+    utils.clear(careChatTemplateSetupPage.timezoneInput);
+    utils.sendKeys(careChatTemplateSetupPage.timezoneInput, 'New_York');
+    utils.click(careChatTemplateSetupPage.selectATimezone);
   }
 
   function validateContentsOfChatStatusMessagesPage() {
@@ -176,7 +200,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfSummaryPage() {
-    validateTitleAndDesc('Summary', 'Configuration Summary');
+    utils.expectTextToBeSet(careChatTemplateSetupPage.summaryDesc, 'You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.');
     utils.click(careChatTemplateSetupPage.chatSetupFinishBtn);
     notifications.assertSuccess(careChatTemplateSetupPage.randomChatTemplateName + ' Chat Template has been created successfully');
   }
@@ -198,7 +222,7 @@ describe('Care admin should be able to', function () {
 
   function validateChatStatusMessagesDefaultPage() {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), "Connecting you to an Agent");
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join…");
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), "Waiting for an Agent to join...");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), "Agent has entered the chat room");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3), "Agent has left the chat room");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(4), "You are chatting with our agent");
@@ -213,7 +237,7 @@ describe('Care admin should be able to', function () {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0),
       "Connecting you to an Agent named Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1),
-      "Waiting for an Agent to join… His name is Joy");
+      "Waiting for an Agent to join... His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2),
       "Agent has entered the chat room His name is Joy");
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(3),

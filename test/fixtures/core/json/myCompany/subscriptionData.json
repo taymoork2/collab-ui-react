@@ -89,7 +89,7 @@
     }],
     "subscriptionId": "subID"
   }],
-  "subscriptionsFormatted": [{
+  "licensesFormatted": [{
     "label": "subscriptions.message",
     "borders": false,
     "subscriptions": [{
@@ -98,8 +98,7 @@
       "offerName": "MS",
       "usage": 7,
       "volume": 100,
-      "id": "donutId00",
-      "subscription": "subID"
+      "id": "donutId00"
     }]
   }, {
     "label": "subscriptions.meeting",
@@ -111,8 +110,7 @@
         "offerName": "CF",
         "usage": 8,
         "volume": 100,
-        "id": "donutId01",
-        "subscription": "subID"
+        "id": "donutId01"
       }]
     }, {
       "siteUrl": "siteUrl",
@@ -123,8 +121,7 @@
         "usage": 101,
         "volume": 100,
         "id": "donutId02",
-        "siteUrl": "siteUrl",
-        "subscription": "subID"
+        "siteUrl": "siteUrl"
       }, {
         "licenseId": "TC_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
@@ -132,8 +129,7 @@
         "usage": 95,
         "volume": 100,
         "id": "donutId03",
-        "siteUrl": "siteUrl",
-        "subscription": "subID"
+        "siteUrl": "siteUrl"
       }]
     }, {
       "siteUrl": "siteUrl-2",
@@ -144,8 +140,7 @@
         "usage": 50,
         "volume": 100,
         "id": "donutId04",
-        "siteUrl": "siteUrl-2",
-        "subscription": "subID"
+        "siteUrl": "siteUrl-2"
       }, {
         "licenseId": "EE_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
@@ -153,8 +148,7 @@
         "usage": 50,
         "volume": 100,
         "id": "donutId05",
-        "siteUrl": "siteUrl-2",
-        "subscription": "subID"
+        "siteUrl": "siteUrl-2"
       }, {
         "licenseId": "CMR_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
@@ -162,8 +156,7 @@
         "usage": 50,
         "volume": 100,
         "id": "donutId06",
-        "siteUrl": "siteUrl-2",
-        "subscription": "subID"
+        "siteUrl": "siteUrl-2"
       }]
     }]
   }, {
@@ -175,8 +168,7 @@
       "offerName": "CO",
       "usage": 3,
       "volume": 100,
-      "id": "donutId07",
-      "subscription": "subID"
+      "id": "donutId07"
     }]
   }, {
     "label": "subscriptions.room",
@@ -187,9 +179,81 @@
       "offerName": "SD",
       "usage": 3,
       "volume": 100,
-      "id": "donutId08",
-      "subscription": "subID"
+      "id": "donutId08"
     }]
+  }],
+  "subscriptionsFormatted": [{
+    "subscriptionId": "subID",
+    "licenses": [{
+      "licenseId": "MS_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "MESSAGING",
+      "offerName": "MS",
+      "usage": 7,
+      "volume": 100,
+      "id": "donutId00"
+    }, {
+      "licenseId": "CF_9b6fbcfe-fa2c-41bb-ad06-9812918cafcd",
+      "licenseType": "CONFERENCING",
+      "offerName": "CF",
+      "usage": 8,
+      "volume": 100,
+      "id": "donutId01"
+    }, {
+      "licenseId": "MC_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "CONFERENCING",
+      "offerName": "MC",
+      "usage": 101,
+      "volume": 100,
+      "siteUrl": "siteUrl",
+      "id": "donutId02"
+    }, {
+      "licenseId": "TC_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "CONFERENCING",
+      "offerName": "TC",
+      "usage": 95,
+      "volume": 100,
+      "siteUrl": "siteUrl",
+      "id": "donutId03"
+    }, {
+      "licenseId": "EC_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "CONFERENCING",
+      "offerName": "EC",
+      "usage": 50,
+      "volume": 100,
+      "siteUrl": "siteUrl-2",
+      "id": "donutId04"
+    }, {
+      "licenseId": "EE_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "CONFERENCING",
+      "offerName": "EE",
+      "usage": 50,
+      "volume": 100,
+      "siteUrl": "siteUrl-2",
+      "id": "donutId05"
+    }, {
+      "licenseId": "CMR_aa250b26-56d6-4e3c-8244-127d2cb49006",
+      "licenseType": "CONFERENCING",
+      "offerName": "CMR",
+      "usage": 50,
+      "volume": 100,
+      "siteUrl": "siteUrl-2",
+      "id": "donutId06"
+    }, {
+      "licenseId": "CO_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "COMMUNICATION",
+      "offerName": "CO",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId07"
+    }, {
+      "licenseId": "SD_21770613-64d6-4658-a1f2-4a63ea819af2",
+      "licenseType": "ROOMS",
+      "offerName": "SD",
+      "usage": 3,
+      "volume": 100,
+      "id": "donutId08"
+    }],
+    "viewAll": false
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",

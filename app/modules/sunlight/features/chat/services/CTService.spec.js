@@ -17,6 +17,7 @@ describe('Chat Template Service', function () {
   };
 
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("UrlConfig", spiedUrlConfig);
     $provide.value("Authinfo", spiedAuthinfo);

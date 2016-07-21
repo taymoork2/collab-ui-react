@@ -4,23 +4,24 @@
   <cs-sp-container ng-if="deviceOverview.currentDevice.needsActivation">
     <div class="activationOverview">
       <img
-          class="activationImage"
-          src="images/devices-hi/activation_code.png"
+        class="activationImage"
+        src="images/devices-hi/activation_code.png"
       />
       <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
-      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires" translate-values="{inXDays: deviceOverview.currentDevice.friendlyExpiryTime}"></div>
+      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires"
+           translate-values="{inXDays: deviceOverview.currentDevice.friendlyExpiryTime}"></div>
     </div>
     <div class="activationButtons">
       <button
-          ng-click="deviceOverview.deleteDevice()"
-          class="btn"
-          ng-disabled="deviceOverview.resettingCode">
+        ng-click="deviceOverview.deleteDevice()"
+        class="btn"
+        ng-disabled="deviceOverview.resettingCode">
         <span translate="deviceOverviewPage.deleteLocation"></span>
       </button>
 
       <button
-          ng-click="deviceOverview.resetCode()"
-          class="btn">
+        ng-click="deviceOverview.resetCode()"
+        class="btn">
         <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
         <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
       </button>
@@ -30,15 +31,15 @@
     <cs-sp-section>
       <div class="overview">
         <img
-            class="overviewImage"
-            ng-if="deviceOverview.currentDevice.image"
-            ng-src="{{deviceOverview.currentDevice.image}}"
+          class="overviewImage"
+          ng-if="deviceOverview.currentDevice.image"
+          ng-src="{{deviceOverview.currentDevice.image}}"
         />
         <div class="overviewDescription">
           <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
           <i
-              class="fa fa-circle device-status device-status"
-              ng-class="deviceOverview.currentDevice.cssColorClass">
+            class="fa fa-circle device-status device-status"
+            ng-class="deviceOverview.currentDevice.cssColorClass">
           </i>
           <span>{{deviceOverview.currentDevice.state.readableState}}</span>
           <span ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</span>
@@ -57,16 +58,33 @@
           <i class="icon icon-plus"></i>
         </span>
           <input
-              type="text"
-              placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
-              ng-model="deviceOverview.newTag"
-              ng-show="deviceOverview.isAddingTag"
-              focus-on="deviceOverview.isAddingTag"
-              ng-blur="deviceOverview.addTag()"
-              ng-keyup="deviceOverview.addTagOnEnter($event)" />
+            type="text"
+            placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
+            ng-model="deviceOverview.newTag"
+            ng-show="deviceOverview.isAddingTag"
+            focus-on="deviceOverview.isAddingTag"
+            ng-blur="deviceOverview.addTag()"
+            ng-keyup="deviceOverview.addTagOnEnter($event)"/>
         </div>
       </div>
     </cs-sp-section>
+
+    <cs-sp-section ng-show="deviceOverview.isKEMAvailable">
+      <div class="section-title-row">
+        <span class="section-name" translate="deviceOverviewPage.kem"></span>
+      </div>
+      <div><p translate="deviceOverviewPage.kemDescription"></p></div>
+      <div class="dropdown-container">
+        <cs-select
+          name="kem" ng-model="deviceOverview.kemNumber" options="deviceOverview.kemOptions"
+          labelfield="label" is-error="{{deviceOverview.isError}}"
+          error-msg="{{::'spacesPage.retrieveKemFail' | translate}}"
+          valuefield="value"
+          on-change-fn="deviceOverview.saveKem()">
+        </cs-select>
+      </div>
+    </cs-sp-section>
+
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
       <div class="section-title-row">
         <span class="section-name" translate="deviceOverviewPage.issues"></span>
@@ -80,36 +98,35 @@
         </li>
       </ul>
     </cs-sp-section>
-
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.actionsHeader"></span>
       </div>
       <div class="form-group">
         <button
-            ng-click="deviceOverview.resetDevice()"
-            class="btn btn-action"
-            ng-if="deviceOverview.currentDevice.canReset"
-            ng-disabled="!deviceOverview.currentDevice.isOnline">
+          ng-click="deviceOverview.resetDevice()"
+          class="btn btn-action"
+          ng-if="deviceOverview.currentDevice.canReset"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span
-              translate="spacesPage.reboot">
+            translate="spacesPage.reboot">
           </span>
         </button>
 
         <button
-            class="btn btn-action"
-            sq-click-promise="deviceOverview.reportProblem()"
-            ng-if="deviceOverview.currentDevice.canReportProblem"
-            ng-disabled="!deviceOverview.currentDevice.isOnline">
+          class="btn btn-action"
+          sq-click-promise="deviceOverview.reportProblem()"
+          ng-if="deviceOverview.currentDevice.canReportProblem"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span translate="spacesPage.reportProblem"></span>
         </button>
 
         <button
-            ng-click="deviceOverview.deleteDevice()"
-            class="btn btn-action"
-            ng-if="deviceOverview.currentDevice.canDelete">
+          ng-click="deviceOverview.deleteDevice()"
+          class="btn btn-action"
+          ng-if="deviceOverview.currentDevice.canDelete">
           <span
-              translate="common.delete">
+            translate="common.delete">
           </span>
         </button>
       </div>
@@ -162,15 +179,15 @@
         <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
         <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
           <cs-select
-              ng-model="deviceOverview.selectedTimeZone"
-              class="timeZoneSelector"
-              options="deviceOverview.timeZoneOptions"
-              is-disabled="deviceOverview.updatingTimeZone"
-              labelfield="label"
-              valuefield="id"
-              on-change-fn="deviceOverview.saveTimeZoneAndWait()"
-              input-placeholder="deviceOverview.searchTimeZonePlaceholder"
-              filter="true">
+            ng-model="deviceOverview.selectedTimeZone"
+            class="timeZoneSelector"
+            options="deviceOverview.timeZoneOptions"
+            is-disabled="deviceOverview.updatingTimeZone"
+            labelfield="label"
+            valuefield="id"
+            on-change-fn="deviceOverview.saveTimeZoneAndWait()"
+            input-placeholder="deviceOverview.searchTimeZonePlaceholder"
+            filter="true">
           </cs-select>
         </div>
         <div class="col-sm-4" ng-show="deviceOverview.updatingTimeZone">
@@ -182,12 +199,12 @@
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
         <div class="col-sm-3" ng-show="deviceOverview.canChangeUpgradeChannel">
           <cs-select
-              ng-model="deviceOverview.selectedUpgradeChannel"
-              options="deviceOverview.upgradeChannelOptions"
-              is-disabled="deviceOverview.updatingUpgradeChannel"
-              labelfield="label"
-              valuefield="value"
-              on-change-fn="deviceOverview.saveUpgradeChannelAndWait()"
+            ng-model="deviceOverview.selectedUpgradeChannel"
+            options="deviceOverview.upgradeChannelOptions"
+            is-disabled="deviceOverview.updatingUpgradeChannel"
+            labelfield="label"
+            valuefield="value"
+            on-change-fn="deviceOverview.saveUpgradeChannelAndWait()"
           >
           </cs-select>
         </div>
@@ -205,6 +222,5 @@
         </div>
       </div>
     </cs-sp-section>
-
   </cs-sp-container>
 </div>

@@ -47,7 +47,7 @@
       var returnData = {
         graphData: []
       };
-      return getService(urlBase + utilizationUrl + getQuery(cluster, time), activePromiseForUtilization).then(function (response) {
+      return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].cpuUtilValues) && angular.isArray(response.data[0].cpuUtilValues) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].cpuUtilValues);
           return adjustUtilizationData(response.data[0].cpuUtilValues, returnData, response.data[0].startTime, response.data[0].endTime);
@@ -68,7 +68,7 @@
       var returnData = {
         graphData: []
       };
-      return getService(urlBase + callVolumeUrl + getQuery(cluster, time), activePromise).then(function (response) {
+      return getService(urlBase + getQuerys(callVolumeUrl, cluster, time), activePromise).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
           return adjustCallVolumeData(response.data[0].values, returnData, response.data[0].startTime, response.data[0].endTime);
@@ -87,7 +87,7 @@
       }
       activePromiseForAvailability = $q.defer();
       var returnData = [];
-      return getService(urlBase + clusterAvailability + getQuery(cluster, time), activePromiseForAvailability).then(function (response) {
+      return getService(urlBase + getQuerys(clusterAvailability, cluster, time), activePromiseForAvailability).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
           return response;
         } else {
@@ -105,7 +105,7 @@
       }
       activePromiseForClusterAvailability = $q.defer();
       var returnData = [];
-      return getService(urlBase + agg_availability + getQuery(cluster, time), activePromiseForClusterAvailability).then(function (response) {
+      return getService(urlBase + getQuerys(agg_availability, cluster, time), activePromiseForClusterAvailability).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data)) {
           return response;
         } else {
@@ -123,7 +123,7 @@
       }
       activePromiseForCPUUtilization = $q.defer();
       var returnData = [];
-      return getService(urlBase + agg_cpu_utilization + getQuery(cluster, time), activePromiseForCPUUtilization).then(function (response) {
+      return getService(urlBase + getQuerys(agg_cpu_utilization, cluster, time), activePromiseForCPUUtilization).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data)) {
           return response;
         } else {
@@ -156,14 +156,18 @@
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null
       };
       var startDate = {
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
+        call_reject: 0,
+        active_calls: 0,
         timestamp: startTime
       };
       activeData.unshift(startDate);
@@ -175,8 +179,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         timestamp: endTime
       };
       returnDataArray.push(endDate);
@@ -188,16 +192,18 @@
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         balloon: true,
         average_cpu: 0.0,
         peak_cpu: 0.0,
         timestamp: null
       };
       var startDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
+        average_cpu: 0.0,
+        peak_cpu: 0.0,
         timestamp: startTime
       };
       activeData.unshift(startDate);
@@ -209,8 +215,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         timestamp: endTime
       };
       returnDataArray.push(endDate);

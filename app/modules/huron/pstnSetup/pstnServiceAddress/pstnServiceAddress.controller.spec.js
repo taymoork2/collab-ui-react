@@ -66,7 +66,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
 
     expect(controller.isValid).toEqual(true);
 
-    controller.validateAddress();
+    controller.validateNext();
     $scope.$apply();
 
     expect(PstnSetup.getServiceAddress()).toEqual(address);

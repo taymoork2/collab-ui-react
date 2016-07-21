@@ -6,7 +6,7 @@ describe('Spark Care Partner flow', function () {
   var orgId;
   var accessToken;
 
-  describe('Add Partner Trial', function () {
+  describe('Add/Edit Partner Trial', function () {
 
     it('should login as care partner', function () {
       login.login('partner-admin', '#/partner/customers').then(function (token) {
@@ -42,10 +42,8 @@ describe('Spark Care Partner flow', function () {
       utils.clickEscape();
     }, LONG_TIMEOUT);
 
-    it('should find the new care trial', function (done) {
-      utils.click(partner.trialFilter);
-      utils.search(partner.newTrial.customerName, -1);
-      utils.expectIsDisplayed(partner.newTrialRow);
+    it('should find the newly added care trial in customer list', function (done) {
+      clickTrialRowAndPreview();
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
         orgId = _orgId;
@@ -53,8 +51,54 @@ describe('Spark Care Partner flow', function () {
       });
     });
 
-    afterAll(function () {
-      deleteTrialUtils.deleteOrg(orgId, accessToken);
+    // TODO: There is a delay seen with partner-admin test user to fetch and edit
+    // trials, so excluding the test until we root cause the delay.
+    xit('should reselect the care offer, change the care license and save',
+      function (done) {
+        clickTrialRowAndPreview();
+
+        utils.click(partner.termsActionButton);
+        utils.click(partner.editTermsButton);
+
+        utils.waitForModal().then(function () {
+          utils.expectIsDisplayed(partner.editTrialForm);
+
+          utils.expectClass(partner.careTrialCheckbox, 'enabled');
+          utils.expectCheckbox(partner.careTrialCheckbox, true);
+
+          var licInput = partner.careLicenseCountTextbox;
+          utils.waitUntilEnabled(licInput).then(function () {
+            utils.sendKeysUpArrow(licInput, 5).then(function () {
+              utils.click(partner.saveUpdateButton);
+              notifications.assertSuccess(partner.newTrial.customerName,
+                'You have successfully edited a trial for');
+              utils.clickEscape();
+              done();
+            });
+          });
+        });
+      });
+
+    afterAll(function (done) {
+      clickTrialRowAndPreview();
+
+      utils.expectIsDisplayed(partner.deleteCustomerButton);
+      utils.click(partner.deleteCustomerButton);
+      utils.waitForModal().then(function () {
+        utils.click(partner.deleteCustomerOrgConfirm).then(function () {
+          notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
+          done();
+        });
+      });
     });
+
+    function clickTrialRowAndPreview() {
+      navigation.clickCustomers();
+      utils.click(partner.trialFilter);
+      utils.search(partner.newTrial.customerName, -1);
+      utils.expectIsDisplayed(partner.newTrialRow);
+      utils.click(partner.newTrialRow);
+      utils.expectIsDisplayed(partner.previewPanel);
+    }
   });
 });

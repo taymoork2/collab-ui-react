@@ -3,7 +3,7 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
 
@@ -27,6 +27,8 @@
         USER: 1,
         CUSTOMER: 2
       };
+
+      customerListToggle = false;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
@@ -73,7 +75,8 @@
 
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
-        $scope: $scope
+        $scope: $scope,
+        customerListToggle: customerListToggle
       });
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');
       view = $compile(angular.element(template))($scope);

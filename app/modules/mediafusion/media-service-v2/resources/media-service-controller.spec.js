@@ -2,8 +2,9 @@
 describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module('Huron'));
   var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
-  var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise;
+  var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise, FeatureToggleService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
   var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
@@ -14,7 +15,7 @@ describe('Controller: MediaServiceControllerV2', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = $state;
     log = $log;
@@ -27,6 +28,14 @@ describe('Controller: MediaServiceControllerV2', function () {
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
+    FeatureToggleService = _FeatureToggleService_;
+
+    FeatureToggleService.features = {
+      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
+    };
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+
     //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
     //spyOn(Notification, 'errorResponse');
     httpMock.when('GET', /^\w+.*/).respond({});

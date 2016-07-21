@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $q, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -34,10 +34,12 @@
       count: 0
     }];
     vm.countHosts = countHosts;
+    vm.getHostnames = getHostnames;
     vm.setFilter = setFilter;
     vm.searchData = searchData;
     vm.openService = openService;
     vm.openSettings = openSettings;
+    vm.addResource = addResource;
     vm._helpers = {
       formatTimeAndDate: formatTimeAndDate,
       hasServices: hasServices
@@ -47,7 +49,6 @@
 
     function loadClusters() {
       FusionClusterService.getAll()
-        .then(addMissingUpgradeScheduleToClusters)
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
@@ -66,28 +67,19 @@
         .value();
     }
 
-    function addMissingUpgradeScheduleToClusters(clusters) {
-      // .clusterUpgradeSchedule is populated when getting the list of clusters
-      // only when the upgrade schedule has been explicitely set by the admin.
-      // Otherwise it's not there but we can get it by fetching directly the
-      // cluster data…
-      var promises = clusters.map(function (cluster) {
-        if (cluster.clusterUpgradeSchedule) {
-          return cluster;
-        } else {
-          return FusionClusterService.getUpgradeSchedule(cluster.id)
-            .then(function (upgradeSchedule) {
-              cluster.clusterUpgradeSchedule = upgradeSchedule;
-              return cluster;
-            });
-        }
-      });
-      return $q.all(promises);
+    function getHostnames(cluster) {
+      return _.chain(cluster.connectors)
+        .map('hostname')
+        .uniq()
+        .sort()
+        .map(_.escape)
+        .join('<br />')
+        .value();
     }
 
     function updateFilters() {
-      var expresswayClusters = _.filter(clustersCache, 'type', 'expressway');
-      var mediafusionClusters = _.filter(clustersCache, 'type', 'mediafusion');
+      var expresswayClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
+      var mediafusionClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       vm.placeholder.count = clustersCache.length;
       vm.filters[0].count = expresswayClusters.length;
       vm.filters[1].count = mediafusionClusters.length;
@@ -96,9 +88,9 @@
     function setFilter(filter) {
       activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'expressway');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
       } else if (filter.filterValue === 'mediafusion') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'mediafusion');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       } else {
         vm.displayedClusters = clustersCache;
       }
@@ -125,25 +117,31 @@
           'clusterId': clusterId
         });
       } else if (serviceId === 'squared-fusion-media') {
-        $state.go('media-service.list');
+        $state.go('media-service-v2.list');
       }
     }
 
     function openSettings(type, id) {
-      $state.go(type + '-settings', {
-        id: id
-      });
+      if (type === 'c_mgmt') {
+        $state.go('expressway-settings', {
+          id: id
+        });
+      } else if (type === 'mf_mgmt') {
+        $state.go('mediafusion-settings', {
+          id: id
+        });
+      }
     }
 
-    function formatTimeAndDate(clusterUpgradeSchedule) {
-      var time = labelForTime(clusterUpgradeSchedule.scheduleTime);
+    function formatTimeAndDate(upgradeSchedule) {
+      var time = labelForTime(upgradeSchedule.scheduleTime);
       var day;
-      if (clusterUpgradeSchedule.scheduleDays.length === 7) {
+      if (upgradeSchedule.scheduleDays.length === 7) {
         day = $translate.instant('weekDays.everyDay', {
           day: $translate.instant('weekDays.day')
         });
       } else {
-        day = labelForDay(clusterUpgradeSchedule.scheduleDays[0]);
+        day = labelForDay(upgradeSchedule.scheduleDays[0]);
       }
       return time + ' ' + day;
     }
@@ -158,21 +156,57 @@
     }
 
     function labelForDay(day) {
-      var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      var keys = _.reduce(days, function (result, day, i) {
-        // the days in shcedule upgrade starts at 1 == monday and ends with 7 == sunday
-        // (API made by a British :))
-        result[i + 1] = day;
-        return result;
-      }, {});
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + keys[day])
+        day: $translate.instant('weekDays.' + day)
       });
     }
 
     function hasServices(cluster) {
       return cluster.servicesStatuses.some(function (serviceStatus) {
         return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
+      });
+    }
+
+    function addResource() {
+      var initialState = {
+        data: {
+          targetType: '',
+          expressway: {},
+          mediafusion: {}
+        },
+        history: [],
+        currentStateName: 'add-resource.type-selector',
+        wizardState: {
+          'add-resource.type-selector': {
+            nextOptions: {
+              expressway: 'add-resource.expressway.service-selector',
+              mediafusion: 'add-resource.mediafusion.hostname'
+            }
+          },
+          // expressway
+          'add-resource.expressway.service-selector': {
+            next: 'add-resource.expressway.hostname'
+          },
+          'add-resource.expressway.hostname': {
+            next: 'add-resource.expressway.name'
+          },
+          'add-resource.expressway.name': {
+            next: 'add-resource.expressway.end'
+          },
+          'add-resource.expressway.end': {},
+          // mediafusion
+          'add-resource.mediafusion.hostname': {
+            next: 'add-resource.mediafusion.name'
+          },
+          'add-resource.mediafusion.name': {
+            next: 'add-resource.mediafusion.end'
+          },
+          'add-resource.mediafusion.end': {}
+        }
+      };
+      var wizard = WizardFactory.create(initialState);
+      $state.go(initialState.currentStateName, {
+        wizard: wizard
       });
     }
   }

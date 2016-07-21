@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAValidationService', function () {
-  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService;
+  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService, AACommonService, AutoAttendantCeMenuModelService;
 
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -38,12 +38,13 @@ describe('Service: AAValidationService', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_, _AACommonService_) {
+  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeMenuModelService_, _AAValidationService_, _AACommonService_) {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAValidationService = _AAValidationService_;
     AANotificationService = _AANotificationService_;
     AACommonService = _AACommonService_;
+    AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
@@ -140,6 +141,122 @@ describe('Service: AAValidationService', function () {
 
       expect(valid).toEqual(false);
       expect(AANotificationService.error).toHaveBeenCalled();
+    });
+    it('report validation error for an empty Route to Auto Attendant target in Submenu', function () {
+
+      var topMenu, subMenu;
+
+      ui = {};
+      ui.isOpenHours = true;
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      subMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu.setType("MENU_OPTION");
+
+      ui.openHours.addEntryAt(0, topMenu);
+
+      subMenu.setType("MENU_OPTION");
+
+      // ui.openHours.entries[0].addEntryAt(0, subMenu);
+      topMenu.addEntryAt(0, subMenu);
+      topMenu.entries[0].key = "0";
+
+      subMenu.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+
+      subMenu.entries[0].setKey("2");
+
+      subMenu.entries[0].addAction(actionEntry);
+
+      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(false);
+
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing', {
+        key: '0',
+        schedule: 'autoAttendant.scheduleOpen',
+        at: 1,
+        subkey: '2'
+      }]);
+
+      expect(AANotificationService.error).toHaveBeenCalled();
+
+    });
+
+    it('should not report a validation error for an valid Route to Auto Attendant target in Submenu', function () {
+
+      var topMenu, subMenu;
+
+      ui = {};
+      ui.isOpenHours = true;
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      subMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu.setType("MENU_OPTION");
+
+      ui.openHours.addEntryAt(0, topMenu);
+
+      subMenu.setType("MENU_OPTION");
+
+      // ui.openHours.entries[0].addEntryAt(0, subMenu);
+      topMenu.addEntryAt(0, subMenu);
+      topMenu.entries[0].key = "0";
+
+      subMenu.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('goto', 'routeToNoWhere');
+
+      subMenu.entries[0].setKey("2");
+
+      subMenu.entries[0].addAction(actionEntry);
+
+      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(true);
+
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+    });
+
+    it('should not report validation error for valid Route to Auto Attendant target in Submenu', function () {
+
+      var topMenu, subMenu;
+
+      ui = {};
+      ui.isOpenHours = true;
+      ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      subMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu = AutoAttendantCeMenuModelService.newCeMenu();
+      topMenu.setType("MENU_OPTION");
+
+      ui.openHours.addEntryAt(0, topMenu);
+
+      subMenu.setType("MENU_OPTION");
+
+      ui.openHours.entries[0].addEntryAt(0, subMenu);
+      subMenu.addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('goto', 'AAAAA');
+      subMenu.entries[0].setKey("0");
+
+      subMenu.entries[0].addAction(actionEntry);
+
+      // ui.openHours.entries[0].setType("MENU_OPTION");
+      // ui.openHours.entries[0].entries[0].setType("MENU_OPTION");
+      // ui.openHours.entries[0].entries[0].key = "0";
+      ui.openHours.entries[0].entries[0].entries[0].setType("MENU_OPTION");
+      ui.openHours.entries[0].entries[0].entries[0].setKey("1");
+
+      var valid = AAValidationService.isRouteToValidationSuccess(ui);
+
+      expect(valid).toEqual(true);
+
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
     });
 
     it('should not report validation error for an empty Route to Auto Attendant target if key is not initialized', function () {

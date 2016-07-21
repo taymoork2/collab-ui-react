@@ -60,6 +60,7 @@
     "save": "Save",
     "status": "Status",
     "pending": "Invite Pending",
+    "error": "Invitation email error",
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
@@ -145,6 +146,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
+    "siteAdminUrl": "Sign-in to manage",
     "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
@@ -373,6 +375,10 @@
     "activeUsers": "Active Users",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
+    "today": "Today",
+    "today2": "today",
+    "yesterday": "Yesterday",
+    "yesterday2": "yesterday",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
@@ -744,6 +750,7 @@
     "begin": "Begin",
     "back": "Back",
     "finish": "Finish",
+    "retry": "Retry",
     "language": "Language",
     "voice": "Voice",
     "selectLanguage": "Select a language",
@@ -966,7 +973,12 @@
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
-    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
+    "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1045,7 +1057,7 @@
   "spacesPage": {
     "addTag": "Add tag",
     "title": "Devices",
-    "addBtn": "Add Device",
+    "addBtn": "New Device",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
     "statusHeader": "Status",
@@ -1075,7 +1087,10 @@
     "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "retrieveDevicesFail": "Failed to load device information",
+    "retrieveKemFail": "Failed to retrieve key expansion module count."
+
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1110,11 +1125,12 @@
       "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
-      "report": "Report",
+      "status": "User Status",
+      "report": "User Status Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1191,7 +1207,6 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
       "notInstalled": "The {{serviceName}} is not installed on this cluster.",
       "deregisterSectionHeader": "Deregister",
       "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
@@ -1277,7 +1292,7 @@
     "cloudExtensions": {
       "serviceNames": {
         "squared-fusion-uc": "Aware",
-        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-cal": "Calendar",
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
@@ -1311,7 +1326,7 @@
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
-      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+      "upgradeWarning": "This cluster has one or more offline hosts. It is recommended to bring all hosts online before initiating an upgrade."
     },
     "expresswayClusterSettings": {
       "pageTitle": "{{clusterName}} settings",
@@ -1426,21 +1441,54 @@
       }
     },
     "fusion": {
+      "types": {
+        "expressway": "Expressway",
+        "mediafusion": "Media Fusion"
+      },
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
-        "users": "Users:",
-        "releaseChannel": "Release Channel:",
-        "upgradeTime": "Upgrade Time:",
+        "upgrade-schedule": "Upgrade Schedule",
+        "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
-        "expressway-short": "E",
-        "mediafusion-short": "M",
+        "add-resource": "Add Resource",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion",
-        "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule"
+        "mediafusion": "Media",
+        "no-services": "No services"
+      },
+      "add-resource": {
+        "title": "Add Resource",
+        "type": {
+          "error": "Error fetching the different cluster types.",
+          "title": "What type of resource do you want to add?",
+          "expressway-description": "Can run Call Service, Calendar Service",
+          "expressway-not-setup": "Expressway no set up",
+          "mediafusion-description": "Can run Media Service",
+          "mediafusion-not-setup": "Media Service no set  up"
+        },
+        "expressway": {
+          "services": {
+            "error": "Error fetching the different service types.",
+            "title": "What services do you want the Expressway to run?",
+            "call-not-setup": "Call Service not set up",
+            "calendar-not-setup": "Calendar Service not set up"
+          },
+          "end": {
+            "line1": "You may now register the Expressway with the Cisco Collaboration Cloud.",
+            "line2": "Go to your Expressway to finish the registrration and configure the Call Connector and the Calendar Connector."
+          }
+        },
+        "mediafusion": {
+          "name": {
+            "title": "Enter a name for the Hybrid Media Node",
+            "help": "The cluster name is only used for display purposes."
+          },
+          "end": {
+
+          }
+        }
       }
     }
   },
@@ -1714,6 +1762,7 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "mapDirectLineWithExtIfPossible": "Map phone number to extension, where possible",
     "reset": "Reset",
     "tosReadAndAgree": "I have read and agree to these",
     "tosTermsAndConditions": "terms and conditions"
@@ -1809,7 +1858,10 @@
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
-    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuAddDigit": "Add an input digit",
+    "phoneMenuAnotherDigit": "Add another input digit",
+    "phoneSubmenuAddDigit": "Add an input digit to submenu",
+    "phoneSubmenuAnotherDigit": "Add another input digit to submenu",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
     "phoneMenuRepeatContinue": "Repeat and Continue To Next Step",
@@ -1822,6 +1874,7 @@
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
     "phoneMenuRouteAA": "Route to Auto Attendant",
+    "phoneMenuGoBack": "Go Back",
     "phoneMenuRouteQueue": "Route to Queue",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
@@ -1831,11 +1884,17 @@
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
+    "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuSubmenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input Digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
+    "phoneMenuSubmenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Hunt Group target.",
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
+    "phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} has a missing or invalid Route To Phone Number target.",
     "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
+    "phoneMenuSubmenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To User target.",
     "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
+    "phoneMenuSubmenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Voicemail target.",
     "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
     "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
     "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
@@ -1956,9 +2015,9 @@
   },
   "callPark": {
     "code": "CP",
-    "title": "Call Parking",
+    "title": "Call Park",
     "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
-    "newCallPark": "New Call Park",
+    "newCallPark": "Create Call Park",
     "callParkInformation": "Call Park information",
     "information1": "The Call Park feature allows you to place a call on hold, so it can be retrieved from another phone in the system. If you are on an active call at your phone, you can park the call to a call park extension by pressing the Park softkey or the Call Park button. Someone on another phone in your system can then dial the call park extension to retrieve the call.",
     "information2": "You can define either a single directory number or a range of directory numbers for use as call park extension numbers. You can park only one call at each call park extension number.",
@@ -1977,13 +2036,28 @@
     "callReversion": "Call Reversion Rule",
     "callReversionDescription": "If the call is not answered, send it to this destination.",
     "callparkInitLine": "Line Number that initiated the Call Park",
-    "namePlaceholder": "Type the Name",
+    "selectParkNumber": "Select Call Park Number",
+    "selectParkHint": "Number ranges are used for interdepartmental transfers while single park numbers are for individual use.",
+    "namePlaceholder": "Name the Call Park",
     "numberPlaceholder": "Enter Number",
+    "memberPlaceholder": "Select Call Park Members",
+    "memberHint": "These users or or places' devices will be part of this call park.",
+    "removeMem": "Remove Member",
+    "nameHint": "The call park name appears on the call park members' devices.",
     "singleNumberPlaceholder": "Enter Single Number",
     "to": "to",
     "lessThan": "{{rangeMin}}  must be less than or equal to {{rangeMax}}.",
     "greaterThan": "{{rangeMax}}  must be greater than or equal to {{rangeMin}}.",
-    "required": "This field is required"
+    "required": "This field is required",
+    "cancelHeader": "Cancel Call Park Creation",
+    "cancelDialog": "Are you sure you wish to cancel call park creation? This call park will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation",
+    "createHelpText": "Create",
+    "successSave": "'{{callParkName}}' call park has been created successfully",
+    "successUpdate": "'{{callParkName}}' call park has been updated successfully",
+    "errorSave": "Failed to create the '{{callParkName}}' Call Park",
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -2164,6 +2238,9 @@
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
+    "nextStepPrompt1": "The customer has to sign a PSTN Contract that will be emailed to them.",
+    "nextStepPrompt2": "The customer has to sign a PSTN Letter of Authorization that will be emailed to them.",
+    "OrderSubmitted": "Customer's order has been submitted.",
     "checkOrderStatus": "Check Order Status",
     "launchPortal": "Setup Spark Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
@@ -2308,7 +2385,7 @@
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
       "timeZonePlaceholder": "Select a time zone...",
-      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
@@ -2329,6 +2406,8 @@
       "meetingRoomCamera": "Spark Room System &nbsp;<span class='small-hint'>(Any mix up to 3 devices)</span>",
       "deskPhones": "Personal and Shared Desk Phones &nbsp;<span class='small-hint'>(Any mix up to 5 devices)</span>",
       "sx10": "SX10",
+      "dx80": "DX80",
+      "mx300": "MX300",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
@@ -2438,10 +2517,14 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to purchase Cisco Spark?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
+    "requestConfirmMsg": "A purchase request message was sent to all partner administrators",
+    "requestConfirmPartialFailMsg": "A purchase request message was not sent to some of your parter administrators",
+    "requestConfirmTotalFailMsg": "A purchase request message was not sent",
     "requestPurchaseBtn": "Purchase Now",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase",
+    "requestConfirmNotifyMsg": "Notification has been sent to all partner admins of your intent to purchase",
+    "requestConfirmPartialFailNotifyMsg": "Due to an error, notification to some of your account managers at {{partnerOrgName}} of your intent to purchase has failed. Please contact your partner directly.",
+    "requestConfirmTotalFailNotifyMsg": "Due to an error, notification of your intent to purchase has failed. Please contact your partner directly",
     "trialDuration": "Trial Duration",
     "callServiceDisabled": "This service is temporarily unavailable for trial."
   },
@@ -2524,6 +2607,7 @@
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
@@ -2531,9 +2615,9 @@
     "ST": "Storage",
     "SD": "Spark Room System",
     "deleteOrgTitle": "Delete Customer",
-    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
-    "deleteOrg": "Delete '{{orgName}}'",
-    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrg": "Delete Customer",
+    "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers"
@@ -2639,13 +2723,26 @@
     "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco.",
     "timeZone": "Timezone",
     "timeZoneUpdated": "Time Zone updated",
-    "timeZoneUpdateFailed": "Device did not update its Time Zone in time"
+    "timeZoneUpdateFailed": "Device did not update its Time Zone in time",
+    "kem": "Key Expansion Module(s)",
+    "kemAbbreviation": "KEM",
+    "kemDescription": "Key Expansion Modules (KEM) can be used to increase personal interaction while increasing responsiveness by adding single-button access to more people.",
+    "kemOptions": {
+      "none": "None",
+      "one": "One",
+      "two": "Two",
+      "three": "Three"
+    },
+    "kemUpdated": "Number of KEM updated.",
+    "kemChangesFailed": "Failed to save KEM changes."
   },
   "addDeviceWizard": {
     "newDevice": "New Device",
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup so that it can be assigned to either a user or a place. What kind of device do you want to activate?",
+      "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
+      "deviceTypeInstructionsNewPlace": "A place containing desk phones will be assigned a Spark Call license. A place containing a room system will be assigned a Spark Room System license. Proceeding acknowledges that a license will be assigned.",
       "deskPhone": "Desk Phone",
       "newDeskPhone": "New desk phone for existing user",
       "deskPhoneExamples": "e.g. 8845, 8865 or 8800",
@@ -2689,6 +2786,12 @@
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of room or shared space"
     },
+    "newSharedSpace": {
+      "title": "Add Place",
+      "newPlace": "Name of Place",
+      "newPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. A place can either contain a room system or up to 10 desk phones. All devices associated with one place will share the same calling configuration. For example, desk phones will share the same lines.",
+      "insertRoomName": "Insert name of room or shared space"
+    },
     "assignPhoneNumber": {
       "assignPhoneNumber": "Assign a phone number",
       "assignPhoneNumberInstructions": "Using a Desk Phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already."
@@ -2699,8 +2802,8 @@
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
-      "plugInDeskPhone": "Plug in your new Cisco desk phone and enter the activation code when prompted or use the device camera to scan the QR code.",
-      "plugInRoomSystem": "Plug in your new Cisco room system and enter the activation code when prompted.",
+      "plugInDeskPhone": "Plug in the Cisco desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code.",
+      "plugInRoomSystem": "Plug in the Cisco room system belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted.",
       "newCodeInUsersPage": "A new activation code can be created from the Users page after this code expires.",
       "newCodeInPlacesPage": "A new activation code can be created from the Places page after this code expires.",
       "newCodeInDevicesPace": "A new activation code can be created from the Devices page after this code expires.",
@@ -2723,7 +2826,9 @@
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful."
+    "emailError": "Email unsuccessful.",
+    "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
+    "generateError": "Unable to generate activation code. Please try again."
   },
   "rolesPanel": {
     "editUser": "Edit User",
@@ -2859,16 +2964,21 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Deactivating a service removes all service-related features for your users and requires a confirmation step",
+      "deactivateServiceV2": "Deactivating a service removes all service-related features for your users and requires a confirmation step.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
+      "emailNotificationsV2": "Add email addresses to recieve notifications about service-impacting alarms and software upgrades.",
       "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
       "documentationHeading": "Documentation and software",
+      "documentationHeadingV2": "Documentation and Software",
       "documentation_1": "Go to",
       "documentation_2": "Help Central",
       "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
+      "documentation_3V2": "for prerequisities and help installing and using the Hybrid Media Service.",
       "documentation_4": "Download Media Service OVA from",
-      "documentation_5": "software.cisco.com",
+      "documentation_4V2": "Download Hybrid Media Service software from",
+      "documentation_5": "here",
       "cancelCaps": "CANCEL",
       "cancel": "Cancel",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
@@ -2899,10 +3009,10 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "Calls local to cluster",
-      "callReject": "Calls rejected by cluster",
+      "callVolumes": "Total Calls",
+      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callLocal": "On Premises",
+      "callReject": "Overflowed to Cloud",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
       "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
@@ -2944,7 +3054,7 @@
       "uninstalling": "Uninstalling",
       "running": "Running",
       "needs_attention": "Needs attention",
-      "alarm": "Alarm",
+      "alarm": "Alarms",
       "Unknown": "Registering",
       "nohosts": "No Hosts Registered",
       "no_hosts": "No Hosts Registered",
@@ -2980,20 +3090,33 @@
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "releaseChannel": "Release channel",
+      "releaseChannel": "Release Channel",
       "doYouStillWantToContinue": "Do you still want to continue ?",
       "youHostNoAvailable": "Your host will no longer be available in future",
       "clusterSettings": "Cluster Settings",
-      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it",
-      "deletecluster": "Delete cluster",
-      "deleteclusterDesc": "Delete the cluster from Cisco Collaboration Cloud"
-
+      "releaseChannelDesc": "Select a release channel for this cluster and assign a specific group of users to it.",
+      "deletecluster": "Delete Cluster",
+      "deleteclusterDesc": "Delete the cluster from Cisco Collaboration Cloud",
+      "deleteClusterBodyDesc": "If you want to delete this cluster you must first move all nodes in this cluster to another cluster or deregister all the nodes. What would you like to do ?",
+      "makeASelection": "Make a selection:",
+      "moveallnodes": "Move All Nodes",
+      "deregisterallnodes": "Deregister All Nodes",
+      "selectTheDest": "Select the destination media cluster for each node.",
+      "nodes": "Nodes",
+      "moveTo": "Move to:",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
+      "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
+      "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
       "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
+      "reassignTextV2": "You are about to move the Hybrid Media Node {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
-      "reassignErrorMessage": "Unable move to the host {{hostName}}.",
+      "reassignErrorMessage": "Unable move to the Hybrid Media Node {{hostName}}. Please try again after some time.",
       "moveHost": "Move Host",
       "deregister_host": "Deregister Host",
       "moveNode": "Move Node",
@@ -3011,28 +3134,40 @@
       "description": "Description",
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
+      "nodeImpact": "Node Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
       "title": "Register a New media server",
       "text1": "Create a new or choose an existing Media Cluster to assign the new media server to:",
       "text2": "Enter the hostname or IP address of the media server that you want to register to the cloud. Click Next, and then log in to your media server to confirm registration.",
-      "register": "Go To media server",
+      "register": "Go To Node",
       "cancel": "Cancel",
+      "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter hostname or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
-      "grant-registration-success-header-new-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
-      "grant-success-information": "Go to your media server within one hour to finish registration.",
+      "grant-registration-success-header-old-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-registration-success-header-new-cluster": "You can now register the Hybrid Media Node <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with the Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "errorTitle": "Registration Error",
-      "errorOnlineText": "The media server that you're registering already exists and is online.",
-      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again.",
-      "titleV2": "Register New Hybrid Media Node",
-      "text1V2": "Create a new or choose an existing Hybrid Media node cluster to assign the new media node",
-      "text2V2": "Enter the hostname or IP address of the Hybrid media node that you want to register with Cisco collaboration cloud",
+      "errorOnlineText": "The Hybrid Media Node that you're registering already exists and is online.",
+      "errorOfflineText": "The Hybrid Media Node that you're registering already exists and is offline. Deregister the existing Hybrid Media Node before you try again.",
+      "titleV2": "Register Hybrid Media Node",
+      "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
+      "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
-      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again."
+      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
+      "firstStep": "Have you installed and configured the software on your new Hybrid Media Node?",
+      "firstStepYes": "During this guided setup you will need documentation.",
+      "firstStepYes1": "Visit ",
+      "firstStepYes2": "Help Central",
+      "firstStepYes3": " for more information.",
+      "firstStepNo": "Before your proceed, install and con gure the Hybrid Media Node software on your server.",
+      "firstStepNo1": "1. Download the latest software from Cisco:",
+      "firstStepNo2": "Click here",
+      "firstStepNo3": "2. Install and configure your Hybrid Media Node. For details, visit Help Central.",
+      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3067,6 +3202,8 @@
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
     "moveHost": "MOVE HOST",
+    "moveHostSuccess": "Node moved successfully, Please wait for a moment...",
+    "deleteNodeSuccess": "Node deregistered successfully, Please wait for a moment...",
     "deleteCluster": "Delete cluster",
     "openSettings": "Open settings",
     "installing": "Installing"
@@ -3526,19 +3663,22 @@
   "branding": {
     "customTitle": "Custom Branding",
     "tenantTitle": "Tenant Branding",
-    "partnerInfo": "Customize your tenant’s experience with Cisco applications by uploading your company logo below.",
-    "customInfo": "Customize your employee’s experience with Cisco applications by uploading your company logo below.",
+    "partnerInfo": "Brand your customer's experience with Cisco applications by uploading your company logo below.",
+    "customInfo": "Brand your employee's experience with Cisco applications by uploading your company logo below.",
     "exampleLink": "&nbsp;(see example)",
     "useCiscoLogo": "Use default Cisco logos",
     "usePartnerLogo": "Use {{partner}} logo",
     "useOwnLogo": "Use your own logo",
+    "logoPlaceholder": "Drag and drop your logo here or click to upload",
     "logoUploadNote": "For best results, logo should be transparent, with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "customBrandingExample": "Custom Branding Examples",
-    "companyLogo": "{{partner}} Company Logos",
-    "brandingExampleIntro": "After uploading, your Partner Company logo will automatically be sized and appear as shown in the following examples.",
-    "logoOnAbout": "{{partner}} Company example logo shown on the Spark About tab.",
-    "logoOnSupprt": "{{partner}} Company example logo shown on the Spark Support tab.",
-    "logoOnWebEx": "{{partner}} Company example logo shown on the Webex Site."
+    "companyLogo": "{{name}} Logo",
+    "brandingExampleIntro": "After uploading, your logo will automatically be sized and appear as shown in the following examples.",
+    "logoOnAbout": "{{name}} example logo shown on the Spark About tab.",
+    "logoOnSupprt": "{{name}} example logo shown on the Spark Support tab.",
+    "logoOnWebEx": "{{name}} example logo shown on the Webex Site.",
+    "partner": "Partner",
+    "customer": "Customer"
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3623,6 +3763,7 @@
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteActions": "Actions",
+    "siteAdminUrl": "Sign-in to manage",
     "siteCsvColumnHeader": "Bulk Modify User Attributes",
     "siteCsvModalText": "Export user attributes, edit the CSV file, and then import the edited version. For details about read-only attributes and other related information, <a href='https://help.webex.com/docs/DOC-8096' target='_blank' ng-click='{{click}}'>click here</a>.",
     "siteCsvModalImportText": "Drag and drop the CSV file here or click to browse.",
@@ -3768,18 +3909,8 @@
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
   "contactCenterUserConfig": {
-    "channels": "Channels",
-    "contactCenterProfile": "Care Profile",
-    "chat": "Chat",
-    "voice": "Voice",
-    "email": "Email",
-    "role": "Role",
     "alias": "Alias",
     "attributes": "Attributes",
-    "userRoles": {
-      "user": "User",
-      "supervisor": "Supervisor"
-    },
     "successMessages": {
       "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
@@ -3831,7 +3962,9 @@
     "sorryMessage": "Sorry, something went wrong ",
     "reloadMessage": "Please try reloading the page"
   },
-
+  "placesPage": {
+    "placeError": "Add Place failed."
+  },
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -3912,14 +4045,24 @@
     "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",
     "feedbackDesc": "This screen is used to collect feedback from the customer after the chat ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
-    "offHoursDesc": "This screen is shown during business off-hours",
+    "offHoursDesc": "This screen is shown to a customer during business off-hours",
+    "offHoursMessage": "Message",
+    "offHoursDefaultMessage": "We are currently offline, please try during our business hours.",
+    "businessHours": "Business Hours",
+    "open24Hours": "Open 24 hours",
+    "offHoursStartTime": "Start Time",
+    "offHoursEndTime": "End Time",
+    "offHoursTimeZone": "Time Zone",
+    "offHoursWarningMessage": "Please Enter Off Hours Message",
+    "offHoursDayWarningMessage": "Please Select a Day",
+    "chatStringsDesc": "These strings appear in the UI based on different scenarios",
     "chatStatusMessagesDesc": "Configure status messages which your customer sees on chat bubble",
     "cancelHeader": "Cancel Chat Template Creation",
     "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
-    "screenCard": "Screen",
-    "attributesCard": "Attributes",
+    "preview": "Preview",
+    "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
     "defaultOrgLabel": "Organization",
     "defaultWelcomeText": "Welcome to",
@@ -3945,7 +4088,6 @@
     "type": "Type",
     "defaultRightCardText": "Select a field on the left to change it's attribute.",
     "profileSelector": "Profile",
-    "screen": "Screen",
     "attributes": "Attributes",
     "org": "Organization",
     "agent": "Agent",
@@ -3961,11 +4103,7 @@
     "customerMsgTime": "10:11 AM",
     "agentEnteredStatus": "Agent has entered chat room",
     "typeNewMsg": "Type your message and press enter.",
-    "feedbackQuery": "Are you satisfied with your chat experience?",
-    "rating": "Rating {{index}}",
-    "rating1Text": "Not at all",
-    "rating2Text": "Moderately",
-    "rating3Text": "Absolutely",
+    "feedbackQuery": "Please rate your chat experience",
     "ratingHintText": "Hint Text",
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
@@ -3995,19 +4133,26 @@
       }
     },
     "summary": "Summary",
-    "summaryDesc": "Configuration Summary",
+    "summaryDesc": "You have configured the chat template. Click Finish to save the configuration and generate embed code so you can start using this chat template on your organization website.",
     "copyEmbedCode": "Copy Embed Code",
-    "errorCreateChatTemplate": "Error creating chat template.",
+    "errorCreateChatTemplate": "Error generating embed code, please try again.",
+    "agentUnavailableMessage": "Sorry, we are unavailable at the moment. Please try again later.",
+    "message": "Message",
     "connecting": "Connecting",
     "connectingMessage": "Connecting you to an Agent",
     "waiting": "Waiting",
-    "waitingMessage": "Waiting for an Agent to join…",
+    "waitingMessage": "Waiting for an Agent to join...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
     "leaveRoom": "Left the Room",
     "leaveRoomMessage": "Agent has left the chat room",
     "chatting": "Chatting",
-    "chattingMessage": "You are chatting with our agent"
+    "chattingMessage": "You are chatting with our agent",
+    "downloadEmbedCode": "Download Embed Code",
+    "embedCodeWarnMsg": "It is important to verify all domains where you want to use chat bubble. You will not be able to embed chat bubble on unverified domains.",
+    "embedCodeWarnMsgContd": "to verify your domains.",
+    "clickHere": "Click here",
+    "embedCodeFor": "Embed Code for "
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
@@ -4187,8 +4332,8 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
-        "convertButton": "Convert",
-        "convertText": "Users who may belong to your organization"
+        "convertButton": "Review",
+        "convertText": "Users ready for license conversion review"
       },
       "message": {
         "title": "Message",
@@ -4271,7 +4416,7 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
       "title": "Support",
@@ -4290,14 +4435,20 @@
     "order": "Order History"
   },
   "subscriptions": {
+    "licenseSummary": "License Summary",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "care": "Care",
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
-    "subscription": "Subscription: ",
+    "subscription": "Subscription ID: ",
+    "defaultName": "Your Subscription",
+    "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
+    "more": "More",
+    "less": "Less",
+    "quantity": "Qty: ",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4307,10 +4458,17 @@
       "EC": "WebEx Event Center",
       "EE": "Webex Enterprise Edition",
       "CMR": "WebEx Collaboration Meeting Rooms",
-      "CO": "Call",
-      "ST": "Storage",
+      "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
+  },
+  "myCompanyOrders": {
+    "numberHeader": "Order Number",
+    "descriptionHeader": "Order Detail",
+    "priceHeader": "Price",
+    "dateHeader": "Order Date",
+    "actionsHeader": "Actions",
+    "downloadPdf": "Download PDF"
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
@@ -4410,7 +4568,9 @@
       "pending": "Invite Pending",
       "transient": "Transient",
       "fraud": "Fraud",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "rejected": "Onboard email error",
+      "resent": "Invite Resent"
     },
     "enabledServices": "Active",
     "availableServices": "Available",

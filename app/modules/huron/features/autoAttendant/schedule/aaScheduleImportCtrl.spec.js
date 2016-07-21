@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AAScheduleImportCtrl', function () {
-  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q;
+  var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q, Analytics;
   var aaModel = {
     aaRecord: {
       scheduleId: 'url-1'
@@ -17,13 +17,14 @@ describe('Controller: AAScheduleImportCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AACalendarService_, _AAICalService_, _AAModelService_, _$translate_, $controller, $rootScope, _$q_) {
+  beforeEach(inject(function (_AACalendarService_, _AAICalService_, _AAModelService_, _$translate_, $controller, $rootScope, _$q_, _Analytics_) {
     $scope = $rootScope.$new();
     AACalendarService = _AACalendarService_;
     AAICalService = _AAICalService_;
     AAModelService = _AAModelService_;
     $translate = _$translate_;
     $q = _$q_;
+    Analytics = _Analytics_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when({}));
@@ -37,7 +38,7 @@ describe('Controller: AAScheduleImportCtrl', function () {
 
     spyOn(AAICalService, 'getHoursRanges').and.returnValue({});
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
-
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     controller = $controller('AAScheduleImportCtrl as vm', {
       $scope: $scope,
       $modalInstance: $modalInstance
@@ -50,10 +51,21 @@ describe('Controller: AAScheduleImportCtrl', function () {
     expect(controller.options.length).toBe(1);
   });
 
+  it('should send analytics after load', function () {
+    expect(Analytics.trackEvent).toHaveBeenCalled();
+  });
+
   it('select and continue to import', function () {
     controller.selected = controller.options[0];
     controller.continueImport();
     $scope.$apply();
     expect($modalInstance.close).toHaveBeenCalledWith({});
+  });
+
+  it('should send analytics on import', function () {
+    controller.selected = controller.options[0];
+    controller.continueImport();
+    $scope.$apply();
+    expect(Analytics.trackEvent).toHaveBeenCalled();
   });
 });

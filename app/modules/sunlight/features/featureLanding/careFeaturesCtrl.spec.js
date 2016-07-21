@@ -23,6 +23,7 @@ describe('Care Feature Ctrl should ', function () {
   };
 
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));

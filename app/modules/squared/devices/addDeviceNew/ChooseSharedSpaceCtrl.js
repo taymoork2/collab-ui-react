@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, Authinfo) {
+  function ChooseSharedSpaceCtrl(CsdmCodeService, CsdmPlaceService, XhrNotificationService, $stateParams, $state, $translate, Authinfo) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -16,6 +16,7 @@
     vm.isExistingCollapsed = true;
     vm.selected = null;
     vm.radioSelect = null;
+    vm.isLoading = false;
 
     vm.rooms = function () {
       if (vm.wizardData.showPlaces) {
@@ -53,14 +54,25 @@
       vm.isNewCollapsed = vm.radioSelect == "existing";
       vm.isExistingCollapsed = vm.radioSelect == "create";
     };
-
+    var minlength = 3;
+    var maxlength = 64;
+    vm.message = {
+      required: $translate.instant('common.invalidRequired'),
+      min: $translate.instant('common.invalidMinLength', {
+        'min': minlength
+      }),
+      max: $translate.instant('common.invalidMaxLength', {
+        'max': maxlength
+      }),
+    };
     vm.isNameValid = function () {
       if (vm.place) {
         return true;
       } // hack;
-      return vm.deviceName && vm.deviceName.length < 128;
+      return vm.deviceName && vm.deviceName.length >= minlength && vm.deviceName.length < maxlength;
     };
     vm.next = function () {
+      vm.isLoading = true;
       var nextOption = vm.wizardData.deviceType;
       if (nextOption == 'huron') {
         if (vm.wizardData.function == 'addPlace') {
@@ -71,32 +83,39 @@
       }
 
       function success(code) {
-        if (code.activationCode && code.activationCode.length > 0) {
-          $stateParams.wizard.next({
-            deviceName: vm.deviceName,
-            activationCode: code.activationCode,
-            expiryTime: code.expiryTime,
-            cisUuid: Authinfo.getUserId(),
-            userName: Authinfo.getUserName(),
-            displayName: Authinfo.getUserName(),
-            organizationId: Authinfo.getOrgId()
-          }, nextOption);
-        }
+        vm.isLoading = false;
+        $stateParams.wizard.next({
+          deviceName: vm.deviceName,
+          code: code,
+          // expiryTime: code.expiryTime,
+          cisUuid: Authinfo.getUserId(),
+          userName: Authinfo.getUserName(),
+          displayName: Authinfo.getUserName(),
+          organizationId: Authinfo.getOrgId()
+        }, nextOption);
+      }
+
+      function error(err) {
+        XhrNotificationService.notify(err);
+        vm.isLoading = false;
       }
 
       if (vm.place) {
         CsdmCodeService
           .createCodeForExisting(vm.place.cisUuid)
-          .then(success, XhrNotificationService.notify);
+          .then(success, error);
       } else {
-        CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
-          vm.place = place;
-          CsdmCodeService
-            .createCodeForExisting(place.cisUuid)
-            .then(success, XhrNotificationService.notify);
-        }, XhrNotificationService.notify);
+        if (vm.wizardData.deviceType === "cloudberry") {
+          CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
+            vm.place = place;
+            CsdmCodeService
+              .createCodeForExisting(place.cisUuid)
+              .then(success, error);
+          }, error);
+        } else { //New Place
+          success();
+        }
       }
-
     };
 
     vm.back = function () {

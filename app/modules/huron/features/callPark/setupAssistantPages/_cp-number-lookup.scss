@@ -1,0 +1,29 @@
+.cs-setupassistant--content {
+  .typeahead-large {
+    &.cpselect {
+
+      margin-top: calc(32vh - 143px);
+      text-align:center;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+
+      .title {
+        color : $color-primary-base;
+        font-family: $brand-font-thin;
+        font-size : $font-size-h1;
+        @include vr-spacing(pt, 3);
+      }
+
+      .desc {
+        @include vr-spacing(pt, 1);
+        @include vr-spacing(pb, 2.5);
+        color: $gray-dark-1;
+        font-family: $brand-font-light;
+        font-size : $font-size-h4;
+      }
+    }
+  }
+}

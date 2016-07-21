@@ -40,10 +40,13 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   var headerTabs = [{
     title: 'mediaFusion.page_title',
-    state: 'reports-metrics',
+    state: 'reports-metrics'
   }, {
     title: 'reportsPage.sparkReports',
     state: 'reports'
+  }, {
+    title: 'tabs.careTab',
+    state: 'reports.care'
   }];
   var timeOptions = [{
     value: 0,
@@ -77,9 +80,13 @@ describe('Controller: Customer Reports Ctrl', function () {
       CustomerGraphService = _CustomerGraphService_;
       FeatureToggleService = _FeatureToggleService_;
 
-      FeatureToggleService.features = {
-        atlasMediaServiceMetrics: 'atlas-media-service-metrics'
-      };
+      spyOn(FeatureToggleService, 'atlasMediaServiceMetricsGetStatus').and.returnValue(
+        $q.when(true)
+      );
+
+      spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(
+        $q.when(true)
+      );
 
       // Service Spies
       spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
@@ -115,8 +122,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
       spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
       spyOn(CustomerReportService, 'getDeviceData').and.returnValue($q.when(deviceResponse));
-
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
       // Webex Requirements
       WebexReportService = {
@@ -452,9 +457,8 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     describe('webex tests', function () {
-      it('should show engagement as true and webex as false', function () {
-        expect(controller.showEngagement).toEqual(true);
-        expect(controller.showWebexReports).toEqual(false);
+      it('should show spark tab but not webex tab', function () {
+        expect(controller.tab).not.toBeDefined();
       });
 
       it('should not have anything in the dropdown for webex reports', function () {

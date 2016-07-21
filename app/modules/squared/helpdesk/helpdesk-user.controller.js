@@ -42,7 +42,15 @@
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
+      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function (result) {
+        var prefix = 'helpdesk.userStatuses.';
+        for (var i = 0; i < vm.user.statuses.length; i++) {
+          var status = vm.user.statuses[i];
+          if (_.contains(prefix + 'rejected', status)) {
+            vm.user.statuses[i] = prefix + 'resent';
+          }
+        }
+      }, XhrNotificationService.notify);
     }
 
     function sendCode() {
@@ -57,6 +65,7 @@
         $modal.open({
           templateUrl: "modules/squared/helpdesk/helpdesk-extended-information.html",
           controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: "HelpdeskExtendedInfoDialog",
           resolve: {
             title: function () {
               return 'helpdesk.userDetails';
@@ -72,6 +81,20 @@
     function initUserView(user) {
       vm.user = user;
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
+      if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
+        HelpdeskService.isEmailBlocked(user.userName)
+          .then(function () {
+            vm.resendInviteEnabled = true;
+            var prefix = 'helpdesk.userStatuses.';
+            var statusToReplace = [prefix + 'active', prefix + 'inactive', prefix + 'pending', prefix + 'resent'];
+            for (var i = 0; i < vm.user.statuses.length; i++) {
+              var status = vm.user.statuses[i];
+              if (_.contains(statusToReplace, status)) {
+                vm.user.statuses[i] = prefix + 'rejected';
+              }
+            }
+          });
+      }
       vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
       vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
       vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
@@ -138,9 +161,15 @@
       }
     }
 
+    function modalVisible() {
+      return $('#HelpdeskExtendedInfoDialog').is(':visible');
+    }
+
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
-        $window.history.back();
+      if (!modalVisible()) {
+        if (event.keyCode === 27) { // Esc
+          $window.history.back();
+        }
       }
     }
   }

@@ -11,6 +11,7 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
   };
   var schedule = 'openHours';
   var index = '0';
+  var menuId = 'menu0';
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
@@ -23,10 +24,11 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
-
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     $scope.schedule = schedule;
     $scope.index = index;
+    $scope.menuId = menuId;
 
     aaUiModel['openHours'].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 

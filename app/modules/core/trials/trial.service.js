@@ -32,6 +32,7 @@
       calcDaysUsed: calcDaysUsed,
       getExpirationPeriod: getExpirationPeriod,
       shallowValidation: shallowValidation,
+      getDaysLeftForCurrentUser: getDaysLeftForCurrentUser,
     };
 
     return service;
@@ -350,6 +351,11 @@
           var trialPeriod = trialPeriodData.trialPeriod;
           return calcDaysLeft(startDate, trialPeriod, currentDate);
         });
+    }
+
+    function getDaysLeftForCurrentUser() {
+      var trialIds = service.getTrialIds();
+      return service.getExpirationPeriod(trialIds);
     }
   }
 })();

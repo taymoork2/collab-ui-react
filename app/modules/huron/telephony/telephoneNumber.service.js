@@ -67,10 +67,10 @@
         if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
           phoneNumberType = phoneUtils.getNumberType(number, regionCode);
           switch (phoneNumberType) {
-          case TOLL_FREE:
           case PREMIUM_RATE:
             res = false;
             break;
+          case TOLL_FREE:
           default:
             res = true;
           }

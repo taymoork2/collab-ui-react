@@ -128,6 +128,20 @@ describe('Service: LineListService', function () {
         expect(PstnSetupService.listPendingOrders).not.toHaveBeenCalled();
       });
     });
+
+    it('should remove any lines that already exist in the overall list and replace them', function () {
+      var exisitingLines = lines.concat(formattedPendingLines);
+      var length = exisitingLines.length;
+      PstnSetupService.listPendingOrders.and.returnValue($q.when(pendingLines));
+      PstnSetupService.translateStatusMessage.and.returnValue('Order cannot be fulfilled for trials');
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=100&order=userid-asc').respond(formattedPendingLines);
+      $scope.$apply();
+      LineListService.getLineList(100, 100, 'userid', '-asc', '', 'all', exisitingLines).then(function (response) {
+        expect(angular.equals(response, formattedPendingLines)).toBe(true);
+        exisitingLines = exisitingLines.concat(response);
+        expect(length).toEqual(exisitingLines.length);
+      });
+    });
   });
 
   it('should exportCSV', function () {
