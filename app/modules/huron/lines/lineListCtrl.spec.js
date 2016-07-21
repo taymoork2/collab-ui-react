@@ -99,7 +99,7 @@ describe('Controller: LineListCtrl', function () {
         }
       }];
 
-      controller.sortColumn(sortColumns);
+      controller.sortColumn($scope, sortColumns);
       expect(LineListService.getLineList.calls.count()).toEqual(1);
       expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-asc', '', 'all', $scope.gridData);
     });
