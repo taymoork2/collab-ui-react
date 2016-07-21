@@ -89,7 +89,7 @@ namespace globalsettings {
 
     });
 
-    describe('requireProtectedDevicesUpdate', ()=> {
+    describe('updateRequireProtectedDevices', ()=> {
       beforeEach(initGetAppSecWithResult({data: {clientSecurityPolicy: false}}));
       beforeEach(initSetAppSec);
       beforeEach(initController);
@@ -97,7 +97,7 @@ namespace globalsettings {
       it('should call AccountOrgService to save the value true', () => {
         controller.requireProtectedDevices = true;
 
-        controller.requireProtectedDevicesUpdate();
+        controller.updateRequireProtectedDevices();
 
         expect(AccountOrgService.setAppSecurity)
           .toHaveBeenCalledWith(Authinfo.getOrgId(), true);
@@ -106,7 +106,7 @@ namespace globalsettings {
       it('should call AccountOrgService to save the value false', () => {
         controller.requireProtectedDevices = false;
 
-        controller.requireProtectedDevicesUpdate();
+        controller.updateRequireProtectedDevices();
 
         expect(AccountOrgService.setAppSecurity)
           .toHaveBeenCalledWith(Authinfo.getOrgId(), false);
