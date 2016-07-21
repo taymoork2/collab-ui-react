@@ -242,6 +242,7 @@
         'user-overview',
         'userprofile',
         'reports',
+        'reports-metrics',
         'setupwizardmodal',
         'firsttimewizard',
         'groups',
@@ -253,7 +254,7 @@
         'activateProduct',
         'settings'
       ],
-      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
