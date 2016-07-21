@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -39,6 +39,7 @@
     vm.searchData = searchData;
     vm.openService = openService;
     vm.openSettings = openSettings;
+    vm.addResource = addResource;
     vm._helpers = {
       formatTimeAndDate: formatTimeAndDate,
       hasServices: hasServices
@@ -77,8 +78,8 @@
     }
 
     function updateFilters() {
-      var expresswayClusters = _.filter(clustersCache, 'type', 'expressway');
-      var mediafusionClusters = _.filter(clustersCache, 'type', 'mediafusion');
+      var expresswayClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
+      var mediafusionClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       vm.placeholder.count = clustersCache.length;
       vm.filters[0].count = expresswayClusters.length;
       vm.filters[1].count = mediafusionClusters.length;
@@ -87,9 +88,9 @@
     function setFilter(filter) {
       activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'expressway');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
       } else if (filter.filterValue === 'mediafusion') {
-        vm.displayedClusters = _.filter(clustersCache, 'type', 'mediafusion');
+        vm.displayedClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       } else {
         vm.displayedClusters = clustersCache;
       }
@@ -121,9 +122,15 @@
     }
 
     function openSettings(type, id) {
-      $state.go(type + '-settings', {
-        id: id
-      });
+      if (type === 'c_mgmt') {
+        $state.go('expressway-settings', {
+          id: id
+        });
+      } else if (type === 'mf_mgmt') {
+        $state.go('mediafusion-settings', {
+          id: id
+        });
+      }
     }
 
     function formatTimeAndDate(upgradeSchedule) {
@@ -157,6 +164,49 @@
     function hasServices(cluster) {
       return cluster.servicesStatuses.some(function (serviceStatus) {
         return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
+      });
+    }
+
+    function addResource() {
+      var initialState = {
+        data: {
+          targetType: '',
+          expressway: {},
+          mediafusion: {}
+        },
+        history: [],
+        currentStateName: 'add-resource.type-selector',
+        wizardState: {
+          'add-resource.type-selector': {
+            nextOptions: {
+              expressway: 'add-resource.expressway.service-selector',
+              mediafusion: 'add-resource.mediafusion.hostname'
+            }
+          },
+          // expressway
+          'add-resource.expressway.service-selector': {
+            next: 'add-resource.expressway.hostname'
+          },
+          'add-resource.expressway.hostname': {
+            next: 'add-resource.expressway.name'
+          },
+          'add-resource.expressway.name': {
+            next: 'add-resource.expressway.end'
+          },
+          'add-resource.expressway.end': {},
+          // mediafusion
+          'add-resource.mediafusion.hostname': {
+            next: 'add-resource.mediafusion.name'
+          },
+          'add-resource.mediafusion.name': {
+            next: 'add-resource.mediafusion.end'
+          },
+          'add-resource.mediafusion.end': {}
+        }
+      };
+      var wizard = WizardFactory.create(initialState);
+      $state.go(initialState.currentStateName, {
+        wizard: wizard
       });
     }
   }

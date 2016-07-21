@@ -69,6 +69,7 @@
           vm.upgradeSchedule = upgradeSchedule;
           vm.nextUpdateOffset = moment.tz(upgradeSchedule.nextUpgradeWindow.startTime, upgradeSchedule.scheduleTimeZone).format('Z');
           vm.errorMessage = '';
+          vm.formOptions.day = getDayOptions();
           vm.state = 'idle';
         })
         .catch(function (error) {
@@ -78,15 +79,28 @@
     }
 
     function convertDataForUI(data) {
+      var scheduleDay = {};
+      if (data.scheduleDays.length === 7) {
+        var label = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+        scheduleDay = {
+          label: label,
+          value: 'everyDay'
+        };
+      } else {
+        scheduleDay = {
+          label: labelForDay(data.scheduleDays[0]),
+          value: data.scheduleDays[0]
+        };
+      }
+
       return {
         scheduleTime: {
           label: labelForTime(data.scheduleTime),
           value: data.scheduleTime
         },
-        scheduleDay: {
-          label: labelForDay(data.scheduleDays[0]),
-          value: data.scheduleDays[0]
-        },
+        scheduleDay: scheduleDay,
         scheduleTimeZone: {
           label: labelForTimeZone(data.scheduleTimeZone),
           value: data.scheduleTimeZone
@@ -150,30 +164,20 @@
     }
 
     function getDayOptions() {
-      if (vm.upgradeSchedule && vm.upgradeSchedule.scheduleDays.length === 7) {
-        var label = $translate.instant('weekDays.everyDay', {
-          day: $translate.instant('weekDays.day')
-        });
-        return [{
-          label: label,
-          value: 'everyDay'
-        }];
+      var currentLanguage = $translate.use();
+      var keys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      var days = _.map(keys, function (day) {
+        return {
+          label: labelForDay(day),
+          value: day
+        };
+      });
+      // if USA, put Sunday first
+      if (currentLanguage === 'en_US') {
+        var sunday = days.pop();
+        return [sunday].concat(days);
       } else {
-        var currentLanguage = $translate.use();
-        var keys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        var days = _.map(keys, function (day) {
-          return {
-            label: labelForDay(day),
-            value: day
-          };
-        });
-        // if USA, put Sunday first
-        if (currentLanguage === 'en_US') {
-          var sunday = days.pop();
-          return [sunday].concat(days);
-        } else {
-          return days;
-        }
+        return days;
       }
     }
 
