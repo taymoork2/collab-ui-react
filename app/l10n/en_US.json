@@ -2976,10 +2976,10 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "Calls local to cluster",
-      "callReject": "Calls rejected by cluster",
+      "callVolumes": "Total Calls",
+      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callLocal": "On Premises",
+      "callReject": "Overflowed to Cloud",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
       "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
@@ -3101,6 +3101,7 @@
       "description": "Description",
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
+      "nodeImpact": "Node Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
