@@ -32,8 +32,8 @@
 
     <setting-section setting="clusterSettings.deactivateServices">
       <div ng-if="clusterSettings.enabledServices.length > 1">
-        <div ng-repeat="service in clusterSettings.enabledServices">
-          <div ng-if="service === 'c_cal'" class="sub-section">
+        <div ng-repeat="service in clusterSettings.enabledServices" class="sub-section">
+          <div ng-if="service === 'c_cal'">
             <h5 class="sub-section__label" translate="hercules.expresswayClusterSettings.deactivateServicesCalendarHeader"></h5>
             <p class="sub-section__description" translate="hercules.expresswayClusterSettings.deactivateServicesParagraph" translate-values="{ ServiceName: clusterSettings.localizedCalendarServiceName }"></p>
             <button type="button" class="btn btn--alert" id="deactivateCalendar" ng-click="clusterSettings.deactivateService('c_cal', clusterSettings.cluster);" translate="hercules.settings.deactivate"></button>

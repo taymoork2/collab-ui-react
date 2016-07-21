@@ -324,14 +324,14 @@
         'cluster-list',
         'call-service',
         'expressway-settings',
-        'mediafusion-settings'
+        'add-resource'
       ],
       'squared-fusion-cal': [
         'calendar-service',
         'services-overview',
         'cluster-list',
         'expressway-settings',
-        'mediafusion-settings'
+        'add-resource'
       ],
       'squared-team-member': [
         'organization'
@@ -343,7 +343,9 @@
         'reports-metrics',
         'media-service',
         'connector-details',
-        'connector-details-v2'
+        'connector-details-v2',
+        'mediafusion-settings',
+        'add-resource'
       ],
       'webex-messenger': [
         'messenger'

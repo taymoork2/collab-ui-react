@@ -113,8 +113,8 @@ describe('Service: FusionClusterService', function () {
         .respond(201, response);
 
       var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
-      newExpresswayPromise.then(function (clusterId) {
-        expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
+      newExpresswayPromise.then(function (data) {
+        expect(data.id).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
       });
     });
 

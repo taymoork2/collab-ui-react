@@ -510,10 +510,7 @@
                 controllerAs: 'brandEg',
               }
             },
-            authenticate: false,
-            params: {
-              modalType: 'Partner'
-            }
+            authenticate: false
           })
           .state('invite', {
             url: '/invite',
@@ -650,26 +647,14 @@
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
               }
             }
           })
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
               }
             }
           })
@@ -688,13 +673,7 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
-                    $state.params.modalId = 'convertDialog';
-                  }
-                }
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
               }
             }
           })
@@ -1700,12 +1679,7 @@
               'modal@': {
                 templateUrl: 'modules/huron/moh/moh.tpl.html',
                 controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
+                controllerAs: 'moh'
               }
             }
           })
@@ -1780,12 +1754,6 @@
             templateUrl: 'modules/core/trials/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
-            resolve: {
-              modalInfo: function ($state) {
-                $state.params.modalClass = 'add-did-numbers-modal';
-                $state.params.modalId = 'didAddModal add-numbers';
-              }
-            },
             params: {
               currentOrg: {}
             }
@@ -2037,6 +2005,7 @@
               }
             }
           })
+          // Cluster settings
           .state('expressway-settings', {
             url: '/services/cluster/expressway/:id/settings',
             templateUrl: 'modules/hercules/fusion-pages/expressway-settings.html',
@@ -2050,6 +2019,120 @@
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             parent: 'main'
+          })
+          // Add Resource modal
+          .state('add-resource', {
+            abstract: true
+          })
+          .state('add-resource.type-selector', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'TypeSelectorController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway', {
+            abstract: true
+          })
+          .state('add-resource.expressway.service-selector', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayServiceSelectorController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/service-selector.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEnterHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEnterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.expressway.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'ExpresswayEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.hostname', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEnterHostnameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.name', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEnterNameController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-name.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion.end', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                controller: 'MediafusionEndController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/end.html'
+              }
+            },
+            params: {
+              wizard: null
+            }
+          })
+          .state('add-resource.mediafusion', {
+            abstract: true
           })
           .state('calendar-service', {
             templateUrl: 'modules/hercules/overview/overview.html',
