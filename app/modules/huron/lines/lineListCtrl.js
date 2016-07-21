@@ -133,9 +133,7 @@
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
-        gridApi.core.on.sortChanged($scope, function (sortColumns) {
-          sortColumn(sortColumns);
-        });
+        gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
         field: 'internalNumber',
@@ -158,23 +156,11 @@
           direction: 'asc',
           priority: 0
         },
-        sortCellFiltered: true,
-        sortingAlgoithmn: function (a, b, $scope) {
-          var aSort = a === null ? a : a.toLowerCase();
-          var bSort = b === null ? b : b.toLowerCase();
-
-          if (aSort > bSort) {
-            return 1;
-          } else if (aSort < bSort) {
-            return -1;
-          } else {
-            return 0;
-          }
-        }
+        sortCellFiltered: true
       }]
     };
 
-    function sortColumn(sortColumns) {
+    function sortColumn(scope, sortColumns) {
       if (_.isUndefined(_.get(sortColumns, '[0]'))) {
         return;
       }
