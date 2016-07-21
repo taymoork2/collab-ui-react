@@ -335,7 +335,7 @@ exports.click = function (elem, maxRetry) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
       return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + ((e && e.message) || e));
         return exports.click(elem, --maxRetry);
       });
     }
