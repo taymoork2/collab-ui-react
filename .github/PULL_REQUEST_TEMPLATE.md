@@ -15,10 +15,15 @@
 
 
 **Please check if the PR fulfills these requirements**
-- [ ] The commit message follows our guidelines: https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit-message-format
+- [ ] The commit messages follow our guidelines: https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit-message-format
 - [ ] A unit test has been written for this change. Some examples can be found here: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/tree/master/examples/unit
 - [ ] My code has been beautified. (This can be done by running `gulp jsBeautifier:beautify`.)
 - [ ] Running `gulp build` produced a successful build. (Unit testing can be done by running `gulp karma`; end-to-end testing can be done by running `gulp e2e`.)
+
+
+**Please provide a screenshot of this feature before and after your code changes, if applicable.**
+
+
 
 **Other information**:
 
