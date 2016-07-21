@@ -5,7 +5,6 @@
       'pascalprecht.translate',
       require('modules/core/config/config'),
       require('modules/core/config/tabConfig'),
-      require('modules/core/localytics/localytics.service')
     ])
     .service('Authinfo', Authinfo)
     .name;

@@ -42,6 +42,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     FeatureToggleService.features = {
       hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
     ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);
     sinon.stub($state, 'go');
@@ -67,7 +68,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
   it('should disable media service', function () {
     spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,
@@ -80,7 +80,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
   });
   it('should disable orpheus for mediafusion org', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,
@@ -95,7 +94,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
 
   it('should notify error while disabling media service', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(MediaServiceActivationV2, 'setServiceEnabled').and.returnValue($q.reject());
     spyOn(XhrNotificationService, 'notify');
     controller.disableMediaService(serviceId);
@@ -105,7 +103,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   });
 
   it('should disable media service success call', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     var getResponse = {
       data: 'this is a mocked response'
     };
@@ -122,7 +119,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     expect(controller.disableOrpheusForMediaFusion).toHaveBeenCalled();
   });
   it('should disable media service error call', function () {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     var getResponse = {
       data: 'this is a mocked response'
     };

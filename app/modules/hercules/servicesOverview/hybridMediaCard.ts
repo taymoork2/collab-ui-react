@@ -2,7 +2,7 @@ import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { CardButton, CardType } from './ServicesOverviewCard';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
-  getShowMoreButton():servicesOverview.CardButton {
+  getShowMoreButton():CardButton {
     return undefined;
   }
 
@@ -12,7 +12,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
     buttonClass: 'btn'
   };
 
-  private _buttons:Array<servicesOverview.CardButton> = [
+  private _buttons:Array<CardButton> = [
     {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaserviceV2', buttonClass: 'btn-link'},
     {
       name: 'servicesOverview.cards.hybridMedia.buttons.settings',
@@ -20,7 +20,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       buttonClass: 'btn-link'
     }];
 
-  getButtons():Array<servicesOverview.CardButton> {
+  getButtons():Array<CardButton> {
     if (this.active)
       return _.take(this._buttons, 3);
     return [this._setupButton];

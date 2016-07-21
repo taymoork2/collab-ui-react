@@ -10,6 +10,7 @@
       'cisco.formly',
       'core.auth',
       'core.body',
+      'core.languages',
       'core.localize',
       'core.logmetricsservice',
       'core.notifications',

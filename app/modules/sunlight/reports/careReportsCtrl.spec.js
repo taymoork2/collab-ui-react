@@ -3,8 +3,8 @@
 describe('Controller: Care Reports Controller', function () {
   var controller, $scope, $translate;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   describe('CareReportsController - Expected Time Options', function () {
     beforeEach(inject(function ($rootScope, $controller, _$translate_) {
