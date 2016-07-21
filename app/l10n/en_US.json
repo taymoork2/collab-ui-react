@@ -2385,7 +2385,7 @@
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
       "timeZonePlaceholder": "Select a time zone...",
-      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
