@@ -32,6 +32,7 @@
     function mkTrialPayload(customerEmail, trialPeriod, organizationId) {
       return {
         type: _types.CUSTOMER_TRIAL,
+        addressTo: customerEmail,
         properties: {
           CustomerEmail: customerEmail,
           TrialPeriod: trialPeriod,
@@ -54,6 +55,7 @@
     function mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail, webexSiteUrl) {
       return {
         type: _types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
+        addressTo: partnerEmail,
         properties: {
           CUSTOMER_NAME: customerName,
           CUSTOMER_EMAIL: customerEmail,
