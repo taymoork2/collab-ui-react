@@ -24,7 +24,7 @@
     "serve": "lite-server -c config/lite-server-dev.js",
     "serve-dist": "lite-server -c config/lite-server-dist.js",
     "start": "npm run serve --",
-    "test": "karma start",
+    "test": "ktest-all",
     "test-watch": "karma start --auto-watch --no-single-run",
     "test-debug": "karma start --no-single-run --debug",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
