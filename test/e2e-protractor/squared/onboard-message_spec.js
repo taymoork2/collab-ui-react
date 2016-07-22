@@ -60,15 +60,15 @@ describe('Onboard users with Message Service', function () {
       utils.click(users.closeSidePanel);
     });
 
-    it('should check (Message On) then uncheck', function () {
+    xit('should check (Message On) then uncheck', function () {
       users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
 
-    it('should check (Message Off) then check', function () {
+    xit('should check (Message Off) then check', function () {
       users.clickServiceCheckbox(testUser, false, false, LICENSE);
     });
 
-    it('should check (Message On)', function () {
+    xit('should check (Message On)', function () {
       users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
   });

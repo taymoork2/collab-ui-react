@@ -182,9 +182,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   describe('setLicenseAvailabity', function () {
     beforeEach(initController);
-    beforeEach(function () {
-      this.$scope.$apply();
-    });
+
     it('Should have been initialized', function () {
       expect(this.Orgservice.getLicensesUsage).toHaveBeenCalled();
     });
