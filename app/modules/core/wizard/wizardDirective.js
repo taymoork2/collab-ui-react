@@ -386,8 +386,9 @@
     }
 
     function hasDefaultButtons() {
-      if (vm.current.step)
+      if (vm.current.step) {
         return angular.isUndefined(vm.current.step.buttons);
+      }
       return false;
     }
 

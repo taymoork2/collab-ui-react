@@ -19,8 +19,9 @@ namespace domainManagement {
 
       let domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true)=> {
 
-        if (mockToken)
+        if (mockToken) {
           domainManageService.getToken = sinon.stub().returns($q.resolve());
+        }
         return Controller('DomainManageVerifyCtrl', {
         $state: {params: {domain: domain, loggedOnUser: user}},
         $previousState: null,

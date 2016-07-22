@@ -40,8 +40,9 @@ namespace domainManagement {
     }
 
     get operationAllowed() {
-      if (!this.domain.token)
+      if (!this.domain.token) {
         return false;
+      }
 
       return !this._error;
     }
