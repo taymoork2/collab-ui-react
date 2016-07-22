@@ -111,7 +111,7 @@
     function pollDeviceForNewTimeZone(newValue, endTime, deferred) {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         if (result == newValue) {
-          Notification.success($translate.instant('deviceOverviewPage.timeZoneUpdated'));
+          Notification.success('deviceOverviewPage.timeZoneUpdated');
           return deferred.resolve();
         }
         if (new Date().getTime() > endTime) {
@@ -282,7 +282,7 @@
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
         if (device.upgradeChannel == newValue) {
-          Notification.success($translate.instant('deviceOverviewPage.channelUpdated'));
+          Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();
         }
         if (new Date().getTime() > endTime) {
@@ -317,15 +317,15 @@
           CmiKemService.getKEM(device.huronId).then(
             function (data) {
               deviceOverview.currentDevice.kem = data;
-              Notification.success($translate.instant('deviceOverviewPage.kemUpdated'));
+              Notification.success('deviceOverviewPage.kemUpdated');
             }
           ).catch(function () {
-            Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+            Notification.error('spacesPage.retrieveKemFail');
           });
         },
         function () {
           deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
-          Notification.error($translate.instant('deviceOverviewPage.kemChangesFailed'));
+          Notification.error('deviceOverviewPage.kemChangesFailed');
         }
       );
     };

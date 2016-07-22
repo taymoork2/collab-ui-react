@@ -264,10 +264,10 @@
               $scope.tooManyUsers = tooManyUsers;
             } else if (tooManyResults) {
               Log.debug('Query existing users yielded too many search results. Status: ' + status);
-              Notification.notify([$translate.instant('usersPage.tooManyResultsError')], 'error');
+              Notification.error('usersPage.tooManyResultsError');
             } else {
               Log.debug('Query existing users failed. Status: ' + status);
-              Notification.notify([$translate.instant('usersPage.userListError')], 'error');
+              Notification.error('usersPage.userListError');
             }
           }
 

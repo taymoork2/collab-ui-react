@@ -421,7 +421,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -1218,10 +1218,10 @@
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
-          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          Notification.error('usersPage.noUsersInput');
         } else {
           Log.debug('Invalid users entered.');
-          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          Notification.error('usersPage.validEmailInput');
         }
       });
     };
@@ -1682,14 +1682,14 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         deferred.reject();
         return deferred.promise;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         deferred.reject();
         return deferred.promise;
       }
@@ -1772,13 +1772,13 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         return;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         return;
       }
 

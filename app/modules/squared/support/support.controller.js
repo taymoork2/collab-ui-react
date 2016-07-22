@@ -390,9 +390,9 @@
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
           Log.debug('Failed to retrieve user logs. Status: ' + status);
-          Notification.notify([$translate.instant('supportPage.errLogQuery', {
+          Notification.error('supportPage.errLogQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     }
@@ -489,9 +489,9 @@
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
+          Notification.error('supportPage.errCallInfoQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     };

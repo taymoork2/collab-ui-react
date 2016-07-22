@@ -255,7 +255,7 @@
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
-            Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
+            Notification.success(translatePrefix + 'patchSuccessful');
           }, function (errorObj) {
             var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
 

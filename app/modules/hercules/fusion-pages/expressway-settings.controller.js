@@ -109,15 +109,15 @@
 
     function setClusterName(newClusterName) {
       if (newClusterName.length === 0) {
-        Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotByEmpty'));
+        Notification.error('hercules.expresswayClusterSettings.clusterNameCannotByEmpty');
         return;
       }
       FusionClusterService.setClusterName(vm.cluster.id, newClusterName)
         .then(function () {
           vm.cluster.name = newClusterName;
-          Notification.success($translate.instant('hercules.expresswayClusterSettings.clusterNameSaved'));
+          Notification.success('hercules.expresswayClusterSettings.clusterNameSaved');
         }, function () {
-          Notification.error($translate.instant('hercules.expresswayClusterSettings.clusterNameCannotBeSaved'));
+          Notification.error('hercules.expresswayClusterSettings.clusterNameCannotBeSaved');
         });
     }
 

@@ -8,7 +8,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout, $translate,
+  function HuntGroupSetupAssistantCtrl($q, $state, $modal, $timeout,
     Authinfo, Notification, HuntGroupService,
     HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;
@@ -331,15 +331,15 @@
 
       HuntGroupService.saveHuntGroup(customerId, data).then(function (data) {
         vm.saveProgress = false;
-        Notification.success($translate.instant('huronHuntGroup.successSave', {
+        Notification.success('huronHuntGroup.successSave', {
           huntGroupName: vm.huntGroupName
-        }));
+        });
         $state.go('huronfeatures');
       }, function (error) {
         vm.saveProgress = false;
-        Notification.errorResponse(error, $translate.instant('huronHuntGroup.errorSave', {
+        Notification.errorResponse(error, 'huronHuntGroup.errorSave', {
           huntGroupName: vm.huntGroupName
-        }));
+        });
       });
     }
 
