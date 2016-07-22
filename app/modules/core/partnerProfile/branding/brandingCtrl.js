@@ -190,8 +190,8 @@
       });
 
     brand.upload = function (file, event) {
-      openModal('sm');
       if (validateLogo(file)) {
+        openModal('sm');
         brand.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
@@ -238,6 +238,11 @@
     };
 
     function validateLogo(logo) {
+      // avoid sencond click upload panel, trigger upload direct,  
+      if (!logo) {
+        return false;
+      }
+
       var error = logo.$error;
       if (error === 'maxWidth' || error === 'minWidth') {
         brand.logoError = 'dimensions';
@@ -247,6 +252,8 @@
 
       if (logo && !logo.$error) {
         return true;
+      } else {
+        openModal('sm');
       }
     }
 
@@ -257,12 +264,12 @@
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(Authinfo.getOrgId()).then(function () {
+      BrandService.resetCdnLogo(Authinfo.getOrgId());
         // load logo url after upload success
-        return BrandService.getLogoUrl(Authinfo.getOrgId());
-      }).then(function (logoUrl) {
+      BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         brand.tempLogoUrl = logoUrl;
       });
+
       brand.usePartnerLogo = false;
       brand.toggleLogo(false);
     }
