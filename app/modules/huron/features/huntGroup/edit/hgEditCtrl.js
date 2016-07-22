@@ -260,9 +260,9 @@
       var updateJSONRequest = hgUpdateReqBody();
       HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function (data) {
         vm.saveInProgress = false;
-        Notification.success($translate.instant('huronHuntGroup.successUpdate', {
+        Notification.success('huronHuntGroup.successUpdate', {
           huntGroupName: vm.model.name
-        }));
+        });
 
         HuntGroupEditDataService.setPristine(updateJSONRequest);
         HuntGroupFallbackDataService.setAsPristine();
@@ -270,7 +270,7 @@
         resetForm(false);
       }, function (data) {
         vm.saveInProgress = false;
-        Notification.errorResponse(data, $translate.instant('huronHuntGroup.errorUpdate'), {
+        Notification.errorResponse(data, 'huronHuntGroup.errorUpdate', {
           huntGroupName: vm.model.name
         });
       });

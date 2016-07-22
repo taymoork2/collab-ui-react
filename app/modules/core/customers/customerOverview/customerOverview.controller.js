@@ -19,7 +19,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isOrgSetup = isOrgSetup;
+    vm.isSetupDone = isSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
 
@@ -31,6 +31,7 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
+    vm.isOrgSetup = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
@@ -68,6 +69,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
+      isSetupDone().
+      then(function (results) {
+        vm.isOrgSetup = results;
+      });
     }
 
     function resetForm() {
@@ -206,10 +211,15 @@
       return false;
     }
 
-    function isOrgSetup() {
-      return _.every(vm.currentCustomer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
+    function isSetupDone() {
+      return Orgservice.isSetupDone(vm.customerOrgId)
+        .catch(function (error) {
+          Notification.error('customerPage.isSetupDoneError', {
+            orgName: vm.customerName,
+            message: error.data.message
+          });
+          return false;
+        });
     }
 
     function isOwnOrg() {

@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice');
+    this.injectDependencies('$modal', '$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice');
     initDependencySpies.apply(this);
   }
 
@@ -43,6 +43,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -82,6 +83,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
   }
 
   function onboardUsersResponse(statusCode, responseMessage) {
@@ -175,6 +177,33 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.$apply();
         expect(promise).toBeResolved();
       });
+    });
+  });
+
+  describe('setLicenseAvailabity', function () {
+    beforeEach(initController);
+
+    it('Should have been initialized', function () {
+      expect(this.Orgservice.getLicensesUsage).toHaveBeenCalled();
+    });
+    it('should get licenses', function () {
+      expect(this.$scope.licenses).toBeDefined();
+    });
+    it('Should calculate the license availabilities correctly', function () {
+      expect(this.$scope.messagingLicenseAvailability).toEqual(0);
+      expect(this.$scope.communicationLicenseAvailability).toEqual(3);
+      expect(this.$scope.conferencingLicenseAvailability).toEqual(1);
+    });
+  });
+  describe('License redirect modal', function () {
+    beforeEach(initController);
+    it('should define the modal when sufficient licenses are not available', function () {
+      this.$scope.checkLicenseAvailability('MESSAGING', true);
+      expect(this.$scope.licenseCheckModal).toBeDefined();
+    });
+    it('should not launch modal when sufficient licenses are available', function () {
+      this.$scope.checkLicenseAvailability('COMMUNICATION', false);
+      expect(this.$scope.licenseCheckModal).not.toHaveBeenCalled();
     });
   });
 

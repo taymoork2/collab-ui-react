@@ -1,0 +1,12 @@
+.add-resource-modal {
+  .loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner--large {
+    font-size: 3rem;
+  }
+}

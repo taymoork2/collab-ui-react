@@ -174,6 +174,13 @@
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms",
+    "licenseShortage": "Not enough licenses",
+    "reviewPlan": "Review your plan",
+    "reviewPlanMessage": "Review your plan and license usage. Upgrade your plan so you can select the licenses that you want.",
+    "proceedFree": "Proceed with free licenses",
+    "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
+    "reviewPlanButton": "Review your plan",
+    "proceedFreeButton": "Proceed with Free",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -973,7 +980,12 @@
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
-    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
+    "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1436,21 +1448,54 @@
       }
     },
     "fusion": {
+      "types": {
+        "expressway": "Expressway",
+        "mediafusion": "Media Fusion"
+      },
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
-        "users": "Users:",
-        "releaseChannel": "Release Channel:",
-        "upgradeTime": "Upgrade Time:",
+        "upgrade-schedule": "Upgrade Schedule",
+        "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
-        "expressway-short": "E",
-        "mediafusion-short": "M",
+        "add-resource": "Add Resource",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion",
-        "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule"
+        "mediafusion": "Media",
+        "no-services": "No services"
+      },
+      "add-resource": {
+        "title": "Add Resource",
+        "type": {
+          "error": "Error fetching the different cluster types.",
+          "title": "What type of resource do you want to add?",
+          "expressway-description": "Can run Call Service, Calendar Service",
+          "expressway-not-setup": "Expressway no set up",
+          "mediafusion-description": "Can run Media Service",
+          "mediafusion-not-setup": "Media Service no set  up"
+        },
+        "expressway": {
+          "services": {
+            "error": "Error fetching the different service types.",
+            "title": "What services do you want the Expressway to run?",
+            "call-not-setup": "Call Service not set up",
+            "calendar-not-setup": "Calendar Service not set up"
+          },
+          "end": {
+            "line1": "You may now register the Expressway with the Cisco Collaboration Cloud.",
+            "line2": "Go to your Expressway to finish the registrration and configure the Call Connector and the Calendar Connector."
+          }
+        },
+        "mediafusion": {
+          "name": {
+            "title": "Enter a name for the Hybrid Media Node",
+            "help": "The cluster name is only used for display purposes."
+          },
+          "end": {
+
+          }
+        }
       }
     }
   },
@@ -2347,7 +2392,7 @@
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
       "timeZonePlaceholder": "Select a time zone...",
-      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
@@ -2577,12 +2622,13 @@
     "ST": "Storage",
     "SD": "Spark Room System",
     "deleteOrgTitle": "Delete Customer",
-    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
-    "deleteOrg": "Delete '{{orgName}}'",
-    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrg": "Delete Customer",
+    "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
-    "addNumbers": "Add Numbers"
+    "addNumbers": "Add Numbers",
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2971,10 +3017,10 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "Calls local to cluster",
-      "callReject": "Calls rejected by cluster",
+      "callVolumes": "Total Calls",
+      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callLocal": "On Premises",
+      "callReject": "Overflowed to Cloud",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
       "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
@@ -3096,6 +3142,7 @@
       "description": "Description",
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
+      "nodeImpact": "Node Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -4377,7 +4424,7 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
       "title": "Support",
@@ -4422,6 +4469,14 @@
       "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
+  },
+  "myCompanyOrders": {
+    "numberHeader": "Order Number",
+    "descriptionHeader": "Order Detail",
+    "priceHeader": "Price",
+    "dateHeader": "Order Date",
+    "actionsHeader": "Actions",
+    "downloadPdf": "Download PDF"
   },
   "ciRoles": {
     "atlas-portal.support": "Support",

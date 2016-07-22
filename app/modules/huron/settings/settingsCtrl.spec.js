@@ -1,35 +1,38 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, $httpBackend, HuronConfig, FeatureToggleService, InternationalDialing;
-  var Authinfo;
-  var HuronCustomer, ServiceSetup, PstnSetupService, ModalService, modalDefer;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
-  var getDeferred;
+  var controller, $controller, $scope, $q, $httpBackend;
+  var Authinfo, Notification;
+  var ExternalNumberService, DialPlanService, FeatureToggleService, PstnSetupService, ModalService;
+  var HuronCustomer, ServiceSetup, CallerId, HuronConfig, InternationalDialing, VoicemailMessageAction;
+  var modalDefer, customer, timezones, timezone, voicemailCustomer, internalNumberRanges;
+  var sites, site, companyNumbers, cosRestrictions, customerCarriers, messageAction;
 
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _PstnSetupService_, _ModalService_,
-    _InternationalDialing_, _Authinfo_, _$httpBackend_, _HuronConfig_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _ExternalNumberService_, _DialPlanService_,
+    _PstnSetupService_, _ModalService_, _Notification_, _HuronCustomer_, _ServiceSetup_, _InternationalDialing_, _Authinfo_, _HuronConfig_,
+    _CallerId_, _VoicemailMessageAction_) {
 
+    $q = _$q_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    CallerId = _CallerId_;
-    ExternalNumberService = _ExternalNumberService_;
+    $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
     Notification = _Notification_;
-    HuronCustomer = _HuronCustomer_;
+    ExternalNumberService = _ExternalNumberService_;
     DialPlanService = _DialPlanService_;
-    ServiceSetup = _ServiceSetup_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
+    ServiceSetup = _ServiceSetup_;
     InternationalDialing = _InternationalDialing_;
-    $httpBackend = _$httpBackend_;
+    HuronCustomer = _HuronCustomer_;
     HuronConfig = _HuronConfig_;
-    $q = _$q_;
+    CallerId = _CallerId_;
+    VoicemailMessageAction = _VoicemailMessageAction_;
+
     modalDefer = $q.defer();
-    Authinfo = _Authinfo_;
 
     customer = getJSONFixture('huron/json/settings/customer.json');
     timezones = getJSONFixture('huron/json/settings/timeZones.json');
@@ -41,9 +44,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
     customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
-
-    //create mock deferred object which will be used to return promises
-    getDeferred = $q.defer();
+    messageAction = getJSONFixture('huron/json/settings/messageAction.json');
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -75,10 +76,12 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
     spyOn(Notification, 'processErrorResponse').and.returnValue('');
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
+    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
+    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -123,7 +126,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should save the company caller ID', function () {
@@ -136,7 +139,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     expect(CallerId.saveCompanyNumber).toHaveBeenCalled();
     expect(CallerId.updateCompanyNumber).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should update the company caller ID', function () {
@@ -155,7 +158,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
     expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
     expect(CallerId.updateCompanyNumber).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should not save the company caller ID if off and no callerId exists', function () {
@@ -164,7 +167,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should not save the company caller ID if off and no callerId exists', function () {
@@ -173,7 +176,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should notify error when save caller ID failed', function () {
@@ -199,7 +202,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
     expect(CallerId.updateCompanyNumber).not.toHaveBeenCalled();
     expect(CallerId.deleteCompanyNumber).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should save the emergency callback number', function () {
@@ -212,7 +215,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should save the emergency callback number if its changing', function () {
@@ -229,7 +232,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should not save the emergency callback number if it is NOT set', function () {
@@ -237,7 +240,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should not save the emergency callback number if it is NOT changing', function () {
@@ -254,7 +257,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should update the company pilot number if not already set', function () {
@@ -272,6 +275,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.hasVoicemailService = true;
     controller.model.companyVoicemail.companyVoicemailEnabled = true;
     controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
+    controller.model.companyVoicemail.voicemailToEmail = true;
 
     controller.save();
     $scope.$apply();
@@ -279,8 +283,9 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should update the company pilot number and voicemail site timezone', function () {
@@ -317,8 +322,9 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should add voicemail service and update the company pilot number if voice only', function () {
@@ -343,8 +349,9 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should disable company pilot number when toggle is OFF', function () {
@@ -370,7 +377,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should not update the company pilot number if nothing changed', function () {
@@ -389,14 +396,21 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.model.companyVoicemail.companyVoicemailEnabled = true;
     controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
 
+    controller.model.companyVoicemail.voicemailToEmail = true;
+    controller.voicemailMessageAction = {
+      objectId: '1',
+      voicemailAction: 3
+    };
+
     controller.save();
     $scope.$apply();
 
     expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
     expect(ModalService.open).not.toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should update site if there is a new outbound steering digit', function () {
@@ -414,7 +428,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
   });
 
   it('should update the timezone options when collection changes', function () {
@@ -800,7 +814,7 @@ describe('Controller: HuronSettingsCtrl', function () {
         timeZone: newTimeZone.id
       });
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalledWith(newTimeZone.id, jasmine.any(String));
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
     it('should not update timezone when timezone selection did not change', function () {
@@ -816,7 +830,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('huronSettings.saveSuccess');
     });
 
   });

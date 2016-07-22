@@ -5,7 +5,7 @@
     .controller('HostDetailsController',
 
       /* @ngInject */
-      function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate, $modal) {
+      function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $modal) {
         var vm = this;
         vm.clusterId = $stateParams.clusterId;
         vm.role = $stateParams.properties["mf.role"];
@@ -50,12 +50,12 @@
         vm.changeRole = function ($selectedRole, $clusterId) {
           MediaClusterService.changeRole($selectedRole, $clusterId)
             .success(function (data) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
+              Notification.success('mediaFusion.roleAssignmentSuccess');
             })
             .error(function (data, status) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
+              Notification.error('mediaFusion.roleAssignmentFailure', {
                 failureMessage: data.message
-              })], 'error');
+              });
             });
         };
 

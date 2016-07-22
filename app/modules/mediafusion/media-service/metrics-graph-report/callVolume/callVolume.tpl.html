@@ -1,11 +1,27 @@
 <cs-card id='call-volume-card' class="full report-card">
   <article>
     <graphheader>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.callVolumes'></h4>
+      <div class="legendDiv">
+        <table class="headerTable">
+          <tr>
+            <td>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.callVolumes'></h4>
+              <p class="report-description" translate='mediaFusion.metrics.callVolumesDescription'></p>
+            </td>
+            <td>
+            <div class="legends">
+              <i class="fa fa-square callLocal" />
+              <p translate="mediaFusion.metrics.callLocal" />
+              <i class="fa fa-square callReject" />
+              <p translate="mediaFusion.metrics.callReject" />
+            </td>
+            </div>
+          </tr>
+        </table>
+      </div>
     </graphheader>
     <section>
       <div class="metrics-call-volume">
-        <p class="report-description" translate='mediaFusion.metrics.callVolumesDescription'></p>
         <div id="callVolumediv" class="barchart" ng-class="{'call-volume-chart': !nav.isEmpty(nav.callVolumeStatus) && !nav.isRefresh(nav.callVolumeStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.callVolumeStatus)">
           <i class='icon icon-spinner icon-2x'></i>

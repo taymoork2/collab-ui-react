@@ -47,7 +47,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -295,6 +295,9 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
+        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
+          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+        }
         var steps = getSteps();
         if (angular.isArray(steps)) {
           var index = steps.indexOf(getStep());

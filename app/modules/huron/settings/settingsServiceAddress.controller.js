@@ -19,6 +19,7 @@
     vm.loadingValidate = false;
     vm.loadingSave = false;
     vm.isValid = false;
+    vm.addressFound = false;
     vm.address = {};
 
     var origAddress = {};
@@ -67,6 +68,7 @@
     }
 
     function modify() {
+      vm.address = {};
       resetForm();
       vm.isValid = false;
     }
@@ -90,6 +92,7 @@
         .then(function () {
           Notification.success('settingsServiceAddress.saveSuccess');
           origAddress = angular.copy(vm.address);
+          vm.addressFound = false;
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'settingsServiceAddress.saveError');
@@ -101,6 +104,7 @@
 
     function cancelSave() {
       initAddress(origAddress);
+      vm.addressFound = false;
     }
 
     function validate() {
@@ -110,6 +114,7 @@
           if (address) {
             vm.address = address;
             vm.isValid = true;
+            vm.addressFound = true;
             resetForm();
           } else {
             Notification.error('pstnSetup.serviceAddressNotFound');
@@ -126,6 +131,7 @@
     function cancelEdit() {
       resetForm();
       initAddress(origAddress);
+      vm.addressFound = false;
     }
 
     function resetForm() {

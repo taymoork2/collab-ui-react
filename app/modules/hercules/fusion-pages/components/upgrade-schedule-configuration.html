@@ -33,9 +33,6 @@
     >
   </cs-select>
 </div>
-<p ng-if="!$ctrl.upgradeSchedule.acknowledged">
-  <button class="btn btn--cta" ng-click="$ctrl.acknowledge($ctrl.formData)" translate="hercules.settings.scheduleUpgrade.defaultWarning"></button>
-</p>
 <p>
   <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
   <strong class="upgrade-schedule-next-time">{{$ctrl.upgradeSchedule.nextUpgradeWindow.startTime | date:'MMM d, y h:mm a':$ctrl.nextUpdateOffset}}</strong> <a href="#" ng-click="$ctrl.postpone($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="$ctrl.canPostpone && !$ctrl.upgradeSchedule.moratoria.length > 0"></a>

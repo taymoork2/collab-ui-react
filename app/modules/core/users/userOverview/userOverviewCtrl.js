@@ -141,7 +141,7 @@
     function getInvitationDetails(invitations, license) {
       if (invitations) {
         var idx = _.findIndex(invitations, function (invite) {
-          return invite.id.substring(0, 2) === license;
+          return invite.id.substring(0, 2) === license && invite.idOperation === "ADD";
         });
         if (idx > -1) {
           if (license === 'CF') {
@@ -245,44 +245,41 @@
     function getAccountStatus() {
       var currentUserId = vm.currentUser.id;
       vm.currentUser.pendingStatus = false;
-      Userservice.getUser(currentUserId, function (data, status) {
-        if (data.success) {
-          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0);
-          vm.currentUser.pendingStatus = vm.pendingStatus;
-          if (vm.pendingStatus) {
-            invitationResource.get({
-              customerId: Authinfo.getOrgId(),
-              userId: currentUserId
-            }).$promise.then(function (response) {
-              if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
-                vm.currentUser.invitations = {
-                  ms: false,
-                  cf: '',
-                  cc: false
-                };
-                if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
-                  msgState.detail = $translate.instant('onboardModal.paidMsg');
-                  vm.services.push(msgState);
-                  vm.currentUser.invitations.ms = true;
-                }
-                var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
-                if (confId) {
-                  confState.detail = $translate.instant('onboardModal.paidConf');
-                  vm.services.push(confState);
-                  vm.currentUser.invitations.cf = confId;
-                }
-                if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                  vm.services.push(contactCenterState);
-                  vm.currentUser.invitations.cc = true;
-                }
-              }
-            });
+      vm.pendingStatus = _.indexOf(vm.currentUser.accountStatus, 'pending') >= 0;
+      vm.currentUser.pendingStatus = vm.pendingStatus;
+      // if there are services found, then those are licenses,
+      // which means the users has already accepted invitations,
+      // so no need to get invitation list
+      if (_.isEmpty(vm.services)) {
+        invitationResource.get({
+          customerId: Authinfo.getOrgId(),
+          userId: currentUserId
+        }).$promise.then(function (response) {
+          if (_.isArray(response.effectiveLicenses) && !_.isEmpty(response.effectiveLicenses)) {
+            vm.currentUser.invitations = {
+              ms: false,
+              cf: '',
+              cc: false
+            };
+            if (getInvitationDetails(response.effectiveLicenses, 'MS')) {
+              msgState.detail = $translate.instant('onboardModal.paidMsg');
+              vm.services.push(msgState);
+              vm.currentUser.invitations.ms = true;
+            }
+            var confId = getInvitationDetails(response.effectiveLicenses, 'CF');
+            if (confId) {
+              confState.detail = $translate.instant('onboardModal.paidConf');
+              vm.services.push(confState);
+              vm.currentUser.invitations.cf = confId;
+            }
+            if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
+              contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+              vm.services.push(contactCenterState);
+              vm.currentUser.invitations.cc = true;
+            }
           }
-        } else {
-          Log.debug('Get existing account info failed. Status: ' + status);
-        }
-      });
+        });
+      }
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

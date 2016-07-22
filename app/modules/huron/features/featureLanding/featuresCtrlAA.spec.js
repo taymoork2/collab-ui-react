@@ -5,7 +5,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, FeatureToggleService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, FeatureToggleService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
   var emptyListOfCPs = {

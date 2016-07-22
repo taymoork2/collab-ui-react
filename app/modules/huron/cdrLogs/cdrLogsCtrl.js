@@ -223,13 +223,13 @@
           maxSize: 10,
           maxSizeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonSizeError'), 'error');
+              Notification.error('cdrLogs.jsonSizeError');
             });
           },
           fileType: filetype,
           fileTypeError: function () {
             $scope.$apply(function () {
-              Notification.notify($translate.instant('cdrLogs.jsonTypeError'), 'error');
+              Notification.error('cdrLogs.jsonTypeError');
             });
           },
           fileSuffix: "json"
@@ -254,11 +254,11 @@
                 vm.gridData.push(addNames([jsonData.cdrs]));
               } else {
                 vm.dataState = 0;
-                Notification.notify($translate.instant('cdrLogs.jsonAllowedFormatError'), 'error');
+                Notification.error('cdrLogs.jsonAllowedFormatError');
               }
             } catch (SyntaxError) {
               vm.dataState = 0;
-              Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
+              Notification.error('cdrLogs.jsonSyntaxError');
             }
           }
         },

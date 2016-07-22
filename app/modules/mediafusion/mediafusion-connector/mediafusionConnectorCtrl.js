@@ -5,7 +5,7 @@
     .controller('mediafusionConnectorCtrl', mediafusionConnectorCtrl);
 
   /* @ngInject */
-  function mediafusionConnectorCtrl($scope, $state, $translate, MediafusionProxy, Authinfo, $log, MediaServiceDescriptor, Notification) {
+  function mediafusionConnectorCtrl($scope, $state, MediafusionProxy, Authinfo, $log, MediaServiceDescriptor, Notification) {
     $scope.loading = true;
     $scope.pollHasFailed = false;
     $scope.showInfoPanel = true;
@@ -131,7 +131,7 @@
     };
 
     function deleteSuccess() {
-      Notification.notify([$translate.instant('mediaFusion.defuseSuccess')], 'success');
+      Notification.success('mediaFusion.defuseSuccess');
       //Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
 
       setTimeout(function () {
@@ -148,7 +148,7 @@
         },
         function error(data, status) {
           //$log.log("Problems enabling media service");
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       $scope.serviceEnabled = true;
@@ -198,9 +198,9 @@
       MediaServiceDescriptor.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
   }
