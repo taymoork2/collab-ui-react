@@ -6,13 +6,11 @@
     .factory('CiService', CiService);
 
   /* @ngInject */
-  function CiService($q, Authinfo, Log, UserListService, Userservice) {
+  function CiService($http, $q, Authinfo, Log, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage
     var user = null;
-    var users = null;
-    var partnerAdmins = null;
 
     var ciService = {
       getCiAdmins: getCiAdmins,
@@ -25,11 +23,8 @@
       hasEntitlements: hasEntitlements,
       hasRole: hasRole,
       isLoggedInToPartnerPortal: isLoggedInToPartnerPortal,
-      isPartnerAdmin: isPartnerAdmin
+      isOrgManager: isOrgManager,
     };
-
-    // Init data
-    init();
 
     // Return the service
     return ciService;
@@ -37,10 +32,6 @@
     ////////////////////////////////////////////////////////////////////////////
 
     // Implementation ----------------------------------------------------------
-
-    function init() {
-      getPartnerAdmins();
-    }
 
     function getCiOrgInfo() {
       return [{
@@ -121,28 +112,6 @@
         }, function (errorMsg) {
           defer.reject('Failed getting user roles: ' + errorMsg);
         });
-
-      return defer.promise;
-    }
-
-    function getPartnerAdmins() {
-      var defer = $q.defer();
-
-      // Cache result
-      if (null === partnerAdmins) {
-        UserListService.listPartners(Authinfo.getOrgId(), function (response) {
-          if (response.success) {
-            partnerAdmins = response.partners;
-            defer.resolve(partnerAdmins);
-          } else {
-            var error = 'Failed getting parter list. Response: ' + JSON.stringify(response);
-            Log.error(error);
-            defer.reject(error);
-          }
-        });
-      } else {
-        defer.resolve(partnerAdmins);
-      }
 
       return defer.promise;
     }
@@ -251,29 +220,25 @@
       return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
     }
 
-    function isPartnerAdmin() {
+    function isOrgManager() {
       var defer = $q.defer();
 
-      // Check if user ID is in the partner admin list
-      getPartnerAdmins()
-        .then(function (admins) {
-          var partnerFound = false;
-
-          // Check for user ID in admin list
-          for (var partner in admins) {
-            if (Authinfo.getUserId() === admins[partner].id) {
-              partnerFound = true;
-              break;
-            }
-          }
-
-          defer.resolve(partnerFound);
-        }, function (errorMsg) {
-          var error = 'Error checking if user is a partner admin: ' + errorMsg;
-          Log.error(error);
-          defer.reject(error);
+      var managedOrgRole = 'id_full_admin';
+      var meUrl = "https://identity.webex.com/identity/scim/" + Authinfo.getOrgId() + "/v1/Users/me";
+      $http.get(meUrl)
+        .success(function (data) {
+          data = data || {};
+          Log.debug('Retrieved user info');
+          defer.resolve(_.findIndex(data.managedOrgs, {
+            'orgId': Authinfo.getOrgId(),
+            'role': managedOrgRole
+          }) > -1);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.status = status;
+          defer.reject('Error: Failed to retrieve user info. Status: ' + data.status);
         });
-
       return defer.promise;
     }
   }
