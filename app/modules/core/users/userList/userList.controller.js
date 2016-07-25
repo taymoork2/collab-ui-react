@@ -527,8 +527,7 @@
             break;
           }
         } //end for
-      } //endif
-      else {
+      } else {
         $scope.currentUserPhoto = null;
       }
       return $scope.currentUserPhoto;
