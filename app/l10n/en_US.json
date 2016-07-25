@@ -411,6 +411,31 @@
     "customerSelect": "Select a customer",
     "trackingId": "Tracking ID: "
   },
+  "careReportsPage": {
+    "tasks": "Tasks",
+    "handled": "Handled",
+    "abandoned": "Abandoned",
+    "todayCategoryAxis": "Hours",
+    "yesterdayCategoryAxis": "Hours",
+    "weekCategoryAxis": "Days",
+    "monthCategoryAxis": "Weeks",
+    "threeMonthsCategoryAxis": "Months",
+    "today": "Today",
+    "today2": "for today",
+    "todayInterval": "15 minutes time interval",
+    "yesterday": "Yesterday",
+    "yesterday2": "for yesterday",
+    "yesterdayInterval": "15 minutes time interval",
+    "week": "Last Week",
+    "week2": "during the last week",
+    "weekInterval": "given day",
+    "month": "Last Month",
+    "month2": "during the last month",
+    "monthInterval": "given week",
+    "threeMonths": "Last Three Months",
+    "threeMonths2": "during the last 3 months",
+    "threeMonthsInterval": "given month"
+  },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
@@ -499,6 +524,10 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
+  },
+  "taskIncoming": {
+    "title": "Tasks Incoming",
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of handled and abandoned tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
