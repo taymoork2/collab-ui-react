@@ -26,6 +26,13 @@
     var hasInit = false;
     var throwError = false;
 
+    /* Trial Event Names */
+    var start_trial = 'Start Trial Button Click';
+
+    /* Partner Admin Event Names */
+    var partner_assigning = 'Partner Admin Assigning';
+    var partner_removal = 'Partner Admin Removal';
+
     return service;
 
     function _init() {
@@ -56,19 +63,9 @@
       });
     }
 
-    function _track(eventName, properties) {
-      mixpanel.track(eventName, properties || {});
-    }
-
     /**
-     *  Saves mixpanel data in production
+     * Determines if it's a Test Org or not.
      */
-    function trackEvent(eventName, properties) {
-      _init().then(function () {
-        service._track(eventName, properties);
-      });
-    }
-
     function getTestOrg() {
       if (!isTestOrg) {
         isTestOrg = $q(function (resolve, reject) {
@@ -78,6 +75,38 @@
         });
       }
       return isTestOrg;
+    }
+
+    function _track(eventName, properties) {
+      mixpanel.track(eventName, properties || {});
+    }
+
+    /**
+     *  Tracks the Event
+     */
+    function trackEvent(eventName, properties) {
+      _init().then(function () {
+        service._track(eventName, properties);
+      });
+    }
+
+    /**
+     * Trial Events
+     */
+
+    function startTrialBtn(from) {
+      trackEvent(start_trial, from);
+    }
+
+    /**
+     * Partner Admin Events
+     */
+    function partnerAssigning(uuid) {
+      trackEvent(partner_assigning, uuid);
+    }
+
+    function partnerRemoval(uuid) {
+      trackEvent(partner_removal, uuid);
     }
   }
 
