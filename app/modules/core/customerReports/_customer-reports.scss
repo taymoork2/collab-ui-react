@@ -1,5 +1,4 @@
 @import 'activeUsers/_active-users';
-@import '../../sunlight/reports/_care-task';
 @import 'avgRooms/_avg-rooms';
 @import 'callMetrics/_call-metrics-customer';
 @import 'mediaQuality/_media-quality-customer';
@@ -55,7 +54,7 @@
     article {
       transform: scale(1, 0);
       animation: scaleDownCard .5s linear;
-      .timechartDiv, .barchart, .areachart {
+      .timechartDiv, .barchart {
         display: none;
       }
     }
@@ -88,14 +87,6 @@
       top: rem-calc(-50);
     }
     .barchart {
-      font-size: rem-calc(11);
-      height: vr-adjust(375);
-      width: 85%;
-      margin-left: auto;
-      margin-right: auto;
-      z-index: 50;
-    }
-    .areachart {
       font-size: rem-calc(11);
       height: vr-adjust(375);
       width: 85%;

@@ -449,15 +449,12 @@
       color: $color-alerts-base;
     }
   }
-  .cta-base {
-    header:after {
-      border-top-color: $color-cta-base;
-    }
-  }
-  .gray-light {
-    header:after {
-      border-top-color: $gray-light-1;
-    }
+  .cta {
+    border-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
   }
   h5 {
     margin-top: 0.5rem;

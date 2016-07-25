@@ -510,10 +510,7 @@
                 controllerAs: 'brandEg',
               }
             },
-            authenticate: false,
-            params: {
-              modalType: 'Partner'
-            }
+            authenticate: false
           })
           .state('invite', {
             url: '/invite',
@@ -650,26 +647,14 @@
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
               }
             }
           })
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'add-users';
-                    $state.params.modalId = 'modalContent';
-                  }
-                }
+                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
               }
             }
           })
@@ -688,13 +673,7 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'convert-users';
-                    $state.params.modalId = 'convertDialog';
-                  }
-                }
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
               }
             }
           })
@@ -1700,12 +1679,7 @@
               'modal@': {
                 templateUrl: 'modules/huron/moh/moh.tpl.html',
                 controller: 'MohCtrl',
-                controllerAs: 'moh',
-                resolve: {
-                  modalInfo: function ($state) {
-                    $state.params.modalClass = 'moh-content';
-                  }
-                }
+                controllerAs: 'moh'
               }
             }
           })
@@ -1780,12 +1754,6 @@
             templateUrl: 'modules/core/trials/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
-            resolve: {
-              modalInfo: function ($state) {
-                $state.params.modalClass = 'add-did-numbers-modal';
-                $state.params.modalId = 'didAddModal add-numbers';
-              }
-            },
             params: {
               currentOrg: {}
             }

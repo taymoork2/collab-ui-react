@@ -42,7 +42,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar cta-base" ng-if="helpdeskUserCtrl.callCard.entitled">
+  <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.callCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -55,12 +55,12 @@
         <div ng-repeat="entitlement in helpdeskUserCtrl.callCard.entitlements">
           <span translate="{{entitlement}}"></span>
         </div>
-
+        
         <div ng-if="helpdeskUserCtrl.callCard.huronNumbers">
           <h5 translate="helpdesk.numbers"></h5>
-
+          
           <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers  | orderBy:'sortOrder'">
-            <span>{{number.internal}}</span> <span ng-if="number.external"> {{'common.or' | translate}} {{number.external}}</span>
+            <span>{{number.internal}}</span> <span ng-if="number.external"> {{'common.or' | translate}} {{number.external}}</span> 
             <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
             <span ng-if="number.users.length > 1"> ({{number.users.length}} {{'helpdesk.users' | translate | lowercase}})</span>
           </div>
@@ -69,7 +69,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar gray-light" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
+  <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">

@@ -6,7 +6,6 @@
 var ReportsPage = function () {
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
-  this.timeSelectCare = element(by.id('timeFilterCare'));
   this.customerSelect = element(by.id('customerFilter'));
   this.allTypes = element(by.id('allReports'));
   this.engagement = element(by.id('engagementReports'));
@@ -75,11 +74,6 @@ var ReportsPage = function () {
   this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
   this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
-
-  // Task Incoming
-  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Tasks Incoming'));
-  this.taskIncomingDescription = element(by.css('.care-card-report')).element(by.css('.report-description'));
-  this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {
     if (partner) {
