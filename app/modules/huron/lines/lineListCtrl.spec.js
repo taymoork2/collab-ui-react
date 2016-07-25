@@ -63,7 +63,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'assignedLines', $scope.gridData);
     });
 
     it('should call getLineList with filter unassignedLines', function () {
@@ -73,7 +73,7 @@ describe('Controller: LineListCtrl', function () {
       $scope.$apply();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'unassignedLines', $scope.gridData);
     });
   });
 
@@ -88,37 +88,20 @@ describe('Controller: LineListCtrl', function () {
     });
   });
 
-  describe('getLineList lineListUpdate event', function () {
-    it('should update line list', function () {
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('lineListUpdated', {});
-
-      expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', '', 'all');
-    });
-  });
-
   describe('getLineList sort event', function () {
     it('should getLineList with sort parameters', function () {
-      var data = {};
-      data.fields = ["internalNumber"];
-      data.directions = ["desc"];
-
       LineListService.getLineList.calls.reset();
-      $scope.$emit('ngGridEventSorted', data);
 
+      var sortColumns = [{
+        'name': 'internalnumber',
+        'sort': {
+          'direction': 'asc'
+        }
+      }];
+
+      controller.sortColumn($scope, sortColumns);
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-desc', '', 'all');
-    });
-
-    it('should not getLineList when sort parameters do not change', function () {
-      var data = {};
-      data.fields = ["userId"];
-      data.directions = ["asc"];
-
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('ngGridEventSorted', data);
-      expect(LineListService.getLineList).not.toHaveBeenCalled();
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'internalnumber', '-asc', '', 'all', $scope.gridData);
     });
   });
 
@@ -136,7 +119,7 @@ describe('Controller: LineListCtrl', function () {
       $timeout.flush();
 
       expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all');
+      expect(LineListService.getLineList).toHaveBeenCalledWith(0, 100, 'userid', '-asc', 'abc', 'all', $scope.gridData);
     });
   });
 

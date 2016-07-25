@@ -79,13 +79,20 @@
       flex: 1 0 auto;
       min-width: 50%;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       margin-bottom: 0.9375rem;
     }
 
+    .connection-status-eyecandy {
+      position: relative;
+    }
+
+    .connection-status-services {
+      margin-left: 16px;
+    }
+
     .connection-status-icon {
-      // outline: 1px dashed blue;
       width: 48px;
       height: 32px;
       background-repeat: no-repeat;
@@ -96,18 +103,19 @@
       background-image: url('/images/hybrid-services/cloud.svg');
     }
 
-    .connection-status-cable {
-      height: 16px;
+    .connection-status-cable-vertical {
+      height: 65px;
       border-right: 1px solid $gray-light-1;
+      width: 50%;
       margin: 8px 0;
     }
 
-    .connection-status-cable-cloud {
-      margin-bottom: 5px
-    }
-
-    .connection-status-cable-premises {
-      margin-top: 5px
+    .connection-status-cable-horizontal {
+      border-top: 1px solid #AEAEAF;
+      width: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
     }
 
     .connection-status-service {
@@ -144,12 +152,12 @@
       }
     }
 
-    &.card-expressway {
+    &.card-c_mgmt {
       header:after {
         border-top-color: $color-people-base;
       }
     }
-    &.card-mediafusion {
+    &.card-mf_mgmt {
       header:after {
         border-top-color: $color-meetings-base;
       }

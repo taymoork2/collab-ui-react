@@ -337,18 +337,18 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://config.nctx3-stg.ciscoccservice.com/config/v1',
+      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     });
   });
 
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
-      dev: 'https://bubble.nva1-de.ciscoccservice.com',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
+      dev: 'https://bubble.dev.ciscoccservice.com',
+      cfe: 'https://bubble.appstaging.ciscoccservice.com',
+      integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.rciad.ciscoccservice.com'
     });
   });

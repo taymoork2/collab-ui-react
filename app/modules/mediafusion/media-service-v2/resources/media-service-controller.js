@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -18,9 +18,11 @@
     vm.deleteSerial = null;
     vm.showPreview = true;
     vm.deleteConnectorName = null;
-    vm.serviceEnabled = true;
+    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
+    vm.featureToggled = false;
+
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
     vm.tabs = [
@@ -76,9 +78,10 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-media") {
-      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
+      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+        if (!error) {
+          vm.serviceEnabled = enabled;
+        }
       });
     }
 
@@ -117,6 +120,9 @@
 
     function addResourceButtonClicked() {
       $modal.open({
+        resolve: {
+          firstTimeSetup: false
+        },
         type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
@@ -136,7 +142,7 @@
         },
         function error(data, status) {
           //$log.log("Problems enabling media service");
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
@@ -186,11 +192,38 @@
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
+    });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          firstTimeSetup: true
+        },
+        controller: 'RedirectAddResourceControllerV2',
+        controllerAs: 'redirectResource',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',
+        modalClass: 'redirect-add-resource'
+      });
+    }
+
   }
 
   /* @ngInject */

@@ -5,7 +5,7 @@
     .service('Authinfo', Authinfo);
 
   /* @ngInject */
-  function Authinfo($rootScope, $translate, Config, Localytics) {
+  function Authinfo($rootScope, $translate, Config) {
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -133,9 +133,6 @@
         authData.isInitialized = true;
         authData.setupDone = data.setupDone;
         $rootScope.$broadcast('AuthinfoUpdated');
-
-        Localytics.setOrgId(authData.orgId);
-        Localytics.setUserId(authData.userId);
       },
       clear: function () {
         authData.username = null;
@@ -344,11 +341,20 @@
       isCustomerAdmin: function () {
         return this.hasRole('Full_Admin');
       },
+      isOnline: function () {
+        return _.eq(authData.customerType, 'Online');
+      },
+      isPending: function () {
+        return _.eq(authData.customerType, 'Pending');
+      },
       isCSB: function () {
-        return (_.contains(authData.customerType, ['CSB']));
+        return (_.eq(authData.customerType, 'CSB'));
       },
       isDirectCustomer: function () {
-        return (_.contains(authData.commerceRelation, ['Direct']));
+        return (_.eq(authData.commerceRelation, 'Direct'));
+      },
+      isPartnerManagedCustomer: function () {
+        return (_.eq(authData.customerType, 'Partner'));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

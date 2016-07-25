@@ -46,11 +46,11 @@
       return invalidList[which];
     }
 
-    function makeKey(schedule, whichMenu, tag) {
+    function makeKey(schedule, tag) {
       /* Used by aaVerificationSuccess and aaRouteToExtNum */
       /* this is an attempt to (weakly) codify the keys used by getInvalid */
 
-      return schedule + '-' + whichMenu + '-' + tag;
+      return schedule + '-' + tag;
     }
 
     function setIsValid(element, validity) {

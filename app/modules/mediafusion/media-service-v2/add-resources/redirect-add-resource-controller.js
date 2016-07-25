@@ -6,7 +6,7 @@
     .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate) {
+  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate, firstTimeSetup, $modal, $state, MediaServiceActivationV2, Notification, Authinfo) {
     var vm = this;
     vm.clusterList = [];
     vm.onlineNodeList = [];
@@ -14,7 +14,7 @@
     vm.clusters = null;
     vm.groups = null;
     vm.combo = true;
-    vm.selectPlaceholder = 'Add new / Select existing Cluster';
+    vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.redirectPopUpAndClose = redirectPopUpAndClose;
@@ -27,6 +27,11 @@
     vm.popup = '';
     vm.createNewCluster = false;
     vm.selectedClusterId = '';
+    vm.firstTimeSetup = firstTimeSetup;
+    vm.closeSetupModal = closeSetupModal;
+    vm.currentServiceId = "squared-fusion-media";
+    vm.enableMediaService = enableMediaService;
+    vm.radio = 1;
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     MediaClusterServiceV2.getAll()
@@ -91,12 +96,88 @@
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster, clusterId) {
+      if (firstTimeSetup) {
+        enableMediaService(vm.currentServiceId);
+      }
       $modalInstance.close();
       vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?clusterName=" + encodeURIComponent(enteredCluster) + "&clusterId=" + encodeURIComponent(clusterId));
       if (!vm.popup || vm.popup.closed || typeof vm.popup.closed == 'undefined') {
         $log.log('popup.closed');
       }
     }
+
+    function closeSetupModal() {
+      if (!firstTimeSetup) {
+        $modalInstance.close();
+        return;
+      }
+      $modal.open({
+          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+          type: 'dialog'
+        })
+        .result.then(function (isAborting) {
+          if (isAborting) {
+            $modalInstance.close();
+            $state.go('services-overview');
+          }
+        });
+    }
+
+    function enableMediaService(serviceId) {
+      vm.waitForEnabled = true;
+      MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
+        function success() {
+          vm.enableOrpheusForMediaFusion();
+        },
+        function error(data, status) {
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
+        });
+      vm.serviceEnabled = true;
+      vm.waitForEnabled = false;
+    }
+
+    vm.enableOrpheusForMediaFusion = function () {
+      MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          var updateMediaAgentOrgId = false;
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+
+          // See if org id is already mapped to user org id
+          if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
+            mediaAgentOrgIdsArray.push(orgId);
+            updateMediaAgentOrgId = true;
+          }
+          // See if "squared" org id is already mapped to user org id
+          if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
+            mediaAgentOrgIdsArray.push("squared");
+            updateMediaAgentOrgId = true;
+          }
+
+          if (updateMediaAgentOrgId) {
+            vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
+          }
+        },
+
+        function error(errorResponse, status) {
+          // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
+          var mediaAgentOrgIdsArray = [];
+          mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
+          mediaAgentOrgIdsArray.push("squared");
+          vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
+        });
+    };
+
+    vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
+      MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+        function success(response) {},
+        function error(errorResponse, status) {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+            failureMessage: errorResponse.message
+          });
+        });
+    };
 
     function back() {
       vm.enableRedirectToTarget = false;

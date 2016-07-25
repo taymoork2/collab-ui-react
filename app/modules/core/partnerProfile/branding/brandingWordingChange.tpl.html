@@ -1,6 +1,6 @@
 <ng-form name="brandingForm" isolate-form="partnerProfileForm" class="branding branding-wording">
   <!-- branding logo upload -->
-  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos">
+  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos || bctrl.isDirectCustomer">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">
       <h4 translate="branding.customTitle"></h4>
       <div class="form-spacing form-group">
@@ -14,9 +14,9 @@
           <div class="cs-input-group cs-input-radio">
             <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="partnerLogoRadio">
-              <span ng-if="bctrl.isPartner" translate="branding.useCiscoLogo"></span>
-              <span ng-if="!bctrl.isPartner" translate="branding.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
-              <a ng-if="!bctrl.isPartner" ng-click=bctrl.showBrandingExample('Partner') translate="branding.exampleLink"></a>
+              <span ng-if="bctrl.isPartner || bctrl.isDirectCustomer" translate="branding.useCiscoLogo"></span>
+              <span ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" translate="branding.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
+              <a ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" ng-click=bctrl.showBrandingExample('Partner') translate="branding.exampleLink"></a>
             </label>
           </div>
 
@@ -25,18 +25,26 @@
             <label for="customLogoRadio">
               <span translate="branding.useOwnLogo"></span>
               <a ng-if="bctrl.isPartner" ng-click=bctrl.showBrandingExample('Partner') translate="branding.exampleLink"></a>
+
               <a ng-if="!bctrl.isPartner" ng-click=bctrl.showBrandingExample('Tenant') translate="branding.exampleLink"></a>
             </label>
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
-                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-drag-over-class="dragover" ngf-validate="{{bctrl.logoCriteria}}">
-                  <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile" ng-hide="bctrl.logoError" />
-                  <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
-                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="bctrl.logoFile"></p>
+                <div 
+                  class="drop-box form-section" 
+                  ngf-drop="bctrl.upload($file, $event)" 
+                  ng-model="bctrl.logoFile" 
+                  ngf-drag-over-class="dragover" 
+                  ngf-validate="{{bctrl.logoCriteria}}"
+                  accept="image/png"
+                  ngf-select="bctrl.upload($file, $event)" 
+                  name="file">
+                    <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
+                     <p class="vertical-align text-center placeholder"  ng-hide="!bctrl.logoFile">
+                    <i class="icon icon-upload"></i><br/>
+                    <span translate="branding.logoPlaceholder"></span>
+                  </p>
                 </div>
-               <!--  <button class="btn btn-primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
-                  <span translate="partnerProfile.chooseFile"></span>
-                </button> -->
               </div>
             </label>
             <p translate="branding.logoUploadNote" class="columns small-10 body-small radio-input-spacing"></p>
@@ -45,7 +53,6 @@
       </div>
     </div>
     <div class="small-12 columns form-spacing" ng-if="bctrl.isPartner">
-      <h4 translate="branding.tenantTitle"></h4>
       <div class="cs-checkbox-group">
         <input
           type="checkbox"

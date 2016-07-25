@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, customerListToggle, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -51,6 +51,8 @@ describe('Controller: CustomerListCtrl', function () {
       CUSTOMER: 2
     };
 
+    customerListToggle = false;
+
     spyOn($state, 'go');
     spyOn(Notification, 'error');
 
@@ -83,7 +85,8 @@ describe('Controller: CustomerListCtrl', function () {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
-      Config: Config
+      Config: Config,
+      customerListToggle: customerListToggle
     });
 
     $scope.$apply();
@@ -152,13 +155,46 @@ describe('Controller: CustomerListCtrl', function () {
   describe('getSubfields', function () {
     beforeEach(initController);
 
-    it('should return a proper list of subfields given the field type', function () {
-      $scope.gridOptions.multiFields = {
-        meeting: ['conferencing', 'webexEEConferencing']
+    it('should return the column from columnGroup for single column group', function () {
+      var entry = {
+        'licenseList': [{
+          'licenseId': 'MS_3c4b0cda-7315-430d-b3d6-97fd5b09991b',
+          'licenseType': 'MESSAGING',
+        }, {
+          'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
+          'licenseType': 'CONFERENCING',
+        }]
       };
-      var result = $scope.getSubfields('meeting');
-      expect(result[0]).toBe('conferencing');
-      expect(result[1]).toBe('webexEEConferencing');
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[0].columnGroup).toBe('conferencing');
+    });
+
+    it('should return the EE for 2nd webex column if there is no webex license', function () {
+      var entry = {
+        'licenseList': [{}]
+      };
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('EE');
+    });
+
+    it('should return webex with license for 2nd webex column if there is one', function () {
+      var entry = {
+        'licenseList': [{
+          'offerName': 'MC',
+          'licenseType': 'CONFERENCING',
+          'status': 'ACTIVE',
+        }, {
+          'licenseId': 'CMR_34302adb-1cb4-4501-a6aa-69b31b7e9558_algendel01.webex.com',
+          'offerName': 'CMR',
+          'licenseType': 'CMR',
+          'status': 'ACTIVE',
+        }]
+      };
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('CMR');
     });
   });
 

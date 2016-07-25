@@ -2,11 +2,12 @@
 
 describe('Template: planReview', function () {
   var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
-  var FeatureToggleService, Userservice, UrlConfig, getUserMe;
+  var FeatureToggleService, Userservice, UrlConfig, getUserMe, WebExUtilsFact;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
+  beforeEach(module('WebExApp'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
@@ -26,7 +27,7 @@ describe('Template: planReview', function () {
   beforeEach(initSpies);
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -37,6 +38,7 @@ describe('Template: planReview', function () {
     FeatureToggleService = _FeatureToggleService_;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
+    WebExUtilsFact = _WebExUtilsFact_;
   }
 
   function initSpies() {

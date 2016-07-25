@@ -6,7 +6,7 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
+  function GenerateActivationCodeCtrl($previousState, $stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $stateParams.currentUser.userName;
@@ -14,11 +14,27 @@
     vm.email = {
       to: vm.userName
     };
+
+    vm.wizardData = ($stateParams.wizard) ? $stateParams.wizard.state().data : null;
+    if (vm.wizardData) {
+      vm.userName = vm.wizardData.userName;
+      vm.otp = angular.copy(vm.wizardData.code);
+      vm.otp.code = vm.wizardData.code.activationCode;
+      vm.otp.expiresOn = vm.otp.expiresOn;
+    }
+
     vm.qrCode = '';
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
     vm.clipboardFallback = clipboardFallback;
+
+    function handleError(response) {
+      Notification.errorWithTrackingId(response,
+        _.get(response, 'status') === 404 ? 'generateActivationCodeModal.generateErrorNotFound' : 'generateActivationCodeModal.generateError'
+      );
+      $previousState.go();
+    }
 
     function activate() {
       if (vm.otp === 'new') {
@@ -26,7 +42,7 @@
           vm.otp = otpObj;
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
           setQRCode(vm.otp.code);
-        });
+        }).catch(handleError);
       } else if (vm.otp.code) {
         vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
         setQRCode(vm.otp.code);

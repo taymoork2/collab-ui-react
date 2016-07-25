@@ -2,7 +2,7 @@ namespace globalsettings {
 
   interface RetentionResponse {
     data: {
-      msgDataRetention:string
+      sparkDataRetentionDays:string
     }
   }
 
@@ -47,8 +47,8 @@ namespace globalsettings {
 
       this.RetentionService.getRetention(this.orgId)
         .then((response) => {
-          var msgDataRetention = response.msgDataRetention || this.RETENTION_DEFAULT;
-          var retentionGuiOption = _.find(this.retentionOptions, {value: msgDataRetention});
+          var sparkDataRetentionDays = response.sparkDataRetentionDays || this.RETENTION_DEFAULT;
+          var retentionGuiOption = _.find(this.retentionOptions, {value: sparkDataRetentionDays});
           if (retentionGuiOption) {
             this.initialRetention = retentionGuiOption;
             this.selectedRetention = retentionGuiOption;
@@ -72,11 +72,11 @@ namespace globalsettings {
             this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)
               .then((response) => {
                 this.initialRetention = this.selectedRetention; // now initial is selected
-                this.Notification.notify([this.$translate.instant('globalSettings.retention.notificationSuccess')], 'success');
+                this.Notification.success('globalSettings.retention.notificationSuccess');
               })
               .catch((response) => {
                 this.selectedRetention = this.initialRetention; // revert the changes
-                this.Notification.notify([this.$translate.instant('globalSettings.retention.notificationFailure')], 'error');
+                this.Notification.error('globalSettings.retention.notificationFailure');
               });
           }).catch(() => {
             this.selectedRetention = this.initialRetention; // revert changes if they close the modal
@@ -85,11 +85,11 @@ namespace globalsettings {
           this.RetentionService.setRetention(this.orgId, this.selectedRetention.value)
             .then((response) => {
               this.initialRetention = this.selectedRetention; // now initial is selected
-              this.Notification.notify([this.$translate.instant('globalSettings.retention.notificationSuccess')], 'success');
+              this.Notification.success('globalSettings.retention.notificationSuccess');
             })
             .catch((response) => {
               this.selectedRetention = this.initialRetention; // revert the changes
-              this.Notification.notify([this.$translate.instant('globalSettings.retention.notificationFailure')], 'error');
+              this.Notification.error('globalSettings.retention.notificationFailure');
             });
         }
       }

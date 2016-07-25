@@ -5,16 +5,16 @@
 /* global webExCommon */
 
 // Start of site list tests
-describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", function () {
+describe('WebEx Sitelist: ' + webExCommon.BTS2.siteUrl + ": ", function () {
   var setup = false;
 
   beforeAll(function () {
     var promise = webEx.setup(
       1,
-      'wbx-singleCenterLicenseTestAdmin',
-      webExCommon.t30citestprov9Info.testAdminUsername,
-      webExCommon.t30citestprov9Info.testAdminPassword,
-      webExCommon.t30citestprov9Info.siteUrl
+      'wbx-t30BTSTestAdmin-SingleLicense',
+      webExCommon.BTS2.testAdminUsername,
+      webExCommon.BTS2.testAdminPassword,
+      webExCommon.BTS2.siteUrl
     );
 
     promise.then(
@@ -32,7 +32,7 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
     navigation.logout();
   }); //afterAll
 
-  it('should allow login as ' + webExCommon.t30citestprov9Info.testAdminUsername + ' and navigate to webex site list page', function () {
+  it('should allow login as ' + webExCommon.BTS2.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
       utils.click(webExSiteList.conferencingLink);
@@ -42,38 +42,38 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov9Info.siteUrl + ": ", fun
 
   it('should detect single licensed site', function () {
     if (setup) {
-      utils.wait(webExCommon.t30citestprov9Info.licenseID);
+      utils.wait(webExCommon.BTS2.licenseID);
     }
   });
 
-  it('should detect ' + webExCommon.t30citestprov9Info.siteUrl + ' is a CI site', function () {
+  it('should detect ' + webExCommon.BTS2.siteUrl + ' is a CI site', function () {
     if (setup) {
-      utils.wait(webExCommon.t30citestprov9Info.isCIID);
+      utils.wait(webExCommon.BTS2.isCIID);
     }
   });
 
   it('should not detect WebEx CSV operation icon', function () {
     if (setup) {
-      expect(webExCommon.t30csvCogDisabled.isPresent()).toBeFalsy();
-      expect(webExCommon.t30csvCogEnabled.isPresent()).toBeFalsy();
-      expect(webExCommon.t30csvSpinner.isPresent()).toBeFalsy();
-      expect(webExCommon.t30csvResult.isPresent()).toBeFalsy();
-      expect(webExCommon.t30csvIcon.isPresent()).toBeFalsy();
+      expect(webExCommon.BTS2.csvCogDisabled.isPresent()).toBeFalsy();
+      expect(webExCommon.BTS2.csvCogEnabled.isPresent()).toBeFalsy();
+      expect(webExCommon.BTS2.csvSpinner.isPresent()).toBeFalsy();
+      expect(webExCommon.BTS2.csvResult.isPresent()).toBeFalsy();
+      expect(webExCommon.BTS2.csvIcon.isPresent()).toBeFalsy();
     }
   });
 
 });
 
-describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", function () {
+describe('WebEx Sitelist: ' + webExCommon.BTS1.siteUrl + ": ", function () {
   var setup = false;
 
   beforeAll(function () {
     var promise = webEx.setup(
       1,
-      'wbx-multipleCenterLicenseTestAdmin',
-      webExCommon.t30citestprov6Info.testAdminUsername,
-      webExCommon.t30citestprov6Info.testAdminPassword,
-      webExCommon.t30citestprov6Info.siteUrl
+      'wbx-t30BTSTestAdmin-MultiLicense',
+      webExCommon.BTS1.testAdminUsername,
+      webExCommon.BTS1.testAdminPassword,
+      webExCommon.BTS1.siteUrl
     );
 
     promise.then(
@@ -91,7 +91,7 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
     navigation.logout();
   }); //afterAll
 
-  it('should allow login as ' + webExCommon.t30citestprov6Info.testAdminUsername + ' and navigate to webex site list page', function () {
+  it('should allow login as ' + webExCommon.BTS1.testAdminUsername + ' and navigate to webex site list page', function () {
     if (setup) {
       navigation.clickServicesTab();
       utils.click(webExSiteList.conferencingLink);
@@ -101,22 +101,13 @@ describe('WebEx Sitelist: ' + webExCommon.t30citestprov6Info.siteUrl + ": ", fun
 
   it('should detect multiple licensed site', function () {
     if (setup) {
-      utils.wait(webExCommon.t30citestprov6Info.licenseID);
+      utils.wait(webExCommon.BTS1.licenseID);
     }
   });
 
-  it('should detect ' + webExCommon.t30citestprov6Info.siteUrl + ' is a CI site', function () {
+  it('should detect ' + webExCommon.BTS1.siteUrl + ' is a CI site', function () {
     if (setup) {
-      utils.wait(webExCommon.t30citestprov6Info.isCIID);
-    }
-  });
-
-  it('should detect WebEx CSV operation icon', function () {
-    if (setup) {
-      var csvCogDisabled = webExCommon.t31csvCogDisabled.isPresent();
-      var csvCogEnabled = webExCommon.t31csvCogEnabled.isPresent();
-      expect(webExCommon.t31csvIcon.isPresent()).toBeTruthy();
-      expect(csvCogDisabled || csvCogEnabled).toBe(true);
+      utils.wait(webExCommon.BTS1.isCIID);
     }
   });
 

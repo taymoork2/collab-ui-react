@@ -64,8 +64,6 @@
       }
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, callVolumeGraphs(data), 'timestamp', catAxis);
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
-      chartData.legend.labelText = '[[title]]';
       var chart = AmCharts.makeChart(callVolumediv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
@@ -87,7 +85,6 @@
         graphs[i].title = titles[i];
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
-        graphs[i].legendColor = secondaryColors[i];
         graphs[i].valueField = values[i];
         //graphs[i].showBalloon = data[0].balloon;
         graphs[i].showBalloon = data[0].balloon;
@@ -138,7 +135,7 @@
       valueAxes[0].position = 'left';
       valueAxes[0].title = '%';
       valueAxes[0].titleRotation = 180;
-      valueAxes[0].guides.label = 'Utilization High';
+      //valueAxes[0].guides.label = 'Utilization High';
 
       var catAxis = CommonMetricsGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
@@ -157,10 +154,6 @@
       }
       var chartData = CommonMetricsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, utilizationGraphs(data), 'timestamp', catAxis);
       chartData.numberFormatter = CommonMetricsGraphService.getBaseVariable(NUMFORMAT);
-      chartData.legend = CommonMetricsGraphService.getBaseVariable(LEGEND);
-      chartData.legend.labelText = '[[title]]';
-      chartData.legend.useGraphSettings = true;
-
       var chart = AmCharts.makeChart(utilizationdiv, chartData);
       chart.addListener("rendered", zoomChart);
       zoomChart(chart);
@@ -178,7 +171,6 @@
         graphs[i].title = titles[i];
         graphs[i].lineColor = secondaryColors[i];
         graphs[i].negativeLineColor = secondaryColors[i];
-        graphs[i].legendColor = secondaryColors[i];
         graphs[i].valueField = values[i];
         graphs[i].showBalloon = data[0].balloon;
         if (graphs[i].valueField === 'peak_cpu') {
@@ -313,16 +305,8 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       }
-      if (data.data[0].isDummy === true) {
-        var dummydata = data.data[0].isDummy;
-        var legend = createLegendsForAvailabilty(dummydata, selectedCluster);
-
-      } else {
-        var legend = createLegendsForAvailabilty(null, selectedCluster);
-
-      }
       var valueAxis = createValueAxis(data);
-      var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, legend);
+      var chartData = CommonMetricsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis);
       var chart = AmCharts.makeChart(availabilitydiv, chartData);
       return chart;
     }
@@ -340,19 +324,7 @@
       startDate = convertToLocalTime(startDate);
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      }
-      /*             else if (availabilityChart !== null && angular.isDefined(availabilityChart)) {
-                          availabilityChart.dataProvider = data.data[0].clusterCategories;
-                          var legend = createLegendsForAvailabilty(selectedCluster);
-                          var valueAxis = createValueAxis(data);
-                          availabilityChart.valueAxis = valueAxis;
-                          availabilityChart.period = data.data[0].period;
-                          availabilityChart.startDate = startDate;
-                          availabilityChart.legend.data=legend;
-                          availabilityChart.validateData();
-                          return availabilityChart;
-                        }*/
-      else {
+      } else {
         availabilityChart = createAvailabilityGraph(data, selectedCluster);
         availabilityChart.period = data.data[0].period;
         availabilityChart.startDate = startDate;

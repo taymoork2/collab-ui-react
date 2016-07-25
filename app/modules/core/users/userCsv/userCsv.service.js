@@ -78,7 +78,7 @@
           responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
             email: email
           });
-        } else if (messageCode === '400096' || messageCode === '400110') {
+        } else if (messageCode === '400110') {
           responseMessage = $translate.instant('usersPage.notSetupForManUserAddError', {
             email: email
           });
@@ -86,7 +86,7 @@
           responseMessage = $translate.instant('usersPage.userExistsDomainClaimError', {
             email: email
           });
-        } else if (messageCode === '400109') {
+        } else if (messageCode === '400096' || messageCode === '400109') {
           responseMessage = $translate.instant('usersPage.unableToMigrateError', {
             email: email
           });

@@ -2,6 +2,8 @@
 
 describe('Directive: hrServiceAddress', function () {
   var $httpBackend, $compile, $scope;
+  var SEARCH_BUTTON = '.search-custom';
+  var HIDE = 'ng-hide';
 
   beforeEach(module('Huron'));
 
@@ -41,4 +43,22 @@ describe('Directive: hrServiceAddress', function () {
     expect(element.text()).toContain('123 MY STREET');
     expect(element.text()).toContain('RICHARDSON, TX  75082');
   });
+  it('should have search button hidden if hide-search is true', function () {
+    var element = $compile('<hr-service-address address="myAddress" read-only="readOnly" ::hide-search="true"><hr-service-address/>')($scope);
+    $scope.$apply();
+    expect(element.find(SEARCH_BUTTON).hasClass(HIDE)).toBe(true);
+  });
+
+  it('should have search button enabled if hide-search is undefined', function () {
+    var element = $compile('<hr-service-address address="myAddress" read-only="readOnly"><hr-service-address/>')($scope);
+    $scope.$apply();
+    expect(element.find(SEARCH_BUTTON).hasClass(HIDE)).toBe(false);
+  });
+
+  it('should have search button enabled if hide-search is false', function () {
+    var element = $compile('<hr-service-address address="myAddress" read-only="readOnly" ::hide-search="false"><hr-service-address/>')($scope);
+    $scope.$apply();
+    expect(element.find(SEARCH_BUTTON).hasClass(HIDE)).toBe(false);
+  });
+
 });

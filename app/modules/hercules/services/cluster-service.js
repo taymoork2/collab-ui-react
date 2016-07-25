@@ -133,7 +133,7 @@
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
-        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        upgradeWarning: upgradeAvailable && !_.any(cluster.connectors, 'state', 'offline'),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);

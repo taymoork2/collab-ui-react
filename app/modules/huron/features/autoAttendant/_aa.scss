@@ -1,53 +1,8 @@
  @import 'builder/aa-builder';
  @import 'sayMessage/aa-saymessage';
  @import 'phoneMenu/aa-phonemenu';
+ @import 'submenu/aa-submenu';
  @import 'routeCall/aa-routecall';
  @import 'dialByExt/aa-dialbyext';
  @import 'routeToExtNum/aa-route-to-ext-num';
  @import 'schedule/aa-schedule';
-
-.aa-template-card {
-  padding: 0;
-  width: 13rem;
-  height: 13rem;
-  .aa-template-card-section {
-    &:hover {
-      cursor: pointer;
-      background-color: $gray-light-4;
-    }
-  }
-  .aa-icon-container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 1.5rem;
-    padding-bottom: 0
-  }
-  .aa-schedule-icon {
-    @extend .icon;
-    @extend .icon-clock;
-    font-size: 1.5em;
-    text-align: center;
-    color: $aa-builder-icon-color;
-  }
-  .aa-audio-icon {
-    @extend .icon;
-    @extend .icon-audio;
-    font-size: 1.5em;
-    text-align: center;
-    color: $aa-builder-icon-color;
-  }
-  .aa-headset-icon {
-    @extend .icon;
-    @extend .icon-headset;
-    font-size: 1.5em;
-    text-align: center;
-    color: $aa-builder-icon-color;
-  }
-  .aa-playlist-icon {
-    @extend .icon;
-    @extend .icon-playlist;
-    font-size: 1.5em;
-    text-align: center;
-    color: $aa-builder-icon-color;
-  }
-}

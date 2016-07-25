@@ -1,6 +1,6 @@
 <div>
   <cs-overlay-panel class="callpark overlay-panel typeahead-group" overlay-title="{{::'callPark.newCallPark' | translate}}" close="callParkSA.cancelModal()"  ng-keyup="callParkSA.evalKeyPress($event.keyCode)">
-    <cs-setup-assistant previous="callParkSA.previousButton(callParkSA.getPageIndex())" next="callParkSA.nextButton(callParkSA.getPageIndex())" previous-fn="callParkSA.previousPage()" next-fn="callParkSA.nextPage()">
+    <cs-setup-assistant previous="callParkSA.previousButton(callParkSA.getPageIndex())" next="callParkSA.nextButton(callParkSA.getPageIndex())" previous-fn="callParkSA.previousPage()" next-fn="callParkSA.nextPage()" next-text="callParkSA.createHelpText()">
 
       <div cp-name
           ng-if="callParkSA.getPageIndex() == 0"

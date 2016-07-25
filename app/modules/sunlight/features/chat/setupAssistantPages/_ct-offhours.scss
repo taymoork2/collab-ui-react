@@ -25,10 +25,12 @@
   }
 
   .offhours-icon {
-    font-size: 3rem;
+    .icon-clock {
+      font-size: 3rem;
+    }
     line-height: 1;
     color: $color-attention;
-    @include vr-spacing(pt, 2);
+    @include vr-spacing(pt, 3);
   }
 
   .offhours-preview-message {
@@ -66,7 +68,6 @@
       line-height: $h5-line-height;
       @include vr-spacing(pt, 0.75);
     }
-
     .message {
       height: 4.5rem;
       width: 20rem;
@@ -76,13 +77,7 @@
       @include vr-spacing(p, 0.75);
       @include vr-spacing(mt, 0);
     }
-
-    .no-message {
-      background-color: $color-attention-lighter;
-      border-color: $color-attention-base;
-    }
   }
-
   .business-hours-label {
     @include vr-spacing(pt, 0.5);
   }
