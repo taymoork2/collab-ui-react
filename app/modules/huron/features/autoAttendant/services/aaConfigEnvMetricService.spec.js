@@ -68,7 +68,9 @@ describe('Service: AAConfigEnvMetricService', function () {
       AAConfigEnvMetricService.trackProdOrIntegNotifications('error', properties);
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });
+  });
 
+  describe('trackConfigEnvNotifications', function () {
     it('should call analytics with integration config env from trackConfigEnvNotifications', function () {
       $location.host.and.returnValue(intHost);
       expect(Config.isIntegration()).toBe(true);
