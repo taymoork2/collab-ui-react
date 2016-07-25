@@ -510,7 +510,10 @@
                 controllerAs: 'brandEg',
               }
             },
-            authenticate: false
+            authenticate: false,
+            params: {
+              modalType: 'Partner'
+            }
           })
           .state('invite', {
             url: '/invite',
