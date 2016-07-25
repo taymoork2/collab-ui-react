@@ -95,6 +95,7 @@ time npm run eslint
 time npm run json-verify
 time npm run languages-verify
 time npm run test
+time npm run combine-coverage
 time npm run build -- --nolint
 set +e
 

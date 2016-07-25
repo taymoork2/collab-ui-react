@@ -16,11 +16,16 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 # ----------
 
 # otherwise collect '--*' args for passing through to gulp
+no_parallel=
 pass_through_opts=
 args=( $@ )
 i=0
 for opt in "${args[@]}"; do
     case "$opt" in
+        --no-parallel )
+            no_parallel="true"
+            unset -v args[$i]
+            ;;
         --* )
             pass_through_opts="$pass_through_opts ${args[$i]}"
             unset -v args[$i]
@@ -56,7 +61,11 @@ done
 # split the raw file list
 shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
 total_specs=$(wc -l "$flist" | awk '{print $1;}')
-lines_per_file=$(calc_lines_per_file $total_specs)
+num_cores=$(num_cpus)
+if [ "${no_parallel}" = "true" ]; then
+    num_cores=1
+fi
+lines_per_file=$(calc_lines_per_file $total_specs $num_cores)
 
 # list all spec files, splitting list into roughly equal sizes
 sort "$flist" \
@@ -86,7 +95,11 @@ export npm_lifecycle_event=test
 # run 'karma' at the project root dir
 pushd ${WX2_ADMIN_WEB_CLIENT_HOME} > /dev/null
 set -x
-parallel karma start ::: $shim_file_args
+if [ "${no_parallel}" = "true" ]; then
+    karma start $shim_file_args $pass_through_opts
+else
+    parallel -j -1 karma start $pass_through_opts ::: $shim_file_args
+fi
 exit_status=$?
 set +x
 popd > /dev/null

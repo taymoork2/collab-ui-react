@@ -2,6 +2,7 @@ var _ = require('lodash');
 var webpackConfig = require('./webpack.config');
 var args = require('yargs').argv;
 var shimFile = args.shimFile || './karma/karma.shim.default.js';
+var shimFileName = _.last(shimFile.split('/'));
 
 module.exports = function (config) {
   var _config = {
@@ -42,8 +43,9 @@ module.exports = function (config) {
     coverageReporter: {
       dir: 'test/coverage/',
       reporters: [{
-          type: 'cobertura',
-          subdir: 'cobertura'
+          type: 'json',
+          subdir: 'json',
+          file: shimFileName + '.json'
         }, {
           type: 'text-summary'
         }, {

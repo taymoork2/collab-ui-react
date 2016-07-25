@@ -6,4 +6,4 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
 fi
 
 find "${WX2_ADMIN_WEB_CLIENT_HOME}/app" -iname \*spec.js -o -iname \*spec.ts \
-    | ktest
+    | ./bin/ktest $@
