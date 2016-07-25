@@ -11,6 +11,7 @@
     $interval,
     $translate,
     Authinfo,
+    Auth,
     Userservice,
     FeatureToggleService,
     WebExUtilsFact,
@@ -710,6 +711,11 @@
             "siteUrl=" + siteRow.siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           //$log.log(logMsg);
+
+          //Check response error code
+          if (response.errorCode.indexOf("060502") != -1) {
+            Auth.redirectToLogin();
+          }
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;
