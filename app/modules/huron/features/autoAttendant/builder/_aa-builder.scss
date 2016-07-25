@@ -78,11 +78,10 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-setup-assistant {
-.cs-setupassistant--content {
-height: auto;
+  .cs-setupassistant--content {
+    height: auto;
+  }
 }
-}
-
 
 #aa-header-row {
   height: $aa-builder-header-height;
@@ -150,27 +149,6 @@ height: auto;
   color: $aa-builder-icon-color;
   @include vr-spacing(p, .25);
 
-}
-
-.aa-help-icon {
-  @extend .icon;
-
-  @extend .icon-help;
-
-  font-size: 1rem;
-  color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
-
-  &:hover {
-    color: $aa-builder-icon-hover-color;
-  }
-}
-
-.aa-help-wrapper {
-  & .popover {
-    width: 60%;
-  }
 }
 
 .aa-builder-number-tile {
