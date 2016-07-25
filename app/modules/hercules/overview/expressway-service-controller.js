@@ -95,29 +95,9 @@
     }
 
     function extractSummaryForAService() {
-      var emptySummary = {
-        activated: 0,
-        deactivated: 0,
-        error: 0,
-        notActivated: 0,
-        notEntitled: 0,
-        total: 0
-      };
-      vm.userStatusSummary = _.chain(USSService2.getStatusesSummary())
-        .filter(function (summary) {
-          return _.includes(vm.servicesId, summary.serviceId);
-        })
-        .reduce(function (acc, summary) {
-          return {
-            activated: acc.activated + summary.activated,
-            deactivated: acc.deactivated + summary.deactivated,
-            error: acc.error + summary.error,
-            notActivated: acc.notActivated + summary.notActivated,
-            notEntitled: acc.notEntitled + summary.notEntitled,
-            total: acc.total + summary.total
-          };
-        }, emptySummary)
-        .value();
+      vm.userStatusSummary = _.filter(USSService2.getStatusesSummary(), function (summary) {
+        return _.includes(vm.servicesId, summary.serviceId);
+      });
     }
 
     function openUserStatusReportModal(serviceId) {
@@ -181,10 +161,11 @@
             },
             servicesId: function () {
               return vm.servicesId;
-            }
+            },
+            firstTimeSetup: false
           },
           controller: 'AddResourceController',
-          controllerAs: 'addResource',
+          controllerAs: 'vm',
           templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
           type: 'small'
         });
@@ -203,7 +184,32 @@
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
     });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
+          },
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: true
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
+    }
 
   }
 }());

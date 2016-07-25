@@ -8,8 +8,8 @@
     transition: initial;
   }
 
-  .form {
-    margin:0;
+  .cs-form {
+    margin-top: 10px;
   }
 
   p {
@@ -30,6 +30,12 @@
 
   .radioNoTranform {
     transition: initial;
+  }
+
+  .privacy {
+    position: absolute;
+    bottom: 12px;
+    color: $gray-light-1;
   }
 
 }

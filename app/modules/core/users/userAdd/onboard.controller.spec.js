@@ -1,117 +1,89 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, $q, $state, $stateParams, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, DialPlanService, Authinfo, CsvDownloadService;
-  var internalNumbers;
-  var externalNumbers;
-  var externalNumberPool;
-  var externalNumberPoolMap;
-  var getUserMe;
-  var getMigrateUsers;
-  var getMyFeatureToggles;
-  var sites;
-  var fusionServices;
-  var headers;
-  var getMessageServices;
-  var getLicensesUsage;
-  var getLicensesUsageSpy;
-  var unlicensedUsers;
-  var allLicensesData;
-  var $controller;
-  var getCareServices;
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $timeout = _$timeout_;
-    $q = _$q_;
-    $state = _$state_;
-    $stateParams = _$stateParams_;
-    Notification = _Notification_;
-    DialPlanService = _DialPlanService_;
-    Userservice = _Userservice_;
-    Orgservice = _Orgservice_;
-    TelephonyInfoService = _TelephonyInfoService_;
-    FeatureToggleService = _FeatureToggleService_;
-    Authinfo = _Authinfo_;
-    CsvDownloadService = _CsvDownloadService_;
+  function init() {
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
+    this.injectDependencies('$modal', '$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice');
+    initDependencySpies.apply(this);
+  }
+
+  function initController() {
+    this.initController('OnboardCtrl');
+  }
+
+  function initDependencySpies() {
+    this.mock = {};
     var current = {
       step: {
         name: 'fakeStep'
       }
     };
-    $scope.wizard = {};
-    $scope.wizard.current = current;
+    this.$scope.wizard = {};
+    this.$scope.wizard.current = current;
 
     function isLastStep() {
       return false;
     }
-    $scope.wizard.isLastStep = isLastStep;
+    this.$scope.wizard.isLastStep = isLastStep;
 
-    spyOn($state, 'go');
+    spyOn(this.$state, 'go');
 
-    internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
-    externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
-    externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
-    externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
-    getUserMe = getJSONFixture('core/json/users/me.json');
-    getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    sites = getJSONFixture('huron/json/settings/sites.json');
-    fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
-    headers = getJSONFixture('core/json/users/headers.json');
-    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
-    unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
-    allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
-    getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    this.mock.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
+    this.mock.externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
+    this.mock.externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
+    this.mock.getUserMe = getJSONFixture('core/json/users/me.json');
+    this.mock.getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
+    this.mock.getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+    this.mock.sites = getJSONFixture('huron/json/settings/sites.json');
+    this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
+    this.mock.headers = getJSONFixture('core/json/users/headers.json');
+    this.mock.getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
+    this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
+    this.mock.allLicensesData = getJSONFixture('core/json/organizations/allLicenses.json');
+    this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
+    this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
-    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
-    spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
+    spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return $q.when(headers);
+        return this.$q.when(this.mock.headers);
       } else {
-        return $q.when({});
+        return this.$q.when({});
       }
+    }.bind(this));
+
+    spyOn(this.Notification, 'notify');
+
+    spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
+    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
+      callback(this.mock.unlicensedUsers, 200);
+    }.bind(this));
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback, status) {
+      callback({}, 200);
     });
 
-    spyOn(Notification, 'notify');
-    spyOn(Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-      callback(unlicensedUsers, 200);
-    });
-
-    spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
-    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
-    spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
-    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+    spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
+    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.when(this.mock.internalNumbers));
+    spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
+    spyOn(this.DialPlanService, 'getCustomerDialPlanDetails').and.returnValue(this.$q.when({
       extensionGenerated: 'false'
     }));
-    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
-    spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
 
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
-    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.when(true));
-    spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
+    spyOn(this.TelephonyInfoService, 'loadExternalNumberPool').and.returnValue(this.$q.when(this.mock.externalNumbers));
+    spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.when(this.mock.externalNumberPoolMap));
 
-    spyOn(Userservice, 'onboardUsers');
-    spyOn(Userservice, 'bulkOnboardUsers');
-    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
-    spyOn(Userservice, 'updateUsers');
-  }));
+    spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
+    spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
+    spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.when(this.mock.sites));
 
-  function initController() {
-    controller = $controller('OnboardCtrl', {
-      $scope: $scope,
-      $state: $state
-    });
-
-    $scope.$apply();
+    spyOn(this.Userservice, 'onboardUsers');
+    spyOn(this.Userservice, 'bulkOnboardUsers');
+    spyOn(this.Userservice, 'getUser').and.returnValue(this.mock.getUserMe);
+    spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.mock.getMigrateUsers);
+    spyOn(this.Userservice, 'updateUsers');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
   }
 
   function onboardUsersResponse(statusCode, responseMessage) {
@@ -132,10 +104,10 @@ describe('OnboardCtrl: Ctrl', function () {
     };
   }
 
+  beforeEach(init);
+
   describe('Bulk Users DirSync', function () {
-    beforeEach(function () {
-      initController();
-    });
+    beforeEach(initController);
     var validUserList = [{
       firstName: 'John',
       lastName: 'Doe',
@@ -150,68 +122,135 @@ describe('OnboardCtrl: Ctrl', function () {
 
     describe('process and save users', function () {
       beforeEach(function () {
-        $scope.userList = validUserList;
-        var promise = $scope.syncStatusNext();
-        $scope.$apply();
-        $timeout.flush();
+        this.$scope.userList = validUserList;
+        var promise = this.$scope.syncStatusNext();
+        this.$scope.$apply();
+        this.$timeout.flush();
       });
       it('should load user list into userArray', function () {
-        expect($scope.model.numMaxUsers).toEqual(2);
+        expect(this.$scope.model.numMaxUsers).toEqual(2);
       });
       it('should report existing users', function () {
-        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200)));
-        var promise = $scope.dirsyncProcessingNext();
-        $scope.$apply();
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200)));
+        var promise = this.$scope.dirsyncProcessingNext();
+        this.$scope.$apply();
         expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(0);
-        expect($scope.model.numExistingUsers).toEqual(2);
-        expect($scope.model.userErrorArray.length).toEqual(0);
+        expect(this.$scope.model.processProgress).toEqual(100);
+        expect(this.$scope.model.numTotalUsers).toEqual(2);
+        expect(this.$scope.model.numNewUsers).toEqual(0);
+        expect(this.$scope.model.numExistingUsers).toEqual(2);
+        expect(this.$scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report error users', function () {
-        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403)));
-        var promise = $scope.dirsyncProcessingNext();
-        $scope.$apply();
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403)));
+        var promise = this.$scope.dirsyncProcessingNext();
+        this.$scope.$apply();
         expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(0);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(2);
+        expect(this.$scope.model.processProgress).toEqual(100);
+        expect(this.$scope.model.numTotalUsers).toEqual(2);
+        expect(this.$scope.model.numNewUsers).toEqual(0);
+        expect(this.$scope.model.numExistingUsers).toEqual(0);
+        expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should report error users when API fails', function () {
-        Userservice.onboardUsers.and.returnValue($q.reject(onboardUsersResponse(500)));
-        var promise = $scope.dirsyncProcessingNext();
-        $scope.$apply();
+        this.Userservice.onboardUsers.and.returnValue(this.$q.reject(onboardUsersResponse(500)));
+        var promise = this.$scope.dirsyncProcessingNext();
+        this.$scope.$apply();
         expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(0);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(2);
+        expect(this.$scope.model.processProgress).toEqual(100);
+        expect(this.$scope.model.numTotalUsers).toEqual(2);
+        expect(this.$scope.model.numNewUsers).toEqual(0);
+        expect(this.$scope.model.numExistingUsers).toEqual(0);
+        expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should stop processing when cancelled', function () {
-        Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(-1)));
-        var promise = $scope.dirsyncProcessingNext();
-        $scope.$apply();
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(-1)));
+        var promise = this.$scope.dirsyncProcessingNext();
+        this.$scope.$apply();
         expect(promise).toBeResolved();
-        expect($scope.model.processProgress).toEqual(100);
-        expect($scope.model.numTotalUsers).toEqual(2);
-        expect($scope.model.numNewUsers).toEqual(0);
-        expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(2);
-        $scope.cancelProcessCsv();
-        $scope.$apply();
+        expect(this.$scope.model.processProgress).toEqual(100);
+        expect(this.$scope.model.numTotalUsers).toEqual(2);
+        expect(this.$scope.model.numNewUsers).toEqual(0);
+        expect(this.$scope.model.numExistingUsers).toEqual(0);
+        expect(this.$scope.model.userErrorArray.length).toEqual(2);
+        this.$scope.cancelProcessCsv();
+        this.$scope.$apply();
         expect(promise).toBeResolved();
       });
+    });
+  });
+
+  describe('setLicenseAvailabity', function () {
+    beforeEach(initController);
+
+    it('Should have been initialized', function () {
+      expect(this.Orgservice.getLicensesUsage).toHaveBeenCalled();
+    });
+    it('should get licenses', function () {
+      expect(this.$scope.licenses).toBeDefined();
+    });
+    it('Should calculate the license availabilities correctly', function () {
+      expect(this.$scope.messagingLicenseAvailability).toEqual(0);
+      expect(this.$scope.communicationLicenseAvailability).toEqual(3);
+      expect(this.$scope.conferencingLicenseAvailability).toEqual(1);
+    });
+  });
+  describe('License redirect modal', function () {
+    beforeEach(initController);
+    it('should define the modal when sufficient licenses are not available', function () {
+      this.$scope.checkLicenseAvailability('MESSAGING', true);
+      expect(this.$scope.licenseCheckModal).toBeDefined();
+    });
+    it('should not launch modal when sufficient licenses are available', function () {
+      this.$scope.checkLicenseAvailability('COMMUNICATION', false);
+      expect(this.$scope.licenseCheckModal).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('with determining message checkbox visibility', function () {
+    beforeEach(initController);
+    it('should return false if more than one license', function () {
+      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
+        license: 1
+      }, {
+        license: 2
+      }]);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and no billingServiceId', function () {
+      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
+        license: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return true if only one license and no selectedSubscription', function () {
+      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }]);
+      expect(displayMessageCheckbox).toBeTruthy();
+    });
+
+    it('should return false if only one license and billingServiceId does not match selectedSubscription', function () {
+      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 2);
+      expect(displayMessageCheckbox).toBeFalsy();
+    });
+
+    it('should return true if only one license and billingServiceId match selectedSubscription', function () {
+      var displayMessageCheckbox = this.$scope.checkMessageVisibility([{
+        billingServiceId: 1
+      }], 1);
+      expect(displayMessageCheckbox).toBeTruthy();
     });
   });
 
   describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {
-      $scope.allLicenses = [{
+      this.$scope.allLicenses = [{
         billing: 'testOrg1',
         confModel: false,
         label: 'test org',
@@ -230,61 +269,61 @@ describe('OnboardCtrl: Ctrl', function () {
       }];
     });
     it('should initialize all licenses correctly', function () {
-      $scope.populateConf();
-      expect($scope.allLicenses[0].confModel).toEqual(false);
-      expect($scope.allLicenses[0].label).toEqual('test org');
-      expect($scope.allLicenses[1].billing).toEqual('testOrg2');
-      expect($scope.allLicenses[1].offerName).toEqual('CS');
+      this.$scope.populateConf();
+      expect(this.$scope.allLicenses[0].confModel).toEqual(false);
+      expect(this.$scope.allLicenses[0].label).toEqual('test org');
+      expect(this.$scope.allLicenses[1].billing).toEqual('testOrg2');
+      expect(this.$scope.allLicenses[1].offerName).toEqual('CS');
     });
     it('should verify userLicenseIds and licenseId are the same', function () {
       var userLicenseIds = 'testABC';
-      $scope.populateConf();
-      expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
-      expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
+      this.$scope.populateConf();
+      expect(this.$scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
+      expect(this.$scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
     });
   });
 
   describe('With assigning message licenses', function () {
     describe('Check if single licenses get assigned correctly', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.singleLicense);
-        $stateParams.currentUser = {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.singleLicense);
+        this.$stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
         };
-        initController();
       });
+      beforeEach(initController);
 
       it('should define licenses model', function () {
-        expect($scope.messageFeatures[1].licenses[0].model).toBeTruthy();
-        expect($scope.radioStates.msgRadio).toEqual(false);
+        expect(this.$scope.messageFeatures[1].licenses[0].model).toBeTruthy();
+        expect(this.$scope.radioStates.msgRadio).toEqual(false);
       });
     });
 
     describe('Check if multiple licenses get assigned correctly', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.multipleLicenses);
-        $stateParams.currentUser = {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getMessageServices').and.returnValue(this.mock.getMessageServices.multipleLicenses);
+        this.$stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
         };
-        initController();
       });
+      beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
-        var licenseFeatures = $scope.getAccountLicenses();
+        var licenseFeatures = this.$scope.getAccountLicenses();
         expect(licenseFeatures[0].id).toEqual('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
-        expect($scope.messageFeatures[1].licenses[0].model).toEqual(true);
-        expect($scope.radioStates.msgRadio).toEqual(true);
+        expect(this.$scope.messageFeatures[1].licenses[0].model).toEqual(true);
+        expect(this.$scope.radioStates.msgRadio).toEqual(true);
       });
     });
   });
 
   describe('With assigning meeting and message licenses on invitations', function () {
     beforeEach(function () {
-      $stateParams.currentUser = {
+      this.$stateParams.currentUser = {
         licenseID: [
           'MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0',
           'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
@@ -295,10 +334,10 @@ describe('OnboardCtrl: Ctrl', function () {
           cf: 'CF_5761413b-5bad-4d6a-b40d-c157c0f99062'
         }
       };
-      initController();
     });
+    beforeEach(initController);
     beforeEach(function () {
-      $scope.allLicenses = [{
+      this.$scope.allLicenses = [{
         billing: 'testOrg1',
         confModel: false,
         label: 'test org',
@@ -309,25 +348,25 @@ describe('OnboardCtrl: Ctrl', function () {
       }];
     });
     it('should set MS license to true based on invitation', function () {
-      expect($scope.radioStates.msgRadio).toBeTruthy();
+      expect(this.$scope.radioStates.msgRadio).toBeTruthy();
     });
     it('should set meeting to true on invitation', function () {
-      $scope.populateConfInvitations();
-      expect($scope.allLicenses[0].confModel).toEqual(true);
+      this.$scope.populateConfInvitations();
+      expect(this.$scope.allLicenses[0].confModel).toEqual(true);
     });
   });
 
   describe('UserAdd DID and DN assignment', function () {
     beforeEach(initController);
     beforeEach(function () {
-      $scope.usrlist = [{
+      this.$scope.usrlist = [{
         "name": "dntodid",
         "address": "dntodid@gmail.com"
       }, {
         "name": "dntodid1",
         "address": "dntodid1@gmail.com"
       }];
-      $scope.convertSelectedList = [{
+      this.$scope.convertSelectedList = [{
         "name": {
           "givenName": "dntodid",
           "familyName": ""
@@ -340,89 +379,89 @@ describe('OnboardCtrl: Ctrl', function () {
         },
         "userName": "dntodid1@gmail.com"
       }];
-      $scope.radioStates.commRadio = 'true';
-      $scope.internalNumberPool = internalNumbers;
-      $scope.externalNumberPool = externalNumberPool;
-      $scope.$apply();
+      this.$scope.radioStates.commRadio = 'true';
+      this.$scope.internalNumberPool = this.mock.internalNumbers;
+      this.$scope.externalNumberPool = this.mock.externalNumberPool;
+      this.$scope.$apply();
 
     });
     beforeEach(installPromiseMatchers);
     it('mapDidToDn', function () {
-      $scope.mapDidToDn();
-      $scope.$apply();
-      expect($scope.externalNumberMapping.length).toEqual(2);
-      expect($scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
-      expect($scope.usrlist[0].assignedDn).toEqual('4532');
-      expect($scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
+      this.$scope.mapDidToDn();
+      this.$scope.$apply();
+      expect(this.$scope.externalNumberMapping.length).toEqual(2);
+      expect(this.$scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
+      expect(this.$scope.usrlist[0].assignedDn).toEqual('4532');
+      expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
 
     });
     it('assignServicesNext', function () {
 
-      expect($scope.usrlist[0].externalNumber).not.toBeDefined();
-      expect($scope.usrlist[0].assignedDn).not.toBeDefined();
-      expect($scope.usrlist[1].externalNumber).not.toBeDefined();
-      expect($scope.usrlist[1].assignedDn).not.toBeDefined();
-      var promise = $scope.assignServicesNext();
-      $scope.$apply();
+      expect(this.$scope.usrlist[0].externalNumber).not.toBeDefined();
+      expect(this.$scope.usrlist[0].assignedDn).not.toBeDefined();
+      expect(this.$scope.usrlist[1].externalNumber).not.toBeDefined();
+      expect(this.$scope.usrlist[1].assignedDn).not.toBeDefined();
+      var promise = this.$scope.assignServicesNext();
+      this.$scope.$apply();
       expect(promise).toBeResolved();
-      expect($scope.usrlist[0].externalNumber).toBeDefined();
-      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
-      expect($scope.usrlist[1].externalNumber).toBeDefined();
-      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      expect(this.$scope.usrlist[0].externalNumber).toBeDefined();
+      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect(this.$scope.usrlist[1].externalNumber).toBeDefined();
+      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
     });
 
     it('editServicesSave', function () {
-      $scope.currentUser = {
+      this.$scope.currentUser = {
         userName: 'johndoe@example.com'
       };
-      $scope.editServicesSave();
-      $scope.$apply();
-      expect($scope.usrlist.length).toEqual(1);
-      expect($scope.usrlist[0]).toEqual(jasmine.objectContaining({
+      this.$scope.editServicesSave();
+      this.$scope.$apply();
+      expect(this.$scope.usrlist.length).toEqual(1);
+      expect(this.$scope.usrlist[0]).toEqual(jasmine.objectContaining({
         address: 'johndoe@example.com',
-        assignedDn: internalNumbers[0],
-        externalNumber: externalNumbers[0]
+        assignedDn: this.mock.internalNumbers[0],
+        externalNumber: this.mock.externalNumbers[0]
       }));
-      expect($state.go).toHaveBeenCalledWith('editService.dn');
-      expect($scope.editServicesFlow).toBe(true);
-      expect($scope.convertUsersFlow).toBe(false);
+      expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
+      expect(this.$scope.editServicesFlow).toBe(true);
+      expect(this.$scope.convertUsersFlow).toBe(false);
     });
 
     it('assignDNForUserList', function () {
 
-      $scope.assignDNForUserList();
-      $scope.$apply();
-      expect($scope.usrlist[0].externalNumber.pattern).toEqual('null');
-      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
-      expect($scope.usrlist[1].externalNumber.pattern).toEqual('null');
-      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      this.$scope.assignDNForUserList();
+      this.$scope.$apply();
+      expect(this.$scope.usrlist[0].externalNumber.pattern).toEqual('null');
+      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect(this.$scope.usrlist[1].externalNumber.pattern).toEqual('null');
+      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
 
     });
 
     it('convertUsersNext', function () {
 
-      $scope.convertUsersNext();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith("users.convert.services.dn");
-      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
-      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      this.$scope.convertUsersNext();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith("users.convert.services.dn");
+      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
     });
 
     it('assignDNForConvertUsers', function () {
 
-      $scope.assignDNForConvertUsers();
-      $scope.$apply();
-      expect(Userservice.migrateUsers).toHaveBeenCalled();
+      this.$scope.assignDNForConvertUsers();
+      this.$scope.$apply();
+      expect(this.Userservice.migrateUsers).toHaveBeenCalled();
     });
 
     it('checkDidDnDupes', function () {
 
-      $scope.loadInternalNumberPool();
-      $scope.loadExternalNumberPool();
-      expect($scope.usrlist.length).toEqual(2);
-      $scope.assignDNForUserList();
-      var result = $scope.checkDidDnDupes();
-      $scope.$apply();
+      this.$scope.loadInternalNumberPool();
+      this.$scope.loadExternalNumberPool();
+      expect(this.$scope.usrlist.length).toEqual(2);
+      this.$scope.assignDNForUserList();
+      var result = this.$scope.checkDidDnDupes();
+      this.$scope.$apply();
       expect(result).toBeTruthy();
     });
 
@@ -432,73 +471,73 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initController);
 
     it('checkClaimedDomain', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400084')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400084')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkOutsideClaimedDomain', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400091')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400091')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExists', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400081')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400081')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExistsInDiffOrg', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400090')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400090')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUnauthorizedToAdd - 400096', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400096')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400096')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExistsOrDomainClaimed', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400108')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400108')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUnableToMigrate', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400109')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400109')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUnauthorizedToAdd - 400110', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400110')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400110')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkInsufficientEntitlements', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400111')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '400111')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('check hybrid services without paid licenses', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
-      $scope.onboardUsers();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(400, '400087')));
+      this.$scope.onboardUsers();
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });
 
   describe('filterList', function () {
     beforeEach(initController);
     it('a proper query should call out to organizationService', function () {
-      $scope.filterList('sqtest');
-      $timeout.flush();
-      expect(Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
-      expect($scope.showSearch).toEqual(true);
+      this.$scope.filterList('sqtest');
+      this.$timeout.flush();
+      expect(this.Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
+      expect(this.$scope.showSearch).toEqual(true);
     });
   });
 
@@ -511,18 +550,18 @@ describe('OnboardCtrl: Ctrl', function () {
         afterEach(expectShouldAddCallService);
 
         it('if both commRadio and ciscoUC are enabled', function () {
-          $scope.radioStates.commRadio = true;
-          $scope.entitlements.ciscoUC = true;
+          this.$scope.radioStates.commRadio = true;
+          this.$scope.entitlements.ciscoUC = true;
         });
 
         it('if commRadio is enabled', function () {
-          $scope.radioStates.commRadio = true;
-          $scope.entitlements.ciscoUC = false;
+          this.$scope.radioStates.commRadio = true;
+          this.$scope.entitlements.ciscoUC = false;
         });
 
         it('if ciscoUC is enabled', function () {
-          $scope.radioStates.commRadio = false;
-          $scope.entitlements.ciscoUC = true;
+          this.$scope.radioStates.commRadio = false;
+          this.$scope.entitlements.ciscoUC = true;
         });
       });
 
@@ -530,8 +569,8 @@ describe('OnboardCtrl: Ctrl', function () {
         afterEach(expectShouldNotAddCallService);
 
         it('if neither commRadio or ciscoUC is enabled', function () {
-          $scope.radioStates.commRadio = false;
-          $scope.entitlements.ciscoUC = false;
+          this.$scope.radioStates.commRadio = false;
+          this.$scope.entitlements.ciscoUC = false;
         });
       });
     });
@@ -542,42 +581,42 @@ describe('OnboardCtrl: Ctrl', function () {
       afterEach(expectShouldNotAddCallService);
 
       it('if both commRadio and ciscoUC are enabled', function () {
-        $scope.radioStates.commRadio = true;
-        $scope.entitlements.ciscoUC = true;
+        this.$scope.radioStates.commRadio = true;
+        this.$scope.entitlements.ciscoUC = true;
       });
 
       it('if commRadio is enabled', function () {
-        $scope.radioStates.commRadio = true;
-        $scope.entitlements.ciscoUC = false;
+        this.$scope.radioStates.commRadio = true;
+        this.$scope.entitlements.ciscoUC = false;
       });
 
       it('if ciscoUC is enabled', function () {
-        $scope.radioStates.commRadio = false;
-        $scope.entitlements.ciscoUC = true;
+        this.$scope.radioStates.commRadio = false;
+        this.$scope.entitlements.ciscoUC = true;
       });
 
       it('if neither commRadio or ciscoUC is enabled', function () {
-        $scope.radioStates.commRadio = false;
-        $scope.entitlements.ciscoUC = false;
+        this.$scope.radioStates.commRadio = false;
+        this.$scope.entitlements.ciscoUC = false;
       });
     });
 
     function expectShouldAddCallService() {
-      expect($scope.shouldAddCallService()).toBe(true);
+      expect(this.$scope.shouldAddCallService()).toBe(true);
     }
 
     function expectShouldNotAddCallService() {
-      expect($scope.shouldAddCallService()).toBe(false);
+      expect(this.$scope.shouldAddCallService()).toBe(false);
     }
 
     function initUserWithoutCall() {
-      $stateParams.currentUser = {
+      this.$stateParams.currentUser = {
         entitlements: []
       };
     }
 
     function initUserWithCall() {
-      $stateParams.currentUser = {
+      this.$stateParams.currentUser = {
         entitlements: ['ciscouc']
       };
     }
@@ -589,7 +628,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(editServicesSave);
 
       it('should activateDID and goto editService.dn state', function () {
-        expect($state.go).toHaveBeenCalledWith('editService.dn');
+        expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
       });
     });
 
@@ -599,17 +638,17 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(editServicesSave);
 
       it('should update user license', function () {
-        expect($scope.updateUserLicense).toHaveBeenCalled();
+        expect(this.$scope.updateUserLicense).toHaveBeenCalled();
       });
     });
 
     function editServicesSave() {
-      $scope.editServicesSave();
-      $scope.$apply();
+      this.$scope.editServicesSave();
+      this.$scope.$apply();
     }
 
     function initSpy() {
-      spyOn($scope, 'updateUserLicense');
+      spyOn(this.$scope, 'updateUserLicense');
     }
   });
 
@@ -617,17 +656,17 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initCurrentUserAndController);
 
     beforeEach(function () {
-      $scope.$dismiss = angular.noop;
-      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200, '')));
+      this.$scope.$dismiss = angular.noop;
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '')));
     });
 
     describe('with a current user', function () {
       beforeEach(updateUserLicense);
 
       it('should call Userservice.onboardUsers() with the current user', function () {
-        expect(Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
-        expect(onboardedUser.address).toEqual($stateParams.currentUser.userName);
+        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(onboardedUser.address).toEqual(this.$stateParams.currentUser.userName);
       });
     });
 
@@ -636,8 +675,8 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(updateUserLicense);
 
       it('should call Userservice.onboardUsers() with the custom user list', function () {
-        expect(Userservice.onboardUsers).toHaveBeenCalled();
-        var onboardedUser = Userservice.onboardUsers.calls.mostRecent().args[0][0];
+        expect(this.Userservice.onboardUsers).toHaveBeenCalled();
+        var onboardedUser = this.Userservice.onboardUsers.calls.mostRecent().args[0][0];
         expect(onboardedUser.address).toEqual(this.usrlist[0].address);
       });
     });
@@ -646,12 +685,12 @@ describe('OnboardCtrl: Ctrl', function () {
       this.usrlist = [{
         address: 'customTestUser'
       }];
-      $scope.usrlist = this.usrlist;
+      this.$scope.usrlist = this.usrlist;
     }
 
     function updateUserLicense() {
-      $scope.updateUserLicense();
-      $scope.$apply();
+      this.$scope.updateUserLicense();
+      this.$scope.$apply();
     }
   });
 
@@ -659,100 +698,100 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initCurrentUserAndController);
 
     it('should check if CMR gets checked when CF gets checked', function () {
-      allLicensesData.allLicenses.forEach(function (lic) {
+      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
           cfLic.confModel = true; // check CF license
-          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           lic.cmrLic.forEach(function (cmrLic) {
             expect(cmrLic).toBeTruthy(); // expect CMR license to be checked
           });
-        });
-      });
+        }.bind(this));
+      }.bind(this));
     });
 
     it('should check if CF gets checked when CMR gets checked', function () {
-      allLicensesData.allLicenses.forEach(function (lic) {
+      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
           lic.cmrLic.forEach(function (cmrLic) {
             cmrLic = true; // check CMR license
           });
-          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
-        });
-      });
+        }.bind(this));
+      }.bind(this));
     });
 
     it('should check if CF remains checked when CMR is unchecked', function () {
-      allLicensesData.allLicenses.forEach(function (lic) {
+      this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
           cfLic.confModel = true; // check CF license
-          $scope.checkCMR(cfLic.confModel, lic.cmrLic);
+          this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           lic.cmrLic.forEach(function (cmrLic) {
             cmrLic = false; // uncheck CMR license
           });
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
-        });
-      });
+        }.bind(this));
+      }.bind(this));
     });
   });
 
   describe('With assigning care licenses', function () {
     describe('Check if single licenses get assigned correctly', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
-        $stateParams.currentUser = {
-          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767']
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        this.$stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd']
         };
-        initController();
       });
+      beforeEach(initController);
 
       it('should have care license', function () {
-        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
-        expect($scope.radioStates.careRadio).toEqual(false);
+        expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect(this.$scope.radioStates.careRadio).toEqual(false);
       });
     });
 
     describe('Check if multiple licenses get assigned correctly', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
-        spyOn(Authinfo, 'getCareServices').and.returnValue(getCareServices.careLicense);
-        $stateParams.currentUser = {
-          licenseID: ['CDC_24b7d249-d452-47e5-b484-651210e55767'],
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCareServices').and.returnValue(this.mock.getCareServices.careLicense);
+        this.$stateParams.currentUser = {
+          licenseID: ['CDC_da652e7d-cd34-4545-8f23-936b74359afd'],
           entitlements: ['cloud-contact-center']
         };
-        initController();
       });
+      beforeEach(initController);
 
       it('should call getAccountLicenses correctly', function () {
-        var licenseFeatures = $scope.getAccountLicenses();
-        expect(licenseFeatures[0].id).toEqual('CDC_24b7d249-d452-47e5-b484-651210e55767');
+        var licenseFeatures = this.$scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
         expect(licenseFeatures[0].idOperation).toEqual('ADD');
-        expect($scope.careFeatures[1].license.licenseType).toEqual('CARE');
-        expect($scope.radioStates.careRadio).toEqual(true);
+        expect(this.$scope.careFeatures[1].license.licenseType).toEqual('CARE');
+        expect(this.$scope.radioStates.careRadio).toEqual(true);
       });
     });
   });
 
   function initUserShouldAddCall() {
-    $scope.radioStates.commRadio = true;
-    $scope.$apply();
+    this.$scope.radioStates.commRadio = true;
+    this.$scope.$apply();
   }
 
   function initCurrentUser() {
-    $stateParams.currentUser = {
+    this.$stateParams.currentUser = {
       userName: 'testUser'
     };
   }
 
   function initCurrentUserAndController() {
-    initCurrentUser();
-    initController();
+    initCurrentUser.apply(this);
+    initController.apply(this);
   }
 
   function initControllerAndEnableCall() {
-    initCurrentUserAndController();
-    initUserShouldAddCall();
+    initCurrentUserAndController.apply(this);
+    initUserShouldAddCall.apply(this);
   }
 });

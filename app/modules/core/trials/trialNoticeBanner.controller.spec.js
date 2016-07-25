@@ -6,6 +6,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     $httpBackend,
     $q,
     Authinfo,
+    deferred,
     EmailService,
     Notification,
     TrialService,
@@ -16,6 +17,11 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       'partners': [{
         'userName': 'fake-partner-email@example.com',
         'displayName': 'fakeuser admin1',
+        'id': '2'
+      }, {
+        'userName': 'fake-partner-email2@example.com',
+        'displayName': 'fakeuser admin2',
+        'id': '1'
       }]
     }
   };
@@ -26,18 +32,18 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   };
 
   var fakeConferenceDataWithWebex = [{
-    "license": {
-      "licenseType": "CONFERENCING",
-      "siteUrl": "test.webex.com",
+    'license': {
+      'licenseType': 'CONFERENCING',
+      'siteUrl': 'test.webex.com',
     }
   }, {
-    "license": {
-      "licenseType": "CONFERENCING",
+    'license': {
+      'licenseType': 'CONFERENCING',
     }
   }];
 
   var fakeConferenceDataWithoutWebex = [{
-    "license": {}
+    'license': {}
   }];
 
   beforeEach(module('core.trial'));
@@ -60,11 +66,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     UserListService = _UserListService_;
 
     spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
     spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.when(fakePartnerInfoData));
     $httpBackend.whenGET(/organization\/trials$/).respond(fakeTrialPeriodData);
 
+    deferred = _$q_.defer();
+
     controller = controller('TrialNoticeBannerCtrl', {
-      $q: $q,
       Authinfo: Authinfo,
       EmailService: EmailService,
       Notification: Notification,
@@ -81,28 +89,25 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('primary behaviors:', function () {
-    it('should set "daysLeft"', function () {
-      // no mechanism to mock current day, to guarantee a consistent period, so just check null
-      expect(controller.daysLeft).not.toBeNull();
-    });
-
-    it('should set "partnerAdminEmail"', function () {
-      expect(controller.partnerAdminEmail).toBe('fake-partner-email@example.com');
-    });
-
-    it('should set "partnerAdminDisplayName"', function () {
-      expect(controller.partnerAdminDisplayName).toBe('fakeuser admin1');
-    });
 
     describe('canShow():', function () {
-      it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty', function () {
+      it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty and the logged in user is not the partner', function () {
         spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
         spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
+        spyOn(Authinfo, 'getUserId').and.returnValue('1');
         expect(controller.canShow()).toBe(true);
       });
 
       it('should return true if "Authinfo.isUserAdmin()" is false', function () {
         spyOn(Authinfo, 'isUserAdmin').and.returnValue(false);
+        spyOn(Authinfo, 'getUserId').and.returnValue('1');
+        expect(controller.canShow()).toBe(false);
+      });
+
+      it('should return true if the logged in user is the partner', function () {
+        spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
+        spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
+        spyOn(Authinfo, 'getUserId').and.returnValue('2');
         expect(controller.canShow()).toBe(false);
       });
     });
@@ -113,48 +118,22 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
         controller.sendRequest().then(function () {
           expect(controller._helpers.sendEmail).toHaveBeenCalled();
-          expect(Notification.success).toHaveBeenCalled();
-          expect(controller.hasRequested).toBe(true);
+
         });
       });
     });
   });
 
   describe('helper functions:', function () {
-    describe('getDaysLeft():', function () {
-      var getDaysLeft;
 
-      beforeEach(function () {
-        getDaysLeft = controller._helpers.getDaysLeft;
-        spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
-        spyOn(TrialService, 'getExpirationPeriod').and.returnValue($q.when(1));
-        spyOn(TrialService, 'getTrialPeriodData').and.returnValue($q.when(fakeTrialPeriodData));
-      });
+    describe('getPartnerInfo():', function () {
 
-      it('should resolve with the return value from "TrialService.getExpirationPeriod()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(daysLeft).toBe(1);
-        });
-      });
-
-      it('should have called "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getTrialIds).toHaveBeenCalled();
-        });
-      });
-
-      it('should have called "TrialService.getExpirationPeriod()" with the return value of "TrialService.getTrialIds()"', function () {
-        getDaysLeft().then(function (daysLeft) {
-          expect(TrialService.getExpirationPeriod).toHaveBeenCalledWith(['fake-uuid-value-1']);
-        });
-      });
-    });
-
-    describe('getPrimaryPartnerInfo():', function () {
       describe('will resolve with partner data that...', function () {
         it('should have a "data.partners[0].displayName" property', function () {
-          controller._helpers.getPrimaryPartnerInfo().then(function (partnerInfo) {
-            expect(partnerInfo.data.partners[0].displayName).toBe('fakeuser admin1');
+          controller._helpers.getPartnerInfo().then(function () {
+            expect(controller.partnerAdmin[0].userName).toBe('fake-partner-email@example.com');
+            expect(controller.partnerAdmin[1].userName).toBe('fake-partner-email2@example.com');
+
           });
         });
       });
@@ -162,20 +141,92 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('sendEmail():', function () {
       beforeEach(function () {
-        spyOn(Authinfo, 'getOrgName').and.returnValue('fake-cust-name');
-        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-cust-admin-email');
-        controller.partnerAdminEmail = 'fake-partner-admin-email';
+        controller.partnerAdmin = fakePartnerInfoData.data.partners;
       });
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()" once for each partner admin with correct userName', function () {
 
-      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()"', function () {
         spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
           return null;
         });
-        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
-        controller._helpers.sendEmail();
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
+        deferred.resolve({});
+        $scope.$apply();
+
+        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email');
         expect(EmailService.emailNotifyPartnerTrialConversionRequest)
           .toHaveBeenCalledWith(
-            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email', null);
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-email2@example.com', null);
+        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
+          .toHaveBeenCalledWith(
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-email@example.com', null);
+      });
+
+      it('should return the results array of length equal to the number of admins and value corresponding to the resolve object', function () {
+
+        spyOn(Authinfo, 'getConferenceServices').and.callFake(function (val) {
+          return null;
+        });
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest').and.returnValue(deferred.promise);
+        deferred.resolve({
+          status: 400
+        });
+        $scope.$apply();
+
+        controller._helpers.sendEmail('fake-cust-name', 'fake-cust-admin-email').then(function (results) {
+          expect(results[0].status).toBe(400);
+          expect(results.length).toBe(2);
+        });
+
+      });
+    });
+
+    describe('sendRequest():', function () {
+
+      it('should set requestResult to true when all emails were sent succesfully with status 200', function () {
+
+        var emailResult = [{
+          status: 200
+        }, {
+          status: 200
+        }];
+
+        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
+        controller.sendRequest().then(function (results) {
+          expect(controller.requestResult).toBe(controller.requestResultEnum.SUCCESS);
+          expect(Notification.success).toHaveBeenCalled();
+
+        });
+      });
+
+      it('should set requestResult to false when some emails were not sent with status 400', function () {
+
+        var emailResult = [{
+          status: 400
+        }, {
+          status: 200
+        }];
+
+        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
+
+        controller.sendRequest().then(function (results) {
+          expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
+          expect(Notification.error).toHaveBeenCalled();
+        });
+      });
+
+      it('should set requestResult to false when all emails were rejected with status 400', function () {
+
+        var emailResult = [{
+          status: 400
+        }, {
+          status: 400
+        }];
+        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when(emailResult));
+
+        controller.sendRequest().then(function (results) {
+          expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
+          expect(Notification.error).toHaveBeenCalled();
+        });
       });
     });
 

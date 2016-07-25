@@ -90,6 +90,10 @@
 
     function removeAction(index) {
       var uiMenu = vm.ui[vm.schedule];
+      var entryI = uiMenu.entries[index];
+      if (AutoAttendantCeMenuModelService.isCeMenu(entryI)) {
+        AutoAttendantCeMenuModelService.deleteCeMenuMap(entryI.getId());
+      }
       uiMenu.deleteEntryAt(index);
 
       AACommonService.setActionStatus(true);

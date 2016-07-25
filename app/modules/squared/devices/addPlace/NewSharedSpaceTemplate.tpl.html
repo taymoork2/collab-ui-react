@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{newPlace.wizardData.title}}"></h3>
+</div>
+<div class="modal-body device-wizard choose-shared">
+  <div class="createNewPlace" ng-hide="newPlace.isNewCollapsed">
+    <form class="createNewPlaceForm" onsubmit="$('#next-button').click()">
+      <h5 translate="addDeviceWizard.newSharedSpace.newPlace"></h5>
+      <!--<h5 ng-show="newPlace.onlyNew()" translate="addDeviceWizard.newSharedSpace.deviceInstalled"></h5>-->
+      <p  translate="addDeviceWizard.newSharedSpace.newPlaceInstructions"></p>
+      <!--<p ng-show="newPlace.onlyNew()" translate="addDeviceWizard.newSharedSpace.deviceInstalledInstructions"></p>-->
+      <div class="newPlaceSpacing" ></div>
+      <div>
+        <input
+            required
+            type="text"
+            id="newPlace"
+            name="roomName"
+            focus-on="true"
+            ng-model="newPlace.deviceName"
+            placeholder="{{'addDeviceWizard.newSharedSpace.insertRoomName' | translate}}"
+            class="form-control"
+            autocomplete="off"
+            maxlength="127">
+        </input>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+
+  <button
+    type="button"
+    class="btn"
+    ng-click="$dismiss()"
+    translate="common.cancel">
+  </button>
+  <button
+      cs-btn
+      loading="newPlace.isLoading"
+      id="next-button"
+      class="btn btn--primary"
+      ng-click="newPlace.next()"
+      ng-disabled="!newPlace.isNameValid()">
+        <span translate="common.next"></span>
+    </button>
+  </button>
+</div>

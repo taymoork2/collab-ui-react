@@ -28,9 +28,9 @@
     },
     AthenaServiceUrl: {
       dev: 'https://athena-integration.wbx2.com/athena/api/v1',
-      cfe: 'https://athena-integration.wbx2.com/athena/api/v1',
+      cfe: 'https://athena-e.wbx2.com/athena/api/v1',
       integration: 'https://athena-integration.wbx2.com/athena/api/v1',
-      prod: 'https://athena-integration.wbx2.com/athena/api/v1'
+      prod: 'https://athena-a.wbx2.com/athena/api/v1'
     },
     CsdmServiceUrl: {
       dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
@@ -123,16 +123,22 @@
       prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      cfe: 'https://config.nva1-de.ciscoccservice.com/config/v1',
-      integration: 'https://config.nctx3-stg.ciscoccservice.com/config/v1',
+      dev: 'https://config.dev.ciscoccservice.com/config/v1',
+      cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
+      integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.nva1-de.ciscoccservice.com',
-      cfe: 'https://bubble.nva1-de.ciscoccservice.com',
-      integration: 'https://bubble.nctx3-stg.ciscoccservice.com',
+      dev: 'https://bubble.dev.ciscoccservice.com',
+      cfe: 'https://bubble.appstaging.ciscoccservice.com',
+      integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.rciad.ciscoccservice.com'
+    },
+    SunlightReportServiceUrl: {
+      dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
+      cfe: 'https://reporting.nva1-de.ciscoccservice.com/reporting/v1',
+      integration: 'https://reporting.nctx3-stg.ciscoccservice.com/reporting/v1',
+      prod: 'https://reporting.rciad.ciscoccservice.com/reporting/v1'
     },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',

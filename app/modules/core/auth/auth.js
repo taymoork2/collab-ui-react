@@ -6,10 +6,11 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, WindowLocation) {
+  function Auth($injector, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
+      logoutAndRedirectTo: logoutAndRedirectTo,
       authorize: authorize,
       getCustomerAccount: getCustomerAccount,
       isLoggedIn: isLoggedIn,
@@ -17,7 +18,6 @@
       redirectToLogin: redirectToLogin,
       getNewAccessToken: getNewAccessToken,
       refreshAccessToken: refreshAccessToken,
-      setAuthorizationHeader: setAuthorizationHeader,
       refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
@@ -62,7 +62,7 @@
     }
 
     function refreshAccessToken() {
-      var refreshToken = Storage.get('refreshToken');
+      var refreshToken = TokenService.getRefreshToken();
 
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
@@ -92,19 +92,27 @@
     }
 
     function logout() {
-      var url = OAuthConfig.getOauthDeleteTokenUrl();
-      var data = 'token=' + Storage.get('accessToken');
+      var redirectUrl = OAuthConfig.getLogoutUrl();
+      return service.logoutAndRedirectTo(redirectUrl);
+    }
+
+    function logoutAndRedirectTo(redirectUrl) {
+      var revokeUrl = OAuthConfig.getOauthDeleteTokenUrl();
+      var data = 'token=' + TokenService.getAccessToken();
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
-      return httpPOST(url, data, token)
+      return httpPOST(revokeUrl, data, token)
         .catch(handleError('Failed to delete the oAuth token'))
         .finally(function () {
           clearStorage();
-          WindowLocation.set(OAuthConfig.getLogoutUrl());
+          // We store a key value in sessionStorage to  
+          // prevent a login when multiple tabs are open
+          SessionStorage.put('logout', 'logout');
+          WindowLocation.set(redirectUrl);
         });
     }
 
     function isLoggedIn() {
-      return !!Storage.get('accessToken');
+      return !!TokenService.getAccessToken();
     }
 
     function redirectToLogin(email, sso) {
@@ -120,8 +128,12 @@
 
     // authorize helpers
 
-    function getAuthorizationUrl() {
+    function getAuthorizationUrl(org) {
       var url = UrlConfig.getAdminServiceUrl();
+
+      if (org) {
+        return url + 'organization/' + org + '/userauthinfo';
+      }
 
       var customerOrgId = SessionStorage.get('customerOrgId');
       if (customerOrgId) {
@@ -146,7 +158,9 @@
       return httpGET(url)
         .then(function (res) {
           var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
-          if (isMessengerOrg) {
+          var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
+          var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
+          if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {
             Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
             authData.services.push({
               serviceId: 'jabberMessenger',
@@ -190,10 +204,8 @@
         return getCustomerAccount(Authinfo.getOrgId())
           .then(function (res) {
             Authinfo.updateAccountInfo(res.data);
-            Authinfo.initializeTabs();
           });
       } else {
-        Authinfo.initializeTabs();
         return authData;
       }
     }
@@ -244,13 +256,13 @@
 
       if (_.has(response, 'data.refresh_token')) {
         var refreshToken = _.get(response, 'data.refresh_token');
-        Storage.put('refreshToken', refreshToken);
+        TokenService.setRefreshToken(refreshToken);
       }
 
       Log.info('Update Access Token');
-      Storage.put('accessToken', accessToken);
+      TokenService.setAccessToken(accessToken);
+      TokenService.setAuthorizationHeader(accessToken);
 
-      setAuthorizationHeader(accessToken);
       return accessToken;
     }
 
@@ -280,10 +292,5 @@
         return $q.reject(res);
       };
     }
-
-    function setAuthorizationHeader(token) {
-      $injector.get('$http').defaults.headers.common.Authorization = 'Bearer ' + (token || Storage.get('accessToken'));
-    }
-
   }
 })();

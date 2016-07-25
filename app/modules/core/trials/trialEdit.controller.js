@@ -32,7 +32,6 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
-    vm.setDeviceModal = setDeviceModal;
     vm.hasUserServices = hasUserServices;
 
     vm.preset = {
@@ -53,6 +52,7 @@
     vm.details.licenseDuration = vm.preset.licenseDuration;
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
     vm.careTrial.details.quantity = vm.preset.careLicenseValue;
+    vm.canSeeDevicePage = true;
 
     vm.trialStates = [{
       name: 'trialEdit.webex',
@@ -187,6 +187,7 @@
       model: vm.careTrial.details,
       key: 'quantity',
       type: 'input',
+      name: 'trialCareLicenseCount',
       className: '',
       templateOptions: {
         id: 'trialCareLicenseCount',
@@ -364,50 +365,67 @@
     ///////////////////////
 
     function init() {
-      $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
-        TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials)
-      ]).then(function (results) {
-        vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[0] && vm.preset.webex;
-        vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[0];
-        vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
-        vm.messageTrial.enabled = vm.preset.message;
-        vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.showContextServiceTrial = results[1];
-        vm.contextTrial.enabled = results[2];
-        vm.preset.context = results[2];
-        vm.showCare = results[3];
-        vm.careTrial.enabled = vm.preset.care;
-        setDeviceModal();
+      var isTestOrg = false;
+      var overrideTestOrg = false;
+      var getAdminOrgError = false;
+      var promises = {
+        ftWebex: FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+        ftContextServ: FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
+        ftCareTrials: FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        ftShipDevices: FeatureToggleService.supports('atlasTrialsShipDevices'),
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+          getAdminOrgError = true;
+          return err;
+        })
+      };
 
-        if (vm.showWebex) {
-          updateTrialService(_messageTemplateOptionId);
-        }
-      }).finally(function () {
-        $scope.$watch(function () {
-          return vm.trialData.trials;
-        }, function (newVal, oldVal) {
-          if (newVal !== oldVal) {
-            toggleTrial();
+      $q.all(promises)
+        .then(function (results) {
+          vm.showRoomSystems = true;
+          vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+          vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
+          vm.meetingTrial.enabled = vm.preset.meeting;
+          vm.showWebex = results.ftWebex;
+          vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
+          vm.messageTrial.enabled = vm.preset.message;
+          vm.pstnTrial.enabled = vm.hasCallEntitlement;
+          vm.showContextServiceTrial = results.ftContextServ;
+          vm.contextTrial.enabled = results.tcHasService;
+          vm.preset.context = results.tcHasService;
+          vm.showCare = results.ftCareTrials;
+          vm.careTrial.enabled = vm.preset.care;
+
+          if (vm.showWebex) {
+            updateTrialService(_messageTemplateOptionId);
           }
-        }, true);
 
-        // Capture modal close and clear service
-        if ($state.modal) {
-          $state.modal.result.finally(function () {
-            TrialService.reset();
-          });
-        }
+          // To determine whether to display the ship devices page
+          overrideTestOrg = results.ftShipDevices;
+          if (!getAdminOrgError && results.adminOrg.data.success) {
+            isTestOrg = results.adminOrg.data.isTestOrg;
+          }
+        }).finally(function () {
+          vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
+          $scope.$watch(function () {
+            return vm.trialData.trials;
+          }, function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+              toggleTrial();
+            }
+          }, true);
 
-        vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
+          // Capture modal close and clear service
+          if ($state.modal) {
+            $state.modal.result.finally(function () {
+              TrialService.reset();
+            });
+          }
 
-        toggleTrial();
-      });
+          vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
+
+          toggleTrial();
+        });
     }
 
     function hasUserServices() {
@@ -737,24 +755,6 @@
       var canSeeDevicePage = vm.canSeeDevicePage;
 
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
-    }
-
-    function setDeviceModal() {
-      var overrideTestOrg = false;
-      var isTestOrg = false;
-
-      $q.all([
-        FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        overrideTestOrg = results[0];
-        if (results[1].data.success) {
-          isTestOrg = results[1].data.isTestOrg;
-        }
-      }).finally(function () {
-        // Display devices modal if not a test org or if toggle is set
-        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
-      });
     }
   }
 })();

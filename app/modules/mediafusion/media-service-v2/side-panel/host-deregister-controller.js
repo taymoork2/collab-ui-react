@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterControllerV2(cluster, orgName, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance) {
+  function HostDeregisterControllerV2(cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $translate, $modalInstance, Notification) {
     var vm = this;
 
     vm.deregisterAreYouSure = $translate.instant(
@@ -11,13 +11,15 @@
         organizationName: orgName
       });
     vm.saving = false;
+
     vm.deregister = function () {
       vm.saving = true;
       MediaClusterServiceV2
-        .deleteCluster(cluster.id)
+        .defuseV2Connector(connector.id)
         .then(function () {
           $modalInstance.close();
           vm.saving = false;
+          Notification.success('mediaFusion.deleteNodeSuccess');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
             clusterName: cluster.name,

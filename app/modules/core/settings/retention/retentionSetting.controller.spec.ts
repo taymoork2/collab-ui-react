@@ -39,12 +39,12 @@ namespace globalsettings {
 
     describe('contructor()', ()=> {
 
-      describe('when getRetention is not provided with parameters', ()=> {
+      describe('when getRetention is not provided with parameters', () => {
         beforeEach(initFailureSpy);
         beforeEach(initController);
 
-        it('should not set dataloaded and no value for selected retention policy', () => {
-          expect(controller.dataLoaded).toBeFalsy();
+        it('should set dataloaded and no value for selected retention policy', () => {
+          expect(controller.dataLoaded).toBeTruthy();
           expect(controller.selectedRetention).toBeFalsy();
         });
 
@@ -53,7 +53,7 @@ namespace globalsettings {
         }
       });
 
-      describe('when getRetention returns a value from the pre-defined options', ()=> {
+      describe('when getRetention returns a value from the pre-defined options', () => {
         beforeEach(initSpyWithRetention);
         beforeEach(initController);
 
@@ -65,14 +65,12 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            data:{
-              msgDataRetention:secondRetentionOption
-            }
+            sparkDataRetentionDays:secondRetentionOption
           }));
         }
       });
 
-      describe('when getRetention returns a value outside the pre-defined options', ()=> {
+      describe('when getRetention returns a value outside the pre-defined options', () => {
         beforeEach(initSpyWithRetention);
         beforeEach(initController);
 
@@ -83,20 +81,19 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            data:{
-              msgDataRetention:45444
-            }
+            sparkDataRetentionDays:45444
           }));
         }
       });
 
-      describe('when getRetention returns insufficient data', ()=> {
+      describe('when getRetention returns insufficient data', () => {
         beforeEach(initSpyInsufficientResponse);
         beforeEach(initController);
 
-        it('should set data loaded but no value for the retention policy', () => {
+        it('should set data loaded and default value for the retention policy', () => {
           expect(controller.dataLoaded).toBeTruthy();
-          expect(controller.selectedRetention).toBeFalsy();
+          expect(controller.selectedRetention).toBeTruthy();
+          expect(controller.selectedRetention.value).toBe(controller.RETENTION_DEFAULT);
         });
 
         function initSpyInsufficientResponse() {

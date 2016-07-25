@@ -535,7 +535,7 @@
                     vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
                   }
                 });
-              Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+              Notification.success('directoryNumberPanel.success');
               vm.saveInProcess = false; // Set flag for "Save" button behavior
               resetForm();
             })
@@ -572,7 +572,7 @@
                           return listSharedLineUsers(vm.directoryNumber.uuid);
                         });
                       }).then(function () {
-                        Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                        Notification.success('directoryNumberPanel.success');
                         $state.go('user-overview.communication.directorynumber', {
                           directoryNumber: vm.directoryNumber
                         });
@@ -580,9 +580,9 @@
                       });
                   });
               } else {
-                Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
+                Notification.error('directoryNumberPanel.maxLines', {
                   user: name
-                })], 'error');
+                });
                 $state.go('user-overview.communication');
                 vm.saveInProcess = false; // Set flag for "Save" button behavior
               }
@@ -603,14 +603,15 @@
 
       $modal.open({
         templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
-        scope: $scope
+        scope: $scope,
+        type: 'dialog'
       }).result.then(function () {
         if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
           return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
             .then(function () {
               TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
               vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-              Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
+              Notification.success('directoryNumberPanel.disassociationSuccess');
               $state.go('user-overview.communication');
             }).then(function () {
               return disassociateSharedLineUsers(true);
@@ -977,9 +978,9 @@
         // Exclude users without Voice service to be shared line User
         // Exclude current user
         if (!isVoiceUser) {
-          Notification.notify([$translate.instant('sharedLinePanel.invalidUser', {
+          Notification.error('sharedLinePanel.invalidUser', {
             user: userInfo.name
-          })], 'error');
+          });
         }
         isValidUser = false;
       }
@@ -1015,9 +1016,9 @@
                 return SharedLineInfoService.addSharedLineUser(user.uuid, vm.directoryNumber.uuid);
               } else {
                 name = (user.name) ? user.name : user.userName;
-                Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
+                Notification.error('directoryNumberPanel.maxLines', {
                   user: name
-                })], 'error');
+                });
               }
             })
             .catch(function (response) {

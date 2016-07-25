@@ -6,13 +6,14 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, chartColors, Config, DialPlanService, FeatureToggleService, Localytics, Log, LogMetricsService, Mixpanel, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     $scope.cmrLicensesForMetric = {};
+    $scope.currentUserCount = 0;
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -36,6 +37,9 @@
     $scope.isMapEnabled = true;
     $scope.processing = false;
     $scope.PATTERN_LIMIT = 50;
+    $scope.messagingLicenseAvailability = 0;
+    $scope.communicationsLicenseAvailability = 0;
+    $scope.conferencingLicenseAvailability = 0;
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
     $scope.isReset = false;
@@ -78,6 +82,77 @@
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
       $scope.isCareEnabled = careStatus;
     });
+
+    initController();
+
+    function initController() {
+      $scope.currentUserCount = 1;
+      setLicenseAvailability();
+    }
+
+    /****************************** License Enforcement START *******************************/
+    //***
+    //***
+    //***********************************************************************************/
+
+    function setLicenseAvailability() {
+      return Orgservice.getLicensesUsage()
+        .then(function (result) {
+          $scope.licenses = result[0].licenses;
+          _.forEach($scope.licenses, function (license) {
+            switch (license.licenseType) {
+            case Config.licenseTypes.MESSAGING:
+              {
+                $scope.messagingLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            case Config.licenseTypes.COMMUNICATION:
+              {
+                $scope.communicationLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            case Config.licenseTypes.CONFERENCING:
+              {
+                $scope.conferencingLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            default:
+              break;
+            }
+          });
+        });
+    }
+
+    $scope.checkLicenseAvailability = function (licenseName, licenseModel) {
+      if (!licenseName || !licenseModel) {
+        return;
+      }
+      var licenseNamePrefix = licenseName.toLowerCase();
+      if ($scope[licenseNamePrefix + 'LicenseAvailability'] < $scope.currentUserCount) {
+        $scope.licenseCheckModal();
+      }
+
+    };
+
+    $scope.licenseCheckModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: "dialog",
+          templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
+        }).result.then(function () {
+          FeatureToggleService.atlasSettingsPageGetStatus()
+            .then(function () {
+              $previousState.forget('modalMemo');
+              $state.go('my-company.subscriptions');
+            });
+        });
+      }
+    };
+
+    /****************************** License Enforcement END *******************************/
+    //***
+    //***
+    //***********************************************************************************/
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -252,7 +327,7 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Mixpanel.trackEvent("CMR checkbox unselected", {
+          Analytics.trackEvent("CMR checkbox unselected", {
             licenseId: licenseId
           });
         }
@@ -346,7 +421,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -369,6 +444,7 @@
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
+    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -387,6 +463,17 @@
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
+    }
+
+    function checkMessageVisibility(licenses, selectedSubscription) {
+      if (licenses.length === 1) {
+        var license = licenses[0];
+        if (license.billingServiceId && selectedSubscription) {
+          return license.billingServiceId === selectedSubscription;
+        }
+        return true;
+      }
+      return false;
     }
 
     function populateConf() {
@@ -540,9 +627,7 @@
       }
 
       populateConf();
-      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
-        populateConfInvitations();
-      }
+      populateConfInvitations();
     };
 
     $scope.isSubscribeable = function (license) {
@@ -824,7 +909,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Localytics.tagEvent(Localytics.events.convertUserSearch, {
+          Analytics.trackEvent("Convert User Search", {
             from: $state.current.name
           });
         }
@@ -1028,6 +1113,7 @@
       var userCount = angular.element('.token-label').length;
       var action = 'finish';
       if (userCount > 0) {
+        $scope.currentUserCount = userCount;
         action = 'next';
       }
       $scope.$emit('wizardNextText', action);
@@ -1128,13 +1214,14 @@
       var usersListLength = angular.element('.token-label').length;
       $scope.validateTokens().then(function () {
         if (invalidcount === 0 && usersListLength > 0) {
+          $scope.currentUserCount = usersListLength;
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
-          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          Notification.error('usersPage.noUsersInput');
         } else {
           Log.debug('Invalid users entered.');
-          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          Notification.error('usersPage.validEmailInput');
         }
       });
     };
@@ -1228,7 +1315,7 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400110')) {
+          } else if (userStatus === 403 && user.message === '400110') {
             userResult.message = $translate.instant('usersPage.notSetupForManUserAddError', {
               email: userResult.email
             });
@@ -1236,7 +1323,7 @@
             userResult.message = $translate.instant('usersPage.userExistsDomainClaimError', {
               email: userResult.email
             });
-          } else if (userStatus === 403 && user.message === '400109') {
+          } else if (userStatus === 403 && (user.message === '400096' || user.message === '400109')) {
             userResult.message = $translate.instant('usersPage.unableToMigrateError', {
               email: userResult.email
             });
@@ -1595,14 +1682,14 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         deferred.reject();
         return deferred.promise;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         deferred.reject();
         return deferred.promise;
       }
@@ -1685,13 +1772,13 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         return;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         return;
       }
 

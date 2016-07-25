@@ -112,6 +112,7 @@
   },
   "getBaseStackSerialGraph": {
     "type": "serial",
+    "pathToImages": "./images/",
     "startEffect": "easeOutSine",
     "addClassNames": true,
     "fontFamily": "CiscoSansTT Extra Light",
@@ -157,6 +158,7 @@
   },
   "getGanttGraph": {
     "type": "gantt",
+    "pathToImages": "./images/",
     "theme": "light",
     "marginRight": 70,
     "dataDateFormat": "YYYY-MM-DDTJJ:NN:SSZ",
@@ -192,15 +194,6 @@
       "valueLineEnabled": true,
       "zoomable": false,
       "valueZoomable": true
-    },
-    "chartScrollbar": {
-      "offset": 30,
-      "scrollbarHeight": 20
-    },
-    "legend": {
-      "align": "right",
-      "position": "top",
-      "data": "dummyData"
     }
   }
 }

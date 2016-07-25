@@ -19,7 +19,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isOrgSetup = isOrgSetup;
+    vm.isSetupDone = isSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
 
@@ -31,23 +31,21 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
-    vm.atlasPartnerAdminFeatureToggle = false;
+    vm.isOrgSetup = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures),
-      FeatureToggleService.atlasCareTrialsGetStatus()
-    ]).then(function (result) {
-      if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
-        vm.showRoomSystems = true;
-      }
-      vm.atlasPartnerAdminFeatureToggle = result[0];
-      setOffers(result[1]);
-    });
+    FeatureToggleService.atlasCareTrialsGetStatus()
+      .then(function (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = true;
+        }
+        setOffers(result);
+      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
@@ -71,6 +69,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
+      isSetupDone().
+      then(function (results) {
+        vm.isOrgSetup = results;
+      });
     }
 
     function resetForm() {
@@ -209,10 +211,15 @@
       return false;
     }
 
-    function isOrgSetup() {
-      return _.every(vm.currentCustomer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
+    function isSetupDone() {
+      return Orgservice.isSetupDone(vm.customerOrgId)
+        .catch(function (error) {
+          Notification.error('customerPage.isSetupDoneError', {
+            orgName: vm.customerName,
+            message: error.data.message
+          });
+          return false;
+        });
     }
 
     function isOwnOrg() {

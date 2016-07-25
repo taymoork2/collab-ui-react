@@ -5,18 +5,15 @@
   </div>
   <div class="modal-body">
     <h3 translate="pstnSetup.serviceAddress"></h3>
-    <p translate="pstnSetup.serviceAddressPrompt"></p>
+    <p translate="pstnSetup.serviceAddressPrompt1"></p>
+    <p translate="pstnSetup.serviceAddressPrompt2"></p>
     <br>
-    <div ng-if="pstnServiceAddress.isValid">
-      <p><span translate="pstnSetup.serviceAddressConfirmation"></span> <a href ng-click="pstnServiceAddress.isValid = false" translate="common.modify"></a></p>
-      <br>
-    </div>
     <form class="row collapse" name="pstnServiceAddress.form">
-      <hr-service-address class="columns medium-6" address="pstnServiceAddress.address" read-only="pstnServiceAddress.isValid"></hr-service-address>
+      <hr-service-address class="columns row full" address="pstnServiceAddress.address" read-only="pstnServiceAddress.isValid" address-validate="pstnServiceAddress.validateAddress()" modify="pstnServiceAddress.modify()" form-name="pstnServiceAddress.form"></hr-service-address>
     </form>
   </div>
   <div class="modal-footer">
     <button class="btn" ng-if="::pstnServiceAddress.hasBackButton()" ng-click="pstnServiceAddress.goBack()" translate="common.back"></button>
-    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateAddress()" ng-disabled="pstnServiceAddress.form.$invalid"><span translate="common.next"></span></button>
+    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateNext()" ng-disabled="pstnServiceAddress.form.$invalid || !pstnServiceAddress.isValid"><span translate="common.next"></span></button>
   </div>
 </div>

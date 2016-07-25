@@ -2,7 +2,7 @@
 
 describe('assignServices', function () {
   var $scope, $state, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService;
+  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice;
 
   var orgid = '1';
 
@@ -41,7 +41,8 @@ describe('assignServices', function () {
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-
+    Orgservice = _Orgservice_;
+    Userservice = _Userservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
     hybridService = _HybridService_;
@@ -49,6 +50,7 @@ describe('assignServices', function () {
     var getUserMe = getJSONFixture('core/json/users/me.json');
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
+    var getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     var current = {
       step: {
@@ -90,8 +92,9 @@ describe('assignServices', function () {
     setupAuthinfo();
     authinfo.updateAccountInfo(accountData);
 
-    spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_Userservice_, 'getUser').and.returnValue(getUserMe);
+    spyOn(Orgservice, 'getUnlicensedUsers');
+    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {

@@ -7,18 +7,18 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
   var expectedCsvHttpsObj;
   var csvConstructHttpsObj;
 
-  var WebExApiGatewayConstsService, Storage, $log;
+  var WebExApiGatewayConstsService, SessionStorage, $log;
 
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (
     _WebExApiGatewayConstsService_,
-    _Storage_,
+    _SessionStorage_,
     _$log_
   ) {
 
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
-    Storage = _Storage_;
+    SessionStorage = _SessionStorage_;
     $log = _$log_;
 
     WebExApiGatewayConstsService.csvAPIs = [{
@@ -53,7 +53,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
     expectedCsvHttpsObj = null;
     csvConstructHttpsObj = null;
 
-    spyOn(Storage, 'get').and.returnValue('someFakeBearer');
+    spyOn(SessionStorage, 'get').and.returnValue('someFakeBearer');
   }));
 
   it('can construct https obj for csvStatus', inject(function (WebExApiGatewayService) {

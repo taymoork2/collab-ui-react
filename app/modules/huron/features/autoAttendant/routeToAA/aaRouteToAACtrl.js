@@ -66,10 +66,9 @@
       var action;
 
       var uiModel = AAUiModelService.getUiModel();
-      var uiCombinedMenu = uiModel[$scope.schedule];
-      var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
       if ($scope.fromRouteCall) {
+        var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         if (vm.menuEntry.actions.length === 0) {
           action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
@@ -82,7 +81,7 @@
           }
         }
       } else {
-
+        var uiPhoneMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         // Read an existing routeToAA entry if exist or initialize it if not
         if ($scope.keyIndex < uiPhoneMenu.entries.length) {
           vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];

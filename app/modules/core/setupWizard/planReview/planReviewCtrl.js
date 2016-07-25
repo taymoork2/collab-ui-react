@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, $translate, $scope) {
+  function PlanReviewCtrl($scope, $translate, Authinfo, FeatureToggleService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -26,6 +26,11 @@
     vm.commServices = {
       isNewTrial: false,
       services: []
+    };
+
+    vm.careServices = {
+      isNewTrial: false,
+      services: Authinfo.getCareServices() || []
     };
 
     vm.cmrServices = {
@@ -48,6 +53,12 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows
     };
+    vm.isCareEnabled = false;
+
+    //TODO this function has to be removed when atlas-care-trials feature is removed
+    vm.getGridColumnClassName = function () {
+      return vm.isCareEnabled ? 'small-3' : 'small-4';
+    };
 
     init();
 
@@ -65,6 +76,10 @@
 
     function init() {
 
+      FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
+        vm.isCareEnabled = careStatus;
+      });
+
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
         if (service.license.isTrial) {
@@ -79,8 +94,14 @@
 
       vm.confServices.services = Authinfo.getConferenceServices() || [];
       angular.forEach(vm.confServices.services, function (service) {
+        var siteUrl = service.license.siteUrl;
+        var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
+
+        service.license.isCI = isCISite;
+
         if (service.label.indexOf('Meeting Center') != -1) {
           service.label = $translate.instant('onboardModal.meetingCenter') + ' ' + service.license.capacity;
+          service.license.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
         }
         if (service.license.isTrial) {
           vm.trialExists = true;
@@ -102,6 +123,24 @@
           }
         }
       });
+
+      var isNewCareTrial = _.chain(vm.careServices.services)
+        .map('license')
+        .filter(function (license) {
+          if (license.isTrial) {
+            vm.trialExists = true;
+            vm.trialId = license.trialId;
+            return true;
+          }
+          return false;
+        }).filter(function (license) {
+          return license.status === 'PENDING';
+        })
+        .value();
+
+      if (isNewCareTrial.length) {
+        vm.careServices.isNewTrial = true;
+      }
 
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
@@ -179,7 +218,8 @@
       var now = moment().startOf('day');
       var start = moment(vm.trial.startDate).startOf('day');
       var daysUsed = moment(now).diff(start, 'days');
-      vm.trialDaysRemaining = (vm.trial.trialPeriod - daysUsed);
+      var daysLeft = vm.trial.trialPeriod - daysUsed;
+      vm.trialDaysRemaining = daysLeft < 0 ? 0 : daysLeft;
       vm.trialUsedPercentage = Math.round((daysUsed / vm.trial.trialPeriod) * 100);
     }
 

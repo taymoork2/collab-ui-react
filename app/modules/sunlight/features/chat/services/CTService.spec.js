@@ -17,6 +17,7 @@ describe('Chat Template Service', function () {
   };
 
   beforeEach(module('Sunlight'));
+  beforeEach(module('Hercules'));
   beforeEach(module(function ($provide) {
     $provide.value("UrlConfig", spiedUrlConfig);
     $provide.value("Authinfo", spiedAuthinfo);

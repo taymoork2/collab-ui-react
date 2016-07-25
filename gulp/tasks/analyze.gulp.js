@@ -43,7 +43,8 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
 gulp.task('eslint', [
   'eslint:tooling',
   'eslint:app',
-  'eslint:e2e'
+  'eslint:e2e',
+  'eslint:examples'
 ]);
 
 gulp.task('eslint:tooling', function () {
@@ -62,6 +63,14 @@ gulp.task('eslint:app', function () {
     config.appFiles.js
   );
   messageLogger('Running ESLint on the app files', files);
+  return createESLintTask(files);
+});
+
+gulp.task('eslint:examples', function () {
+  var files = [].concat(
+    config.examples + '/**/*.js'
+  );
+  messageLogger('Running ESLint on the example files', files);
   return createESLintTask(files);
 });
 
@@ -118,7 +127,7 @@ gulp.task('json:verify', function () {
 
 gulp.task('languages:verify', function (done) {
   var L10N_DIR = 'app/l10n';
-  var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/ig;
+  var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/g;
   var L10N_SOURCE = 'app/modules/core/l10n/languages.js';
 
   var languages = fs.readFileSync(L10N_SOURCE, 'utf8').match(L10N_SOURCE_REGEX);

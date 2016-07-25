@@ -11,8 +11,8 @@
     <i ng-if="!row.entity.showSiteLinks || 
               !row.entity.showCSVInfo || 
               row.entity.isError"
-       id="{{row.entity.license.siteUrl}}_csvUnavailable"
-       name="{{row.entity.license.siteUrl}}_csvUnavailable"
+       id="{{row.entity.license.siteUrl}}_csvDisabled"
+       name="{{row.entity.license.siteUrl}}_csvDisabled"
        class="icon icon-admin iconDisabled grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
@@ -22,8 +22,8 @@
               row.entity.showCSVInfo && 
               !row.entity.isError && 
               !row.entity.isCSVSupported"
-       id="{{row.entity.license.siteUrl}}_csvNotSupported"
-       name="{{row.entity.license.siteUrl}}_csvNotSupported"
+       id="{{row.entity.license.siteUrl}}_csvDisabled"
+       name="{{row.entity.license.siteUrl}}_csvDisabled"
        class="icon icon-admin iconDisabled grid-vcenter"
        tooltip-append-to-body="true" 
        tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"></i>
@@ -36,7 +36,9 @@
       <span ng-if="(row.entity.csvStatusObj.status == 'exportInProgress') || 
                    (row.entity.csvStatusObj.status == 'importInProgress')">
                    
-        <i class="icon icon-admin iconDisabled grid-vcenter"
+        <i id="{{row.entity.license.siteUrl}}_csvDisabled"
+       name="{{row.entity.license.siteUrl}}_csvDisabled"
+       class="icon icon-admin iconDisabled grid-vcenter"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
         
@@ -46,7 +48,9 @@
               tooltip-append-to-body="true" 
               tooltip="{{::'siteList.exportInProgressTooltip' | translate}}">
               
-          <i class="icon icon-spinner grid-vcenter"></i>
+          <i id="{{row.entity.license.siteUrl}}_csvSpinner"
+       name="{{row.entity.license.siteUrl}}_csvSpinner"
+       class="icon icon-spinner grid-vcenter"></i>
           <span translate="siteList.siteCsvExportInProgressLinkLabel"></span>
         </span>
         
@@ -54,7 +58,9 @@
               tooltip-append-to-body="true" 
               tooltip="{{::'siteList.importInProgressTooltip' | translate}}">
               
-          <i class="icon icon-spinner grid-vcenter"></i>
+          <i id="{{row.entity.license.siteUrl}}_csvSpinner"
+       name="{{row.entity.license.siteUrl}}_csvSpinner"
+          class="icon icon-spinner grid-vcenter"></i>
           <span translate="siteList.siteCsvImportInProgressLinkLabel"></span>
         </span>
       </span>
@@ -63,7 +69,9 @@
       <span ng-if="(row.entity.csvStatusObj.status != 'importInProgress') && 
                    (row.entity.csvStatusObj.status != 'exportInProgress')">
                 
-        <i class="icon icon-admin iconEnabledWithHover grid-vcenter"
+        <i id="{{row.entity.license.siteUrl}}_csvEnabled"
+       name="{{row.entity.license.siteUrl}}_csvEnabled"
+        class="icon icon-admin iconEnabledWithHover grid-vcenter"
            ui-sref="site-csv({siteRow:row.entity})"
            tooltip-append-to-body="true" 
            tooltip="{{::'siteList.siteCsvColumnHeader' | translate}}"></i>
@@ -76,8 +84,8 @@
                      
           &nbsp;&nbsp;&nbsp;
           
-          <a id="{{row.entity.license.siteUrl}}_exportResult"
-             name="{{row.entity.license.siteUrl}}_exportResult"
+          <a id="{{row.entity.license.siteUrl}}_csvResult"
+             name="{{row.entity.license.siteUrl}}_csvResult"
              ui-sref="site-csv-results({siteRow:row.entity})">
             
             <!-- display export results link -->

@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, $q, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -18,17 +18,17 @@
       getAll: getAll,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
-      getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
-      postponeUpgradeSchedule: postponeUpgradeSchedule
+      postponeUpgradeSchedule: postponeUpgradeSchedule,
+      deleteMoratoria: deleteMoratoria,
+      setClusterName: setClusterName,
+      deregisterCluster: deregisterCluster,
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
 
     ////////////////
-
-    // TODO: maybe cache data for the cluster list and
-    // poll new data every 30 seconds
 
     function get(clusterId) {
       return $http
@@ -40,15 +40,8 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
-        .then(onlyKeepFusedClusters)
         .then(addServicesStatuses)
         .then(sort);
-    }
-
-    function getUpgradeSchedule(id) {
-      var orgId = Authinfo.getOrgId();
-      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
-        .then(extractData);
     }
 
     function setUpgradeSchedule(id, params) {
@@ -56,8 +49,16 @@
       return $http.patch(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule', params);
     }
 
-    function postponeUpgradeSchedule(id) {
-      return $q.reject('Not Implemented');
+    function postponeUpgradeSchedule(id, upgradeWindow) {
+      var orgId = Authinfo.getOrgId();
+      return $http.post(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria', {
+        timeWindow: upgradeWindow
+      });
+    }
+
+    function deleteMoratoria(clusterId, moratoriaId) {
+      var orgId = Authinfo.getOrgId();
+      return $http.delete(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + clusterId + '/upgradeSchedule/moratoria/' + moratoriaId);
     }
 
     function extractData(response) {
@@ -68,22 +69,16 @@
       return extractData(response).clusters;
     }
 
-    function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, 'state', 'fused');
-    }
-
     function extractDataFromResponse(res) {
       return res.data;
     }
 
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
-        var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
-        var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-        var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-        var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
-        if (mgmtConnectors.length > 0) {
-          cluster.type = 'expressway';
+        if (cluster.targetType === 'c_mgmt') {
+          var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
+          var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
+          var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -97,11 +92,11 @@
             state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
             total: calConnectors.length
           }];
-        } else if (mediaConnectors.length > 0) {
-          cluster.type = 'mediafusion';
+        } else if (cluster.targetType === 'mf_mgmt') {
+          var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
-            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length
           }];
         }
@@ -111,40 +106,40 @@
 
     function sort(clusters) {
       // Could be anything but at least make it consistent between 2 page refresh
-      return _.sortBy(clusters, 'type');
+      return _.sortByAll(clusters, ['type', 'name']);
     }
 
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          "name": name,
-          "releaseChannel": releaseChannel,
-          "targetType": managementConnectorType
-        }).then(extractDataFromResponse)
-        .then(function (data) {
-          return data.id;
-        });
+          name: name,
+          releaseChannel: releaseChannel,
+          targetType: managementConnectorType
+        })
+        .then(extractDataFromResponse);
     }
 
     function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http.post(url, {
-        "hostname": hostname,
-        "ttlInSeconds": ttlInSeconds,
-        "clusterId": clusterId
+        hostname: hostname,
+        ttlInSeconds: ttlInSeconds,
+        clusterId: clusterId
       });
     }
 
     function provisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
-      return $http.post(url);
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/add/invoke?connectorType=' + connectorType;
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
-      return $http.post(url);
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function getAllProvisionedConnectorTypes(clusterId) {
@@ -185,6 +180,29 @@
         }
       });
       return sidepanelConnectorList;
+    }
+
+    function setClusterName(clusterId, newClusterName) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.patch(url, {
+          name: newClusterName
+        })
+        .then(extractDataFromResponse);
+    }
+
+    function deregisterCluster(clusterId) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
+      return $http.post(url)
+        .then(extractDataFromResponse);
+    }
+
+    function getReleaseNotes(releaseChannel, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
+      return $http.get(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          return data.releaseNotes;
+        });
     }
 
   }

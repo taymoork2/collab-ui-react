@@ -46,14 +46,7 @@
       'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
-      'tickLength': 0,
-      "guides": [{
-        "inside": true,
-        "label": "Utilization High",
-        "lineColor": '#000000',
-        "lineAlpha": 0.5,
-        "value": 80
-      }]
+      'tickLength': 0
     };
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
@@ -131,6 +124,7 @@
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis) {
       return angular.copy({
         'type': 'serial',
+        'pathToImages': './images/',
         'startEffect': 'easeOutSine',
         'addClassNames': true,
         'fontFamily': 'CiscoSansTT Extra Light',
@@ -182,9 +176,10 @@
       });
     }
 
-    function getGanttGraph(data, valueAxis, legendData) {
+    function getGanttGraph(data, valueAxis) {
       return angular.copy({
         'type': 'gantt',
+        'pathToImages': './images/',
         'theme': 'light',
         'marginRight': 70,
         'dataDateFormat': 'YYYY-MM-DDTJJ:NN:SSZ',
@@ -220,16 +215,7 @@
           'zoomable': false,
           'valueZoomable': true
         },
-        'chartScrollbar': {
-          'offset': 30,
-          'scrollbarHeight': 20
-        },
-        'export': baseVariables['export'],
-        'legend': {
-          'align': 'right',
-          'position': 'top',
-          'data': legendData
-        }
+        'export': baseVariables['export']
       });
     }
   }

@@ -7,7 +7,7 @@ namespace domainManagement {
     private _loadTime;
 
     /* @ngInject */
-    constructor(private $state, private $previousState, private DomainManagementService, $translate, private LogMetricsService) {
+    constructor(private $state, private $previousState, private DomainManagementService, private LogMetricsService) {
       this._domain = $state.params.domain;
       this._loggedOnUser = $state.params.loggedOnUser;
       this._loadTime = moment();

@@ -1,13 +1,46 @@
 <cs-card id='availability-card' class="full report-card">
   <article>
     <graphheader>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster' ng-if="nav.clusterSelected == 'All'"></h4>
-      <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost' ng-if="nav.clusterSelected != 'All'"></h4>
+      <div class="legendDiv" >
+        <table class="headerTable" ng-if="nav.clusterSelected == 'All Clusters'">
+          <tr>
+            <td>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfCluster'></h4>
+              <p class="report-description" translate='mediaFusion.metrics.availabilityOfClusterDescription'></p>
+            </td>
+            <td>
+              <div class="legends">
+                <i class="fa fa-square hostAvailableStyle" />
+                <p translate="mediaFusion.metrics.hostAvailableTitle" />
+                <i class="fa fa-square hostUnavailableStyle" />
+                <p translate="mediaFusion.metrics.hostUnavailableTitle" />
+                <i class="fa fa-square clusterPartialStyle" />
+                <p translate="mediaFusion.metrics.clusterPartialTitle" />
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table class="headerTable" ng-if="nav.clusterSelected != 'All Clusters'">
+          <tr>
+            <td>
+              <h4 class='report-section-header' translate='mediaFusion.metrics.availabilityOfHost'></h4>
+              <p class="report-description" translate='mediaFusion.metrics.availabilityOfHostDescription'></p>
+            </td>
+            <td>
+              <div class="legends">
+                <i class="fa fa-square hostAvailableStyle" />
+                <p translate="mediaFusion.metrics.hostAvailableTitle" />
+                <i class="fa fa-square hostUnavailableStyle" />
+                <p translate="mediaFusion.metrics.hostUnavailableTitle" />
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </graphheader>
     </graphheader>
     <section>
       <div class="metrics-availability">
-        <p class="report-description" translate='mediaFusion.metrics.availabilityOfClusterDescription' ng-if="nav.clusterSelected == 'All'"></p>
-        <p class="report-description" translate='mediaFusion.metrics.availabilityOfHostDescription' ng-if="nav.clusterSelected != 'All'"></p>
         <div id="availabilitydiv" class="barchart" ng-class="{'availability-chart': !nav.isEmpty(nav.availabilityStatus) && !nav.isRefresh(nav.availabilityStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.availabilityStatus)">
           <i class='icon icon-spinner icon-2x'></i>

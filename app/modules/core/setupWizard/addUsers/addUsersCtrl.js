@@ -93,7 +93,6 @@
     };
 
     $scope.setupTokenfield = function () {
-      //console.log('test');
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield-wiz').tokenfield({
           delimiter: [',', ';'],
@@ -133,7 +132,7 @@
       } else if (syncOption === 'manual') {
         $scope.showStep('manual');
       } else {
-        Notification.error($translate.instant('firstTimeWizard.chooseSync'));
+        Notification.error('firstTimeWizard.chooseSync');
       }
     };
 
@@ -249,9 +248,6 @@
           }
         } else {
           Log.debug('Failed to retrieve directory sync configuration. Status: ' + status);
-          // Notification.notify([$translate.instant('dirsyncModal.getDomainFailed', {
-          //   status: status
-          // })], 'error');
         }
       });
     };
@@ -267,9 +263,9 @@
             Log.debug('Created DirSync domain. Status: ' + status);
           } else {
             Log.debug('Failed to create directory sync domain. Status: ' + status);
-            Notification.notify([$translate.instant('dirsyncModal.setDomainFailed', {
+            Notification.error('dirsyncModal.setDomainFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
       }
@@ -299,9 +295,9 @@
           }
         } else {
           Log.debug('Failed to retrieve directory sync status. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.getStatusFailed', {
+          Notification.error('dirsyncModal.getStatusFailed', {
             status: status
-          })], 'error');
+          });
         }
       });
 
@@ -339,15 +335,15 @@
         if (data.success) {
           $scope.syncNowLoad = false;
           Log.debug('DirSync started successfully. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.dirsyncSuccess', {
+          Notification.success('dirsyncModal.dirsyncSuccess', {
             status: status
-          })], 'success');
+          });
         } else {
           $scope.syncNowLoad = false;
           Log.debug('Failed to start directory sync. Status: ' + status);
-          Notification.notify([$translate.instant('dirsyncModal.dirsyncFailed', {
+          Notification.error('dirsyncModal.dirsyncFailed', {
             status: status
-          })], 'error');
+          });
         }
       });
     };
@@ -424,8 +420,6 @@
 
         if (data.success) {
           Log.info('User invitation sent successfully.', data.id);
-          // var success = [$translate.instant('usersPage.successInvite', data)];
-          // Notification.notify(success, 'success');
           for (var i = 0; i < data.inviteResponse.length; i++) {
 
             var userResult = {

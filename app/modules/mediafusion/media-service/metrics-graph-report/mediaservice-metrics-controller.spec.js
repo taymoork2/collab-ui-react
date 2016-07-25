@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller:MediaServiceMetricsContoller', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, MediaFusionAnalyticsService, DummyMetricsReportService, MetricsReportService, MetricsGraphService;
+  beforeEach(module('wx2AdminWebClientApp'));
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService, redirectTargetPromise;
 
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
@@ -32,116 +33,127 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     description: 'mediaFusion.metrics.threeMonths2'
   }];
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _XhrNotificationService_, _MetricsReportService_, _DummyMetricsReportService_, _MetricsGraphService_) {
+    $scope = $rootScope.$new();
+    $stateParams = _$stateParams_;
+    $q = _$q_;
+    $translate = _$translate_;
+    $timeout = _$timeout_;
+    Log = _Log_;
+    Config = _Config_;
+    redirectTargetPromise = {
+      then: sinon.stub()
+    };
+    MediaClusterServiceV2 = {
+      getAll: sinon.stub().returns(redirectTargetPromise)
+    };
+    XhrNotificationService = _XhrNotificationService_;
+    MetricsReportService = _MetricsReportService_;
+    DummyMetricsReportService = _DummyMetricsReportService_;
+    MetricsGraphService = _MetricsGraphService_;
 
-  describe('MediaServiceMetricsContoller - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _MediaFusionAnalyticsService_, _MetricsReportService_, _DummyMetricsReportService_, _MetricsGraphService_) {
-      $scope = $rootScope.$new();
-      $stateParams = _$stateParams_;
-      $q = _$q_;
-      $translate = _$translate_;
-      $timeout = _$timeout_;
-      Log = _Log_;
-      Config = _Config_;
-      MediaFusionAnalyticsService = _MediaFusionAnalyticsService_;
-      MetricsReportService = _MetricsReportService_;
-      DummyMetricsReportService = _DummyMetricsReportService_;
-      MetricsGraphService = _MetricsGraphService_;
-
-      spyOn(MetricsGraphService, 'setCallVolumeGraph').and.returnValue({
-        'dataProvider': callVolumeData
-      });
-      spyOn(MetricsGraphService, 'setAvailabilityGraph').and.returnValue({
-        'dataProvider': clusteravailabilityData
-      });
-      spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
-        'dataProvider': dummydata
-      });
-
-      spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
-      spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
-      spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
-
-      controller = $controller('MediaServiceMetricsContoller', {
-        $stateParams: $stateParams,
-        $scope: $scope,
-        $q: $q,
-        $translate: $translate,
-        Log: Log,
-        Config: Config,
-        MediaFusionAnalyticsService: MediaFusionAnalyticsService,
-        MetricsReportService: MetricsReportService,
-        DummyMetricsReportService: DummyMetricsReportService,
-        MetricsGraphService: MetricsGraphService
-      });
-      //$scope.$apply();
-    }));
-
-    describe('Initializing Controller', function () {
-      it('should be created successfully and all expected calls completed', function () {
-        expect(controller).toBeDefined();
-        $timeout(function () {
-
-          expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
-          expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
-
-          expect(MetricsGraphService.setCallVolumeGraph).toHaveBeenCalled();
-          expect(MetricsGraphService.setAvailabilityGraph).toHaveBeenCalled();
-          expect(MetricsGraphService.setUtilizationGraph).toHaveBeenCalled();
-
-        }, 30);
-      });
+    spyOn(MetricsGraphService, 'setCallVolumeGraph').and.returnValue({
+      'dataProvider': callVolumeData
+    });
+    spyOn(MetricsGraphService, 'setAvailabilityGraph').and.returnValue({
+      'dataProvider': clusteravailabilityData
+    });
+    spyOn(MetricsGraphService, 'setUtilizationGraph').and.returnValue({
+      'dataProvider': dummydata
     });
 
-    describe('filter changes', function () {
-      it('should set all page variables', function () {
-        expect(controller.timeOptions).toEqual(timeOptions);
-        expect(controller.timeSelected).toEqual(timeOptions[0]);
-      });
+    spyOn(MetricsReportService, 'getCallVolumeData').and.returnValue($q.when(callVolumeData));
+    spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
+    spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
+    spyOn(XhrNotificationService, 'notify');
+    //spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(totalcallsdata));
 
-      it('All graphs should update on time filter changes', function () {
-        controller.timeSelected = timeOptions[1];
-        controller.timeUpdate();
-        expect(controller.timeSelected).toEqual(timeOptions[1]);
-        expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'All');
-        expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'All');
-        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'All');
+    controller = $controller('MediaServiceMetricsContoller', {
+      $stateParams: $stateParams,
+      $scope: $scope,
+      $q: $q,
+      $translate: $translate,
+      Log: Log,
+      Config: Config,
+      MediaClusterServiceV2: MediaClusterServiceV2,
+      XhrNotificationService: XhrNotificationService,
+      MetricsReportService: MetricsReportService,
+      DummyMetricsReportService: DummyMetricsReportService,
+      MetricsGraphService: MetricsGraphService
+    });
+    //$scope.$apply();
+  }));
+  it('controller should be defined', function () {
+    expect(controller).toBeDefined();
+  });
 
-      });
+  describe('Initializing Controller', function () {
+    it('should be created successfully and all expected calls completed', function () {
+      expect(controller).toBeDefined();
+      $timeout(function () {
 
-      it('All graphs should update on cluster filter changes', function () {
-        controller.clusterSelected = 'All';
-        controller.clusterUpdate();
+        expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0]);
+        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0]);
+        //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0]);
 
-        expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-        expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
-        expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+        expect(MetricsGraphService.setCallVolumeGraph).toHaveBeenCalled();
+        expect(MetricsGraphService.setAvailabilityGraph).toHaveBeenCalled();
+        expect(MetricsGraphService.setUtilizationGraph).toHaveBeenCalled();
 
-      });
+      }, 30);
+    });
+  });
+
+  describe('filter changes', function () {
+    it('should set all page variables', function () {
+      expect(controller.timeOptions).toEqual(timeOptions);
+      expect(controller.timeSelected).toEqual(timeOptions[0]);
     });
 
-    describe('isRefresh', function () {
-      it('should return true when sent "refresh"', function () {
-        expect(controller.isRefresh('refresh')).toBeTruthy();
-      });
+    it('All graphs should update on time filter changes', function () {
+      controller.timeSelected = timeOptions[1];
+      controller.clusterUpdate();
+      controller.timeUpdate();
+      expect(controller.timeSelected).toEqual(timeOptions[1]);
+      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], 'All Clusters');
+      //expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[1], 'All');
 
-      it('should return false when sent "set" or "empty"', function () {
-        expect(controller.isRefresh('set')).toBeFalsy();
-        expect(controller.isRefresh('empty')).toBeFalsy();
-      });
     });
 
-    describe('isEmpty', function () {
-      it('should return true when sent "empty"', function () {
-        expect(controller.isEmpty('empty')).toBeTruthy();
-      });
+    it('All graphs should update on cluster filter changes', function () {
+      controller.clusterSelected = 'All Clusters';
+      controller.clusterUpdate();
 
-      it('should return false when sent "set" or "refresh"', function () {
-        expect(controller.isEmpty('set')).toBeFalsy();
-        expect(controller.isEmpty('refresh')).toBeFalsy();
-      });
+      expect(MetricsReportService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+      expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+      expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+      //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+
+    });
+  });
+
+  describe('isRefresh', function () {
+    it('should return true when sent "refresh"', function () {
+      expect(controller.isRefresh('refresh')).toBeTruthy();
     });
 
+    it('should return false when sent "set" or "empty"', function () {
+      expect(controller.isRefresh('set')).toBeFalsy();
+      expect(controller.isRefresh('empty')).toBeFalsy();
+    });
+  });
+
+  describe('isEmpty', function () {
+    it('should return true when sent "empty"', function () {
+      expect(controller.isEmpty('empty')).toBeTruthy();
+    });
+
+    it('should return false when sent "set" or "refresh"', function () {
+      expect(controller.isEmpty('set')).toBeFalsy();
+      expect(controller.isEmpty('refresh')).toBeFalsy();
+    });
   });
 });

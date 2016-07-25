@@ -38,6 +38,18 @@
             quantity: 0,
             readonly: false,
             valid: true
+          }, {
+            model: 'CISCO_DX80',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true
+          }, {
+            model: 'CISCO_MX300',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true
           }],
         }
       };

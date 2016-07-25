@@ -52,6 +52,12 @@ describe('Controller: TrialEditCtrl:', function () {
         return $q.when(true);
       }
     });
+    spyOn(Orgservice, 'getAdminOrgAsPromise').and.returnValue($q.when({
+      data: {
+        success: true,
+        isTestOrg: true
+      }
+    }));
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/organizations/null?disableCache=false')
@@ -83,6 +89,12 @@ describe('Controller: TrialEditCtrl:', function () {
 
       it('should return days left', function () {
         expect(controller.getDaysLeft(1)).toEqual(1);
+      });
+    });
+
+    describe('display device page check', function () {
+      it('should return cannot see devices', function () {
+        expect(controller.canSeeDevicePage).toBe(false);
       });
     });
 
@@ -390,20 +402,6 @@ describe('Controller: TrialEditCtrl:', function () {
               expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
             });
         });
-    });
-
-    describe('Set ship devices modal display with Orgservice call', function () {
-      it('should disable ship devices modal for test org', function () {
-        spyOn(Orgservice, 'getAdminOrg').and.returnValue($q.when({
-          data: {
-            success: true,
-            isTestOrg: true
-          }
-        }));
-        controller.setDeviceModal();
-        $scope.$apply();
-        expect(controller.canSeeDevicePage).toBeFalsy();
-      });
     });
 
     describe('helper functions for Care:', function () {
