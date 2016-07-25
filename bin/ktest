@@ -10,6 +10,27 @@ if ! type parallel >/dev/null 2>&1; then
     exit 1
 fi
 
+function ex_usage {
+    echo "Run karma tests on given files."
+    echo ""
+    echo "usage: $(basename "$0") [--help|-h|-?] [--debug] <karma_spec_file>"
+    echo ""
+    echo "ex. single karma spec file"
+    echo "  $(basename "$0") trial.service.spec.js"
+    echo ""
+    echo "ex. all spec files in the parent dir"
+    echo "  $(basename "$0") ../*.spec.js"
+    echo ""
+    echo "ex. all spec files found under the './app' dir"
+    echo "  find ./app -iname \\*spec.js | $(basename "$0")"
+}
+
+# early out if looking for usage
+if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "-?" ]]; then
+    ex_usage
+    exit 1
+fi
+
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 
@@ -61,7 +82,13 @@ done
 # split the raw file list
 shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
 total_specs=$(wc -l "$flist" | awk '{print $1;}')
-num_cores=$(num_cpus)
+
+# num cores is used to determine num spec files to include / shim file
+# - it also happens to determine:
+#   - how many shim files are generated
+#   - how many processes are spawned by 'parallel'
+# - offset by -1 here to prevent monopolizing the system
+num_cores=$(( $(num_cpus) - 1 ))
 if [ "${no_parallel}" = "true" ]; then
     num_cores=1
 fi
@@ -98,7 +125,7 @@ set -x
 if [ "${no_parallel}" = "true" ]; then
     karma start $shim_file_args $pass_through_opts
 else
-    parallel -j -1 karma start $pass_through_opts ::: $shim_file_args
+    parallel karma start $pass_through_opts ::: $shim_file_args
 fi
 exit_status=$?
 set +x
