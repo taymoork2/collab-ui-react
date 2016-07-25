@@ -98,7 +98,7 @@
 
     function logoutAndRedirectTo(redirectUrl) {
       var revokeUrl = OAuthConfig.getOauthDeleteTokenUrl();
-      var data = 'token=' + TokenService.getAccessToken();
+      var data = 'token=' + TokenService.getRefreshToken();
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
       return httpPOST(revokeUrl, data, token)
         .catch(handleError('Failed to delete the oAuth token'))
