@@ -73,6 +73,7 @@
     vm.nextTab = nextTab;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.goToStep = goToStep;
     vm.getRequiredTabs = getRequiredTabs;
 
     vm.isFirstTab = isFirstTab;
@@ -310,6 +311,20 @@
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
+    }
+
+    function goToStep(requestedStep) {
+      var steps = getSteps();
+      if (angular.isArray(steps)) {
+        var index = _.map(steps, function (step) {
+          return step.name;
+        }).indexOf(requestedStep);
+        if (index === -1 || index >= steps.length) {
+          nextStep();
+        } else if (index < steps.length) {
+          setStep(steps[index]);
+        }
+      }
     }
 
     function getRequiredTabs() {

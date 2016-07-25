@@ -680,6 +680,19 @@
               }
             }
           })
+          .state('users.add.results', {
+            views: {
+              'usersAdd@users.add': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
+              }
+            }
+          })
           .state('users.convert', {
             parent: 'modal',
             views: {
@@ -709,6 +722,13 @@
             views: {
               'usersConvert@users.convert': {
                 templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+              }
+            }
+          })
+          .state('users.convert.results', {
+            views: {
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html'
               }
             }
           })

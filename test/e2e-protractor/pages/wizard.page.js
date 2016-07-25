@@ -17,10 +17,10 @@ var Wizard = function () {
   this.radiobuttons = element.all(by.css('label.cs-radio'));
   this.manualAddUsers = element(by.css('label.cs-radio[for="syncSimple"]'));
   this.beginBtn = element(by.id('wizardSaveNextBtn'));
-  this.backBtn = element(by.id('wizardBackBtn'));
-  this.nextBtn = element(by.id('wizardSaveNextBtn'));
-  this.saveBtn = element(by.id('wizardSaveNextBtn'));
-  this.finishBtn = element(by.id('wizardSaveNextBtn'));
+  this.backBtn = element(by.buttonText('Back'));
+  this.nextBtn = element(by.buttonText('Next'));
+  this.saveBtn = element(by.buttonText('Save'));
+  this.finishBtn = element(by.buttonText('Finish'));
   this.esEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'enterpriseSettings\')"]'));
   this.toExpCloudDataBtn = element.all(by.css('[ng-click="changeStep(\'exportCloudData\')"]'));
   this.toTestSSOBtn = element.all(by.css('[ng-click="changeStep(\'testSSO\')"]'));
