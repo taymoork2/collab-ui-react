@@ -510,7 +510,10 @@
                 controllerAs: 'brandEg',
               }
             },
-            authenticate: false
+            authenticate: false,
+            params: {
+              modalType: 'Partner'
+            }
           })
           .state('invite', {
             url: '/invite',
@@ -647,14 +650,26 @@
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html'
+                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
               }
             }
           })
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html'
+                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
               }
             }
           })
@@ -662,6 +677,19 @@
             views: {
               'usersAdd@users.add': {
                 templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+              }
+            }
+          })
+          .state('users.add.results', {
+            views: {
+              'usersAdd@users.add': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
               }
             }
           })
@@ -673,7 +701,13 @@
                 template: '<div ui-view="usersConvert"></div>'
               },
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html'
+                templateUrl: 'modules/core/convertUsers/convertUsersModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'convert-users';
+                    $state.params.modalId = 'convertDialog';
+                  }
+                }
               }
             }
           })
@@ -688,6 +722,13 @@
             views: {
               'usersConvert@users.convert': {
                 templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+              }
+            }
+          })
+          .state('users.convert.results', {
+            views: {
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html'
               }
             }
           })
@@ -1679,7 +1720,12 @@
               'modal@': {
                 templateUrl: 'modules/huron/moh/moh.tpl.html',
                 controller: 'MohCtrl',
-                controllerAs: 'moh'
+                controllerAs: 'moh',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'moh-content';
+                  }
+                }
               }
             }
           })
@@ -1754,6 +1800,12 @@
             templateUrl: 'modules/core/trials/addNumbers.tpl.html',
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
+            resolve: {
+              modalInfo: function ($state) {
+                $state.params.modalClass = 'add-did-numbers-modal';
+                $state.params.modalId = 'didAddModal add-numbers';
+              }
+            },
             params: {
               currentOrg: {}
             }

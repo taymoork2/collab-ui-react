@@ -292,11 +292,9 @@
         'partnerName': Authinfo.getOrgName()
       };
       DidAddEmailService.save({}, emailInfo, function () {
-        var successMsg = [$translate.instant('didManageModal.emailSuccessText')];
-        Notification.notify(successMsg, 'success');
+        Notification.success('didManageModal.emailSuccessText');
       }, function () {
-        var errorMsg = [$translate.instant('didManageModal.emailFailText')];
-        Notification.notify(errorMsg, 'error');
+        Notification.error('didManageModal.emailFailText');
       });
       $state.modal.close();
     }
@@ -308,16 +306,16 @@
             $scope.trial.model.licenseDuration,
             $scope.trial.model.customerOrgId)
           .then(function (response) {
-            Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
+            Notification.success('didManageModal.emailSuccessText');
           })
           .catch(function (response) {
-            Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+            Notification.error('didManageModal.emailFailText');
           })
           .finally(function () {
             angular.element('#trialNotifyCustomer').prop('disabled', true);
           });
       } else {
-        Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+        Notification.error('didManageModal.emailFailText');
       }
     }
 

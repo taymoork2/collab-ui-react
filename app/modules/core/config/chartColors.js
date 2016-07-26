@@ -36,7 +36,11 @@
     metricLightGreen: '#7BAF5D',
     metricDarkGreen: '#417505',
     metricBlue: '#049FD9',
-    metricYellow: '#F5A623'
+    metricYellow: '#F5A623',
+    colorLightGreen: '#43A942',
+    colorLightRed: '#F96452',
+    colorLightGreen1: '#D4ECD4',
+    colorLightRed1: '#FDD5D3'
   };
 
   angular

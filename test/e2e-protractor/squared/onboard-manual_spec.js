@@ -33,7 +33,8 @@ describe('Onboard users through Manual Invite', function () {
     // Need a license for valid HS services
     utils.click(users.paidMsgCheckbox);
     utils.click(inviteusers.nextButton);
-    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsDisplayed(users.saveButton);
+    utils.click(users.saveButton);
 
     _.each(userList, function (alias) {
       activate.setup(null, alias);

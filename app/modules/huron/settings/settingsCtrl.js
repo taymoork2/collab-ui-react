@@ -682,13 +682,13 @@
               endNumber: DEFAULT_TO
             });
           }
-          Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {
+          Notification.success('serviceSetupModal.extensionDeleteSuccess', {
             extension: internalNumberRange.name
-          })], 'success');
+          });
         }).catch(function (response) {
-          Notification.errorResponse(response, $translate.instant('serviceSetupModal.extensionDeleteError', {
+          Notification.errorResponse(response, 'serviceSetupModal.extensionDeleteError', {
             extension: internalNumberRange.name
-          }));
+          });
         });
       } else {
         // delete the range from display list
@@ -1347,7 +1347,7 @@
           if (errors.length > 0) {
             Notification.notify(errors, 'error');
           } else {
-            Notification.notify([$translate.instant('huronSettings.saveSuccess')], 'success');
+            Notification.success('huronSettings.saveSuccess');
             resetForm();
           }
         })
