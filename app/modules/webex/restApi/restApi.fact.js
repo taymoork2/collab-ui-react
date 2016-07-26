@@ -71,9 +71,10 @@
           // mock the request csv status result
 
           if (WebExApiGatewayConstsService.csvStates.authTokenError == mockCsvStatusReq) {
+
             mockResult = {
-              errorCode: "060502",
-              errorMessage: "Auth token is invalid."
+              "errorCode": "060502",
+              "errorMessage": "Auth token is invalid."
             };
 
             return $q.reject(mockResult);

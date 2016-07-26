@@ -712,8 +712,8 @@
             "response=" + JSON.stringify(response);
           //$log.log(logMsg);
 
-          //Check response error code
-          if (response.errorCode.indexOf("060502") != -1) {
+          if (response.errorId == "060502") {
+            //$log.log("Redirect to login...");
             Auth.redirectToLogin();
           }
 

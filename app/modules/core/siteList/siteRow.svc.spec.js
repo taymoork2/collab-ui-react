@@ -622,7 +622,7 @@ describe('Service: WebExSiteRowService', function () {
     deferredCsvStatus.reject({
       siteUrl: 'sjsite04.webex.com',
       status: 'error',
-      errorCode: '060502',
+      errorId: '060502',
       errorDesc: 'Auth token is invalid.',
       completionDetails: null
     });
