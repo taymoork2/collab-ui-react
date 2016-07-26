@@ -78,14 +78,13 @@ describe('Controller: AASubmenuCtrl', function () {
 
   });
 
- 
   describe('activate', function () {
-   
-	  it('feature toggle false', function () {
-	      var count = _.findIndex(controller.keyActions, {
-	        "name": 'phoneMenuRouteQueue'
-	      });
-	      expect(count).toEqual(-1);
-	    });
+
+    it('feature toggle false', function () {
+      var count = _.findIndex(controller.keyActions, {
+        "name": 'phoneMenuRouteQueue'
+      });
+      expect(count).toEqual(-1);
+    });
   });
 });
