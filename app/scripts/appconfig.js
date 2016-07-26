@@ -1408,6 +1408,15 @@
                 function orgCallback(data, status) {
                   defer.resolve(data);
                 }
+              },
+              newCustomerViewToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  })
+                  .catch(function () {
+                    return false;
+                  });
               }
             },
             params: {
@@ -1442,6 +1451,17 @@
             },
             params: {
               currentCustomer: {}
+            }
+          })
+          .state('customer-overview.meetingDetail', {
+            controller: 'MeetingDetailCtrl',
+            controllerAs: 'meetingDetail',
+            templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            data: {
+              displayName: 'Meeting Detail'
+            },
+            params: {
+              meetingLicenses: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {

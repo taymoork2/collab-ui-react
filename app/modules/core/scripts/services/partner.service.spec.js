@@ -474,5 +474,143 @@ describe('Partner Service -', function () {
         expect(data.offer.deviceBasedServices).toContain($translate.instant('trials.roomSystem'));
       });
     });
+
+    describe('Helper functions related to getFreeOrActiveServices ', function () {
+      it('should createConferenceMapping with conferencing license type', function () {
+        var result = PartnerService.helpers.createConferenceMapping();
+        expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+      });
+
+      it('should  createLicenseMapping with proper icons', function () {
+        var result = PartnerService.helpers.createLicenseMapping();
+        expect(result[Config.licenseTypes.COMMUNICATION].icon).toBe('icon-circle-call');
+
+      });
+
+      it('should  create FreeServicesMapping consisting of Messaging, Call, and Conferencing (CF) ', function () {
+        var result = PartnerService.helpers.createFreeServicesMapping();
+        expect(result.length).toBe(3);
+        expect(result[0].code).toBe(Config.offerCodes.MS);
+        expect(result[1].code).toBe(Config.offerCodes.CF);
+        expect(result[2].code).toBe(Config.offerCodes.CO);
+
+      });
+
+      it('should build a meeting service given conferencing mapping', function () {
+        var mapping = PartnerService.helpers.createConferenceMapping();
+        var licenseInfo = {
+          volume: 20
+        };
+        var result = PartnerService.helpers.buildService(licenseInfo, mapping);
+        expect(result.icon).toBe('icon-circle-group');
+        expect(result.qty).toBe(20);
+
+      });
+      it('should build a non meeting service given license mapping', function () {
+        var mapping = PartnerService.helpers.createLicenseMapping();
+        var licenseInfo = {
+          licenseType: 'MESSAGING',
+          volume: 10
+        };
+        var result = PartnerService.helpers.buildService(licenseInfo, mapping);
+        expect(result.licenseType).toBe(Config.licenseTypes.MESSAGING);
+        expect(result.qty).toBe(10);
+
+      });
+
+      it('should add a service if there is not already one with the same name and quantity', function () {
+        var service = {
+          'qty': 20,
+          'name': 'Spark Room System'
+        };
+        var services = [{
+          'qty': 10,
+          'name': 'Spark Room System'
+        }, {
+          'qty': 20,
+          'name': 'Call'
+        }];
+        PartnerService.helpers.addUniqueService(services, service);
+        expect(services.length).toBe(3);
+        PartnerService.helpers.addUniqueService(services, service);
+        expect(services.length).toBe(3);
+        service = {
+          'qty': 10,
+          'name': 'Call'
+        };
+        PartnerService.helpers.addUniqueService(services, service);
+        expect(services.length).toBe(4);
+      });
+    });
+
+    describe('getFreeOrActiveServices ', function () {
+      var customer;
+      var licenseData = [{
+        'offerName': 'SC',
+        'licenseType': 'CONFERENCING',
+        'volume': 200,
+        'isTrial': false
+      }, {
+        'offerName': 'CMR',
+        'licenseType': 'CMR',
+        'volume': 100,
+        'isTrial': false,
+      }, {
+        'offerName': 'MC',
+        'licenseType': 'CONFERENCING',
+        'volume': 200,
+        'isTrial': false,
+      }, {
+        'offerName': 'MS',
+        'licenseType': 'MESSAGING',
+        'volume': 100,
+        'isTrial': true
+      }, {
+        'offerName': 'CO',
+        'licenseType': 'COMMUNICATION',
+        'volume': 100,
+        'isTrial': true,
+      }, {
+        'offerName': 'CF',
+        'licenseType': 'CONFERENCING',
+        'volume': 100,
+        'isTrial': true
+      }];
+
+      beforeEach(function () {
+        customer = {
+          licenseList: licenseData
+        };
+      });
+
+      it('should return an object without free/paid services if none or only multiple conferencing services', function () {
+        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        expect(result.freeOrPaidServices).not.toBeDefined();
+      });
+
+      it('should return an object with an array of free/paid services if present ', function () {
+        customer.licenseList[3].isTrial = false;
+        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        expect(result.freeOrPaidServices).toBeDefined();
+        expect(result.freeOrPaidServices.length).toBe(1);
+      });
+
+      it('should return an object with and array of meeting services and total license quantity when multiple conf. services are active ', function () {
+        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        expect(result.meetingServices.sub.length).toBe(3);
+        expect(result.meetingServices.qty).toBe(500);
+      });
+
+      it('should return an object with an meeting as part of freeOrPaidServices and no mettingServices when only 1 conferencing service', function () {
+        _.each(customer.licenseList, function (license) {
+          license.isTrial = true;
+        });
+        customer.licenseList[2].isTrial = false;
+        var result = PartnerService.getFreeOrActiveServices(customer, true);
+        expect(result.meetingPaidServices).not.toBeDefined();
+        expect(result.freeOrPaidServices).toBeDefined();
+        expect(result.freeOrPaidServices[0].licenseType).toBe(Config.licenseTypes.CONFERENCING);
+      });
+    });
   });
 });
