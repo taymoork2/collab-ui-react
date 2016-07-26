@@ -147,7 +147,7 @@ describe('Partner flow', function () {
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
-      utils.click(wizard.finishBtn);
+      utils.click(wizard.saveBtn);
       notifications.clearNotifications();
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');

@@ -5,9 +5,12 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, HuntGroupService, CallParkService, FeatureToggleService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
+  var emptyListOfCPs = {
+    callparks: []
+  };
   var getAAListSuccessResp = function (data) {
     return data;
   };
@@ -43,7 +46,7 @@ describe('Features Controller', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -54,6 +57,8 @@ describe('Features Controller', function () {
     Authinfo = _Authinfo_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     HuntGroupService = _HuntGroupService_;
+    CallParkService = _CallParkService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     Log = _Log_;
     Notification = _Notification_;
@@ -63,7 +68,9 @@ describe('Features Controller', function () {
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
+    spyOn(CallParkService, 'getListOfCallParks').and.returnValue($q.when(emptyListOfCPs));
     spyOn(Notification, 'error');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when());
 
     spyOn($state, 'go');
 
@@ -82,7 +89,6 @@ describe('Features Controller', function () {
   }));
 
   it('should get list of AAs and if there is any data, should change the pageState to showFeatures', function () {
-
     getDeferred.resolve(getAAListSuccessResp(listOfAAs));
     $scope.$apply();
 

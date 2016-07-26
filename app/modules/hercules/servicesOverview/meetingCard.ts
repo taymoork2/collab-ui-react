@@ -5,16 +5,18 @@ namespace servicesOverview {
     private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link'};
 
     getShowMoreButton():servicesOverview.CardButton {
-      if (this.active)
+      if (this.active) {
         return this.moreButton;
+      }
       return undefined;
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [];
 
     getButtons():Array<servicesOverview.CardButton> {
-      if (this.active)
+      if (this.active) {
         return _.take(this._buttons, 3);
+      }
       return [];
     }
 

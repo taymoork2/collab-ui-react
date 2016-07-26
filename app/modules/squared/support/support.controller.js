@@ -95,8 +95,9 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      if (!vm.masonryRefreshed)
+      if (!vm.masonryRefreshed) {
         reInstantiateMasonry();
+      }
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
     };
 
