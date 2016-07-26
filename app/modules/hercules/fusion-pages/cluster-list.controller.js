@@ -6,8 +6,8 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
-    if (!hasFeatureToggle) {
+  function FusionClusterListController($filter, $state, $translate, hasF410FeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+    if (!hasF410FeatureToggle) {
       // simulate a 404
       $state.go('login');
     }
