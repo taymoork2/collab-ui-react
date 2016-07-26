@@ -265,7 +265,7 @@
       }, 3000);
       // Automatically start using the custom logo
       BrandService.resetCdnLogo(Authinfo.getOrgId());
-        // load logo url after upload success
+      // load logo url after upload success
       BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         brand.tempLogoUrl = logoUrl;
       });
