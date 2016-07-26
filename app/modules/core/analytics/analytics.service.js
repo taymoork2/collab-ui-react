@@ -97,19 +97,37 @@
      * Trial Events
      */
 
-    function trackTrialStarted(from) {
-      trackEvent(START_TRIAL, from);
+    function trackTrialStarted(name) {
+      if (name === null) {
+        $q.reject('Name of user not provided');
+      }
+
+      trackEvent(START_TRIAL, {
+        from: name
+      });
     }
 
     /**
      * Partner Admin Events
      */
-    function trackAssignPartner(uuid) {
-      trackEvent(ASSIGN_PARTNER, uuid);
+    function trackAssignPartner(UUID) {
+      if (UUID === null) {
+        $q.reject('UUID not provided');
+      }
+
+      trackEvent(ASSIGN_PARTNER, {
+        uuid: UUID
+      });
     }
 
-    function trackRemovePartner(uuid) {
-      trackEvent(REMOVE_PARTNER, uuid);
+    function trackRemovePartner(UUID) {
+      if (UUID === null) {
+        $q.reject('UUID not provided');
+      }
+
+      trackEvent(REMOVE_PARTNER, {
+        uuid: UUID
+      });
     }
   }
 

@@ -60,4 +60,26 @@ describe('Service: Analytics', function () {
     });
   });
 
+  describe('when calling trial events', function () {
+    it('should call _track when trackTrialStarted is called', function () {
+      Analytics.trackTrialStarted('testUser');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when calling partner admin events', function () {
+    it('should call _track when trackAssignPartner is called', function () {
+      Analytics.trackAssignPartner('4567');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackRemovePartner is called', function () {
+      Analytics.trackRemovePartner('4567');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
 });
