@@ -48,8 +48,8 @@
     function getAllNonMediaClusters() {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(removeMediaClusters)
         .then(extractClustersFromResponse)
+        .then(removeMediaClusters)
         .then(addServicesStatuses)
         .then(sort);
     }
@@ -76,10 +76,7 @@
     }
 
     function extractClustersFromResponse(response) {
-      if (response.data !== undefined) {
-        return extractData(response).clusters;
-      }
-      return [];
+      return extractData(response).clusters;
     }
 
     function extractDataFromResponse(res) {
@@ -87,13 +84,16 @@
     }
 
     function removeMediaClusters(clusters) {
-      var clustersWithOutMedia = [];
+      return _.filter(clusters, function (cluster) {
+        return cluster.targetType !== 'mf_mgmt';
+      });
+      /*var clustersWithOutMedia = [];
       _.forEach(clusters, function (cluster) {
         if (cluster.targetType !== 'mf_mgmt') {
           clustersWithOutMedia.push(cluster);
         }
       });
-      return clustersWithOutMedia;
+      return clustersWithOutMedia;*/
     }
 
     function addServicesStatuses(clusters) {
