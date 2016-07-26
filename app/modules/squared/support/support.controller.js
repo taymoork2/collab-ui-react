@@ -109,14 +109,7 @@
       state: "support.status"
     }];
 
-    //TODO remove test
-    /*$scope.tabs.push({
-      title: $translate.instant('supportPage.tabs.logs'),
-      state: "support.logs"
-    });*/
-
-    //ADD BACK
-    if (Authinfo.isInDelegatedAdministrationOrg()) {
+    if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
         state: "support.logs"
