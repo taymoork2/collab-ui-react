@@ -6,7 +6,7 @@
     .factory('CiService', CiService);
 
   /* @ngInject */
-  function CiService($http, $q, Authinfo, Log, UserListService, Userservice) {
+  function CiService($q, Authinfo, Log, UserListService, Userservice, Config) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage
@@ -221,25 +221,13 @@
     }
 
     function isOrgManager() {
-      var defer = $q.defer();
-
-      var managedOrgRole = 'id_full_admin';
-      var meUrl = "https://identity.webex.com/identity/scim/" + Authinfo.getOrgId() + "/v1/Users/me";
-      $http.get(meUrl)
-        .success(function (data) {
-          data = data || {};
-          Log.debug('Retrieved user info');
-          defer.resolve(_.findIndex(data.managedOrgs, {
-            'orgId': Authinfo.getOrgId(),
-            'role': managedOrgRole
-          }) > -1);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.status = status;
-          defer.reject('Error: Failed to retrieve user info. Status: ' + data.status);
+      return Userservice.getUser('me', _.noop)
+        .then(function (response) {
+          return _.some(response.data.managedOrgs, {
+            orgId: Authinfo.getOrgId(),
+            role: Config.backend_roles.full_admin
+          });
         });
-      return defer.promise;
     }
   }
 })();
