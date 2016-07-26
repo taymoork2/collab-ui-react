@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Directive: aaSubmenu', function () {
-  var $compile, $rootScope, $scope;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $compile, $rootScope, $scope, $q;
+  var AAUiModelService, AutoAttendantCeMenuModelService, FeatureToggleService;
 
   var aaUiModel = {
     openHours: {},
@@ -17,14 +17,17 @@ describe('Directive: aaSubmenu', function () {
   var submenu;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
+    $q = _$q_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -32,6 +35,8 @@ describe('Directive: aaSubmenu', function () {
     $scope.menuId = menuId;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     var mainMenu = AutoAttendantCeMenuModelService.newCeMenu();

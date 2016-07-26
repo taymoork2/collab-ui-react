@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, Config) {
+  function AASubmenuCtrl($scope, $translate, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -232,26 +232,24 @@
     /**
      * This include the list of feature which are not production ready yet
      */
-    function addAvailableFeatures() {
-      if (Config.isDev() || Config.isIntegration()) {
-        // push features here
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-          name: 'phoneMenuRouteQueue',
-          action: 'routeToQueue'
-        });
 
-      }
+    function toggleRouteToQueueFeature() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+        if (result) {
+          /* will push route to queue in list */
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+        }
+      });
     }
 
     /////////////////////
 
     function activate() {
-      var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-      vm.menuEntry = menu.entries[$scope.keyIndex];
-      vm.menuId = vm.menuEntry.id;
 
-      addAvailableFeatures();
       vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
@@ -263,6 +261,14 @@
       }
     }
 
-    activate();
+    function init() {
+      var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      vm.menuEntry = menu.entries[$scope.keyIndex];
+      vm.menuId = vm.menuEntry.id;
+
+      toggleRouteToQueueFeature().finally(activate);
+    }
+
+    init();
   }
 })();
