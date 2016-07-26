@@ -12,7 +12,7 @@
       TIMEOUT_PHONE_MENU: prefix + 'timeout.phoneMenu',
       TIMEOUT_DIAL_BY_EXT: prefix + 'timeout.dialByExt',
       IMPORT_SCHEDULE_FEATURE: prefix + 'import.schedule',
-      UI_NOTIFICATION: prefix + 'ui.' + 'notification',
+      UI_NOTIFICATION: prefix + 'notification',
     };
     return service;
   }

@@ -6,7 +6,7 @@
     .factory('AANotificationService', AANotificationService);
 
   /* @ngInject */
-  function AANotificationService($translate, Notification, AAConfigEnvMetricService) {
+  function AANotificationService($translate, Notification, AAConfigEnvMetricService, AAMetricNameService) {
 
     var service = {
       success: success,
@@ -27,7 +27,7 @@
       //error messages that get piped through the autoAttendant's
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
-      AAConfigEnvMetricService.trackProdOrIntegNotifications('error', {
+      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
         type: message
       });
     }
@@ -69,7 +69,7 @@
       //error messages that get piped through the autoAttendant's
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
-      AAConfigEnvMetricService.trackProdOrIntegNotifications('error', {
+      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
         type: message
       });
     }
