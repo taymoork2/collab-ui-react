@@ -1,7 +1,8 @@
 # get list of PIDs for all matching processes (complete name, no substrings)
 function get_pids {
     local grepex="\b$1\b"
-    ps aux | grep -e $grepex | grep -v grep | awk '{print $2;}' | xargs echo
+    # shellcheck disable=SC2009
+    ps aux | grep -e "$grepex" | grep -v grep | awk '{print $2;}' | xargs echo
 }
 
 # kill list of PIDs (reattempt 'max_retry_count'-times, then use `kill -9`)
@@ -10,21 +11,25 @@ function kill_wait {
     local i=0
     proc_to_kill="$1"
 
-    echo "INFO: procname to kill: $proc_to_kill"
-    pids="`get_pids $proc_to_kill`"
-    echo "INFO: pids to kill: $pids"
+    echo "[INFO] procname to kill: $proc_to_kill"
+    pids=$(get_pids "$proc_to_kill")
+    if [ -z "$pids" ]; then
+        echo "[INFO] no pids found, quitting."
+        return
+    fi
 
-    kill $pids
+    echo "[INFO] pids to kill: $pids"
+    kill "$pids"
     sleep 2
 
     while ps -p "$pids"; do
         let "i+=1"
-        echo "trying again ($i)"
+        echo "[INFO] trying again ($i)"
         if [ $i -lt $max_retry_count ]; then
-            kill $pids
+            kill "$pids"
         else
-            echo "Max retries reached, force killing: $proc_to_kill"
-            kill -9 $pids
+            echo "[INFO] max retries reached, force killing: $proc_to_kill"
+            kill -9 "$pids"
         fi
 
         sleep 2

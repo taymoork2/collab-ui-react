@@ -71,10 +71,6 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Verifies well-formed `.json` files
 
-### `npm run kill`
-
-* Kills any process running on port `8000`
-
 ### `npm run languages-verify`
 
 * Runs test to verify `l10n` language json files used in the app
