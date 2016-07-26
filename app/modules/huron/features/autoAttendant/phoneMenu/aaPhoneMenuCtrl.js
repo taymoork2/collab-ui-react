@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService, Config) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AAScrollBar, FeatureToggleService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -270,22 +270,33 @@
     /**
      * This include the list of feature which are not production ready yet
      */
-    function addAvailableFeatures() {
-      if (Config.isDev() || Config.isIntegration()) {
-        // push features here
-        vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
-          name: 'phoneMenuRouteQueue',
-          action: 'routeToQueue'
-        });
-
-      }
+    function toggleRouteToQueueFeature() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
+        if (result) {
+          /* will push route to queue in list */
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
+            name: 'phoneMenuRouteQueue',
+            action: 'routeToQueue'
+          });
+        }
+      });
     }
 
+    function toggleSubmenuFeature() {
+      return FeatureToggleService.supports(FeatureToggleService.features.huronAASubmenu).then(function (result) {
+        if (result) {
+          vm.keyActions.push({
+            label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+            name: 'phoneMenuPlaySubmenu',
+            action: 'runActionsOnInput'
+          });
+        }
+      });
+    }
     /////////////////////
 
     function activate() {
-      addAvailableFeatures();
       vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
@@ -310,15 +321,7 @@
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
 
-      FeatureToggleService.supports(FeatureToggleService.features.huronAASubmenu).then(function (result) {
-        if (result) {
-          vm.keyActions.push({
-            label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-            name: 'phoneMenuPlaySubmenu',
-            action: 'runActionsOnInput'
-          });
-        }
-      }).finally(activate);
+      toggleRouteToQueueFeature().then(toggleSubmenuFeature).finally(activate);
     }
 
     init();
