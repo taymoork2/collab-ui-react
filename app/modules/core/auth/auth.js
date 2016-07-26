@@ -6,7 +6,7 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $http, $translate, $log, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -63,7 +63,6 @@
 
     function refreshAccessToken() {
       var refreshToken = TokenService.getRefreshToken();
-
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
@@ -97,18 +96,31 @@
     }
 
     function logoutAndRedirectTo(redirectUrl) {
-      var revokeUrl = OAuthConfig.getOauthDeleteTokenUrl();
-      var data = 'token=' + TokenService.getRefreshToken();
-      var token = OAuthConfig.getOAuthClientRegistrationCredentials();
-      return httpPOST(revokeUrl, data, token)
-        .catch(handleError('Failed to delete the oAuth token'))
-        .finally(function () {
-          clearStorage();
-          // We store a key value in sessionStorage to  
-          // prevent a login when multiple tabs are open
-          SessionStorage.put('logout', 'logout');
-          WindowLocation.set(redirectUrl);
+      var listTokensUrl = OAuthConfig.getListTokenUrl();
+      return httpGET(listTokensUrl)
+        .then(function (response) {
+          var refreshTokenData = _.find(response.data.data, {client_id: OAuthConfig.getClientId()});
+	        var refreshTokenId = refreshTokenData.token_id;
+          revokeAuthTokens(refreshTokenId, redirectUrl);
+        })
+        .catch(function (response) {
+          handleError('Failed to retrieve token_id');
         });
+    }
+
+    function revokeAuthTokens(tokenId, redirectUrl) {
+      var revokeUrl = OAuthConfig.getOauthRevokeTokenUrl() + tokenId;
+      return $http.delete(revokeUrl)
+        .then(completeLogout(redirectUrl))
+        .catch(handleError('Failed to delete the oAuth token'));
+    }
+
+    function completeLogout(redirectUrl) {
+      clearStorage();
+      // We store a key value in sessionStorage to  
+      // prevent a login when multiple tabs are open
+      SessionStorage.put('logout', 'logout');
+      WindowLocation.set(redirectUrl);
     }
 
     function isLoggedIn() {
