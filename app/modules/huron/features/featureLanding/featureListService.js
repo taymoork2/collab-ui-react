@@ -43,8 +43,9 @@
       _.forEach(data.dependsIds, function (ceid) {
         var cardToUpdateIndex = 0;
         _.forEach(formattedList, function (card, index) {
-          if (ceid.aaID === card.id)
+          if (ceid.aaID === card.id) {
             cardToUpdateIndex = index;
+          }
         });
         _.forEach(ceid.dependants, function (dependant) {
           formattedList[cardToUpdateIndex].hasDepends = true;
@@ -58,8 +59,9 @@
 
           var refCardIndex = 0;
           _.forEach(formattedList, function (refcard, refindex) {
-            if (dependName === refcard.cardName)
+            if (dependName === refcard.cardName) {
               refCardIndex = refindex;
+            }
           });
           formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
           formattedList[refCardIndex].hasReferences = true;

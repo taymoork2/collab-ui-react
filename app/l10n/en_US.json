@@ -8,7 +8,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Add Users",
+    "addUsers": "Add Users",
+    "convertUsers": "Convert Users",
+    "errorMessages": "Error Messages",
+    "skipErrorsAndFinish": "Skip Errors and Finish",
+    "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
+    "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
+    "errors": "{errors, plural, one{# Error} other{# Errors}}",
     "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
@@ -1890,6 +1896,7 @@
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
     "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
+    "openHoursDaySelect": "At least one open hours form does not have any days of the week checked.",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -3024,6 +3031,11 @@
       "schedule": "Set a Schedule",
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
+    },
+    "deregister": {
+      "header": "Are you sure you want to deregister this node?",
+      "body1": "If you proceed, this node will no longer be available.",
+      "body2": "To make this node available again, you will need to reregister it."
     },
     "metrics": {
       "today": "Last 24 Hours",
