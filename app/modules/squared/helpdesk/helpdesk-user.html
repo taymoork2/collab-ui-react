@@ -106,7 +106,7 @@
         </div>
         <div class="medium-7 columns details-value">
           <span>
-            <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'medium'}} ({{helpdeskUserCtrl.lastPushedLog.platform}})</a>
+            <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'yyyy-MM-dd HH:mm':'UTC'}} UTC ({{helpdeskUserCtrl.lastPushedLog.platform}})</a>
           </span>
           <span ng-if="!helpdeskUserCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
         </div>
