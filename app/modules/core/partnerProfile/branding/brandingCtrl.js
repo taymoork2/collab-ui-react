@@ -183,7 +183,7 @@
 
     brand.upload = function (file, event) {
       if (validateLogo(file)) {
-        openModal('sm');
+        openModal();
         brand.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
@@ -195,8 +195,7 @@
         type: 'small',
         scope: $scope,
         modalClass: 'modal-logo-upload',
-        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
-        size: size
+        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html'
       });
     }
 
@@ -247,7 +246,7 @@
       if (logo && !logo.$error) {
         return true;
       } else {
-        openModal('sm');
+        openModal();
       }
     }
 
