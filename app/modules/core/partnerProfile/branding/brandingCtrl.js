@@ -19,6 +19,9 @@
       'pattern': '.png',
       'width': {
         min: '100'
+      },
+      'size': {
+        max: '1MB'
       }
     };
 
@@ -235,6 +238,8 @@
       var error = logo.$error;
       if (error === 'maxWidth' || error === 'minWidth') {
         brand.logoError = 'dimensions';
+      } else if (error === 'minSize' || error === 'maxSize') {
+        brand.logoError = 'size';
       } else {
         brand.logoError = logo.$error;
       }
