@@ -25,6 +25,10 @@ namespace globalsettings {
       this.subdomainCount++;
       this.errorMsg = $translate.instant('firstTimeWizard.setSipDomainErrorMessage');
 
+      let onSaveEventDeregister = $rootScope.$on('wizard-enterprise-sip-url-event', this.saveDomain.bind(this));
+
+      $scope.$on('$destroy', onSaveEventDeregister);
+
       this.checkRoomLicense();
       this.loadSipDomain();
       this.checkSSAReservation();
@@ -68,7 +72,7 @@ namespace globalsettings {
       return this.isError;
     }
 
-    public enterpriseSipUrlNext() {
+    public saveDomain() {
       if (this.isUrlAvailable && this.isConfirmed) {
         this.SparkDomainManagementService.addSipDomain(this._validatedValue)
           .then((response) => {

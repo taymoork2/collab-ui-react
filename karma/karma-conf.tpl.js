@@ -58,6 +58,9 @@ module.exports = function (config) {
     coverageReporter: {
       dir: 'coverage/unit',
       reporters: [{
+        type: 'html',
+        subdir: 'report-html'
+      }, {
         type: 'json',
         subdir: 'json',
         file: 'coverage-<module>.json'
@@ -89,6 +92,7 @@ module.exports = function (config) {
       'karma-chrome-launcher',
       'karma-coverage',
       'karma-firefox-launcher',
+      'karma-htmlfile-reporter',
       'karma-jasmine',
       'karma-junit-reporter',
       'karma-ng-html2js-preprocessor',
@@ -111,6 +115,10 @@ module.exports = function (config) {
       useBrowserName: false,
       outputFile: 'test/unit-test-results.xml',
       suite: ''
+    },
+
+    htmlReporter: {
+      outputFile: 'test/unit-test-results.html'
     }
   });
 };

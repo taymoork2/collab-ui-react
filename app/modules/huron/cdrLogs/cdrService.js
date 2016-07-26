@@ -43,14 +43,14 @@
           defer.resolve(data.Resources[0].id);
         } else {
           Log.debug('User does not exist in this org.');
-          Notification.notify([$translate.instant('cdrLogs.nonexistentUser', {
+          Notification.error('cdrLogs.nonexistentUser', {
             calltype: calltype
-          })], 'error');
+          });
           defer.reject(null);
         }
       }).error(function (data, status) {
         Log.debug('Failed to retrieve user data. Status: ' + status);
-        Notification.notify([$translate.instant('cdrLogs.userDataError')], 'error');
+        Notification.error('cdrLogs.userDataError');
         defer.reject(null);
       });
 
@@ -424,22 +424,22 @@
         return ABORT;
       } else if (response.status === 401 || response.status === 403) {
         Log.debug('User not authorized to retrieve cdr data from server. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr401And403Error')], 'error');
+        Notification.error('cdrLogs.cdr401And403Error');
       } else if (response.status === 404) {
         Log.debug('Elastic Search unable to respond. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr404Error')], 'error');
+        Notification.error('cdrLogs.cdr404Error');
       } else if (response.status === 408) {
         Log.debug('Request timed out while waiting for a response. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr408Error')], 'error');
+        Notification.error('cdrLogs.cdr408Error');
       } else if (response.status === 409) {
         Log.debug('Request failed due to a processing conflict. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr409Error')], 'error');
+        Notification.error('cdrLogs.cdr409Error');
       } else if (response.status === 502 || response.status === 503) {
         Log.debug('Elastic Search is temporarily unavailable. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr502And503Error')], 'error');
+        Notification.error('cdrLogs.cdr502And503Error');
       } else {
         Log.debug('Request failed due to an error with Elastic Search. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdr500Error')], 'error');
+        Notification.error('cdrLogs.cdr500Error');
       }
       return;
     }

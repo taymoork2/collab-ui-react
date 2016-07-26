@@ -95,8 +95,9 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      if (!vm.masonryRefreshed)
+      if (!vm.masonryRefreshed) {
         reInstantiateMasonry();
+      }
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
     };
 
@@ -390,9 +391,9 @@
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
           Log.debug('Failed to retrieve user logs. Status: ' + status);
-          Notification.notify([$translate.instant('supportPage.errLogQuery', {
+          Notification.error('supportPage.errLogQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     }
@@ -489,9 +490,9 @@
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
+          Notification.error('supportPage.errCallInfoQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     };

@@ -32,7 +32,15 @@
     colorGreen: '#5AAE76',
     colorRed: '#F4735E',
     colorYellow: '#E99849',
-    colorPurple: '#8E5ACF'
+    colorPurple: '#8E5ACF',
+    metricLightGreen: '#7BAF5D',
+    metricDarkGreen: '#417505',
+    metricBlue: '#049FD9',
+    metricYellow: '#F5A623',
+    colorLightGreen: '#43A942',
+    colorLightRed: '#F96452',
+    colorLightGreen1: '#D4ECD4',
+    colorLightRed1: '#FDD5D3'
   };
 
   angular

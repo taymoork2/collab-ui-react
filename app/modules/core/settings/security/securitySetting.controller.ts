@@ -7,13 +7,13 @@ namespace globalsettings {
   }
   export class SecuritySettingController {
 
-    public requireProtectedDevices:boolean = undefined;
-    public requireProtectedDevicesIsLoaded:boolean = false;
+    private _isSparkClientSecurityEnabled:boolean = undefined;
+    isSparkClientSecurityLoaded:boolean = false;
 
     private orgId:string;
 
     /* @ngInject */
-    constructor(private Notification, private $translate, private AccountOrgService, Authinfo) {
+    constructor(private Notification, private AccountOrgService, Authinfo) {
       this.orgId = Authinfo.getOrgId();
       this.loadSetting();
     }
@@ -25,21 +25,29 @@ namespace globalsettings {
 
     private appSecuritySettingLoaded({data:{clientSecurityPolicy:clientSecurityPolicy}={clientSecurityPolicy: null}}:GetAppSecurityResponse) {
       if (clientSecurityPolicy != null) {
-        this.requireProtectedDevices = clientSecurityPolicy;
-        this.requireProtectedDevicesIsLoaded = true;
+        this._isSparkClientSecurityEnabled = clientSecurityPolicy;
+        this.isSparkClientSecurityLoaded = true;
       }
     }
 
-    requireProtectedDevicesUpdate() {
-      if (this.requireProtectedDevices != undefined) {
+    get isSparkClientSecurityEnabled():boolean {
+      return this._isSparkClientSecurityEnabled;
+    }
 
+    set isSparkClientSecurityEnabled(value:boolean) {
+      this._isSparkClientSecurityEnabled = value;
+      this.updateSparkClientSecuritySetting();
+    }
+
+    updateSparkClientSecuritySetting() {
+      if (this._isSparkClientSecurityEnabled != undefined) {
         // Calls AppSecuritySetting service to update device security enforcement
-        this.AccountOrgService.setAppSecurity(this.orgId, this.requireProtectedDevices)
+        this.AccountOrgService.setAppSecurity(this.orgId, this._isSparkClientSecurityEnabled)
           .then((response) => {
-            this.Notification.notify([this.$translate.instant('firstTimeWizard.messengerAppSecuritySuccess')], 'success');
+            this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
           })
           .catch((response) => {
-            this.Notification.notify([this.$translate.instant('firstTimeWizard.messengerAppSecurityError')], 'error');
+            this.Notification.error('firstTimeWizard.messengerAppSecurityError');
           });
       }
     }

@@ -86,7 +86,7 @@ describe('Spark Care Partner flow', function () {
       utils.click(partner.deleteCustomerButton);
       utils.waitForModal().then(function () {
         utils.click(partner.deleteCustomerOrgConfirm).then(function () {
-          notifications.assertSuccess(partner.newTrial.customerName, 'was successfully deleted');
+          notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
           done();
         });
       });

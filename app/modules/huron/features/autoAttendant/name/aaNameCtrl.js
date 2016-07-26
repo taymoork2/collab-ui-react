@@ -54,10 +54,11 @@
     }
 
     function nextButton() {
-      if (vm.name === '')
+      if (vm.name === '') {
         return false;
-      else
+      } else {
         return true;
+      }
     }
 
     function nextPage() {

@@ -138,7 +138,7 @@
             vm.error = $translate.instant("ediscovery.search.roomNotFound", {
               roomId: roomId
             });
-            Notification.error($translate.instant("ediscovery.search.roomLookupError"));
+            Notification.error('ediscovery.search.roomLookupError');
             break;
           }
         })
@@ -160,7 +160,7 @@
           runReport(res.runUrl, res.url);
         })
         .catch(function (err) {
-          Notification.error($translate.instant('ediscovery.search.createReportFailed'));
+          Notification.error('ediscovery.search.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
         });
@@ -197,7 +197,7 @@
     function runReport(runUrl, url) {
       EdiscoveryService.runReport(runUrl, vm.searchCriteria.roomId, url, vm.searchCriteria.startDate, vm.searchCriteria.endDate)
         .catch(function (err) {
-          Notification.error($translate.instant('ediscovery.search.runFailed'));
+          Notification.error('ediscovery.search.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: "FAILED",
             failureReason: "UNEXPECTED_FAILURE"
@@ -221,12 +221,12 @@
         state: "ABORTED"
       }).then(function (res) {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
-          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+          Notification.success('ediscovery.search.reportCancelled');
         }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
-          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+          Notification.error('ediscovery.search.reportCancelFailed');
         }
       }).finally(function () {
         vm.cancellingReport = false;
@@ -258,7 +258,7 @@
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
         .catch(function (err) {
-          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+          Notification.error('ediscovery.unableToDownloadFile');
         })
         .finally(function () {
           vm.downloadingReport = false;

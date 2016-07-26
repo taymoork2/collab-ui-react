@@ -20,8 +20,8 @@
       <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
       ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
       ng-click="customerOverview.launchCustomerPortal()">
-        <span ng-if="customerOverview.isOrgSetup()" translate="customerPage.launchButton"></span>
-        <span ng-if="!customerOverview.isOrgSetup()" translate="customerPage.setupButton"></span>
+        <span ng-if="customerOverview.isOrgSetup" translate="customerPage.launchButton"></span>
+        <span ng-if="!customerOverview.isOrgSetup" translate="customerPage.setupButton"></span>
       </button>
       <a ng-if="customerOverview.isOwnOrg()" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
         <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
@@ -93,9 +93,9 @@
       </div>
     </cs-sp-section>
     <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin"></uc-customer-administrator-overview>
-    <button id="deleteCustomer" cs-btn class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
+   <button id="deleteCustomer" cs-btn class="btn btn--link btn--negative btn--delete " ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
       ng-click="customerOverview.deleteTestOrg()" loading="customerOverview.isDeleting">
-        <span translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}"></span>
+     <i class="icon icon-trash"></i>    <span translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}"></span>
     </button>
   </cs-sp-container>
 

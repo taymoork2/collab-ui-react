@@ -2,9 +2,8 @@
   <input
     cs-input
     type="checkbox"
-    ng-model="secCtrl.requireProtectedDevices"
-    name="requireProtectedDevices"
-    cs-input-label="{{'globalSettings.security.requireProtectedDevices'|translate}}"
-    ng-change="secCtrl.requireProtectedDevicesUpdate()"
-    ng-disabled="!secCtrl.requireProtectedDevicesIsLoaded">
+    id="sparkClientSecurityEnabled"
+    ng-model="secCtrl.isSparkClientSecurityEnabled"
+    cs-input-label="{{'globalSettings.security.description'|translate}}"
+    ng-disabled="!secCtrl.isSparkClientSecurityLoaded">
 </div>

@@ -6,13 +6,14 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
     $scope.cmrLicensesForMetric = {};
+    $scope.currentUserCount = 0;
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -36,8 +37,12 @@
     $scope.isMapEnabled = true;
     $scope.processing = false;
     $scope.PATTERN_LIMIT = 50;
+    $scope.messagingLicenseAvailability = 0;
+    $scope.communicationsLicenseAvailability = 0;
+    $scope.conferencingLicenseAvailability = 0;
     $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
+    var isFTW = false;
     $scope.isReset = false;
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
@@ -78,6 +83,77 @@
     FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
       $scope.isCareEnabled = careStatus;
     });
+
+    initController();
+
+    function initController() {
+      $scope.currentUserCount = 1;
+      setLicenseAvailability();
+    }
+
+    /****************************** License Enforcement START *******************************/
+    //***
+    //***
+    //***********************************************************************************/
+
+    function setLicenseAvailability() {
+      return Orgservice.getLicensesUsage()
+        .then(function (result) {
+          $scope.licenses = result[0].licenses;
+          _.forEach($scope.licenses, function (license) {
+            switch (license.licenseType) {
+            case Config.licenseTypes.MESSAGING:
+              {
+                $scope.messagingLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            case Config.licenseTypes.COMMUNICATION:
+              {
+                $scope.communicationLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            case Config.licenseTypes.CONFERENCING:
+              {
+                $scope.conferencingLicenseAvailability = license.volume - license.usage;
+                break;
+              }
+            default:
+              break;
+            }
+          });
+        });
+    }
+
+    $scope.checkLicenseAvailability = function (licenseName, licenseModel) {
+      if (!licenseName || !licenseModel) {
+        return;
+      }
+      var licenseNamePrefix = licenseName.toLowerCase();
+      if ($scope[licenseNamePrefix + 'LicenseAvailability'] < $scope.currentUserCount) {
+        $scope.licenseCheckModal();
+      }
+
+    };
+
+    $scope.licenseCheckModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: "dialog",
+          templateUrl: "modules/core/users/userAdd/licenseErrorModal.tpl.html",
+        }).result.then(function () {
+          FeatureToggleService.atlasSettingsPageGetStatus()
+            .then(function () {
+              $previousState.forget('modalMemo');
+              $state.go('my-company.subscriptions');
+            });
+        });
+      }
+    };
+
+    /****************************** License Enforcement END *******************************/
+    //***
+    //***
+    //***********************************************************************************/
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -346,7 +422,7 @@
     }
 
     $scope.ConfirmAdditionalServiceSetup = function () {
-      var promise = (Notification.confirmation($translate.instant('usersPage.addtionalServiceSetupConfirmation')));
+      var promise = Notification.confirmation('usersPage.addtionalServiceSetupConfirmation');
       promise.then(function () {
         $state.go('firsttimewizard');
       });
@@ -370,8 +446,6 @@
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     $scope.checkMessageVisibility = checkMessageVisibility;
-    var convertSuccess = [];
-    var convertFailures = [];
     var convertUsersCount = 0;
     var convertStartTime = 0;
     var convertCancelled = false;
@@ -552,9 +626,7 @@
       }
 
       populateConf();
-      if ($scope.currentUser && $scope.currentUser.pendingStatus) {
-        populateConfInvitations();
-      }
+      populateConfInvitations();
     };
 
     $scope.isSubscribeable = function (license) {
@@ -1040,6 +1112,7 @@
       var userCount = angular.element('.token-label').length;
       var action = 'finish';
       if (userCount > 0) {
+        $scope.currentUserCount = userCount;
         action = 'next';
       }
       $scope.$emit('wizardNextText', action);
@@ -1119,6 +1192,12 @@
       return retString;
     }
 
+    function removeEmailFromTokenfield(email) {
+      $scope.model.userList = $scope.model.userList.split(', ').filter(function (token) {
+        return token.indexOf(email) === -1;
+      }).join(', ');
+    }
+
     var setPlaceholder = function (placeholder) {
       angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
     };
@@ -1140,13 +1219,14 @@
       var usersListLength = angular.element('.token-label').length;
       $scope.validateTokens().then(function () {
         if (invalidcount === 0 && usersListLength > 0) {
+          $scope.currentUserCount = usersListLength;
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
           Log.debug('No users entered.');
-          Notification.notify([$translate.instant('usersPage.noUsersInput')], 'error');
+          Notification.error('usersPage.noUsersInput');
         } else {
           Log.debug('Invalid users entered.');
-          Notification.notify([$translate.instant('usersPage.validEmailInput')], 'error');
+          Notification.error('usersPage.validEmailInput');
         }
       });
     };
@@ -1208,7 +1288,8 @@
       var successCallback = function (response) {
         Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        var numAddedUsers = 0;
+        $scope.numAddedUsers = 0;
+        $scope.numUpdatedUsers = 0;
         var hybridCheck = false;
 
         _.forEach(response.data.userResponse, function (user) {
@@ -1224,7 +1305,11 @@
               email: userResult.email
             });
             userResult.alertType = 'success';
-            numAddedUsers++;
+            if (userStatus === 200) {
+              $scope.numUpdatedUsers++;
+            } else {
+              $scope.numAddedUsers++;
+            }
           } else if (userStatus === 409) {
             userResult.message = userResult.email + ' ' + user.message;
           } else if (userStatus === 403 && user.message === '400081') {
@@ -1278,35 +1363,45 @@
 
         });
 
-        if (numAddedUsers > 0) {
-          var msg = 'Invited ' + numAddedUsers + ' users';
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
+        if ($scope.numAddedUsers > 0) {
+          var msg = 'Invited ' + $scope.numAddedUsers + ' users';
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), $scope.numAddedUsers, null);
         }
 
         //concatenating the results in an array of strings for notify function
-        var successes = [];
-        var errors = [];
+        $scope.results.errors = [];
         for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success') {
-            successes.push($scope.results.resultList[idx].message);
+          if ($scope.results.resultList[idx].alertType === 'success' && $scope.results.resultList[idx].email) {
+            removeEmailFromTokenfield($scope.results.resultList[idx].email);
           } else {
-            errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].message, response));
           }
         }
+
+        $scope.skipErrorsOrFinish = function () {
+          if ($scope.results.errors.length > 0) {
+            return 'usersPage.skipErrorsAndFinish';
+          } else {
+            return 'common.finish';
+          }
+        };
+
+        $scope.fixBulkErrors = function () {
+          if (isFTW) {
+            $scope.wizard.goToStep('manualEntry');
+          } else {
+            $state.go('users.add');
+          }
+        };
 
         //Displaying notifications
         if ($scope.results.resultList.length === usersList.length) {
           $scope.btnOnboardLoading = false;
-          Notification.notify(successes, 'success');
-          if (hybridCheck) {
-            Notification.notify(errors[0], 'error');
+          if (isFTW) {
+            deferred.resolve();
           } else {
-            Notification.notify(errors, 'error');
+            $state.go('users.add.results');
           }
-          deferred.resolve();
-        }
-        if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-          $scope.$dismiss();
         }
       };
 
@@ -1395,6 +1490,9 @@
       $scope.results = {
         resultList: []
       };
+      $scope.numAddedUsers = 0;
+      $scope.numUpdatedUsers = 0;
+      $scope.results.errors = [];
       var isComplete = true;
 
       $rootScope.$broadcast('USER_LIST_UPDATED');
@@ -1410,9 +1508,14 @@
 
           var userStatus = data.userResponse[i].status;
 
-          if (userStatus === 200) {
+          if (userStatus === 200 || userStatus === 201) {
             userResult.message = $translate.instant('onboardModal.result.200');
             userResult.alertType = 'success';
+            if (userStatus === 200) {
+              $scope.numUpdatedUsers++;
+            } else if (userStatus === 201) {
+              $scope.numAddedUsers++;
+            }
           } else if (userStatus === 404) {
             userResult.message = $translate.instant('onboardModal.result.404');
             userResult.alertType = 'danger';
@@ -1440,34 +1543,18 @@
           }
         }
 
-        //concatenating the results in an array of strings for notify function
-        var successes = [];
-        var errors = [];
-        var count_s = 0;
-        var count_e = 0;
         for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success') {
-            successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-            count_s++;
-          } else {
-            errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
-            count_e++;
+          if ($scope.results.resultList[idx].alertType !== 'success') {
+            $scope.results.errors.push(UserCsvService.addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
           }
         }
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if (successes.length + errors.length) {
+          if ($scope.numAddedUsers + $scope.numUpdatedUsers + $scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.notify(errors, 'error');
-          }
-        } else {
-          if (count_s > 0) {
-            convertSuccess.push.apply(convertSuccess, successes);
-          }
-          if (count_e > 0) {
-            convertFailures.push.apply(convertFailures, errors);
+            Notification.error($scope.results.errors);
           }
         }
 
@@ -1496,7 +1583,7 @@
           $scope.btnOnboardLoading = false;
           $scope.btnSaveEntLoad = false;
         } else {
-          convertFailures.push(error);
+          $scope.results.errors.push(error);
         }
       }
 
@@ -1510,18 +1597,16 @@
         } else {
           if (convertBacked === false) {
             $scope.btnConvertLoad = false;
-            $scope.$dismiss();
+            $state.go('users.convert.results');
           } else {
             $state.go('users.convert', {});
           }
-          Notification.notify(convertSuccess, 'success');
-          Notification.notify(convertFailures, 'error');
-          var msg = 'Migrated ' + convertSuccess.length + ' users';
+          var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
           var migratedata = {
             totalUsers: convertUsersCount,
-            successfullyConverted: convertSuccess.length
+            successfullyConverted: $scope.numUpdatedUsers
           };
-          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+          LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
         }
       }
 
@@ -1552,6 +1637,7 @@
 
     // Wizard hook for next button
     $scope.manualEntryNext = function () {
+      isFTW = true;
       var deferred = $q.defer();
 
       if (getUsersList().length === 0) {
@@ -1579,14 +1665,9 @@
         activateDID();
         deferred.resolve();
       } else {
-        return onboardUsers(true).then(function () {
-          if (angular.isDefined($scope.wizard)) {
-            $q.when($scope.wizard.nextTab()).then(function () {
-              deferred.reject();
-            });
-          } else {
-            deferred.resolve();
-          }
+        onboardUsers(true).then(function () {
+          deferred.reject(); // prevent the wizard from going forward
+          $scope.wizard.goToStep('addUsersResults');
         });
       }
       return deferred.promise;
@@ -1607,14 +1688,14 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         deferred.reject();
         return deferred.promise;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         deferred.reject();
         return deferred.promise;
       }
@@ -1697,13 +1778,13 @@
       // check for DiD duplicates
       if (didDnDupes.didDupe) {
         Log.debug('Duplicate Direct Line entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+        Notification.error('usersPage.duplicateDidFound');
         return;
       }
       // check for Dn duplicates
       if (didDnDupes.dnDupe) {
         Log.debug('Duplicate Internal Extension entered.');
-        Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+        Notification.error('usersPage.duplicateDnFound');
         return;
       }
 
@@ -1763,8 +1844,8 @@
       convertPending = true;
       convertCancelled = false;
       convertBacked = false;
-      convertSuccess = [];
-      convertFailures = [];
+      $scope.numAddedUsers = 0;
+      $scope.numUpdatedUsers = 0;
       convertStartTime = moment();
       convertUsersInBatch();
     };
@@ -1777,7 +1858,7 @@
 
         for (var i = 0; i < data.userResponse.length; i++) {
           if (data.userResponse[i].status !== 200) {
-            convertFailures.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
+            $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
           } else {
             var user = {
               'address': data.userResponse[i].email
@@ -1808,18 +1889,16 @@
           } else {
             if (convertBacked === false) {
               $scope.btnConvertLoad = false;
-              $scope.$dismiss();
+              $state.go('users.convert.results');
             } else {
               $state.go('users.convert', {});
             }
-            Notification.notify(convertSuccess, 'success');
-            Notification.notify(convertFailures, 'error');
-            var msg = 'Migrated ' + convertSuccess.length + ' users';
+            var msg = 'Migrated ' + $scope.numUpdatedUsers + ' users';
             var migratedata = {
               totalUsers: convertUsersCount,
-              successfullyConverted: convertSuccess.length
+              successfullyConverted: $scope.numUpdatedUsers
             };
-            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, $scope.numUpdatedUsers, migratedata);
           }
         }
       });

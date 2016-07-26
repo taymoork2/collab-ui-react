@@ -204,6 +204,9 @@
         }, {
           name: 'assignDnAndDirectLines',
           template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
+        }, {
+          name: 'addUsersResults',
+          template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html'
         }]
       };
       var advancedSubTabSteps = [{

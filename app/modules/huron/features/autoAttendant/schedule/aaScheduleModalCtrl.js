@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -556,28 +556,37 @@
         controllerAs: 'import'
       });
       importModal.result.then(function (allHours) {
-        if (allHours) {
-          AANotificationService.success('autoAttendant.successImport', {
-            holidays: allHours.holidays.length,
-            hours: allHours.hours.length
-          });
-          allHours.hours.forEach(function (value) {
-            _.each(value.days, function (day) {
-              day.label = moment.weekdays(day.index);
+          if (allHours) {
+            AANotificationService.success('autoAttendant.successImport', {
+              holidays: allHours.holidays.length,
+              hours: allHours.hours.length
             });
-            vm.openhours.unshift(value);
+            allHours.hours.forEach(function (value) {
+              _.each(value.days, function (day) {
+                day.label = moment.weekdays(day.index);
+              });
+              vm.openhours.unshift(value);
+            });
+            allHours.holidays.forEach(function (value) {
+              if (!value.exactDate) {
+                value.month.label = moment.months(value.month.index);
+                value.rank.labelTranslate = $translate.instant(value.rank.label);
+                value.day.label = moment.weekdays(value.day.index);
+              }
+              vm.holidays.unshift(value);
+            });
+            vm.holidaysForm.$setDirty();
+          }
+        },
+        //on 'fail', cancel was clicked and $dismiss will trigger this response
+        function (allHours) {
+          //let Analytics know the property type of 'cancel'
+          var type = 'cancel';
+          //dispatch the metric
+          Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
+            type: type
           });
-          allHours.holidays.forEach(function (value) {
-            if (!value.exactDate) {
-              value.month.label = moment.months(value.month.index);
-              value.rank.labelTranslate = $translate.instant(value.rank.label);
-              value.day.label = moment.weekdays(value.day.index);
-            }
-            vm.holidays.unshift(value);
-          });
-          vm.holidaysForm.$setDirty();
-        }
-      });
+        });
     }
 
     function activate() {

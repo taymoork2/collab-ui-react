@@ -13,10 +13,6 @@
 			<cs-select ng-model="msgSetup.selected" options="msgSetup.options" placeholder="msgSetup.placeholder" labelField="label" valueField="value"></cs-select>
 		</div>
 	</div>
-	<div class="app-launch" ng-if="msgSetup.showAppSecurity">
-		<h4 translate="firstTimeWizard.appSecurity"></h4>
-		<cs-checkbox ckid="chk-app-security" ng-click="msgSetup.currentAppSecurity = !msgSetup.currentAppSecurity" ng-model="msgSetup.currentAppSecurity" label="{{'firstTimeWizard.appSecurityLabel' | translate}}"></cs-checkbox>
-	</div>
 	<div class="data-share">
 		<h4 translate="firstTimeWizard.dataShareTitle"></h4>
 		<cs-checkbox ckid="chk-data-share" ng-model="msgSetup.dataShare" label="{{'firstTimeWizard.dataShareLabel' | translate}}"></cs-checkbox>

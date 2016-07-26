@@ -341,11 +341,20 @@
       isCustomerAdmin: function () {
         return this.hasRole('Full_Admin');
       },
+      isOnline: function () {
+        return _.eq(authData.customerType, 'Online');
+      },
+      isPending: function () {
+        return _.eq(authData.customerType, 'Pending');
+      },
       isCSB: function () {
-        return (_.contains(authData.customerType, ['CSB']));
+        return (_.eq(authData.customerType, 'CSB'));
       },
       isDirectCustomer: function () {
-        return (_.contains(authData.commerceRelation, ['Direct']));
+        return (_.eq(authData.commerceRelation, 'Direct'));
+      },
+      isPartnerManagedCustomer: function () {
+        return (_.eq(authData.customerType, 'Partner'));
       },
       isPartner: function () {
         return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

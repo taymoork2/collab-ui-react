@@ -1,11 +1,14 @@
 @import 'mySubscriptions/_mySubscription';
 
-#my-company-info{
-  display: block;
-  background-color: white;
-  min-height: 100vh;
-}
+.my-company-page {
+  @extend %grid-subheader;
+  @extend %content-subheader;
 
+  .my-company-info-state &,
+  .my-company-orders-state & {
+    @extend %page-background-white;
+  }
+}
 .btn--myCompany{
   .icon{
     position: static !important;
@@ -13,21 +16,10 @@
   }
 }
 
-.company-left-tabs{
-  position: relative;
-  top: 4px;
-  .page-header__left{
-    display: none;
-  }
-  .page-header__right{
-    @include vr-spacing(mt, 0.75);
-    @include vr-spacing(mh, 0);
-    order: -1;
-    li.current.active:first-of-type a.nav-link {
-      @include vr-spacing(ml, 0);
-    }
-    li.current.active a.nav-link, li a.nav-link {
-      @include vr-spacing(pb, 0.5);
-    }
+.my-company-order-history-actions {
+  display: flex;
+  align-items: center;
+  .icon {
+    margin-right: 0.5rem;
   }
 }

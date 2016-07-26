@@ -10,11 +10,17 @@
     var vm = this;
     vm.backUrl = 'cluster-list';
     vm.upgradeSchedule = {
-      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
-      description: 'hercules.expresswayClusterSettings.upgradeScheduleParagraph'
+      title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader'
+    };
+    vm.releaseChannel = {
+      title: 'mediaFusion.clusters.releaseChannel',
+      description: 'mediaFusion.clusters.releaseChannelDesc'
+    };
+    vm.delete = {
+      title: 'mediaFusion.clusters.deleteclusterDesc'
     };
 
-    //hardcoded now and will be changed in the future 
+    //hardcoded now and will be changed in the future
     vm.options = [
       'GA',
       'DEV',

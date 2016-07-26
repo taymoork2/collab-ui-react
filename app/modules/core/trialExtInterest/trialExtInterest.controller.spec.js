@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialExtInterestCtrl', function () {
-  var $rootScope, $location, $translate, Log, TrialExtInterestService, $controller, controller, $q;
+  var $rootScope, $location, Log, TrialExtInterestService, $controller, controller, $q;
   var eqpParam = 'hi';
 
   beforeEach(module('Core'));

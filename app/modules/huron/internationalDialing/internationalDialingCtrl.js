@@ -127,15 +127,11 @@
           vm.model.internationalDialingUuid, cosType).then(function () {
           initInternationalDialing();
 
-          result.msg = $translate.instant('internationalDialingPanel.success');
-          result.type = 'success';
-
-          Notification.notify([result.msg], result.type);
+          Notification.success('internationalDialingPanel.success');
           resetForm();
         })
         .catch(function (response) {
-          Notification.errorResponse(response, $translate.instant('internationalDialingPanel.error'));
-
+          Notification.errorResponse(response, 'internationalDialingPanel.error');
         })
         .finally(function () {
           vm.saveInProcess = false;
