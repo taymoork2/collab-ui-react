@@ -144,8 +144,16 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
+      },
+
+      licenseStatus: {
+        PENDING: 'PENDING',
+        ACTIVE: 'ACTIVE',
+        CANCELLED: 'CANCELLED',
+        SUSPENDED: 'SUSPENDED'
       },
 
       licenseTypes: {

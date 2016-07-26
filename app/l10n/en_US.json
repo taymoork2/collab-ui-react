@@ -911,6 +911,9 @@
     "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
+    "setUpDevices": "Activate your devices when they arrive.",
+    "setUpSharedDevices": "Activate your Room System devices when they arrive.",
+    "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
