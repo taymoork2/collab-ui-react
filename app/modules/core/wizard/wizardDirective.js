@@ -73,6 +73,7 @@
     vm.nextTab = nextTab;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.goToStep = goToStep;
     vm.getRequiredTabs = getRequiredTabs;
 
     vm.isFirstTab = isFirstTab;
@@ -312,6 +313,20 @@
       });
     }
 
+    function goToStep(requestedStep) {
+      var steps = getSteps();
+      if (angular.isArray(steps)) {
+        var index = _.map(steps, function (step) {
+          return step.name;
+        }).indexOf(requestedStep);
+        if (index === -1 || index >= steps.length) {
+          nextStep();
+        } else if (index < steps.length) {
+          setStep(steps[index]);
+        }
+      }
+    }
+
     function getRequiredTabs() {
       return getTabs().filter(function (tab) {
         return tab.required;
@@ -386,8 +401,9 @@
     }
 
     function hasDefaultButtons() {
-      if (vm.current.step)
+      if (vm.current.step) {
         return angular.isUndefined(vm.current.step.buttons);
+      }
       return false;
     }
 

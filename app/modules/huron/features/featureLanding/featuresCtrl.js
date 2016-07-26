@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -31,12 +31,22 @@
       name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
-      name: $translate.instant('huronHuntGroup.modalTitle'),
-      filterValue: 'HG'
-    }, {
       name: $translate.instant('autoAttendant.title'),
       filterValue: 'AA'
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG'
     }];
+
+    FeatureToggleService.supports(FeatureToggleService.features.callParkService).then(function (result) {
+      if (result) {
+        var cp = {
+          name: $translate.instant('callPark.title'),
+          filterValue: 'CP'
+        };
+        vm.filters.push(cp);
+      }
+    });
     /* LIST OF FEATURES
      *
      *  To add a New Feature
@@ -59,6 +69,13 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
+    }, {
+      name: 'CP',
+      getFeature: CallParkService.getListOfCallParks,
+      formatter: HuronFeaturesListService.callParks,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.cpName',
+      color: 'cta'
     }];
 
     init();
@@ -137,7 +154,6 @@
 
       var list = feature.formatter(data);
       if (list.length > 0) {
-
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);

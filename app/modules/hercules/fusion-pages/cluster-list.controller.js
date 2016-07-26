@@ -6,7 +6,7 @@
     .controller('FusionClusterListController', FusionClusterListController);
 
   /* @ngInject */
-  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
+  function FusionClusterListController($filter, $state, $translate, hasFeatureToggle, hasMediaFeatureToggle, FusionClusterService, XhrNotificationService, WizardFactory) {
     if (!hasFeatureToggle) {
       // simulate a 404
       $state.go('login');
@@ -24,15 +24,24 @@
       filterValue: 'all',
       count: 0
     };
-    vm.filters = [{
-      name: $translate.instant('hercules.fusion.list.expressway'),
-      filterValue: 'expressway',
-      count: 0
-    }, {
-      name: $translate.instant('hercules.fusion.list.mediafusion'),
-      filterValue: 'mediafusion',
-      count: 0
-    }];
+
+    if (hasMediaFeatureToggle) {
+      vm.filters = [{
+        name: $translate.instant('hercules.fusion.list.expressway'),
+        filterValue: 'expressway',
+        count: 0
+      }, {
+        name: $translate.instant('hercules.fusion.list.mediafusion'),
+        filterValue: 'mediafusion',
+        count: 0
+      }];
+    } else {
+      vm.filters = [{
+        name: $translate.instant('hercules.fusion.list.expressway'),
+        filterValue: 'expressway',
+        count: 0
+      }];
+    }
     vm.countHosts = countHosts;
     vm.getHostnames = getHostnames;
     vm.setFilter = setFilter;
@@ -48,15 +57,28 @@
     loadClusters();
 
     function loadClusters() {
-      FusionClusterService.getAll()
-        .then(function (clusters) {
-          clustersCache = clusters;
-          updateFilters();
-          vm.displayedClusters = clusters;
-        }, XhrNotificationService.notify)
-        .finally(function () {
-          vm.loading = false;
-        });
+      if (hasMediaFeatureToggle) {
+        FusionClusterService.getAll()
+          .then(function (clusters) {
+            clustersCache = clusters;
+            updateFilters();
+            vm.displayedClusters = clusters;
+          }, XhrNotificationService.notify)
+          .finally(function () {
+            vm.loading = false;
+          });
+      } else {
+        FusionClusterService.getAllNonMediaClusters()
+          .then(function (clusters) {
+            clustersCache = clusters;
+            updateFilters();
+            vm.displayedClusters = clusters;
+          }, XhrNotificationService.notify)
+          .finally(function () {
+            vm.loading = false;
+          });
+      }
+
     }
 
     function countHosts(cluster) {
@@ -82,7 +104,9 @@
       var mediafusionClusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
       vm.placeholder.count = clustersCache.length;
       vm.filters[0].count = expresswayClusters.length;
-      vm.filters[1].count = mediafusionClusters.length;
+      if (hasMediaFeatureToggle) {
+        vm.filters[1].count = mediafusionClusters.length;
+      }
     }
 
     function setFilter(filter) {
