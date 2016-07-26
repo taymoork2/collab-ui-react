@@ -19,11 +19,18 @@ namespace myCompanyPage {
   let subUrl = "http://gc.digitalriver.com/store?SiteID=ciscoctg&Action=DisplaySelfServiceSubscriptionLandingPage&futureAction=DisplaySelfServiceSubscriptionUpgradePage&subscriptionID=";
   let trial = "trial"
 
+  // icon classes
+  let messageClass = 'icon-message';
+  let meetingRoomClass = 'icon-meeting-room';
+  let webexClass = 'icon-webex';
+  let callClass = 'icon-calls';
+
   class MySubscriptionCtrl {
     private _hybridServices = [];
     private _licenseCategory = [];
     private _subscriptionDetails = [];
     private _visibleSubscriptions = false;
+    private _isOnline = false;
 
     get hybridServices() {
       return this._hybridServices;
@@ -41,12 +48,16 @@ namespace myCompanyPage {
       return this._visibleSubscriptions;
     }
 
+    get isOnline() {
+      return this._isOnline;
+    }
+
     upgradeUrl(subId) {
       return subUrl + subId;
     }
 
     /* @ngInject */
-    constructor($rootScope, $translate, Authinfo, Orgservice, ServiceDescriptor) {
+    constructor($rootScope, $translate, $q, Authinfo, Orgservice, ServiceDescriptor) {
       // message subscriptions
       this._licenseCategory[0] = angular.copy(baseCategory);
       this._licenseCategory[0].label = $translate.instant("subscriptions.message");
@@ -63,6 +74,9 @@ namespace myCompanyPage {
       // room system subscriptions
       this._licenseCategory[3] = angular.copy(baseCategory);
       this._licenseCategory[3].label = $translate.instant("subscriptions.room");
+
+      this._isOnline = Authinfo.isOnline();
+      let usageName = $translate.instant('subscriptions.usage');
 
       Orgservice.getLicensesUsage()
         .then(subscriptions => {
@@ -87,22 +101,27 @@ namespace myCompanyPage {
                     usage: license.usage,
                     volume: license.volume,
                     siteUrl: license.siteUrl,
-                    id: 'donutId' + subIndex + licenseIndex
+                    id: 'donutId' + subIndex + licenseIndex,
+                    tooltip: generateTooltip($translate.instant('subscriptions.licenseTypes.' + license.offerName), usageName, license.usage, license.volume),
+                    class: undefined
                   };
-
-                  this._visibleSubscriptions = true;
-                  newSubscription.licenses.push(offer);
-                  // if the subscription is a trial, all licenses will have isTrial set to true
-                  newSubscription.isTrial = license.isTrial;
 
                   _.forEach(licenseTypes, (type, index) => {
                     if ((license.offerName === type) && (index === 0)) {
+                      offer.class = messageClass;
                       this._licenseCategory[0].subscriptions = addSubscription(this._licenseCategory[0].subscriptions, offer);
                     } else if ((license.offerName === type) && (index === 7)) {
+                      offer.class = callClass;
                       this._licenseCategory[2].subscriptions = addSubscription(this._licenseCategory[2].subscriptions, offer);
                     } else if ((license.offerName === type) && (index === 8)) {
+                      offer.class = meetingRoomClass;
                       this._licenseCategory[3].subscriptions = addSubscription(this._licenseCategory[3].subscriptions, offer);
                     } else if (license.offerName === type) {
+                      if(index === 1) {
+                        offer.class = meetingRoomClass;
+                      } else {
+                        offer.class = webexClass;
+                      }
                       let existingSite = checkForSite(offer.siteUrl, this._licenseCategory[1].subscriptions);
                       if (existingSite) {
                         this._licenseCategory[1].subscriptions[existingSite].offers = addSubscription(this._licenseCategory[1].subscriptions[existingSite].offers, offer);
@@ -119,6 +138,11 @@ namespace myCompanyPage {
                       }
                     }
                   });
+
+                  this._visibleSubscriptions = true;
+                  newSubscription.licenses.push(offer);
+                  // if the subscription is a trial, all licenses will have isTrial set to true
+                  newSubscription.isTrial = license.isTrial;
                 }
               });
               
@@ -131,9 +155,11 @@ namespace myCompanyPage {
               }
             });
           }
-          if ((this._subscriptionDetails.length === 1) && this._subscriptionDetails[0].subscriptionId && !this._subscriptionDetails[0].isTrial) {
+
+          if (this._subscriptionDetails.length === 1) {
             let broadcastData = {
-              display: true,
+              isOnline: this._isOnline,
+              isTrial: this._subscriptionDetails[0].isTrial,
               url: this.upgradeUrl(this._subscriptionDetails[0].subscriptionId)
             };
             $rootScope.$broadcast('SUBSCRIPTION::upgradeData', broadcastData);
@@ -179,6 +205,22 @@ namespace myCompanyPage {
     }
   }
 
+  // generating the subscription view tooltips
+  function generateTooltip(offerName, usageName, usage, volume) {
+    if (_.isNumber(usage) && _.isNumber(volume)) {
+      let tooltip = offerName + '<br>' + usageName
+      if (usage > volume) {
+        tooltip += '<span class="warning">' + usage + '/' + volume + '</span>';
+      } else {
+        tooltip += usage + '/' + volume;
+      }
+      return tooltip;
+    } else {
+      return undefined;
+    }
+  }
+
+  // seperates out different sites for the license view
   function checkForSite(siteUrl, siteArray) {
     let found;
     if(_.isArray(siteArray)) {
@@ -191,6 +233,7 @@ namespace myCompanyPage {
     return found;
   }
 
+  // combines licenses for the license view
   function addSubscription(subscriptions, item) {
     let exists = false;
 

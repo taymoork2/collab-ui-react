@@ -4443,7 +4443,6 @@
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription ID: ",
-    "defaultName": "Your Subscription",
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
     "more": "More",

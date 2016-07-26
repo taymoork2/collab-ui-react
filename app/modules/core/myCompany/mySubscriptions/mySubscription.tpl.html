@@ -1,29 +1,31 @@
 <div class="subscriptions-container">
   <cr-trial-notice-banner></cr-trial-notice-banner>
   <cs-card-layout block-view="true">
-    <cs-card class="full subscriptions detail-view" ng-repeat="subscription in mcpSubscription.subscriptionDetails" ng-if="mcpSubscription.subscriptionDetails.length > 1">
+    <cs-card class="full subscriptions detail-view" ng-repeat="subscription in mcpSubscription.subscriptionDetails" ng-if="mcpSubscription.subscriptionDetails.length > 1" ng-class="{'subscription-expanded': subscription.viewAll}">
       <article><section>
-        <h3 class="columns medium-1 sub-name" ng-if="mcpSubscription.subscriptionDetails.length === 1" translate="subscriptions.defaultName"></h3>
-        <h3 class="columns medium-1 sub-name"  ng-if="mcpSubscription.subscriptionDetails.length > 1" translate="subscriptions.numberedName" translate-values="{number: $index + 1}"></h3>
+        <div class="columns medium-2 subscription-header">
+          <i class="icon icon-header" ng-class="{'icon-arrow-down': subscription.viewAll, 'icon-right-arrow-contained': !subscription.viewAll}" ng-click="subscription.viewAll = !subscription.viewAll"></i>
+          <h3 class="sub-name" translate="subscriptions.numberedName" translate-values="{number: $index + 1}"></h3>
+        </div>
         <div class="columns medium-8 subscription-column">
-          <div ng-repeat="license in subscription.licenses" ng-if="subscription.viewAll || ($index < 3)" 
-          ng-class="{'detail': !subscription.viewAll || (subscription.licenses.length < 4), 'detail-expanded detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
-            <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
-          </div>
-          <div class="detail-expanded detail-break" ng-if="subscription.viewAll && subscription.subscriptionId  && !subscription.isTrial" ng-class="{'detail-space': subscription.viewAll && (subscription.licenses.length > 3)}">
-            <span class="h6" translate="subscriptions.subscription"></span>
-            <span class="h6">{{::subscription.subscriptionId}}</span>
-          </div>
-          <div ng-click="subscription.viewAll = !subscription.viewAll" ng-class="{'detail': !subscription.viewAll, 'detail-expanded': subscription.viewAll, 'detail-space': subscription.viewAll && (subscription.licenses.length > 3), 'detail-break': subscription.isTrial && subscription.viewAll}">
-            <a class="h6" translate="subscriptions.more" ng-if="!subscription.viewAll"></a>
-            <a class="h6" translate="subscriptions.less" ng-if="subscription.viewAll"></a>
-          </div>
+            <div ng-repeat="license in subscription.licenses" class="detail" ng-if="($index < 3) || subscription.viewAll" ng-class="{'tooltip-present': !subscription.viewAll}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!subscription.viewAll && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
+              <i class="icon {{::license.class}} icon-detail" ng-if="license.class"></i>
+              <span class="h6" translate="subscriptions.licenseTypes.{{::license.offerName}}"></span>
+              <div class="detail-break" ng-class="{'match-icon': license.class}" ng-if="subscription.viewAll">
+                <span class="h6" translate="subscriptions.usage"></span>
+                <span class="h6" ng-class="{'warning': license.usage > license.volume}">{{::license.usage}}/{{::license.volume}}</span>
+              </div>
+            </div>
         </div>
         <div class="columns medium-2 subscription-upgrade">
-          <a ng-if="subscription.subscriptionId && !subscription.isTrial" ng-href="{{::mcpSubscription.upgradeUrl(subscription.subscriptionId)}}" class="btn btn--primary pull-right" translate="subscriptions.upgrade"></a>
-          <div class="license-quantity pull-right">
+          <a ng-if="subscription.subscriptionId && mcpSubscription.isOnline" ng-href="{{::mcpSubscription.upgradeUrl(subscription.subscriptionId)}}" class="btn btn--primary" translate="subscriptions.upgrade"></a>
+          <div class="license-quantity">
             <span class="h6" translate="subscriptions.quantity"></span>
             <span class="h6">{{::subscription.licenses.length}}</span>
+          </div>
+          <div class="subscription-id" ng-if="subscription.viewAll">
+            <span class="h6" translate="subscriptions.subscription"></span>
+            <span class="h6">{{::subscription.subscriptionId}}</span>
           </div>
         </div>
       </section></article>
@@ -32,7 +34,11 @@
     <cs-card class="full subscriptions" ng-if="mcpSubscription.hybridServices.length > 0 || mcpSubscription.visibleSubscriptions">
       <article><section>
         <div class="row">
-          <h3 class="column sub-name" translate="subscriptions.licenseSummary"></h3>
+          <h3 class="column medium-2 sub-name" translate="subscriptions.licenseSummary"></h3>
+          <div class="column medium-2 sub-id" ng-if="mcpSubscription.subscriptionDetails.length === 1 && !mcpSubscription.subscriptionDetails[0].isTrial">
+            <span class="h6" translate="subscriptions.subscription"></span>
+            <span class="h6">{{::mcpSubscription.subscriptionDetails[0].subscriptionId}}</span>
+          </div>
         </div>
         <div class="row" ng-repeat="licenseCategory in mcpSubscription.licenseCategory" ng-show="licenseCategory.subscriptions && licenseCategory.subscriptions.length > 0">
           <h5 class="columns medium-2 subscription-type">{{::licenseCategory.label}}</h5>
@@ -49,15 +55,15 @@
               </div>
 
               <!-- if not default, there are borders -->
-              <div class="h5 subscription-site" ng-if="subscription.siteUrl && licenseCategory.borders">{{::subscription.siteUrl}}</div>
-              <div ng-repeat="offer in subscription.offers" class="subscription-interior" ng-if="licenseCategory.borders">
+              <div class="license-item" ng-repeat="offer in subscription.offers" ng-if="licenseCategory.borders">
                 <cs-donut name="offer.id" value="offer.usage" max="offer.volume" ssize="48" class="text-center"></cs-donut>
                 <div class="subscription-description">
+                  <div class="h5 subscription-site" ng-if="subscription.siteUrl && licenseCategory.borders">{{::subscription.siteUrl}}</div>
                   <div class="description-line">
-                    <span class="name" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></span>
+                    <span class="name h6" translate="subscriptions.licenseTypes.{{::offer.offerName}}"></span>
                   </div><div class="description-line">
-                    <span translate="subscriptions.usage"></span>
-                    <span ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
+                    <span class="h6" translate="subscriptions.usage"></span>
+                    <span class="h6" ng-class="{'warning': offer.usage > offer.volume}">{{::offer.usage}}/{{::offer.volume}}</span>
                   </div>
                 </div>
               </div>
