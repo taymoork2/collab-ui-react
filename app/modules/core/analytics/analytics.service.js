@@ -98,8 +98,8 @@
      */
 
     function trackTrialStarted(name) {
-      if (name === null) {
-        $q.reject('Name of user not provided');
+      if (!name) {
+        return;
       }
 
       trackEvent(START_TRIAL, {
@@ -111,8 +111,8 @@
      * Partner Admin Events
      */
     function trackAssignPartner(UUID) {
-      if (UUID === null) {
-        $q.reject('UUID not provided');
+      if (!UUID) {
+        return;
       }
 
       trackEvent(ASSIGN_PARTNER, {
@@ -121,8 +121,8 @@
     }
 
     function trackRemovePartner(UUID) {
-      if (UUID === null) {
-        $q.reject('UUID not provided');
+      if (!UUID) {
+        return;
       }
 
       trackEvent(REMOVE_PARTNER, {
