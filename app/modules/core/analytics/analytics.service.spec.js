@@ -45,7 +45,7 @@ describe('Service: Analytics', function () {
 
     it('should not call _track if it is also not a test org', function () {
       Analytics._init.and.returnValue($q.reject());
-      spyOn(Analytics, 'getTestOrg').and.returnValue(false);
+      spyOn(Analytics, 'checkIfTestOrg').and.returnValue(false);
       expect(Analytics._track).not.toHaveBeenCalled();
     });
   });
