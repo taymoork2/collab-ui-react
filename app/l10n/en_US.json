@@ -1896,6 +1896,7 @@
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
     "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
+    "openHoursDaySelect": "At least one open hours form does not have any days of the week checked.",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
