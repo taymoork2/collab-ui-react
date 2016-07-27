@@ -248,7 +248,11 @@
     /////////////////////
 
     function activate() {
+      var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+      vm.menuEntry = menu.entries[$scope.keyIndex];
+      vm.menuId = vm.menuEntry.id;
 
+      toggleRouteToQueueFeature();
       vm.keyActions.sort(AACommonService.sortByProperty('name'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {
@@ -260,15 +264,6 @@
       }
     }
 
-    function init() {
-      var menu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-      vm.menuEntry = menu.entries[$scope.keyIndex];
-      vm.menuId = vm.menuEntry.id;
-
-      toggleRouteToQueueFeature();
-      activate();
-    }
-
-    init();
+    activate();
   }
 })();
