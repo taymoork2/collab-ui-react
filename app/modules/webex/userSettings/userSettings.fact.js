@@ -333,7 +333,7 @@
           "Hybrid audio=" + WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled + "\n" +
           "WebEx audio=" + WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio + "\n" +
           "TSP audio=" + WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isTspAudio;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         // Start of call-in teleconf
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
@@ -392,7 +392,7 @@
           "tollFree.value=" + WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.value + "\n" +
           "callInTeleconf=" + WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value + "\n" +
           "callInTeleconf.selectedCallInTollType=" + WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
-        $log.log(logMsg);
+        // $log.log(logMsg);
         // End of call-in teleconf
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
@@ -432,7 +432,7 @@
         logMsg = funcName + ": " + "\n" +
           "integratedVoIP.isSiteEnabled=" + WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.isSiteEnabled + "\n" +
           "integratedVoIP.value=" + WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value;
-        $log.log(logMsg);
+        // $log.log(logMsg);
         // End of Telephony privileges
       }, // updateUserSettingsModelPart2()
 
@@ -453,12 +453,12 @@
         WebexUserSettingsSvc.pmr.value = (
           "true" == userInfoJson.use_privilege.use_isEnablePMR
         ) ? true : false;
-        $log.log("PMR = " + WebexUserSettingsSvc.pmr.value);
+        // $log.log("PMR = " + WebexUserSettingsSvc.pmr.value);
 
         WebexUserSettingsSvc.cmr.value = (
           "true" == userInfoJson.use_privilege.use_isEnableCET
         ) ? true : false;
-        $log.log("CMR = " + WebexUserSettingsSvc.cmr.value);
+        // $log.log("CMR = " + WebexUserSettingsSvc.cmr.value);
 
         // Start of Video privileges
         WebexUserSettingsSvc.videoSettings.hiQualVideo.isSiteEnabled = (
