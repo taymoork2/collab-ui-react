@@ -12,16 +12,19 @@
 
       isDomainVerified: function (domainList, uri) {
 
-        if (!domainList)
+        if (!domainList) {
           return false;
+        }
 
-        if (!uri)
+        if (!uri) {
           return false;
+        }
 
         var uriDomain = uri.slice(uri.lastIndexOf('@') + 1);
 
-        if (!uriDomain)
+        if (!uriDomain) {
           return false;
+        }
         //we always normalize to lowercase.
         uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
 

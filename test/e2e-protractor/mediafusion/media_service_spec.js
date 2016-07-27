@@ -6,7 +6,149 @@ describe('Validate Media Service Managemnt Page', function () {
 
     it('login as media super admin', function () {
       login.login('media-super-admin');
+      //login.loginThroughGui('mediafusion54@yahoo.com', 'Cisco$234', '#/users');
     }, 120000);
+
+    //We are not currently running this because the pages are behind feature toggle and sometime feature toggle doesn't loads fast. We will enable them when we remove feature toggle.
+    xdescribe('Metrics page : ', function () {
+      it('Navigate to metrics page', function () {
+        browser.sleep(5000);
+        mediaservice.clickMetrics();
+      });
+      it('check for total_calls', function () {
+        utils.expectIsDisplayed(mediaservice.total_calls);
+      });
+      it('check for averageutilization', function () {
+        utils.expectIsDisplayed(mediaservice.averageutilization);
+      });
+      it('check for clusteravailability', function () {
+        utils.expectIsDisplayed(mediaservice.clusteravailability);
+      });
+      it('check for cluster filter enabled', function () {
+        utils.expectIsEnabled(mediaservice.clusterFilter);
+        utils.click(mediaservice.clusterFilter);
+        utils.click(mediaservice.clusterFilter);
+      });
+      it('check for time filter enabled', function () {
+        utils.expectIsEnabled(mediaservice.timeFilter);
+      });
+
+      it('check for Percentage Utilization', function () {
+        utils.expectIsDisplayed(mediaservice.utilizationCard);
+        utils.expectIsDisplayed(mediaservice.utilizationTitle);
+      });
+
+      it('check for Call volume', function () {
+        utils.expectIsDisplayed(mediaservice.callVolumeCard);
+        utils.expectIsDisplayed(mediaservice.callVolumes);
+
+      });
+
+      it('check for Availability', function () {
+        utils.expectIsDisplayed(mediaservice.availabilityCard);
+        utils.expectIsDisplayed(mediaservice.availabilityOfCluster);
+      });
+
+      it('select different time range', function () {
+        browser.sleep(3000);
+        utils.click(mediaservice.timeFilter);
+        utils.click(mediaservice.timeFilter.all(by.css('li')).last());
+        utils.expectIsDisplayed(mediaservice.total_calls);
+        utils.expectIsDisplayed(mediaservice.averageutilization);
+        utils.expectIsDisplayed(mediaservice.clusteravailability);
+      });
+      it('check for total_calls', function () {
+        utils.expectIsDisplayed(mediaservice.total_calls);
+      });
+      it('check for averageutilization', function () {
+        utils.expectIsDisplayed(mediaservice.averageutilization);
+      });
+      it('check for clusteravailability', function () {
+        utils.expectIsDisplayed(mediaservice.clusteravailability);
+      });
+      it('check for cluster filter enabled', function () {
+        utils.expectIsEnabled(mediaservice.clusterFilter);
+        utils.click(mediaservice.clusterFilter);
+        utils.click(mediaservice.clusterFilter);
+      });
+      it('check for time filter enabled', function () {
+        utils.expectIsEnabled(mediaservice.timeFilter);
+      });
+
+      it('check for Percentage Utilization', function () {
+        utils.expectIsDisplayed(mediaservice.utilizationCard);
+        utils.expectIsDisplayed(mediaservice.utilizationTitle);
+      });
+
+      it('check for Call volume', function () {
+        utils.expectIsDisplayed(mediaservice.callVolumeCard);
+        utils.expectIsDisplayed(mediaservice.callVolumes);
+
+      });
+
+      it('check for Availability', function () {
+        utils.expectIsDisplayed(mediaservice.availabilityCard);
+        utils.expectIsDisplayed(mediaservice.availabilityOfCluster);
+      });
+    });
+
+    xdescribe('Resource page : ', function () {
+      it('Navigate to Resource page', function () {
+        browser.sleep(3000);
+        navigation.clickServicesTab();
+        browser.sleep(5000);
+        mediaservice.resourceButton.isPresent().then(function (result) {
+          console.log(result);
+          if (result) {
+            mediaservice.settingsButton.isPresent().then(function (result1) {
+              console.log(result1);
+              if (result1) {
+                mediaservice.clickResource();
+                utils.expectIsDisplayed(mediaservice.resourceTab);
+                utils.expectIsDisplayed(mediaservice.settingsTab);
+                utils.click(mediaservice.settingsTab);
+                utils.click(mediaservice.resourceTab);
+                utils.expectIsDisplayed(mediaservice.addResourceButton);
+                utils.expectIsEnabled(mediaservice.addResourceButton);
+                utils.expectIsDisplayed(mediaservice.mediaCluster);
+                utils.expectIsDisplayed(mediaservice.serviceStatus);
+              }
+            });
+          }
+        });
+      });
+    });
+
+    xdescribe('Settings page : ', function () {
+      it('Navigate to Settings page ', function () {
+        browser.sleep(3000);
+        navigation.clickServicesTab();
+        browser.sleep(5000);
+        mediaservice.resourceButton.isPresent().then(function (result) {
+          console.log(result);
+          if (result) {
+            mediaservice.settingsButton.isPresent().then(function (result1) {
+              console.log(result1);
+              if (result1) {
+                mediaservice.clickSettings();
+                utils.expectIsDisplayed(mediaservice.emailNotificationsHeading);
+                utils.expectIsDisplayed(mediaservice.deactivateServiceHeading);
+                utils.expectIsDisplayed(mediaservice.deactivateButton);
+                utils.expectIsEnabled(mediaservice.deactivateButton);
+                utils.expectIsDisplayed(mediaservice.documentationAndSoftware);
+                utils.click(mediaservice.resourceTab);
+                utils.click(mediaservice.settingsTab);
+                utils.expectIsDisplayed(mediaservice.emailNotificationsHeading);
+                utils.expectIsDisplayed(mediaservice.deactivateServiceHeading);
+                utils.expectIsDisplayed(mediaservice.deactivateButton);
+                utils.expectIsEnabled(mediaservice.deactivateButton);
+                utils.expectIsDisplayed(mediaservice.documentationAndSoftware);
+              }
+            });
+          }
+        });
+      });
+    });
 
     //Commenting the below codes to enable feature toggle for new media service page development.
     /*it('Clicking on Media Service Management tab should change the view', function () {

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, ServiceDescriptor, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -57,17 +57,17 @@
             MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success(response) {},
               function error(errorResponse, status) {
-                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
-                })], 'error');
+                });
               });
           } else {
             MediaServiceActivation.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success(response) {},
               function error(errorResponse, status) {
-                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
-                })], 'error');
+                });
               });
           }
         });

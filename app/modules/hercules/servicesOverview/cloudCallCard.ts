@@ -13,8 +13,9 @@ namespace servicesOverview {
       {name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass: 'btn-link'}];
 
     getButtons():Array<servicesOverview.CardButton> {
-      if (this.active)
+      if (this.active) {
         return _.take(this._buttons, 3);
+      }
       return [];
     }
 

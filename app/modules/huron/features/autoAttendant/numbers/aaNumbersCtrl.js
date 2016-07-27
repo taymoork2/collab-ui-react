@@ -130,8 +130,9 @@
       // the number field contains the phone number as known to the human
       resource.setNumber(number);
       // for external numbers, we just store the number as the routable id, extension id's are formatted later based on CMI
-      if (resource.getType() === AANumberAssignmentService.EXTERNAL_NUMBER)
+      if (resource.getType() === AANumberAssignmentService.EXTERNAL_NUMBER) {
         resource.setId(number);
+      }
 
       // add to the resource list
       var resources;
@@ -257,9 +258,8 @@
       // if they are of the same type, ie both external or internal, just compare directly
       if (vm.numberTypeList[a] === vm.numberTypeList[b]) {
         return a.localeCompare(b);
-      }
-      // else if a is an internal extension, it comes after
-      else if (vm.numberTypeList[a] === AANumberAssignmentService.DIRECTORY_NUMBER) {
+        // else if a is an internal extension, it comes after
+      } else if (vm.numberTypeList[a] === AANumberAssignmentService.DIRECTORY_NUMBER) {
         return 1;
         // else a must be an externalNumber, which comes first
       } else {
@@ -323,8 +323,9 @@
       return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (extPool) {
         for (var i = 0; i < extPool.length; i++) {
 
-          if (extPool[i].uuid.toUpperCase() === "NONE")
+          if (extPool[i].uuid.toUpperCase() === "NONE") {
             continue;
+          }
 
           var dn = {
             id: extPool[i].uuid,
@@ -356,8 +357,9 @@
       var onlyCMI = [];
 
       // if we don't have a record (as in new) then there's nothing to check
-      if (!vm.aaModel.aaRecordUUID)
+      if (!vm.aaModel.aaRecordUUID) {
         return;
+      }
 
       var currentResources = [];
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {

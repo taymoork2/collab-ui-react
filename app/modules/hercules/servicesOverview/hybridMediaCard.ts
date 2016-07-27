@@ -21,9 +21,14 @@ namespace servicesOverview {
       }];
 
     getButtons():Array<servicesOverview.CardButton> {
-      if (this.active)
+      if (this.active) {
         return _.take(this._buttons, 3);
+      }
       return [this._setupButton];
+    }
+
+    public hybridMediaFeatureToggleEventHandler(hasFeature:boolean) {
+      this._display = hasFeature;
     }
 
     public constructor() {
@@ -34,9 +39,11 @@ namespace servicesOverview {
         statusServices: ['squared-fusion-media'],
         statusLink: 'mediaserviceV2',
         active: false,
+        display : false,
         cardClass: 'media',
         cardType: CardType.hybrid
       });
+      this._loading = false;
     }
   }
 }

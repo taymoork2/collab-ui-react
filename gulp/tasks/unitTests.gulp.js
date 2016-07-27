@@ -302,7 +302,7 @@ function karmaCombineCoverage(done) {
       collector.add(JSON.parse(fs.readFileSync(file, 'utf8')));
     });
 
-    reporter.addAll(['cobertura']);
+    reporter.addAll(['html', 'cobertura']);
     reporter.write(collector, true, done);
   });
 }

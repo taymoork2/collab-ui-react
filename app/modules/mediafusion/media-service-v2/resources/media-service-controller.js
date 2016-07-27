@@ -142,7 +142,7 @@
         },
         function error(data, status) {
           //$log.log("Problems enabling media service");
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
@@ -192,9 +192,9 @@
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
 

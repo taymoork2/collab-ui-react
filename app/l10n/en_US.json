@@ -8,7 +8,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Add Users",
+    "addUsers": "Add Users",
+    "convertUsers": "Convert Users",
+    "errorMessages": "Error Messages",
+    "skipErrorsAndFinish": "Skip Errors and Finish",
+    "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
+    "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
+    "errors": "{errors, plural, one{# Error} other{# Errors}}",
     "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
@@ -174,6 +180,13 @@
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms",
+    "licenseShortage": "Not enough licenses",
+    "reviewPlan": "Review your plan",
+    "reviewPlanMessage": "Review your plan and license usage. Upgrade your plan so you can select the licenses that you want.",
+    "proceedFree": "Proceed with free licenses",
+    "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
+    "reviewPlanButton": "Review your plan",
+    "proceedFreeButton": "Proceed with Free",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -404,6 +417,31 @@
     "customerSelect": "Select a customer",
     "trackingId": "Tracking ID: "
   },
+  "careReportsPage": {
+    "tasks": "Tasks",
+    "handled": "Handled",
+    "abandoned": "Abandoned",
+    "todayCategoryAxis": "Hours",
+    "yesterdayCategoryAxis": "Hours",
+    "weekCategoryAxis": "Days",
+    "monthCategoryAxis": "Weeks",
+    "threeMonthsCategoryAxis": "Months",
+    "today": "Today",
+    "today2": "for today",
+    "todayInterval": "15 minutes time interval",
+    "yesterday": "Yesterday",
+    "yesterday2": "for yesterday",
+    "yesterdayInterval": "15 minutes time interval",
+    "week": "Last Week",
+    "week2": "during the last week",
+    "weekInterval": "given day",
+    "month": "Last Month",
+    "month2": "during the last month",
+    "monthInterval": "given week",
+    "threeMonths": "Last Three Months",
+    "threeMonths2": "during the last 3 months",
+    "threeMonthsInterval": "given month"
+  },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
@@ -492,6 +530,10 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
+  },
+  "taskIncoming": {
+    "title": "Tasks Incoming",
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of handled and abandoned tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -1438,6 +1480,13 @@
       "no-domain-verified": {
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
+      },
+      "user-activation-errors": {
+        "title": "Activation Error",
+        "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
+        "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
+        "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
+        "generate-report": "Generate Report"
       }
     },
     "fusion": {
@@ -1511,7 +1560,8 @@
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
       "ABORTED": "Cancelled",
-      "INIT": "Initializing"
+      "INIT": "Initializing",
+      "STORING": "Storing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1854,6 +1904,7 @@
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
     "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
+    "openHoursDaySelect": "At least one open hours form does not have any days of the week checked.",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -2620,7 +2671,8 @@
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
-    "addNumbers": "Add Numbers"
+    "addNumbers": "Add Numbers",
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2988,6 +3040,11 @@
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
+    "deregister": {
+      "header": "Are you sure you want to deregister this node?",
+      "body1": "If you proceed, this node will no longer be available.",
+      "body2": "To make this node available again, you will need to reregister it."
+    },
     "metrics": {
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
@@ -3011,15 +3068,17 @@
       "node": "Node",
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
       "callLocal": "On Premises",
       "callReject": "Overflowed to Cloud",
+      "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
-      "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
-      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls",
+      "availabilityOfClusterDescription": "Availability of Hybrid Media Clusters to host calls.",
+      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls.",
       "clusterAvailableTitle": "Available",
       "clusterUnavailableTitle": "Unavailable",
-      "clusterPartialTitle": "Partial Availability",
+      "clusterPartialTitle": "Partially Available",
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",

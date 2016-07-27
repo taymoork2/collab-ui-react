@@ -6,7 +6,7 @@
     .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
   /* @ngInject */
-  function MessagingSetupCtrl($q, $scope, $translate, AccountOrgService, Analytics, Authinfo, FeatureToggleService, Notification) {
+  function MessagingSetupCtrl($scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
     var msgIntFlag = false;
     var currentDataRetentionPeriod = null;
     var orgId = Authinfo.getOrgId();
@@ -14,9 +14,6 @@
     vm.showMessengerInterop = false;
     vm.msgIntegration = false;
     vm.dataShare = true;
-    vm.showAppSecurity = true;
-    vm.appSecurity = false;
-    vm.currentAppSecurity = false;
     // US11663 - Hide data retention content for now.  Will be restored in the future.
     vm.showDataRetentionContent = false;
 
@@ -42,20 +39,13 @@
       value: 'indefinite'
     }];
 
-    var promises = {
-      atlasPinSettings: FeatureToggleService.atlasPinSettingsGetStatus(),
-      atlasDataRetentionSettings: FeatureToggleService.atlasDataRetentionSettingsGetStatus()
-    };
-
-    $q.all(promises).then(function (results) {
-      vm.showAppSecurity = results.atlasPinSettings;
-      vm.showDataRetentionContent = results.atlasDataRetentionSettings;
+    FeatureToggleService.atlasDataRetentionSettingsGetStatus().then(function (toggle) {
+      vm.showDataRetentionContent = toggle;
     }).finally(init);
 
     function init() {
       getServices();
       getOrgSettings();
-      getAppSecurity();
     }
 
     function getServices() {
@@ -87,15 +77,6 @@
         });
     }
 
-    // Calls AppSecuritySetting service to get device security enforcement from clientSecurityPolicy API
-    function getAppSecurity() {
-      return AccountOrgService.getAppSecurity(orgId)
-        .then(function (response) {
-          _.set(vm, 'appSecurity', response.data.clientSecurityPolicy);
-          vm.currentAppSecurity = vm.appSecurity;
-        });
-    }
-
     $scope.setupNext = function () {
       if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
@@ -115,22 +96,6 @@
           .catch(function (response) {
             Notification.error('firstTimeWizard.messengerRetentionEditError');
           });
-      }
-
-      if (vm.showAppSecurity) {
-        // Calls AppSecuritySetting service to update device security enforcement
-        if (vm.currentAppSecurity !== vm.appSecurity) {
-          AccountOrgService.setAppSecurity(orgId, vm.currentAppSecurity)
-            .then(function (response) {
-              Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
-              Analytics.trackEvent('Device clientSecurityPolicy', {
-                orgId: orgId
-              });
-            })
-            .catch(function (response) {
-              Notification.error('firstTimeWizard.messengerAppSecurityError');
-            });
-        }
       }
 
       if (vm.msgIntegration && !msgIntFlag) {

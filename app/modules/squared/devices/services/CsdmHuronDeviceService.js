@@ -85,7 +85,7 @@
                   ).catch(function () {
                     if (!errorRetrieveKEM) {
                       errorRetrieveKEM = true;
-                      Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+                      Notification.error('spacesPage.retrieveKemFail');
                     }
                   });
                 }
@@ -94,7 +94,7 @@
           });
         }, function () {
           loadedData = true;
-          Notification.error($translate.instant('spacesPage.retrieveDevicesFail'));
+          Notification.error('spacesPage.retrieveDevicesFail');
         });
       });
     }

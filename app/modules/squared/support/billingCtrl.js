@@ -5,7 +5,7 @@
     .controller('BillingCtrl', BillingCtrl);
 
   /* @ngInject */
-  function BillingCtrl($scope, $filter, Notification, Log, $translate, PageParam, $stateParams, BillingService) {
+  function BillingCtrl($scope, $filter, Notification, Log, PageParam, $stateParams, BillingService) {
 
     var enc;
     $scope.orderDetails = [];
@@ -23,9 +23,9 @@
           $scope.orderDetails.push(data);
         } else {
           Log.debug('Failed to retrieve order status. Status: ' + status);
-          Notification.notify([$translate.instant('billingPage.errOrderStatus', {
+          Notification.error('billingPage.errOrderStatus', {
             status: status
-          })], 'error');
+          });
         }
       });
     };
@@ -37,12 +37,12 @@
     $scope.resendCustomerEmail = function (orderId) {
       BillingService.resendCustomerEmail(orderId, function (data, status) {
         if (data != null) {
-          Notification.notify([$translate.instant('billingPage.customerEmailSuccess')], 'success');
+          Notification.success('billingPage.customerEmailSuccess');
         } else {
           Log.debug('Failed to resend customer email. Status: ' + status);
-          Notification.notify([$translate.instant('billingPage.errCustomerEmail', {
+          Notification.error('billingPage.errCustomerEmail', {
             status: status
-          })], 'error');
+          });
         }
         angular.element('.open').removeClass('open');
       });
@@ -51,12 +51,12 @@
     $scope.resendPartnerEmail = function (orderId) {
       BillingService.resendPartnerEmail(orderId, function (data, status) {
         if (data != null) {
-          Notification.notify([$translate.instant('billingPage.partnerEmailSuccess')], 'success');
+          Notification.success('billingPage.partnerEmailSuccess');
         } else {
           Log.debug('Failed to resend customer email. Status: ' + status);
-          Notification.notify([$translate.instant('billingPage.errPartnerEmail', {
+          Notification.error('billingPage.errPartnerEmail', {
             status: status
-          })], 'error');
+          });
         }
         angular.element('.open').removeClass('open');
       });

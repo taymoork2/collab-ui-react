@@ -10,10 +10,6 @@
 
 
 
-**Does this PR introduce a breaking change?**
-
-
-
 **Please check if the PR fulfills these requirements**
 - [ ] The commit messages follow our guidelines: https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit-message-format
 - [ ] A unit test has been written for this change. Some examples can be found here: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/tree/master/examples/unit

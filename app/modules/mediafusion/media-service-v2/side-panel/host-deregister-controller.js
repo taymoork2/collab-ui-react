@@ -19,7 +19,7 @@
         .then(function () {
           $modalInstance.close();
           vm.saving = false;
-          Notification.notify($translate.instant('mediaFusion.deleteNodeSuccess'), 'success');
+          Notification.success('mediaFusion.deleteNodeSuccess');
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
             clusterName: cluster.name,

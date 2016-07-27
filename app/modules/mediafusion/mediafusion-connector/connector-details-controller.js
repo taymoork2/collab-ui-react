@@ -5,7 +5,7 @@
     .controller('ConnectorDetailsController',
 
       /* @ngInject */
-      function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, Notification, $translate) {
+      function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, Notification) {
         $scope.visibleAlarm = {};
         $scope.clusters = [];
         $scope.selectedCluster = '';
@@ -67,12 +67,12 @@
           // $log.log("The value of selectedCluster is", $scope.selectedCluster);
           MediafusionClusterService.changeRole($selectedRole, $scope.selectedCluster)
             .success(function (data) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
+              Notification.success('mediaFusion.roleAssignmentSuccess');
             })
             .error(function (data, status) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
+              Notification.error('mediaFusion.roleAssignmentFailure', {
                 failureMessage: data.message
-              })], 'error');
+              });
             });
         };
 
@@ -105,12 +105,12 @@
                 MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, resp.$$state.value.data.id)
                   .success(function (data) {
                     $scope.oldClusterVal = $name;
-                    Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
+                    Notification.success('mediaFusion.groupAssignmentSuccess');
                   })
                   .error(function (data, status) {
-                    Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                    Notification.error('mediaFusion.groupAssignmentFailure', {
                       failureMessage: data.message
-                    })], 'error');
+                    });
                   });
               });
             } else {
@@ -139,21 +139,21 @@
                         .success(function (data) {
                           // $log.log("success data :", data);
                           $scope.oldClusterVal = $name;
-                          Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
+                          Notification.success('mediaFusion.groupAssignmentSuccess');
                         })
                         .error(function (data, status) {
                           // $log.log("error data :", data);
                           // $log.log("error message :", data.message);
                           // $log.log("error status :", status);
-                          Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                          Notification.error('mediaFusion.groupAssignmentFailure', {
                             failureMessage: data.message
-                          })], 'error');
+                          });
                         });
                     })
                     .error(function (data) {
-                      Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                      Notification.error('mediaFusion.groupAssignmentFailure', {
                         failureMessage: data.message
-                      })], 'error');
+                      });
                     });
 
                 });
@@ -164,12 +164,12 @@
                   MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $scope.newGrpId)
                     .success(function (data) {
                       $scope.oldClusterVal = $name;
-                      Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
+                      Notification.success('mediaFusion.groupAssignmentSuccess');
                     })
                     .error(function (data, status) {
-                      Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                      Notification.success('mediaFusion.groupAssignmentFailure', {
                         failureMessage: data.message
-                      })], 'error');
+                      });
                     });
                 });
               }

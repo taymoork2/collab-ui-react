@@ -108,6 +108,12 @@
         .then(extractData);
     }
 
+    function extractSummaryForAService(servicesId) {
+      return _.filter(getStatusesSummary(), function (summary) {
+        return _.includes(servicesId, summary.serviceId);
+      });
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -116,7 +122,8 @@
       getStatusesSummary: getStatusesSummary,
       getStatuses: getStatuses,
       subscribeStatusesSummary: hub.on,
-      getStatusesForUserInOrg: getStatusesForUserInOrg
+      getStatusesForUserInOrg: getStatusesForUserInOrg,
+      extractSummaryForAService: extractSummaryForAService
     };
   }
 
