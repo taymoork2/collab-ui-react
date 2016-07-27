@@ -69,7 +69,8 @@
 }
 
 .metrics-reports .report-card .legendDiv .lineCpu {
-  border: .14rem double;
+  border: 0 none;
+  border-top: 4.5px solid;
   display: inline-block;
   width: 2.5rem;
   -webkit-border-start-width: inherit;
