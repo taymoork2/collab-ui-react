@@ -70,6 +70,7 @@
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaCENumberStatus = false;
+      routeQueueToggle = false;
       invalidList = {};
     }
 

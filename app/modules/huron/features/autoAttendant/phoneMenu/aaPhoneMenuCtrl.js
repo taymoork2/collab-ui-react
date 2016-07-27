@@ -280,7 +280,11 @@
             name: 'phoneMenuRouteQueue',
             action: 'routeToQueue'
           });
+        } else {
+          AACommonService.setRouteQueueToggle(false);
         }
+      }).catch(function (e) {
+        AACommonService.setRouteQueueToggle(false);
       });
     }
 
@@ -321,7 +325,7 @@
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
       vm.menuId = vm.menuEntry.id;
-
+      AACommonService.setRouteQueueToggle(false);
       toggleRouteToQueueFeature().then(toggleSubmenuFeature).finally(activate);
     }
 
