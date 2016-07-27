@@ -6,7 +6,7 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $interval, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService, HuronCustomer) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $translate, $timeout, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
 
@@ -19,6 +19,7 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
+    var licenseUnavailablilty = false;
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = angular.copy(csvData.columns || []);
     }).catch(function (response) {
@@ -128,6 +129,20 @@
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
+    };
+
+    $scope.licenseBulkErrorModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: "dialog",
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
+        }).result.then(function () {
+          FeatureToggleService.atlasSettingsPageGetStatus()
+            .then(function () {
+              $state.go('my-company.subscriptions');
+            });
+        });
+      }
     };
 
     // functions
@@ -356,6 +371,9 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
+              if (user.message === '400112') {
+                licenseUnavailablilty = true;
+              }
               addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
@@ -409,6 +427,9 @@
                 errorCallback(response, usersToOnboard);
               }).finally(function () {
                 calculateProcessProgress();
+                if (licenseUnavailablilty) {
+                  $scope.licenseBulkErrorModal();
+                }
                 resolve();
               });
             } else {

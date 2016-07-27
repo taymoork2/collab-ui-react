@@ -59,6 +59,8 @@
           responseMessage = $translate.instant('usersPage.hybridServicesError');
         } else if (messageCode === '400094') {
           responseMessage = $translate.instant('usersPage.hybridServicesComboError');
+        } else if (messageCode === '400112') {
+          responseMessage = $translate.instant('usersPage.insufficientLicensesError');
         } else {
           responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
         }
