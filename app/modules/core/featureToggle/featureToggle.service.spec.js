@@ -2,10 +2,8 @@
 
 describe('FeatureToggleService', function () {
   beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
 
-  var httpBackend, $q, $state, Config, Authinfo, Userservice, FeatureToggleService;
+  var httpBackend, $q, $state, Config, Authinfo, FeatureToggleService;
   var forOrg = false;
   var forUser = true;
   var userId = '1';
@@ -14,21 +12,18 @@ describe('FeatureToggleService', function () {
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
   var orgRegex = /.*\/features\/rules\.*/;
+  var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
     $q = _$q_;
     $state = _$state_;
     Config = _Config_;
     Authinfo = _Authinfo_;
-    Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
-
-    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
-      callback(getUserMe, 200);
-    });
+    httpBackend.whenGET(identityMe).respond(200, getUserMe);
   }));
 
   afterEach(function () {

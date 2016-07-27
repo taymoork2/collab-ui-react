@@ -68,6 +68,7 @@
     require('modules/core/auth/auth'),
     require('modules/core/auth/token.service'),
     require('modules/core/config/config'),
+    require('modules/core/featureToggle/featureToggle.service'),
     require('modules/core/l10n/languages'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/storage'),

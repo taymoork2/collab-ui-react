@@ -42,7 +42,9 @@
       'ui.grid.saveState',
       'ui.grid.infiniteScroll',
       'timer',
-      'toaster'
+      'toaster',
+      require('modules/core/featureToggle/featureToggle.service'),
+      require('modules/core/scripts/services/org.service'),
     ])
     .constant('pako', require('pako'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -61,7 +63,8 @@
     'uc.overview',
     'uc.hurondetails',
     'uc.cdrlogsupport',
-    'ngIcal'
+    'ngIcal',
+    require('modules/huron/telephony/telephonyConfig'),
   ]);
 
   angular.module('Hercules', ['Core', 'Squared', 'core.onboard', 'ngTagsInput']);

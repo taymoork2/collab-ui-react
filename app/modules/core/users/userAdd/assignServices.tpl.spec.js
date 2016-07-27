@@ -35,7 +35,7 @@ describe('assignServices', function () {
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
-    _Orgservice_, _Userservice_) {
+    _Orgservice_, _FeatureToggleService_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
@@ -91,7 +91,7 @@ describe('assignServices', function () {
     authinfo.updateAccountInfo(accountData);
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_Userservice_, 'getUser').and.returnValue(getUserMe);
+    spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
