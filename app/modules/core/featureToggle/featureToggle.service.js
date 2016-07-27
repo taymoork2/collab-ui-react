@@ -19,7 +19,7 @@
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
-      atlasMediaSericeOnboarding: 'atlas-media-service-onboarding',
+      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
       atlasMyCompanyPage: 'atlas-my-company-page',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
