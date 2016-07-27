@@ -2052,11 +2052,11 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaSericeOnboarding);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             }
           })

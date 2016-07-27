@@ -24,14 +24,14 @@ describe('Controller: FusionClusterListController', function () {
 
   function initController() {
     controller = $controller('FusionClusterListController', {
-      hasFeatureToggle: true,
+      hasF410FeatureToggle: true,
       hasMediaFeatureToggle: true
     });
   }
 
   function initControllerNoMedia() {
     controller = $controller('FusionClusterListController', {
-      hasFeatureToggle: true,
+      hasF410FeatureToggle: true,
       hasMediaFeatureToggle: false
     });
   }
