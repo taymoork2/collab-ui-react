@@ -9,20 +9,17 @@
   function AAConfigEnvMetricService(Config, Analytics) {
 
     var service = {
-      trackProdOrIntegNotifications: trackProdOrIntegNotifications
+      trackProdNotifications: trackProdNotifications
     };
 
     return service;
 
     /////////////////////
 
-    //track production vs integration messages sent from the ui
-    //to the analytics service
-    function trackProdOrIntegNotifications(metric, properties) {
+    //track production messages sent from the ui to the analytics service
+    function trackProdNotifications(metric, properties) {
       if (Config.isProd()) {
         Analytics.trackEvent(metric + ".prod", properties);
-      } else if (Config.isIntegration()) {
-        Analytics.trackEvent(metric + ".integration", properties);
       }
     }
   }

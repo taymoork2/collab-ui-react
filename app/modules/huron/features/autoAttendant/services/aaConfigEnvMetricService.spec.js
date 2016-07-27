@@ -21,25 +21,25 @@ describe('Service: AAConfigEnvMetricService', function () {
   describe('trackProdOrIntegNotifications', function () {
     it('should call analytics trackEvent with prod from trackProdOrIntegNotifications', function () {
       spyOn(Config, 'isProd').and.returnValue(true);
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_NOTIFICATION + ".error.prod", properties);
     });
 
     it('should call analytics trackEvent with integration from trackProdOrIntegNotifications', function () {
       spyOn(Config, 'isIntegration').and.returnValue(true);
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_NOTIFICATION + ".error.integration", properties);
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });
 
     it('should not call analytics trackEvent with dev from trackProdOrIntegNotifications', function () {
       spyOn(Config, 'isDev').and.returnValue(true);
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });
 
     it('should not call analytics trackEvent with cfe from trackProdOrIntegNotifications', function () {
       spyOn(Config, 'isCfe').and.returnValue(true);
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', properties);
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });
   });
