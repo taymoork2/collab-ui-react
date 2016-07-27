@@ -2054,6 +2054,9 @@
             resolve: {
               hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              },
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaSericeOnboarding);
               }
             }
           })

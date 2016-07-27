@@ -92,7 +92,7 @@
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>
-            <a ng-if="helpdeskDeviceCtrl.lastPushedLog" ng-click="helpdeskDeviceCtrl.downloadLog(helpdeskDeviceCtrl.lastPushedLog.filename)">{{helpdeskDeviceCtrl.lastPushedLog.timestamp | date:'medium'}}</a>
+            <a ng-if="helpdeskDeviceCtrl.lastPushedLog" ng-click="helpdeskDeviceCtrl.downloadLog(helpdeskDeviceCtrl.lastPushedLog.filename)">{{helpdeskDeviceCtrl.lastPushedLog.timestamp | date:'yyyy-MM-dd HH:mm':'UTC'}} UTC</a>
           </span>
           <span ng-if="!helpdeskDeviceCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
         </div>
