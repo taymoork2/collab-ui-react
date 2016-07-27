@@ -14,7 +14,10 @@
       _init: _init,
       _track: _track,
       trackEvent: trackEvent,
-      getTestOrg: getTestOrg
+      checkIfTestOrg: checkIfTestOrg,
+      trackTrialStarted: trackTrialStarted,
+      trackAssignPartner: trackAssignPartner,
+      trackRemovePartner: trackRemovePartner
     };
 
     var token = {
@@ -25,6 +28,13 @@
     var isTestOrg = null;
     var hasInit = false;
     var throwError = false;
+
+    /* Trial Event Names */
+    var START_TRIAL = 'Start Trial Button Click';
+
+    /* Partner Admin Event Names */
+    var ASSIGN_PARTNER = 'Partner Admin Assigning';
+    var REMOVE_PARTNER = 'Partner Admin Removal';
 
     return service;
 
@@ -39,7 +49,7 @@
         if (Config.isProd()) {
           resolve(token.PROD_KEY);
         } else {
-          getTestOrg().then(function () {
+          checkIfTestOrg().then(function () {
             if (isTestOrg) {
               resolve(token.TEST_KEY);
             } else {
@@ -56,20 +66,10 @@
       });
     }
 
-    function _track(eventName, properties) {
-      mixpanel.track(eventName, properties || {});
-    }
-
     /**
-     *  Saves mixpanel data in production
+     * Determines if it's a Test Org or not.
      */
-    function trackEvent(eventName, properties) {
-      _init().then(function () {
-        service._track(eventName, properties);
-      });
-    }
-
-    function getTestOrg() {
+    function checkIfTestOrg() {
       if (!isTestOrg) {
         isTestOrg = $q(function (resolve, reject) {
           Orgservice.getOrg(function (response) {
@@ -78,6 +78,56 @@
         });
       }
       return isTestOrg;
+    }
+
+    function _track(eventName, properties) {
+      mixpanel.track(eventName, properties || {});
+    }
+
+    /**
+     *  Tracks the Event
+     */
+    function trackEvent(eventName, properties) {
+      _init().then(function () {
+        service._track(eventName, properties);
+      });
+    }
+
+    /**
+     * Trial Events
+     */
+
+    function trackTrialStarted(name) {
+      if (!name) {
+        return;
+      }
+
+      trackEvent(START_TRIAL, {
+        from: name
+      });
+    }
+
+    /**
+     * Partner Admin Events
+     */
+    function trackAssignPartner(UUID) {
+      if (!UUID) {
+        return;
+      }
+
+      trackEvent(ASSIGN_PARTNER, {
+        uuid: UUID
+      });
+    }
+
+    function trackRemovePartner(UUID) {
+      if (!UUID) {
+        return;
+      }
+
+      trackEvent(REMOVE_PARTNER, {
+        uuid: UUID
+      });
     }
   }
 
