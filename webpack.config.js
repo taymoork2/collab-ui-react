@@ -6,10 +6,13 @@ switch (process.env.npm_lifecycle_event) {
     webpackConfig = require('./webpack/webpack.prod');
     break;
   case 'test':
-  case 'test-watch':
+  case 'ktest-all':
+  case 'ktest-all-no-parallel':
+  case 'ktest-all-watch':
+  case 'ktest-watch':
     webpackConfig = require('./webpack/webpack.test');
     break;
-  case 'test-debug':
+  case 'ktest-debug':
     webpackConfig = require('./webpack/webpack.testdebug');
     break;
   default:

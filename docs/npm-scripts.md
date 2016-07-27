@@ -32,7 +32,8 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 ### `npm test`
 
-* Runs karma unit tests with `karma.conf.js`
+* Alias for `npm run ktest-all`
+* Runs parallel karma unit tests with `karma.conf.js`
 
 ## Custom NPM Scripts
 
@@ -48,6 +49,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `npm run clean-install`
 
 * Clean npm cache, `node_modules` directories, and reinstall `node_modules`
+
+### `npm run combine-coverage`
+
+* Combines the unit test istanbul coverage results
 
 ### `npm run e2e`
 
@@ -71,6 +76,33 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Verifies well-formed `.json` files
 
+### `npm run ktest-all`
+
+* Runs `./bin/ktest-all`
+* Runs all karma unit tests in parallel
+
+### `npm run ktest-all-no-parallel`
+
+* Runs `./bin/ktest-all --no-parallel`
+* Runs all karma unit tests
+
+### `npm run ktest-all-watch`
+
+* Runs `./bin/ktest-all --no-parallel --no-single-run --auto-watch`
+* Runs all karma unit tests in watch mode for iterative development
+* Reruns tests on app/test file changes
+* Focus tests (`fdescribe`, `fit`) to isolate tests
+
+### `npm run ktest-debug -- <tests>`
+
+* Runs `./bin/ktest --no-parallel --no-single-run --debug`
+* Runs specific karma unit tests in debug mode (chrome browser)
+
+### `npm run ktest-watch -- <tests>`
+
+* Runs `./bin/ktest --no-parallel --no-single-run --auto-watch`
+* Runs specific karma unit tests in watch mode for iterative development
+
 ### `npm run languages-verify`
 
 * Runs test to verify `l10n` language json files used in the app
@@ -86,14 +118,6 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `npm run serve-dist`
 
 * Serves the static content from the `dist` directory
-
-### `npm run test-watch`
-
-* Runs karma unit tests while watching app files
-
-### `npm run test-debug`
-
-* Runs karma unit tests with `--debug` flag
 
 ### `npm run ts-spec-delete`
 

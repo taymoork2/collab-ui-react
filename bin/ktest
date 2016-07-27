@@ -117,7 +117,7 @@ done
 # ----------
 # run tests in gnu 'parallel'
 # loading the correct webpack config requires 'npm_lifecycle_event' be set
-export npm_lifecycle_event=test
+export npm_lifecycle_event=${npm_lifecycle_event=test}
 
 # run 'karma' at the project root dir
 pushd ${WX2_ADMIN_WEB_CLIENT_HOME} > /dev/null
