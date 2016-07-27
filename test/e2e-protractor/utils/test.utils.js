@@ -76,11 +76,10 @@ exports.sendRequest = function (options) {
   return flow.execute(function () {
     var defer = protractor.promise.defer();
     request(options, function (error, response, body) {
-      var status = response && response.statusCode ? response.statusCode : 'unknown';
-      if (error) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
-      } else if (response && response.statusCode >= 400) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+      var status = _.get(response, 'statusCode');
+      if (error || status >= 400) {
+        console.error('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '.  ' + (error || body));
+        defer.reject(response);
       } else {
         defer.fulfill(body);
       }
