@@ -27,7 +27,7 @@
       //error messages that get piped through the autoAttendant's
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
         type: message
       });
     }
@@ -69,7 +69,7 @@
       //error messages that get piped through the autoAttendant's
       //notification service (toaster msgs) will automatically
       //be tracked through the Config Environment Metric Service
-      AAConfigEnvMetricService.trackProdOrIntegNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
+      AAConfigEnvMetricService.trackProdNotifications(AAMetricNameService.UI_NOTIFICATION + '.error', {
         type: message
       });
     }
