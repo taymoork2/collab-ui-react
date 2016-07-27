@@ -17,6 +17,7 @@
     WebexUserSettingsSvc,
     WebExXmlApiInfoSvc
   ) {
+
     var loading = {
       reloadBtn: false,
       reloadBtn2: false,
@@ -25,8 +26,12 @@
       saveBtn: false,
       saveBtn2: false
     };
+
+    var allowSessionMismatch = false;
+
     return {
       loading: loading,
+      allowSessionMismatch: allowSessionMismatch,
       /**
        * If user does not have first and last names, use the email address as the display name
        */
@@ -760,13 +765,16 @@
 
               _self.updateCenterLicenseEntitlements();
 
-              // var isValidLicenseEntitlement = true;
-              var isValidLicenseEntitlement = (
-                (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
-                (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
-                (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx == WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas) &&
-                (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx == WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas)
-              ) ? true : false;
+              var isValidLicenseEntitlement = true;
+
+              if (!allowSessionMismatch) {
+                isValidLicenseEntitlement = (
+                  (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
+                  (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
+                  (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx == WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas) &&
+                  (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx == WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas)
+                ) ? true : false;
+              }
 
               if (!isValidLicenseEntitlement) {
                 logMsg = funcName + "\n" +
@@ -912,55 +920,11 @@
           } // chkSessionType()
         ); // WebexUserSettingsSvc.sessionTypes.forEach()
 
-        // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
-        // once block save flag has been set to true, skip checking other centers and go straight to block save
-        var blockDueToNoSession = false;
-        if (
-          (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx) &&
-          (userSettings.meetingCenter != "true")
-        ) {
-          blockDueToNoSession = true;
-        } else if (
-          (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx) &&
-          (userSettings.trainingCenter != "true")
-        ) {
-          blockDueToNoSession = true;
-        } else if (
-          (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx) &&
-          (userSettings.eventCenter != "true")
-        ) {
-          blockDueToNoSession = true;
-        } else if (
-          (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx) &&
-          (userSettings.supportCenter != "true")
-        ) {
-          blockDueToNoSession = true;
-        }
-
-        $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
-
-        if (blockDueToNoSession) {
-          loading.saveBtn = false;
-          loading.saveBtn2 = false;
-          WebexUserSettingsSvc.disableCancel = false;
-          WebexUserSettingsSvc.disableCancel2 = false;
-          errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
-          Notification.notify([errMessage], 'error');
+        if (blockSaveDueToNoSession()) {
           return;
         }
 
-        //so this is true if he has PMR but does not have PRO or STD.
-        var blockDueToPMR = _self.isUserLevelPMREnabled() &&
-          !_self.hasProOrStdMeetingCenter(WebexUserSettingsSvc.sessionTypes);
-        $log.log("DURE blockDueToPMR=" + blockDueToPMR);
-
-        if (blockDueToPMR) {
-          loading.saveBtn = false;
-          loading.saveBtn2 = false;
-          WebexUserSettingsSvc.disableCancel = false;
-          WebexUserSettingsSvc.disableCancel2 = false;
-          errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
-          Notification.notify([errMessage], 'error');
+        if (blockSaveDueToPMR()) {
           return;
         }
 
@@ -978,6 +942,76 @@
             _self.processNoUpdateResponse(result);
           } // updateUserSettingsError()
         );
+
+        function blockSaveDueToNoSession() {
+          var funcName = "blockSaveDueToNoSession()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
+          // block save if any entitled WebEx Center does not have at least one session types selected
+          var blockSave = false;
+
+          if (!allowSessionMismatch) {
+            if (
+              (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx) &&
+              (userSettings.meetingCenter != "true")
+            ) {
+
+              blockSave = true;
+            } else if (
+              (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx) &&
+              (userSettings.trainingCenter != "true")
+            ) {
+
+              blockSave = true;
+            } else if (
+              (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx) &&
+              (userSettings.eventCenter != "true")
+            ) {
+
+              blockSave = true;
+            } else if (
+              (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx) &&
+              (userSettings.supportCenter != "true")
+            ) {
+
+              blockSave = true;
+            }
+          }
+
+          if (blockSave) {
+            loading.saveBtn = false;
+            loading.saveBtn2 = false;
+            WebexUserSettingsSvc.disableCancel = false;
+            WebexUserSettingsSvc.disableCancel2 = false;
+            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            Notification.notify([errMessage], 'error');
+          }
+
+          return blockSave;
+        } // blockSaveDueToNoSession()
+
+        function blockSaveDueToPMR() {
+          var funcName = "blockSaveDueToPMR()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
+          // block save if PMR is enabled but does not have PRO or STD enabled.
+          var blockSave = _self.isUserLevelPMREnabled() && !_self.hasProOrStdMeetingCenter(WebexUserSettingsSvc.sessionTypes);
+
+          if (blockSave) {
+            loading.saveBtn = false;
+            loading.saveBtn2 = false;
+            WebexUserSettingsSvc.disableCancel = false;
+            WebexUserSettingsSvc.disableCancel2 = false;
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            Notification.notify([errMessage], 'error');
+          }
+
+          return blockSave;
+        } // blockSaveDueToPMR()
       }, // updateUserSettings()
 
       updateUserSettings2: function (form) {
