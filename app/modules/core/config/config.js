@@ -237,31 +237,11 @@
         'userprofile',
         'users',
       ],
-      Readonly_Admin: [
-        'activateProduct',
-        'customerprofile',
-        'editService',
-        'firsttimewizard',
-        'groups',
-        'overview',
-        'my-company',
-        'profile',
-        'reports',
-        'reports-metrics',
-        'settings',
-        'setupwizardmodal',
-        'support',
-        'trialExtInterest',
-        'user-overview',
-        'userprofile',
-        'users',
-      ],
-      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'reports-metrics'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -280,6 +260,9 @@
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
+
+    config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
+    config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
 
     config.serviceStates = {
       'ciscouc': [
