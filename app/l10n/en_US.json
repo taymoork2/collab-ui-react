@@ -1295,6 +1295,10 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
+    "hybridServiceNames": {
+      "squared-fusion-uc": "Hybrid Call Service",
+      "squared-fusion-cal": "Hybrid Calendar Service"
+    },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
@@ -1485,7 +1489,7 @@
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion"
+        "mediafusion": "Hybrid Media Node"
       },
       "list": {
         "title": "Clusters",
@@ -1505,21 +1509,21 @@
         "type": {
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
-          "expressway-description": "Can run Call Service, Calendar Service",
+          "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
           "expressway-not-setup": "Expressway no set up",
           "mediafusion-description": "Can run Media Service",
-          "mediafusion-not-setup": "Media Service no set  up"
+          "mediafusion-not-setup": "Media Service not set up"
         },
         "expressway": {
           "services": {
             "error": "Error fetching the different service types.",
             "title": "What services do you want the Expressway to run?",
-            "call-not-setup": "Call Service not set up",
-            "calendar-not-setup": "Calendar Service not set up"
+            "call-not-setup": "Hybrid Call Service not set up",
+            "calendar-not-setup": "Hybrid Calendar Service not set up"
           },
           "end": {
-            "line1": "You may now register the Expressway with the Cisco Collaboration Cloud.",
-            "line2": "Go to your Expressway to finish the registrration and configure the Call Connector and the Calendar Connector."
+            "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
+            "line2": "Go to your Expressway to complete registration and configure the connector(s)."
           }
         },
         "mediafusion": {
