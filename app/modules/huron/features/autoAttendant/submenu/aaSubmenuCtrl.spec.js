@@ -2,8 +2,8 @@
 
 describe('Controller: AASubmenuCtrl', function () {
   var controller;
-  var AutoAttendantCeMenuModelService, FeatureToggleService;
-  var $rootScope, $scope, $translate, $q;
+  var AutoAttendantCeMenuModelService, AACommonService;
+  var $rootScope, $scope, $translate;
   var aaUiModel = {
     openHours: {}
   };
@@ -71,14 +71,13 @@ describe('Controller: AASubmenuCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _$q_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $translate = _$translate_;
-    $q = _$q_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    FeatureToggleService = _FeatureToggleService_;
+    AACommonService = _AACommonService_;
 
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = raw2Menu(submenuData.combinedMenuWithSubmenu2);
@@ -87,7 +86,7 @@ describe('Controller: AASubmenuCtrl', function () {
     $scope.keyIndex = keyIndex;
     $scope.menuId = menuId;
 
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
 
     controller = $controller('AASubmenuCtrl', {
       $scope: $scope

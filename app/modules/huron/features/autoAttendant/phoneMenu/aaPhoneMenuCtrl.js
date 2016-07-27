@@ -273,6 +273,7 @@
     function toggleRouteToQueueFeature() {
       return FeatureToggleService.supports(FeatureToggleService.features.huronAACallQueue).then(function (result) {
         if (result) {
+          AACommonService.setRouteQueueToggle(true);
           /* will push route to queue in list */
           vm.keyActions.push({
             label: $translate.instant('autoAttendant.phoneMenuRouteQueue'),
