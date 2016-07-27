@@ -68,7 +68,7 @@ describe('Service: Analytics', function () {
     });
   });
 
-  describe('when calling partner admin events', function () {
+  describe('when calling partner events', function () {
     it('should call _track when trackAssignPartner is called', function () {
       Analytics.trackAssignPartner('4567');
       $scope.$apply();
@@ -77,6 +77,26 @@ describe('Service: Analytics', function () {
 
     it('should call _track when trackRemovePartner is called', function () {
       Analytics.trackRemovePartner('4567');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackUserPatch is called', function () {
+      Analytics.trackUserPatch('123');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when calling first time wizard events', function () {
+    it('should call _track when trackSelectedCheckbox is called', function () {
+      Analytics.trackSelectedCheckbox('123');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackConvertUser is called', function () {
+      Analytics.trackConvertUser('1234');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });

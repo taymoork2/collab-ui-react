@@ -17,7 +17,10 @@
       checkIfTestOrg: checkIfTestOrg,
       trackTrialStarted: trackTrialStarted,
       trackAssignPartner: trackAssignPartner,
-      trackRemovePartner: trackRemovePartner
+      trackRemovePartner: trackRemovePartner,
+      trackUserPatch: trackUserPatch,
+      trackSelectedCheckbox: trackSelectedCheckbox,
+      trackConvertUser: trackConvertUser
     };
 
     var token = {
@@ -32,9 +35,14 @@
     /* Trial Event Names */
     var START_TRIAL = 'Start Trial Button Click';
 
-    /* Partner Admin Event Names */
+    /* Partner Event Names */
     var ASSIGN_PARTNER = 'Partner Admin Assigning';
     var REMOVE_PARTNER = 'Partner Admin Removal';
+    var PATCH_USER = 'patch user call';
+
+    /* First Time Wizard Event Names */
+    var CMR_CHECKBOX = 'CMR checkbox unselected';
+    var CONVERT_USER = 'Convert User Search';
 
     return service;
 
@@ -108,7 +116,7 @@
     }
 
     /**
-     * Partner Admin Events
+     * Partner Events
      */
     function trackAssignPartner(UUID) {
       if (!UUID) {
@@ -127,6 +135,39 @@
 
       trackEvent(REMOVE_PARTNER, {
         uuid: UUID
+      });
+    }
+
+    function trackUserPatch(orgId) {
+      if (!orgId) {
+        return;
+      }
+
+      trackEvent(PATCH_USER, {
+        by: orgId
+      });
+    }
+
+    /**
+     * First Time Wizard Events
+     */
+    function trackSelectedCheckbox(id) {
+      if (!id) {
+        return;
+      }
+
+      trackEvent(CMR_CHECKBOX, {
+        licenseId: id
+      });
+    }
+
+    function trackConvertUser(name) {
+      if (!name) {
+        return;
+      }
+
+      trackEvent(CONVERT_USER, {
+        from: name
       });
     }
   }
