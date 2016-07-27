@@ -179,7 +179,7 @@
           "trainingCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas + "\n" +
           "eventCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas + "\n" +
           "supportCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas;
-        $log.log(logMsg);
+        // $log.log(logMsg);
       }, // updateCenterLicenseEntitlements()
 
       updateUserSettingsModelPart1: function () {
@@ -765,22 +765,34 @@
 
               _self.updateCenterLicenseEntitlements();
 
-              var isValidLicenseEntitlement = true;
-
-              if (!allowSessionMismatch) {
-                isValidLicenseEntitlement = (
-                  (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
-                  (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
-                  (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx == WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas) &&
-                  (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx == WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas)
-                ) ? true : false;
-              }
+              var isValidLicenseEntitlement = (
+                (WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas) &&
+                (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
+                (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx == WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas) &&
+                (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx == WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas)
+              ) ? true : false;
 
               if (!isValidLicenseEntitlement) {
                 logMsg = funcName + "\n" +
-                  "entitlement mismatch detected";
+                  "ERROR -entitlement mismatch detected!" + "\n" +
+                  "\n" +
+                  "meetingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + "\n" +
+                  "trainingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx + "\n" +
+                  "eventCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx + "\n" +
+                  "supportCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx + "\n" +
+                  "\n" +
+                  "meetingCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnAtlas + "\n" +
+                  "trainingCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas + "\n" +
+                  "eventCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas + "\n" +
+                  "supportCenter.isEntitledOnAtlas=" + WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas;
                 $log.log(logMsg);
 
+                if (allowSessionMismatch) {
+                  isValidLicenseEntitlement = true;
+                }
+              }
+
+              if (!isValidLicenseEntitlement) {
                 _self.setLoadingErrorDisplay(
                   "defaultDbMismatchError",
                   false,
@@ -947,7 +959,7 @@
           var funcName = "blockSaveDueToNoSession()";
           var logMsg = "";
 
-          $log.log(funcName);
+          // $log.log(funcName);
 
           // block save if any entitled WebEx Center does not have at least one session types selected
           var blockSave = false;
@@ -996,7 +1008,7 @@
           var funcName = "blockSaveDueToPMR()";
           var logMsg = "";
 
-          $log.log(funcName);
+          // $log.log(funcName);
 
           // block save if PMR is enabled but does not have PRO or STD enabled.
           var blockSave = _self.isUserLevelPMREnabled() && !_self.hasProOrStdMeetingCenter(WebexUserSettingsSvc.sessionTypes);
