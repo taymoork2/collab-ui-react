@@ -30,12 +30,12 @@
     // Setup Assistant pages with index
     vm.states = ['name',
       'overview',
-      'profile',
-      'chatStatusMessages',
       'customerInformation',
-      'feedback',
       'agentUnavailable',
       'offHours',
+      'feedback',
+      'profile',
+      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
