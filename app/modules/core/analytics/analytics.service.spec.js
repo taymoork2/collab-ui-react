@@ -45,7 +45,7 @@ describe('Service: Analytics', function () {
 
     it('should not call _track if it is also not a test org', function () {
       Analytics._init.and.returnValue($q.reject());
-      spyOn(Analytics, 'getTestOrg').and.returnValue(false);
+      spyOn(Analytics, 'checkIfTestOrg').and.returnValue(false);
       expect(Analytics._track).not.toHaveBeenCalled();
     });
   });
@@ -55,6 +55,48 @@ describe('Service: Analytics', function () {
 
     it('should call _track', function () {
       Analytics.trackEvent('myState', {});
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when calling trial events', function () {
+    it('should call _track when trackTrialStarted is called', function () {
+      Analytics.trackTrialStarted('testUser');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when calling partner events', function () {
+    it('should call _track when trackAssignPartner is called', function () {
+      Analytics.trackAssignPartner('4567');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackRemovePartner is called', function () {
+      Analytics.trackRemovePartner('4567');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackUserPatch is called', function () {
+      Analytics.trackUserPatch('123');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+  });
+
+  describe('when calling first time wizard events', function () {
+    it('should call _track when trackSelectedCheckbox is called', function () {
+      Analytics.trackSelectedCheckbox('123');
+      $scope.$apply();
+      expect(Analytics._track).toHaveBeenCalled();
+    });
+
+    it('should call _track when trackConvertUser is called', function () {
+      Analytics.trackConvertUser('1234');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
