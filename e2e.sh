@@ -15,7 +15,7 @@ npm run webdriver
 # Cleanup tcp processed from previous jobs
 kill_wait "lite-server"
 
-npm run serve-dist &
+npm run serve-dist -- --noopen &
 # poll on web webserver at root context until it comes up
 while [ $( curl_http_status "http://127.0.0.1:8000/" ) -ne 200 ]; do
     sleep 2;

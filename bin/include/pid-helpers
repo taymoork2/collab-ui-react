@@ -19,7 +19,7 @@ function kill_wait {
     fi
 
     echo "[INFO] pids to kill: $pids"
-    kill "$pids"
+    kill ${pids[*]}
     sleep 2
 
     while ps -p "$pids"; do
