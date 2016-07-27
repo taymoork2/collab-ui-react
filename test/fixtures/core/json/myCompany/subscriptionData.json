@@ -98,11 +98,12 @@
       "offerName": "MS",
       "usage": 7,
       "volume": 100,
-      "id": "donutId00"
+      "id": "donutId00",
+      "tooltip": "subscriptions.licenseTypes.MS<br>subscriptions.usage7/100",
+      "class": "icon-message"
     }]
   }, {
     "label": "subscriptions.meeting",
-    "borders": true,
     "subscriptions": [{
       "offers": [{
         "licenseId": "CF_9b6fbcfe-fa2c-41bb-ad06-9812918cafcd",
@@ -110,7 +111,9 @@
         "offerName": "CF",
         "usage": 8,
         "volume": 100,
-        "id": "donutId01"
+        "id": "donutId01",
+        "tooltip": "subscriptions.licenseTypes.CF<br>subscriptions.usage8/100",
+        "class": "icon-meeting-room"
       }]
     }, {
       "siteUrl": "siteUrl",
@@ -120,16 +123,20 @@
         "offerName": "MC",
         "usage": 101,
         "volume": 100,
+        "siteUrl": "siteUrl",
         "id": "donutId02",
-        "siteUrl": "siteUrl"
+        "tooltip": "subscriptions.licenseTypes.MC<br>subscriptions.usage<span class=\"warning\">101/100</span>",
+        "class": "icon-webex"
       }, {
         "licenseId": "TC_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
         "offerName": "TC",
         "usage": 95,
         "volume": 100,
+        "siteUrl": "siteUrl",
         "id": "donutId03",
-        "siteUrl": "siteUrl"
+        "tooltip": "subscriptions.licenseTypes.TC<br>subscriptions.usage95/100",
+        "class": "icon-webex"
       }]
     }, {
       "siteUrl": "siteUrl-2",
@@ -139,26 +146,33 @@
         "offerName": "EC",
         "usage": 50,
         "volume": 100,
+        "siteUrl": "siteUrl-2",
         "id": "donutId04",
-        "siteUrl": "siteUrl-2"
+        "tooltip": "subscriptions.licenseTypes.EC<br>subscriptions.usage50/100",
+        "class": "icon-webex"
       }, {
         "licenseId": "EE_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
         "offerName": "EE",
         "usage": 50,
         "volume": 100,
+        "siteUrl": "siteUrl-2",
         "id": "donutId05",
-        "siteUrl": "siteUrl-2"
+        "tooltip": "subscriptions.licenseTypes.EE<br>subscriptions.usage50/100",
+        "class": "icon-webex"
       }, {
         "licenseId": "CMR_aa250b26-56d6-4e3c-8244-127d2cb49006",
         "licenseType": "CONFERENCING",
         "offerName": "CMR",
         "usage": 50,
         "volume": 100,
+        "siteUrl": "siteUrl-2",
         "id": "donutId06",
-        "siteUrl": "siteUrl-2"
+        "tooltip": "subscriptions.licenseTypes.CMR<br>subscriptions.usage50/100",
+        "class": "icon-webex"
       }]
-    }]
+    }],
+    "borders": true
   }, {
     "label": "subscriptions.call",
     "borders": false,
@@ -168,7 +182,9 @@
       "offerName": "CO",
       "usage": 3,
       "volume": 100,
-      "id": "donutId07"
+      "id": "donutId07",
+      "tooltip": "subscriptions.licenseTypes.CO<br>subscriptions.usage3/100",
+      "class": "icon-calls"
     }]
   }, {
     "label": "subscriptions.room",
@@ -179,7 +195,9 @@
       "offerName": "SD",
       "usage": 3,
       "volume": 100,
-      "id": "donutId08"
+      "id": "donutId08",
+      "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
+      "class": "icon-meeting-room"
     }]
   }],
   "subscriptionsFormatted": [{
@@ -190,14 +208,18 @@
       "offerName": "MS",
       "usage": 7,
       "volume": 100,
-      "id": "donutId00"
+      "id": "donutId00",
+      "tooltip": "subscriptions.licenseTypes.MS<br>subscriptions.usage7/100",
+      "class": "icon-message"
     }, {
       "licenseId": "CF_9b6fbcfe-fa2c-41bb-ad06-9812918cafcd",
       "licenseType": "CONFERENCING",
       "offerName": "CF",
       "usage": 8,
       "volume": 100,
-      "id": "donutId01"
+      "id": "donutId01",
+      "tooltip": "subscriptions.licenseTypes.CF<br>subscriptions.usage8/100",
+      "class": "icon-meeting-room"
     }, {
       "licenseId": "MC_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "CONFERENCING",
@@ -205,7 +227,9 @@
       "usage": 101,
       "volume": 100,
       "siteUrl": "siteUrl",
-      "id": "donutId02"
+      "id": "donutId02",
+      "tooltip": "subscriptions.licenseTypes.MC<br>subscriptions.usage<span class=\"warning\">101/100</span>",
+      "class": "icon-webex"
     }, {
       "licenseId": "TC_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "CONFERENCING",
@@ -213,7 +237,9 @@
       "usage": 95,
       "volume": 100,
       "siteUrl": "siteUrl",
-      "id": "donutId03"
+      "id": "donutId03",
+      "tooltip": "subscriptions.licenseTypes.TC<br>subscriptions.usage95/100",
+      "class": "icon-webex"
     }, {
       "licenseId": "EC_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "CONFERENCING",
@@ -221,7 +247,9 @@
       "usage": 50,
       "volume": 100,
       "siteUrl": "siteUrl-2",
-      "id": "donutId04"
+      "id": "donutId04",
+      "tooltip": "subscriptions.licenseTypes.EC<br>subscriptions.usage50/100",
+      "class": "icon-webex"
     }, {
       "licenseId": "EE_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "CONFERENCING",
@@ -229,7 +257,9 @@
       "usage": 50,
       "volume": 100,
       "siteUrl": "siteUrl-2",
-      "id": "donutId05"
+      "id": "donutId05",
+      "tooltip": "subscriptions.licenseTypes.EE<br>subscriptions.usage50/100",
+      "class": "icon-webex"
     }, {
       "licenseId": "CMR_aa250b26-56d6-4e3c-8244-127d2cb49006",
       "licenseType": "CONFERENCING",
@@ -237,22 +267,29 @@
       "usage": 50,
       "volume": 100,
       "siteUrl": "siteUrl-2",
-      "id": "donutId06"
+      "id": "donutId06",
+      "tooltip": "subscriptions.licenseTypes.CMR<br>subscriptions.usage50/100",
+      "class": "icon-webex"
     }, {
       "licenseId": "CO_21770613-64d6-4658-a1f2-4a63ea819af2",
       "licenseType": "COMMUNICATION",
       "offerName": "CO",
       "usage": 3,
       "volume": 100,
-      "id": "donutId07"
+      "id": "donutId07",
+      "tooltip": "subscriptions.licenseTypes.CO<br>subscriptions.usage3/100",
+      "class": "icon-calls"
     }, {
       "licenseId": "SD_21770613-64d6-4658-a1f2-4a63ea819af2",
       "licenseType": "ROOMS",
       "offerName": "SD",
       "usage": 3,
       "volume": 100,
-      "id": "donutId08"
+      "id": "donutId08",
+      "tooltip": "subscriptions.licenseTypes.SD<br>subscriptions.usage3/100",
+      "class": "icon-meeting-room"
     }],
+    "isTrial": false,
     "viewAll": false
   }],
   "servicesResponse": [{
