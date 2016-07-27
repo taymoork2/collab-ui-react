@@ -346,9 +346,6 @@
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));
       },
-      isOnline: function () {
-        return (_.contains(authData.customerType, ['online']));
-      },
       isDirectCustomer: function () {
         return (_.eq(authData.commerceRelation, 'Direct'));
       },
