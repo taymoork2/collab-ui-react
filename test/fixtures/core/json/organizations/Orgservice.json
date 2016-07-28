@@ -70,6 +70,42 @@
     "selfSubscribeServices": ["meetings", "spark", "squared-call-initiation", "squared-fusion-cal", "squared-fusion-mgmt", "squared-onbehalf-of", "squared-room-moderation", "squared-syncup", "webex-squared"],
     "success": true
   },
+  "getOrgNoSip": {
+    "schemas": ["urn:cisco:codev:identity:organization:core:1.0"],
+    "displayName": "Altas_Test_sipuri_testing",
+    "email": "fakeemail@faux.faked",
+    "zone": "AllZone",
+    "services": ["squared-room-moderation", "atlas-portal", "squared-fusion-cal", "squared-call-initiation", "squared-onbehalf-of", "meetings", "spark", "webex-squared", "squared-fusion-mgmt", "squared-syncup"],
+    "isTestOrg": true,
+    "managedBy": [{
+      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+      "roles": ["id_full_admin"]
+    }, {
+      "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+      "roles": ["id_full_admin"]
+    }],
+    "orgSettings": {
+      "reportingSiteUrl": "",
+      "reportingSiteDesc": "",
+      "allowOnBehalfFromDifferentOrg": true,
+      "isCiscoSupport": true,
+      "isCiscoHelp": true,
+      "logoUrl": "https://94b6b900d66ab54604ad-5bd511b512ffac5b60f6dbd4f0ba3414.ssl.cf1.rackcdn.com/bcd7afcd-839d-4c61-a7a8-31c6c7f016d7/branding/logos/customerLogo.png",
+      "usePartnerLogo": false,
+      "allowCustomerLogos": false
+    },
+    "meta": {
+      "created": "2016-01-07T21:41:20.970Z",
+      "lastModified": "2016-01-23T00:22:10.428Z",
+      "version": "W/\"61833905457\"",
+      "location": "https://identity.webex.com/organization/scim/v1/Orgs/bcd7afcd-839d-4c61-a7a8-31c6c7f016d7"
+    },
+    "id": "bcd7afcd-839d-4c61-a7a8-31c6c7f016d7",
+    "ssoEnabled": false,
+    "dirsyncEnabled": false,
+    "selfSubscribeServices": ["meetings", "spark", "squared-call-initiation", "squared-fusion-cal", "squared-fusion-mgmt", "squared-onbehalf-of", "squared-room-moderation", "squared-syncup", "webex-squared"],
+    "success": true
+  },
   "getLicensesUsage": {
     "multiSub": [{
       "subscriptionId": "svcid-integ-sunnyway-1a",
