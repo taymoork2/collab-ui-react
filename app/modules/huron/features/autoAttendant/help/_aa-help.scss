@@ -21,4 +21,8 @@
     width: 75%;
     @include vr-spacing(mt, .5);
   }
+
+  & .popover-content {
+    overflow: hidden;
+  }
 }

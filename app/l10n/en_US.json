@@ -2039,7 +2039,7 @@
     "sayMessageHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will continue to the next step.",
     "sayMessageSpecialChar": "To speak special characters, write them out (use 'star' for '*').",
     "aaHelpFAQ": "Find 'Frequently Asked Questions About Auto Attendant' here:",
-    "errorReadCMI": "Unable to load assiagned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
+    "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
