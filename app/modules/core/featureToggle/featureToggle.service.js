@@ -109,7 +109,6 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
-      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
