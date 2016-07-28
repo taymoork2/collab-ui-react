@@ -6,10 +6,10 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $translate, $timeout, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
-
+    vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
 
     var maxUsers = 1100;
@@ -19,7 +19,6 @@
     var saveDeferred;
     var csvHeaders = null;
     var orgHeaders;
-    var licenseUnavailablilty = false;
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = angular.copy(csvData.columns || []);
     }).catch(function (response) {
@@ -131,16 +130,13 @@
       $scope.$broadcast('timer-stop');
     };
 
-    $scope.licenseBulkErrorModal = function () {
+    vm.licenseBulkErrorModal = function () {
       if (Authinfo.isOnline()) {
         $modal.open({
-          type: "dialog",
+          type: 'dialog',
           templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
         }).result.then(function () {
-          FeatureToggleService.atlasSettingsPageGetStatus()
-            .then(function () {
-              $state.go('my-company.subscriptions');
-            });
+          $state.go('my-company.subscriptions');
         });
       }
     };
@@ -372,7 +368,7 @@
               }
             } else {
               if (user.message === '400112') {
-                licenseUnavailablilty = true;
+                vm.licenseUnavailable = true;
               }
               addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
@@ -427,8 +423,8 @@
                 errorCallback(response, usersToOnboard);
               }).finally(function () {
                 calculateProcessProgress();
-                if (licenseUnavailablilty) {
-                  $scope.licenseBulkErrorModal();
+                if (vm.licenseUnavailable) {
+                  vm.licenseBulkErrorModal();
                 }
                 resolve();
               });
