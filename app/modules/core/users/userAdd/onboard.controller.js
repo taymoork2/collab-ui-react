@@ -328,9 +328,7 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Analytics.trackEvent("CMR checkbox unselected", {
-            licenseId: licenseId
-          });
+          Analytics.trackSelectedCheckbox(licenseId);
         }
       }
       if (shouldAddCallService()) {
@@ -908,9 +906,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackEvent("Convert User Search", {
-            from: $state.current.name
-          });
+          Analytics.trackConvertUser($state.current.name);
         }
       }, $scope.timeoutVal);
     }
