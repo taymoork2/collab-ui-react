@@ -648,7 +648,8 @@
 
       $modal.open({
         templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
-        scope: $scope
+        scope: $scope,
+        type: 'dialog'
       }).result.then(function () {
         if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
           return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
