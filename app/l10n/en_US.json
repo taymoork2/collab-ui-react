@@ -1480,6 +1480,13 @@
       "no-domain-verified": {
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
+      },
+      "user-activation-errors": {
+        "title": "Activation Error",
+        "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
+        "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
+        "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
+        "generate-report": "Generate Report"
       }
     },
     "fusion": {
@@ -1553,7 +1560,8 @@
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
       "ABORTED": "Cancelled",
-      "INIT": "Initializing"
+      "INIT": "Initializing",
+      "STORING": "Storing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1896,6 +1904,7 @@
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
     "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
+    "openHoursDaySelect": "At least one open hours form does not have any days of the week checked.",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -3033,6 +3042,11 @@
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
+    "deregister": {
+      "header": "Are you sure you want to deregister this node?",
+      "body1": "If you proceed, this node will no longer be available.",
+      "body2": "To make this node available again, you will need to reregister it."
+    },
     "metrics": {
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
@@ -3056,15 +3070,17 @@
       "node": "Node",
       "callVolumes": "Total Calls",
       "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
       "callLocal": "On Premises",
       "callReject": "Overflowed to Cloud",
+      "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
-      "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
-      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls",
+      "availabilityOfClusterDescription": "Availability of Hybrid Media Clusters to host calls.",
+      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls.",
       "clusterAvailableTitle": "Available",
       "clusterUnavailableTitle": "Unavailable",
-      "clusterPartialTitle": "Partial Availability",
+      "clusterPartialTitle": "Partially Available",
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",
@@ -3732,7 +3748,9 @@
     "errorFileType": "File Not Uploaded: incorrect file type",
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
-    "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
+    "errorWidthHeight": "The uploaded image must be wider than {{width}} px.",
+    "errorFileSize": "File Not Uploaded: incorrect file size",
+    "errorFileLarge": "The image file size must be less than 1 MB."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -4036,11 +4054,14 @@
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
+    "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
     "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
     "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
     "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
+    "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
+    "errorNotOrgManager": "User does not manage org to view this content",
     "errorUnauthorizedToView": "Unauthorized to view this content",
     "http0": "Can't connect to service",
     "http401": "401 Unauthorized",
@@ -4488,12 +4509,12 @@
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription ID: ",
-    "defaultName": "Your Subscription",
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",
+    "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",

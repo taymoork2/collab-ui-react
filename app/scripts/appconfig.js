@@ -566,6 +566,11 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
+              },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
@@ -2052,8 +2057,11 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              },
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             }
           })

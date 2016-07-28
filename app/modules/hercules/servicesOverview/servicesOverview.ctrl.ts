@@ -32,6 +32,10 @@ namespace servicesOverview {
       FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
         this.forwardEvent('f410FeatureEventHandler', supports);
       });
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
+        this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
+      });
     }
 
     get hybridCards() {
