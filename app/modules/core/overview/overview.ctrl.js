@@ -77,9 +77,9 @@
               if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
                 vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
               } else if (sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-              } else if (sharedDevicesUsage === 0) {
                 vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+              } else if (sharedDevicesUsage === 0) {
+                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
               }
             });
         }

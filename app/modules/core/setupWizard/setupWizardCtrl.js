@@ -164,6 +164,13 @@
                 $scope.tabs = _.reject($scope.tabs, function (tab) {
                   return tab.name === 'messagingSetup' || tab.name === 'addUsers';
                 });
+                $scope.tabs = _.each($scope.tabs, function (tab) {
+                  if (tab.name === 'enterpriseSettings') {
+                    tab.steps = _.reject(tab.steps, function (step) {
+                      return step.name === 'init' || step.name === 'exportMetadata' || step.name === 'importIdp' || step.name === 'testSSO';
+                    });
+                  }
+                });
               }
             });
         }
