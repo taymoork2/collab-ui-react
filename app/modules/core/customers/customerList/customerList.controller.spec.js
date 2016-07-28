@@ -14,9 +14,50 @@ describe('Controller: CustomerListCtrl', function () {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
+    daysLeft: NaN,
     communications: {
-      isTrial: false
-    }
+      isTrial: false,
+      volume: 5
+    },
+    licenseList: [{
+      isTrial: false,
+      volume: 5,
+      name: 'communications'
+    }]
+  };
+  var testExpired = {
+    customerOrgId: '1234-34534-afdagfg-425345-adad',
+    customerName: 'ControllerTestOrg',
+    customerEmail: 'customer2@cisco.com',
+    daysLeft: -1,
+    communications: {
+      isTrial: true
+    },
+    licenses: 11,
+    deviceLicenses: 0,
+    licenseList: []
+  };
+  var testLongExpired = {
+    customerOrgId: '1234-34534-afdagfg-425345-abab',
+    customerName: 'ControllerTestOrg',
+    customerEmail: 'customer4@cisco.com',
+    daysLeft: -40,
+    communications: {
+      isTrial: true
+    },
+    licenseList: []
+  };
+  var testTrial = {
+    customerOrgId: '1234-34534-afdagfg-425345-acac',
+    customerName: 'ControllerTestOrg',
+    customerEmail: 'customer3@cisco.com',
+    daysLeft: 50,
+    communications: {
+      isTrial: true
+    },
+    licenses: 10,
+    deviceLicenses: 5,
+    licenseList: []
   };
   var numberResponse = {
     numbers: [1, 2, 3]
@@ -99,6 +140,32 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
+  describe('grid column display', function () {
+    beforeEach(initController);
+
+    it('should return the correct account status', function () {
+      expect($scope.getAccountStatus(testExpired)).toBe('expired');
+      expect($scope.getAccountStatus(testTrial)).toBe('trial');
+      expect($scope.getAccountStatus(testOrg)).toBe('active');
+    });
+
+    it('should return expired days left', function () {
+      var expiredText = $translate.instant('customerPage.expired');
+      var daysLeftText = $translate.instant('customerPage.daysLeftToPurchase', {
+        count: 29
+      });
+      // 30 day grace period, with -1 days left == 29
+      expect($scope.getExpiredDaysLeft(testExpired)).toBe(expiredText + '. ' + daysLeftText);
+      expect($scope.getExpiredDaysLeft(testLongExpired)).toBe(expiredText);
+    });
+
+    it('should return proper license counts', function () {
+      expect($scope.getTotalLicenses(testOrg)).toEqual(5);
+      expect($scope.getTotalLicenses(testExpired)).toEqual(11);
+      expect($scope.getTotalLicenses(testTrial)).toEqual(15);
+    });
+  });
+
   describe('Click setup PSTN', function () {
     beforeEach(initController);
 
@@ -152,6 +219,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
   });
+
   describe('getSubfields', function () {
     beforeEach(initController);
 

@@ -12,6 +12,7 @@
     $scope.isTestOrg = false;
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
+    $scope.isCareEnabled = false;
 
     $scope.isOrgSetup = isOrgSetup;
     $scope.isPartnerAdminWithCall = isPartnerAdminWithCall;
@@ -35,6 +36,10 @@
     $scope.showCustomerDetails = showCustomerDetails;
     $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.addNumbers = addNumbers;
+    $scope.getTotalLicenses = getTotalLicenses;
+    $scope.getAccountStatus = getAccountStatus;
+    $scope.isLicenseTypeAny = isLicenseTypeAny;
+    $scope.getExpiredDaysLeft = getExpiredDaysLeft;
 
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
@@ -58,26 +63,22 @@
       getLicenseObj: getLicenseObj,
     };
 
-    var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
+    // common between new + old
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
+    // old templates
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
     var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
-    var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
+    var oldNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
+    var actionTemplate = $templateCache.get('modules/core/customers/customerList/grid/actionColumn.tpl.html');
+    // new templates
+    var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
+    var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');
+    var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
+    var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
 
-    var careField = {
-      field: 'care',
-      displayName: $translate.instant('customerPage.care'),
-      width: '12%',
-      cellTemplate: serviceTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: serviceSort
-    };
-
-    var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
-
-    $scope.isCareEnabled = false;
-
-    $scope.gridColumns = [{
+    // common grid column defs between new + old
+    var customerNameField = {
       field: 'customerName',
       displayName: $translate.instant('customerPage.customerNameHeader'),
       width: '25%',
@@ -88,7 +89,32 @@
         direction: 'asc',
         priority: 0,
       }
-    }, {
+    };
+    // old grid column defs
+    var careField = {
+      field: 'care',
+      displayName: $translate.instant('customerPage.care'),
+      width: '12%',
+      cellTemplate: serviceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+    var actionField = {
+      field: 'action',
+      displayName: $translate.instant('customerPage.actionHeader'),
+      sortable: false,
+      cellTemplate: actionTemplate,
+      width: '95',
+      cellClass: 'align-center'
+    };
+    var oldNotesField = {
+      field: 'notes',
+      displayName: $translate.instant('customerPage.notes'),
+      cellTemplate: oldNoteTemplate,
+      sortingAlgorithm: notesSort
+    };
+    // This array is all the old services, but split into separate columns
+    var splitServicesFields = [{
       field: 'messaging',
       displayName: $translate.instant('customerPage.message'),
       width: '12%',
@@ -116,19 +142,50 @@
       cellTemplate: serviceTemplate,
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
-    }, {
+    }];
+    // new column defs
+    var allServicesField = {
+      field: 'services',
+      displayName: $translate.instant('customerPage.services'),
+      width: '20%',
+      cellTemplate: compactServiceTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+    var accountStatusField = {
+      field: 'accountStatus',
+      displayName: $translate.instant('customerPage.accountStatus'),
+      width: '12%',
+      cellTemplate: accountStatusTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+    var licenseQuantityField = {
+      field: 'accountStatus',
+      displayName: $translate.instant('customerPage.totalLicenses'),
+      width: '14%',
+      cellTemplate: licenseCountTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+    var totalUsersField = {
+      field: 'totalUsers',
+      displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
+      width: '12%',
+      cellTemplate: totalUsersTemplate,
+      headerCellClass: 'align-center',
+      sortingAlgorithm: serviceSort
+    };
+    var newNotesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: noteTemplate,
+      cellTemplate: newNoteTemplate,
       sortingAlgorithm: notesSort
-    }, {
-      field: 'action',
-      displayName: $translate.instant('customerPage.actionHeader'),
-      sortable: false,
-      cellTemplate: actionTemplate,
-      width: '95',
-      cellClass: 'align-center'
-    }];
+    };
+
+    var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
+
+    $scope.gridColumns = [];
 
     $scope.gridOptions = {
       data: 'gridData',
@@ -200,14 +257,21 @@
 
     function init() {
       setNotesTextOrder();
+      initColumns();
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
         if (!careStatus) {
-          $scope.gridColumns.splice($scope.gridColumns.indexOf(careField), 1);
+          var idx = $scope.gridColumns.indexOf(careField);
+          if (idx !== -1) {
+            $scope.gridColumns.splice(idx, 1);
+          }
         }
       }, function () {
         // if getting care feature status fails, fall back to the old behavior
-        $scope.gridColumns.splice($scope.gridColumns.indexOf(careField), 1);
+        var idx = $scope.gridColumns.indexOf(careField);
+        if (idx !== -1) {
+          $scope.gridColumns.splice(idx, 1);
+        }
       }).finally(function () {
         resetLists().then(function () {
           setFilter($stateParams.filter);
@@ -220,7 +284,6 @@
           Log.error('Query org info failed. Status: ' + status);
         }
       });
-
     }
 
     function getSubfields(entry, name) {
@@ -234,6 +297,17 @@
         }) || group[0]);
       });
       return result;
+    }
+
+    function initColumns() {
+      $scope.gridColumns.push(customerNameField);
+      if ($scope.customerListToggle) {
+        $scope.gridColumns.push(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, newNotesField);
+      } else {
+        // use this way instead of concat so we can maintain the ref inside gridOptions
+        Array.prototype.push.apply($scope.gridColumns, splitServicesFields);
+        $scope.gridColumns.push(oldNotesField, actionField);
+      }
     }
 
     function isOrgSetup(customer) {
@@ -520,6 +594,24 @@
         _.includes(noFreeLicense, licenseTypeField));
     }
 
+    function isLicenseTypeAny(rowData, licenseTypeField) {
+      return (isLicenseInfoAvailable(rowData.licenseList)) &&
+        (PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField)) ||
+          PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField)));
+    }
+
+    function getTotalLicenses(rowData) {
+      if (getAccountStatus(rowData) === 'active') {
+        var sum = 0;
+        _.forEach(rowData.licenseList, function (value) {
+          sum += value.volume;
+        });
+        return sum;
+      } else {
+        return rowData.licenses + rowData.deviceLicenses;
+      }
+    }
+
     function partnerClicked(rowData) {
       $scope.activeBadge = isPartnerOrg(rowData);
     }
@@ -530,6 +622,33 @@
 
     function setTrial(trial) {
       $scope.currentTrial = trial;
+    }
+
+    function getAccountStatus(rowData) {
+      var licenseTypes = ['messaging', 'communications', 'care', 'roomSystems', 'conferencing'];
+      if (rowData.daysLeft <= 0) {
+        return 'expired';
+      }
+      var isTrial = false;
+      _.forEach(licenseTypes, function (value) {
+        if (isLicenseTypeATrial(rowData, value)) {
+          isTrial = true;
+        }
+      });
+      return isTrial ? 'trial' : 'active';
+    }
+
+    function getExpiredDaysLeft(rowData) {
+      var expired = $translate.instant("customerPage.expired");
+      // Can renew up to 30 days after expiration (grace period)
+      var maxExpiredDaysLeft = -30;
+      if (rowData.daysLeft < 0 && rowData.daysLeft >= maxExpiredDaysLeft) {
+        return expired + ". " + $translate.instant("customerPage.daysLeftToPurchase", {
+          count: Math.abs(rowData.daysLeft - maxExpiredDaysLeft)
+        });
+      } else {
+        return expired;
+      }
     }
 
     function showCustomerDetails(customer) {
