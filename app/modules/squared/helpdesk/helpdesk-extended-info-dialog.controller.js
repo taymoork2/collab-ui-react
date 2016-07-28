@@ -6,7 +6,7 @@
     .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
 
   /* @ngInject */
-  function HelpdeskExtendedInfoDialogController(title, data, $timeout, $scope, $log) {
+  function HelpdeskExtendedInfoDialogController(title, data, $timeout, $scope, $log, Notification) {
     var vm = this;
     vm.title = title;
     vm.copied = false;
@@ -32,7 +32,9 @@
     };
 
     vm.clipboardError = function (e) {
-      $log.error("Unable to copy data to clipboard", e);
+      $log.error("Unable to copy data to clipboard. Details:", e);
+      Notification.error("helpdesk.extended-data-dialog.unableToCopy", e);
+      e.clearSelection();
     };
   }
 

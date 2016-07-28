@@ -4704,7 +4704,8 @@
     },
     "extended-data-dialog": {
       "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard"
+      "copiedToClipboard": "Data copied to clipboard",
+      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
