@@ -1936,7 +1936,7 @@
     "phoneMenuRepeatThree": "Three Times",
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
-    "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
+    "phoneMenuHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will still listen for caller input.",
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
@@ -2048,7 +2048,9 @@
       "oskar": "Oskar",
       "empar": "Empar"
     },
-    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "sayMessageHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will continue to the next step.",
+    "sayMessageSpecialChar": "To speak special characters, write them out (use 'star' for '*').",
+    "aaHelpFAQ": "Find 'Frequently Asked Questions About Auto Attendant' here:",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
@@ -3749,7 +3751,9 @@
     "errorFileType": "File Not Uploaded: incorrect file type",
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
-    "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
+    "errorWidthHeight": "The uploaded image must be wider than {{width}} px.",
+    "errorFileSize": "File Not Uploaded: incorrect file size",
+    "errorFileLarge": "The image file size must be less than 1 MB."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
