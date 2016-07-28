@@ -1511,7 +1511,7 @@
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
           "expressway-not-setup": "Expressway no set up",
-          "mediafusion-description": "Can run Media Service",
+          "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up"
         },
         "expressway": {
