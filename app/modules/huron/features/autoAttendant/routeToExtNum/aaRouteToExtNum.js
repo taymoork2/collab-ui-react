@@ -12,6 +12,8 @@
 
     vm.model = {};
 
+    vm.uniqueCtrlIdentifer = '';
+
     vm.model.phoneNumberInput = {
       phoneNumber: ''
     };
