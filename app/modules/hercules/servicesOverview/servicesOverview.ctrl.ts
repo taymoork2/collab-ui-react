@@ -7,11 +7,6 @@ namespace servicesOverview {
   export class ServicesOverviewCtrl {
 
     private cards:Array<ServicesOverviewCard>;
-    private _feature = false;
-
-    get featureEnabled():boolean {
-      return this._feature;
-    }
 
     public showFilterDropDown:boolean = false;
 
@@ -24,10 +19,6 @@ namespace servicesOverview {
       ServiceDescriptor.services((err, services)=> {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
-
-      FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
-        this._feature = !!supports;
-      });
 
       FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
         this.forwardEvent('f410FeatureEventHandler', supports);

@@ -4,7 +4,7 @@ var WebExSiteReportsPage = function () {
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
   this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
-  this.conferencing = element(by.css('a[href="#site-list"]'));
+  this.conferencing = element(by.css('a[href="#/site-list"]'));
   this.webexReportsLink = element(by.css('a[href="#/reports/webex"]'));
   this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
