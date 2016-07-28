@@ -394,7 +394,7 @@
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
-          vm.showContextServiceTrial = results.ftContextServ;
+          vm.showContextServiceTrial = true;
           vm.contextTrial.enabled = results.tcHasService;
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;

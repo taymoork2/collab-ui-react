@@ -96,22 +96,27 @@
     }
 
     function logoutAndRedirectTo(redirectUrl) {
-      var listTokensUrl = OAuthConfig.getListTokenUrl();
+      var listTokensUrl = OAuthConfig.getOauthListTokenUrl();
       return httpGET(listTokensUrl)
         .then(function (response) {
-          var refreshTokenData = _.find(response.data.data, {client_id: OAuthConfig.getClientId()});
-	        var refreshTokenId = refreshTokenData.token_id;
-          revokeAuthTokens(refreshTokenId, redirectUrl);
+          var promises = [];
+          var refreshTokenData = _.each(response.data.data, function (tokenData) {
+            var refreshTokenId = tokenData.token_id;
+            var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
+            promises.push(revoke);
+          });
+          $q.all(promises).then(function () {
+            completeLogout(redirectUrl);
+          });
         })
         .catch(function (response) {
           handleError('Failed to retrieve token_id');
         });
     }
 
-    function revokeAuthTokens(tokenId, redirectUrl) {
-      var revokeUrl = OAuthConfig.getOauthRevokeTokenUrl() + tokenId;
+    function revokeAuthTokens(tokenId) {
+      var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + tokenId;
       return $http.delete(revokeUrl)
-        .then(completeLogout(redirectUrl))
         .catch(handleError('Failed to delete the oAuth token'));
     }
 

@@ -52,11 +52,10 @@
       getLogoutUrl: getLogoutUrl,
       getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,
-      getListTokenUrl: getListTokenUrl,
+      getOauthListTokenUrl: getOauthListTokenUrl,
       getAccessTokenUrl: getAccessTokenUrl,
       getOauthAccessCodeUrl: getOauthAccessCodeUrl,
-      getOauthDeleteTokenUrl: getOauthDeleteTokenUrl,
-      getOauthRevokeTokenUrl: getOauthRevokeTokenUrl,
+      getOauthDeleteRefreshTokenUrl: getOauthDeleteRefreshTokenUrl,
       getAccessTokenPostData: getAccessTokenPostData,
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
@@ -73,11 +72,7 @@
       return getOauth2Url() + 'access_token';
     }
 
-    function getOauthDeleteTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/revoke';
-    }
-
-    function getOauthRevokeTokenUrl() {
+    function getOauthDeleteRefreshTokenUrl() {
       return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
     }
 
@@ -105,7 +100,7 @@
       return Utils.sprintf(pattern, params);
     }
 
-    function getListTokenUrl() {
+    function getOauthListTokenUrl() {
       return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
     }
 
