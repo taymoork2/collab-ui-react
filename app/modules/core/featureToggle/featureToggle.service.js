@@ -30,7 +30,7 @@
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasPstnTfn: 'atlas-pstn-tfn',
       huronAASubmenu: 'huron-aa-submenu',
-      huronAACallQueue: 'huron-aa-route-to-queue',
+      huronAACallQueue: 'huronAACallQueue',
       huronKEM: 'huronKEM',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
