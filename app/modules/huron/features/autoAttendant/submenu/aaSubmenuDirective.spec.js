@@ -2,7 +2,7 @@
 
 describe('Directive: aaSubmenu', function () {
   var $compile, $rootScope, $scope;
-  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
 
   var aaUiModel = {
     openHours: {},
@@ -17,14 +17,16 @@ describe('Directive: aaSubmenu', function () {
   var submenu;
 
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AACommonService = _AACommonService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -32,6 +34,8 @@ describe('Directive: aaSubmenu', function () {
     $scope.menuId = menuId;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    spyOn(AACommonService, 'isRouteQueueToggle').and.returnValue(true);
+
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
     var mainMenu = AutoAttendantCeMenuModelService.newCeMenu();

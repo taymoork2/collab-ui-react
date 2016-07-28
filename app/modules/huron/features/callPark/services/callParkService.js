@@ -228,7 +228,7 @@
     // function will be used in future milestone
     function getListOfCallParks() {
 
-      return CallParkServiceV2.query({
+      return CallParkServiceV2.get({
         customerId: customerId
       }).$promise;
     }

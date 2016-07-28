@@ -2,18 +2,18 @@
 describe('Controller: EdiscoveryReportsController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Authinfo, controller, $state, ReportUtilService, EdiscoveryService, $q, $controller, httpBackend, $translate, $scope;
+  var $controller, $q, $scope, $state, $translate, Authinfo, controller, EdiscoveryService, httpBackend, ReportUtilService;
 
-  beforeEach(inject(function (_Authinfo_, _ReportUtilService_, _$state_, _$translate_, _EdiscoveryService_, _$q_, _$rootScope_, $httpBackend, _$controller_) {
-    ReportUtilService = _ReportUtilService_;
+  beforeEach(inject(function (_$controller_, $httpBackend, _$q_, _$rootScope_, _$state_, _$translate_, _Authinfo_, _EdiscoveryService_, _ReportUtilService_) {
     $state = _$state_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     httpBackend = $httpBackend;
-    EdiscoveryService = _EdiscoveryService_;
     $translate = _$translate_;
     $q = _$q_;
     Authinfo = _Authinfo_;
+    EdiscoveryService = _EdiscoveryService_;
+    ReportUtilService = _ReportUtilService_;
 
     httpBackend
       .when('GET', 'l10n/en_US.json')

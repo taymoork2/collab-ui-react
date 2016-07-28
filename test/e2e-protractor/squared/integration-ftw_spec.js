@@ -47,7 +47,7 @@ describe('First Time Wizard', function () {
     notifications.clearNotifications();
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
-    utils.click(wizard.finishBtn);
+    utils.click(users.saveButton);
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
   }, LONG_TIMEOUT);

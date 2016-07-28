@@ -14,8 +14,9 @@
       this.units = units;
       this.time = moment().utc().format();
       this.elapsedTime = elapsedTime;
-      if (data !== null)
+      if (data !== null) {
         this.data = data;
+      }
     }
 
     return {

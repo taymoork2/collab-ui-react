@@ -7,7 +7,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig, Userservice) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
@@ -19,7 +19,8 @@
       atlasContextServiceTrials: 'atlas-context-service-trials',
       atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
-      atlasMediaSericeOnboarding: 'atlas-media-service-onboarding',
+      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
+      atlasMyCompanyPage: 'atlas-my-company-page',
       atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasSettingsPage: 'atlas-settings-page',
@@ -29,6 +30,8 @@
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
       atlasPstnTfn: 'atlas-pstn-tfn',
       huronAASubmenu: 'huron-aa-submenu',
+      huronAACallQueue: 'huronAACallQueue',
+      huronKEM: 'huronKEM',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
@@ -106,7 +109,6 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
-      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
@@ -174,6 +176,7 @@
       getFeaturesForOrg: getFeaturesForOrg,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
+      stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
       features: features
@@ -290,6 +293,25 @@
           return toggle;
         }
       });
+    }
+
+    function stateSupportsFeature(feature) {
+      return supports(feature).then(shouldFeatureAllowState);
+    }
+
+    function shouldFeatureAllowState(isSupported) {
+      if (!isSupported) {
+        if (currentlyInState()) {
+          return $q.reject('Requested feature is not supported by requested state');
+        } else {
+          $state.go('login');
+        }
+      }
+      return isSupported;
+    }
+
+    function currentlyInState() {
+      return !!$state.$current.name;
     }
 
     function supports(feature) {

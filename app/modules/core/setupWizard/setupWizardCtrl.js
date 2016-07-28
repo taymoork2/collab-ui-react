@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($scope, Authinfo, FeatureToggleService, $stateParams) {
+  function SetupWizardCtrl($scope, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
 
     $scope.tabs = [];
     var tabs = [{
@@ -155,6 +155,16 @@
         });
       }
 
+      Orgservice.getAdminOrgUsage()
+        .then(function (subscriptions) {
+          var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
+          if (_.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0) {
+            $scope.tabs = _.reject($scope.tabs, function (tab) {
+              return tab.name === 'messagingSetup' || tab.name === 'addUsers';
+            });
+          }
+        });
+
       // if we have any step thats is empty, we remove the tab
       _.forEach($scope.tabs, function (tab, index) {
         if (tab.steps.length === 0) {
@@ -204,6 +214,9 @@
         }, {
           name: 'assignDnAndDirectLines',
           template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
+        }, {
+          name: 'addUsersResults',
+          template: 'modules/core/setupWizard/addUsers/addUsers.results.tpl.html'
         }]
       };
       var advancedSubTabSteps = [{

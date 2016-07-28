@@ -84,6 +84,27 @@ beforeEach(function () {
     var templateString = this.$templateCache.get(template);
     this.compileTemplate(templateString);
   };
+
+  /**
+   * Constructs and compiles a component
+   * Sets this.view and this.controller with compiled template and controller
+   *
+   * @param {String} componentName Name of the component
+   * @param {String} componentParamsObj Optional object of component bindings
+   */
+  this.compileComponent = function (componentName, componentParamsObj) {
+    var component = _.kebabCase(componentName);
+    var componentParams = '';
+    if (_.isObject(componentParamsObj)) {
+      componentParams = _.reduce(componentParamsObj, function (result, value, key) {
+        result += ' ' + _.kebabCase(key) + '="' + value + '"';
+        return result;
+      }, '');
+    }
+    var componentString = '<' + component + componentParams + '></' + component + '>';
+    this.compileTemplate(componentString);
+    this.controller = this.view.controller(componentName);
+  };
 });
 
 describe('Global Unit Test Config', function () {

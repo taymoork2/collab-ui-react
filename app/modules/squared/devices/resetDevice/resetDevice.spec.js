@@ -10,6 +10,7 @@ describe('Controller: ResetDeviceController', function () {
   beforeEach(module('Squared'));
   beforeEach(module('Huron'));
   beforeEach(module('Hercules'));
+  beforeEach(module('Sunlight'));
 
   describe('Expected Responses', function () {
     beforeEach(inject(function ($controller, _$httpBackend_, _XhrNotificationService_) {

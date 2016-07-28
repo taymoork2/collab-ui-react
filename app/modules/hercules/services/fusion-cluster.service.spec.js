@@ -38,26 +38,6 @@ describe('Service: FusionClusterService', function () {
       FusionClusterService.getAll();
     });
 
-    it('should filter out non-fused clusters', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond({
-          clusters: [{
-            state: 'fused',
-            targetType: 'c_mgmt',
-            connectors: []
-          }, {
-            state: 'defused',
-            targetType: 'c_mgmt',
-            connectors: []
-          }]
-        });
-      FusionClusterService.getAll()
-        .then(function (clusters) {
-          expect(clusters.length).toBe(1);
-        });
-    });
-
     // state (fused, defused, etc.) will soon be removed from the API reponse!
     // the API will only return fused clusters
     it('should not crash if clusters do not have a state', function () {
@@ -133,8 +113,8 @@ describe('Service: FusionClusterService', function () {
         .respond(201, response);
 
       var newExpresswayPromise = FusionClusterService.preregisterCluster('man.united', 'GA');
-      newExpresswayPromise.then(function (clusterId) {
-        expect(clusterId).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
+      newExpresswayPromise.then(function (data) {
+        expect(data.id).toBe('3803ded5-70d9-4e7d-bdc4-fe3dbf319e59');
       });
     });
 

@@ -224,8 +224,9 @@
         var groupDisplayName = cluster.properties["mf.group.displayName"];
 
         // Filter out the cluster/connector with empty group name
-        if (groupDisplayName == null)
+        if (groupDisplayName == null) {
           continue;
+        }
 
         if (groupDisplayName !== groupName) {
           group = {

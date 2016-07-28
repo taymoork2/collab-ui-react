@@ -130,7 +130,7 @@
           vm.enableOrpheusForMediaFusion();
         },
         function error(data, status) {
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
@@ -173,9 +173,9 @@
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
 

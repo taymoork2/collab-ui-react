@@ -13,6 +13,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     this.mock = {};
     this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.mock.headers = getJSONFixture('core/json/users/headers.json');
+    this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -26,6 +27,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
   }
 
   function initSpies() {

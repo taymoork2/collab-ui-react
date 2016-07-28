@@ -144,8 +144,16 @@
         EC: 'EC', // Event Center (WebEx)
         CO: 'CO', // Communication
         SD: 'SD', // Spark Room System
+        SB: 'SB', // Spark Board
         CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         CDC: 'CDC' // Care Digital Channel
+      },
+
+      licenseStatus: {
+        PENDING: 'PENDING',
+        ACTIVE: 'ACTIVE',
+        CANCELLED: 'CANCELLED',
+        SUSPENDED: 'SUSPENDED'
       },
 
       licenseTypes: {
@@ -214,51 +222,34 @@
     config.roleStates = {
       // Customer Admin
       Full_Admin: [
-        'overview',
-        'domainmanagement',
-        'dr-login-forward',
-        'users',
-        'user-overview',
-        'userprofile',
-        'reports',
-        'setupwizardmodal',
-        'firsttimewizard',
-        'groups',
-        'profile',
-        'customerprofile',
-        'support',
-        'editService',
-        'trialExtInterest',
-        'cdrsupport',
+        'activateProduct',
         'cdr-overview',
         'cdrladderdiagram',
-        'activateProduct',
-        'settings',
-        'userRedirect'
-      ],
-      Readonly_Admin: [
-        'overview',
-        'users',
-        'user-overview',
-        'userprofile',
-        'reports',
-        'setupwizardmodal',
+        'cdrsupport',
+        'customerprofile',
+        'domainmanagement',
+        'dr-login-forward',
+        'editService',
         'firsttimewizard',
         'groups',
+        'my-company',
+        'overview',
         'profile',
-        'customerprofile',
+        'reports',
+        'settings',
+        'setupwizardmodal',
         'support',
-        'editService',
         'trialExtInterest',
-        'activateProduct',
-        'settings'
+        'user-overview',
+        'userRedirect',
+        'userprofile',
+        'users',
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'support', 'activateProduct'],
       WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video', 'settings'],
-      PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup', 'settings'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -278,71 +269,74 @@
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports']
     };
 
+    config.roleStates.Readonly_Admin = _.clone(config.roleStates.Full_Admin);
+    config.roleStates.PARTNER_READ_ONLY_ADMIN = _.clone(config.roleStates.PARTNER_ADMIN);
+
     config.serviceStates = {
       'ciscouc': [
-        'callrouting',
-        'mediaonhold',
-        'generateauthcode',
+        'addDeviceFlow',
         'autoattendant',
         'callpark',
         'callpickup',
-        'intercomgroups',
-        'paginggroups',
-        'huntgroups',
-        'didadd',
-        'hurondetails',
-        'huronlines',
-        'huronsettings',
-        'huronfeatures',
-        'huronnewfeature',
-        'huronHuntGroup',
-        'huronCallPark',
-        'huntgroupedit',
-        'devices',
+        'callrouting',
         'device-overview',
-        'addDeviceFlow',
-        'places',
+        'devices',
+        'didadd',
+        'generateauthcode',
+        'huntgroups',
+        'huronCallPark',
+        'hurondetails',
+        'huronfeatures',
+        'huronHuntGroup',
+        'huronlines',
+        'huronnewfeature',
+        'huronsettings',
+        'huntgroupedit',
+        'intercomgroups',
+        'mediaonhold',
+        'paginggroups',
         'place-overview',
-        'services-overview'
+        'places',
+        'services-overview',
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
+        'management-connector-details',
         'management-service',
         'services-overview',
-        'my-company',
-        'management-connector-details'
       ],
       'spark-room-system': [
-        'devices',
-        'device-overview',
         'addDeviceFlow',
+        'device-overview',
+        'devices',
+        'place-overview',
         'places',
-        'place-overview'
       ],
       'squared-fusion-uc': [
-        'cluster-list',
+        'add-resource',
         'call-service',
+        'cluster-list',
         'expressway-settings',
-        'mediafusion-settings'
       ],
       'squared-fusion-cal': [
+        'add-resource',
         'calendar-service',
-        'services-overview',
         'cluster-list',
         'expressway-settings',
-        'mediafusion-settings'
+        'services-overview',
       ],
       'squared-team-member': [
         'organization'
       ],
       'squared-fusion-media': [
-        //'mediafusionconnector',
+        'add-resource',
+        'connector-details',
+        'connector-details-v2',
+        'media-service',
         'media-service-v2',
+        'mediafusion-settings',
         'metrics',
         'reports-metrics',
-        'media-service',
-        'connector-details',
-        'connector-details-v2'
       ],
       'webex-messenger': [
         'messenger'
@@ -362,22 +356,21 @@
         'partnerreports'
       ],
       'partner': [
-        'overview',
-        'reports',
-        'devices',
-        'fusion',
-        //'mediafusionconnector',
-        'media-service-v2',
-        'media-service',
-        'hurondetails',
-        'huronsettings',
-        'cluster-list',
-        'expressway-settings',
-        'mediafusion-settings',
         'calendar-service',
         'call-service',
+        'cluster-list',
+        'devices',
+        'expressway-settings',
+        'fusion',
+        'hurondetails',
+        'huronsettings',
         'management-service',
-        'services-overview'
+        'media-service',
+        'media-service-v2',
+        'mediafusion-settings',
+        'overview',
+        'reports',
+        'services-overview',
       ]
     };
 

@@ -35,7 +35,7 @@
   }
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl) {
+  function CsdmHuronDeviceService($http, $q, $translate, Authinfo, HuronConfig, CsdmConverter, CmiKemService, KemService, Notification, devicesUrl, FeatureToggleService) {
 
     function huronEnabled() {
       return $q.when(Authinfo.isSquaredUC());
@@ -74,23 +74,27 @@
         return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
           loadedData = true;
           _.extend(deviceList, CsdmConverter.convertHuronDevices(res.data));
-          _.forEach(deviceList, function (device) {
-            if (KemService.isKEMAvailable(device.product)) {
-              CmiKemService.getKEM(device.huronId).then(
-                function (data) {
-                  device.kem = data;
-                }
-              ).catch(function () {
-                if (!errorRetrieveKEM) {
-                  errorRetrieveKEM = true;
-                  Notification.error($translate.instant('spacesPage.retrieveKemFail'));
+          FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
+            if (result) {
+              _.forEach(deviceList, function (device) {
+                if (KemService.isKEMAvailable(device.product)) {
+                  CmiKemService.getKEM(device.huronId).then(
+                    function (data) {
+                      device.kem = data;
+                    }
+                  ).catch(function () {
+                    if (!errorRetrieveKEM) {
+                      errorRetrieveKEM = true;
+                      Notification.error('spacesPage.retrieveKemFail');
+                    }
+                  });
                 }
               });
             }
           });
         }, function () {
           loadedData = true;
-          Notification.error($translate.instant('spacesPage.retrieveDevicesFail'));
+          Notification.error('spacesPage.retrieveDevicesFail');
         });
       });
     }

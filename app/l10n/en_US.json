@@ -8,7 +8,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Add Users",
+    "addUsers": "Add Users",
+    "convertUsers": "Convert Users",
+    "errorMessages": "Error Messages",
+    "skipErrorsAndFinish": "Skip Errors and Finish",
+    "newUsers": "{newusers, plural, one{# New user} other{# New users}}",
+    "updatedUsers": "{updatedusers, plural, one{# Updated user} other{# Updated users}}",
+    "errors": "{errors, plural, one{# Error} other{# Errors}}",
     "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
@@ -86,6 +92,7 @@
     "userListError": "Error retrieving the user list. Please try reloading the page.",
     "hybridServicesError": "Unable to perform this operation for some users. Hybrid Services are available for licensed users. Please check the licensing for your users and then try again.",
     "hybridServicesComboError": "You chose a combination of services (Call Service and Spark Call) that we don't support. Please remove one and try again.",
+    "licenseServicesError": "Not enough licenses available for an user",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
@@ -174,6 +181,15 @@
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms",
+    "licenseShortage": "Not enough licenses",
+    "licenseShortageBulk": "You did not have enough licenses",
+    "bulkCsvLicensingMessage": "You ran out of licenses for some of your services. Users that we onboarded after you ran out of licenses were given a free license. Please visit 'Review Plan' to buy more licenses.",
+    "reviewPlan": "Review your plan",
+    "reviewPlanMessage": "Review your plan and license usage. Upgrade your plan so you can select the licenses that you want.",
+    "proceedFree": "Proceed with free licenses",
+    "proceedFreeMessage": "If you run out of licenses for a Cisco Spark service, any remaining users are assigned a free license for that service.",
+    "reviewPlanButton": "Review your plan",
+    "proceedFreeButton": "Proceed with Free",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -235,12 +251,6 @@
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
     "addOrganizationTab": "Create an Organization",
     "addOrganizationTabDesc": "Add a new organization to this account",
-    "fusionDetailsTab": "Connector Management",
-    "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Call",
-    "huronLineDetailsTabDesc": "Numbers and Settings",
-    "MediafusionDetailsTab": "Hybrid Services: Media",
-    "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
     "mediaOnHoldTab": "Media On Hold",
@@ -260,23 +270,11 @@
     "entResUtilizationTab": "Utilization",
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
-    "conferencing": "WebEx",
-    "conferencingDesc": "List of WebEx Sites",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "messengerTab": "Webex Messenger",
-    "messengerTabDesc": "Webex Messenger Administration",
-    "calendarServiceTab": "Hybrid Services: Calendar",
-    "calendarServiceTabDesc": "Calendar Service",
-    "callServiceTab": "Hybrid Services: Call",
-    "callServiceTabDesc": "Call Service",
-    "expresswayManagementServiceTab": "Hybrid Services: Management",
-    "expresswayManagementServiceTabDesc": "Expressway Management Service",
-    "helpdesk": "Help Desk",
-    "careTab": "Care",
-    "careTabDesc": "Cloud Contact Center"
+    "helpdesk": "Help Desk"
   },
   "index": {
     "welcome": "Welcome!",
@@ -404,6 +402,31 @@
     "customerSelect": "Select a customer",
     "trackingId": "Tracking ID: "
   },
+  "careReportsPage": {
+    "tasks": "Tasks",
+    "handled": "Handled",
+    "abandoned": "Abandoned",
+    "todayCategoryAxis": "Hours",
+    "yesterdayCategoryAxis": "Hours",
+    "weekCategoryAxis": "Days",
+    "monthCategoryAxis": "Weeks",
+    "threeMonthsCategoryAxis": "Months",
+    "today": "Today",
+    "today2": "for today",
+    "todayInterval": "15 minutes time interval",
+    "yesterday": "Yesterday",
+    "yesterday2": "for yesterday",
+    "yesterdayInterval": "15 minutes time interval",
+    "week": "Last Week",
+    "week2": "during the last week",
+    "weekInterval": "given day",
+    "month": "Last Month",
+    "month2": "during the last month",
+    "monthInterval": "given week",
+    "threeMonths": "Last Three Months",
+    "threeMonths2": "during the last 3 months",
+    "threeMonthsInterval": "given month"
+  },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
@@ -492,6 +515,10 @@
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer"
+  },
+  "taskIncoming": {
+    "title": "Tasks Incoming",
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of handled and abandoned tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -869,6 +896,9 @@
     "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
+    "setUpDevices": "Activate your devices when they arrive.",
+    "setUpSharedDevices": "Activate your Room System devices when they arrive.",
+    "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
@@ -973,7 +1003,12 @@
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
-    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
+    "voicemailToEmailLabel": "Voicemail to Email",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
+    "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
+    "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1248,6 +1283,10 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
+    "hybridServiceNames": {
+      "squared-fusion-uc": "Hybrid Call Service",
+      "squared-fusion-cal": "Hybrid Calendar Service"
+    },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
@@ -1433,24 +1472,64 @@
       "no-domain-verified": {
         "title": "Verify a Domain",
         "description": "You need at least one verified domain to use call services. Add domains under settings."
+      },
+      "user-activation-errors": {
+        "title": "Activation Error",
+        "calendar-user-errors": "There are {{numberUsers}} users with Calendar Service activation errors.",
+        "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
+        "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
+        "generate-report": "Generate Report"
       }
     },
     "fusion": {
+      "types": {
+        "expressway": "Expressway",
+        "mediafusion": "Hybrid Media Node"
+      },
       "list": {
         "title": "Clusters",
         "empty": "No clusters found.",
-        "users": "Users:",
-        "releaseChannel": "Release Channel:",
-        "upgradeTime": "Upgrade Time:",
+        "upgrade-schedule": "Upgrade Schedule",
+        "release-channel": "Release Channel",
         "hosts": "{count, plural, one{# Host} other{# Hosts}}",
         "settings": "Settings",
         "all": "All",
-        "expressway-short": "E",
-        "mediafusion-short": "M",
+        "add-resource": "Add Resource",
         "expressway": "Expressway",
-        "mediafusion": "Media Fusion",
-        "no-services": "No services",
-        "upgrade-schedule": "Upgrade Schedule"
+        "mediafusion": "Media",
+        "no-services": "No services"
+      },
+      "add-resource": {
+        "title": "Add Resource",
+        "type": {
+          "error": "Error fetching the different cluster types.",
+          "title": "What type of resource do you want to add?",
+          "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
+          "expressway-not-setup": "Expressway no set up",
+          "mediafusion-description": "Can run Hybrid Media Service",
+          "mediafusion-not-setup": "Media Service not set up"
+        },
+        "expressway": {
+          "services": {
+            "error": "Error fetching the different service types.",
+            "title": "What services do you want the Expressway to run?",
+            "call-not-setup": "Hybrid Call Service not set up",
+            "calendar-not-setup": "Hybrid Calendar Service not set up"
+          },
+          "end": {
+            "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
+            "line2": "Go to your Expressway to complete registration and configure the connector(s)."
+          }
+        },
+        "mediafusion": {
+          "name": {
+            "title": "Enter a name for the Hybrid Media Node",
+            "help": "The cluster name is only used for display purposes."
+          },
+          "end": {
+
+          }
+        }
       }
     }
   },
@@ -1473,7 +1552,8 @@
       "CREATED": "Created",
       "ACCEPTED": "Accepted",
       "ABORTED": "Cancelled",
-      "INIT": "Initializing"
+      "INIT": "Initializing",
+      "STORING": "Storing"
     },
     "reportFailureReasons": {
       "UNEXPECTED_FAILURE": "Unexpected failure",
@@ -1816,6 +1896,7 @@
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
     "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
+    "openHoursDaySelect": "At least one open hours form does not have any days of the week checked.",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -1844,7 +1925,7 @@
     "phoneMenuRepeatThree": "Three Times",
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
-    "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
+    "phoneMenuHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will still listen for caller input.",
     "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
     "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
     "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
@@ -1956,7 +2037,9 @@
       "oskar": "Oskar",
       "empar": "Empar"
     },
-    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "sayMessageHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will continue to the next step.",
+    "sayMessageSpecialChar": "To speak special characters, write them out (use 'star' for '*').",
+    "aaHelpFAQ": "Find 'Frequently Asked Questions About Auto Attendant' here:",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
@@ -2347,7 +2430,7 @@
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
       "timeZonePlaceholder": "Select a time zone...",
-      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
@@ -2577,12 +2660,13 @@
     "ST": "Storage",
     "SD": "Spark Room System",
     "deleteOrgTitle": "Delete Customer",
-    "deleteOrgConfirmMsg": "Are you sure you want to delete '{{orgName}}'?",
-    "deleteOrg": "Delete '{{orgName}}'",
-    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrg": "Delete Customer",
+    "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
-    "addNumbers": "Add Numbers"
+    "addNumbers": "Add Numbers",
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2950,6 +3034,11 @@
       "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
+    "deregister": {
+      "header": "Are you sure you want to deregister this node?",
+      "body1": "If you proceed, this node will no longer be available.",
+      "body2": "To make this node available again, you will need to reregister it."
+    },
     "metrics": {
       "today": "Last 24 Hours",
       "today2": "Last 24 Hours",
@@ -2971,17 +3060,19 @@
       "clusterAvailability": "Cluster Availability for",
       "callReject": "Call Rejects  for",
       "node": "Node",
-      "callVolumes": "Total Number of Calls",
-      "callVolumesDescription": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
-      "callLocal": "Calls local to cluster",
-      "callReject": "Calls rejected by cluster",
+      "callVolumes": "Total Calls",
+      "callVolumesDescription": "Total number of on-premises calls and calls that overflowed to the Cisco Collaboration Cloud.",
+      "callVolumesDescriptionForClusterSel": "Total number of calls hosted on this Hybrid Media Cluster and those that were redirected to another resource (cluster or cloud).",
+      "callLocal": "On Premises",
+      "callReject": "Overflowed to Cloud",
+      "callsRedirected": "Calls Redirected",
       "availabilityOfCluster": "Cluster Availability",
       "availabilityOfHost": "Node Availability",
-      "availabilityOfClusterDescription": "Hybrid Media Clusters to host",
-      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls",
+      "availabilityOfClusterDescription": "Availability of Hybrid Media Clusters to host calls.",
+      "availabilityOfHostDescription": "Availability of nodes in this Hybrid Media Cluster to host calls.",
       "clusterAvailableTitle": "Available",
       "clusterUnavailableTitle": "Unavailable",
-      "clusterPartialTitle": "Partial Availability",
+      "clusterPartialTitle": "Partially Available",
       "hostAvailableTitle": "Available",
       "hostUnavailableTitle": "Unavailable",
       "utilizationTitle": "Percentage Utilization",
@@ -3096,6 +3187,7 @@
       "description": "Description",
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
+      "nodeImpact": "Node Impacted",
       "raised": "Raised"
     },
     "add-resource-dialog": {
@@ -3648,7 +3740,9 @@
     "errorFileType": "File Not Uploaded: incorrect file type",
     "errorFilePNG": "The uploaded file must be a PNG file",
     "errorDimensions": "File Not Uploaded: incorrect file dimensions",
-    "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
+    "errorWidthHeight": "The uploaded image must be wider than {{width}} px.",
+    "errorFileSize": "File Not Uploaded: incorrect file size",
+    "errorFileLarge": "The image file size must be less than 1 MB."
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -3952,11 +4046,14 @@
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
     "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
     "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
+    "errorFailedCheckingOrgInManagedOrgs": "Failed checking if user has customer org in its managed orgs: ",
     "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
     "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
     "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
     "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
     "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
+    "errorLacksRole": "User lacks appropriate role in Common Identity to view this content",
+    "errorNotOrgManager": "User does not manage org to view this content",
     "errorUnauthorizedToView": "Unauthorized to view this content",
     "http0": "Can't connect to service",
     "http401": "401 Unauthorized",
@@ -4377,7 +4474,7 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Spark Client Security",
-      "requireProtectedDevices": "Users can only launch the Cisco Spark app on protected devices or workstations"
+      "description": "Users can only launch the Cisco Spark app on protected devices or workstations"
     },
     "support": {
       "title": "Support",
@@ -4404,12 +4501,12 @@
     "room": "Room Systems",
     "hybrid": "Hybrid Services",
     "subscription": "Subscription ID: ",
-    "defaultName": "Your Subscription",
     "numberedName": "Subscription {{number}}",
     "usage": "Usage: ",
     "more": "More",
     "less": "Less",
     "quantity": "Qty: ",
+    "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Rooms",
       "CF": "Meeting 25 Party",
@@ -4422,6 +4519,14 @@
       "CO": "Spark Call",
       "SD": "Spark Room Systems"
     }
+  },
+  "myCompanyOrders": {
+    "numberHeader": "Order Number",
+    "descriptionHeader": "Order Detail",
+    "priceHeader": "Price",
+    "dateHeader": "Order Date",
+    "actionsHeader": "Actions",
+    "downloadPdf": "Download PDF"
   },
   "ciRoles": {
     "atlas-portal.support": "Support",

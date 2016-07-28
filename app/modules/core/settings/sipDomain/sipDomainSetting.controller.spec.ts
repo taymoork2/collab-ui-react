@@ -103,7 +103,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
     it('should disable the field and clear error on the field validation', () => {
       controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
-      controller.enterpriseSipUrlNext();
+      controller.saveDomain();
       $scope.$apply();
       expect(controller.isError).toEqual(false);
       expect(controller.isDisabled).toEqual(true);
@@ -140,7 +140,7 @@ describe('Controller: EnterpriseSettingsCtrl', ()  => {
 
       controller._inputValue = controller._validatedValue = "alalalalalong!";
       controller.isConfirmed = true;
-      controller.enterpriseSipUrlNext();
+      controller.saveDomain();
       $scope.$apply();
       expect(Notification.error).toHaveBeenCalled();
     });

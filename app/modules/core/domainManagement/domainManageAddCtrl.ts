@@ -71,10 +71,11 @@ namespace domainManagement {
     get exampleDomain() {
       //If the user is not a partner, and if not already added, suggest the logged on user's domain:
       if (this._loggedOnUser.isLoaded && !this._loggedOnUser.isPartner
-        && !_.some(this.DomainManagementService.domainList, {text: this._loggedOnUser.domain}))
+        && !_.some(this.DomainManagementService.domainList, {text: this._loggedOnUser.domain})) {
         return this._loggedOnUser.domain;
-      else
+      } else {
         return null;
+      }
     }
 
     get error() {
@@ -99,15 +100,17 @@ namespace domainManagement {
     }
 
     get domainToAdd() {
-      if (this._domain || !this._loggedOnUser.domain || !this._loggedOnUser.isLoaded || this._loggedOnUser.isPartner)
+      if (this._domain || !this._loggedOnUser.domain || !this._loggedOnUser.isLoaded || this._loggedOnUser.isPartner) {
         return this.encodedDomain;
+      }
 
       return this._loggedOnUser.domain.toLowerCase();
     }
 
     set domain(domain) {
-      if (domain == this._domain)
+      if (domain == this._domain) {
         return;
+      }
 
       this._error = null;//reset error
       this._domain = domain;

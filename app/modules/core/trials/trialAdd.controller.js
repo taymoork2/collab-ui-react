@@ -433,7 +433,7 @@
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = results[2];
+        vm.showContextServiceTrial = true;
 
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
