@@ -2169,6 +2169,13 @@
     "addNew": "Add New",
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
+  "multipleCalls": {
+    "title": "Simultaneous Calls",
+    "two": "2",
+    "eight": "8",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
+    "mulitpleCallsLoadError": "Multiple Calls failed to load."
+  },
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>",

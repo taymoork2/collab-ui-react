@@ -2,10 +2,10 @@
 
 describe('Controller: LineSettingsCtrl', function () {
   var controller, $scope, $state, $stateParams, $rootScope, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, ServiceSetup;
-  var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers,
+  var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers, simultaneousCall,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
     modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService;
+  var UserListService, SharedLineInfoService, CallerId, Notification, companyNumber, DeviceService, SimultaneousCallsServiceV2, DialPlanService;
   var userList = [];
   var userData = [];
   var sharedLineUsers = [];
@@ -22,7 +22,9 @@ describe('Controller: LineSettingsCtrl', function () {
       uuid: ''
     }
   };
-
+  var simultaneousCall = {
+    incomingCallMaximum:8
+  };
   var errorResponse = {
     message: 'error',
     status: 500
@@ -37,13 +39,14 @@ describe('Controller: LineSettingsCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$state_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_) {
+    _UserListService_, _SharedLineInfoService_, _SimultaneousCallsServiceV2_, _CallerId_, _DeviceService_, _DialPlanService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
     $modal = _$modal_;
     $state = _$state_;
     Notification = _Notification_;
+    SimultaneousCallsServiceV2 = _SimultaneousCallsServiceV2_;
     DirectoryNumber = _DirectoryNumber_;
     TelephonyInfoService = _TelephonyInfoService_;
     LineSettings = _LineSettings_;
@@ -70,6 +73,7 @@ describe('Controller: LineSettingsCtrl', function () {
     getDirectoryNumberBusyNewLine = getJSONFixture('huron/json/lineSettings/getDirectoryNumberBusyNewLine.json');
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
+    simultaneousCall = getJSONFixture('huron/json/lineSettings/simultaneousCall.json');
     telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
     telephonyInfoVoiceOnly = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
     telephonyInfoVoiceOnlyShared = angular.copy(telephonyInfoVoiceOnly);
@@ -103,6 +107,8 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.when());
     spyOn(LineSettings, 'changeInternalLine').and.returnValue($q.when());
     spyOn(LineSettings, 'addNewLine').and.returnValue($q.when());
+    spyOn(LineSettings, 'getSimultaneousCalls').and.returnValue($q.when(simultaneousCall));
+    spyOn(LineSettings, 'updateSimultaneousCalls').and.returnValue($q.when());
     spyOn(LineSettings, 'disassociateInternalLine').and.returnValue($q.when());
     spyOn(LineSettings, 'addExternalLine').and.returnValue($q.when());
     spyOn(LineSettings, 'changeExternalLine').and.returnValue($q.when());
@@ -191,6 +197,20 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(Notification.errorResponse).not.toHaveBeenCalled();
     });
 
+    it('should call getMultipleCalls during init', function () {
+      controller.init();
+      $scope.$apply();
+      expect(LineSettings.getSimultaneousCalls).toHaveBeenCalled();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+    });
+
+    it('it should notify an error when getMultipleCalls fails', function () {
+      LineSettings.getSimultaneousCalls.and.returnValue($q.reject(errorResponse));
+      controller.init();
+      $scope.$apply();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+    });
+
     it('should notify an error when loadExternalNumberPool fails', function () {
       TelephonyInfoService.getExternalNumberPool.and.returnValue([]);
       TelephonyInfoService.loadExternalNumberPool.and.returnValue($q.reject(errorResponse));
@@ -241,6 +261,10 @@ describe('Controller: LineSettingsCtrl', function () {
 
     it('should update dtmfAccessId with the external number pattern', function () {
       expect(HuronUser.updateDtmfAccessId).toHaveBeenCalledWith(currentUser.id, telephonyInfoWithVoicemail.esn);
+    });
+
+    it('should update Simultaneous Calling', function () {
+      expect(LineSettings.updateSimultaneousCalls).toHaveBeenCalled();
     });
   });
 
