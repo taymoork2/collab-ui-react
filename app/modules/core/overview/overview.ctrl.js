@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
+  function OverviewCtrl($rootScope, $scope, $translate, Authinfo, Config, FeatureToggleService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, ServiceDescriptor, TrialService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -55,31 +55,35 @@
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       });
-      Orgservice.getLicensesUsage()
-        .then(function (subscriptions) {
-          var sharedDevicesUsage = -1;
-          var sparkBoardsUsage = -1;
-          _.each(subscriptions, function (subscription) {
-            _.each(subscription, function (licenses) {
-              _.each(licenses, function (license) {
-                if (license.status === Config.licenseStatus.ACTIVE) {
-                  if (license.offerName === Config.offerCodes.SD) {
-                    sharedDevicesUsage = license.usage;
-                  } else if (license.offerName === Config.offerCodes.SB) {
-                    sparkBoardsUsage = license.usage;
-                  }
-                }
+      FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
+        if (toggle) {
+          Orgservice.getAdminOrgUsage()
+            .then(function (subscriptions) {
+              var sharedDevicesUsage = -1;
+              var sparkBoardsUsage = -1;
+              _.each(subscriptions, function (subscription) {
+                _.each(subscription, function (licenses) {
+                  _.each(licenses, function (license) {
+                    if (license.status === Config.licenseStatus.ACTIVE) {
+                      if (license.offerName === Config.offerCodes.SD) {
+                        sharedDevicesUsage = license.usage;
+                      } else if (license.offerName === Config.offerCodes.SB) {
+                        sparkBoardsUsage = license.usage;
+                      }
+                    }
+                  });
+                });
               });
+              if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
+                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+              } else if (sparkBoardsUsage === 0) {
+                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+              } else if (sharedDevicesUsage === 0) {
+                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+              }
             });
-          });
-          if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
-            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-          } else if (sparkBoardsUsage === 0) {
-            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-          } else if (sharedDevicesUsage === 0) {
-            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-          }
-        });
+        }
+      });
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
