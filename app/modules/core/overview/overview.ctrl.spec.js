@@ -7,7 +7,7 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo, OverviewNotificationFactory, TrialService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageJSONFixture = getJSONFixture('core/json/organizations/usage.json');
   var services = getJSONFixture('squared/json/services.json');
@@ -265,15 +265,16 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _Authinfo_, _OverviewNotificationFactory_, _TrialService_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
-    $translate = _$translate_;
     $state = _$state_;
-    Log = _Log_;
-    Config = _Config_;
+    $translate = _$translate_;
     Authinfo = _Authinfo_;
+    Config = _Config_;
+    FeatureToggleService = _FeatureToggleService_;
+    Log = _Log_;
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
 
@@ -290,7 +291,7 @@ describe('Controller: OverviewCtrl', function () {
     };
     Orgservice = {
       getAdminOrg: function (orgEventHandler) {},
-      getLicensesUsage: function () {
+      getAdminOrgUsage: function () {
         return $q.when(orgServiceJSONFixture.getLicensesUsage.singleSub);
       },
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
@@ -344,6 +345,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getServices').and.returnValue(services);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
 
     controller = $controller('OverviewCtrl', {
