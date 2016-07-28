@@ -10,6 +10,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.name = wizardData.expressway.hostname;
     vm.next = next;
+    vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {

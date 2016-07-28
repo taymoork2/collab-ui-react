@@ -11,6 +11,7 @@
     var clusterId = null;
     vm.name = wizardData.mediafusion.hostname;
     vm.next = next;
+    vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
