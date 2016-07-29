@@ -2,18 +2,19 @@
 
 describe('Controller: customerAdministratorDetailCtrl', function () {
   beforeEach(module('Core'));
-  var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService, Analytics;
+  var controller, $controller, $scope, $q, $stateParams, Analytics, CustomerAdministratorService, ModalService, Notification, Orgservice;
   var modalDefer, testUsers = [];
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Analytics_, _Notification_, _CustomerAdministratorService_, _ModalService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Analytics_, _Notification_, _CustomerAdministratorService_, _ModalService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    $stateParams = _$stateParams_;
-    CustomerAdministratorService = _CustomerAdministratorService_;
-    Notification = _Notification_;
-    ModalService = _ModalService_;
-    Analytics = _Analytics_;
     $q = _$q_;
+    $stateParams = _$stateParams_;
+    Analytics = _Analytics_;
+    CustomerAdministratorService = _CustomerAdministratorService_;
+    ModalService = _ModalService_;
+    Notification = _Notification_;
+    Orgservice = _Orgservice_;
 
     $stateParams.currentCustomer = {
       customerOrgId: '5555-6666',
@@ -67,6 +68,10 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
+
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
   }));
 
   function initController() {

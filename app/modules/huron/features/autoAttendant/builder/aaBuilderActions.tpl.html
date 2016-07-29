@@ -2,9 +2,9 @@
   <div class="aa-vertical-line"></div>
   <div ng-show="!actions.option" name="newStepForm" class="aa-panel" id="newStepForm{{schedule + index}}">
     <div class="aa-panel-body">
-      <div class="aa-flex-row aa-help-wrapper">
+      <div class="aa-flex-row">
         <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
-        <span class="aa-help-icon" aria-label="common.help" popover="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+        <aa-help content="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}"></aa-help>
         <div class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>
@@ -14,18 +14,18 @@
       <div class="aa-flex-row">
         <p class="h6 aa-new-step-info" translate="autoAttendant.builderNewStepInfo"></p>
       </div>
-      <div class="aa-flex-row aa-help-wrapper">
+      <div class="aa-flex-row">
         <cs-select ng-model="actions.option" options="actions.options" labelfield="title" placeholder="actions.actionPlaceholder" icon="icon-chevron-down" id="actionSelect{{schedule + index}}" on-change-fn="actions.selectOption()"></cs-select>
-        <span class="aa-help-icon" aria-label="common.help" aa-popover-html="{{ :: actions.getSelectHint() }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+        <aa-help content="{{ :: actions.getSelectHint() }}"></aa-help>
       </div>
     </div>
   </div>
 
   <div ng-if="actions.option" class="aa-panel-lane" name="actionForm">
     <div class="aa-panel-body" name="{{actions.option.title}}">
-      <div class="aa-flex-row aa-help-wrapper">
+      <div class="aa-flex-row">
         <h3 class="text-info" translate="{{actions.option.title}}"></h3>
-        <span ng-if="actions.option.help" class="aa-help-icon" popover="{{ :: actions.option.help }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+        <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink"></aa-help>
         <div class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>

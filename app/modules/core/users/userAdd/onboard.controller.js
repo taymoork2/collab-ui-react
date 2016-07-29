@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, WebExUtilsFact) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -328,9 +328,7 @@
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
         if ($scope.cmrLicensesForMetric[licenseId]) {
-          Analytics.trackEvent("CMR checkbox unselected", {
-            licenseId: licenseId
-          });
+          Analytics.trackSelectedCheckbox(licenseId);
         }
       }
       if (shouldAddCallService()) {
@@ -603,11 +601,14 @@
           var cmrMatches = _.filter(cmrFeatures, {
             siteUrl: site
           });
+          var isCISiteFlag = (WebExUtilsFact.isCIEnabledSite(site)) ? true : false;
           return {
             site: site,
             billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
             confLic: confMatches,
-            cmrLic: cmrMatches
+            cmrLic: cmrMatches,
+            isCISite: isCISiteFlag,
+            siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
           };
         });
         $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
@@ -908,9 +909,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackEvent("Convert User Search", {
-            from: $state.current.name
-          });
+          Analytics.trackConvertUser($state.current.name);
         }
       }, $scope.timeoutVal);
     }

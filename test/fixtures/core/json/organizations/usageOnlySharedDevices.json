@@ -1,0 +1,11 @@
+[{
+  "licenses": [{
+    "licenseId": "SD_e32425a1-2674-4d98-9e56",
+    "offerName": "SD",
+    "licenseType": "SHARED_DEVICES",
+    "features": ["spark-room-system"],
+    "volume": 3,
+    "status": "ACTIVE",
+    "usage": 0
+  }]
+}]

@@ -30,12 +30,12 @@
     // Setup Assistant pages with index
     vm.states = ['name',
       'overview',
-      'profile',
-      'chatStatusMessages',
       'customerInformation',
-      'feedback',
       'agentUnavailable',
       'offHours',
+      'feedback',
+      'profile',
+      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -57,6 +57,7 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.logoUrl = undefined;
     vm.categoryTokensId = 'categoryTokensElement';
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
@@ -157,7 +158,7 @@
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
+          orgLogoUrl: vm.logoUrl,
           useAgentRealName: false
         },
         pages: {
@@ -498,12 +499,14 @@
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: ''
+          orgLogoUrl: vm.logoUrl
         };
       } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: false,
-          useAgentRealName: false
+          useAgentRealName: false,
+          orgLogoUrl: vm.logoUrl,
+          displayText: vm.orgName
         };
       }
     }
@@ -583,6 +586,9 @@
     }
 
     function init() {
+      CTService.getLogoUrl().then(function (url) {
+        vm.logoUrl = url;
+      });
       CTService.getLogo().then(function (data) {
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;

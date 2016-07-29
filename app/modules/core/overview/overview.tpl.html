@@ -13,65 +13,23 @@
             <div translate="homePage.notifications"/>
           </header>
 
-          <section class="monitoring-panel small-3 medium-12 column"
-                   ng-if="!overview.displayNotifications()">
+          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length === 0">
             <div class="notification-style">
               <span translate="overview.nonotifications"></span>
             </div>
           </section>
-          <section class="monitoring-panel small-3 medium-12 column"
-                   ng-if="overview.displayNotifications()">
-
-            <div class="notification-style" ng-show="overview.setupNotDone()">
-              <span class="badge badge-warning" translate="homePage.todo"></span>
-              <span class="notification-spacing">
-                <span translate="homePage.setUpYourTrial"></span>
-                <a ng-click="overview.openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
+          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
+            <div class="notification-style" ng-repeat="notification in overview.notifications">
+              <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
+              <div ng-if="notification.canDismiss" class="notification-spacing">
+                <span translate="{{notification.text}}"></span>
+                <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
+              </div>
+              <span ng-if="!notification.canDismiss" class="notification-spacing">
+                <span translate="{{notification.text}}"></span>
+                <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
               </span>
-            </div>
-
-            <!--calendar-->
-            <div class="notification-style" ng-if="!overview.isCalendarAcknowledged">
-              <span class="badge success" translate="common.new"></span>
-              <div class="notification-spacing">
-                <span translate="homePage.setUpCalendarService"></span>
-                <a ng-click="overview.showServiceActivationPage('calendar-service')"
-                   translate="homePage.getStarted"></a>
-              </div>
-              <button type="button" class="close"
-                      ng-click="overview.setHybridAcknowledged('calendar-service')"></button>
-            </div>
-            <!--call-aware-->
-            <div class="notification-style" ng-if="!overview.isCallAwareAcknowledged">
-              <span class="badge success" translate="common.new"></span>
-              <div class="notification-spacing">
-                <span translate="homePage.setUpCallAwareService"></span>
-                <a ng-click="overview.showServiceActivationPage('call-aware-service')"
-                   translate="homePage.getStarted"></a>
-              </div>
-              <button type="button" class="close"
-                      ng-click="overview.setHybridAcknowledged('call-aware-service')"></button>
-            </div>
-            <!--call-connect-->
-            <div class="notification-style" ng-if="!overview.isCallConnectAcknowledged">
-              <span class="badge success" translate="common.new"></span>
-              <div class="notification-spacing">
-                <span translate="homePage.setUpCallConnectService"></span>
-                <a ng-click="overview.showServiceActivationPage('call-connect-service')"
-                   translate="homePage.getStarted"></a>
-              </div>
-              <button type="button" class="close"
-                      ng-click="overview.setHybridAcknowledged('call-connect-service')"></button>
-            </div>
-            <!--cloud-sip-uri -->
-            <div class="notification-style" ng-if="overview.isCloudSipUriSet !== undefined && !overview.isCloudSipUriSet && !overview.isSipUriAcknowledged">
-              <span class="badge warning" translate="homePage.todo"></span>
-              <div class="notification-spacing">
-                <span translate="homePage.setupCloudSipUriMessage"></span>
-                <a ng-click="overview.showEnterpriseSettings()"
-                   translate="homePage.goSetupCloudSipUri"></a>
-              </div>
-              <button type="button" class="close" ng-click="overview.setSipUriNotificationAcknowledged()"></button>
+              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)"></button>
             </div>
           </section>
         </article>
