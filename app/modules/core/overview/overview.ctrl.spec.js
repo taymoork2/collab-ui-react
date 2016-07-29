@@ -292,7 +292,9 @@ describe('Controller: OverviewCtrl', function () {
     Orgservice = {
       getAdminOrg: function (orgEventHandler) {},
       getAdminOrgUsage: function () {
-        return $q.when(orgServiceJSONFixture.getLicensesUsage.singleSub);
+        return $q.when({
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+        });
       },
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getOrg: jasmine.createSpy().and.callFake(function (callback, status) {
