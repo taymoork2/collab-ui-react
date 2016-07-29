@@ -58,10 +58,10 @@
       FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
         if (toggle) {
           Orgservice.getAdminOrgUsage()
-            .then(function (subscriptions) {
+            .then(function (response) {
               var sharedDevicesUsage = -1;
               var sparkBoardsUsage = -1;
-              _.each(subscriptions, function (subscription) {
+              _.each(response.data, function (subscription) {
                 _.each(subscription, function (licenses) {
                   _.each(licenses, function (license) {
                     if (license.status === Config.licenseStatus.ACTIVE) {
