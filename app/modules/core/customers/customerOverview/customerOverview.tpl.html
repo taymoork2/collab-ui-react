@@ -54,36 +54,36 @@
           <div class="progress-bar" ng-class="{'danger-bar': customerOverview.currentCustomer.daysLeft <= 5, 'warning-bar': (customerOverview.currentCustomer.daysLeft < customerOverview.currentCustomer.duration/2), 'success-bar': (customerOverview.currentCustomer.daysLeft >= customerOverview.currentCustomer.duration/2)}" role="progressbar" aria-valuenow="{{getProgressValue(customerOverview.currentCustomer)}}" aria-valuemin="0" aria-valuemax="{{customerOverview.currentCustomer.duration}}" style="width: {{customerOverview.currentCustomer.percentUsed}}%;"></div>
         </div>
       </div>
-      <div class="feature-list trials-list" >
+      <div class="feature-list trials-list">
         <ul>
           <li class="feature" ng-if="customerOverview.offer.userServices">
             <div class="feature-name" id="trial-info"> <i class="icon icon-circle-group feature-icon"></i>{{:: customerOverview.offer.userServices | translate}}</div>
             <div class="feature-details pull-right">{{customerOverview.currentCustomer.licenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
-          <li class="feature"  ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
-            <div class="feature-name"><i class="icon icon-circle-telepresence feature-icon"></i>{{::customerOverview.offer.deviceBasedServices|translate}}</div>
+          <li class="feature" ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
+            <div class="feature-name"><i class="icon icon-circle-telepresence feature-icon"></i>{{::customerOverview.offer.deviceBasedServices | translate}}</div>
             <div class="feature-details pull-right">{{customerOverview.currentCustomer.deviceLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
         </ul>
       </div>
     </cs-sp-section>
   <!-- services -->
-  <cs-sp-section  ng-if= "customerOverview.newCustomerViewToggle && (customerOverview.nonTrialServices|| customerOverview.meetingServices)">
+  <cs-sp-section  ng-if= "customerOverview.newCustomerViewToggle && (customerOverview.freeOrPaidServices|| customerOverview.meetingServices)">
     <div class="section-title-row">
       <span class="section-name" translate="customerPage.services"></span>
     </div>
     <div class="feature-list services-list" >
       <ul ng-class="{'has-meeting': customerOverview.meetingServices}">
         <!-- paid services -->
-        <li class="feature" ng-repeat = "service in customerOverview.nonTrialServices">
-          <div class="feature-name" ><i class="icon  feature-icon  {{service.icon}} " ></i>{{:: service.name | translate}}</div>
+        <li class="feature" ng-repeat = "service in customerOverview.freeOrPaidServices">
+          <div class="feature-name" ><i class="icon  feature-icon " ng-class="service.icon"></i>{{:: service.name | translate}}</div>
             <div class="feature-details pull-right" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
             <div class="feature-details pull-right" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
           </li>
           <!-- if there is meeting -->
           <li class="feature" id="meeting" ng-if="customerOverview.meetingServices">
-           <a ui-sref="customer-overview.meetingDetail({meetingLicenses: customerOverview.meetingServices.sub})" >
-            <div class="feature-name"><i class="icon  feature-icon  {{customerOverview.meetingServices.icon}} " ></i>{{::customerOverview.meetingServices.name}}</div>
+           <a ui-sref="customer-overview.meetingDetail({meetingLicenses: customerOverview.meetingServices.sub})">
+            <div class="feature-name"><i class="icon  feature-icon  {{customerOverview.meetingServices.icon}}"></i>{{::customerOverview.meetingServices.name}}</div>
             <div class="feature-details pull-right">{{customerOverview.meetingServices.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}</div>
             <i class="feature-arrow"></i>
           </a>

@@ -26,7 +26,7 @@
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       buildService: _buildService,
-      addUniqueService: _addUniqueService
+      addService: _addService
     };
 
     var factory = {
@@ -60,9 +60,9 @@
       conferenceMapping[Config.offerCodes.EC] = $translate.instant('customerPage.EC');
       conferenceMapping[Config.offerCodes.CMR] = $translate.instant('customerPage.CMR');
 
-      conferenceMapping = _.mapValues(conferenceMapping, function (obj) {
+      conferenceMapping = _.mapValues(conferenceMapping, function (translatedOfferCode) {
         return {
-          name: obj,
+          name: translatedOfferCode,
           icon: 'icon-circle-group',
           licenseType: Config.licenseTypes.CONFERENCING
         };
@@ -92,7 +92,7 @@
       };
       licenseMapping[Config.offerTypes.CARE] = {
         name: $translate.instant('trials.care'),
-        icon: 'icon-circle-calendar',
+        icon: 'icon-circle-contact-centre',
 
       };
       return licenseMapping;
@@ -140,11 +140,14 @@
       return service;
     }
 
-    function _addUniqueService(services, service) {
-      if (!_.find(services, {
-          name: service.name,
-          qty: service.qty
-        })) {
+    function _addService(services, service) {
+      var existingService = _.find(services, {
+        name: service.name
+      });
+      if (existingService) {
+        existingService.qty = existingService.qty + service.qty;
+      }
+      else {
         services.push(service);
       }
     }
@@ -532,11 +535,12 @@
         service = null;
         if (licenseInfo) {
           //remove trial or paid services from 'free'
-          _.remove(freeServices, function (n) {
-            if (licenseInfo.offerName)
-              return n.licenseType == licenseInfo.licenseType && n.code == licenseInfo.offerName;
-            else
-              return n.licenseType == licenseInfo.licenseType;
+          _.remove(freeServices, function (freeService) {
+            if (licenseInfo.offerName) {
+              return freeService.licenseType === licenseInfo.licenseType && freeService.code === licenseInfo.offerName;
+            } else {
+              return freeService.licenseType === licenseInfo.licenseType;
+            }
           });
 
           //from paid or free services
@@ -544,20 +548,21 @@
             //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = helpers.buildService(licenseInfo, conferenceMapping);
-              helpers.addUniqueService(meetingServices, service);
+              helpers.addService(meetingServices, service);
 
             } else {
               service = helpers.buildService(licenseInfo, licenseMapping);
-              helpers.addUniqueService(paidServices, service);
+              helpers.addService(paidServices, service);
 
             }
           }
         }
 
       });
+
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
-        helpers.addUniqueService(paidServices, meetingServices.shift());
+        helpers.addService(paidServices, meetingServices.shift());
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {

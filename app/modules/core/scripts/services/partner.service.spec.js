@@ -518,7 +518,24 @@ describe('Partner Service -', function () {
 
       });
 
-      it('should add a service if there is not already one with the same name and quantity', function () {
+      it('should add a service if there is not already one with the same name', function () {
+        var service = {
+          'qty': 20,
+          'name': 'Spark Room System'
+        };
+        var services = [{
+          'qty': 10,
+          'name': 'Messaging'
+        }, {
+          'qty': 20,
+          'name': 'Call'
+        }];
+        PartnerService.helpers.addService(services, service);
+        expect(services.length).toBe(3);
+
+      });
+
+      it('should  sum quantities if there is already service with the same name', function () {
         var service = {
           'qty': 20,
           'name': 'Spark Room System'
@@ -530,16 +547,10 @@ describe('Partner Service -', function () {
           'qty': 20,
           'name': 'Call'
         }];
-        PartnerService.helpers.addUniqueService(services, service);
-        expect(services.length).toBe(3);
-        PartnerService.helpers.addUniqueService(services, service);
-        expect(services.length).toBe(3);
-        service = {
-          'qty': 10,
-          'name': 'Call'
-        };
-        PartnerService.helpers.addUniqueService(services, service);
-        expect(services.length).toBe(4);
+
+        PartnerService.helpers.addService(services, service);
+        expect(services.length).toBe(2);
+        expect(services[0].qty).toBe(30);
       });
     });
 

@@ -1413,9 +1413,6 @@
                 return FeatureToggleService.atlasCustomerListUpdateGetStatus()
                   .then(function (result) {
                     return result;
-                  })
-                  .catch(function () {
-                    return false;
                   });
               }
             },

@@ -5,8 +5,8 @@
     </div>
     <div class="feature-list services-list" ng-if="meetingDetail.meetingLicenses">
      <ul>
-      <li class="feature" ng-repeat = "service in meetingDetail.meetingLicenses" track by $index>
-        <div class="feature-name" > <i class="icon  feature-icon  {{service.icon}} " ></i>
+      <li class="feature" ng-repeat = "service in meetingDetail.meetingLicenses track by $index">
+        <div class="feature-name" > <i class="icon feature-icon {{service.icon}}"></i>
           {{:: service.name | translate}}</div>
           <div class="feature-details pull-right"> {{service.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}
           </div>
