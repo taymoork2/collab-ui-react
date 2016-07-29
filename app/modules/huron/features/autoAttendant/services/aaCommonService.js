@@ -12,6 +12,7 @@
     var aaActionStatus = false;
     var aaDialByExtensionStatus = false;
     var aaCENumberStatus = false;
+    var routeQueueToggle = false;
 
     var invalidList = {};
     var service = {
@@ -21,6 +22,8 @@
       setActionStatus: setActionStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
       setCENumberStatus: setCENumberStatus,
+      setRouteQueueToggle: setRouteQueueToggle,
+      isRouteQueueToggle: isRouteQueueToggle,
       isValid: isValid,
       setIsValid: setIsValid,
       getInvalid: getInvalid,
@@ -67,6 +70,7 @@
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
       aaCENumberStatus = false;
+      routeQueueToggle = false;
       invalidList = {};
     }
 
@@ -88,6 +92,17 @@
 
     function setCENumberStatus(status) {
       aaCENumberStatus = status;
+    }
+
+    function setRouteQueueToggle(status) {
+      routeQueueToggle = status;
+    }
+
+    /**
+     * Will check the toggle status for Queue which is set while aaPhoneMenuCtrl
+     */
+    function isRouteQueueToggle() {
+      return routeQueueToggle;
     }
 
     function saveUiModel(ui, aaRecord) {

@@ -448,9 +448,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackEvent('Start Trial Button Click', {
-          from: $state.current.name
-        });
+        Analytics.trackTrialStarted($state.current.name);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);

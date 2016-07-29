@@ -3,30 +3,30 @@
     <div class="row full">
       <div class="columns medium-9">
         <label for="streetAddress" translate="serviceAddress.streetAddress"></label>
-        <input type="text" id="streetAddress" ng-model="address.streetAddress" required ng-disabled="controller.isValid">
+        <input type="text" id="streetAddress" ng-model="address.streetAddress" required ng-disabled="readOnly">
       </div>
       <div class="columns medium-3">
         <label for="unit" translate="serviceAddress.unit"></label>
-        <input type="text" id="unit" ng-model="address.unit" ng-disabled="controller.isValid">
+        <input type="text" id="unit" ng-model="address.unit" ng-disabled="readOnly">
       </div>
     </div>
     <div class="row full">
       <div class="columns medium-12">
         <label for="city" translate="serviceAddress.city"></label>
-        <input type="text" id="city" ng-model="address.city" required ng-disabled="controller.isValid">
+        <input type="text" id="city" ng-model="address.city" required ng-disabled="readOnly">
       </div>
     </div>
     <div class="row full">
       <div class="columns medium-7">
         <label for="state" translate="serviceAddress.state"></label>
-        <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true" is-disabled="controller.isValid"></cs-select>
+        <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true" is-disabled="readOnly"></cs-select>
       </div>
       <div class="columns medium-5">
         <label for="zip" translate="serviceAddress.zipCode"></label>
-        <input type="text" id="zip" ng-model="address.zip" required ng-disabled="controller.isValid">
+        <input type="text" id="zip" ng-model="address.zip" required ng-disabled="readOnly">
       </div>
     </div>
-      <button class="btn--primary search-custom" type="submit" ng-click="controller.validateAddress()" translate="organizationsPage.search"></button>
+      <button class="btn--primary search-custom" type="submit" ng-click="addressValidate()" translate="organizationsPage.search" ng-disabled="formName.$invalid || readOnly" ng-hide="hideSearch" ></button>
   </div>
   <div class="flex-address validation-padding text-center">
     <div ng-if="readOnly">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div>
-        <p><a href ng-click="controller.modify()" translate="trialModal.pstn.addrRetry"></a></p>
+        <p><a href ng-click="modify()" translate="trialModal.pstn.addrRetry"></a></p>
         <br>
       </div>
     </div>

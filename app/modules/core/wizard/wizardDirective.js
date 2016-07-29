@@ -47,7 +47,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($controller, $modal, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -73,6 +73,7 @@
     vm.nextTab = nextTab;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.goToStep = goToStep;
     vm.getRequiredTabs = getRequiredTabs;
 
     vm.isFirstTab = isFirstTab;
@@ -295,6 +296,9 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
+        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
+          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+        }
         var steps = getSteps();
         if (angular.isArray(steps)) {
           var index = steps.indexOf(getStep());
@@ -307,6 +311,20 @@
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
+    }
+
+    function goToStep(requestedStep) {
+      var steps = getSteps();
+      if (angular.isArray(steps)) {
+        var index = _.map(steps, function (step) {
+          return step.name;
+        }).indexOf(requestedStep);
+        if (index === -1 || index >= steps.length) {
+          nextStep();
+        } else if (index < steps.length) {
+          setStep(steps[index]);
+        }
+      }
     }
 
     function getRequiredTabs() {
@@ -383,8 +401,9 @@
     }
 
     function hasDefaultButtons() {
-      if (vm.current.step)
+      if (vm.current.step) {
         return angular.isUndefined(vm.current.step.buttons);
+      }
       return false;
     }
 

@@ -43,7 +43,7 @@ describe('Service: Webex Trial Service', function () {
     it('should successfully validate a valid site url', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
-          isValid: true,
+          isValid: 'true',
           errorCode: '0'
         }]
       });
@@ -56,7 +56,7 @@ describe('Service: Webex Trial Service', function () {
     it('should fail to validate an invalid site url', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
-          isValid: false,
+          isValid: 'false',
           errorCode: '434057'
         }]
       });
@@ -69,7 +69,7 @@ describe('Service: Webex Trial Service', function () {
     it('should fail to validate a valid site url when errorCode is unknown', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
-          isValid: true,
+          isValid: 'true',
           errorCode: '2'
         }]
       });
@@ -82,7 +82,7 @@ describe('Service: Webex Trial Service', function () {
     it('should reutrn default errorCode when errorCode is unknown', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
-          isValid: false,
+          isValid: 'false',
           errorCode: '1337'
         }]
       });

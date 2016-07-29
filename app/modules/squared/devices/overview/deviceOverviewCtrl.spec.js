@@ -221,6 +221,7 @@ describe('Huron Device', function () {
   beforeEach(module('Hercules'));
   beforeEach(module('Squared'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

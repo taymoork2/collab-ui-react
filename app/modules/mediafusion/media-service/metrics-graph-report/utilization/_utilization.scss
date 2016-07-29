@@ -1,4 +1,6 @@
 .metrics-utilization {
+    position: relative;
+    bottom: 10px;
   .report-sides {
     margin: 0 rem-calc(25);
   }
@@ -51,4 +53,74 @@
       transform: translate(-50%, -50%);
     }
   }
+}
+
+
+.metrics-reports .report-card .legendDiv .report-section-header {
+}
+
+.metrics-reports .report-card .legendDiv .dottedlineCpu {
+    border: 0 none;
+    border-top: 4.5px dashed;
+    display: inline-block;
+    width: 3.5rem;
+    margin: 1.5rem 0 0 0rem;
+    color: #7BAF5D;
+}
+
+.metrics-reports .report-card .legendDiv .lineCpu {
+  border: 0 none;
+  border-top: 4.5px solid;
+  display: inline-block;
+  width: 2.5rem;
+  -webkit-border-start-width: inherit;
+  margin: 1.5rem 0 0 3rem;
+  color: #417505;
+}
+
+.metrics-reports .report-card .legendDiv p {
+  display: inline-block;
+  padding: 0;
+}
+
+.inlineBlockDiv {
+  display: inline-block;
+}
+
+.metrics-reports .report-card .legendDiv .headerTable {
+  table-layout: fixed;
+  margin-bottom: 0rem;
+  border-collapse: inherit;
+  width: 100%;
+  td {
+    padding: 0;
+    vertical-align: top;
+    width: 50%;
+  }
+}
+
+.metrics-reports .report-card .legendDiv .legends{
+  display: inline-block;
+    float: right;
+}
+.metrics-reports .report-card .legendDiv .legends .callLocal{
+  color:#049FD9
+}
+.metrics-reports .report-card .legendDiv .legends .callReject{
+  color:#F5A623;
+  padding-left:3rem;
+}
+
+.metrics-reports .report-card .legendDiv .legends .hostAvailableStyle{
+  color:#417505;
+}
+
+.metrics-reports .report-card .legendDiv .legends .hostUnavailableStyle{
+  color:#D03D35;
+  padding-left:3rem;
+}
+
+.metrics-reports .report-card .legendDiv .legends .clusterPartialStyle{
+  color:#F5A623;
+  padding-left:3rem;
 }

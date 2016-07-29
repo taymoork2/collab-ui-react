@@ -12,8 +12,8 @@
 
     function ReportUtil(report) {
       this.report = report;
-      this.acceptedOrRunning = function () {
-        return this.report.state === 'ACCEPTED' || this.report.state === 'RUNNING';
+      this.reportInProgress = function () {
+        return this.report.state === 'ACCEPTED' || this.report.state === 'RUNNING' || this.report.state === 'STORING';
       };
 
       this.tooLongSinceLastUpdate = function () {
@@ -44,12 +44,12 @@
     function tweakReport(report) {
       if (report) {
         var reportUtil = new ReportUtil(report);
-        report.timeoutDetected = reportUtil.acceptedOrRunning() && reportUtil.tooLongSinceLastUpdate();
+        report.timeoutDetected = reportUtil.reportInProgress() && reportUtil.tooLongSinceLastUpdate();
         if (report.state === 'FAILED' && !report.failureReason) {
           report.failureReason = 'UNEXPECTED_FAILURE';
         }
         report.isDone = reportUtil.isDone();
-        report.canBeCancelled = report.state === 'ACCEPTED' || report.state === 'RUNNING';
+        report.canBeCancelled = reportUtil.reportInProgress();
         report.canBeDownloaded = report.state === "COMPLETED" && reportUtil.hasNotExpired();
         report.hasExpired = reportUtil.hasExpired();
         report.expiresIn = reportUtil.expiresIn();

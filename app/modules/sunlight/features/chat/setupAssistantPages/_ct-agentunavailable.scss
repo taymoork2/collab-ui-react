@@ -58,6 +58,9 @@
       flex-wrap: nowrap;
       width: 80%;
       color: $alert-color;
+      .icon-warning {
+        font-size: 2rem;
+      }
     }
 
     .unavailable-msg {

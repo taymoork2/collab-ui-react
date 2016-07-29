@@ -40,7 +40,7 @@
       MediaClusterServiceV2.moveV2Host(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
         $modalInstance.close();
         vm.saving = false;
-        Notification.notify($translate.instant('mediaFusion.moveHostSuccess'), 'success');
+        Notification.success('mediaFusion.moveHostSuccess');
       }, function (err) {
         vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
           hostName: vm.selectedCluster,

@@ -17,7 +17,6 @@
     var vm = this;
     vm.$onInit = $onInit;
     vm.$onChanges = $onChanges;
-    vm.acknowledge = updateUpgradeScheduleAndUI;
     vm.postpone = postpone;
 
     ////////
@@ -30,9 +29,7 @@
         time: getTimeOptions(),
         timeZone: getTimeZoneOptions()
       };
-      vm.upgradeSchedule = {
-        acknowledged: false
-      };
+      vm.upgradeSchedule = {};
       vm.errorMessage = '';
     }
 
@@ -63,12 +60,16 @@
 
     function updateUI() {
       vm.state = 'syncing';
-      return FusionClusterService.getUpgradeSchedule(vm.clusterId)
+      return FusionClusterService.get(vm.clusterId)
+        .then(function (cluster) {
+          return cluster.upgradeSchedule;
+        })
         .then(function (upgradeSchedule) {
           vm.formData = convertDataForUI(upgradeSchedule);
           vm.upgradeSchedule = upgradeSchedule;
           vm.nextUpdateOffset = moment.tz(upgradeSchedule.nextUpgradeWindow.startTime, upgradeSchedule.scheduleTimeZone).format('Z');
           vm.errorMessage = '';
+          vm.formOptions.day = getDayOptions();
           vm.state = 'idle';
         })
         .catch(function (error) {
@@ -78,15 +79,28 @@
     }
 
     function convertDataForUI(data) {
+      var scheduleDay = {};
+      if (data.scheduleDays.length === 7) {
+        var label = $translate.instant('weekDays.everyDay', {
+          day: $translate.instant('weekDays.day')
+        });
+        scheduleDay = {
+          label: label,
+          value: 'everyDay'
+        };
+      } else {
+        scheduleDay = {
+          label: labelForDay(data.scheduleDays[0]),
+          value: data.scheduleDays[0]
+        };
+      }
+
       return {
         scheduleTime: {
           label: labelForTime(data.scheduleTime),
           value: data.scheduleTime
         },
-        scheduleDay: {
-          label: labelForDay(data.scheduleDays[0]),
-          value: data.scheduleDays[0]
-        },
+        scheduleDay: scheduleDay,
         scheduleTimeZone: {
           label: labelForTimeZone(data.scheduleTimeZone),
           value: data.scheduleTimeZone
@@ -144,15 +158,15 @@
     }
 
     function labelForDay(day) {
-      var keys = ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       return $translate.instant('weekDays.everyDay', {
-        day: $translate.instant('weekDays.' + keys[day])
+        day: $translate.instant('weekDays.' + day)
       });
     }
 
     function getDayOptions() {
       var currentLanguage = $translate.use();
-      var days = _.range(1, 8).map(function (day) {
+      var keys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      var days = _.map(keys, function (day) {
         return {
           label: labelForDay(day),
           value: day

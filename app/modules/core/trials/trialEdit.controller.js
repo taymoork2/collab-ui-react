@@ -13,7 +13,7 @@
     vm.stateDetails = angular.copy($stateParams.details);
 
     vm.customerOrgId = undefined;
-
+    vm.licenseCountChanged = false;
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
@@ -276,7 +276,11 @@
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
         inputClass: 'medium-5',
-        options: [30, 60, 90]
+        options: [30, 60, 90],
+        onChange: function () {
+          vm.licenseCountChanged = true;
+          isProceedDisabled();
+        }
       },
     }];
 
@@ -390,7 +394,7 @@
           vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
           vm.messageTrial.enabled = vm.preset.message;
           vm.pstnTrial.enabled = vm.hasCallEntitlement;
-          vm.showContextServiceTrial = results.ftContextServ;
+          vm.showContextServiceTrial = true;
           vm.contextTrial.enabled = results.tcHasService;
           vm.preset.context = results.tcHasService;
           vm.showCare = results.ftCareTrials;
@@ -647,7 +651,7 @@
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
-        vm.preset.licenseDuration !== vm.details.licenseDuration,
+        vm.licenseCountChanged,
         canAddDevice()
       ];
 

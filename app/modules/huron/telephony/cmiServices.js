@@ -23,8 +23,9 @@
     .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
-    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
     .factory('VoicemailService', VoicemailService)
+    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
+    .factory('VoicemailMessageActionService', VoicemailMessageActionService)
     .factory('CompanyNumberService', CompanyNumberService)
     // Will remove this service later
     .factory('CallRouterService', CallRouterService)
@@ -239,6 +240,13 @@
   }
 
   /* @ngInject */
+  function VoicemailService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
+      customerId: '@customerId'
+    });
+  }
+
+  /* @ngInject */
   function VoicemailTimezoneService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
       customerId: '@customerId',
@@ -251,9 +259,15 @@
   }
 
   /* @ngInject */
-  function VoicemailService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
-      customerId: '@customerId'
+  function VoicemailMessageActionService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:userTemplateId/messageactions/:messageActionId', {
+      customerId: '@customerId',
+      userTemplateId: '@userTemplateId',
+      messageActionId: '@messageActionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   }
 

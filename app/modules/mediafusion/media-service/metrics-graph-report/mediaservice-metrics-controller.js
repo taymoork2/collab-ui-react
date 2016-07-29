@@ -262,7 +262,8 @@
     }
 
     function setTotalCallsData() {
-      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterId).then(function (response) {
+      //changing the cluster ID to clister name and this should be changed back to cluster ID in future 
+      MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
