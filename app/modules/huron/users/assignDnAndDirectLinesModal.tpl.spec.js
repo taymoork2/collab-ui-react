@@ -3,8 +3,8 @@
 describe('Template: assignDnAndDirectLinesModal', function () {
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$q', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
   }

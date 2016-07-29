@@ -5,8 +5,8 @@ describe('Template: editServices', function () {
   var SAVE_BUTTON = '#btnSaveEnt';
 
   function init() {
-    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight');
-    this.injectDependencies('$q', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice');
+    this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
+    this.injectDependencies('$q', 'CsvDownloadService', 'FeatureToggleService', 'Orgservice', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/core/users/userPreview/editServices.tpl.html');
   }
