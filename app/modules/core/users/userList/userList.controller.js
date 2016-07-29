@@ -86,7 +86,7 @@
     $scope.getUserList = getUserList;
 
     var promises = {
-      csvEnhancement: FeatureToggleService.csvEnhancementGetStatus(),
+      csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
       atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus()
     };
 

@@ -199,7 +199,7 @@
     };
 
     function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;

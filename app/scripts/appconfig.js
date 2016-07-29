@@ -2058,7 +2058,7 @@
             parent: 'main',
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.AtlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
@@ -2310,7 +2310,7 @@
             },
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               }
             }
           })

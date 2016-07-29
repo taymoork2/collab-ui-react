@@ -70,7 +70,7 @@ describe('UserListCtrl: Ctrl', function () {
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'csvEnhancementGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
 
   }));

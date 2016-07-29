@@ -41,7 +41,7 @@ namespace globalsettings {
 
     private initBranding() {
       if(this.Authinfo.isPartner()) {
-        this.FeatureToggleService.brandingWordingChangeGetStatus().then(() => {
+        this.FeatureToggleService.atlasBrandingWordingChangeGetStatus().then(() => {
           // this is done to prevent flashing between the two branding templates,
           // it will be revealed after toggle is resolved
           this.branding = new BrandingSetting();
