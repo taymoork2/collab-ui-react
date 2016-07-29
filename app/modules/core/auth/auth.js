@@ -6,7 +6,7 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $http, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -105,9 +105,12 @@
             var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
             promises.push(revoke);
           });
-          $q.all(promises).then(function () {
-            completeLogout(redirectUrl);
-          });
+          $q.all(promises).catch(function () {
+              handleError('Failed to revoke the refresh tokens');
+            })
+            .finally(function () {
+              completeLogout(redirectUrl);
+            });
         })
         .catch(function (response) {
           handleError('Failed to retrieve token_id');
@@ -115,7 +118,7 @@
     }
 
     function revokeAuthTokens(tokenId) {
-      var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + tokenId;
+      var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
       return $http.delete(revokeUrl)
         .catch(handleError('Failed to delete the oAuth token'));
     }
