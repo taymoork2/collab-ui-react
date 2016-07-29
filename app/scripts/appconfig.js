@@ -566,6 +566,11 @@
                 controllerAs: 'mcpSubscription',
                 controller: 'MySubscriptionCtrl',
                 templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'
+              },
+              'headerRight': {
+                controllerAs: 'subscriptionHeader',
+                controller: 'SubscriptionHeaderCtrl',
+                templateUrl: 'modules/core/myCompany/mySubscriptions/subscriptionHeader.tpl.html'
               }
             }
           })
@@ -680,6 +685,19 @@
               }
             }
           })
+          .state('users.add.results', {
+            views: {
+              'usersAdd@users.add': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'add-users';
+                    $state.params.modalId = 'modalContent';
+                  }
+                }
+              }
+            }
+          })
           .state('users.convert', {
             parent: 'modal',
             views: {
@@ -709,6 +727,13 @@
             views: {
               'usersConvert@users.convert': {
                 templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+              }
+            }
+          })
+          .state('users.convert.results', {
+            views: {
+              'usersConvert@users.convert': {
+                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html'
               }
             }
           })
@@ -2032,8 +2057,11 @@
             controllerAs: 'resourceList',
             parent: 'main',
             resolve: {
-              hasFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+              hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+              },
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             }
           })

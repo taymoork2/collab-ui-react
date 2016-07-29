@@ -2,7 +2,7 @@
 
 describe('assignServices', function () {
   var $scope, $state, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice;
+  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice, WebExUtilsFact;
 
   var orgid = '1';
 
@@ -32,10 +32,11 @@ describe('assignServices', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
-    _Orgservice_, _Userservice_) {
+    _Orgservice_, _Userservice_, _WebExUtilsFact_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
@@ -46,6 +47,7 @@ describe('assignServices', function () {
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
     hybridService = _HybridService_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
     var getUserMe = getJSONFixture('core/json/users/me.json');
     var headers = getJSONFixture('core/json/users/headers.json');

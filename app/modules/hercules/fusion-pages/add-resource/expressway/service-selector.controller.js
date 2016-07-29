@@ -27,8 +27,8 @@
       .then(function (setup) {
         vm.hasSetup = setup;
         vm._translation = {
-          call: vm.hasSetup.call ? $translate.instant('hercules.serviceNames.squared-fusion-uc') : $translate.instant('hercules.fusion.add-resource.expressway.services.call-not-setup'),
-          calendar: vm.hasSetup.calendar ? $translate.instant('hercules.serviceNames.squared-fusion-cal') : $translate.instant('hercules.fusion.add-resource.expressway.services.calendar-not-setup')
+          call: vm.hasSetup.call ? $translate.instant('hercules.hybridServiceNames.squared-fusion-uc') : $translate.instant('hercules.fusion.add-resource.expressway.services.call-not-setup'),
+          calendar: vm.hasSetup.calendar ? $translate.instant('hercules.hybridServiceNames.squared-fusion-cal') : $translate.instant('hercules.fusion.add-resource.expressway.services.calendar-not-setup')
         };
         vm.UIstate = 'success';
       })

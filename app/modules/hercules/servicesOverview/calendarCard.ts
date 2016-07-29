@@ -23,8 +23,9 @@ namespace servicesOverview {
 
 
     getButtons():Array<servicesOverview.CardButton> {
-      if (this.active)
+      if (this.active) {
         return _.take(this._buttons, 3);
+      }
       return [this._setupButton];
     }
 

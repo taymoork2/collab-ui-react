@@ -178,6 +178,10 @@
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
+          errorResult.details = response;
+          errorResult.errorId = response.errorCode;
+          errorResult.errorDesc = response.errorMessage;
+
           deferredResponse.reject(errorResult);
         }
       );

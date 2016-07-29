@@ -8,7 +8,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, CallParkService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -16,7 +16,7 @@
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureFilter = $stateParams.deleteFeatureType;
     vm.featureType = vm.featureFilter === 'AA' ? $translate.instant('autoAttendant.title') : vm.featureFilter === 'HG' ?
-      $translate.instant('huronHuntGroup.title') : 'Feature';
+      $translate.instant('huronHuntGroup.title') : vm.featureFilter === 'CP' ? $translate.instant('callPark.title') : 'Feature';
 
     vm.deleteBtnDisabled = false;
 
@@ -78,6 +78,15 @@
           });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(
+          function (data) {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else if (vm.featureFilter === 'CP') {
+        CallParkService.deleteCallPark(vm.featureId).then(
           function (data) {
             deleteSuccess();
           },

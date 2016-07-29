@@ -95,8 +95,9 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      if (!vm.masonryRefreshed)
+      if (!vm.masonryRefreshed) {
         reInstantiateMasonry();
+      }
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
     };
 
@@ -109,14 +110,7 @@
       state: "support.status"
     }];
 
-    //TODO remove test
-    /*$scope.tabs.push({
-      title: $translate.instant('supportPage.tabs.logs'),
-      state: "support.logs"
-    });*/
-
-    //ADD BACK
-    if (Authinfo.isInDelegatedAdministrationOrg()) {
+    if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
         state: "support.logs"

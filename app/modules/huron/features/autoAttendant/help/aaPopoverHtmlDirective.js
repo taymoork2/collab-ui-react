@@ -18,7 +18,7 @@
         animation: "&",
         isOpen: "&"
       },
-      templateUrl: 'modules/huron/features/autoAttendant/builder/aaPopoverHtmlPopup.tpl.html'
+      templateUrl: 'modules/huron/features/autoAttendant/help/aaPopoverHtmlPopup.tpl.html'
     };
   }
 

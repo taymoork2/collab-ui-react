@@ -39,8 +39,9 @@ describe('Squared Add User Flow', function () {
       utils.click(users.emailAddressRadio);
 
       utils.click(users.nextButton);
-      utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
+      utils.click(users.saveButton);
+      utils.expectIsDisplayed(users.finishButton);
+      utils.click(users.finishButton);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 
@@ -89,9 +90,11 @@ describe('Squared Add User Flow', function () {
 
       utils.click(users.emailAddressRadio);
 
-      utils.click(wizard.nextBtn);
-      utils.click(wizard.finishBtn);
-      notifications.assertSuccess('onboarded successfully');
+      utils.click(users.nextButton);
+      utils.click(users.saveButton);
+      utils.expectIsDisplayed(users.saveButton);
+      utils.click(users.saveButton);
+      utils.expectIsNotDisplayed(users.manageDialog);
     });
 
     it('should automatically close wizard', function () {
