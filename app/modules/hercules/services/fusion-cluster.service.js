@@ -24,7 +24,9 @@
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
       deregisterCluster: deregisterCluster,
-      getReleaseNotes: getReleaseNotes
+      getReleaseNotes: getReleaseNotes,
+      getAggregatedStatusForService: getAggregatedStatusForService,
+      processClustersToAggregateStatusForService: processClustersToAggregateStatusForService
     };
 
     return service;
@@ -226,6 +228,57 @@
         .then(function (data) {
           return data.releaseNotes;
         });
+    }
+
+    function getAggregatedStatusForService(serviceId) {
+      return getAllNonMediaClusters().then(function (clusters) {
+        return processClustersToAggregateStatusForService(serviceId, clusters);
+      });
+    }
+
+    function processClustersToAggregateStatusForService(serviceId, clusterList) {
+
+      // get the aggregated statuses per cluster, and transform them into a flat array that
+      // represents the state of each cluster for only that service, e.g. ['stopped', 'running']
+      var allServicesStatuses = _.map(clusterList, 'servicesStatuses');
+      var statuses = _.map(allServicesStatuses, function (services) {
+        var matchingService = _.find(services, function (service) {
+          return service.serviceId === serviceId;
+        });
+        if (matchingService && matchingService.state) {
+          return matchingService.state.name;
+        } else {
+          return 'unknown';
+        }
+      });
+
+      // if no data or invalid data, assume that something is wrong
+      if (statuses.length === 0) {
+        return 'outage';
+      }
+
+      // We have an outage if all clusters have their connectors in these states or combinations of them:
+      if (_.every(statuses, function (value) {
+          return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
+        })) {
+        return 'outage';
+      }
+
+      // Service is degraded if one or more clusters have their connectors in one of these states:
+      if (_.find(statuses, function (value) {
+          return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+        })) {
+        return 'impaired';
+      }
+
+      // fallback: if no connectors are running, return at least 'degraded'
+      if (!_.includes(statuses, 'running')) {
+        return 'impaired';
+      }
+
+      // if no other rule applies, assume we're operational!
+      return 'operational';
+
     }
 
   }

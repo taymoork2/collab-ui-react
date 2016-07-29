@@ -401,4 +401,358 @@ describe('Service: FusionClusterService', function () {
 
   });
 
+  describe('.getAggregateStatusForServiceAcrossAllClusters', function () {
+
+    var twoClusters;
+    var alarm = {
+      "id": "60064",
+      "firstReported": "1469454148",
+      "lastReported": "1469623452",
+      "severity": "alert",
+      "title": "[Hybrid services] Connector failed to start",
+      "description": "The Call Connector service unexpectedly stopped\n"
+    };
+
+    beforeEach(function () {
+      twoClusters = [{
+        "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6",
+        "id": "89f3fc3a-3498-11e6-8de3-005056b111e6",
+        "name": "Oslo Cluster",
+        "connectors": [{
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/connectors/c_mgmt@070EC9D0",
+          "id": "c_mgmt@070EC9D0",
+          "connectorType": "c_mgmt",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "thomitte-ex.rd.cisco.com",
+          "hostSerial": "070EC9D0",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.321168",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/connectors/c_ucmc@070EC9D0",
+          "id": "c_ucmc@070EC9D0",
+          "connectorType": "c_ucmc",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "thomitte-ex.rd.cisco.com",
+          "hostSerial": "070EC9D0",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.2265",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/connectors/c_cal@070EC9D0",
+          "id": "c_cal@070EC9D0",
+          "connectorType": "c_cal",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "thomitte-ex.rd.cisco.com",
+          "hostSerial": "070EC9D0",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.3208",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
+          "registered": true
+        }],
+        "releaseChannel": "GA",
+        "provisioning": [{
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/provisioning/c_mgmt",
+          "connectorType": "c_mgmt",
+          "provisionedVersion": "8.7-1.0.321168",
+          "availableVersion": "8.7-1.0.321171",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/provisioning/c_cal",
+          "connectorType": "c_cal",
+          "provisionedVersion": "8.7-1.0.3208",
+          "availableVersion": "8.7-1.0.3251",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/provisioning/c_ucmc",
+          "connectorType": "c_ucmc",
+          "provisionedVersion": "8.7-1.0.2265",
+          "availableVersion": "8.7-1.0.2265",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"
+        }],
+        "registered": true,
+        "targetType": "c_mgmt",
+        "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule",
+        "upgradeSchedule": {
+          "scheduleDays": ["sunday"],
+          "scheduleTime": "15:00",
+          "scheduleTimeZone": "Pacific/Tahiti",
+          "moratoria": [],
+          "nextUpgradeWindow": {
+            "startTime": "2016-08-08T01:00:02.507Z",
+            "endTime": "2016-08-08T02:00:02.507Z"
+          },
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/upgradeSchedule"
+        },
+        "servicesStatuses": [{
+          "serviceId": "squared-fusion-mgmt",
+          "state": {
+            "name": "running",
+            "severity": 0,
+            "label": "ok"
+          },
+          "total": 1
+        }, {
+          "serviceId": "squared-fusion-uc",
+          "state": {
+            "name": "running",
+            "severity": 0,
+            "label": "ok"
+          },
+          "total": 1
+        }, {
+          "serviceId": "squared-fusion-cal",
+          "state": {
+            "name": "running",
+            "severity": 0,
+            "label": "ok"
+          },
+          "total": 1
+        }]
+      }, {
+        "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350",
+        "id": "a31a92df-4e16-4a7e-a1c2-30405b512350",
+        "name": "New York Cluster",
+        "connectors": [{
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@0379F08E",
+          "id": "c_mgmt@0379F08E",
+          "connectorType": "c_mgmt",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple04.rd.cisco.com",
+          "hostSerial": "0379F08E",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.321168",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0D09EDC5",
+          "id": "c_cal@0D09EDC5",
+          "connectorType": "c_cal",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple01.rd.cisco.com",
+          "hostSerial": "0D09EDC5",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.3250",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@0D10F849",
+          "id": "c_mgmt@0D10F849",
+          "connectorType": "c_mgmt",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple03.rd.cisco.com",
+          "hostSerial": "0D10F849",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.321168",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0D10F849",
+          "id": "c_cal@0D10F849",
+          "connectorType": "c_cal",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple03.rd.cisco.com",
+          "hostSerial": "0D10F849",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.3250",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@0D09EDC5",
+          "id": "c_mgmt@0D09EDC5",
+          "connectorType": "c_mgmt",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple01.rd.cisco.com",
+          "hostSerial": "0D09EDC5",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.321168",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@0379F08E",
+          "id": "c_cal@0379F08E",
+          "connectorType": "c_cal",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple04.rd.cisco.com",
+          "hostSerial": "0379F08E",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.3250",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_cal@07A00089",
+          "id": "c_cal@07A00089",
+          "connectorType": "c_cal",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple02.rd.cisco.com",
+          "hostSerial": "07A00089",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.3250",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal",
+          "registered": true
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/connectors/c_mgmt@07A00089",
+          "id": "c_mgmt@07A00089",
+          "connectorType": "c_mgmt",
+          "upgradeState": "upgraded",
+          "state": "running",
+          "hostname": "fms-quadruple02.rd.cisco.com",
+          "hostSerial": "07A00089",
+          "alarms": [],
+          "runningVersion": "8.7-1.0.321168",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt",
+          "registered": true
+        }],
+        "releaseChannel": "GA",
+        "provisioning": [{
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/provisioning/c_mgmt",
+          "connectorType": "c_mgmt",
+          "provisionedVersion": "8.7-1.0.321168",
+          "availableVersion": "8.7-1.0.321171",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_mgmt"
+        }, {
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/provisioning/c_cal",
+          "connectorType": "c_cal",
+          "provisionedVersion": "8.7-1.0.3250",
+          "availableVersion": "8.7-1.0.3251",
+          "packageUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
+        }],
+        "registered": true,
+        "targetType": "c_mgmt",
+        "upgradeScheduleUrl": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule",
+        "upgradeSchedule": {
+          "scheduleDays": ["wednesday"],
+          "scheduleTime": "03:00",
+          "scheduleTimeZone": "Europe/Oslo",
+          "moratoria": [],
+          "nextUpgradeWindow": {
+            "startTime": "2016-08-03T01:00:02.505Z",
+            "endTime": "2016-08-03T02:00:02.505Z"
+          },
+          "url": "https://hercules-integration.wbx2.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/a31a92df-4e16-4a7e-a1c2-30405b512350/upgradeSchedule"
+        },
+        "servicesStatuses": [{
+          "serviceId": "squared-fusion-mgmt",
+          "state": {
+            "name": "running",
+            "severity": 0,
+            "label": "ok"
+          },
+          "total": 4
+        }, {
+          "serviceId": "squared-fusion-uc",
+          "state": {
+            "name": "running",
+            "severity": 1,
+            "label": "unknown"
+          },
+          "total": 0
+        }, {
+          "serviceId": "squared-fusion-cal",
+          "state": {
+            "name": "running",
+            "severity": 0,
+            "label": "ok"
+          },
+          "total": 4
+        }]
+      }];
+    });
+
+    it('should return *operational* when all hosts are *running*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-mgmt', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors stopped', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'stopped';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors disabled', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'disabled';
+      twoClusters[1].servicesStatuses[2].state.name = 'disabled';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors not_configured', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_configured';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors in a mix of "red" states', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if Calendar connectors in exactly one cluster have alarms but connectors are otherwise fine', function () {
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if Calendar connectors in all clusters have alarms but connectors are otherwise fine', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'has_alarms';
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *outage* if one cluster is not_configured and one cluster is not_operational', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if one host is *running* and one is *not_operational*', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if no connector is running, even when the statuses are temporary', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      twoClusters[1].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *operational* during an upgrade the other cluster has at least one running connector', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+      twoClusters[0].servicesStatuses[2].state.name = 'installing';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should not let Call Connector statuses impact Calendar Connector aggregation', function () {
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should handle invalid service types by falling back to *outage*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    });
+
+    it('should handle invalid cluster lists by falling back to *outage*', function () {
+      var malformedClusterList = {
+        clusters: 'not exactly a valid list of clusters'
+      };
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
+    });
+
+  });
+
 });
