@@ -169,6 +169,35 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
+  describe('myOrg appears first in orgList', function () {
+    beforeEach(initController);
+
+    managedOrgsResponse = {
+      "data": {
+        "organizations": [{
+          customerOrgId: '1234-34534-afdagfg-425345-afaf',
+          customerName: 'ControllerTestOrg',
+          customerEmail: 'customer@cisco.com',
+          communications: {
+            isTrial: true
+          }
+        }, {
+          customerOrgId: '1',
+          customerName: 'testOrg'
+        }]
+      }
+    };
+
+    it('if myOrg is in managedOrgsList, myOrg should be at top', function () {
+      $scope.getManagedOrgsList();
+      expect($scope.managedOrgsList).toBeDefined();
+      expect($scope.managedOrgsList[0].customerName).toBe('testOrg');
+      expect($scope.managedOrgsList[1].customerName).toBe('ControllerTestOrg');
+      expect($scope.managedOrgsList.length).toEqual(2);
+      expect($scope.totalOrgs).toBe(2);
+    });
+  });
+
   describe('Click setup PSTN', function () {
     beforeEach(initController);
 

@@ -21,6 +21,7 @@
     $scope.getSubfields = getSubfields;
     $scope.filterAction = filterAction;
     $scope.modifyManagedOrgs = modifyManagedOrgs;
+    $scope.getManagedOrgsList = getManagedOrgsList;
     $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
@@ -453,19 +454,13 @@
 
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
+      var promiselist = PartnerService.getManagedOrgsList(searchText);
+      var myOrgName = Authinfo.getOrgName();
+      var isPartnerAdmin = Authinfo.isPartnerAdmin();
+      var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
+      var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
 
-      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
-        // move our org to the top of the list
-        // dont know why this is here yet
-        // this should be handled by a sorting fn
-        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
-          promiselist.push(getMyOrgDetails());
-        }
-
-      }
-
-      return $q.all(promiselist)
+      return $q.all([promiselist, getMyOrgDetails()])
         .catch(function (err) {
           Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -477,15 +472,24 @@
         .then(function (results) {
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
             $scope.isCareEnabled);
+          var myOrgItem = _.find(managed, {
+            customerName: myOrgName
+          });
 
-          if (results[1]) {
-            // 4/11/2016 admolla
-            // TODO: for some reason if I refactor this to not need an array, karma acts up....
-            if (_.isArray(results[1])) {
-              managed.unshift(results[1][0]);
+          // is MyOrg returned in managedOrgs list
+          if (myOrgItem) {
+            // remove from list
+            _.remove(managed, myOrgItem);
+            // add to top
+            managed.unshift(myOrgItem);
+          } else {
+            if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
+              // move our org to the top of the list
+              if (searchText === '' || getOrgNameSearch !== -1) {
+                managed.unshift(results[1][0]);
+              }
             }
           }
-
           $scope.managedOrgsList = managed;
           $scope.totalOrgs = $scope.managedOrgsList.length;
 
