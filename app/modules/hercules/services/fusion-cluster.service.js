@@ -231,9 +231,15 @@
     }
 
     function getAggregatedStatusForService(serviceId) {
-      return getAllNonMediaClusters().then(function (clusters) {
-        return processClustersToAggregateStatusForService(serviceId, clusters);
-      });
+      return getAll()
+        .then(function (clusters) {
+          return clusters.filter(function (cluster) {
+            return cluster.targetType === 'c_mgmt';
+          });
+        })
+        .then(function (clusters) {
+          return processClustersToAggregateStatusForService(serviceId, clusters);
+        });
     }
 
     function processClustersToAggregateStatusForService(serviceId, clusterList) {

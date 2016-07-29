@@ -19,7 +19,7 @@
     ////////////////
 
     function connectorHasAlarms(connector) {
-      return connector.alarms.length > 0 ? true : false;
+      return connector.alarms.length > 0;
     }
 
     function mapStateToSeverity(state) {
