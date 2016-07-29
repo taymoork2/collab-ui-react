@@ -2384,6 +2384,7 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
+    "tollFreeNumberOrder": "Toll-Free Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
@@ -2404,8 +2405,9 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
-    "newNumbersTab": "New Numbers",
-    "portNumbersTab": "Port Numbers",
+    "newNumbersTab": "Standard Numbers",
+    "newTollFreeTab": "Toll-Free Numbers",
+    "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
@@ -2464,7 +2466,13 @@
     },
     "errors": {
       "states": "Failed to retrieve states",
-      "inventory": "Failed to get PSTN inventory"
+      "inventory": "Failed to get PSTN inventory",
+      "tollfree": {
+        "areacodes": "Failed to retrieve toll-free area codes.",
+        "inventory": "Failed to retrieve toll-free number inventory."
+      },
+      "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
+      "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
