@@ -221,7 +221,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
         displayText: OrgName,
-        image: '',
         orgLogoUrl: dummyLogoUrl
       });
     });

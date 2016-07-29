@@ -158,7 +158,6 @@
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
           orgLogoUrl: vm.logoUrl,
           useAgentRealName: false
         },
@@ -500,8 +499,7 @@
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
-          orgLogoUrl: vm.logoUrl,
+          orgLogoUrl: vm.logoUrl
         };
       } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
         vm.template.configuration.mediaSpecificConfiguration = {
