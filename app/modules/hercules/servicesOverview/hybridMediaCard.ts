@@ -27,6 +27,10 @@ namespace servicesOverview {
       return [this._setupButton];
     }
 
+    public hybridMediaFeatureToggleEventHandler(hasFeature:boolean) {
+      this._display = hasFeature;
+    }
+
     public constructor() {
       super({
         name: 'servicesOverview.cards.hybridMedia.title',
@@ -35,9 +39,11 @@ namespace servicesOverview {
         statusServices: ['squared-fusion-media'],
         statusLink: 'mediaserviceV2',
         active: false,
+        display : false,
         cardClass: 'media',
         cardType: CardType.hybrid
       });
+      this._loading = false;
     }
   }
 }

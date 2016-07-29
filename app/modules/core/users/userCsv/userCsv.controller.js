@@ -6,10 +6,10 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $interval, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService, HuronCustomer) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
-
+    vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
 
     var maxUsers = 1100;
@@ -128,6 +128,17 @@
       cancelDeferred.resolve();
       saveDeferred.resolve();
       $scope.$broadcast('timer-stop');
+    };
+
+    vm.licenseBulkErrorModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
+        }).result.then(function () {
+          $state.go('my-company.subscriptions');
+        });
+      }
     };
 
     // functions
@@ -356,6 +367,9 @@
                 addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
               }
             } else {
+              if (user.message === '400112') {
+                vm.licenseUnavailable = true;
+              }
               addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
@@ -409,6 +423,9 @@
                 errorCallback(response, usersToOnboard);
               }).finally(function () {
                 calculateProcessProgress();
+                if (vm.licenseUnavailable) {
+                  vm.licenseBulkErrorModal();
+                }
                 resolve();
               });
             } else {

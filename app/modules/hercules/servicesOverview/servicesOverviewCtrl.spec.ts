@@ -22,18 +22,21 @@ namespace servicesOverview {
       $httpBackend.when('GET', /\/services/).respond([]);
     }));
 
-    function initController({F410=false, F288=true}) {
+    function initController({F410=false, F288=true, MEDIA=true}) {
       ctrl = $controller('ServicesOverviewCtrl', {
         FeatureToggleService: {
           features: {
             hybridServicesResourceList: 'F410',
-            servicesOverview: 'F288'
+            servicesOverview: 'F288',
+            atlasMediaServiceOnboarding: 'MEDIA'
           },
           supports: function (feature) {
             if (feature === 'F410') {
-              return $q.when(F410);
+              return $q.resolve(F410);
             } else if (feature === 'F288') {
-              return $q.when(F288);
+              return $q.resolve(F288);
+            } else if (feature === 'MEDIA') {
+              return $q.resolve(MEDIA);
             }
           }
         }
@@ -66,16 +69,26 @@ namespace servicesOverview {
       });
     });
 
-    it('should show the right cards when the F410 feature is NOT active', ()=> {
+    it('should show the right cards when the F410 feature toggle is NOT active', ()=> {
       initController({F410:false});
       expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'})).not.toBe(undefined);
       expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.clusterList.title'})).toBe(undefined);
     });
 
-    it('should show the right cards when the F410 feature is active', ()=> {
+    it('should show the right cards when the F410 feature toggle is active', ()=> {
       initController({F410:true});
       expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'})).toBe(undefined);
       expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.clusterList.title'})).not.toBe(undefined);
+    });
+
+    it('should show the right cards when the hybrid media feature toggle is NOT active', ()=> {
+      initController({MEDIA:false});
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridMedia.title'})).toBe(undefined);
+    });
+
+    it('should show the right cards when the hybrid media feature toggle is active', ()=> {
+      initController({MEDIA:true});
+      expect(_.find(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridMedia.title'})).not.toBe(undefined);
     });
   });
 }

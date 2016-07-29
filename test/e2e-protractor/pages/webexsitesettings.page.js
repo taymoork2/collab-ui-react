@@ -1,7 +1,7 @@
 'use strict';
 
 var WebExSiteSettigsPage = function () {
-  this.conferencing = element(by.css('a[href="#site-list"]'));
+  this.conferencing = element(by.css('a[href="#/site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));

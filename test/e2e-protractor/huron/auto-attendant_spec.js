@@ -392,7 +392,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
-      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);

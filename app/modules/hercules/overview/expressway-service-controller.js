@@ -35,7 +35,6 @@
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.serviceIconClass = FusionUtils.serviceId2Icon(vm.servicesId[0]); // kill?
     vm.openUserStatusReportModal = openUserStatusReportModal;
-    vm.openUserErrorsModal = openUserErrorsModal;
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
     vm.enableService = enableService;
@@ -95,12 +94,10 @@
     }
 
     function extractSummaryForAService() {
-      vm.userStatusSummary = _.filter(USSService2.getStatusesSummary(), function (summary) {
-        return _.includes(vm.servicesId, summary.serviceId);
-      });
+      vm.userStatusSummary = USSService2.extractSummaryForAService(vm.servicesId);
     }
 
-    function openUserStatusReportModal(serviceId) {
+    function openUserStatusReportModal() {
       $scope.modal = $modal.open({
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
@@ -132,23 +129,6 @@
       $state.go('cluster-details', {
         clusterId: cluster.id,
         connectorType: vm.connectorType
-      });
-    }
-
-    function openUserErrorsModal() {
-      $scope.modal = $modal.open({
-        controller: 'UserErrorsController',
-        controllerAs: 'userErrorsCtrl',
-        templateUrl: 'modules/hercules/user-statuses/user-errors.html',
-        type: 'small',
-        resolve: {
-          servicesId: function () {
-            return vm.servicesId;
-          },
-          userStatusSummary: function () {
-            return vm.userStatusSummary;
-          }
-        }
       });
     }
 
