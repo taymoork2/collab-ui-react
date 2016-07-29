@@ -43,7 +43,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialStarted($state.current.name);
+        Analytics.trackTrialSteps('start', $state.current.name);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);

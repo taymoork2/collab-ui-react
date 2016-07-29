@@ -15,7 +15,7 @@
       _track: _track,
       trackEvent: trackEvent,
       checkIfTestOrg: checkIfTestOrg,
-      trackTrialStarted: trackTrialStarted,
+      trackTrialSteps: trackTrialSteps,
       trackAssignPartner: trackAssignPartner,
       trackRemovePartner: trackRemovePartner,
       trackUserPatch: trackUserPatch,
@@ -34,6 +34,8 @@
 
     /* Trial Event Names */
     var START_TRIAL = 'Start Trial Button Click';
+    var NEXT_BUTTON = 'Next Button Clicked';
+    var BACK_BUTTON = 'Back Button Clicked';
 
     /* Partner Event Names */
     var ASSIGN_PARTNER = 'Partner Admin Assigning';
@@ -105,12 +107,26 @@
      * Trial Events
      */
 
-    function trackTrialStarted(name) {
-      if (!name) {
+    function trackTrialSteps(state, name) {
+      if (!state || !name) {
         return;
       }
 
-      trackEvent(START_TRIAL, {
+      var step = '';
+
+      switch (state) {
+      case 'start':
+        step = START_TRIAL;
+        break;
+      case 'next':
+        step = NEXT_BUTTON;
+        break;
+      case 'back':
+        step = BACK_BUTTON;
+        break;
+      }
+
+      trackEvent(step, {
         from: name
       });
     }
