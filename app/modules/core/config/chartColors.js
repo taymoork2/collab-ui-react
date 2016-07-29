@@ -33,10 +33,6 @@
     colorRed: '#F4735E',
     colorYellow: '#E99849',
     colorPurple: '#8E5ACF',
-    metricLightGreen: '#7BAF5D',
-    metricDarkGreen: '#417505',
-    metricBlue: '#049FD9',
-    metricYellow: '#F5A623',
     colorLightGreen: '#43A942',
     colorLightGreenFill: '#017900',
     colorLightYellow: '#F5A623',
@@ -46,8 +42,7 @@
     metricLightGreen: '#7BAF5D',
     metricDarkGreen: '#417505',
     metricBlue: '#049FD9',
-    metricYellow: '#F5A623',
-    stripeColor: '#F9C877'
+    metricYellow: '#F5A623'
   };
 
   angular

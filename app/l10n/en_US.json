@@ -274,7 +274,9 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
@@ -403,17 +405,16 @@
     "trackingId": "Tracking ID: "
   },
   "careReportsPage": {
-<<<<<<< 1602872a6aa500b8e0c58637c66cb02a2b6abe42
     "tasks": "Tasks",
     "handled": "Handled",
+    "assigned": "Assigned",
+    "in-queue": "In-Queue",
     "abandoned": "Abandoned",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
     "weekCategoryAxis": "Days",
     "monthCategoryAxis": "Weeks",
     "threeMonthsCategoryAxis": "Months",
-=======
->>>>>>> export added and commented code removed
     "today": "Today",
     "today2": "for today",
     "todayTaskStatus": "handled, assigned, in-queue and abandoned",
@@ -527,7 +528,7 @@
   },
   "taskIncoming": {
     "title": "Tasks Incoming",
-    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",

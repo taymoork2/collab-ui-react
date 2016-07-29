@@ -3,19 +3,7 @@
     position: relative;
     margin-left: 0px !important;
   }
-  .care-graph-text {
-    font-family: $brand-font-cisco-TT-Regular;
-    font-size: rem-calc(15);
-    color: $gray-dark-1;
+  graph-text.care-graph-text {
     text-align: center;
-    float: center;
-    .graph-number {
-      font-size: rem-calc(18);
-      color: $brand-success;
-      text-align: center;
-    }
-    .graph-media {
-      font-size: rem-calc(18);
-    }
   }
 }

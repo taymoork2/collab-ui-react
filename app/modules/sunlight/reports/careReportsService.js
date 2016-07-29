@@ -7,7 +7,8 @@
   /* @ngInject */
   function CareReportsService($translate, CareReportsGraphService, chartColors) {
 
-    function setTaskIncomingGraphs(data, categoryAxisTitle) {
+    function setTaskIncomingGraphs(data, categoryAxisTitle, selectedIndex) {
+
       var report = {};
       report.data = data;
       report.divId = 'taskIncomingdiv';
@@ -16,16 +17,15 @@
       report.valueFields = getValueFields(selectedIndex);
       report.colors = getColors(selectedIndex, false);
       if (selectedIndex == 0) {
-        report.fillColors = [chartColors.colorLightGreenFill, chartColors.colorLightYellowFill, chartColors.colorLightYellowFill, chartColors.colorLightRedFill];
+        report.fillColors = [chartColors.colorLightGreenFill, chartColors.colorLightYellowFill, chartColors.stripeColor, chartColors.colorLightRedFill];
         report.showBalloon = [false, false, false, true];
-        report.balloonText = '<span class="care-graph-text">Abandoned [[value]]</span><br><span class="care-graph-text">In-Queue [[numTasksQueuedState]]</span><br><span class="care-graph-text">Assigned [[numTasksAssignedState]]</span><br><span class="care-graph-text">Handled [[numTasksHandledState]]</span>';
+        report.balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' [[value]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.in-queue') + ' [[numTasksQueuedState]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.assigned') + ' [[numTasksAssignedState]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' [[numTasksHandledState]]</span>';
       } else {
-        report.fillColors = [chartColors.colorLightGreen1, chartColors.colorLightRed1];
+        report.fillColors = [chartColors.colorLightGreenFill, chartColors.colorLightRedFill];
         report.showBalloon = [false, true];
-        report.balloonText = '<span class="care-graph-text">Abandoned [[value]]</span><br><span class="care-graph-text">Handled [[numTasksHandledState]]</span>';
+        report.balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' [[value]]</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' [[numTasksHandledState]]</span>';
       }
       report.enableExport = true;
-      report.showBalloon = [false, true];
       report.cursorAlpha = 1;
       report.fillAlphas = 0.1;
       createCareReportsGraph(report, selectedIndex, false);
@@ -34,7 +34,7 @@
     function getLegendTitles(selectedIndex) {
       if (selectedIndex == 0) {
         return [$translate.instant('careReportsPage.handled'),
-          $translate.instant('careReportsPage.assigned'), $translate.instant('careReportsPage.abandoned'), $translate.instant('careReportsPage.in-queue')
+          $translate.instant('careReportsPage.assigned'), $translate.instant('careReportsPage.in-queue'), $translate.instant('careReportsPage.abandoned')
         ];
       } else {
         return [$translate.instant('careReportsPage.handled'), $translate.instant('careReportsPage.abandoned')];
@@ -54,15 +54,13 @@
       if (isDummy) {
         if (selectedIndex == 0) {
           return [chartColors.grayLight, chartColors.grayLighter, chartColors.dummyGrayLight, chartColors.dummyGrayLighter];
-        } else {
-          return [chartColors.dummyGrayLight, chartColors.dummyGrayLighter];
         }
+        return [chartColors.dummyGrayLight, chartColors.dummyGrayLighter];
       } else {
         if (selectedIndex == 0) {
           return [chartColors.colorLightGreen, chartColors.colorLightYellow, chartColors.colorLightYellow, chartColors.colorLightRed];
-        } else {
-          return [chartColors.colorLightGreen, chartColors.colorLightRed];
         }
+        return [chartColors.colorLightGreen, chartColors.colorLightRed];
       }
     }
 
@@ -83,11 +81,11 @@
       }
       dummyReport.cursorAlpha = 0;
       dummyReport.fillAlphas = 1;
-
       createCareReportsGraph(dummyReport, selectedIndex, true);
     }
 
     function createCareReportsGraph(report, selectedIndex, isDummy) {
+
       var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
       valueAxes[0].title = 'Tasks';
       valueAxes[0].stackType = 'regular';
@@ -110,6 +108,7 @@
 
     function getGraphs(report, isDummy) {
       var graphs = [];
+
       var pattern = {
         "url": "line_pattern.png",
         "width": 14,
@@ -128,7 +127,7 @@
         graphs[i].legendValueText = ' ';
         if (!isDummy) {
           graphs[i].dashLength = dashLength[i];
-          if (i == 2) {
+          if (i == 2) { // in-queue graph
             graphs[i].pattern = pattern;
             graphs[i].fillAlphas = 1;
           }
