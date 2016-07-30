@@ -146,8 +146,7 @@
       });
       if (existingService) {
         existingService.qty = existingService.qty + service.qty;
-      }
-      else {
+      } else {
         services.push(service);
       }
     }

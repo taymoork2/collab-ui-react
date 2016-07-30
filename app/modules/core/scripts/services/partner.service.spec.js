@@ -556,41 +556,11 @@ describe('Partner Service -', function () {
 
     describe('getFreeOrActiveServices ', function () {
       var customer;
-      var licenseData = [{
-        'offerName': 'SC',
-        'licenseType': 'CONFERENCING',
-        'volume': 200,
-        'isTrial': false
-      }, {
-        'offerName': 'CMR',
-        'licenseType': 'CMR',
-        'volume': 100,
-        'isTrial': false,
-      }, {
-        'offerName': 'MC',
-        'licenseType': 'CONFERENCING',
-        'volume': 200,
-        'isTrial': false,
-      }, {
-        'offerName': 'MS',
-        'licenseType': 'MESSAGING',
-        'volume': 100,
-        'isTrial': true
-      }, {
-        'offerName': 'CO',
-        'licenseType': 'COMMUNICATION',
-        'volume': 100,
-        'isTrial': true,
-      }, {
-        'offerName': 'CF',
-        'licenseType': 'CONFERENCING',
-        'volume': 100,
-        'isTrial': true
-      }];
+
 
       beforeEach(function () {
         customer = {
-          licenseList: licenseData
+          licenseList: testData.partialLicenseDataWithPaid
         };
       });
 
