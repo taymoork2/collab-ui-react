@@ -62,7 +62,7 @@ describe('Service: Analytics', function () {
 
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
-      Analytics.trackTrialSteps('start', 'testUser');
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
