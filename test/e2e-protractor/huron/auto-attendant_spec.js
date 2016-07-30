@@ -438,6 +438,17 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
+    it('should be able to change time zone for AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.timeZone);
+      utils.click(autoattendant.firstTimeZoneElement);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      expect(autoattendant.aaTimeZone.getText()).toEqual(autoattendant.firstTimeZone);
+    }, 120000);
+
     it('should delete a AA Schedule', function () {
       utils.click(autoattendant.schedule);
       utils.expectIsDisabled(autoattendant.modalsave);
