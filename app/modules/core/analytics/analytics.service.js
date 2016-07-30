@@ -10,17 +10,24 @@
   /* @ngInject */
   function Analytics($q, Config, Orgservice) {
 
+    var eventNames = {
+      START: 'start',
+      NEXT: 'next',
+      BACK: 'back'
+    };
+
     var service = {
       _init: _init,
       _track: _track,
       trackEvent: trackEvent,
       checkIfTestOrg: checkIfTestOrg,
-      trackTrialStarted: trackTrialStarted,
+      trackTrialSteps: trackTrialSteps,
       trackAssignPartner: trackAssignPartner,
       trackRemovePartner: trackRemovePartner,
       trackUserPatch: trackUserPatch,
       trackSelectedCheckbox: trackSelectedCheckbox,
-      trackConvertUser: trackConvertUser
+      trackConvertUser: trackConvertUser,
+      eventNames: eventNames
     };
 
     var token = {
@@ -34,6 +41,8 @@
 
     /* Trial Event Names */
     var START_TRIAL = 'Start Trial Button Click';
+    var NEXT_BUTTON = 'Next Button Clicked';
+    var BACK_BUTTON = 'Back Button Clicked';
 
     /* Partner Event Names */
     var ASSIGN_PARTNER = 'Partner Admin Assigning';
@@ -105,12 +114,26 @@
      * Trial Events
      */
 
-    function trackTrialStarted(name) {
-      if (!name) {
+    function trackTrialSteps(state, name) {
+      if (!state || !name) {
         return;
       }
 
-      trackEvent(START_TRIAL, {
+      var step = '';
+
+      switch (state) {
+      case eventNames.START:
+        step = START_TRIAL;
+        break;
+      case eventNames.NEXT:
+        step = NEXT_BUTTON;
+        break;
+      case eventNames.BACK:
+        step = BACK_BUTTON;
+        break;
+      }
+
+      trackEvent(step, {
         from: name
       });
     }
