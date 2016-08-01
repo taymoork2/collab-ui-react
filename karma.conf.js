@@ -62,7 +62,7 @@ module.exports = function (config) {
       noInfo: true // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage', 'html'],
 
     port: 9876,
 
