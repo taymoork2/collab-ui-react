@@ -624,7 +624,7 @@
       if (rowData.daysLeft <= 0) {
         return 'expired';
       }
-      var isTrial = _.some(licenseTypes, function(type) {
+      var isTrial = _.some(licenseTypes, function (type) {
         return isLicenseTypeATrial(rowData, type);
       });
       return isTrial ? 'trial' : 'active';

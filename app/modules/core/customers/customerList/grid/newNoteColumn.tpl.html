@@ -1,7 +1,8 @@
 <div class="ui-grid-cell-contents">
   <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft > 0"
     translate="customerPage.daysLeftToPurchase"
-    translate-values="{count: row.entity.daysLeft}"></span>
+    translate-values="{count: row.entity.daysLeft}"
+    translate-interpolation="messageformat"></span>
   <span ng-if="row.entity.isTrial && grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft === 0"
     translate="customerPage.expiringToday"></span>
   <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft < 0"

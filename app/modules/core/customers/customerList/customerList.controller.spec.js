@@ -109,7 +109,7 @@ describe('Controller: CustomerListCtrl', function () {
   describe('grid column display', function () {
     var testTrialData = {};
     beforeEach(initController);
-    beforeEach(function() {
+    beforeEach(function () {
       testTrialData = {
         customerOrgId: '1234-34534-afdagfg-425345-acac',
         customerName: 'ControllerTestOrg',
@@ -132,10 +132,12 @@ describe('Controller: CustomerListCtrl', function () {
       testTrialData.daysLeft = 30;
       testTrialData.communications.isTrial = true;
     }
+
     function setTestDataExpired() {
       testTrialData.daysLeft = -10;
       testTrialData.communications.isTrial = true;
     }
+
     function setTestDataActive() {
       testTrialData.daysLeft = NaN;
       testTrialData.communications.isTrial = false;
