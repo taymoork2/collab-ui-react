@@ -2773,7 +2773,7 @@
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
+    "deviceCodeExpires": "The current activation code will expire {{inXDays}}.",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
