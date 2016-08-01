@@ -14,26 +14,33 @@
       resendSuccess: false
     };
 
-    var showHide = function (provision, expired, resend) {
-      $scope.result.provisionSuccess = provision;
-      $scope.result.codeExpired = expired;
-      $scope.result.resendSuccess = resend;
+    var hideAllMessages = function () {
+      $scope.result.provisionSuccess = false;
+      $scope.result.codeExpired = false;
+      $scope.result.resendSuccess = false;
     };
 
-    var activateWeb = function () {
-      showHide(true, false, false);
+    var showProvisionSuccessMessage = function () {
+      hideAllMessages();
+      $scope.result.provisionSuccess = true;
     };
 
-    var activateErrorWeb = function () {
-      showHide(false, true, false);
+    var showCodeExpiredMessage = function () {
+      hideAllMessages();
+      $scope.result.codeExpired = true;
     };
 
-    var activateMobile = function () {
+    var showResendSuccessMessage = function () {
+      hideAllMessages();
+      $scope.result.resendSuccess = true;
+    };
+
+    var redirectToSparkWithSuccess = function () {
       // launch app with URL: squared://confirmation_code_verified
       WindowLocation.set(UrlConfig.getSquaredAppUrl() + 'confirmation_code_verified');
     };
 
-    var activateErrorMobile = function (errorCode) {
+    var redirectToSparkWithError = function (errorCode) {
       // launch app with error URL: squared://confirmation_error_code/xxxx
       WindowLocation.set(UrlConfig.getSquaredAppUrl() + 'confirmation_error_code/' + errorCode);
     };
@@ -52,22 +59,17 @@
           $scope.deviceId = data.deviceId;
           $scope.deviceUserAgent = data.userAgent;
 
-          if (!Utils.isWeb()) {
-            if (!data.codeException) {
-              activateMobile();
-            } else {
-              activateErrorMobile(data.codeException);
-            }
+          if (!data.codeException) {
+            showProvisionSuccessMessage();
+            redirectToSparkWithSuccess();
           } else {
-            if (!data.codeException) {
-              activateWeb();
-            } else {
-              activateErrorWeb();
-            }
+            showCodeExpiredMessage();
+            redirectToSparkWithError(data.codeException);
           }
-        }, function (status) {
+        })
+        .catch(function (status) {
           if (!Utils.isWeb()) {
-            activateErrorMobile(status);
+            redirectToSparkWithError(status);
           } else {
             $scope.result.errmsg = 'Failed to verify code and create user. Status: ' + status;
             Log.error($scope.result.errmsg);
@@ -83,8 +85,8 @@
       Activateservice.resendCode(encryptedParam)
         .then(function (res) {
           if (res.data) {
+            showResendSuccessMessage();
             $scope.eqp = res.data.eqp;
-            showHide(false, false, true);
           }
         }, function (status) {
           if (status === 404) {
