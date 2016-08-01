@@ -26,7 +26,9 @@
       createLicenseMapping: _createLicenseMapping,
       createFreeServicesMapping: _createFreeServicesMapping,
       buildService: _buildService,
-      addService: _addService
+      addService: _addService,
+      removeFromFreeServices: _removeFromFreeServices,
+      isDisplayablePaidService: _isDisplayablePaidService
     };
 
     var factory = {
@@ -148,6 +150,30 @@
         existingService.qty = existingService.qty + service.qty;
       } else {
         services.push(service);
+      }
+    }
+
+    function _removeFromFreeServices(freeServices, service) {
+      //remove trial or paid services from 'free'
+      _.remove(freeServices, function (freeService) {
+        if (service.offerName) {
+          return freeService.licenseType === service.licenseType && freeService.code === service.offerName;
+        } else {
+          return freeService.licenseType === service.licenseType;
+        }
+      });
+    }
+
+    function _isDisplayablePaidService(service, isCareEnabled) {
+
+      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE) || isCareEnabled;
+      if (service.isTrial) {
+        return false;
+      }
+      if ((service.licenseType !== Config.licenseTypes.STORAGE) && serviceNotCareOrCareIsShown) {
+        return true;
+      } else {
+        return false;
       }
     }
 
@@ -533,18 +559,9 @@
       _.forEach(_.get(customer, 'licenseList', []), function (licenseInfo) {
         service = null;
         if (licenseInfo) {
-          //remove trial or paid services from 'free'
-          _.remove(freeServices, function (freeService) {
-            if (licenseInfo.offerName) {
-              return freeService.licenseType === licenseInfo.licenseType && freeService.code === licenseInfo.offerName;
-            } else {
-              return freeService.licenseType === licenseInfo.licenseType;
-            }
-          });
-
+          helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (!licenseInfo.isTrial && (licenseInfo.licenseType !== Config.licenseTypes.STORAGE) && (licenseInfo.licenseType !== Config.offerTypes.CARE || isCareEnabled)) {
-            //if conference
+          if (helpers.isDisplayablePaidService(licenseInfo, isCareEnabled)) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = helpers.buildService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
@@ -561,7 +578,8 @@
 
       //if only one meeting service -- move to the services list
       if (meetingServices.length === 1) {
-        helpers.addService(paidServices, meetingServices.shift());
+        var singleMeetingService = meetingServices.shift();
+        helpers.addService(paidServices, singleMeetingService);
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {

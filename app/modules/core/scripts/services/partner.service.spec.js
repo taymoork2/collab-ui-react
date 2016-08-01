@@ -496,6 +496,40 @@ describe('Partner Service -', function () {
 
       });
 
+      it('should return false from isDisplayablePaidService for trial license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.MESSAGING,
+          volume: 10,
+          isTrial: true
+        };
+        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(false);
+      });
+
+      it('should return false from isDisplayablePaidService for storage license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.STORAGE,
+          volume: 10
+        };
+        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(false);
+      });
+
+      it('should return the value of the toggle  from isDisplayablePaidService for care license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.CARE,
+          volume: 10
+        };
+        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, false)).toBe(false);
+        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(true);
+      });
+
+      it('should return true from isDisplayablePaidService for care license for paid conference license ', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.CONFERENCING,
+          volume: 10
+        };
+        expect(PartnerService.helpers.isDisplayablePaidService(licenseInfo, true)).toBe(true);
+      });
+
       it('should build a meeting service given conferencing mapping', function () {
         var mapping = PartnerService.helpers.createConferenceMapping();
         var licenseInfo = {
@@ -520,15 +554,15 @@ describe('Partner Service -', function () {
 
       it('should add a service if there is not already one with the same name', function () {
         var service = {
-          'qty': 20,
-          'name': 'Spark Room System'
+          qty: 20,
+          name: 'Spark Room System'
         };
         var services = [{
-          'qty': 10,
-          'name': 'Messaging'
+          qty: 10,
+          name: 'Messaging'
         }, {
-          'qty': 20,
-          'name': 'Call'
+          qty: 20,
+          name: 'Call'
         }];
         PartnerService.helpers.addService(services, service);
         expect(services.length).toBe(3);
@@ -537,15 +571,15 @@ describe('Partner Service -', function () {
 
       it('should  sum quantities if there is already service with the same name', function () {
         var service = {
-          'qty': 20,
-          'name': 'Spark Room System'
+          qty: 20,
+          name: 'Spark Room System'
         };
         var services = [{
-          'qty': 10,
-          'name': 'Spark Room System'
+          qty: 10,
+          name: 'Spark Room System'
         }, {
-          'qty': 20,
-          'name': 'Call'
+          qty: 20,
+          name: 'Call'
         }];
 
         PartnerService.helpers.addService(services, service);
@@ -556,7 +590,6 @@ describe('Partner Service -', function () {
 
     describe('getFreeOrActiveServices ', function () {
       var customer;
-
 
       beforeEach(function () {
         customer = {
