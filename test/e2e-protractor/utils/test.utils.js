@@ -484,6 +484,21 @@ exports.expectCheckbox = function (elem, value) {
   });
 };
 
+exports.expectInputCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        // Have to navigate up out of the isolated scope from cs-input
+        return input.element(by.xpath('../..')).evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for input checkbox to be ' + value + ': ' + elem.locator());
+  });
+};
+
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
