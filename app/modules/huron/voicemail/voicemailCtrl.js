@@ -17,7 +17,7 @@
     init();
 
     $scope.$on('telephonyInfoUpdated', function () {
-      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      init();
     });
 
     function init() {
