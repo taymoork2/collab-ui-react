@@ -178,7 +178,8 @@ describe('Controller: ServiceSetup', function () {
       $state.current.data.firstTimeSetup = true;
     });
 
-    it('should have the default site steering digit in the steeringDigits array', function () {
+    //TODO: re-enable option '8' once it is an acceptable steering digit
+    xit('should have the default site steering digit in the steeringDigits array', function () {
       var index = _.indexOf(controller.steeringDigits, '8');
       expect(index).toEqual(7);
     });
