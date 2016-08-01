@@ -139,7 +139,7 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.getUserPhoto(photoUsers.photoUser)).toEqual(photoUsers.photoUser.photos[1].value);
     });
     it('should return null if no photo list', function () {
-      expect($scope.getUserPhoto(currentUser)).toBeNull();
+      expect($scope.getUserPhoto(currentUser)).toBeUndefined();
     });
   });
 

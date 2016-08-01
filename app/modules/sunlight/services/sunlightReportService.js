@@ -42,9 +42,16 @@
       switch (timeSelected) {
         // today
       case 0:
-        var deferred = $q.defer();
-        deferred.resolve([]);
-        dataPromise = deferred.promise;
+        var startTimeStamp = moment().startOf('day');
+        var endTimeStamp = moment();
+        var config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
+        var dataPromise = getStats(reportName, config)
+          .then(function (response) {
+            var localTimeData = downSampleByHour(response.data.data);
+            return fillEmptyData(
+              (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
+              'h', localTimeData, hourFormat, false);
+          });
         break;
 
         // yesterday
@@ -59,7 +66,6 @@
               (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
               'h', localTimeData, hourFormat, false);
           });
-
         break;
 
         // last week
@@ -91,7 +97,7 @@
         // last 3 month
       case 4:
         var startTimeStamp = moment().subtract(2, 'months').startOf('month');
-        var endTimeStamp = moment().subtract(1, 'days').startOf('day');
+        var endTimeStamp = moment().startOf('day');
         var config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
         var dataPromise = getStats(reportName, config)
           .then(function (response) {
@@ -198,6 +204,7 @@
       var resultStats = reduceOrgStats(stats1, stats2);
       var isoWeekDay = moment(stats2.createdTime).isoWeekday();
       resultStats.createdTime = moment(stats2.createdTime).endOf('week').format(dayFormat);
+
       return resultStats;
     }
 
