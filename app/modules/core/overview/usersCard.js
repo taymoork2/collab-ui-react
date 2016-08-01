@@ -38,6 +38,13 @@
           $state.go('users.convert', {});
         };
 
+        card.showSSOSettings = function () {
+          $state.go('setupwizardmodal', {
+            currentTab: 'enterpriseSettings',
+            currentStep: 'init'
+          });
+        };
+
         return card;
       }
     };

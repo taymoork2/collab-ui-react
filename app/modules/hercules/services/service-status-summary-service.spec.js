@@ -285,8 +285,9 @@ describe('ServiceStatusSummaryService', function () {
         return "Management Connector";
       } else if (serviceType == "c_cal") {
         return "Calendar Connector";
-      } else
+      } else {
         return "Unknown connector name";
+      }
     };
 
     var services = [];

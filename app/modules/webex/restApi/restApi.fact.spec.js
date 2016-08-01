@@ -27,6 +27,7 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
     };
 
     WebExApiGatewayConstsService.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -50,6 +51,24 @@ describe('WebExRestApiFact.csvApiRequest() test', function () {
 
       function csvApiRequestError(response) {
         var dummy = null;
+      }
+    );
+  }));
+
+  it('can redirect on auth token error', inject(function (WebExRestApiFact) {
+    WebExRestApiFact.csvApiRequest(
+      true,
+      WebExApiGatewayConstsService.csvStates.authTokenError
+    ).then(
+
+      function csvApiRequestSuccess(response) {
+        var dummy = null;
+      },
+
+      function csvApiRequestError(response) {
+        expect(response).not.toEqual(null);
+        expect(response.errorCode).toEqual("060502");
+        expect(response.errorMessage).toEqual("Auth token is invalid.");
       }
     );
   }));

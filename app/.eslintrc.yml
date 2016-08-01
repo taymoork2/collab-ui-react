@@ -9,7 +9,6 @@
     # airbnb-config inherited rules
     array-callback-return: 0
     block-scoped-var: 0
-    brace-style: 0
     curly: 0
     default-case: 0
     dot-notation: 0

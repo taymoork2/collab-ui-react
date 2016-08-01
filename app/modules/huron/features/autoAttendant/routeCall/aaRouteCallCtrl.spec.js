@@ -3,7 +3,7 @@
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };

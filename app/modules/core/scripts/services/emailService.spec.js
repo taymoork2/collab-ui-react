@@ -44,6 +44,7 @@ describe('emailService', function () {
 
         expect(mkTrialPayload(fakeCustEmail, fakeTrialPeriod, fakeOrgId)).toEqual({
           type: CUSTOMER_TRIAL,
+          addressTo: fakeCustEmail,
           properties: {
             CustomerEmail: fakeCustEmail,
             TrialPeriod: fakeTrialPeriod,
@@ -66,6 +67,7 @@ describe('emailService', function () {
         expect(mkTrialConversionReqPayload(fakeCustName, fakeCustEmail, fakePartnerEmail, webexSiteUrl))
           .toEqual({
             type: NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
+            addressTo: fakePartnerEmail,
             properties: {
               CUSTOMER_NAME: fakeCustName,
               CUSTOMER_EMAIL: fakeCustEmail,

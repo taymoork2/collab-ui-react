@@ -18,18 +18,29 @@ describe('Controller: FusionClusterListController', function () {
 
   function initSpies() {
     spyOn(FusionClusterService, 'getAll');
+    spyOn(FusionClusterService, 'getAllNonMediaClusters');
     spyOn(XhrNotificationService, 'notify');
   }
 
   function initController() {
     controller = $controller('FusionClusterListController', {
-      hasFeatureToggle: true
+      hasF410FeatureToggle: true,
+      hasMediaFeatureToggle: true
+    });
+  }
+
+  function initControllerNoMedia() {
+    controller = $controller('FusionClusterListController', {
+      hasF410FeatureToggle: true,
+      hasMediaFeatureToggle: false
     });
   }
 
   describe('init', function () {
     beforeEach(function () {
       FusionClusterService.getAll.and.returnValue($q.resolve());
+      FusionClusterService.getAllNonMediaClusters.and.returnValue($q.resolve());
+      // FusionClusterService.isMediaFeatureToggled.and.returnValue($q.resolve());
       initController();
     });
 
@@ -81,4 +92,35 @@ describe('Controller: FusionClusterListController', function () {
       expect(controller.displayedClusters.length).toBe(2);
     });
   });
+
+  describe('after loading clusters with no media', function () {
+    it('should call XhrNotificationService.notify if loading failed', function () {
+      FusionClusterService.getAllNonMediaClusters.and.returnValue($q.reject());
+      initControllerNoMedia();
+      expect(controller.loading).toBe(true);
+      expect(XhrNotificationService.notify).not.toHaveBeenCalled();
+      $rootScope.$apply(); // force FusionClusterService.getAll() to return
+      expect(controller.loading).toBe(false);
+      expect(XhrNotificationService.notify).toHaveBeenCalled();
+    });
+
+    it('should update filters and displayed clusters', function () {
+      FusionClusterService.getAllNonMediaClusters.and.returnValue($q.resolve([{
+        targetType: 'c_mgmt',
+        connectors: [{
+          alarms: [],
+          connectorType: 'c_mgmt',
+          runningState: 'running',
+          hostname: 'a.elg.no'
+        }]
+      }]));
+      initControllerNoMedia();
+      expect(controller.filters[0].count).toBe(0);
+      expect(controller.displayedClusters.length).toBe(0);
+      $rootScope.$apply(); // force FusionClusterService.getAll() to return
+      expect(controller.filters[0].count).toBe(1);
+      expect(controller.displayedClusters.length).toBe(1);
+    });
+  });
+
 });

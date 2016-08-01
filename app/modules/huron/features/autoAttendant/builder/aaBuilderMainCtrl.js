@@ -9,7 +9,7 @@
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService) {
+    AATrackChangeService, AADependencyService, ServiceSetup) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -35,6 +35,8 @@
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
     vm.setLoadingDone = setLoadingDone;
 
+    vm.getSystemTimeZone = getSystemTimeZone;
+    vm.getTimeZoneOptions = getTimeZoneOptions;
     vm.save8To5Schedule = save8To5Schedule;
     vm.saveCeDefinition = saveCeDefinition;
     vm.delete8To5Schedule = delete8To5Schedule;
@@ -62,6 +64,11 @@
         actionset: []
       }]
     }];
+
+    var DEFAULT_TZ = {
+      id: 'America/Los_Angeles',
+      label: $translate.instant('timeZones.America/Los_Angeles')
+    };
 
     setLoadingStarted();
 
@@ -159,6 +166,16 @@
           vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.closedHours.setType('MENU_WELCOME');
         }
+      }
+
+      if (vm.aaModel.aaRecord.assignedTimeZone) {
+        vm.ui.timeZone = _.find(vm.ui.timeZoneOptions, function (tzOption) {
+          return tzOption.id === vm.aaModel.aaRecord.assignedTimeZone;
+        });
+      } else {
+        vm.ui.timeZone = _.find(vm.ui.timeZoneOptions, function (tzOption) {
+          return tzOption.id === vm.ui.systemTimeZone.id;
+        });
       }
     }
 
@@ -508,6 +525,26 @@
       vm.setupTemplate();
     }
 
+    function getSystemTimeZone() {
+      vm.ui.systemTimeZone = DEFAULT_TZ;
+      return ServiceSetup.listSites().then(function () {
+        if (ServiceSetup.sites.length !== 0) {
+          return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+            vm.ui.systemTimeZone = _.find(vm.ui.timeZoneOptions, function (timezone) {
+              return timezone.id === site.timeZone;
+            });
+          });
+        }
+      });
+    }
+
+    function getTimeZoneOptions() {
+      return ServiceSetup.getTimeZones().then(function (timezones) {
+        var tzOptions = ServiceSetup.getTranslatedTimeZones(timezones);
+        vm.ui.timeZoneOptions = _.sortBy(tzOptions, 'label');
+      });
+    }
+
     function save8To5Schedule(aaName) {
       return AAUiScheduleService.create8To5Schedule(aaName).then(
         function (scheduleId) {
@@ -577,7 +614,7 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().finally(function () {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(getTimeZoneOptions).then(getSystemTimeZone).finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;

@@ -129,7 +129,8 @@ describe('Controller: LineSettingsCtrl', function () {
 
     //Sharedline
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
 
     controller = $controller('LineSettingsCtrl', {
@@ -322,7 +323,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(LineSettings.disassociateInternalLine).toHaveBeenCalledWith(currentUser.id, telephonyInfoSecondLine.currentDirectoryNumber.userDnUuid);
       expect(SharedLineInfoService.disassociateSharedLineUser).not.toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('directoryNumberPanel.disassociationSuccess');
     });
   });
 
@@ -371,7 +372,7 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(SharedLineInfoService.loadSharedLineUsers).toHaveBeenCalled();
       expect(controller.sharedLineUsers.length).toBe(2);
       expect(controller.sharedLineEndpoints).toBeDefined();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('directoryNumberPanel.success');
     });
 
   });
@@ -410,12 +411,12 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.devices.length).toBe(3);
       expect(controller.devices[0].isSharedLine).toBeTruthy();
       expect(SharedLineInfoService.disassociateLineEndpoint).toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('directoryNumberPanel.success');
     });
 
     it('associateSharedLineDevice: should associate Shared Line endpoint', function () {
       expect(SharedLineInfoService.associateLineEndpoint).toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalledWith('directoryNumberPanel.success');
     });
   });
 
@@ -502,7 +503,7 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.sharedLineBtn).toBe(true);
       expect(SharedLineInfoService.getUserLineCount).toHaveBeenCalledWith(selectedUsers[0].uuid);
       expect(SharedLineInfoService.addSharedLineUser).not.toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      expect(Notification.error).toHaveBeenCalledWith('directoryNumberPanel.maxLines', jasmine.any(Object));
       expect(controller.sharedLineEndpoints).toBeDefined();
     });
   });

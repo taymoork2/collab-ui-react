@@ -21,8 +21,9 @@ export class ServicesOverviewHybridCallCard extends ServicesOverviewHybridCard {
     }];
 
   getButtons():Array<CardButton> {
-    if (this.active)
+    if (this.active) {
       return _.take(this._buttons, 3);
+    }
     return [this._setupButton];
   }
 

@@ -7,8 +7,9 @@ describe('Controller: OverviewCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $rootScope, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo, TrialService;
+  var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
+  var usageJSONFixture = getJSONFixture('core/json/organizations/usage.json');
   var services = getJSONFixture('squared/json/services.json');
 
   describe('Wire up', function () {
@@ -202,35 +203,59 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
-  describe('Cloud SIP URI Notification', function () {
+  describe('Notifications', function () {
+    var TOTAL_NOTIFICATIONS = 6;
     beforeEach(inject(defaultWireUpFunc));
-    it('should set flags to prevent display of notification', function () {
-      controller.isCloudSipUriSet = false;
-      controller.setSipUriNotification();
-      expect(controller.isCloudSipUriSet).toEqual(true);
+
+    it('should all be shown', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
     });
 
-    it('should set flags to dismiss SIP URI Notification on DISMISS_SIP_NOTIFICATION event', function () {
-      controller.isSipUriAcknowledged = false;
+    it('should dismiss the Devices notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createDevicesNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Setup notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createSetupNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Calendar notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCalendarNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Call Aware notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCallAwareNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Call Connect notification', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
+      var notification = OverviewNotificationFactory.createCallConnectNotification();
+      controller.dismissNotification(notification);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
+    });
+
+    it('should dismiss the Cloud SIP URI Notification using a rootScope broadcast', function () {
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+
       $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
-      expect(controller.isSipUriAcknowledged).toEqual(true);
-    });
-  });
-
-  describe('Cloud SIP URI Notification', function () {
-    beforeEach(inject(defaultWireUpFunc));
-    beforeEach(function () {
-      Orgservice.getOrg = jasmine.createSpy().and.callFake(function (callback, oid, disableCache) {
-        callback({
-          orgSettings: {}
-        }, 200);
-      });
-    });
-
-    it('should set flags to display notification', function () {
-      controller.isCloudSipUriSet = false;
-      controller.setSipUriNotification();
-      expect(controller.isCloudSipUriSet).toEqual(false);
+      expect(controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS - 1);
     });
   });
 
@@ -240,15 +265,17 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _Orgservice_, _Authinfo_, _TrialService_) {
+  function defaultWireUpFunc(_$rootScope_, $controller, _$state_, _$stateParams_, _$q_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Orgservice_, _OverviewNotificationFactory_, _TrialService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
-    $translate = _$translate_;
     $state = _$state_;
-    Log = _Log_;
-    Config = _Config_;
+    $translate = _$translate_;
     Authinfo = _Authinfo_;
+    Config = _Config_;
+    FeatureToggleService = _FeatureToggleService_;
+    Log = _Log_;
+    OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
 
     ServiceDescriptor = {
@@ -264,15 +291,35 @@ describe('Controller: OverviewCtrl', function () {
     };
     Orgservice = {
       getAdminOrg: function (orgEventHandler) {},
+      getAdminOrgUsage: function () {
+        return $q.when({
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+        });
+      },
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getOrg: jasmine.createSpy().and.callFake(function (callback, status) {
-        callback(orgServiceJSONFixture.getOrg, 200);
+        callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
       getHybridServiceAcknowledged: function () {
         var defer = $q.defer();
-        defer.resolve({});
+        defer.resolve({
+          status: 200,
+          data: {
+            items: [{
+              id: Config.entitlements.fusion_cal,
+              acknowledged: false
+            }, {
+              id: Config.entitlements.fusion_uc,
+              acknowledged: false
+            }, {
+              id: Config.entitlements.fusion_ec,
+              acknowledged: false
+            }]
+          }
+        });
         return defer.promise;
-      }
+      },
+      setHybridServiceAcknowledged: jasmine.createSpy()
     };
 
     ReportsService = {
@@ -298,6 +345,9 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'getLicenses').and.returnValue([{}]);
     spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Authinfo, 'getServices').and.returnValue(services);
+    spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
+    spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
 
     controller = $controller('OverviewCtrl', {
@@ -312,7 +362,8 @@ describe('Controller: OverviewCtrl', function () {
       ServiceDescriptor: ServiceDescriptor,
       ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config,
-      TrialService: TrialService
+      TrialService: TrialService,
+      OverviewNotificationFactory: OverviewNotificationFactory
     });
     $scope.$apply();
   }

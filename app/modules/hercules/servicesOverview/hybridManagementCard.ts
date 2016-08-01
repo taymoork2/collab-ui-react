@@ -26,8 +26,9 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
   ];
 
   getButtons():Array<CardButton> {
-    if (this.active)
+    if (this.active) {
       return _.take(this._buttons, 3);
+    }
     return [this._setupButton];
   }
 
@@ -46,3 +47,4 @@ export class ServicesOverviewHybridManagementCard extends ServicesOverviewHybrid
     });
   }
 }
+

@@ -10,7 +10,7 @@ import { ServicesOverviewHybridMediaCard } from './hybridMediaCard';
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 
 /* @ngInject */
-function ServicesOverviewCardFactory($translate, Authinfo) {
+function ServicesOverviewCardFactory(Authinfo) {
 
   return {
     createCards: function ():Array<ServicesOverviewCard> {

@@ -2,7 +2,7 @@
 
 describe('Service: WebExSiteRowService', function () {
 
-  var controller, $rootScope, $scope, $q, WebExSiteRowService, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  var controller, $rootScope, $scope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
   var fakeSiteRow1 = {
     "label": "Meeting Center 200",
@@ -195,8 +195,9 @@ describe('Service: WebExSiteRowService', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
 
+    Auth = _Auth_;
     Authinfo = _Authinfo_;
     WebExSiteRowService = _WebExSiteRowService_;
     FeatureToggleService = _FeatureToggleService_;
@@ -212,6 +213,7 @@ describe('Service: WebExSiteRowService', function () {
     deferredCsvStatus = $q.defer();
 
     WebExApiGatewayConstsService.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -231,6 +233,7 @@ describe('Service: WebExSiteRowService', function () {
       WebExApiGatewayConstsService.csvStates.importCompletedWithErr
     ];
 
+    spyOn(Auth, 'redirectToLogin');
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
@@ -600,6 +603,33 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
+  });
+
+  it('can process "Auth token is invalid"', function () {
+
+    WebExSiteRowService.getConferenceServices();
+    WebExSiteRowService.configureGrid();
+
+    deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "sjsite04.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: true
+    });
+
+    deferredCsvStatus.reject({
+      siteUrl: 'sjsite04.webex.com',
+      status: 'error',
+      errorId: '060502',
+      errorDesc: 'Auth token is invalid.',
+      completionDetails: null
+    });
+
+    $rootScope.$apply();
+
+    expect(Auth.redirectToLogin).toHaveBeenCalled();
   });
 
   it('can process multiple licensed services', function () {

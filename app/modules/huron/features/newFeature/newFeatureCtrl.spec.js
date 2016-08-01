@@ -2,7 +2,7 @@
 
 describe('Controller: FeatureCtrl', function () {
 
-  var controller, $scope, $modal, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, CallParkService, Log, Notification;
+  var controller, $scope, $modal, $state, $filter, $timeout, Authinfo, HuntGroupService, CallParkService, Log, Notification;
 
   var fakeModal = {
     result: {

@@ -19,6 +19,9 @@
       'pattern': '.png',
       'width': {
         min: '100'
+      },
+      'size': {
+        max: '1MB'
       }
     };
 
@@ -129,21 +132,15 @@
         return WebexClientVersion.postOrPutTemplate(pid, selected, brand.useLatestWbxVersion);
       });
       //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, brand.useLatestWbxVersion);
-      var successMessage = "";
-      if (alwaysSelectLatest) {
-        successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
-      } else {
-        successMessage = $translate.instant('partnerProfile.webexVersionUseLatestFalse');
-      }
-      var failureMessage = $translate.instant('partnerProfile.webexVersionUseLatestUpdateFailed');
       p.then(function (s) {
-        Notification.notify([successMessage], 'success');
+        if (alwaysSelectLatest) {
+          Notification.success('partnerProfile.webexVersionUseLatestTrue');
+        } else {
+          Notification.success('partnerProfile.webexVersionUseLatestFalse');
+        }
       }).catch(function (e) {
-        Notification.notify([failureMessage], 'success');
+        Notification.error('partnerProfile.webexVersionUseLatestUpdateFailed');
       });
-
-      //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
-      //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
     }
 
     function wbxclientversionselectchanged(wbxclientversionselected) {
@@ -160,17 +157,12 @@
       //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, brand.useLatestWbxVersion);
 
       Log.info("New version selected is " + versionSelected);
-      var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
-      var failureMessage = $translate.instant('partnerProfile.webexClientVersionUpdatedFailed');
 
       p.then(function (s) {
-        Notification.notify([successMessage], 'success');
+        Notification.success('partnerProfile.webexClientVersionUpdated');
       }).catch(function (e) {
-        Notification.notify([failureMessage], 'success');
+        Notification.error('partnerProfile.webexClientVersionUpdatedFailed');
       });
-
-      //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
-      //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
     }
 
     brand.wbxclientversionselectchanged = wbxclientversionselectchanged;
@@ -190,8 +182,8 @@
       });
 
     brand.upload = function (file, event) {
-      openModal('sm');
       if (validateLogo(file)) {
+        openModal();
         brand.progress = 0;
         BrandService.upload(orgId, file)
           .then(uploadSuccess, uploadError, uploadProgress);
@@ -203,8 +195,7 @@
         type: 'small',
         scope: $scope,
         modalClass: 'modal-logo-upload',
-        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
-        size: size
+        templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html'
       });
     }
 
@@ -238,15 +229,24 @@
     };
 
     function validateLogo(logo) {
+      // avoid sencond click upload panel, trigger upload direct,  
+      if (!logo) {
+        return false;
+      }
+
       var error = logo.$error;
       if (error === 'maxWidth' || error === 'minWidth') {
         brand.logoError = 'dimensions';
+      } else if (error === 'minSize' || error === 'maxSize') {
+        brand.logoError = 'size';
       } else {
         brand.logoError = logo.$error;
       }
 
       if (logo && !logo.$error) {
         return true;
+      } else {
+        openModal();
       }
     }
 
@@ -257,12 +257,12 @@
         }
       }, 3000);
       // Automatically start using the custom logo
-      BrandService.resetCdnLogo(Authinfo.getOrgId()).then(function () {
-        // load logo url after upload success
-        return BrandService.getLogoUrl(Authinfo.getOrgId());
-      }).then(function (logoUrl) {
+      BrandService.resetCdnLogo(Authinfo.getOrgId());
+      // load logo url after upload success
+      BrandService.getLogoUrl(Authinfo.getOrgId()).then(function (logoUrl) {
         brand.tempLogoUrl = logoUrl;
       });
+
       brand.usePartnerLogo = false;
       brand.toggleLogo(false);
     }

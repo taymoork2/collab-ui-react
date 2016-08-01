@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -433,7 +433,7 @@
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = results[2];
+        vm.showContextServiceTrial = true;
 
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
@@ -579,6 +579,7 @@
     function previousStep() {
       var state = getBackState();
       if (state) {
+        Analytics.trackTrialSteps('back', state);
         $state.go(state);
       }
     }
@@ -599,6 +600,7 @@
       if (!hasNextStep()) {
         return startTrial(callback);
       } else {
+        Analytics.trackTrialSteps('next', $state.current.name);
         return $state.go(getNextState());
       }
     }

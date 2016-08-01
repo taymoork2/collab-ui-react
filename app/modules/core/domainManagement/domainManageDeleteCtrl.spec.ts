@@ -20,8 +20,9 @@ namespace domainManagement {
 
     let controllerFactory = (domain, user?)=> {
 
-      if (!user)
+      if (!user) {
         user = {email: 'user@same.domain', domain: 'same.domain'};
+      }
 
       return $controller('DomainManageDeleteCtrl', {
         $stateParams: {domain: domain, loggedOnUser: user},

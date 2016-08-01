@@ -4,16 +4,18 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
   private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list', buttonClass: 'btn-link'};
 
   getShowMoreButton():CardButton {
-    if (this.active)
+    if (this.active) {
       return this.moreButton;
+    }
     return undefined;
   }
 
   private _buttons:Array<CardButton> = [];
 
   getButtons():Array<CardButton> {
-    if (this.active)
+    if (this.active) {
       return _.take(this._buttons, 3);
+    }
     return [];
   }
 

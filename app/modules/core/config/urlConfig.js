@@ -134,6 +134,12 @@
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.rciad.ciscoccservice.com'
     },
+    SunlightReportServiceUrl: {
+      dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
+      cfe: 'https://reporting.nva1-de.ciscoccservice.com/reporting/v1',
+      integration: 'https://reporting.nctx3-stg.ciscoccservice.com/reporting/v1',
+      prod: 'https://reporting.rciad.ciscoccservice.com/reporting/v1'
+    },
     CalliopeUrl: {
       dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',

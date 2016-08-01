@@ -80,7 +80,8 @@ describe('Controller: DidAddCtrl', function () {
     $timeout.flush();
 
     spyOn(EmailService, 'emailNotifyTrialCustomer');
-    spyOn(Notification, "notify");
+    spyOn(Notification, "success");
+    spyOn(Notification, "error");
     spyOn($window, 'open');
     spyOn($state, 'href').and.callThrough();
   }));
@@ -248,14 +249,14 @@ describe('Controller: DidAddCtrl', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(200);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calls.count()).toEqual(1);
+          expect(Notification.success.calls.count()).toEqual(1);
         });
 
         it('should report error notification when email cannot be sent', function () {
           $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/didadd').respond(500);
           controller.sendEmail();
           $httpBackend.flush();
-          expect(Notification.notify.calls.count()).toEqual(1);
+          expect(Notification.error.calls.count()).toEqual(1);
         });
       });
 
@@ -274,7 +275,7 @@ describe('Controller: DidAddCtrl', function () {
 
         it('should report error notification when email cannot be sent', function () {
           controller.emailNotifyTrialCustomer();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
         });
       });
 
@@ -291,7 +292,7 @@ describe('Controller: DidAddCtrl', function () {
 
           controller.emailNotifyTrialCustomer();
           $scope.$apply();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+          expect(Notification.success).toHaveBeenCalledWith('didManageModal.emailSuccessText');
         });
       });
 
@@ -307,7 +308,7 @@ describe('Controller: DidAddCtrl', function () {
         it('should report error notification when email cannot be sent', function () {
           controller.emailNotifyTrialCustomer();
           $scope.$apply();
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+          expect(Notification.error).toHaveBeenCalledWith('didManageModal.emailFailText');
         });
       });
 

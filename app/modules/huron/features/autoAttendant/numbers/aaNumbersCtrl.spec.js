@@ -4,7 +4,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
   var controller, AANotificationService, AutoAttendantCeService, ExternalNumberPoolService;
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
-  var $rootScope, $scope, $q, deferred, $translate, $stateParams;
+  var $rootScope, $scope, $q, deferred, $stateParams;
   var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
 
