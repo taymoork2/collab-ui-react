@@ -1,1 +1,8 @@
-<div gridscrollbar class="gridStyle" ui-grid="$ctrl.gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+<div
+  gridscrollbar
+  class="gridStyle"
+  ui-grid="$ctrl.gridOptions">
+</div>
+<div class="grid-refresh" ng-if="$ctrl.loading">
+  <i class='icon icon-spinner icon-2x'></i>
+</div>

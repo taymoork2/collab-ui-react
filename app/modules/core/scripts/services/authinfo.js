@@ -132,6 +132,7 @@
           }
 
           authData.customerType = _.get(customerAccounts, '[0].customerType', '');
+          authData.customerId = _.get(customerAccounts, '[0].customerId');
           authData.commerceRelation = _.get(customerAccounts, '[0].commerceRelation', '');
 
           for (var x = 0; x < customerAccounts.length; x++) {
@@ -215,6 +216,9 @@
       },
       getOrgId: function () {
         return authData.orgId;
+      },
+      getCustomerId: function () {
+        return authData.customerId;
       },
       getUserName: function () {
         return authData.username;
