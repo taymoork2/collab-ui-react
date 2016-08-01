@@ -97,7 +97,7 @@
         // last 3 month
       case 4:
         var startTimeStamp = moment().subtract(2, 'months').startOf('month');
-        var endTimeStamp = moment().subtract(1, 'days').startOf('day');
+        var endTimeStamp = moment().startOf('day');
         var config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
         var dataPromise = getStats(reportName, config)
           .then(function (response) {

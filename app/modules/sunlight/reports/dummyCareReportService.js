@@ -50,7 +50,7 @@
         // last 3 months
       case 4:
         var startTime = moment().subtract(2, 'months').startOf('month');
-        var endTime = moment().subtract(1, 'days').startOf('day');
+        var endTime = moment().startOf('day');
         dummyGraph = getDataForGivenRange((moment.range(startTime.toDate(), endTime.toDate())), 'M', monthFormat, 100, 15);
         break;
 

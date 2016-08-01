@@ -274,9 +274,7 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk",
-    "careTab": "Care",
-    "careTabDesc": "Cloud Contact Center"
+    "helpdesk": "Help Desk"
   },
   "index": {
     "welcome": "Welcome!",
@@ -395,6 +393,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
