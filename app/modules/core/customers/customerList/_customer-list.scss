@@ -113,11 +113,12 @@
       width: 1px;
       min-width: 1px;
       padding: 5px;
-    }
-    .badge.alert {
-      /* for some reason there are margins on only the alert class */
-      margin-left: 0;
-      margin-right: 0;
+
+      &.alert {
+        /* for some reason there are margins on only the alert class */
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 }

@@ -39,7 +39,7 @@
     $scope.getTotalLicenses = getTotalLicenses;
     $scope.getAccountStatus = getAccountStatus;
     $scope.isLicenseTypeAny = isLicenseTypeAny;
-    $scope.getExpiredDaysLeft = getExpiredDaysLeft;
+    $scope.getExpiredNotesColumnText = getExpiredNotesColumnText;
 
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
     $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
@@ -65,7 +65,8 @@
 
     // common between new + old
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    // old templates
+    // old templates. These should be deleted once the customer list redesign rolls out publiclly
+    // FIXME: Delete when customer list redesign is published
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
     var multiServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/multiServiceColumn.tpl.html');
     var oldNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
@@ -77,20 +78,8 @@
     var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
     var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
 
-    // common grid column defs between new + old
-    var customerNameField = {
-      field: 'customerName',
-      displayName: $translate.instant('customerPage.customerNameHeader'),
-      width: '25%',
-      cellTemplate: nameTemplate,
-      cellClass: 'ui-grid-add-column-border',
-      sortingAlgorithm: partnerAtTopSort,
-      sort: {
-        direction: 'asc',
-        priority: 0,
-      }
-    };
-    // old grid column defs
+    // old grid column defs. These should be deleted once the customer list redesign rolls out publiclly
+    // FIXME: Delete when customerList redesign is published
     var careField = {
       field: 'care',
       displayName: $translate.instant('customerPage.care'),
@@ -143,7 +132,21 @@
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
     }];
-    // new column defs
+    // END SECTION TO BE DELETED
+
+    // new column defs for the customer list redesign. These should stay once the feature is rolled out
+    var customerNameField = {
+      field: 'customerName',
+      displayName: $translate.instant('customerPage.customerNameHeader'),
+      width: '25%',
+      cellTemplate: nameTemplate,
+      cellClass: 'ui-grid-add-column-border',
+      sortingAlgorithm: partnerAtTopSort,
+      sort: {
+        direction: 'asc',
+        priority: 0,
+      }
+    };
     var allServicesField = {
       field: 'services',
       displayName: $translate.instant('customerPage.services'),
@@ -176,7 +179,7 @@
       headerCellClass: 'align-center',
       sortingAlgorithm: serviceSort
     };
-    var newNotesField = {
+    var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
       cellTemplate: newNoteTemplate,
@@ -261,17 +264,11 @@
       FeatureToggleService.atlasCareTrialsGetStatus().then(function (careStatus) {
         $scope.isCareEnabled = careStatus;
         if (!careStatus) {
-          var idx = $scope.gridColumns.indexOf(careField);
-          if (idx !== -1) {
-            $scope.gridColumns.splice(idx, 1);
-          }
+          _.remove($scope.gridColumns, careField);
         }
       }, function () {
         // if getting care feature status fails, fall back to the old behavior
-        var idx = $scope.gridColumns.indexOf(careField);
-        if (idx !== -1) {
-          $scope.gridColumns.splice(idx, 1);
-        }
+        _.remove($scope.gridColumns, careField);
       }).finally(function () {
         resetLists().then(function () {
           setFilter($stateParams.filter);
@@ -302,7 +299,7 @@
     function initColumns() {
       $scope.gridColumns.push(customerNameField);
       if ($scope.customerListToggle) {
-        $scope.gridColumns.push(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, newNotesField);
+        $scope.gridColumns.push(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField);
       } else {
         // use this way instead of concat so we can maintain the ref inside gridOptions
         Array.prototype.push.apply($scope.gridColumns, splitServicesFields);
@@ -429,21 +426,21 @@
             myOrg[0].customerOrgId = accountId;
 
             myOrg[0].messaging = _.merge(myOrg[0].messaging, _.find(licenses, {
-              licenseType: "MESSAGING"
+              licenseType: 'MESSAGING'
             }));
             myOrg[0].communications = _.merge(myOrg[0].communications, _.find(licenses, {
-              licenseType: "COMMUNICATION"
+              licenseType: 'COMMUNICATION'
             }));
             myOrg[0].roomSystems = _.merge(myOrg[0].roomSystems, _.find(licenses, {
-              licenseType: "SHARED_DEVICES"
+              licenseType: 'SHARED_DEVICES'
             }));
             myOrg[0].conferencing = _.merge(myOrg[0].conferencing, _.find(licenses, {
-              licenseType: "CONFERENCING",
-              offerName: "CF"
+              licenseType: 'CONFERENCING',
+              offerName: 'CF'
             }));
             myOrg[0].webexEEConferencing = _.merge(myOrg[0].webexEEConferencing, _.find(licenses, {
-              licenseType: "CONFERENCING",
-              offerName: "EE"
+              licenseType: 'CONFERENCING',
+              offerName: 'EE'
             }));
             resolve(myOrg);
           } else {
@@ -595,18 +592,16 @@
     }
 
     function isLicenseTypeAny(rowData, licenseTypeField) {
-      return (isLicenseInfoAvailable(rowData.licenseList)) &&
-        (PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField)) ||
-          PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField)));
+      if (!isLicenseInfoAvailable(rowData.licenseList)) {
+        return false;
+      }
+      var licenseObj = getLicenseObj(rowData, licenseTypeField);
+      return PartnerService.isLicenseATrial(licenseObj) || PartnerService.isLicenseActive(licenseObj);
     }
 
     function getTotalLicenses(rowData) {
       if (getAccountStatus(rowData) === 'active') {
-        var sum = 0;
-        _.forEach(rowData.licenseList, function (value) {
-          sum += value.volume;
-        });
-        return sum;
+        return _.sum(rowData.licenseList, 'volume');
       } else {
         return rowData.licenses + rowData.deviceLicenses;
       }
@@ -629,25 +624,19 @@
       if (rowData.daysLeft <= 0) {
         return 'expired';
       }
-      var isTrial = false;
-      _.forEach(licenseTypes, function (value) {
-        if (isLicenseTypeATrial(rowData, value)) {
-          isTrial = true;
-        }
+      var isTrial = _.some(licenseTypes, function(type) {
+        return isLicenseTypeATrial(rowData, type);
       });
       return isTrial ? 'trial' : 'active';
     }
 
-    function getExpiredDaysLeft(rowData) {
-      var expired = $translate.instant("customerPage.expired");
+    function getExpiredNotesColumnText(rowData) {
       // Can renew up to 30 days after expiration (grace period)
       var maxExpiredDaysLeft = -30;
-      if (rowData.daysLeft < 0 && rowData.daysLeft >= maxExpiredDaysLeft) {
-        return expired + ". " + $translate.instant("customerPage.daysLeftToPurchase", {
-          count: Math.abs(rowData.daysLeft - maxExpiredDaysLeft)
-        });
+      if (_.inRange(rowData.daysLeft, 0, maxExpiredDaysLeft)) {
+        return $translate.instant('customerPage.expiredWithGracePeriod');
       } else {
-        return expired;
+        return $translate.instant('customerPage.expired');
       }
     }
 
