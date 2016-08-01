@@ -3220,6 +3220,7 @@
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
+      "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Have you installed and configured the software on your new Hybrid Media Node?",
@@ -3231,7 +3232,14 @@
       "firstStepNo1": "1. Download the latest software from Cisco:",
       "firstStepNo2": "Click here",
       "firstStepNo3": "2. Install and configure your Hybrid Media Node. For details, visit Help Central.",
-      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below."
+      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
+      "yesProceed": "Yes, I’m ready to proceed.",
+      "noProceed": "No, I'm not ready to proceed.",
+      "noInfo": "Before you can proceed, install and configure the Hybrid Media Node software on your server.",
+      "noDesc1": "For detailed instructions, visit ",
+      "noDesc2": "Help Central.",
+      "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
+      "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",

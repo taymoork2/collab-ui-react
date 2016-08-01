@@ -2093,6 +2093,11 @@
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
               }
             },
+            resolve: {
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+              }
+            },
             params: {
               wizard: null
             }
@@ -2156,13 +2161,20 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
+                /*                controller: 'AddResourceControllerClusterViewV2',
+                                controllerAs: 'redirectResource',
+                                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                                modalClass: 'redirect-add-resource'*/
                 controller: 'MediafusionEnterHostnameController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
               }
             },
             params: {
-              wizard: null
+              wizard: null,
+              firstTimeSetup: false,
+              yesProceed: false,
+              fromClusters: true
             }
           })
           .state('add-resource.mediafusion.name', {
