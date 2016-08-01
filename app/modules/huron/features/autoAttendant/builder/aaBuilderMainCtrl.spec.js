@@ -1,12 +1,13 @@
 'use strict';
 
 describe('Controller: AABuilderMainCtrl', function () {
-  var controller, AANotificationService, AutoAttendantCeService;
+  var controller, $controller, AANotificationService, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $state, $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
   var AATrackChangeService, AADependencyService;
   var FeatureToggleService;
+  var ServiceSetup, timeZone, translatedTimeZone, sysModel;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -51,10 +52,10 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
+  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_) {
+    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_) {
 
     $state = _$state_;
     $rootScope = _$rootScope_;
@@ -66,6 +67,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     };
     $translate = _$translate_;
     $stateParams = _$stateParams_;
+    $controller = _$controller_;
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
@@ -82,9 +84,29 @@ describe('Controller: AABuilderMainCtrl', function () {
     AATrackChangeService = _AATrackChangeService_;
     AADependencyService = _AADependencyService_;
     FeatureToggleService = _FeatureToggleService_;
+    ServiceSetup = _ServiceSetup_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
+
+    sysModel = {
+      site: {
+        uuid: '777-888-666',
+        steeringDigit: '5',
+        siteSteeringDigit: '6',
+        siteCode: '200',
+        voicemailPilotNumber: "+16506679080",
+        timeZone: 'America/Los_Angeles'
+      }
+    };
+    timeZone = [{
+      id: 'America/Los_Angeles',
+      label: 'America/Los_Angeles'
+    }];
+    translatedTimeZone = [{
+      id: 'America/Los_Angeles',
+      label: 'timeZones.America/Los_Angeles'
+    }];
 
     spyOn($state, 'go');
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
@@ -92,6 +114,12 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
     spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
+    spyOn(ServiceSetup, 'listSites').and.callFake(function () {
+      ServiceSetup.sites = [sysModel.site];
+      return $q.when();
+    });
+    spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(sysModel.site));
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
@@ -103,6 +131,24 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   afterEach(function () {
 
+  });
+
+  describe('getTimeZoneOptions', function () {
+    it('should retreive the the list of system timezone options', function () {
+      controller.ui.timeZoneOptions = undefined;
+      controller.getTimeZoneOptions();
+      $scope.$apply();
+      expect(angular.equals(controller.ui.timeZoneOptions, translatedTimeZone)).toBe(true);
+    });
+  });
+
+  describe('getSystemTimeZone', function () {
+    it('should retreive the system timezone', function () {
+      controller.ui.systemTimeZone = undefined;
+      controller.getSystemTimeZone();
+      $scope.$apply();
+      expect(angular.equals(controller.ui.systemTimeZone, translatedTimeZone[0])).toBe(true);
+    });
   });
 
   describe('areAssignedResourcesDifferent', function () {
