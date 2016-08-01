@@ -2058,7 +2058,7 @@
             parent: 'main',
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.AtlasHybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
