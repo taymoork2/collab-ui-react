@@ -77,9 +77,9 @@
     $scope.canShowUserDelete = canShowUserDelete;
     $scope.canShowResendInvite = canShowResendInvite;
     $scope.handleDeleteUser = handleDeleteUser;
-    $scope.getUserPhoto = getUserPhoto;
+    $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
-    $scope.isValidThumbnail = isValidThumbnail;
+    $scope.isValidThumbnail = Userservice.isValidThumbnail;
     $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
 
@@ -519,35 +519,10 @@
       });
     }
 
-    function getUserPhoto(user) {
-      if (user && user.photos) {
-        for (var i in user.photos) {
-          if (user.photos[i].type === 'thumbnail') {
-            $scope.currentUserPhoto = user.photos[i].value;
-            break;
-          }
-        } //end for
-      } else {
-        $scope.currentUserPhoto = null;
-      }
-      return $scope.currentUserPhoto;
-    }
-
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
       return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
-    }
-
-    function isValidThumbnail(user) {
-      var photos = _.get(user, 'photos', []);
-      var thumbs = _.filter(photos, {
-        type: 'thumbnail'
-      });
-      var validThumbs = _.filter(thumbs, function (thumb) {
-        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
-      });
-      return !_.isEmpty(validThumbs);
     }
 
     function startExportUserList() {

@@ -21,7 +21,9 @@
 
         //today
       case 0:
-        dummyGraph = [];
+        var startTime = moment().startOf('day');
+        var endTime = moment().add(1, 'days').startOf('day');
+        dummyGraph = getDataForToday((moment.range(startTime.add(1, 'hours').toDate(), endTime.toDate())), 'h', hourFormat, 10, 1);
         break;
 
         //yesterday
@@ -48,7 +50,7 @@
         // last 3 months
       case 4:
         var startTime = moment().subtract(2, 'months').startOf('month');
-        var endTime = moment().subtract(1, 'days').startOf('day');
+        var endTime = moment().startOf('day');
         dummyGraph = getDataForGivenRange((moment.range(startTime.toDate(), endTime.toDate())), 'M', monthFormat, 100, 15);
         break;
 
@@ -57,6 +59,36 @@
       }
 
       return dummyGraph;
+    }
+
+    function getDataForToday(range, interval, format, initValue, changeValue) {
+      var rangeStatsList = [];
+      var handleCount = initValue;
+      var abandonCount = initValue / 3;
+      range.by(interval, function (moment) {
+        var formattedTime = momentFormatter(moment, format);
+        var rangeStats = {};
+        rangeStats.createdTime = formattedTime;
+        if (moment.isAfter()) {
+          rangeStats.numTasksHandledState = 0;
+          rangeStats.numTasksAbandonedState = 0;
+          rangeStats.numTasksAssignedState = 0;
+          rangeStats.numTasksQueuedState = 0;
+        } else {
+          rangeStats.numTasksHandledState = handleCount;
+          rangeStats.numTasksAbandonedState = abandonCount;
+          rangeStats.numTasksAssignedState = handleCount;
+          rangeStats.numTasksQueuedState = handleCount;
+        }
+        rangeStatsList.push(rangeStats);
+        handleCount = handleCount + changeValue;
+        abandonCount = abandonCount - changeValue / 3;
+
+        if (abandonCount < 0) {
+          abandonCount = 0;
+        }
+      });
+      return rangeStatsList;
     }
 
     function getDataForGivenRange(range, interval, format, initValue, changeValue) {
@@ -68,8 +100,13 @@
         var formattedTime = formatter(moment, format);
         var rangeStats = {};
         rangeStats.createdTime = formattedTime;
-        rangeStats.numTasksHandledState = handleCount;
-        rangeStats.numTasksAbandonedState = abandonCount;
+        if (moment.isAfter()) {
+          rangeStats.numTasksHandledState = 0;
+          rangeStats.numTasksAbandonedState = 0;
+        } else {
+          rangeStats.numTasksHandledState = handleCount;
+          rangeStats.numTasksAbandonedState = abandonCount;
+        }
         rangeStatsList.push(rangeStats);
         if (interval === 'w' || interval === 'd') {
           if (rangeStatsList.length == 1) {

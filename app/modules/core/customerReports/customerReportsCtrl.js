@@ -100,7 +100,7 @@
       }
       if (features.care) {
         vm.headerTabs.push({
-          title: $translate.instant('tabs.careTab'),
+          title: $translate.instant('reportsPage.careTab'),
           state: 'reports.care'
         });
       }

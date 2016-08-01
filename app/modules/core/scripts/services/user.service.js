@@ -25,7 +25,9 @@
       isHuronUser: isHuronUser,
       isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
-      sendSparkWelcomeEmail: sendSparkWelcomeEmail
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
+      getUserPhoto: getUserPhoto,
+      isValidThumbnail: isValidThumbnail
     };
     var _helpers = {
       isSunlightUser: isSunlightUser,
@@ -540,6 +542,21 @@
           }
         });
       });
+    }
+
+    function getUserPhoto(user) {
+      return _.chain(user)
+        .get('photos')
+        .find(function (photo) {
+          return photo.type === 'thumbnail';
+        })
+        .get('value')
+        .value();
+    }
+
+    function isValidThumbnail(user) {
+      var userPhotoValue = getUserPhoto(user);
+      return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
     }
 
   }

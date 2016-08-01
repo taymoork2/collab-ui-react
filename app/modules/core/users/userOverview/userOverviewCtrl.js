@@ -26,6 +26,9 @@
     vm.isFusionCal = Authinfo.isFusionCal();
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
+    vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.isValidThumbnail = Userservice.isValidThumbnail;
+
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: $translate.instant('onboardModal.message'),
@@ -60,6 +63,8 @@
     });
 
     init();
+
+    /////////////////////////////
 
     function init() {
       vm.services = [];

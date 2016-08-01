@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, SunlightReportService) {
+  function CareReportsController($timeout, $translate, CareReportsService, DummyCareReportService, Notification, SunlightReportService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
@@ -28,12 +28,13 @@
         value: i,
         label: $translate.instant('careReportsPage.' + name),
         description: $translate.instant('careReportsPage.' + name + '2'),
+        taskStatus: $translate.instant('careReportsPage.' + name + 'TaskStatus'),
         intervalTxt: $translate.instant('careReportsPage.' + name + 'Interval'),
         categoryAxisTitle: $translate.instant('careReportsPage.' + name + 'CategoryAxis')
       };
     });
 
-    vm.timeSelected = vm.timeOptions[1];
+    vm.timeSelected = vm.timeOptions[0];
     vm.timeUpdate = timeUpdate;
 
     function timeUpdate() {
@@ -56,7 +57,8 @@
     function setFilterBasedTextForCare() {
       vm.taskIncomingDescription = $translate.instant('taskIncoming.description', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt
+        interval: vm.timeSelected.intervalTxt,
+        taskStatus: vm.timeSelected.taskStatus
       });
     }
 
@@ -65,15 +67,17 @@
     }
 
     function setTaskIncomingGraphs() {
-      var selectedIndex = vm.timeSelected.value;
-      SunlightReportService.getReportingData('org_stats', selectedIndex, 'chat')
+      SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, 'chat')
         .then(function (data) {
           if (data.length === 0) {
             vm.taskIncomingStatus = EMPTY;
           } else {
             vm.taskIncomingStatus = SET;
-            CareReportsService.setTaskIncomingGraphs(data, vm.timeSelected.categoryAxisTitle);
+            CareReportsService.setTaskIncomingGraphs(data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value);
           }
+        }, function (response) {
+          vm.taskIncomingStatus = EMPTY;
+          Notification.error($translate.instant('careReportsPage.taskIncomingError'));
         });
     }
 
@@ -88,7 +92,7 @@
 
     function setDummyData() {
       var dummyData = DummyCareReportService.dummyOrgStatsData(vm.timeSelected.value);
-      CareReportsService.setTaskIncomingDummyData(dummyData, vm.timeSelected.categoryAxisTitle);
+      CareReportsService.setTaskIncomingDummyData(dummyData, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value);
     }
 
     function resetCards(filter) {
