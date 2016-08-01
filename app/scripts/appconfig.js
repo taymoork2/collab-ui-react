@@ -231,7 +231,7 @@
 
         $stateProvider
           .state('addDeviceFlow', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -244,7 +244,7 @@
             }
           })
           .state('addDeviceFlow.chooseDeviceType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -257,7 +257,7 @@
             }
           })
           .state('addDeviceFlow.chooseAccountType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseAccountTypeCtrl',
@@ -270,7 +270,7 @@
             }
           })
           .state('addDeviceFlow.choosePersonal', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChoosePersonalCtrl',
@@ -283,7 +283,7 @@
             }
           })
           .state('addDeviceFlow.chooseSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseSharedSpaceCtrl',
@@ -296,7 +296,7 @@
             }
           })
           .state('addDeviceFlow.newSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'NewSharedSpaceCtrl',
@@ -309,7 +309,7 @@
             }
           })
           .state('addDeviceFlow.addServices', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddServicesCtrl',
@@ -322,7 +322,7 @@
             }
           })
           .state('addDeviceFlow.addLines', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddLinesCtrl',
@@ -335,7 +335,7 @@
             }
           })
           .state('addDeviceFlow.showActivationCode', {
-            parent: 'modalSmall',
+            parent: 'modal',
             params: {
               currentUser: {},
               activationCode: {},
