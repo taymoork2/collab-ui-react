@@ -23,7 +23,7 @@ describe('Controller: LineSettingsCtrl', function () {
     }
   };
   var simultaneousCall = {
-    incomingCallMaximum:8
+    incomingCallMaximum: 8
   };
   var errorResponse = {
     message: 'error',

@@ -513,12 +513,11 @@
       numberId: '@numberId',
       placesId: '@placesId'
     }, {
-      get: {
-        method: 'GET',
-        transformResponse: transformEnvelope
-      },
       update: {
         method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }
