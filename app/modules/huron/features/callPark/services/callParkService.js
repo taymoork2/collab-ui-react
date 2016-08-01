@@ -22,6 +22,7 @@
       getNumberSuggestions: getNumberSuggestions,
       getMembers: getMembers,
       suggestionsNeeded: suggestionsNeeded,
+      getCallParkMember: getCallParkMember,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"
     };
@@ -219,6 +220,15 @@
       });
 
       return members;
+    }
+
+    function getCallParkMember(user) {
+      var callParkMember = {};
+      return getMemberInfo(customerId, user.memberUuid).then(function (u) {
+        callParkMember.uuid = user.memberUuid;
+        callParkMember.user = u;
+        return callParkMember;
+      });
     }
 
     function suggestionsNeeded(typedText) {

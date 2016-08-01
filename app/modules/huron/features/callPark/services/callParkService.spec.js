@@ -2,7 +2,7 @@
 
 describe('Call Park Group Service', function () {
 
-  var HuronConfig, $q, $httpBackend, callParkService, callParkId, getParkListUrl, deleteCPUrl;
+  var HuronConfig, $q, $httpBackend, callParkService, callParkId, getParkListUrl, deleteCPUrl, getParkUrl, customerURL;
   var customerId = '123',
     userSearchServiceV2, numberSearchServiceV2;
 
@@ -10,6 +10,10 @@ describe('Call Park Group Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId)
   };
   var cpList = getJSONFixture('huron/json/features/callPark/cpList.json');
+  var oneCp = getJSONFixture('huron/json/features/callPark/callParkData.json');
+  var user = {
+    "name": "Test Name"
+  };
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module(function ($provide) {
@@ -24,13 +28,23 @@ describe('Call Park Group Service', function () {
     callParkId = '456';
 
     getParkListUrl = new RegExp(".*/customers/" + customerId + "/features/callparks.*");
+    getParkUrl = new RegExp(".*/customers/" + customerId + "/features/callparks/" + callParkId);
     deleteCPUrl = new RegExp(".*/customers/" + customerId + "/features/callparks/" + callParkId + ".*");
+    customerURL = new RegExp(".*/customers/" + customerId + "/users");
   }));
 
   afterEach(function () {
     $httpBackend.flush();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should return a properly formatted object when calling for a member', function () {
+    $httpBackend.expectGET(customerURL).respond(200, user);
+    callParkService.getCallParkMember(oneCp.members[0]).then(function (member) {
+      expect(member.uuid).toEqual(oneCp.members[0].memberUuid);
+      expect(member.user.name).toEqual(user.name);
+    });
   });
 
   it('should be able to get list of call parks for a given customerId', function () {
