@@ -17,7 +17,7 @@
       help: $translate.instant('hercules.expresswayClusterSettings.renameClusterDescription'),
       placeholder: $translate.instant('hercules.addResourceDialog.clusternameWatermark')
     };
-    vm.minlength = 3;
+    vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {
