@@ -36,7 +36,7 @@ describe('Care Reports', function () {
       // Task Incoming
       utils.expectIsDisplayed(reports.taskIncomingHeader);
       utils.expectIsDisplayed(reports.taskIncomingDescription);
-      utils.expectTextToBeSet(reports.taskIncomingDescription, lowerTime[1]);
+      utils.expectTextToBeSet(reports.taskIncomingDescription, lowerTime[0]);
       utils.expectIsDisplayed(reports.taskIncomingGraph);
 
     });

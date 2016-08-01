@@ -393,6 +393,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
@@ -405,6 +407,8 @@
   "careReportsPage": {
     "tasks": "Tasks",
     "handled": "Handled",
+    "assigned": "Assigned",
+    "in-queue": "In-Queue",
     "abandoned": "Abandoned",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
@@ -413,19 +417,25 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayInterval": "15 minutes time interval",
+    "todayTaskStatus": "handled, assigned, in-queue and abandoned",
+    "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
-    "yesterdayInterval": "15 minutes time interval",
+    "yesterdayTaskStatus": "handled and abandoned",
+    "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
     "week2": "during the last week",
+    "weekTaskStatus": "handled and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
     "month2": "during the last month",
+    "monthTaskStatus": "handled and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
-    "threeMonths2": "during the last 3 months",
-    "threeMonthsInterval": "given month"
+    "threeMonths2": "during the last three months",
+    "threeMonthsTaskStatus": "handled and abandoned",
+    "threeMonthsInterval": "given month",
+    "taskIncomingError": "There was an error while loading the data for Tasks Incoming."
   },
   "activeUsers": {
     "active": "Active",
@@ -518,7 +528,7 @@
   },
   "taskIncoming": {
     "title": "Tasks Incoming",
-    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of handled and abandoned tasks for a {{interval}}."
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
