@@ -1457,6 +1457,7 @@
     },
     "notifications": {
       "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
         "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
@@ -1489,6 +1490,17 @@
         "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
         "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
         "generate-report": "Generate Report"
+      },
+      "add-SIP-destination": {
+        "title": "Complete Call Service Connect Configuration",
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+      },
+      "no-fuse-yet": {
+        "title": "Register your Cisco Expressways for Hybrid Services"
+      },
+      "add-call-service-connect": {
+        "title": "Add Call Service Connect",
+        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
       }
     },
     "fusion": {
