@@ -7,6 +7,7 @@ var AutoAttendantPage = function () {
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
+  this.firstTimeZone = 'Africa/Abidjan';
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
@@ -152,6 +153,9 @@ var AutoAttendantPage = function () {
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
+  this.timeZone = element(by.name('aaScheduleModalCtrl.timeZoneForm'));
+  this.firstTimeZoneElement = element(by.name('aaScheduleModalCtrl.timeZoneForm')).element(by.css('div.dropdown-menu')).all(by.tagName('li')).first();
+  this.aaTimeZone = element(by.name('aaTimeZone'));
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
   this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
