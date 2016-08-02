@@ -5,14 +5,18 @@ describe('SetupWizardCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Sunlight'));
 
-  var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
+  var controller, $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_) {
+  var usageFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
@@ -21,6 +25,8 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -241,6 +247,19 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 4 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
+  describe('When there are only shared device licenses', function () {
+    beforeEach(function () {
+      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+
+      initController();
+    });
+
+    it('the wizard should have 3 tabs', function () {
+      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
     });
   });
 

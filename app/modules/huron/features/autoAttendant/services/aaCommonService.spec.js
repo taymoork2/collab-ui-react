@@ -87,9 +87,9 @@
 
       it('is making properly formatted key', function () {
 
-        var k = AACommonService.makeKey('openHours', '0', 'someTag');
+        var k = AACommonService.makeKey('openHours', 'someTag');
 
-        expect(k).toEqual('openHours' + '-' + '0' + '-' + 'someTag');
+        expect(k).toEqual('openHours' + '-' + 'someTag');
 
       });
 
@@ -111,6 +111,17 @@
         expect(AACommonService.isValid()).toBeTruthy();
 
       });
+
+      it('setRouteQueueToggle should set to false', function () {
+        AACommonService.setRouteQueueToggle(false);
+        expect(AACommonService.isRouteQueueToggle()).toBeFalsy();
+      });
+
+      it('setRouteQueueToggle should set to true', function () {
+        AACommonService.setRouteQueueToggle(true);
+        expect(AACommonService.isRouteQueueToggle()).toBeTruthy();
+      });
+
     });
 
     describe('saveUiModel', function () {

@@ -7,11 +7,6 @@ namespace servicesOverview {
   export class ServicesOverviewCtrl {
 
     private cards:Array<ServicesOverviewCard>;
-    private _feature = false;
-
-    get featureEnabled():boolean {
-      return this._feature;
-    }
 
     public showFilterDropDown:boolean = false;
 
@@ -25,12 +20,12 @@ namespace servicesOverview {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
 
-      FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
-        this._feature = !!supports;
-      });
-
       FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
         this.forwardEvent('f410FeatureEventHandler', supports);
+      });
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding).then(supports => {
+        this.forwardEvent('hybridMediaFeatureToggleEventHandler', supports);
       });
     }
 

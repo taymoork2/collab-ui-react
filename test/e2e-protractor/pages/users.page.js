@@ -30,7 +30,7 @@ var UsersPage = function () {
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
-  this.manageDialog = element(by.id('modalContent'));
+  this.manageDialog = element(by.css('.modal-content'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
@@ -102,6 +102,7 @@ var UsersPage = function () {
 
   this.cancelButton = element(by.buttonText('Cancel'));
   this.saveButton = element(by.buttonText('Save'));
+  this.finishButton = element(by.buttonText('Finish'));
 
   this.clearButton = element(by.id('btnClear'));
   this.backButton = element(by.buttonText('Clear'));
@@ -248,7 +249,8 @@ var UsersPage = function () {
     users.createUser(alias);
     utils.click(checkbox);
     utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsDisplayed(users.finishButton);
+    utils.click(users.finishButton);
     utils.expectIsNotDisplayed(users.manageDialog);
 
     activate.setup(null, alias);

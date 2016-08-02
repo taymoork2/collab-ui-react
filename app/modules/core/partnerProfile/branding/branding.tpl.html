@@ -15,9 +15,9 @@
           <div class="cs-input-group cs-input-radio">
             <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="partnerLogoRadio">
-              <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner && bctrl.isDirectCustomer" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner && !bctrl.isDirectCustomer" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
+              <span ng-if="bctrl.isPartner" translate="partnerProfile.useCiscoLogo"></span>
+              <span ng-if="!bctrl.isPartner && bctrl.isDirectCustomer" translate="partnerProfile.useCiscoLogo"></span>
+              <span ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" translate="customerProfile.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
             </label>
           </div>
 
@@ -25,10 +25,13 @@
             <input type="radio" id="customLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="false" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="customLogoRadio" class="radio-input-spacing">
               <div class="radio-input-flex">
-                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-drag-over-class="dragover" ngf-validate="{{bctrl.logoCriteria}}">
-                  <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile" ng-hide="bctrl.logoError" />
+                <div class="drop-box form-section" ngf-drop="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-drag-over-class="dragover" ngf-validate="{{bctrl.logoCriteria}}" name="file">
+                   <img class="thumbnail" alt="newLogo" ngf-src="bctrl.logoFile.blobUrl" ng-hide="bctrl.logoError" />
                   <img class="thumbnail" alt="currentLogo" ng-src="{{bctrl.tempLogoUrl}}" ng-if="!bctrl.logoFile && bctrl.tempLogoUrl" onerror="this.style.display='none'" />
-                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="bctrl.logoFile"></p>
+                  <p class="vertical-align text-center placeholder"  ng-hide="bctrl.tempLogoUrl">
+                    <i class="icon icon-upload"></i><br/>
+                    <span translate="partnerProfile.logoPlaceholder"></span>
+                  </p>
                 </div>
                 <button class="btn btn-primary" name="file" accept="image/png" ngf-select="bctrl.upload($file, $event)" ng-model="bctrl.logoFile" ngf-validate="{{bctrl.logoCriteria}}">
                   <span translate="partnerProfile.chooseFile"></span>

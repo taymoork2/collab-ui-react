@@ -65,7 +65,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            msgDataRetention:secondRetentionOption
+            sparkDataRetentionDays:secondRetentionOption
           }));
         }
       });
@@ -81,7 +81,7 @@ namespace globalsettings {
 
         function initSpyWithRetention() {
           RetentionService.getRetention.and.returnValue($q.when({
-            msgDataRetention:45444
+            sparkDataRetentionDays:45444
           }));
         }
       });

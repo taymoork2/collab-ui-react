@@ -10,10 +10,12 @@
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
+      getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
+      isSetupDone: isSetupDone,
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
@@ -88,6 +90,25 @@
           data.success = false;
           data.status = status;
           callback(data, status);
+        });
+    }
+
+    function getAdminOrgAsPromise(oid, disableCache) {
+      return getAdminOrg(_.noop, oid, disableCache)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          return $q.reject(data);
+
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
         });
     }
 
@@ -358,6 +379,13 @@
           eft: setting
         }
       });
+    }
+
+    function isSetupDone(orgId) {
+      return $http.get(Auth.getAuthorizationUrl(orgId))
+        .then(function (data) {
+          return data.data.setupDone;
+        });
     }
   }
 })();

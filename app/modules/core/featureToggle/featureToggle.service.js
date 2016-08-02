@@ -7,21 +7,33 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
+  function FeatureToggleService($q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig, Userservice) {
     var features = {
       csvUpload: 'atlas-csv-upload',
       csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasAppleFeatures: 'atlas-apple-features',
+      atlasDarling: 'atlas-darling',
+      atlasDataRetentionSettings: 'atlas-data-retention-settings',
+      atlasPinSettings: 'atlas-pin-settings',
+      atlasCustomerListUpdate: 'atlas-customer-list-update',
       atlasContextServiceTrials: 'atlas-context-service-trials',
+      atlasEmailStatus: 'atlas-email-status',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
+      atlasMediaServiceOnboarding: 'atlas-media-service-onboarding',
+      atlasMyCompanyPage: 'atlas-my-company-page',
+      atlasNewRoomSystems: 'atlas-new-roomSystems',
       atlasNurturingEmails: 'atlas-nurturing-emails',
       atlasSettingsPage: 'atlas-settings-page',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasPartnerAdminFeatures: 'atlas-partner-admin-features',
+      atlasPstnTfn: 'atlas-pstn-tfn',
+      huronAACallQueue: 'huronAACallQueue',
       huronAASubmenu: 'huron-aa-submenu',
+      huronAATimeZone: 'huron-aa-timezone',
+      huronKEM: 'huronKEM',
       atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
@@ -88,7 +100,6 @@
       modifyConvoActivityLimits: 'modify-convo-activity-limits',
       multigetCi: 'multiget-ci',
       muteByDefault: 'mute-by-default',
-      myCompanyPage: 'atlas-my-company-page',
       newMessageBanner: 'new-message-banner',
       newMessageBannerAndroid: 'new-message-banner-android',
       newMessagesIndicator: 'new-messages-indicator',
@@ -100,7 +111,6 @@
       searchTab: 'search-tab',
       sendStickies: 'send-stickies',
       sendStickies2: 'send-stickies2',
-      servicesOverview: 'atlas-services-overview',
       sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
@@ -168,6 +178,7 @@
       getFeaturesForOrg: getFeaturesForOrg,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
+      stateSupportsFeature: stateSupportsFeature,
       supports: supports,
       supportsDirSync: supportsDirSync,
       features: features
@@ -284,6 +295,25 @@
           return toggle;
         }
       });
+    }
+
+    function stateSupportsFeature(feature) {
+      return supports(feature).then(shouldFeatureAllowState);
+    }
+
+    function shouldFeatureAllowState(isSupported) {
+      if (!isSupported) {
+        if (currentlyInState()) {
+          return $q.reject('Requested feature is not supported by requested state');
+        } else {
+          $state.go('login');
+        }
+      }
+      return isSupported;
+    }
+
+    function currentlyInState() {
+      return !!$state.$current.name;
     }
 
     function supports(feature) {

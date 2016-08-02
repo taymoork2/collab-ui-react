@@ -6,7 +6,7 @@
     .controller('AAScheduleImportCtrl', AAScheduleImportCtrl);
 
   /* @ngInject */
-  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate, AANotificationService) {
+  function AAScheduleImportCtrl($modalInstance, Analytics, AAMetricNameService, AACalendarService, AAICalService, AAModelService, $translate, AANotificationService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
@@ -21,6 +21,12 @@
       AACalendarService.readCalendar(vm.selected.value).then(function (calendar) {
         var allHours = AAICalService.getHoursRanges(calendar);
         $modalInstance.close(allHours);
+        //where the copy schedule modal is open && user selected AA + clicked 'continue'
+        var type = 'continue';
+        //register the metric property of 'continue' to Analytics
+        Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
+          type: type
+        });
       });
     }
 
@@ -55,7 +61,7 @@
           };
         });
 
-        // Sort the schedule names using case-insensitive 
+        // Sort the schedule names using case-insensitive
         vm.options = _.sortBy(vm.options,
           function (covertToLowerCase) {
             return covertToLowerCase.label.toLowerCase();
@@ -67,6 +73,12 @@
             status: response.status
           });
         }
+      });
+      //on event trigger 'copy schedule'
+      var type = 'open';
+      //register the metric propety of 'open' to Analytics
+      Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
+        type: type
       });
     }
 

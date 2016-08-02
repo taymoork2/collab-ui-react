@@ -215,11 +215,20 @@
     return this.url;
   };
 
+  var ceMenuMap = {};
+  var ceMenuCount = 0;
+
   function CeMenu() {
     this.type = '';
     this.headers = [];
     this.entries = [];
+    this.id = 'menu' + ceMenuCount++;
+    ceMenuMap[this.id] = this;
   }
+
+  CeMenu.prototype.getId = function () {
+    return this.id;
+  };
 
   CeMenu.prototype.setType = function (menuType) {
     this.type = menuType;
@@ -253,10 +262,12 @@
     return this.entries[index];
   };
 
-  function MainMenu() {
-    this.description = '';
-    this.prompts = {};
-    this.inputs = [];
+  function newRunActionsOnInput() {
+    var obj = {};
+    obj.description = '';
+    obj.prompts = {};
+    obj.inputs = [];
+    return obj;
   }
 
   function CustomAction() {
@@ -281,6 +292,10 @@
       deleteMenu: deleteMenu,
       deleteCombinedMenu: deleteCombinedMenu,
       deleteScheduleActionSetMap: deleteScheduleActionSetMap,
+      getCeMenu: getCeMenu,
+      clearCeMenuMap: clearCeMenuMap,
+      deleteCeMenuMap: deleteCeMenuMap,
+      isCeMenu: isCeMenu,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -404,6 +419,11 @@
       } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
         setDescription(action, inAction.repeatActionsOnInput);
+        if (_.has(inAction.repeatActionsOnInput, 'level')) {
+          action.level = inAction.repeatActionsOnInput.level;
+        } else {
+          action.level = 0;
+        }
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToCollectedNumber)) {
         action = new Action('routeToCollectedNumber', '');
@@ -517,7 +537,7 @@
               menu.addEntry(menuEntry);
             }
           } else {
-            var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
+            var optionMenu = getOptionMenuFromAction(ceActionArray[i], actionSetName);
             if (angular.isDefined(optionMenu)) {
               menu.addEntry(optionMenu);
             }
@@ -555,17 +575,14 @@
       // returns only the first menu it finds
       var i = getActionIndex(ceActionArray, 'runActionsOnInput');
       if (i >= 0) {
-        var menu = new CeMenu();
-        menu.setType('MENU_OPTION');
-        var ceActionsOnInput = ceActionArray[i].runActionsOnInput;
         if (angular.isDefined(ceActionArray[i]['runActionsOnInput'])) {
-          return getOptionMenuFromAction(ceActionArray[i]);
+          return getOptionMenuFromAction(ceActionArray[i], actionSetName);
         }
       }
       return undefined;
     }
 
-    function getOptionMenuFromAction(optionMenuAction) {
+    function getOptionMenuFromAction(optionMenuAction, actionSetName) {
 
       if (angular.isDefined(optionMenuAction) && angular.isDefined(optionMenuAction.runActionsOnInput)) {
         var menu = new CeMenu();
@@ -620,12 +637,27 @@
               // do not expose timeout entry by default
               menu.addHeader(timeoutMenuEntry);
             } else {
-              menuEntry = new CeMenuEntry();
-              menuEntry.setType('MENU_OPTION');
-              menuEntry.setDescription(menuOption.description || '');
-              menuEntry.setKey(menuOption.input || '');
-              parseActions(menuEntry, menuOption.actions);
-              menu.addEntry(menuEntry);
+              // A displayable menu entry from CeDefinition must have both input (key) and
+              // actions array defined.  It is better to skip any entry with either one of these
+              // attributes missing to keep the UI stable.
+              if (_.has(menuOption, 'input') && _.has(menuOption, 'actions')) {
+                // Looks for menu or submenu, i.e., a runActionsOnInput object that has an
+                // undefined runActionsOnInput.inputType or runActionsOnInput.inputType === 1.
+                // Note, runActionsOnInput.inputType equals 2 is dialByExt.
+                if (_.has(menuOption.actions[0], 'runActionsOnInput') &&
+                  (!_.has(menuOption.actions[0], 'runActionsOnInput.inputType') ||
+                    menuOption.actions[0].runActionsOnInput.inputType === 1)) {
+                  menuEntry = getOptionMenuFromAction(menuOption.actions[0], actionSetName);
+                  menuEntry.key = menuOption.input || '';
+                } else {
+                  menuEntry = new CeMenuEntry();
+                  menuEntry.setType('MENU_OPTION');
+                  menuEntry.setDescription(menuOption.description || '');
+                  menuEntry.setKey(menuOption.input || '');
+                  parseActions(menuEntry, menuOption.actions);
+                }
+                menu.addEntry(menuEntry);
+              }
             }
           }
           return menu;
@@ -845,7 +877,7 @@
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
         if (menuEntry.type === 'MENU_OPTION') {
-          newActionArray[i].runActionsOnInput = new MainMenu();
+          newActionArray[i].runActionsOnInput = newRunActionsOnInput();
           createOptionMenu(newActionArray[i].runActionsOnInput, menuEntry);
         } else {
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
@@ -940,7 +972,10 @@
           }
         } else if (actionName === 'runActionsOnInput') {
           newActionArray[i][actionName] = populateRunActionsOnInput(actions[i]);
+        } else if (actionName === 'repeatActionsOnInput' && _.has(actions[i], 'level')) {
+          newActionArray[i][actionName].level = actions[i].level;
         }
+
         if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
           newActionArray[i][actionName].description = actions[i].description;
         }
@@ -990,11 +1025,29 @@
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
         // skip incomplete key/action definition
-        if (menuEntry.key && menuEntry.actions.length > 0 && menuEntry.actions[0].name) {
+        if (menuEntry.key && _.has(menuEntry, 'actions') && menuEntry.actions.length > 0 && menuEntry.actions[0].name) {
           var newOption = {};
           newOption.description = menuEntry.description;
           newOption.input = menuEntry.key;
           newOption.actions = createActionArray(menuEntry.actions);
+          newOptionArray.push(newOption);
+        } else if (menuEntry.key && _.has(menuEntry, 'entries') && _.has(menuEntry, 'headers')) {
+          var newOption = {};
+          if (angular.isDefined(menuEntry.description)) {
+            newOption.description = menuEntry.description;
+          }
+          newOption.input = menuEntry.key;
+          newOption.actions = [];
+          newOption.actions[0] = {};
+          var _menu = newRunActionsOnInput();
+          // for submenu, always return to parent when invalid inputs timeout.
+          newOption.actions[0]['runActionsOnInput'] = _menu;
+          newOption.actions[0]['runActionsOnInput']['incompleteInputActions'] = [{
+            "repeatActionsOnInput": {
+              "level": -1
+            }
+          }];
+          createOptionMenu(_menu, menuEntry);
           newOptionArray.push(newOption);
         }
       }
@@ -1010,7 +1063,9 @@
         inputAction.prompts = {};
         inputAction.prompts.description = menuEntry.description;
         inputAction.prompts.sayList = createSayList(menuEntry.actions);
-        inputAction.attempts = aaMenu.attempts;
+        if (_.has(aaMenu, 'attempts')) {
+          inputAction.attempts = aaMenu.attempts;
+        }
         inputAction.language = menuEntry.getLanguage();
         inputAction.voice = menuEntry.getVoice();
         // for Dial by Extension we need to copy the Phone Menu voice & language
@@ -1057,7 +1112,7 @@
       if (angular.isUndefined(inputAction)) {
         var i = actionSet.actions.length;
         actionSet.actions[i] = {};
-        actionSet.actions[i].runActionsOnInput = new MainMenu();
+        actionSet.actions[i].runActionsOnInput = newRunActionsOnInput();
         inputAction = actionSet.actions[i];
       }
       createOptionMenu(inputAction.runActionsOnInput, aaMenu);
@@ -1172,6 +1227,40 @@
         }
       }
       return false;
+    }
+
+    function objectType(obj) {
+      if (obj) {
+        var text = obj.constructor.toString();
+        return text.match(/function (.*)\(/)[1];
+      } else {
+        return undefined;
+      }
+    }
+
+    function getCeMenu(id) {
+      return ceMenuMap[id];
+    }
+
+    function clearCeMenuMap() {
+      ceMenuMap = {};
+      ceMenuCount = 0;
+    }
+
+    function deleteCeMenuMap(menuId) {
+      var menu = ceMenuMap[menuId];
+      if (menu) {
+        _.forEach(menu.entries, function (entry) {
+          if (isCeMenu(entry)) {
+            deleteCeMenuMap(entry.getId());
+          }
+        });
+        delete ceMenuMap[menuId];
+      }
+    }
+
+    function isCeMenu(obj) {
+      return (objectType(obj) === 'CeMenu');
     }
   }
 })();

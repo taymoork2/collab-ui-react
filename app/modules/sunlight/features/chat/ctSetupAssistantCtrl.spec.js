@@ -2,21 +2,22 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
-  var Notification;
+  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state;
+  var Notification, $translate;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Chat Template';
   var NAME_PAGE_INDEX = 0;
-  var PROFILE_PAGE_INDEX = 1;
-  var OVERVIEW_PAGE_INDEX = 2;
-  var CUSTOMER_PAGE_INDEX = 3;
-  var FEEDBACK_PAGE_INDEX = 4;
-  var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
-  var OFF_HOURS_PAGE_INDEX = 6;
+  var OVERVIEW_PAGE_INDEX = 1;
+  var CUSTOMER_PAGE_INDEX = 2;
+  var AGENT_UNAVAILABLE_PAGE_INDEX = 3;
+  var OFF_HOURS_PAGE_INDEX = 4;
+  var FEEDBACK_PAGE_INDEX = 5;
+  var PROFILE_PAGE_INDEX = 6;
   var CHAT_STATUS_MESSAGES_PAGE_INDEX = 7;
   var EMBED_CODE_PAGE_INDEX = 8;
   var OrgName = 'Test-Org-Name';
+  var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName)
@@ -27,6 +28,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       data: data
     };
   };
+
+  var dummyLogoUrl = 'https://www.example.com/logo.png';
 
   var failedData = {
     success: false,
@@ -40,6 +43,20 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     success: true,
     status: 201
   };
+
+  var deSelectAllDays = function () {
+    _.forEach(controller.days, function (day, key) {
+      if (day.isSelected) {
+        controller.setDay(key);
+      }
+    });
+  };
+
+  var selectedDaysByDefault = businessHours.selectedDaysByDefault;
+  var defaultTimeZone = businessHours.defaultTimeZone;
+  var defaultDayPreview = businessHours.defaultDayPreview;
+  var startTimeOptions = businessHours.startTimeOptions;
+  var defaultTimings = businessHours.defaultTimings;
 
   beforeEach(module('Sunlight'));
   beforeEach(module('Hercules'));
@@ -57,12 +74,13 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   }));
 
-  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_,
+  var intializeCtrl = function (_$rootScope_, $controller, _$modal_, _$q_, _$timeout_, _$translate_,
     _$window_, _Authinfo_, _CTService_, _SunlightConfigService_, _$state_, _Notification_) {
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $q = _$q_;
     $timeout = _$timeout_;
+    $translate = _$translate_;
     $window = _$window_;
     Authinfo = _Authinfo_;
     CTService = _CTService_;
@@ -70,10 +88,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $state = _$state_;
     Notification = _Notification_;
 
+    // set language to en_US to show AM and PM for startTime and endTime
+    $translate.use(businessHours.userLang);
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
+    getLogoUrlDeferred = $q.defer();
     spyOn($modal, 'open');
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
 
     controller = $controller('CareChatSetupAssistantCtrl');
@@ -98,6 +120,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $scope.$apply();
   }
 
+  function resolveLogoUrlPromise() {
+    getLogoUrlDeferred.resolve(dummyLogoUrl);
+    $scope.$apply();
+  }
+
   function rejectLogoPromise() {
     getLogoDeferred.reject({
       status: 500
@@ -110,6 +137,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
     });
 
     it("it starts from the name page", function () {
@@ -147,7 +175,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   describe('Feedback Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.currentState = controller.states[4];
+      controller.currentState = controller.states[FEEDBACK_PAGE_INDEX];
     });
 
     it('next and previous buttons should be enabled by default', function () {
@@ -161,7 +189,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   describe('Profile Page', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
-      controller.currentState = controller.states[1];
+      controller.currentState = controller.states[PROFILE_PAGE_INDEX];
     });
     it('set Organization name and prev/next should be enabled', function () {
       resolveLogoPromise();
@@ -187,22 +215,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should set template profile to org profile if org profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.org;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
         displayText: OrgName,
-        image: ''
+        orgLogoUrl: dummyLogoUrl
       });
     });
 
     it('should set template profile to agent profile if agent profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: false,
-        useAgentRealName: false
+        useAgentRealName: false,
+        orgLogoUrl: dummyLogoUrl,
+        displayText: OrgName,
       });
     });
 
@@ -337,6 +369,139 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     });
   });
 
+  describe('Off Hours Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[OFF_HOURS_PAGE_INDEX]; // set to off hours view
+      resolveLogoPromise();
+    });
+
+    function setTimings(startTime) {
+      expect(controller.timings).toEqual(defaultTimings);
+      controller.timings.startTime = startTime;
+      controller.setEndTimeOptions();
+    }
+
+    function setTimezone(timeZoneValue) {
+      controller.scheduleTimeZone = _.find(CTService.getTimezoneOptions(), {
+        value: timeZoneValue
+      });
+    }
+
+    it('should set off hours message and business hours by default', function () {
+      expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.offHoursDefaultMessage');
+      expect(controller.template.configuration.pages.offHours.schedule.open24Hours).toBe(true);
+      expect(controller.isOffHoursMessageValid).toBe(true);
+      expect(controller.isBusinessHoursDisabled).toBe(false);
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual(selectedDaysByDefault);
+      expect(_.map(controller.timings, 'value')).toEqual(['08:00', '16:00']);
+      expect(controller.scheduleTimeZone).toEqual(defaultTimeZone);
+      expect(controller.daysPreview).toEqual(defaultDayPreview);
+    });
+
+    it('should set days', function () {
+      deSelectAllDays();
+      expect(controller.isBusinessHoursDisabled).toBe(true);
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual([]);
+      controller.setDay(1); // set Monday
+      controller.setDay(6); // set Saturday
+      expect(_.map(_.filter(controller.days, 'isSelected'), 'label')).toEqual(['Monday', 'Saturday']);
+      expect(controller.daysPreview).toEqual('Monday, Saturday');
+    });
+
+    it('should disable the right btn if no days are selected', function () {
+      deSelectAllDays();
+      expect(controller.nextButton()).toBe(undefined);
+    });
+
+    it('should disable the right btn if off hours message is empty', function () {
+      controller.template.configuration.pages.offHours.message = '';
+      expect(controller.nextButton()).toBe(undefined);
+    });
+
+    it('should select start time and end time correctly if startTime is less than endTime', function () {
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '09:00 AM',
+        value: '09:00'
+      };
+      var oldEndTime = controller.timings.endTime;
+      setTimings(startTime);
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: oldEndTime
+
+      });
+    });
+
+    it('should select start time and end time correctly if startTime is greater than endTime', function () {
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '05:00 PM',
+        value: '17:00'
+      };
+      var endTime = {
+        label: '05:30 PM',
+        value: '17:30'
+      };
+      setTimings(startTime);
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: endTime
+      });
+    });
+
+    it('should select end time as 11:59 PM if start time is 11:30 PM', function () {
+      expect(_.map(controller.startTimeOptions, 'label')).toEqual(startTimeOptions);
+      var startTime = {
+        label: '11:30 PM',
+        value: '23:30'
+      };
+      var endTime = {
+        label: '11:59 PM',
+        value: '23:59'
+      };
+      setTimings(startTime);
+      expect(controller.timings).toEqual({
+        startTime: startTime,
+        endTime: endTime
+      });
+    });
+
+    it('should update templateJSON with the offHours data', function () {
+      controller.template.configuration.pages.offHours.schedule.open24Hours = false;
+      deSelectAllDays();
+      controller.setDay(1); // set Monday
+      controller.setDay(6); // set Saturday
+      var startTime = {
+        label: '10:30 AM',
+        value: '10:30'
+      };
+      var endTime = {
+        label: '05:30 PM',
+        value: '17:30'
+      };
+      setTimings(startTime);
+      controller.timings.endTime = endTime;
+      setTimezone('America/Nassau');
+      controller.nextButton();
+      expect(controller.template.configuration.pages.offHours).toEqual({
+        enabled: true,
+        message: 'careChatTpl.offHoursDefaultMessage',
+        schedule: {
+          businessDays: ['Monday', 'Saturday'],
+          open24Hours: false,
+          timings: {
+            startTime: '10:30 AM',
+            endTime: '05:30 PM'
+          },
+          timezone: 'America/Nassau'
+        }
+      });
+    });
+
+  });
+
   describe('Summary Page', function () {
     var deferred;
     beforeEach(inject(intializeCtrl));
@@ -373,11 +538,12 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
       expect($modal.open).toHaveBeenCalledWith({
         templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-        size: 'lg',
+        type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
         resolve: {
-          templateId: jasmine.any(Function)
+          templateId: jasmine.any(Function),
+          templateHeader: jasmine.any(Function)
         }
       });
       expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
@@ -397,4 +563,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
   });
+
+  describe('Agent Unavailable Page', function () {
+    beforeEach(inject(intializeCtrl));
+    beforeEach(function () {
+      controller.currentState = controller.states[AGENT_UNAVAILABLE_PAGE_INDEX];
+    });
+
+    it('next and previous buttons should be enabled by default', function () {
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+
+    it("next button should be disabled when unavailable msg is not present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = '';
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
+    });
+
+    it("next button should be enabled when unavailable msg is present", function () {
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = templateName;
+      checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, true);
+    });
+  });
+
 });

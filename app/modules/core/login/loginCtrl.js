@@ -26,6 +26,12 @@
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
     }
 
+    // If the tab has logged out and we are logged into another tab
+    // we want to allow the tab to get auth tokens from another logged in tab
+    if (SessionStorage.get('logout')) {
+      SessionStorage.remove('logout');
+    }
+
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {
@@ -60,6 +66,8 @@
               state = 'helpdesk.search';
             } else if (!$stateParams.customerOrgId && Authinfo.isComplianceUserOnly()) {
               state = 'ediscovery.search';
+            } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskAndComplianceUserOnly()) {
+              state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
             }
@@ -69,6 +77,7 @@
               Log.debug('Sending "customer logged in" metrics');
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
+
             return loadingDelayPromise.then(function () {
               $state.go(state, params);
             });

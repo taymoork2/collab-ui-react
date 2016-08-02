@@ -29,12 +29,12 @@
 
     // Setup Assistant pages with index
     vm.states = ['name',
-      'profile',
       'overview',
       'customerInformation',
-      'feedback',
       'agentUnavailable',
       'offHours',
+      'feedback',
+      'profile',
       'chatStatusMessages',
       'summary'
     ];
@@ -57,12 +57,12 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.logoUrl = undefined;
     vm.categoryTokensId = 'categoryTokensElement';
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
     vm.days = CTService.getDays();
-    vm.open24Hours = true;
     vm.isOffHoursMessageValid = true;
     vm.isBusinessHoursDisabled = false;
     vm.timings = CTService.getDefaultTimes();
@@ -158,7 +158,7 @@
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
+          orgLogoUrl: vm.logoUrl,
           useAgentRealName: false
         },
         pages: {
@@ -236,11 +236,25 @@
             }
           },
           agentUnavailable: {
-            enabled: true
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
           },
           offHours: {
             enabled: true,
-            message: $translate.instant('careChatTpl.offHoursDefaultMessage')
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
           },
           feedback: {
             enabled: true,
@@ -329,10 +343,7 @@
     }
 
     function isNamePageValid() {
-      if (vm.template.name === '') {
-        return false;
-      }
-      return true;
+      return (vm.template.name !== '');
     }
 
     function isProfilePageValid() {
@@ -343,9 +354,16 @@
       return false;
     }
 
+    function isAgentUnavailablePageValid() {
+      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
+    }
+
     function isOffHoursPageValid() {
       setOffHoursWarning();
-      return vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected');
+      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+        setOffHoursData();
+        return true;
+      }
     }
 
     function nextButton() {
@@ -354,6 +372,8 @@
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
+      case 'agentUnavailable':
+        return isAgentUnavailablePageValid();
       case 'offHours':
         return isOffHoursPageValid();
       case 'summary':
@@ -479,14 +499,24 @@
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: ''
+          orgLogoUrl: vm.logoUrl
         };
       } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: false,
-          useAgentRealName: false
+          useAgentRealName: false,
+          orgLogoUrl: vm.logoUrl,
+          displayText: vm.orgName
         };
       }
+    }
+
+    function setOffHoursData() {
+      vm.template.configuration.pages.offHours.enabled = true;
+      vm.template.configuration.pages.offHours.schedule.businessDays = _.map(_.filter(vm.days, 'isSelected'), 'label');
+      vm.template.configuration.pages.offHours.schedule.timings.startTime = vm.timings.startTime.label;
+      vm.template.configuration.pages.offHours.schedule.timings.endTime = vm.timings.endTime.label;
+      vm.template.configuration.pages.offHours.schedule.timezone = vm.scheduleTimeZone.value;
     }
 
     function setAgentProfile() {
@@ -514,17 +544,7 @@
       Notification.success('careChatTpl.createSuccessText', {
         featureName: vm.template.name
       });
-      $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-        size: 'lg',
-        controller: 'EmbedCodeCtrl',
-        controllerAs: 'embedCodeCtrl',
-        resolve: {
-          templateId: function () {
-            return responseTemplateId;
-          }
-        }
-      });
+      CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
     }
 
     function setDay(index) {
@@ -534,7 +554,9 @@
 
     function setEndTimeOptions() {
       vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
-      vm.timings.endTime = vm.endTimeOptions[0];
+      if (vm.timings.endTime.value < vm.endTimeOptions[0].value) {
+        vm.timings.endTime = vm.endTimeOptions[0];
+      }
     }
 
     function setDayPreview() {
@@ -564,6 +586,9 @@
     }
 
     function init() {
+      CTService.getLogoUrl().then(function (url) {
+        vm.logoUrl = url;
+      });
       CTService.getLogo().then(function (data) {
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;

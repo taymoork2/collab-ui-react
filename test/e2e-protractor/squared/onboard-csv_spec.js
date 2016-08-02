@@ -4,6 +4,7 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard Users using CSV File', function () {
+  var token;
   var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
   var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
 
@@ -23,11 +24,14 @@ describe('Onboard Users using CSV File', function () {
   }
 
   it('should login as an account admin', function () {
-    login.login('account-admin', '#/users');
+    login.login('account-admin', '#/users')
+      .then(function (_token) {
+        token = _token;
+      });
   });
 
   it('should open add users tab', function () {
-    utils.click(landing.serviceSetup);
+    utils.click(landing.serviceSetup); //TODO this is invalid, since the wizard will only be shown when !isSetupDone
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.bulkUpload);
@@ -69,6 +73,8 @@ describe('Onboard Users using CSV File', function () {
 
   afterAll(function () {
     utils.deleteFile(CSV_FILE_PATH);
-    _.each(userList, deleteUtils.deleteUser);
+    _.each(userList, function (user) {
+      deleteUtils.deleteUser(user, token);
+    });
   }, 60000 * 4);
 });

@@ -16,23 +16,22 @@
       deprovisionConnector: deprovisionConnector,
       getAllProvisionedConnectorTypes: getAllProvisionedConnectorTypes,
       getAll: getAll,
+      getAllNonMediaClusters: getAllNonMediaClusters,
       get: get,
       buildSidepanelConnectorList: buildSidepanelConnectorList,
-      getUpgradeSchedule: getUpgradeSchedule,
       setUpgradeSchedule: setUpgradeSchedule,
       postponeUpgradeSchedule: postponeUpgradeSchedule,
       deleteMoratoria: deleteMoratoria,
       setClusterName: setClusterName,
       deregisterCluster: deregisterCluster,
-      getReleaseNotes: getReleaseNotes
+      getReleaseNotes: getReleaseNotes,
+      getAggregatedStatusForService: getAggregatedStatusForService,
+      processClustersToAggregateStatusForService: processClustersToAggregateStatusForService
     };
 
     return service;
 
     ////////////////
-
-    // TODO: maybe cache data for the cluster list and
-    // poll new data every 30 seconds
 
     function get(clusterId) {
       return $http
@@ -44,31 +43,17 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
-        .then(onlyKeepFusedClusters)
         .then(addServicesStatuses)
         .then(sort);
     }
 
-    function getUpgradeSchedule(id) {
-      var orgId = Authinfo.getOrgId();
-      return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule')
-        .then(extractData)
-        .then(function (upgradeSchedule) {
-          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/moratoria')
-            .then(extractData)
-            .then(function (moratoria) {
-              upgradeSchedule.moratoria = moratoria;
-              return upgradeSchedule;
-            });
-        })
-        .then(function (upgradeSchedule) {
-          return $http.get(UrlConfig.getHerculesUrlV2() + '/organizations/' + orgId + '/clusters/' + id + '/upgradeSchedule/nextUpgradeWindow')
-            .then(extractData)
-            .then(function (nextUpgradeWindow) {
-              upgradeSchedule.nextUpgradeWindow = nextUpgradeWindow;
-              return upgradeSchedule;
-            });
-        });
+    function getAllNonMediaClusters() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractClustersFromResponse)
+        .then(removeMediaClusters)
+        .then(addServicesStatuses)
+        .then(sort);
     }
 
     function setUpgradeSchedule(id, params) {
@@ -96,24 +81,29 @@
       return extractData(response).clusters;
     }
 
-    function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, function (cluster) {
-        return cluster.state ? cluster.state === 'fused' : true;
-      });
-    }
-
     function extractDataFromResponse(res) {
       return res.data;
     }
 
+    function removeMediaClusters(clusters) {
+      return _.filter(clusters, function (cluster) {
+        return cluster.targetType !== 'mf_mgmt';
+      });
+      /*var clustersWithOutMedia = [];
+      _.forEach(clusters, function (cluster) {
+        if (cluster.targetType !== 'mf_mgmt') {
+          clustersWithOutMedia.push(cluster);
+        }
+      });
+      return clustersWithOutMedia;*/
+    }
+
     function addServicesStatuses(clusters) {
       return _.map(clusters, function (cluster) {
-        var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
-        var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-        var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-        var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
-        if (mgmtConnectors.length > 0) {
-          cluster.type = 'expressway';
+        if (cluster.targetType === 'c_mgmt') {
+          var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
+          var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
+          var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-mgmt',
             state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
@@ -127,11 +117,11 @@
             state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
             total: calConnectors.length
           }];
-        } else if (mediaConnectors.length > 0) {
-          cluster.type = 'mediafusion';
+        } else if (cluster.targetType === 'mf_mgmt') {
+          var mediaConnectors = _.filter(cluster.connectors, 'connectorType', 'mf_mgmt');
           cluster.servicesStatuses = [{
             serviceId: 'squared-fusion-media',
-            state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
+            state: FusionClusterStatesService.getMergedStateSeverity(mediaConnectors),
             total: mediaConnectors.length
           }];
         }
@@ -147,34 +137,34 @@
     function preregisterCluster(name, releaseChannel, managementConnectorType) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http.post(url, {
-          "name": name,
-          "releaseChannel": releaseChannel,
-          "targetType": managementConnectorType
-        }).then(extractDataFromResponse)
-        .then(function (data) {
-          return data.id;
-        });
+          name: name,
+          releaseChannel: releaseChannel,
+          targetType: managementConnectorType
+        })
+        .then(extractDataFromResponse);
     }
 
     function addPreregisteredClusterToAllowList(hostname, ttlInSeconds, clusterId) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/allowedRedirectTargets';
       return $http.post(url, {
-        "hostname": hostname,
-        "ttlInSeconds": ttlInSeconds,
-        "clusterId": clusterId
+        hostname: hostname,
+        ttlInSeconds: ttlInSeconds,
+        clusterId: clusterId
       });
     }
 
     function provisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/add/invoke?connectorType=" + connectorType;
-      return $http.post(url);
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/add/invoke?connectorType=' + connectorType;
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function deprovisionConnector(clusterId, connectorType) {
-      var url = UrlConfig.getHerculesUrlV2() + "/organizations/" + Authinfo.getOrgId() + "/clusters/" + clusterId +
-        "/provisioning/actions/remove/invoke?connectorType=" + connectorType;
-      return $http.post(url);
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId +
+        '/provisioning/actions/remove/invoke?connectorType=' + connectorType;
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function getAllProvisionedConnectorTypes(clusterId) {
@@ -220,13 +210,15 @@
     function setClusterName(clusterId, newClusterName) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.patch(url, {
-        name: newClusterName
-      });
+          name: newClusterName
+        })
+        .then(extractDataFromResponse);
     }
 
     function deregisterCluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
-      return $http.post(url);
+      return $http.post(url)
+        .then(extractDataFromResponse);
     }
 
     function getReleaseNotes(releaseChannel, connectorType) {
@@ -236,6 +228,63 @@
         .then(function (data) {
           return data.releaseNotes;
         });
+    }
+
+    function getAggregatedStatusForService(serviceId) {
+      return getAll()
+        .then(function (clusters) {
+          return clusters.filter(function (cluster) {
+            return cluster.targetType === 'c_mgmt';
+          });
+        })
+        .then(function (clusters) {
+          return processClustersToAggregateStatusForService(serviceId, clusters);
+        });
+    }
+
+    function processClustersToAggregateStatusForService(serviceId, clusterList) {
+
+      // get the aggregated statuses per cluster, and transform them into a flat array that
+      // represents the state of each cluster for only that service, e.g. ['stopped', 'running']
+      var allServicesStatuses = _.map(clusterList, 'servicesStatuses');
+      var statuses = _.map(allServicesStatuses, function (services) {
+        var matchingService = _.find(services, function (service) {
+          return service.serviceId === serviceId;
+        });
+        if (matchingService && matchingService.state) {
+          return matchingService.state.name;
+        } else {
+          return 'unknown';
+        }
+      });
+
+      // if no data or invalid data, assume that something is wrong
+      if (statuses.length === 0) {
+        return 'outage';
+      }
+
+      // We have an outage if all clusters have their connectors in these states or combinations of them:
+      if (_.every(statuses, function (value) {
+          return (value === 'unknown' || value === 'stopped' || value === 'disabled' || value === 'offline' || value === 'not_configured' || value === 'not_operational');
+        })) {
+        return 'outage';
+      }
+
+      // Service is degraded if one or more clusters have their connectors in one of these states:
+      if (_.find(statuses, function (value) {
+          return (value === 'has_alarms' || value === 'stopped' || value === 'not_operational' || value === 'disabled' || value === 'offline');
+        })) {
+        return 'impaired';
+      }
+
+      // fallback: if no connectors are running, return at least 'degraded'
+      if (!_.includes(statuses, 'running')) {
+        return 'impaired';
+      }
+
+      // if no other rule applies, assume we're operational!
+      return 'operational';
+
     }
 
   }

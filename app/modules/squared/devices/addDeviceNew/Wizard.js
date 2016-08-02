@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core').service('WizardFactory', WizardFactory);
+  angular.module('Squared').service('WizardFactory', WizardFactory);
 
   function WizardFactory($injector) {
     function create(state) {
@@ -21,7 +21,7 @@
       var next = wizardState.wizardState[wizardState.currentStateName].next || wizardState.wizardState[wizardState.currentStateName].nextOptions[nextOption];
       wizardState.history.push(wizardState.currentStateName);
       wizardState.currentStateName = next;
-      _.extend(wizardState.data, data);
+      _.merge(wizardState.data, data);
       $state.go(next, {
         wizard: this
       });

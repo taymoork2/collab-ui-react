@@ -10,11 +10,24 @@
   /* @ngInject */
   function Analytics($q, Config, Orgservice) {
 
+    var eventNames = {
+      START: 'start',
+      NEXT: 'next',
+      BACK: 'back'
+    };
+
     var service = {
       _init: _init,
       _track: _track,
       trackEvent: trackEvent,
-      getTestOrg: getTestOrg
+      checkIfTestOrg: checkIfTestOrg,
+      trackTrialSteps: trackTrialSteps,
+      trackAssignPartner: trackAssignPartner,
+      trackRemovePartner: trackRemovePartner,
+      trackUserPatch: trackUserPatch,
+      trackSelectedCheckbox: trackSelectedCheckbox,
+      trackConvertUser: trackConvertUser,
+      eventNames: eventNames
     };
 
     var token = {
@@ -25,6 +38,20 @@
     var isTestOrg = null;
     var hasInit = false;
     var throwError = false;
+
+    /* Trial Event Names */
+    var START_TRIAL = 'Start Trial Button Click';
+    var NEXT_BUTTON = 'Next Button Clicked';
+    var BACK_BUTTON = 'Back Button Clicked';
+
+    /* Partner Event Names */
+    var ASSIGN_PARTNER = 'Partner Admin Assigning';
+    var REMOVE_PARTNER = 'Partner Admin Removal';
+    var PATCH_USER = 'patch user call';
+
+    /* First Time Wizard Event Names */
+    var CMR_CHECKBOX = 'CMR checkbox unselected';
+    var CONVERT_USER = 'Convert User Search';
 
     return service;
 
@@ -39,7 +66,7 @@
         if (Config.isProd()) {
           resolve(token.PROD_KEY);
         } else {
-          getTestOrg().then(function () {
+          checkIfTestOrg().then(function () {
             if (isTestOrg) {
               resolve(token.TEST_KEY);
             } else {
@@ -56,20 +83,10 @@
       });
     }
 
-    function _track(eventName, properties) {
-      mixpanel.track(eventName, properties || {});
-    }
-
     /**
-     *  Saves mixpanel data in production
+     * Determines if it's a Test Org or not.
      */
-    function trackEvent(eventName, properties) {
-      _init().then(function () {
-        service._track(eventName, properties);
-      });
-    }
-
-    function getTestOrg() {
+    function checkIfTestOrg() {
       if (!isTestOrg) {
         isTestOrg = $q(function (resolve, reject) {
           Orgservice.getOrg(function (response) {
@@ -78,6 +95,103 @@
         });
       }
       return isTestOrg;
+    }
+
+    function _track(eventName, properties) {
+      mixpanel.track(eventName, properties || {});
+    }
+
+    /**
+     *  Tracks the Event
+     */
+    function trackEvent(eventName, properties) {
+      _init().then(function () {
+        service._track(eventName, properties);
+      });
+    }
+
+    /**
+     * Trial Events
+     */
+
+    function trackTrialSteps(state, name) {
+      if (!state || !name) {
+        return;
+      }
+
+      var step = '';
+
+      switch (state) {
+      case eventNames.START:
+        step = START_TRIAL;
+        break;
+      case eventNames.NEXT:
+        step = NEXT_BUTTON;
+        break;
+      case eventNames.BACK:
+        step = BACK_BUTTON;
+        break;
+      }
+
+      trackEvent(step, {
+        from: name
+      });
+    }
+
+    /**
+     * Partner Events
+     */
+    function trackAssignPartner(UUID) {
+      if (!UUID) {
+        return;
+      }
+
+      trackEvent(ASSIGN_PARTNER, {
+        uuid: UUID
+      });
+    }
+
+    function trackRemovePartner(UUID) {
+      if (!UUID) {
+        return;
+      }
+
+      trackEvent(REMOVE_PARTNER, {
+        uuid: UUID
+      });
+    }
+
+    function trackUserPatch(orgId) {
+      if (!orgId) {
+        return;
+      }
+
+      trackEvent(PATCH_USER, {
+        by: orgId
+      });
+    }
+
+    /**
+     * First Time Wizard Events
+     */
+    function trackSelectedCheckbox(id) {
+      if (!id) {
+        return;
+      }
+
+      trackEvent(CMR_CHECKBOX, {
+        licenseId: id
+      });
+    }
+
+    function trackConvertUser(name) {
+      if (!name) {
+        return;
+      }
+
+      trackEvent(CONVERT_USER, {
+        from: name
+      });
     }
   }
 

@@ -6,7 +6,7 @@
     .factory('Auth', Auth);
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -104,6 +104,9 @@
         .catch(handleError('Failed to delete the oAuth token'))
         .finally(function () {
           clearStorage();
+          // We store a key value in sessionStorage to  
+          // prevent a login when multiple tabs are open
+          SessionStorage.put('logout', 'logout');
           WindowLocation.set(redirectUrl);
         });
     }
@@ -125,8 +128,12 @@
 
     // authorize helpers
 
-    function getAuthorizationUrl() {
+    function getAuthorizationUrl(org) {
       var url = UrlConfig.getAdminServiceUrl();
+
+      if (org) {
+        return url + 'organization/' + org + '/userauthinfo';
+      }
 
       var customerOrgId = SessionStorage.get('customerOrgId');
       if (customerOrgId) {
@@ -151,7 +158,9 @@
       return httpGET(url)
         .then(function (res) {
           var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
-          if (isMessengerOrg) {
+          var isAdminForMsgr = _.intersection(['Full_Admin', 'Readonly_Admin'], authData.roles).length;
+          var isPartnerAdmin = _.intersection(['PARTNER_ADMIN', 'PARTNER_READ_ONLY_ADMIN', 'PARTNER_USER'], authData.roles).length;
+          if (isMessengerOrg && (isAdminForMsgr || !isPartnerAdmin)) {
             Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
             authData.services.push({
               serviceId: 'jabberMessenger',

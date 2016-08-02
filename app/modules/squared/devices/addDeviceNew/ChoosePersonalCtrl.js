@@ -123,6 +123,7 @@
           $stateParams.wizard.next({
             deviceName: vm.deviceName,
             activationCode: code.code,
+            code: code,
             expiryTime: code.friendlyExpiresOn,
             cisUuid: vm.cisUuid,
             userName: vm.userName,

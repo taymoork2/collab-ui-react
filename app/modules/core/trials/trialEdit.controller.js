@@ -13,7 +13,7 @@
     vm.stateDetails = angular.copy($stateParams.details);
 
     vm.customerOrgId = undefined;
-
+    vm.licenseCountChanged = false;
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.showContextServiceTrial = false;
@@ -276,7 +276,11 @@
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: '',
         inputClass: 'medium-5',
-        options: [30, 60, 90]
+        options: [30, 60, 90],
+        onChange: function () {
+          vm.licenseCountChanged = true;
+          isProceedDisabled();
+        }
       },
     }];
 
@@ -367,58 +371,65 @@
     function init() {
       var isTestOrg = false;
       var overrideTestOrg = false;
-      $q.all([
-        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
-        TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
-        FeatureToggleService.supports('atlasTrialsShipDevices'),
-        Orgservice.getAdminOrg(_.noop)
-      ]).then(function (results) {
-        vm.showRoomSystems = true;
-        vm.roomSystemTrial.enabled = vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[0] && vm.preset.webex;
-        vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[0];
-        vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
-        vm.messageTrial.enabled = vm.preset.message;
-        vm.pstnTrial.enabled = vm.hasCallEntitlement;
-        vm.showContextServiceTrial = results[1];
-        vm.contextTrial.enabled = results[2];
-        vm.preset.context = results[2];
-        vm.showCare = results[3];
-        vm.careTrial.enabled = vm.preset.care;
+      var getAdminOrgError = false;
+      var promises = {
+        ftWebex: FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+        ftContextServ: FeatureToggleService.supports(FeatureToggleService.features.atlasContextServiceTrials),
+        tcHasService: TrialContextService.trialHasService(vm.currentTrial.customerOrgId),
+        ftCareTrials: FeatureToggleService.supports(FeatureToggleService.features.atlasCareTrials),
+        ftShipDevices: FeatureToggleService.supports('atlasTrialsShipDevices'),
+        adminOrg: Orgservice.getAdminOrgAsPromise().catch(function (err) {
+          getAdminOrgError = true;
+          return err;
+        })
+      };
 
-        if (vm.showWebex) {
-          updateTrialService(_messageTemplateOptionId);
-        }
+      $q.all(promises)
+        .then(function (results) {
+          vm.showRoomSystems = true;
+          vm.roomSystemTrial.enabled = vm.preset.roomSystems;
+          vm.webexTrial.enabled = results.ftWebex && vm.preset.webex;
+          vm.meetingTrial.enabled = vm.preset.meeting;
+          vm.showWebex = results.ftWebex;
+          vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
+          vm.messageTrial.enabled = vm.preset.message;
+          vm.pstnTrial.enabled = vm.hasCallEntitlement;
+          vm.showContextServiceTrial = true;
+          vm.contextTrial.enabled = results.tcHasService;
+          vm.preset.context = results.tcHasService;
+          vm.showCare = results.ftCareTrials;
+          vm.careTrial.enabled = vm.preset.care;
 
-        // To determine whether to display the ship devices page
-        overrideTestOrg = results[4];
-        if (results[5].data.success) {
-          isTestOrg = results[5].data.isTestOrg;
-        }
-      }).finally(function () {
-        vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
-        $scope.$watch(function () {
-          return vm.trialData.trials;
-        }, function (newVal, oldVal) {
-          if (newVal !== oldVal) {
-            toggleTrial();
+          if (vm.showWebex) {
+            updateTrialService(_messageTemplateOptionId);
           }
-        }, true);
 
-        // Capture modal close and clear service
-        if ($state.modal) {
-          $state.modal.result.finally(function () {
-            TrialService.reset();
-          });
-        }
+          // To determine whether to display the ship devices page
+          overrideTestOrg = results.ftShipDevices;
+          if (!getAdminOrgError && results.adminOrg.data.success) {
+            isTestOrg = results.adminOrg.data.isTestOrg;
+          }
+        }).finally(function () {
+          vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
+          $scope.$watch(function () {
+            return vm.trialData.trials;
+          }, function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+              toggleTrial();
+            }
+          }, true);
 
-        vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
+          // Capture modal close and clear service
+          if ($state.modal) {
+            $state.modal.result.finally(function () {
+              TrialService.reset();
+            });
+          }
 
-        toggleTrial();
-      });
+          vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
+
+          toggleTrial();
+        });
     }
 
     function hasUserServices() {
@@ -640,7 +651,7 @@
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
         vm.preset.licenseCount !== vm.details.licenseCount,
-        vm.preset.licenseDuration !== vm.details.licenseDuration,
+        vm.licenseCountChanged,
         canAddDevice()
       ];
 

@@ -21,8 +21,9 @@ namespace domainManagement {
 
     get operationAllowed() {
       //input validation:
-      if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
+      if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded)) {
         return false;
+      }
 
       return !this._error;
     }

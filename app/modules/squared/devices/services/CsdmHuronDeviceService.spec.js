@@ -3,6 +3,7 @@
 describe('CsdmHuronOrgDeviceService', function () {
   beforeEach(module('Squared'));
   beforeEach(module('Huron'));
+  beforeEach(module('Sunlight'));
 
   var csdmHuronOrgDeviceService, Authinfo, $httpBackend, HuronConfig;
 

@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function USSService2($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
-    var cachedUserStatusSummary = {};
+    var cachedUserStatusSummary = [];
 
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
@@ -15,7 +15,28 @@
       return $http
         .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
         .then(function (res) {
-          cachedUserStatusSummary = res.data.summary;
+          var summary = res.data.summary;
+          // The server returns *nothing* for call and calendar
+          // but we want to show that there are 0 users so let's populate
+          // the data with defaults
+          var emptySummary = {
+            serviceId: null,
+            activated: 0,
+            notActivated: 0,
+            error: 0,
+            total: 0
+          };
+          _.forEach(['squared-fusion-cal', 'squared-fusion-uc'], function (serviceId) {
+            var found = _.find(summary, {
+              serviceId: serviceId
+            });
+            if (!found) {
+              var newSummary = angular.copy(emptySummary);
+              newSummary.serviceId = serviceId;
+              summary.push(newSummary);
+            }
+          });
+          cachedUserStatusSummary = summary;
         });
     };
 
@@ -87,6 +108,12 @@
         .then(extractData);
     }
 
+    function extractSummaryForAService(servicesId) {
+      return _.filter(getStatusesSummary(), function (summary) {
+        return _.includes(servicesId, summary.serviceId);
+      });
+    }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
@@ -95,7 +122,8 @@
       getStatusesSummary: getStatusesSummary,
       getStatuses: getStatuses,
       subscribeStatusesSummary: hub.on,
-      getStatusesForUserInOrg: getStatusesForUserInOrg
+      getStatusesForUserInOrg: getStatusesForUserInOrg,
+      extractSummaryForAService: extractSummaryForAService
     };
   }
 

@@ -2,8 +2,8 @@
 
 describe('Controller: ServiceSetup', function () {
   var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService, FeatureToggleService;
-  var Authinfo;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer;
+  var Authinfo, VoicemailMessageAction;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
 
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -17,7 +17,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_) {
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -31,6 +31,7 @@ describe('Controller: ServiceSetup', function () {
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     modalDefer = $q.defer();
+    VoicemailMessageAction = _VoicemailMessageAction_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -81,7 +82,8 @@ describe('Controller: ServiceSetup', function () {
       label: "(650) 667-9080"
     };
     usertemplate = [{
-      timeZone: 'America/Los_Angeles',
+      timeZone: '3',
+      timeZoneName: 'America/Los_Angeles',
       alias: '1',
       objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
     }];
@@ -102,6 +104,8 @@ describe('Controller: ServiceSetup', function () {
     form = {
       '$invalid': false
     };
+
+    messageAction = getJSONFixture('huron/json/settings/messageAction.json');
 
     spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.when());
     spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.when());
@@ -136,6 +140,9 @@ describe('Controller: ServiceSetup', function () {
 
     spyOn(Authinfo, 'getOrgName').and.returnValue('Cisco Org Name');
     spyOn(Authinfo, 'getOrgId').and.returnValue(customer.uuid);
+
+    spyOn(VoicemailMessageAction, 'get').and.returnValue($q.when(messageAction));
+    spyOn(VoicemailMessageAction, 'update').and.returnValue($q.when());
 
     $httpBackend
       .expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + customer.uuid + '/directorynumbers')
@@ -266,6 +273,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.createSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
 
@@ -292,6 +300,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).toHaveBeenCalled();
     });
@@ -316,6 +325,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.createSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -346,6 +356,7 @@ describe('Controller: ServiceSetup', function () {
       expect(controller.hasSites).toEqual(false);
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -371,6 +382,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -396,6 +408,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -424,6 +437,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -452,6 +466,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
@@ -466,6 +481,7 @@ describe('Controller: ServiceSetup', function () {
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.model.ftswCompanyVoicemail.ftswVoicemailToEmail = true;
       controller.hasVoicemailService = true;
       controller.model.site.timeZone = {
         id: 'bogus'
@@ -479,6 +495,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.createSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -492,7 +509,13 @@ describe('Controller: ServiceSetup', function () {
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.model.ftswCompanyVoicemail.ftswVoicemailToEmail = true;
+
       controller.hasVoicemailService = true;
+      controller.voicemailMessageAction = {
+        objectId: '1',
+        voicemailAction: 3
+      };
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -502,6 +525,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -528,6 +552,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -554,6 +579,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -579,7 +605,8 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -603,6 +630,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.createSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).toHaveBeenCalled();
     });
@@ -622,6 +650,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -645,6 +674,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -668,11 +698,12 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
       expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
 
-    it('customer without voicemail should update site and not change voicemail timezone', function () {
+    it('customer enabling voicemail should update site and voicemail timezone', function () {
       var selectedPilotNumber = {
         pattern: '+19728965000',
         label: '(972) 896-5000'
@@ -693,7 +724,8 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(VoicemailMessageAction.update).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });

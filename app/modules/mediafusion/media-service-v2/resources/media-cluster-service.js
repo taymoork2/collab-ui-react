@@ -11,19 +11,19 @@
       return res.data;
     }
 
+    function extractClustersFromResponse(response) {
+      return extractDataFromResponse(response).clusters;
+    }
+
     var fetch = function () {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
-        //removing the below code as state is no longer available
-        .then(function (response) {
-          // only keep fused clusters
-          return response.clusters; //_.filter(response.clusters, 'state', 'fused');
-        })
+        .then(extractClustersFromResponse)
         .then(function (clusters) {
-          // start modeling the response to match how the UI uses it, per connectorType
+          // start modeling the response to match how the UI uses it
+          var onlyMfMgmt = _.filter(clusters, 'targetType', 'mf_mgmt');
           return {
-            mf_mgmt: clusterType('mf_mgmt', clusters)
+            mf_mgmt: onlyMfMgmt
           };
         })
         .then(function (clusters) {

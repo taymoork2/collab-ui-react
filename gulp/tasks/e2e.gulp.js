@@ -136,7 +136,10 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     tests = [].concat(
       config.testFiles.e2e.squared,
       config.testFiles.e2e.hercules,
-      config.testFiles.e2e.sunlight,
+      // Sunlight team is doing DR Testing and moving to new Data Centers,
+      // and a long outage is expected during this cutover, so disabling the E2E tests till the tasks are completed.
+      // This is a one-time activity before Sunlight goes for EFT.
+      // config.testFiles.e2e.sunlight,
       config.testFiles.e2e.webex,
       config.testFiles.e2e.mediafusion
     );

@@ -6,13 +6,28 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, WizardFactory, channels, RemoteSupportModal, ServiceSetup, KemService, CmiKemService, FeatureToggleService) {
     var deviceOverview = this;
     deviceOverview.currentDevice = $stateParams.currentDevice;
     var huronDeviceService = $stateParams.huronDeviceService;
 
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
+    deviceOverview.isError = false;
+    deviceOverview.isKEMAvailable = false;
+    FeatureToggleService.supports(FeatureToggleService.features.huronKEM).then(function (result) {
+      if (result) {
+        deviceOverview.isKEMAvailable = KemService.isKEMAvailable(deviceOverview.currentDevice.product);
+        if (deviceOverview.isKEMAvailable) {
+          if (!_.has(deviceOverview.currentDevice, 'kem')) {
+            deviceOverview.currentDevice.kem = [];
+            deviceOverview.isError = true;
+          }
+          deviceOverview.kemNumber = KemService.getKemOption(deviceOverview.currentDevice.kem.length);
+          deviceOverview.kemOptions = KemService.getOptionList(deviceOverview.currentDevice.product);
+        }
+      }
+    });
 
     if (deviceOverview.currentDevice.isHuronDevice) {
       initTimeZoneOptions().then(function () {
@@ -96,7 +111,7 @@
     function pollDeviceForNewTimeZone(newValue, endTime, deferred) {
       huronDeviceService.getTimezoneForDevice(deviceOverview.currentDevice).then(function (result) {
         if (result == newValue) {
-          Notification.success($translate.instant('deviceOverviewPage.timeZoneUpdated'));
+          Notification.success('deviceOverviewPage.timeZoneUpdated');
           return deferred.resolve();
         }
         if (new Date().getTime() > endTime) {
@@ -267,7 +282,7 @@
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
         if (device.upgradeChannel == newValue) {
-          Notification.success($translate.instant('deviceOverviewPage.channelUpdated'));
+          Notification.success('deviceOverviewPage.channelUpdated');
           return deferred.resolve();
         }
         if (new Date().getTime() > endTime) {
@@ -278,5 +293,41 @@
         }, 1000);
       });
     }
+
+    deviceOverview.saveKem = function () {
+      var device = deviceOverview.currentDevice;
+      var previousKemNumber = device.kem.length;
+      var newKemNumber = deviceOverview.kemNumber.value;
+      var diff = newKemNumber - previousKemNumber;
+      var promiseList = [];
+      if (diff > 0) {
+        _.times(diff, function (n) {
+          promiseList.push(CmiKemService.createKEM(device.huronId, previousKemNumber + 1 + n));
+        });
+      } else {
+        _.times(-diff, function (n) {
+          var module = _.findWhere(device.kem, {
+            index: '' + (previousKemNumber - n)
+          });
+          promiseList.push(CmiKemService.deleteKEM(device.huronId, module.uuid));
+        });
+      }
+      $q.all(promiseList).then(
+        function () {
+          CmiKemService.getKEM(device.huronId).then(
+            function (data) {
+              deviceOverview.currentDevice.kem = data;
+              Notification.success('deviceOverviewPage.kemUpdated');
+            }
+          ).catch(function () {
+            Notification.error('spacesPage.retrieveKemFail');
+          });
+        },
+        function () {
+          deviceOverview.kemNumber = KemService.getKemOption(previousKemNumber);
+          Notification.error('deviceOverviewPage.kemChangesFailed');
+        }
+      );
+    };
   }
 })();

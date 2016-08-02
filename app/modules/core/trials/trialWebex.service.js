@@ -70,12 +70,14 @@
       return $http(config).then(function (response) {
         var data = response.data.properties[0];
         var errorCodes = {
-          '0': 'validSite',
-          '434057': 'domainInvalid',
-          '439012': 'duplicateSite'
+          0: 'validSite',
+          434057: 'domainInvalid',
+          439012: 'duplicateSite',
+          431397: 'duplicateSite'
         };
+        var isValid = (data.isValid === 'true');
         return {
-          'isValid': data.isValid && data.errorCode === '0',
+          'isValid': isValid && data.errorCode === '0',
           'errorCode': errorCodes[data.errorCode] || 'invalidSite'
         };
       }).catch(function (response) {

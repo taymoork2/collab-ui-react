@@ -9,11 +9,11 @@
     <p translate="pstnSetup.serviceAddressPrompt2"></p>
     <br>
     <form class="row collapse" name="pstnServiceAddress.form">
-      <hr-service-address class="columns row full" address="pstnServiceAddress.address" read-only="pstnServiceAddress.isValid" controller="pstnServiceAddress"></hr-service-address>
+      <hr-service-address class="columns row full" address="pstnServiceAddress.address" read-only="pstnServiceAddress.isValid" address-validate="pstnServiceAddress.validateAddress()" modify="pstnServiceAddress.modify()" form-name="pstnServiceAddress.form"></hr-service-address>
     </form>
   </div>
   <div class="modal-footer">
     <button class="btn" ng-if="::pstnServiceAddress.hasBackButton()" ng-click="pstnServiceAddress.goBack()" translate="common.back"></button>
-    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateAddress()" ng-disabled="pstnServiceAddress.form.$invalid || !pstnServiceAddress.isValid"><span translate="common.next"></span></button>
+    <button class="btn btn--primary" cs-btn loading="pstnServiceAddress.loading" ng-click="pstnServiceAddress.validateNext()" ng-disabled="pstnServiceAddress.form.$invalid || !pstnServiceAddress.isValid"><span translate="common.next"></span></button>
   </div>
 </div>

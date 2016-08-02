@@ -2,3 +2,11 @@ function abort {
     >&2 echo "Aborting '`basename $0`'"
     exit 1
 }
+
+function num_cpus {
+    if [ "`uname`" = "Darwin" ]; then
+        sysctl -n hw.ncpu
+    else
+        grep ^processor /proc/cpuinfo | wc -l
+    fi
+}

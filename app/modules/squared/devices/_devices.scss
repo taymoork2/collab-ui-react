@@ -104,6 +104,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    @include vr-spacing(pt, 1.5);
   }
 
   .overviewImage {
@@ -129,6 +130,19 @@
 
   .timeZoneSelector {
     width: 280px;
+  }
+
+  .button-container {
+    right: 0;
+  }
+
+  .dropdown-container {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 1);
+  }
+
+  .select-list.alert {
+    @include vr-spacing(m, 0);
   }
 }
 
@@ -259,8 +273,8 @@
     margin-bottom: 8px;
   }
 
-  .wizardDescription {
-    max-width: 518px;
+  p {
+    max-width: 580px;
   }
 
   .scrollSpace {
@@ -336,7 +350,7 @@
   }
 
   .createNewPlaceForm, .chooseExistingPlaceForm {
-    flex-basis: 50%;
+    //flex-basis: 50%;
     display: flex;
     flex-direction: column;
     margin-bottom: 0;
@@ -379,10 +393,6 @@
     flex-grow: 1;
   }
 
-  .chooseExistingUserForm {
-    flex-basis: 50%;
-  }
-
   .chooseExistingUserForm input {
     width: 250px;
   }
@@ -421,6 +431,10 @@
 
     .qrCodePlaceholder {
       height: 16px;
+    }
+
+    .loading{
+      font-size: 3em;
     }
 
     .qrCodeImage {

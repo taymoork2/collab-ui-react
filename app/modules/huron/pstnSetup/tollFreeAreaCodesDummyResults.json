@@ -1,0 +1,26 @@
+{
+  "comments": [
+    "This file is used to return dummy data for UI demo purposes.",
+    "This file and references to this file should be removed when the Terminus/IntelePeer toll-free number ordering APIs are ready."
+  ],
+  "areaCodes": [{
+    "code": "800",
+    "count": 36
+  }, {
+    "code": "844",
+    "count": 0
+  }, {
+    "code": "855",
+    "count": 0
+  }, {
+    "code": "866",
+    "count": 0
+  }, {
+    "code": "877",
+    "count": 0
+  }, {
+    "code": "888",
+    "count": 0
+  }],
+  "total": "39"
+}

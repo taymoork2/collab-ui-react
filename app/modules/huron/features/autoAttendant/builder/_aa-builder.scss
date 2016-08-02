@@ -77,6 +77,12 @@ $aa-builder-text-color: $gray-dark-1;
   justify-content: center;
 }
 
+.aa-setup-assistant {
+  .cs-setupassistant--content {
+    height: auto;
+  }
+}
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $color-white;
@@ -145,27 +151,6 @@ $aa-builder-text-color: $gray-dark-1;
 
 }
 
-.aa-help-icon {
-  @extend .icon;
-
-  @extend .icon-help;
-
-  font-size: 1rem;
-  color: $aa-builder-icon-color;
-  @include vr-spacing(pl, .25);
-  @include vr-spacing(pt, .25);
-
-  &:hover {
-    color: $aa-builder-icon-hover-color;
-  }
-}
-
-.aa-help-wrapper {
-  & .popover {
-    width: 60%;
-  }
-}
-
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
@@ -206,7 +191,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   @include aa-builder-height($h2-font-size);
 
-  width: 100vw;
+  width: 65vw;
   background-color: $color-white;
 
   #aa-name-detail {

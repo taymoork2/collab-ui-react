@@ -14,8 +14,9 @@
       this.units = units;
       this.time = moment().utc().format();
       this.elapsedTime = elapsedTime;
-      if (data !== null)
+      if (data !== null) {
         this.data = data;
+      }
     }
 
     return {
@@ -26,6 +27,8 @@
       },
 
       eventType: {
+        contextServiceEnabled: 'CONTEXTSERVICEENABLED',
+        contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
         partnerLogin: 'PARTNERLOGIN',
         partnerCustomersPage: 'PARTNERCUSTOMERSPAGE',

@@ -158,7 +158,8 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
-      utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
+      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
 
@@ -255,7 +256,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // first menu option is Add Say Message
-      utils.click(autoattendant.newStepSelectFirst);
+      utils.click(autoattendant.newStepSelectSayMessage);
 
       // Since the AA already contained 2 Say Message, we should now have 3
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
@@ -289,7 +290,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // middle/2nd menu option is Add Phone Menu
-      utils.click(autoattendant.newStepSelectSecond);
+      utils.click(autoattendant.newStepSelectPhoneMenu);
 
       utils.click(autoattendant.saveButton);
 
@@ -319,7 +320,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // 4th/last menu option is Route Call
-      utils.click(autoattendant.newStepSelectLast);
+      utils.click(autoattendant.newStepSelectRouteCall);
 
       // stop here as the complete menu has been tested elsewhere
       utils.expectIsDisplayed(autoattendant.routeCall);
@@ -337,8 +338,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addStepLast);
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
-      // 3rd menu option is Dial By Extension 
-      utils.click(autoattendant.newStepSelectThird);
+      // 3rd menu option is Dial By Extension
+      utils.click(autoattendant.newStepSelectDialByExt);
 
       utils.expectIsDisplayed(autoattendant.dialByExtension);
 
@@ -391,7 +392,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
-      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);

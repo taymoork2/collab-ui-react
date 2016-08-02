@@ -6,33 +6,39 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService, AACommonService, $translate) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AANotificationService, AACommonService, $translate) {
 
     var routeToCalls = [{
       'name': 'goto',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToAATargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing'
     }, {
       name: 'routeToHuntGroup',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToHGTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToHGTargetMissing'
     }, {
       name: 'routeToUser',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToUserTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToUserTargetMissing'
     }, {
       name: 'routeToVoiceMail',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToVoicemailTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToVoicemailTargetMissing'
     }, {
       name: 'route',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToPhoneNumberTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing'
     }, {
       name: 'routeToQueue',
       /* not implemented */
       errRCMsg: '',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing'
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToQueueTargetMissing'
     }];
 
     var service = {
@@ -66,14 +72,13 @@
       return true;
     }
 
-    function actionValid(entry, whichLane, whichMenu, tag, type) {
+    function actionValid(entry, whichLane) {
       var action;
 
-      if (type === 'MENU_OPTION' && _.isEmpty(entry.key)) {
+      if (entry.type === 'MENU_OPTION' && _.isEmpty(entry.key)) {
         /* entry was a phone menu with no selected entry for the key, ignore */
         return true;
       }
-
       if (_.isEmpty(entry.actions[0])) {
         /* no actions to validate */
         return true;
@@ -81,14 +86,19 @@
 
       action = entry.actions[0];
 
+      if (_.isEmpty(action.name)) {
+        /* no actions to validate */
+        return true;
+      }
+
       // special case - when action is route we need to check for valid phone number
       if (action.name === 'route') {
-        /* AACommonService maintains a list which looks like: 
-           holiday-2-0 for phoneMenu 
-           holiday-1-RouteCalls for route call
+        /* AACommonService maintains a list which looks like:
+           holiday-0menu3 for phoneMenu
+           holiday-1 for route call (route call menu 2)
         */
 
-        var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, whichMenu, tag));
+        var ret = AACommonService.getInvalid(AACommonService.makeKey(whichLane, entry.routeToId));
         /* getInvalid returns false if an error, undefined if no error */
         return angular.isUndefined(ret);
 
@@ -106,49 +116,66 @@
     /* whichMenu - index into the original array..position in the lane of this screen
        whichLane - openHours, closeHours, holiday
      */
-    function checkAllActions(optionMenu, whichMenu, whichLane) {
-      var m;
+    function checkAllActions(optionMenu, whichLane) {
+      var msg;
 
-      if (actionValid(optionMenu, whichLane, whichMenu, 'RouteCall', optionMenu.type)) {
+      if (actionValid(optionMenu, whichLane)) {
         return;
       }
 
       /* got here? error */
 
-      m = _.find(routeToCalls, {
+      msg = _.find(routeToCalls, {
         name: optionMenu.actions[0].name
       });
 
       /* might be Say Message, not in the routeCalls list */
-      if (m) {
-        return m.errRCMsg;
+      if (msg) {
+        return msg.errRCMsg;
       }
 
       return;
     }
 
-    /* whichMenu - index into the original array..position in the lane of this screen
-       whichLane - openHours, closeHours, holiday
-     */
-    function checkAllKeys(optionMenu, whichMenu, whichLane) {
-      var outErrors = [];
+    /* whichLane - openHours, closeHours, holiday */
+
+    function checkAllKeys(optionMenu, whichLane, outErrors) {
 
       _.forEach(optionMenu.entries, function (entry, index) {
 
-        if (actionValid(entry, whichLane, whichMenu, index, optionMenu.type)) {
+        /* will be defined only if a submenu. We can make use of this later to 
+         * differentiate btw menu and sub menus for the error condition
+         */
+
+        var saveKey = optionMenu.key;
+        if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
+          checkAllKeys(entry, whichLane, outErrors);
           return;
+        } else {
+          if (actionValid(entry, whichLane)) {
+            return;
+          }
         }
 
         /* got here? error */
 
         _.find(routeToCalls, function (routeTo) {
           if (routeTo.name === entry.actions[0].name) {
-            outErrors.push({
-              msg: routeTo.errPhoneMsg,
-              key: entry.key
-            });
+            if (angular.isUndefined(saveKey)) {
+              outErrors.push({
+                msg: routeTo.errPhoneMsg,
+                key: entry.key
+              });
+            } else {
+              outErrors.push({
+                msg: routeTo.errSubMenuPhoneMsg,
+                key: saveKey,
+                subkey: entry.key
+              });
 
-            return true;
+            }
+
+            return;
 
           }
 
@@ -158,6 +185,58 @@
 
       return outErrors;
 
+    }
+
+    function checkForValidPhoneMenu(optionMenu, menuOptions, fromLane, translatedLabel) {
+      var errors = [];
+      var isValid = true;
+
+      if (_.has(optionMenu, 'entries')) {
+        checkAllKeys(optionMenu, fromLane, errors, 0);
+      }
+
+      _.forEach(errors, function (err) {
+        isValid = false;
+
+        if (_.has(err, 'subkey')) {
+          AANotificationService.error(err.msg, {
+            key: err.key,
+            schedule: translatedLabel,
+            at: _.indexOf(menuOptions, optionMenu) + 1,
+            subkey: err.subkey
+          });
+
+        } else {
+
+          AANotificationService.error(err.msg, {
+            key: err.key,
+            schedule: translatedLabel,
+            at: _.indexOf(menuOptions, optionMenu) + 1
+          });
+        }
+
+      });
+
+      return isValid;
+
+    }
+
+    function checkForValidRouteCall(optionMenu, routeTosOnly, fromLane, translatedLabel) {
+
+      var isValid = true;
+
+      var error = checkAllActions(optionMenu, fromLane);
+
+      if (error) {
+        isValid = false;
+
+        AANotificationService.error(error, {
+          schedule: translatedLabel,
+          at: _.indexOf(routeTosOnly, optionMenu) + 1
+        });
+      }
+
+      return isValid;
     }
 
     function isRouteToValidationSuccess(ui) {
@@ -192,16 +271,15 @@
 
     function checkForValid(uiCombinedMenu, fromLane, scheduleLabel) {
       var isValid = true;
-      var error;
 
-      /* save menuOptions array so we can compute which Phone menu  had 
+      /* save menuOptions array so we can compute which Phone menu  had
          the offending field */
 
       var menuOptions = _.filter(uiCombinedMenu.entries, {
         'type': 'MENU_OPTION'
       });
 
-      /* segregate the RouteCall menus so we can determine which 
+      /* segregate the RouteCall menus so we can determine which
          RouteCall menu has the error
        */
 
@@ -212,47 +290,18 @@
         });
       });
 
-      /* we need to iterate over the original array so we can discern the 
-         position ('index') of this menu. Needed for aaCommonService.js's 
-         getInvalid()
-       */
-
-      _.forEach(uiCombinedMenu.entries, function (optionMenu, index) {
+      _.forEach(uiCombinedMenu.entries, function (optionMenu) {
 
         if (optionMenu.type === 'MENU_OPTION') {
-
-          var errors = [];
-
-          if (_.has(optionMenu, 'entries')) {
-            errors = checkAllKeys(optionMenu, index, fromLane);
-          }
-
-          _.forEach(errors, function (err) {
+          if (!checkForValidPhoneMenu(optionMenu, menuOptions, fromLane, scheduleLabel)) {
             isValid = false;
-
-            AANotificationService.error(err.msg, {
-              key: err.key,
-              schedule: scheduleLabel,
-              at: _.indexOf(menuOptions, optionMenu) + 1
-            });
-          });
-
-          return;
-
-        } /* option in menu (phone) */
-        /* else must be welcome menu - process routeCalls */
-
-        error = checkAllActions(optionMenu, index, fromLane);
-
-        if (error) {
-          isValid = false;
-
-          AANotificationService.error(error, {
-            schedule: scheduleLabel,
-            at: _.indexOf(routeTosOnly, optionMenu) + 1
-          });
+          }
+        } else {
+          /* else must be welcome menu - process routeCalls */
+          if (!checkForValidRouteCall(optionMenu, routeTosOnly, fromLane, scheduleLabel)) {
+            isValid = false;
+          }
         }
-
       });
 
       return isValid;

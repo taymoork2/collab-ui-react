@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $translate, MediaFusionAnalyticsService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -13,7 +13,7 @@
     vm.callVolumeChart = null;
     vm.availabilityChart = null;
     vm.utilizationChart = null;
-    vm.getClusters = getClusters;
+    //vm.getClusters = getClusters;
     vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
     vm.isRefresh = isRefresh;
@@ -35,7 +35,9 @@
     vm.utilizationStatus = vm.REFRESH;
     vm.clusterOptions = ['All Clusters'];
     vm.clusterSelected = vm.clusterOptions[0];
-    getClusters();
+    vm.clusterId = vm.clusterOptions[0];
+    //getClusters();
+    vm.Map = {};
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('mediaFusion.metrics.today'),
@@ -100,22 +102,30 @@
       }
     }
 
-    function getClusters() {
-      MediaFusionAnalyticsService.getClusters(function (data, status) {
-        if (data.success) {
-          vm.clusterData = data;
-          _.each(data, function (clusterData) {
-            vm.clusterOptions.push(clusterData.name);
-          });
-          vm.clusterSelected = vm.clusterOptions[0];
-        }
-      });
-    }
+    MediaClusterServiceV2.getAll()
+      .then(function (clusters) {
+        vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
+        _.each(clusters, function (cluster) {
+          if (cluster.targetType === "mf_mgmt") {
+            vm.clusterOptions.push(cluster.name);
+            vm.Map[cluster.name] = cluster.id;
+
+          }
+        });
+        vm.clusterId = vm.clusterOptions[0];
+        vm.clusterSelected = vm.clusterOptions[0];
+
+      }, XhrNotificationService.notify);
 
     function clusterUpdate() {
       vm.callVolumeStatus = vm.REFRESH;
       vm.availabilityStatus = vm.REFRESH;
       vm.utilizationStatus = vm.REFRESH;
+      if (vm.clusterSelected !== 'All Clusters') {
+        vm.clusterId = vm.Map[vm.clusterSelected];
+      } else {
+        vm.clusterId = 'All Clusters';
+      }
       setDummyData();
       setAllGraphs();
     }
@@ -181,7 +191,7 @@
     }
 
     function setCallVolumeData() {
-      MetricsReportService.getCallVolumeData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportService.getCallVolumeData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (response.graphData.length === 0) {
@@ -196,14 +206,25 @@
     }
 
     function setAvailabilityGraph(data) {
-      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(data, vm.availabilityChart, vm.clusterSelected);
+      var tempData = angular.copy(data);
+      if (vm.clusterId === 'All Clusters') {
+        angular.forEach(data.data[0].clusterCategories, function (clusterCategory, index) {
+          var clusterName = _.findKey(vm.Map, function (val) {
+            return val === clusterCategory.category;
+          });
+          if (angular.isDefined(clusterName)) {
+            tempData.data[0].clusterCategories[index].category = clusterName;
+          }
+        });
+      }
+      var tempAvailabilityChart = MetricsGraphService.setAvailabilityGraph(tempData, vm.availabilityChart, vm.clusterId);
       if (tempAvailabilityChart !== null && angular.isDefined(tempAvailabilityChart)) {
         vm.availabilityChart = tempAvailabilityChart;
       }
     }
 
     function setAvailabilityData() {
-      MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportService.getAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (!angular.isDefined(response.data) || !angular.isArray(response.data) || response.data.length === 0 || !angular.isDefined(response.data[0].clusterCategories) || response.data[0].clusterCategories.length === 0) {
@@ -225,7 +246,7 @@
     }
 
     function setUtilizationData() {
-      MetricsReportService.getUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportService.getUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (!angular.isDefined(response.graphData) || response.graphData.length === 0) {
@@ -241,8 +262,9 @@
     }
 
     function setTotalCallsData() {
+      //changing the cluster ID to clister name and this should be changed back to cluster ID in future 
       MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        if (vm.clusterSelected === 'All Clusters') {
+        if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
@@ -279,7 +301,7 @@
     }
 
     function setCPUUtilizationData() {
-      MetricsReportService.getCPUUtilizationData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportService.getCPUUtilizationData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.avgCpu) || !angular.isDefined(response.data.peakCpu)) {
@@ -296,7 +318,7 @@
     }
 
     function setClusterAvailability() {
-      MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MetricsReportService.getClusterAvailabilityData(vm.timeSelected, vm.clusterId).then(function (response) {
         if (response === vm.ABORT) {
           return;
         } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.availabilityPercent)) {

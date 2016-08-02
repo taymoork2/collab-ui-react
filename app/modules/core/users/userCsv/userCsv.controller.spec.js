@@ -1,9 +1,9 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $scope, $timeout, $q, $state, $stateParams, $interval, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $stateParams, modalDefer, $interval, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
   var getUserMe, getMigrateUsers, getMyFeatureToggles, sites;
-  var fusionServices, headers, getMessageServices, getLicensesUsage;
+  var fusionServices, headers, getLicensesUsage;
   var getLicensesUsageSpy, customer;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -11,7 +11,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Sunlight'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _$interval_, _Notification_, _Userservice_, _Orgservice_, _FeatureToggleService_, _Authinfo_, _CsvDownloadService_, _HuronCustomer_, _UserCsvService_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$stateParams_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -19,6 +19,7 @@ describe('OnboardCtrl: Ctrl', function () {
     $q = _$q_;
     $state = _$state_;
     $stateParams = _$stateParams_;
+    $modal = _$modal_;
     Notification = _Notification_;
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
@@ -28,7 +29,12 @@ describe('OnboardCtrl: Ctrl', function () {
     HuronCustomer = _HuronCustomer_;
     UserCsvService = _UserCsvService_;
 
-    spyOn($state, 'go');
+    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn(Authinfo, 'isOnline').and.returnValue(true);
+    modalDefer = $q.defer();
+    spyOn($modal, 'open').and.returnValue({
+      result: modalDefer.promise
+    });
 
     getUserMe = getJSONFixture('core/json/users/me.json');
     getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
@@ -36,7 +42,6 @@ describe('OnboardCtrl: Ctrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
-    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
     customer = getJSONFixture('huron/json/settings/customer.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
@@ -265,6 +270,13 @@ describe('OnboardCtrl: Ctrl', function () {
           $scope.$apply();
           expect(promise).toBeRejected();
           expect(Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
+        });
+      });
+      describe('licenseUnavailable is set to true', function () {
+        it('should invoke modal to have been called', function () {
+          controller.licenseBulkErrorModal();
+          $scope.$apply();
+          expect($modal.open).toHaveBeenCalled();
         });
       });
     });

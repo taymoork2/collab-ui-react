@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
 
     var vm = this;
 
@@ -27,7 +27,6 @@
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
-    vm.aaModel = {};
     vm.uiMenu = {};
     vm.menuEntry = {
       entries: []
@@ -73,15 +72,17 @@
     // format name with extension
     function formatName(user, extension) {
       var name;
-      if (angular.isDefined(user.displayName))
+      if (angular.isDefined(user.displayName)) {
         name = user.displayName;
-      else
+      } else {
         name = user.userName;
+      }
 
-      if (angular.isDefined(extension) && extension.length > 0)
+      if (angular.isDefined(extension) && extension.length > 0) {
         return name + ' (' + extension + ')';
-      else
+      } else {
         return name;
+      }
     }
 
     // get user by uuid
@@ -126,11 +127,12 @@
       }).$promise.then(
         function (response) {
           // success
-          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
+          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
             return response.primaryDirectoryNumber.pattern;
-          else
-          // the user actually has no extension - represented as null in the json, which works here as well
+          } else {
+            // the user actually has no extension - represented as null in the json, which works here as well
             return null;
+          }
         },
         function (response) {
           // failure
@@ -246,15 +248,13 @@
     }
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      var ui = AAUiModelService.getUiModel();
 
-      vm.uiMenu = ui[$scope.schedule];
-      vm.menuEntry = vm.uiMenu.entries[$scope.index];
       var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       if ($scope.fromRouteCall) {
-
+        var ui = AAUiModelService.getUiModel();
+        vm.uiMenu = ui[$scope.schedule];
+        vm.menuEntry = vm.uiMenu.entries[$scope.index];
         fromRouteCall = true;
 
         if (vm.menuEntry.actions.length === 0) {
@@ -267,9 +267,8 @@
             vm.menuEntry.actions[0].setValue('');
           }
         }
-
       } else {
-
+        vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {
@@ -277,7 +276,6 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           vm.menuKeyEntry.addAction(action);
         }
-
       }
       populateUiModel();
 
