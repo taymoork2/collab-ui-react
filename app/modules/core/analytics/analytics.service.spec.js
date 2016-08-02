@@ -69,14 +69,8 @@ describe('Service: Analytics', function () {
   });
 
   describe('when calling partner events', function () {
-    it('should call _track when trackAssignPartner is called', function () {
-      Analytics.trackAssignPartner('4567');
-      $scope.$apply();
-      expect(Analytics._track).toHaveBeenCalled();
-    });
-
-    it('should call _track when trackRemovePartner is called', function () {
-      Analytics.trackRemovePartner('4567');
+    it('should call _track when trackPartnerActions is called', function () {
+      Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, '4567');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });

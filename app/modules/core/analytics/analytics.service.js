@@ -13,7 +13,9 @@
     var eventNames = {
       START: 'start',
       NEXT: 'next',
-      BACK: 'back'
+      BACK: 'back',
+      ASSIGN: 'assign',
+      REMOVE: 'remove'
     };
 
     var service = {
@@ -22,8 +24,7 @@
       trackEvent: trackEvent,
       checkIfTestOrg: checkIfTestOrg,
       trackTrialSteps: trackTrialSteps,
-      trackAssignPartner: trackAssignPartner,
-      trackRemovePartner: trackRemovePartner,
+      trackPartnerActions: trackPartnerActions,
       trackUserPatch: trackUserPatch,
       trackSelectedCheckbox: trackSelectedCheckbox,
       trackConvertUser: trackConvertUser,
@@ -141,22 +142,23 @@
     /**
      * Partner Events
      */
-    function trackAssignPartner(UUID) {
-      if (!UUID) {
+    function trackPartnerActions(state, UUID) {
+      if (!state || !UUID) {
         return;
       }
 
-      trackEvent(ASSIGN_PARTNER, {
-        uuid: UUID
-      });
-    }
+      var step = '';
 
-    function trackRemovePartner(UUID) {
-      if (!UUID) {
-        return;
+      switch (state) {
+        case eventNames.ASSIGN:
+          step = ASSIGN_PARTNER;
+          break;
+        case eventNames.REMOVE:
+          step = REMOVE_PARTNER;
+          break;
       }
 
-      trackEvent(REMOVE_PARTNER, {
+      trackEvent(step, {
         uuid: UUID
       });
     }
