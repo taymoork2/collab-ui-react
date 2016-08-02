@@ -11,7 +11,7 @@
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="site in userOverview.currentUser.trainSiteNames">
-          <a id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})">
+          <a id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})" ng-if="isValidConferenceSerivce(site)">
             <span class="feature-name">{{site}}</span>
             <i class="feature-arrow"></i>
           </a>
