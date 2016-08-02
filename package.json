@@ -8,8 +8,9 @@
   "license": "Copyright 2013-2016 Cisco Systems, Inc.",
   "scripts": {
     "build": "npm run clean && webpack --bail --progress --profile",
-    "clean": "rimraf dist build ./test/results ./test/coverage",
+    "clean": "rimraf dist build",
     "clean-install": "npm cache clean && rimraf node_modules && npm install",
+    "clean-test": "rimraf ./test/results ./test/coverage && npm test",
     "combine-coverage": "node ./utils/combine-coverage",
     "commit": "git-cz",
     "e2e": "npm run protractor -- --production-backend --suite jenkins",
