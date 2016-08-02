@@ -2595,6 +2595,7 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
+    "services": "Services",
     "message": "Message",
     "call": "Call",
     "care": "Care",
@@ -2677,7 +2678,8 @@
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
-    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "meetingLicenses": "Meeting Licenses"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2773,7 +2775,7 @@
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
+    "deviceCodeExpires": "The current activation code will expire {{inXDays}}.",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",

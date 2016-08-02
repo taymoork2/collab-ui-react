@@ -32,7 +32,7 @@ describe('Controller: MediaServiceControllerV2', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     FeatureToggleService.features = {
-      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));

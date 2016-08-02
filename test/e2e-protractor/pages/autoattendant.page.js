@@ -7,6 +7,7 @@ var AutoAttendantPage = function () {
   this.key0 = '0';
   this.key1 = '1';
   this.key2 = '2';
+  this.firstTimeZone = 'Africa/Abidjan';
 
   this.searchBox = element(by.id('searchFilter'));
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
@@ -23,6 +24,8 @@ var AutoAttendantPage = function () {
   this.saveButton = element(by.name('saveButton'));
   this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+  this.testCardClick = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+  this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
   this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
@@ -33,7 +36,7 @@ var AutoAttendantPage = function () {
 
   this.deleteModalConfirmButton = element(by.id('deleteFeature'));
 
-  this.lanesWrapper = element(by.css('div.aa-lanes-wrapper'));
+  this.lanesWrapper = element.all(by.css('div.aa-lanes-wrapper')).first();
 
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
@@ -46,7 +49,7 @@ var AutoAttendantPage = function () {
   this.sayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
-  this.phoneMenuSay = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
+  this.phoneMenuSay = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message')).first();
   this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
@@ -150,6 +153,9 @@ var AutoAttendantPage = function () {
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
+  this.timeZone = element(by.name('aaScheduleModalCtrl.timeZoneForm'));
+  this.firstTimeZoneElement = element(by.name('aaScheduleModalCtrl.timeZoneForm')).element(by.css('div.dropdown-menu')).all(by.tagName('li')).first();
+  this.aaTimeZone = element(by.name('aaTimeZone'));
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
   this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
@@ -177,7 +183,7 @@ var AutoAttendantPage = function () {
   this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
   this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
   this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
-  this.scheduletrash = element(by.css('.aa-schedule-trash'));
+  this.scheduletrash = element.all(by.css('.aa-schedule-trash')).first();
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
   this.scheduleCloseButton = element(by.css('.modal-header button.close'));

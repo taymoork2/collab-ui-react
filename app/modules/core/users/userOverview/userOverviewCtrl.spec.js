@@ -219,4 +219,5 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.isCSB).toBe(false);
     });
   });
+
 });

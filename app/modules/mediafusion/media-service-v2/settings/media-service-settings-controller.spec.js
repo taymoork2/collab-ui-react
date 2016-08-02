@@ -44,7 +44,7 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
       then: sinon.stub()
     };
     FeatureToggleService.features = {
-      hybridServicesResourceList: 'atlas-hybrid-services-resource-list'
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
     };
     sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
     ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);

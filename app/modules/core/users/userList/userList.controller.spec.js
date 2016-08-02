@@ -70,7 +70,7 @@ describe('UserListCtrl: Ctrl', function () {
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'csvEnhancementGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
 
   }));
@@ -139,7 +139,7 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.getUserPhoto(photoUsers.photoUser)).toEqual(photoUsers.photoUser.photos[1].value);
     });
     it('should return null if no photo list', function () {
-      expect($scope.getUserPhoto(currentUser)).toBeNull();
+      expect($scope.getUserPhoto(currentUser)).toBeUndefined();
     });
   });
 
