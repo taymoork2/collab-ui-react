@@ -117,7 +117,7 @@
 
     function trackTrialSteps(state, name) {
       if (!state || !name) {
-        return;
+        $q.reject('state or name not passed');
       }
 
       var step = '';
@@ -163,7 +163,7 @@
 
     function trackUserPatch(orgId, UUID) {
       if (!orgId || !UUID) {
-        return;
+        $q.reject('orgId or uuid not passed');
       }
 
       trackEvent(PATCH_USER, {
@@ -177,7 +177,7 @@
      */
     function trackSelectedCheckbox(id) {
       if (!id) {
-        return;
+        $q.reject('id not passed');
       }
 
       trackEvent(CMR_CHECKBOX, {
@@ -187,7 +187,7 @@
 
     function trackConvertUser(name) {
       if (!name) {
-        return;
+        $q.reject('name not passed');
       }
 
       trackEvent(CONVERT_USER, {
