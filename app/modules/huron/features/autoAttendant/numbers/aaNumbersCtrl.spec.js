@@ -68,16 +68,16 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
     getOrgName: sinon.stub().returns('awesomeco')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

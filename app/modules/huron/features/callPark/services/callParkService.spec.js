@@ -11,8 +11,8 @@ describe('Call Park Group Service', function () {
   };
   var cpList = getJSONFixture('huron/json/features/callPark/cpList.json');
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

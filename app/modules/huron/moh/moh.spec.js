@@ -3,8 +3,8 @@
 describe('Controller: MohCtrl', function () {
   var controller, scope, httpBackend, playlistsData, playlistData1;
 
-  beforeEach(module('uc.moh'));
-  beforeEach(module('ui.router'));
+  beforeEach(angular.mock.module('uc.moh'));
+  beforeEach(angular.mock.module('ui.router'));
 
   beforeEach(
     inject(

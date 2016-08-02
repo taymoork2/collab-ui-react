@@ -79,7 +79,7 @@ function trim_out_launcher_prefix {
 
 function get_sauce_property {
     local sauce_property=${1}
-    local sauce_config_file=${2:-${WX2_ADMIN_WEB_CLIENT_HOME}/test/env/sauce.json}
+    local sauce_config_file=${2:-${WX2_ADMIN_WEB_CLIENT_HOME}/test/env/sauce.properties}
     if [ -z "${sauce_property}" ]; then
       >&2 echo "Error: no sauce_property passed to get_sauce_property"
       return 1
@@ -87,7 +87,8 @@ function get_sauce_property {
       >&2 echo "Error: sauce_config_file not found: ${sauce_config_file}"
       return 1
     fi
-    cat $sauce_config_file | python -c "import json,sys; data=json.load(sys.stdin); print data['${sauce_property}']"
+    . $sauce_config_file
+    echo "${!sauce_property}"
 }
 
 function md5_hmac {

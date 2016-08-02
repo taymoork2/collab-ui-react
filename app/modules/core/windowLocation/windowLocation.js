@@ -1,9 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('WindowLocation', WindowLocation);
+  module.exports = angular
+    .module('core.windowlocation', [])
+    .service('WindowLocation', WindowLocation)
+    .name;
 
   /* @ngInject */
   function WindowLocation($window) {

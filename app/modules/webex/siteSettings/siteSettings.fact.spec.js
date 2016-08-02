@@ -7,9 +7,9 @@ describe('WebExSiteSettingsFact Test', function () {
   var siteName = "go";
   var WebExXmlApiFact;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var $stateParams = {
       'siteUrl': siteUrl
     };

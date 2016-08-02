@@ -9,6 +9,12 @@
 
 #customerListPanel {
   .ui-grid-cell-contents {
+    .icon {
+      color: $gray-base;
+      margin-right: 1rem;
+      font-size: 14pt;
+    }
+
     .badge {
       min-width: rem-calc(60);
     }
@@ -97,6 +103,21 @@
 
       .free-disabled {
         @include free-disabled-darker;
+      }
+    }
+  }
+
+  .status-column {
+    padding-left: 2rem;
+    .badge {
+      width: 1px;
+      min-width: 1px;
+      padding: 5px;
+
+      &.alert {
+        /* for some reason there are margins on only the alert class */
+        margin-left: 0;
+        margin-right: 0;
       }
     }
   }

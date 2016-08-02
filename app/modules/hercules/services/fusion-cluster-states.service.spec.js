@@ -3,7 +3,7 @@
 describe('Service: FusionClusterStatesService', function () {
   var FusionClusterStatesService;
 
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
 
   function dependencies(_FusionClusterStatesService_) {

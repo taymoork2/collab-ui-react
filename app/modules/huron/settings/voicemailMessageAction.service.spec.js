@@ -3,7 +3,7 @@
 describe('Service: VoicemailMessageAction', function () {
   var $rootScope, $httpBackend, HuronConfig, Authinfo, VoicemailMessageAction;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$httpBackend_, _HuronConfig_, _Authinfo_, _VoicemailMessageAction_) {
     $rootScope = _$rootScope_;

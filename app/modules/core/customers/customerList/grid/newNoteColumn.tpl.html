@@ -1,0 +1,16 @@
+<div class="ui-grid-cell-contents">
+  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft > 0"
+    translate="customerPage.daysLeftToPurchase"
+    translate-values="{count: row.entity.daysLeft}"
+    translate-interpolation="messageformat"></span>
+  <span ng-if="row.entity.isTrial && grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft === 0"
+    translate="customerPage.expiringToday"></span>
+  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'ACTIVE' && row.entity.daysLeft < 0"
+    >{{grid.appScope.getExpiredNotesColumnText(row.entity)}}</span>
+  <span ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === 'CANCELED'"
+    translate="customerPage.suspended"> </span>
+  <span ng-if="!grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)"
+    translate="customerPage.licenseInfoNotAvailable"></span>
+  <span ng-if="grid.appScope.isPartnerOrg(row.entity.customerOrgId)" translate="customerPage.myOrganization"></span>
+  <span ng-if="grid.appScope.getAccountStatus(row.entity) === 'active' && !grid.appScope.isPartnerOrg(row.entity.customerOrgId)" translate="customerPage.purchased"></span>
+</div>

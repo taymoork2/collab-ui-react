@@ -3,8 +3,8 @@
 describe('Controller: CallParkDetailCtrl', function () {
   var controller, $scope, $modalInstance, $q, CallPark;
 
-  beforeEach(module('uc.callpark'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.callpark'));
+  beforeEach(angular.mock.module('Huron'));
   var callParkModel = getJSONFixture('huron/json/callpark/callpark.json');
   var callParkError = getJSONFixture('huron/json/callpark/callparkerror.json');
   beforeEach(inject(function ($rootScope, $controller, _$q_, _CallPark_) {

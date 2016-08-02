@@ -11,7 +11,7 @@ describe('Controller: Dummy Metrics Reports', function () {
   }, {
     value: 3
   }];
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
   describe('Dummy Data Responses', function () {
     beforeEach(inject(function (_DummyMetricsReportService_, _chartColors_) {
       DummyMetricsReportService = _DummyMetricsReportService_;

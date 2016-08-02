@@ -10,8 +10,8 @@
    };
    var templateList = getJSONFixture('sunlight/json/features/chatTemplates/chatTemplateList.json');
 
-   beforeEach(module('Sunlight'));
-   beforeEach(module(function ($provide) {
+   beforeEach(angular.mock.module('Sunlight'));
+   beforeEach(angular.mock.module(function ($provide) {
      $provide.value("Authinfo", spiedAuthinfo);
    }));
 

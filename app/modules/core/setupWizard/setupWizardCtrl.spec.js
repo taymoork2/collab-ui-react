@@ -1,9 +1,9 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var controller, $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 

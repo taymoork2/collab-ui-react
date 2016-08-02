@@ -4,8 +4,8 @@ describe('Directive: ucVoicemail', function () {
   var $compile, $rootScope, TelephonyInfoService;
   var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _TelephonyInfoService_) {
     $compile = _$compile_;

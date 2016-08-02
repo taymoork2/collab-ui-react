@@ -13,8 +13,8 @@ describe(' sunlightReportService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

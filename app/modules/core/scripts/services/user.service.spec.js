@@ -2,7 +2,7 @@
 'use strict';
 
 describe('User Service', function () {
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(function () {
     bard.appModule('Huron');
     bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');

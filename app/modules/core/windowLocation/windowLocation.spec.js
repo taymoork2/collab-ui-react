@@ -1,11 +1,11 @@
 'use strict';
 
 describe('Window Location', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var WindowLocation, $window;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value('$window', $window = {
       location: {}
     });

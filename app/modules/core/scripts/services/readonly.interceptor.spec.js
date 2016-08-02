@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ReadonlyInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.readonlyinterceptor'));
 
   var $httpBackend, Interceptor, Authinfo, Notification, $q;
 

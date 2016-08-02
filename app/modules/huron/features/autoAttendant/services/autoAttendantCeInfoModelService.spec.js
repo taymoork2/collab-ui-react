@@ -28,9 +28,9 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
     "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/0c192613-a960-43bb-9101-b9bc80be049c"
   }];
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AACeDependenciesService_, _AAModelService_, _$rootScope_, _$q_, _$timeout_) {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;

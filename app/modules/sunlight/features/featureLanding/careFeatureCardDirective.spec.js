@@ -3,7 +3,7 @@
 describe('Directive: car featureCards', function () {
   var $compile, $rootScope;
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;

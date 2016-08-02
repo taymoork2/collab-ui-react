@@ -4,10 +4,9 @@
 describe('WebexReportService Test', function () {
 
   //load the service's module
-  //beforeEach(module('wx2AdminWebClientApp'));
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  // beforeEach(module(function ($provide) {
+  // beforeEach(angular.mock.module(function ($provide) {
   //   $provide.value("$translate", {
   //     'use': function () {
   //       return "en_US.json";
@@ -15,16 +14,14 @@ describe('WebexReportService Test', function () {
   //   });
   // }));
   //Initialize variables
-  var WebexReportService, httpBackend, WebExUtilsFact, testReports, $translate, reportService;
+  var WebexReportService, WebExUtilsFact, testReports, $translate, reportService;
   var ref1, ref2;
 
-  beforeEach(inject(function ($httpBackend, _WebexReportService_, _$translate_) {
+  beforeEach(inject(function (_WebexReportService_, _$translate_) {
 
-    //httpBackend = $httpBackend;
     var useLocale = "en_US";
 
     WebexReportService = _WebexReportService_;
-    httpBackend = $httpBackend;
 
     // $translate = {
     //   'use': function () {

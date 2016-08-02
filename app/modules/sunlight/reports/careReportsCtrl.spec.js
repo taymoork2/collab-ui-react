@@ -33,8 +33,8 @@ describe('Controller: Care Reports Controller', function () {
     intervalText: 'careReportsPage.threeMonthsInterval',
     categoryAxisTitle: 'careReportsPage.threeMonthsCategoryAxis'
   }];
-  beforeEach(module('Core'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(
     inject(function ($rootScope, $controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_, _DummyCareReportService_) {
       $q = _$q_;
