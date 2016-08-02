@@ -8,9 +8,9 @@ describe('Template: userDeleteSelf', function () {
   var DISABLED = 'disabled';
   var YES = 'YES';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);

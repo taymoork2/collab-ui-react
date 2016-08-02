@@ -6,7 +6,7 @@
 describe('WebExRestApiFact.csvApiRequest() test', function () {
   var WebExApiGatewayConstsService;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
     _WebExApiGatewayConstsService_

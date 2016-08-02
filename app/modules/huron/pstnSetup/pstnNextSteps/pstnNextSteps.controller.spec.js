@@ -5,7 +5,7 @@ describe('Controller: PstnNextStepsCtrl', function () {
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$window_, _$state_, _$httpBackend_, _PstnSetup_, _HuronConfig_) {
     $scope = $rootScope.$new();

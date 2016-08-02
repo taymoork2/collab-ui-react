@@ -3,8 +3,8 @@
 describe('Service: FusionClusterService', function () {
   var FusionClusterService, $httpBackend;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(mockDependencies));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
   function dependencies(_$httpBackend_, _FusionClusterService_) {
@@ -397,6 +397,98 @@ describe('Service: FusionClusterService', function () {
 
       expect(callback.callCount).toBe(1);
       expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
+    });
+
+  });
+
+  describe('.getAggregateStatusForServiceAcrossAllClusters', function () {
+
+    var twoClusters;
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+    });
+
+    it('should return *operational* when all hosts are *running*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-uc', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-mgmt', twoClusters)).toBe('operational');
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors stopped', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'stopped';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors disabled', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'disabled';
+      twoClusters[1].servicesStatuses[2].state.name = 'disabled';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors not_configured', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_configured';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *outage* if all clusters have their Calendar Connectors in a mix of "red" states', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'stopped';
+      twoClusters[1].servicesStatuses[2].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if Calendar connectors in exactly one cluster have alarms but connectors are otherwise fine', function () {
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if Calendar connectors in all clusters have alarms but connectors are otherwise fine', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'has_alarms';
+      twoClusters[1].servicesStatuses[2].state.name = 'has_alarms';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *outage* if one cluster is not_configured and one cluster is not_operational', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      twoClusters[1].servicesStatuses[2].state.name = 'not_configured';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('outage');
+    });
+
+    it('should return *degraded* if one host is *running* and one is *not_operational*', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'not_operational';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *degraded* if no connector is running, even when the statuses are temporary', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      twoClusters[1].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('impaired');
+    });
+
+    it('should return *operational* during an upgrade the other cluster has at least one running connector', function () {
+      twoClusters[0].servicesStatuses[2].state.name = 'downloading';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+      twoClusters[0].servicesStatuses[2].state.name = 'installing';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should not let Call Connector statuses impact Calendar Connector aggregation', function () {
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      twoClusters[0].servicesStatuses[1].state.name = 'offline';
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', twoClusters)).toBe('operational');
+    });
+
+    it('should handle invalid service types by falling back to *outage*', function () {
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-invalid-service', twoClusters)).toBe('outage');
+    });
+
+    it('should handle invalid cluster lists by falling back to *outage*', function () {
+      var malformedClusterList = {
+        clusters: 'not exactly a valid list of clusters'
+      };
+      expect(FusionClusterService.processClustersToAggregateStatusForService('squared-fusion-call', malformedClusterList)).toBe('outage');
     });
 
   });

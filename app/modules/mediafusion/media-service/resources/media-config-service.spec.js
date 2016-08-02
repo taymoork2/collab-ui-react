@@ -1,7 +1,7 @@
 'use strict';
 
 describe('MediaConfigService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var Service;
   var rootPath;

@@ -136,8 +136,8 @@
     },
     SunlightReportServiceUrl: {
       dev: 'https://reporting.dev.ciscoccservice.com/reporting/v1',
-      cfe: 'https://reporting.nva1-de.ciscoccservice.com/reporting/v1',
-      integration: 'https://reporting.nctx3-stg.ciscoccservice.com/reporting/v1',
+      cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
+      integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.rciad.ciscoccservice.com/reporting/v1'
     },
     CalliopeUrl: {
@@ -170,9 +170,13 @@
 
   };
 
-  angular
-    .module('Core')
-    .factory('UrlConfig', UrlConfig);
+  module.exports = angular
+    .module('core.urlconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('UrlConfig', UrlConfig)
+    .name;
 
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {

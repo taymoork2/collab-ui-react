@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: CustomerAdministratorService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   var $rootScope, $httpBackend, $q, Authinfo, UrlConfig, CustomerAdministratorService;
   var customerId, userUuid;
   var getSalesAdminRegex = /.*\%2212345-67890-12345%22\.*/;

@@ -6,12 +6,14 @@
     .factory('LineSettings', LineSettings);
 
   /* @ngInject */
-  function LineSettings($q, DirectoryNumber, TelephonyInfoService, HuronAssignedLine) {
+  function LineSettings($q, Authinfo, DirectoryNumber, TelephonyInfoService, HuronAssignedLine, SimultaneousCallsServiceV2) {
     var service = {
       addNewLine: addNewLine,
       changeInternalLine: changeInternalLine,
       disassociateInternalLine: disassociateInternalLine,
       addExternalLine: addExternalLine,
+      getSimultaneousCalls: getSimultaneousCalls,
+      updateSimultaneousCalls: updateSimultaneousCalls,
       changeExternalLine: changeExternalLine,
       deleteExternalLine: deleteExternalLine,
       updateLineSettings: updateLineSettings
@@ -86,6 +88,23 @@
           TelephonyInfoService.updateAlternateDirectoryNumber(updatedAltNumber.uuid, updatedAltNumber.numMask);
           return TelephonyInfoService.loadExternalNumberPool();
         });
+    }
+    // get the customer's simultaneous call profile
+    function getSimultaneousCalls(numberId, placesId) {
+      var queryString = {
+        customerId: Authinfo.getOrgId(),
+        numberId: numberId,
+        placesId: placesId
+      };
+      return SimultaneousCallsServiceV2.get(queryString).$promise;
+    }
+
+    function updateSimultaneousCalls(numberId, placesId, incomingCallMaximum) {
+      return SimultaneousCallsServiceV2.update({
+        customerId: Authinfo.getOrgId(),
+        numberId: numberId,
+        placesId: placesId
+      }, incomingCallMaximum).$promise;
     }
 
     function deleteExternalLine(_dnUuid, _altNumUuid) {

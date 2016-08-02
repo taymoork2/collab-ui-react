@@ -15,7 +15,7 @@ describe('Directive: aaRouteToAa', function () {
   var keyIndex = '0';
   var menuId = 'menu1';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $compile = _$compile_;

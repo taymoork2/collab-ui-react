@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: ReportUtilService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Ediscovery'));
 
   var Service;
 

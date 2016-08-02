@@ -1,8 +1,11 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('PageParam', PageParam);
+  module.exports = angular.module('core.pageparam', [
+      require('modules/core/scripts/services/storage')
+    ])
+    .service('PageParam', PageParam)
+    .name;
 
   /* @ngInject */
   function PageParam(Storage) {

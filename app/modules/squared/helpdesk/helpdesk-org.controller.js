@@ -44,7 +44,7 @@
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 

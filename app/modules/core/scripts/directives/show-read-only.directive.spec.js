@@ -3,7 +3,7 @@ describe('Directive: ShowReadOnly', function () {
 
   var compile, scope, directiveElem, Authinfo, translate, controller;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$rootScope_, _$compile_, _$translate_, _Authinfo_) {
     compile = _$compile_;

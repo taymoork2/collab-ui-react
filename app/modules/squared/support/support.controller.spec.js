@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Controller: SupportCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config, $scope;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];

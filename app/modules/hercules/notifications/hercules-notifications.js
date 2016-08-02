@@ -38,12 +38,6 @@
       }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
     };
 
-    vm.navigateToDirSyncSetup = function () {
-      $state.go('setupwizardmodal', {
-        currentTab: 'addUsers'
-      });
-    };
-
     vm.navigateToUsers = function () {
       $state.go('users.list');
     };

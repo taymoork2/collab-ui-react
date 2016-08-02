@@ -1,8 +1,13 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('Authinfo', Authinfo);
+  module.exports = angular.module('core.authinfo', [
+      'pascalprecht.translate',
+      require('modules/core/config/config'),
+      require('modules/core/config/tabConfig'),
+    ])
+    .service('Authinfo', Authinfo)
+    .name;
 
   /* @ngInject */
   function Authinfo($rootScope, $translate, Config) {

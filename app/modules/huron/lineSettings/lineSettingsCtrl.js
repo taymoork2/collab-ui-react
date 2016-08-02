@@ -17,6 +17,14 @@
       forwardNABCalls: ''
     };
 
+    vm.simultaneousModel = {
+      incomingCallMaximum: 8
+    };
+
+    vm.multipleCalls = {
+      incomingCallMaximum: 2
+    };
+
     vm.validations = {
       phoneNumber: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -200,6 +208,25 @@
       }
     }];
 
+    vm.simultaneousCalls = [{
+      key: 'simultaneousTwo',
+      defaultValue: true,
+      type: 'radio',
+      templateOptions: {
+        model: 'incomingCallMaximum',
+        label: $translate.instant('multipleCalls.two'),
+        value: 2
+      }
+    }, {
+      key: 'simultaneousEight',
+      type: 'radio',
+      templateOptions: {
+        model: 'incomingCallMaximum',
+        label: $translate.instant('multipleCalls.eight'),
+        value: 8
+      }
+    }];
+
     vm.callerIdInfo = {};
     vm.hasDevice = true;
     vm.callerIdFields = [{
@@ -296,6 +323,20 @@
       });
     }
 
+    function getMultipleCalls() {
+      LineSettings.getSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id).then(function (simultaneous) {
+        vm.simultaneousModel = {
+          incomingCallMaximum: simultaneous.incomingCallMaximum
+        };
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'simultaneousCalls.mulitpleCallsLoadError');
+      });
+    }
+
+    function updateMultipleCalls() {
+      LineSettings.updateSimultaneousCalls(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.currentUser.id, vm.simultaneousModel);
+    }
+
     function loadExternalNumberPool(pattern) {
       TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
         vm.externalNumberPool = externalNumberPool;
@@ -320,6 +361,8 @@
 
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       vm.internalNumberPool = TelephonyInfoService.getInternalNumberPool();
+      getMultipleCalls();
+
       vm.externalNumberPool = TelephonyInfoService.getExternalNumberPool();
       toggleShowExtensions();
 
@@ -479,6 +522,8 @@
             return listSharedLineUsers(vm.directoryNumber.uuid);
           });
           promises.push(promise);
+
+          updateMultipleCalls();
 
           var dnPromise;
           var dnPromises = [];

@@ -13,7 +13,7 @@
     vm.content = "";
     vm.showLink = false;
     vm.trigger = "focus";
-    vm.placement = "right";
+    vm.placement = "auto right";
 
     vm.optionHelp = $translate.instant("autoAttendant.aaHelpFAQ");
     vm.helpUrlAATag = Config.helpUrl + "/tags#/?tags=auto%20attendant";

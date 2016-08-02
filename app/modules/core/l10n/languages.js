@@ -136,8 +136,9 @@
     }
   }
 
-  angular
-    .module('Core')
-    .provider('languages', LanguagesProvider);
+  module.exports = angular
+    .module('core.languages', [])
+    .provider('languages', LanguagesProvider)
+    .name;
 
 }());

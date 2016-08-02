@@ -3,8 +3,8 @@
 describe('Directive: ucExternalNumberOverview', function () {
   var $compile, $rootScope, $q, ExternalNumberService, FeatureToggleService;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _ExternalNumberService_, _FeatureToggleService_) {
     $compile = _$compile_;

@@ -2,7 +2,7 @@
 
 describe('Care Chat Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, SunlightConfigService, $state;
+  var controller, $scope, $modal, $q, $timeout, $window, Authinfo, CTService, getLogoDeferred, getLogoUrlDeferred, SunlightConfigService, $state;
   var Notification, $translate;
 
   var escapeKey = 27;
@@ -28,6 +28,8 @@ describe('Care Chat Setup Assistant Ctrl', function () {
       data: data
     };
   };
+
+  var dummyLogoUrl = 'https://www.example.com/logo.png';
 
   var failedData = {
     success: false,
@@ -56,9 +58,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Hercules'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
     $provide.value("SunlightConfigService", {
@@ -90,8 +92,10 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $translate.use(businessHours.userLang);
     //create mock deferred object which will be used to return promises
     getLogoDeferred = $q.defer();
+    getLogoUrlDeferred = $q.defer();
     spyOn($modal, 'open');
     spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
     spyOn(Notification, 'success');
 
     controller = $controller('CareChatSetupAssistantCtrl');
@@ -116,6 +120,11 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     $scope.$apply();
   }
 
+  function resolveLogoUrlPromise() {
+    getLogoUrlDeferred.resolve(dummyLogoUrl);
+    $scope.$apply();
+  }
+
   function rejectLogoPromise() {
     getLogoDeferred.reject({
       status: 500
@@ -128,6 +137,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     beforeEach(inject(intializeCtrl));
     beforeEach(function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
     });
 
     it("it starts from the name page", function () {
@@ -205,22 +215,26 @@ describe('Care Chat Setup Assistant Ctrl', function () {
 
     it('should set template profile to org profile if org profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.org;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: true,
         displayText: OrgName,
-        image: ''
+        orgLogoUrl: dummyLogoUrl
       });
     });
 
     it('should set template profile to agent profile if agent profile is selected when nextBtn is clicked', function () {
       resolveLogoPromise();
+      resolveLogoUrlPromise();
       controller.selectedTemplateProfile = controller.profiles.agent;
       controller.nextButton();
       expect(controller.template.configuration.mediaSpecificConfiguration).toEqual({
         useOrgProfile: false,
-        useAgentRealName: false
+        useAgentRealName: false,
+        orgLogoUrl: dummyLogoUrl,
+        displayText: OrgName,
       });
     });
 

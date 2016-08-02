@@ -1,7 +1,8 @@
 'use strict';
 describe('Service: MediaClusterServiceV2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
   var $httpBackend, $location, Service, converter, authinfo;
+  var $rootScope;
   var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
   var herculesUrlV2Path = 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/orgId';
 
@@ -10,7 +11,7 @@ describe('Service: MediaClusterServiceV2', function () {
     authinfo.getOrgId = sinon.stub().returns("orgId");
     Service = _MediaClusterServiceV2_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
+    $rootScope = $injector.get('$rootScope');
     $location = _$location_;
   }));
   afterEach(function () {

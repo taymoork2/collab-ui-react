@@ -29,18 +29,20 @@
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.expressway}}"
           cs-input-help-text="{{vm._translation.expresswayHelpText}}">
-        <input
+    <!-- ng-show was not working inside input tag so we added this inside a div tag. -->
+        <div ng-show="{{ vm.hasMediaFeatureToggle && vm.isEntitledTo.mediafusion }}">
+          <input
           cs-input
           type="radio"
           ng-model="vm.selectedType"
           name="selectedType"
           value="mediafusion"
           id="selectedType_mediafusion"
-          ng-show="vm.isEntitledTo.mediafusion"
           ng-disabled="!vm.hasSetup.mediafusion"
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.mediafusion}}"
           cs-input-help-text="{{vm._translation.mediafusionHelpText}}">
+        </div>
       </div>
     </form>
   </div>

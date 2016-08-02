@@ -9,9 +9,11 @@
 </div>
 <div class="modal-footer">
   <button
+    cs-btn
+    loading="addServices.isLoading"
     id="create-place-button"
     class="btn btn--primary"
-    sq-click-promise="addServices.next()"
-    translate="common.next">
+    ng-click="addServices.next()">
+    <span translate="common.next"></span>
   </button>
 </div>

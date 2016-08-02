@@ -3,7 +3,7 @@
 describe('Service: Analytics', function () {
   var Config, Analytics, Orgservice, $q, $scope, $window;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
@@ -61,8 +61,8 @@ describe('Service: Analytics', function () {
   });
 
   describe('when calling trial events', function () {
-    it('should call _track when trackTrialStarted is called', function () {
-      Analytics.trackTrialStarted('testUser');
+    it('should call _track when trackTrialSteps is called', function () {
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });

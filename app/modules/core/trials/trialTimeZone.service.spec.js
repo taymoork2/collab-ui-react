@@ -3,7 +3,7 @@
 describe('Service: TrialTimeZoneService:', function () {
   var TrialTimeZoneService;
 
-  beforeEach(module('core.trial'));
+  beforeEach(angular.mock.module('core.trial'));
   beforeEach(inject(dependencies));
 
   function dependencies(_TrialTimeZoneService_) {

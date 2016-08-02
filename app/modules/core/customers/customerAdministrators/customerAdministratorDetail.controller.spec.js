@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: customerAdministratorDetailCtrl', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   var controller, $controller, $scope, $q, $stateParams, Analytics, CustomerAdministratorService, ModalService, Notification, Orgservice;
   var modalDefer, testUsers = [];
 

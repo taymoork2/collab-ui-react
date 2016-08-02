@@ -1,0 +1,16 @@
+<div class="ui-grid-cell-contents align-left status-column" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
+  <span ng-switch="grid.appScope.getAccountStatus(row.entity)">
+    <!-- The space in the span is required to render a spherical badge! -->
+    <span ng-switch-when="trial" class="badge badge--round warning"> </span>
+    <span ng-switch-when="trial" translate="customerPage.trial"></span>
+
+    <span ng-switch-when="expired" class="badge badge--round alert"> </span>
+    <span ng-switch-when="expired" translate="customerPage.expired"></span>
+
+    <span ng-switch-when="active" class="badge badge--round success"> </span>
+    <span ng-switch-when="active" translate="customerPage.purchased"></span>
+
+    <span ng-switch-default class="badge badge--round"> </span>
+    <span ng-switch-default translate="common.unknown"></span>
+  </span>
+</div>

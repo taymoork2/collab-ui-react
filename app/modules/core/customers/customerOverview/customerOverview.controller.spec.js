@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice;
   var testOrg;
 
   function LicenseFeature(name, state) {
@@ -12,9 +12,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
@@ -35,6 +35,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
     };
+    $scope.newCustomerViewToggle = newCustomerViewToggle;
     Userservice = {
       updateUsers: function () {}
     };
@@ -103,6 +104,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       Authinfo: Authinfo,
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
+      newCustomerViewToggle: newCustomerViewToggle,
       $modal: modal
     });
 

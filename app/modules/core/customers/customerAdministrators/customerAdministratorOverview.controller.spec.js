@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: customerAdministratorOverviewCtrl', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   var controller, $controller, $scope, $stateParams, $q, CustomerAdministratorService, Notification;
 
   beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_) {

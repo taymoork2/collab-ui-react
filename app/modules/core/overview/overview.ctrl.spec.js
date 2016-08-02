@@ -3,9 +3,9 @@
 describe('Controller: OverviewCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
@@ -292,7 +292,9 @@ describe('Controller: OverviewCtrl', function () {
     Orgservice = {
       getAdminOrg: function (orgEventHandler) {},
       getAdminOrgUsage: function () {
-        return $q.when(orgServiceJSONFixture.getLicensesUsage.singleSub);
+        return $q.when({
+          data: orgServiceJSONFixture.getLicensesUsage.singleSub
+        });
       },
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getOrg: jasmine.createSpy().and.callFake(function (callback, status) {

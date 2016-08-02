@@ -1,16 +1,17 @@
-/// <reference path="../settingSection.ts"/>
-namespace globalsettings {
+import { SettingSection } from '../settingSection';
 
-  export class PrivacySetting extends SettingSection {
+export class PrivacySetting extends SettingSection {
 
-    constructor() {
-      super('privacy');
-      this.subsectionLabel = '';
-      this.subsectionDescription = '';
-    }
+  constructor() {
+    super('privacy');
+    this.subsectionLabel = '';
+    this.subsectionDescription = '';
   }
-  angular.module('Core').component('privacySetting', {
-    controller: 'PrivacySettingController as vm',
-    templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html'
-  });
 }
+angular.module('Core').component('privacySetting', {
+  bindings: {
+    hideUsagePart: '<'
+  },
+  controller: 'PrivacySettingController as vm',
+  templateUrl:'modules/core/settings/privacySection/privacySettings.tpl.html'
+});

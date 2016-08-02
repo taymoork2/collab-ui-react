@@ -57,8 +57,6 @@
       'valueLineAlpha': 0,
       'balloonPointerOrientation': 'vertical',
       'cursorColor': '#AEAEAF',
-      //'fullWidth':true,
-      //'cursorPosition': 'start',
       'categoryBalloonEnabled': false,
       'valueLineBalloonEnabled': false,
       'cursorAlpha': 1
@@ -88,13 +86,17 @@
       }
     }
 
-    function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor) {
-      return angular.copy({
-        'type': 'serial',
-        'theme': 'light',
-        'colors': data.colors,
-        'marginRight': 30,
-        'legend': {
+    //This function creates a deep copy of baseSerialGraph object with the arguments 
+    function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor, selectedIndex) {
+      var legend = {};
+      if (selectedIndex == 0) {
+        legend = {
+          'useGraphSettings': true,
+          'equalWidths': true,
+          'position': 'bottom'
+        };
+      } else {
+        legend = {
           'data': [{
             title: data.legendTitles[1],
             color: data.colors[1]
@@ -104,7 +106,15 @@
           }],
           'equalWidths': false,
           'position': 'bottom'
-        },
+        };
+      }
+      return angular.copy({
+        'type': 'serial',
+        'theme': 'light',
+        'colors': data.colors,
+        "path": "./images/",
+        'marginRight': 30,
+        'legend': legend,
         'dataProvider': data.data,
         'valueAxes': valueAxes,
         'graphs': graphs,

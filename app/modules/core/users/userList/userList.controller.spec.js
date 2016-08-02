@@ -12,9 +12,9 @@ describe('UserListCtrl: Ctrl', function () {
   listAdminsMore = getJSONFixture('core/json/users/listAdminsMore.json');
   listPartners = getJSONFixture('core/json/users/listPartners.json');
   getOrgJson = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
@@ -70,7 +70,7 @@ describe('UserListCtrl: Ctrl', function () {
 
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'csvEnhancementGetStatus').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasCsvEnhancementGetStatus').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue($q.when(false));
 
   }));
@@ -139,7 +139,7 @@ describe('UserListCtrl: Ctrl', function () {
       expect($scope.getUserPhoto(photoUsers.photoUser)).toEqual(photoUsers.photoUser.photos[1].value);
     });
     it('should return null if no photo list', function () {
-      expect($scope.getUserPhoto(currentUser)).toBeNull();
+      expect($scope.getUserPhoto(currentUser)).toBeUndefined();
     });
   });
 

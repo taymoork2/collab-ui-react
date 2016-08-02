@@ -3,7 +3,7 @@
 describe(' DummyCareReportService', function () {
   var dummyCareReportService;
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_DummyCareReportService_) {
     dummyCareReportService = _DummyCareReportService_;
@@ -28,6 +28,14 @@ describe(' DummyCareReportService', function () {
 
   it('should get DummyReportingData for org for time selected yesterday', function () {
     var response = dummyCareReportService.dummyOrgStatsData(1);
+    expect(response.length).toBe(24);
+    _.each(response, function (reportData) {
+      expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+    });
+  });
+
+  it('should get DummyReportingData for org for time selected today', function () {
+    var response = dummyCareReportService.dummyOrgStatsData(0);
     expect(response.length).toBe(24);
     _.each(response, function (reportData) {
       expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);

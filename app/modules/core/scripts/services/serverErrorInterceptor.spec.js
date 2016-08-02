@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ServerErrorInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.servererrorinterceptor'));
 
   var Interceptor, Config, $log;
 

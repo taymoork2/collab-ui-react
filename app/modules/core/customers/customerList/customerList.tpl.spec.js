@@ -6,9 +6,10 @@
     var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
-    beforeEach(module('Core'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
+
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
       $scope = $rootScope.$new();

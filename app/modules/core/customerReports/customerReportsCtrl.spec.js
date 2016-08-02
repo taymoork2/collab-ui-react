@@ -45,7 +45,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: 'reportsPage.sparkReports',
     state: 'reports'
   }, {
-    title: 'tabs.careTab',
+    title: 'reportsPage.careTab',
     state: 'reports.care'
   }];
   var timeOptions = [{
@@ -62,9 +62,9 @@ describe('Controller: Customer Reports Ctrl', function () {
     description: 'reportsPage.threeMonths2'
   }];
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   describe('CustomerReportsCtrl - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _$translate_, _$timeout_, _Log_, _Config_, _CustomerReportService_, _DummyCustomerReportService_, _CustomerGraphService_, _FeatureToggleService_) {
