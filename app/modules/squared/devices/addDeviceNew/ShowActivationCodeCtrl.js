@@ -10,7 +10,6 @@
     vm.hideBackButton = vm.wizardData.function == "showCode";
     vm.showEmail = false;
     vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.userName + ")";
-    vm.belongsTo = vm.wizardData.accountType === "shared" ? vm.wizardData.deviceName : vm.wizardData.displayName;
     vm.email = {
       to: vm.wizardData.userName
     };

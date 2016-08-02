@@ -59,6 +59,7 @@
       huronAACallQueue: 'huronAACallQueue',
       huronAASubmenu: 'huron-aa-submenu',
       huronAATimeZone: 'huron-aa-timezone',
+      huronMultipleCalls: 'huron-multiple-calls',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       huronKEM: 'huronKEM',
