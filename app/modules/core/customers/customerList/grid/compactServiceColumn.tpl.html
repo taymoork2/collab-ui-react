@@ -1,0 +1,8 @@
+<div class="ui-grid-cell-contents align-left icon-column" ng-click="grid.appScope.partnerClicked(row.entity.customerOrgId)" ng-class="{'selected' : row.isSelected}">
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'messaging')" class="icon icon-message"></i>
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'conferencing')" class="icon icon-conference"></i>
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'communications')" class="icon icon-phone"></i>
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'webexCMR')" class="icon icon-webex"></i>
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'roomSystems')" class="icon icon-devices"></i>
+  <i ng-if="grid.appScope.isLicenseTypeAny(row.entity, 'care')" class="icon icon-headset"></i>
+</div>
