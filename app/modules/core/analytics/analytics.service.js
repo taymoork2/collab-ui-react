@@ -163,13 +163,14 @@
       });
     }
 
-    function trackUserPatch(orgId) {
-      if (!orgId) {
+    function trackUserPatch(orgId, UUID) {
+      if (!orgId || !UUID) {
         return;
       }
 
       trackEvent(PATCH_USER, {
-        by: orgId
+        by: orgId,
+        uuid: UUID
       });
     }
 

@@ -212,7 +212,7 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             patchManagedOrgs(uuid, customerOrgId);
-            Analytics.trackUserPatch(response.data.orgId);
+            Analytics.trackUserPatch(response.data.orgId, uuid);
           }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);

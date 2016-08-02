@@ -76,7 +76,7 @@ describe('Service: Analytics', function () {
     });
 
     it('should call _track when trackUserPatch is called', function () {
-      Analytics.trackUserPatch('123');
+      Analytics.trackUserPatch('123', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
