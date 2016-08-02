@@ -119,7 +119,6 @@
     };
 
     vm.next = function () {
-      console.log('next');
       vm.isLoading = true;
       if (vm.cisUuid) {
         OtpService.generateOtp(vm.userName).then(function (code) {

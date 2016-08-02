@@ -44,7 +44,7 @@
             organizationId: Authinfo.getOrgId()
           });
         } else {
-          vn.isLoading = false;
+          vm.isLoading = false;
           $state.go('users.list');
         }
       }
