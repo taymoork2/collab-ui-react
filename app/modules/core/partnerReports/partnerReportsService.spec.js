@@ -57,7 +57,7 @@ describe('Service: Partner Reports Service', function () {
 
     var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
-    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+    mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?reportType=weeklyUsage&cache=' + cacheValue;
     mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;

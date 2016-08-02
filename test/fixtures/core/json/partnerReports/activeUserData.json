@@ -106,57 +106,161 @@
       "orgName": "Test Org One",
       "data": [{
         "details": {
-          "numCalls": "14",
-          "totalActivity": "14",
-          "userId": "6f85ef2b-a83a-4c58-9d26-842a6567faaa",
-          "userName": "sparkucreportfunctionaltest+3@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "18",
+          "totalActivity": "18",
+          "userId": "bddfc7f4-d49d-421b-89a6-93be3a969a0a",
+          "userName": "Lele Ren -X (lelren - YA CHUANG BO YAN SHANG HAI XIN XI JI SHU YOU XIAN GONG SI at Cisco)"
         }
       }, {
         "details": {
-          "numCalls": "7",
-          "totalActivity": "7",
-          "userId": "afb4b084-6b6c-4392-9889-d2f2741347e5",
-          "userName": "sparkucreportfunctionaltest@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "16",
+          "totalActivity": "16",
+          "userId": "9663fa47-1002-4e63-8eb7-fcd2e28c3ab4",
+          "userName": "Lydia Wilkins (lywilkin)"
         }
       }, {
         "details": {
-          "numCalls": "7",
-          "totalActivity": "7",
-          "userId": "d06b5c55-4d29-4e35-922e-3ec495d7e5e9",
-          "userName": "sparkucreportfunctionaltest+2@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "16",
+          "totalActivity": "16",
+          "userId": "dfb85cbd-a557-4719-8c5c-0af26647a620",
+          "userName": "Stephanie DOAN (stedoan)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "16",
+          "totalActivity": "16",
+          "userId": "1520d75a-8b78-4391-95d0-10a60a2e2a10",
+          "userName": "Giuseppe Gennaro (ggennaro)"
         }
       }]
     }, {
       "orgId": "80a642d9-1949-43e8-bdc8-29c2d24dbfd6",
-      "orgName": "Test Org Three"
+      "orgName": "Test Org Three",
+      "data": [{
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "16",
+          "totalActivity": "16",
+          "userId": "785636fb-3ed7-4d55-bf3a-a08165b7248c",
+          "userName": "Zheng Xing -X (zhexing - YA CHUANG BO YAN SHANG HAI XIN XI JI SHU YOU XIAN GONG SI at Cisco)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "2893d99e-3b5e-4603-8298-705341dac5dd",
+          "userName": "Geraldine Cusiac -X (gcusiac - INNOVATIA INC at Cisco)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "71f0e2be-4995-4e74-9a6e-c4c735465700",
+          "userName": "Shane Gannon (shgannon)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "ac4ce43f-2385-4083-ad15-fae472edb23d",
+          "userName": "Robert Headon (rheadon)"
+        }
+      }]
     }, {
       "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
       "orgName": "Test Org Two",
       "data": [{
         "details": {
-          "numCalls": "14",
-          "totalActivity": "14",
-          "userId": "6f85ef2b-a83a-4c58-9d26-842a6567faaa",
-          "userName": "sparkucreportfunctionaltest+3@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "7a8b434e-59c5-4ac2-ac80-19146765456c",
+          "userName": "Joe Skehill (jskehill)"
         }
       }, {
         "details": {
-          "numCalls": "7",
-          "totalActivity": "7",
-          "userId": "afb4b084-6b6c-4392-9889-d2f2741347e5",
-          "userName": "sparkucreportfunctionaltest@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "21c6cded-cc8f-4fc1-a9aa-99a1b35012d9",
+          "userName": "Tony Espejo (tespejo)"
         }
       }, {
         "details": {
-          "numCalls": "7",
-          "totalActivity": "7",
-          "userId": "d06b5c55-4d29-4e35-922e-3ec495d7e5e9",
-          "userName": "sparkucreportfunctionaltest+2@gmail.com"
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "b6fac605-6845-4c80-93f1-54fc4c972848",
+          "userName": "Wissam Loudhaief (wloudhai)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "0c334436-453d-43da-a4cf-5d90ad8732ca",
+          "userName": "Vigleik Norheim (vnorheim)"
         }
       }]
     }, {
       "orgId": "1",
-      "orgName": "Test Partner"
+      "orgName": "Test Partner",
+      "data": [{
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "87b935dc-c7f6-471e-bd00-817084654c23",
+          "userName": "Damon Martin (dammarti)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "8ea1f9a4-7c70-4e35-881c-78b98d0420bb",
+          "userName": "Colm Mcnelis (cmcnelis)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "3cde57c1-c01d-45fd-93ab-162d6c160f9e",
+          "userName": "Holger G Forrest (hoforres)"
+        }
+      }, {
+        "details": {
+          "sparkCalls": "0",
+          "sparkUcCalls": "0",
+          "sparkMessages": "15",
+          "totalActivity": "15",
+          "userId": "984572e5-6d2f-419b-884a-3ba8e585ada7",
+          "userName": "Renaldo Williams (renawill)"
+        }
+      }]
     }],
     "type": "activeUsers",
     "date": "2016-03-03T21:48:00.146Z",
@@ -224,40 +328,100 @@
   }],
   "mostActiveResponse": [{
     "orgName": "Test Org One",
-    "numCalls": 14,
-    "totalActivity": 14,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest+3@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 18,
+    "sparkMessages": 18,
+    "userName": "Lele Ren -X (lelren - YA CHUANG BO YAN SHANG HAI XIN XI JI SHU YOU XIAN GONG SI at Cisco)"
   }, {
     "orgName": "Test Org One",
-    "numCalls": 7,
-    "totalActivity": 7,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 16,
+    "sparkMessages": 16,
+    "userName": "Lydia Wilkins (lywilkin)"
   }, {
     "orgName": "Test Org One",
-    "numCalls": 7,
-    "totalActivity": 7,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest+2@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 16,
+    "sparkMessages": 16,
+    "userName": "Stephanie DOAN (stedoan)"
+  }, {
+    "orgName": "Test Org One",
+    "numCalls": 0,
+    "totalActivity": 16,
+    "sparkMessages": 16,
+    "userName": "Giuseppe Gennaro (ggennaro)"
+  }, {
+    "orgName": "Test Org Three",
+    "numCalls": 0,
+    "totalActivity": 16,
+    "sparkMessages": 16,
+    "userName": "Zheng Xing -X (zhexing - YA CHUANG BO YAN SHANG HAI XIN XI JI SHU YOU XIAN GONG SI at Cisco)"
+  }, {
+    "orgName": "Test Org Three",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Geraldine Cusiac -X (gcusiac - INNOVATIA INC at Cisco)"
+  }, {
+    "orgName": "Test Org Three",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Shane Gannon (shgannon)"
+  }, {
+    "orgName": "Test Org Three",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Robert Headon (rheadon)"
   }, {
     "orgName": "Test Org Two",
-    "numCalls": 14,
-    "totalActivity": 14,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest+3@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Joe Skehill (jskehill)"
   }, {
     "orgName": "Test Org Two",
-    "numCalls": 7,
-    "totalActivity": 7,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Tony Espejo (tespejo)"
   }, {
     "orgName": "Test Org Two",
-    "numCalls": 7,
-    "totalActivity": 7,
-    "sparkMessages": 0,
-    "userName": "sparkucreportfunctionaltest+2@gmail.com"
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Wissam Loudhaief (wloudhai)"
+  }, {
+    "orgName": "Test Org Two",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Vigleik Norheim (vnorheim)"
+  }, {
+    "orgName": "Test Partner",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Damon Martin (dammarti)"
+  }, {
+    "orgName": "Test Partner",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Colm Mcnelis (cmcnelis)"
+  }, {
+    "orgName": "Test Partner",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Holger G Forrest (hoforres)"
+  }, {
+    "orgName": "Test Partner",
+    "numCalls": 0,
+    "totalActivity": 15,
+    "sparkMessages": 15,
+    "userName": "Renaldo Williams (renawill)"
   }],
   "activePopResponse": [{
     "customerId": "a7cba512-7b62-4f0a-a869-725b413680e4",
