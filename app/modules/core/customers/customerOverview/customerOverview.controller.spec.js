@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice, Notification;
 
   var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_, _Notification_) {
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$state_, _$window_, _$q_, _$modal_, _FeatureToggleService_, _Orgservice_, _PartnerService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -67,6 +67,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
     };
 
     TrialService = _TrialService_;
+    Notification = _Notification_;
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
@@ -137,6 +139,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   describe('launchCustomerPortal', function () {
     beforeEach(function () {
+      Userservice.updateUsers.and.returnValue($q.when());
       controller.launchCustomerPortal();
       $scope.$apply();
     });
@@ -154,15 +157,21 @@ describe('Controller: CustomerOverviewCtrl', function () {
       });
     });
 
-    it('should call Userservice.updateUsers with correct license', function () {
-      expect(Userservice.updateUsers).toHaveBeenCalledWith([{
-        address: "xyz123@gmail.com"
-      }], jasmine.any(Array),
-        null, 'updateUserLicense', jasmine.any(Function));
-    });
-
     it('should call $window.open', function () {
       expect($window.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('launchCustomerPortal error', function () {
+    beforeEach(function () {
+      PartnerService.modifyManagedOrgs.and.returnValue($q.reject(400));
+      Userservice.updateUsers.and.returnValue($q.when());
+      controller.launchCustomerPortal();
+      $scope.$apply();
+    });
+
+    it('should cause a Notification if modifyManagedOrgs returns 400', function () {
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
   });
 
