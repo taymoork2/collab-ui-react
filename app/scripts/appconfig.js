@@ -472,11 +472,17 @@
           })
           .state('activate', {
             url: '/activate',
-            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/activate.html',
                 controller: 'ActivateCtrl'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             },
             authenticate: false

@@ -260,6 +260,7 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 3 tabs', function () {
       expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });
 

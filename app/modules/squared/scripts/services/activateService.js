@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Squared')
-    .service('Activateservice', ActivateService);
+  module.exports = angular.module('squared.activateservice', [
+      require('modules/core/auth/auth'),
+      require('modules/core/config/urlConfig'),
+    ])
+    .service('ActivateService', ActivateService)
+    .name;
 
   /* @ngInject */
   function ActivateService($http, UrlConfig, Auth) {
