@@ -21,7 +21,6 @@
     $scope.getSubfields = getSubfields;
     $scope.filterAction = filterAction;
     $scope.modifyManagedOrgs = modifyManagedOrgs;
-    $scope.getManagedOrgsList = getManagedOrgsList;
     $scope.getTrialsList = getTrialsList;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
@@ -187,6 +186,7 @@
       sortingAlgorithm: notesSort
     };
 
+    var myOrgDetails = {};
     var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
 
     $scope.gridColumns = [];
@@ -443,7 +443,8 @@
               licenseType: 'CONFERENCING',
               offerName: 'EE'
             }));
-            resolve(myOrg);
+            myOrgDetails = myOrg;
+            resolve(myOrgDetails);
           } else {
             reject('Unable to query for signed-in users org');
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
@@ -454,13 +455,21 @@
 
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = PartnerService.getManagedOrgsList(searchText);
+      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
       var myOrgName = Authinfo.getOrgName();
       var isPartnerAdmin = Authinfo.isPartnerAdmin();
       var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
       var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
+      var attachMyOrg = false;
 
-      return $q.all([promiselist, getMyOrgDetails()])
+      if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
+        if (searchText === '' || getOrgNameSearch !== -1) {
+          attachMyOrg = true;
+          getMyOrgDetails();
+        }
+      }
+
+      return $q.all(promiselist)
         .catch(function (err) {
           Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -483,11 +492,9 @@
             // add to top
             managed.unshift(myOrgItem);
           } else {
-            if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
-              // move our org to the top of the list
-              if (searchText === '' || getOrgNameSearch !== -1) {
-                managed.unshift(results[1][0]);
-              }
+            if (attachMyOrg) {
+              // add myOrg to the top of the list
+              managed.unshift(myOrgDetails[0]);
             }
           }
           $scope.managedOrgsList = managed;
