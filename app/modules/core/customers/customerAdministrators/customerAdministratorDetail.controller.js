@@ -15,13 +15,12 @@
 
     vm.selected = '';
     vm.selectedAdmin = undefined;
-    vm.searchUsers = [];
     vm.users = [];
     vm.administrators = [];
     vm.addAdmin = addAdmin;
+    vm.getPartnerUsers = getPartnerUsers;
     vm.removeSalesAdmin = removeSalesAdmin;
-    vm.timeoutVal = 500;
-    vm.filterList = _.debounce(filterList, vm.timeoutVal);
+    vm.adminSuggestLimit = 8;
 
     init();
 
@@ -81,13 +80,6 @@
       Analytics.trackAssignPartner(uuid);
     }
 
-    function filterList(newValue, oldValue) {
-      if (newValue.length > 0 && (newValue !== oldValue)) {
-        vm.selected = newValue;
-        getPartnerUsers(newValue);
-      }
-    }
-
     function patchSalesAdminRole(email) {
       CustomerAdministratorService.patchSalesAdminRole(email)
         .catch(function () {
@@ -129,9 +121,10 @@
     }
 
     function getPartnerUsers(str) {
-      CustomerAdministratorService.getPartnerUsers(str)
+      return CustomerAdministratorService.getPartnerUsers(str)
         .then(function (response) {
           var resources = _.get(response, 'data.Resources', []);
+          var searchUsers = [];
           var fullName = '';
           var uuid = '';
           _.each(resources, function (user) {
@@ -147,14 +140,15 @@
               fullName = _.get(user, 'username');
             }
             uuid = _.get(user, 'id');
-            if (vm.searchUsers.indexOf(fullName) < 0) {
-              vm.searchUsers.push(fullName);
+            if (searchUsers.length < vm.adminSuggestLimit && fullName.toLowerCase().indexOf(str.toLowerCase()) != -1) {
+              searchUsers.push(fullName);
+              vm.users.push({
+                fullName: fullName,
+                uuid: uuid
+              });
             }
-            vm.users.push({
-              fullName: fullName,
-              uuid: uuid
-            });
           });
+          return searchUsers;
         })
         .catch(function () {
           Notification.error('customerAdminPanel.customerAdministratorServiceError');

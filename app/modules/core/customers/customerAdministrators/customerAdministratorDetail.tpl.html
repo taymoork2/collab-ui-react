@@ -8,11 +8,10 @@
   	  <div class="align-search-inputs">
 	      <input id="stateInput" type="text" ng-model="customerAdmin.selected"
 	            typeahead-template-url="stateTemplate.html"
-	            typeahead="searchUser for searchUser in customerAdmin.searchUsers | filter:$viewValue | limitTo:8"
+	            typeahead="searchUser for searchUser in customerAdmin.getPartnerUsers($viewValue)"
 	            typeahead-on-select="customerAdmin.selectAdmin($item)"
 	            placeholder="Enter Administrator name"
 	            typeahead-wait-ms="0"
-              ng-change="customerAdmin.filterList(customerAdmin.selected, '{{customerAdmin.selected}}')"
 	            ng-disabled="customerAdmin.disableAdminSearch" />
         <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
       </div>
