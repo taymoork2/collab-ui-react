@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, Orgservice, PartnerService, TrialService, Userservice;
+  var $controller, $scope, $stateParams, $state, $window, $q, modal, Authinfo, BrandService, controller, currentCustomer, FeatureToggleService, identityCustomer, newCustomerViewToggle, Orgservice, PartnerService, TrialService, Userservice;
   var testOrg;
 
   function LicenseFeature(name, state) {
@@ -35,6 +35,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
     };
+    $scope.newCustomerViewToggle = newCustomerViewToggle;
     Userservice = {
       updateUsers: function () {}
     };
@@ -103,6 +104,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       Authinfo: Authinfo,
       BrandService: BrandService,
       FeatureToggleService: FeatureToggleService,
+      newCustomerViewToggle: newCustomerViewToggle,
       $modal: modal
     });
 

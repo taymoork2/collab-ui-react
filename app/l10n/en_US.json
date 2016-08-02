@@ -393,6 +393,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center",
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
@@ -405,6 +407,8 @@
   "careReportsPage": {
     "tasks": "Tasks",
     "handled": "Handled",
+    "assigned": "Assigned",
+    "in-queue": "In-Queue",
     "abandoned": "Abandoned",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
@@ -413,19 +417,25 @@
     "threeMonthsCategoryAxis": "Months",
     "today": "Today",
     "today2": "for today",
-    "todayInterval": "15 minutes time interval",
+    "todayTaskStatus": "handled, assigned, in-queue and abandoned",
+    "todayInterval": "one hour time interval",
     "yesterday": "Yesterday",
     "yesterday2": "for yesterday",
-    "yesterdayInterval": "15 minutes time interval",
+    "yesterdayTaskStatus": "handled and abandoned",
+    "yesterdayInterval": "one hour time interval",
     "week": "Last Week",
     "week2": "during the last week",
+    "weekTaskStatus": "handled and abandoned",
     "weekInterval": "given day",
     "month": "Last Month",
     "month2": "during the last month",
+    "monthTaskStatus": "handled and abandoned",
     "monthInterval": "given week",
     "threeMonths": "Last Three Months",
-    "threeMonths2": "during the last 3 months",
-    "threeMonthsInterval": "given month"
+    "threeMonths2": "during the last three months",
+    "threeMonthsTaskStatus": "handled and abandoned",
+    "threeMonthsInterval": "given month",
+    "taskIncomingError": "There was an error while loading the data for Tasks Incoming."
   },
   "activeUsers": {
     "active": "Active",
@@ -518,7 +528,7 @@
   },
   "taskIncoming": {
     "title": "Tasks Incoming",
-    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chat for a breakdown of total number of handled and abandoned tasks for a {{interval}}."
+    "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -1447,6 +1457,7 @@
     },
     "notifications": {
       "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
         "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
@@ -1479,6 +1490,17 @@
         "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
         "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
         "generate-report": "Generate Report"
+      },
+      "add-SIP-destination": {
+        "title": "Complete Call Service Connect Configuration",
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+      },
+      "no-fuse-yet": {
+        "title": "Register your Cisco Expressways for Hybrid Services"
+      },
+      "add-call-service-connect": {
+        "title": "Add Call Service Connect",
+        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
       }
     },
     "fusion": {
@@ -2159,6 +2181,13 @@
     "addNew": "Add New",
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
+  "multipleCalls": {
+    "title": "Simultaneous Calls",
+    "two": "2",
+    "eight": "8",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
+    "mulitpleCallsLoadError": "Multiple Calls failed to load."
+  },
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>",
@@ -2585,6 +2614,7 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
+    "services": "Services",
     "message": "Message",
     "call": "Call",
     "care": "Care",
@@ -2667,7 +2697,8 @@
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
-    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "meetingLicenses": "Meeting Licenses"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2763,7 +2794,7 @@
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
+    "deviceCodeExpires": "The current activation code will expire {{inXDays}}.",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
@@ -2826,7 +2857,7 @@
       "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
       "existingPlace": "Existing Place",
       "existingPlaceInstructions": "If the place you are searching for isn’t listed, it either has 10 associated desk phones or an assigned Cisco Spark Room System license. A place can only have up to 10 desk phones associated to it. Desk phones and room systems cannot share the same place.",
-      "searchRoom": "Search for a room",
+      "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
@@ -3210,6 +3241,7 @@
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
+      "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Have you installed and configured the software on your new Hybrid Media Node?",
@@ -3221,7 +3253,14 @@
       "firstStepNo1": "1. Download the latest software from Cisco:",
       "firstStepNo2": "Click here",
       "firstStepNo3": "2. Install and configure your Hybrid Media Node. For details, visit Help Central.",
-      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below."
+      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
+      "yesProceed": "Yes, I’m ready to proceed.",
+      "noProceed": "No, I'm not ready to proceed.",
+      "noInfo": "Before you can proceed, install and configure the Hybrid Media Node software on your server.",
+      "noDesc1": "For detailed instructions, visit ",
+      "noDesc2": "Help Central.",
+      "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
+      "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -4598,6 +4637,8 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "organizationId": "Org. ID",
+    "userId": "User ID",
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",

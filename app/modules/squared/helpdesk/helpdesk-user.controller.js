@@ -35,7 +35,7 @@
     vm.supportsExtendedInformation = false;
     vm.cardsAvailable = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.helpdeskExt).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
     });
 

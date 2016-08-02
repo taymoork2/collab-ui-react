@@ -24,7 +24,7 @@ describe('ServiceOverviewCtrl', ()=> {
     ctrl = $controller('ServicesOverviewCtrl', {
       FeatureToggleService: {
         features: {
-          hybridServicesResourceList: 'F410',
+          atlasHybridServicesResourceList: 'F410',
           servicesOverview: 'F288',
           atlasMediaServiceOnboarding: 'MEDIA'
         },

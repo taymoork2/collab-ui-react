@@ -1,7 +1,7 @@
   'use strict';
   describe('RedirectAddResourceControllerV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
-    var vm, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
+    var vm, yesProceed, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
     var hostname = "MFA";
     var enteredCluster = "blr-ecp-246";
     var $rootScope, getClusterListDiffered, getGroupsDiffered, addRedirectTargetDiffered;
@@ -9,6 +9,7 @@
       $q = _$q_;
       $scope = _$rootScope_.$new();
       firstTimeSetup = false;
+      yesProceed = false;
       redirectTargetPromise = {
         then: sinon.stub()
       };
@@ -44,7 +45,8 @@
         log: log,
         $modal: $modal,
         $scope: $scope,
-        firstTimeSetup: firstTimeSetup
+        firstTimeSetup: firstTimeSetup,
+        yesProceed: yesProceed
       });
     }));
     it('controller should be defined', function () {

@@ -34,6 +34,14 @@ describe(' DummyCareReportService', function () {
     });
   });
 
+  it('should get DummyReportingData for org for time selected today', function () {
+    var response = dummyCareReportService.dummyOrgStatsData(0);
+    expect(response.length).toBe(24);
+    _.each(response, function (reportData) {
+      expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+    });
+  });
+
   it('should get DummyReportingData for org for time selected last 3 months', function () {
     var response = dummyCareReportService.dummyOrgStatsData(4);
     expect(response.length).toBe(3);

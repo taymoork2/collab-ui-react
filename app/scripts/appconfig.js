@@ -352,7 +352,7 @@
 
         $stateProvider
           .state('addDeviceFlow', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -365,7 +365,7 @@
             }
           })
           .state('addDeviceFlow.chooseDeviceType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
@@ -378,7 +378,7 @@
             }
           })
           .state('addDeviceFlow.chooseAccountType', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseAccountTypeCtrl',
@@ -391,7 +391,7 @@
             }
           })
           .state('addDeviceFlow.choosePersonal', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChoosePersonalCtrl',
@@ -404,7 +404,7 @@
             }
           })
           .state('addDeviceFlow.chooseSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'ChooseSharedSpaceCtrl',
@@ -417,7 +417,7 @@
             }
           })
           .state('addDeviceFlow.newSharedSpace', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'NewSharedSpaceCtrl',
@@ -430,7 +430,7 @@
             }
           })
           .state('addDeviceFlow.addServices', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddServicesCtrl',
@@ -443,7 +443,7 @@
             }
           })
           .state('addDeviceFlow.addLines', {
-            parent: 'modalSmall',
+            parent: 'modal',
             views: {
               'modal@': {
                 controller: 'AddLinesCtrl',
@@ -456,7 +456,7 @@
             }
           })
           .state('addDeviceFlow.showActivationCode', {
-            parent: 'modalSmall',
+            parent: 'modal',
             params: {
               currentUser: {},
               activationCode: {},
@@ -1515,6 +1515,12 @@
                 function orgCallback(data, status) {
                   defer.resolve(data);
                 }
+              },
+              newCustomerViewToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.atlasCustomerListUpdateGetStatus()
+                  .then(function (result) {
+                    return result;
+                  });
               }
             },
             params: {
@@ -1549,6 +1555,17 @@
             },
             params: {
               currentCustomer: {}
+            }
+          })
+          .state('customer-overview.meetingDetail', {
+            controller: 'MeetingDetailCtrl',
+            controllerAs: 'meetingDetail',
+            templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            data: {
+              displayName: 'Meeting Detail'
+            },
+            params: {
+              meetingLicenses: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {
@@ -2107,7 +2124,7 @@
             parent: 'main',
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               },
               hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
@@ -2140,6 +2157,11 @@
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html'
+              }
+            },
+            resolve: {
+              hasMediaFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
               }
             },
             params: {
@@ -2205,13 +2227,20 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
+                /*                controller: 'AddResourceControllerClusterViewV2',
+                                controllerAs: 'redirectResource',
+                                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                                modalClass: 'redirect-add-resource'*/
                 controller: 'MediafusionEnterHostnameController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
               }
             },
             params: {
-              wizard: null
+              wizard: null,
+              firstTimeSetup: false,
+              yesProceed: false,
+              fromClusters: true
             }
           })
           .state('add-resource.mediafusion.name', {
@@ -2359,7 +2388,7 @@
             },
             resolve: {
               hasF410FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
               }
             }
           })

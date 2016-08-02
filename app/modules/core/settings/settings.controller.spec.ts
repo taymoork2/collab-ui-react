@@ -21,7 +21,7 @@ namespace globalsettings {
     function initSpies() {
       spyOn(Orgservice, 'getOrg');
       spyOn(FeatureToggleService, 'supports');
-      spyOn(FeatureToggleService, 'brandingWordingChangeGetStatus');
+      spyOn(FeatureToggleService, 'atlasBrandingWordingChangeGetStatus');
       spyOn(Authinfo, 'isPartner');
       spyOn(Authinfo, 'isCustomerAdmin');
       spyOn(Authinfo, 'isDirectCustomer');
@@ -144,7 +144,7 @@ namespace globalsettings {
     }
 
     function setBranding() {
-      FeatureToggleService.brandingWordingChangeGetStatus.and.returnValue($q.when(true));
+      FeatureToggleService.atlasBrandingWordingChangeGetStatus.and.returnValue($q.when(true));
     }
   });
 }

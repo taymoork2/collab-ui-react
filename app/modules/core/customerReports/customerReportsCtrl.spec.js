@@ -45,7 +45,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     title: 'reportsPage.sparkReports',
     state: 'reports'
   }, {
-    title: 'tabs.careTab',
+    title: 'reportsPage.careTab',
     state: 'reports.care'
   }];
   var timeOptions = [{

@@ -136,6 +136,16 @@ describe(' sunlightReportService', function () {
     $httpBackend.flush();
   });
 
+  it('should get ReportingData for org for time selected today for mediaType chat', function () {
+    sunlightReportService.getReportingData('org_stats', 0, 'chat').then(function (response) {
+      expect(response.length).toBe(24);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+      });
+    });
+    $httpBackend.flush();
+  });
+
   it('should get ReportingData for org for time selected last 3 months for mediaType chat', function () {
     sunlightReportService.getReportingData('org_stats', 4, 'chat').then(function (response) {
       expect(response.length).toBe(3);
