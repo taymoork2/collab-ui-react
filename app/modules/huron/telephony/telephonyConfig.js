@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('HuronConfig', HuronConfig);
+  module.exports = angular
+    .module('huron.config', [
+      require('modules/core/config/config'),
+    ])
+    .factory('HuronConfig', HuronConfig)
+    .name;
 
   /* @ngInject */
   function HuronConfig(Config) {

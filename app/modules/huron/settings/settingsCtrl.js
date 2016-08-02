@@ -7,7 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService,
-    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing) {
+    ModalService, CeService, HuntGroupServiceV2, DirectoryNumberService, InternationalDialing, VoicemailMessageAction) {
 
     var vm = this;
     vm.loading = true;
@@ -53,8 +53,9 @@
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
     vm.extensionLengthChanged = false;
+    //TODO: re-enable option '8' once it is an acceptable steering digit
     vm.steeringDigits = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+      '0', '1', '2', '3', '4', '5', '6', '7', '9'
     ];
     vm.availableExtensions = [
       '3', '4', '5'
@@ -83,7 +84,8 @@
       },
       companyVoicemail: {
         companyVoicemailEnabled: false,
-        companyVoicemailNumber: undefined
+        companyVoicemailNumber: undefined,
+        voicemailToEmail: false
       },
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
@@ -624,6 +626,17 @@
             _voicemailEnabledWatcher($scope);
             _callerIdNumberWatcher($scope);
           }
+        }, {
+          key: 'voicemailToEmail',
+          type: 'cs-input',
+          templateOptions: {
+            label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
+            type: 'checkbox',
+            helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
+          },
+          hideExpression: function () {
+            return !vm.model.companyVoicemail.companyVoicemailEnabled;
+          }
         }]
       }
     }];
@@ -670,13 +683,13 @@
               endNumber: DEFAULT_TO
             });
           }
-          Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {
+          Notification.success('serviceSetupModal.extensionDeleteSuccess', {
             extension: internalNumberRange.name
-          })], 'success');
+          });
         }).catch(function (response) {
-          Notification.errorResponse(response, $translate.instant('serviceSetupModal.extensionDeleteError', {
+          Notification.errorResponse(response, 'serviceSetupModal.extensionDeleteError', {
             extension: internalNumberRange.name
-          }));
+          });
         });
       } else {
         // delete the range from display list
@@ -738,10 +751,9 @@
       }
     }
 
-    function updateVoicemailUserTimeZone() {
-      // TODO: This is not a good way to determine when to update the timezone, get site doesn't
-      // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
+    function updateVoicemailTimeZone() {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
+        (_.get(vm, 'model.site.timeZone.id') !== _.get(vm, 'model.voicemailTimeZone.id'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -760,7 +772,10 @@
               vm.model.site.voicemailPilotNumber = undefined;
             }
           })
-          .then(loadVoicemailUserTimeZone)
+          // in the case when voicemail is getting enabled, reload voicemail info such as (timezone and vm2email settings)
+          // needs to be done in order, usertemplates > messageactions
+          .then(loadVoicemailTimeZone)
+          .then(loadVoicemailToEmail)
           .catch(function (response) {
             // unset the site voicemail pilot number
             vm.model.site.voicemailPilotNumber = undefined;
@@ -955,23 +970,48 @@
         });
     }
 
-    function loadVoicemailUserTimeZone() {
-      if (vm.hasVoicemailService) {
+    function loadVoicemailTimeZone() {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled) {
         return ServiceSetup.listVoicemailTimezone()
           .then(function (userTemplates) {
-            if (angular.isArray(userTemplates) && userTemplates.length > 0) {
+            if (_.isArray(userTemplates) && userTemplates.length > 0) {
               vm.voicemailUserTemplate = {
-                timeZone: '' + userTemplates[0].timeZone,
-                objectId: userTemplates[0].objectId
+                objectId: userTemplates[0].objectId,
+                timeZone: _.toString(userTemplates[0].timeZone),
+                timeZoneName: userTemplates[0].timeZoneName
               };
 
               vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
-                return timezone.id === vm.voicemailUserTemplate.timeZone;
+                return timezone.id === _.get(vm, 'voicemailUserTemplate.timeZoneName');
               });
 
             }
           })
-          .catch(_.noop);
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailTimeZoneGetError'));
+            return $q.reject(response);
+          });
+      }
+    }
+
+    function loadVoicemailToEmail() {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
+        _.get(vm, 'voicemailUserTemplate.objectId')) {
+        return VoicemailMessageAction.get(vm.voicemailUserTemplate.objectId)
+          .then(function (messageAction) {
+            // set to the value of existing vm2email settings
+            if (_.isUndefined(vm.voicemailMessageAction)) {
+              vm.model.companyVoicemail.voicemailToEmail = VoicemailMessageAction.isVoicemailToEmailEnabled(messageAction.voicemailAction);
+            }
+            vm.voicemailMessageAction = messageAction;
+          })
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailToEmailGetError'));
+            return $q.reject(response);
+          });
+      } else {
+        vm.model.companyVoicemail.voicemailToEmail = false;
+        vm.voicemailMessageAction = {};
       }
     }
 
@@ -1084,7 +1124,12 @@
           clearCallerIdFields();
 
           if (vm.hasVoiceService) {
-            promises.push(loadTimeZoneOptions().then(loadSite).then(loadVoicemailUserTimeZone));
+            promises.push(loadTimeZoneOptions()
+              .then(loadSite)
+              .then(loadVoicemailTimeZone)
+              .then(loadVoicemailToEmail)
+            );
+
             promises.push(loadInternalNumbers());
             promises.push(loadInternationalDialing());
             promises.push(loadDialPlan());
@@ -1104,7 +1149,8 @@
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
         .then(updateSite)
-        .then(updateVoicemailUserTimeZone)
+        .then(updateVoicemailTimeZone)
+        .then(updateVoicemailToEmail)
         .catch(_.noop);
     }
 
@@ -1246,6 +1292,29 @@
         });
     }
 
+    function updateVoicemailToEmail() {
+      return $q.when(true)
+        .then(function () {
+          if (shouldUpdateVoicemailToEmail()) {
+            return VoicemailMessageAction.update(vm.model.companyVoicemail.voicemailToEmail, vm.voicemailUserTemplate.objectId, vm.voicemailMessageAction.objectId)
+              .then(function () {
+                vm.voicemailMessageAction.voicemailAction = VoicemailMessageAction.getVoicemailActionEnum(vm.model.companyVoicemail.voicemailToEmail);
+              })
+              .catch(function (response) {
+                errors.push(Notification.processErrorResponse(response, 'huronSettings.voicemailToEmailUpdateError'));
+                return $q.reject(response);
+              });
+          }
+        });
+    }
+
+    function shouldUpdateVoicemailToEmail() {
+      // validate parameters exist and model value is changing
+      return vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled &&
+        _.get(vm, 'voicemailMessageAction.voicemailAction') && _.get(vm, 'voicemailMessageAction.objectId') && _.get(vm, 'voicemailUserTemplate.objectId') &&
+        (vm.model.companyVoicemail.voicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
+    }
+
     function init() {
       vm.loading = true;
       errors = [];
@@ -1279,7 +1348,7 @@
           if (errors.length > 0) {
             Notification.notify(errors, 'error');
           } else {
-            Notification.notify([$translate.instant('huronSettings.saveSuccess')], 'success');
+            Notification.success('huronSettings.saveSuccess');
             resetForm();
           }
         })
@@ -1323,6 +1392,7 @@
 
       vm.model.companyVoicemail.companyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
       vm.model.companyVoicemail.companyVoicemailNumber = savedModel.companyVoicemail.companyVoicemailNumber;
+      vm.model.companyVoicemail.voicemailToEmail = savedModel.companyVoicemail.voicemailToEmail;
 
       vm.model.internationalDialingEnabled = savedModel.internationalDialingEnabled;
       vm.model.internationalDialingUuid = savedModel.internationalDialingUuid;

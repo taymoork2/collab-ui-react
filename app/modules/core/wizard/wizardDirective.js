@@ -47,8 +47,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo,
-    SessionStorage, $stateParams, $state, ModalService, ServiceSetup) {
+  function WizardCtrl($controller, $modal, $rootScope, $scope, $state, $stateParams, $translate, Authinfo, Config, ModalService, PromiseHook, ServiceSetup, SessionStorage) {
     var vm = this;
     vm.current = {};
 
@@ -74,6 +73,7 @@
     vm.nextTab = nextTab;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.goToStep = goToStep;
     vm.getRequiredTabs = getRequiredTabs;
 
     vm.isFirstTab = isFirstTab;
@@ -296,35 +296,33 @@
 
     function executeNextStep(subTabControllerAs) {
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
-        //TODO remove these broadcasts
-        if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
-          $rootScope.$broadcast('wizard-messenger-setup-event');
-          updateStep();
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
-          updateStep();
-          vm.isNextDisabled = true;
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
-          $rootScope.$broadcast('wizard-set-sso-event');
-          vm.nextText = $translate.instant('common.save');
-        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
+        if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
           $rootScope.$broadcast('wizard-enterprise-sip-url-event');
-          updateStep();
-        } else {
-          updateStep();
+        }
+        var steps = getSteps();
+        if (angular.isArray(steps)) {
+          var index = steps.indexOf(getStep());
+          if (index + 1 < steps.length) {
+            setStep(steps[index + 1]);
+          } else if (index + 1 === steps.length) {
+            nextTab();
+          }
         }
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
     }
 
-    function updateStep() {
+    function goToStep(requestedStep) {
       var steps = getSteps();
       if (angular.isArray(steps)) {
-        var index = steps.indexOf(getStep());
-        if (index + 1 < steps.length) {
-          setStep(steps[index + 1]);
-        } else if (index + 1 === steps.length) {
-          nextTab();
+        var index = _.map(steps, function (step) {
+          return step.name;
+        }).indexOf(requestedStep);
+        if (index === -1 || index >= steps.length) {
+          nextStep();
+        } else if (index < steps.length) {
+          setStep(steps[index]);
         }
       }
     }
@@ -403,8 +401,9 @@
     }
 
     function hasDefaultButtons() {
-      if (vm.current.step)
+      if (vm.current.step) {
         return angular.isUndefined(vm.current.step.buttons);
+      }
       return false;
     }
 

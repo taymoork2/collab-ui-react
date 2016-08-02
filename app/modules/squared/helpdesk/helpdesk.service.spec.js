@@ -1,6 +1,6 @@
 'use strict';
 describe('HelpdeskService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
 
@@ -16,9 +16,6 @@ describe('HelpdeskService', function () {
     CsdmConverter = _CsdmConverter_;
 
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('searching orgs', function () {
@@ -242,63 +239,63 @@ describe('HelpdeskService', function () {
   });
 
   it('finds cloudberry devices by display name', function () {
-    var result = Service.filterDevices('Testing DR', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    var result = Service.filterDevices('Testing DR', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
     expect(result[0].displayName).toEqual('Testing DR');
 
-    result = Service.filterDevices('test', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    result = Service.filterDevices('test', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(2);
     expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
     expect(result[0].displayName).toEqual('Testing DR');
     expect(result[1].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
     expect(result[1].displayName).toEqual('schnappi test');
 
-    result = Service.filterDevices('balle', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    result = Service.filterDevices('balle', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(0);
   });
 
   it('finds cloudberry devices by serial', function () {
-    var result = Service.filterDevices('FTT1927036B', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    var result = Service.filterDevices('FTT1927036B', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('c1641e38-4782-52ad-8953-e3e3f3aee5c0');
     expect(result[0].displayName).toEqual('Ellie');
 
-    result = Service.filterDevices('FTT', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    result = Service.filterDevices('FTT', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 10);
     expect(result.length).toBe(6);
   });
 
   it('finds cloudberry devices by MAC address', function () {
     // E8:ED:F3:B5:DB:8F should match when removing ':' or using any of '.','-' or no separator
-    var result = Service.filterDevices('E8:ED:F3:B5:DB:8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    var result = Service.filterDevices('E8:ED:F3:B5:DB:8F', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
     expect(result[0].displayName).toEqual('manyhus-sx20');
 
-    result = Service.filterDevices('E8EDF3B5DB8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    result = Service.filterDevices('E8EDF3B5DB8F', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
 
-    result = Service.filterDevices('E8-ED-F3-B5-DB-8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    result = Service.filterDevices('E8-ED-F3-B5-DB-8F', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
 
-    result = Service.filterDevices('E8.ED.F3.B5.DB.8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    result = Service.filterDevices('E8.ED.F3.B5.DB.8F', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
 
-    result = Service.filterDevices('DC:EB', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    result = Service.filterDevices('DC:EB', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 10);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
     expect(result[0].displayName).toEqual('schnappi test');
 
-    result = Service.filterDevices('DCEB', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    result = Service.filterDevices('DCEB', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 10);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
   });
 
   it('finds cloudberry devices by cisUuid', function () {
-    var result = Service.filterDevices('f50d76ed-b6d3-49fb-9b40-8cf4d993b7f6', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    var result = Service.filterDevices('f50d76ed-b6d3-49fb-9b40-8cf4d993b7f6', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);
     expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
     expect(result[0].displayName).toEqual('Testing DR');

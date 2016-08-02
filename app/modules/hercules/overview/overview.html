@@ -1,5 +1,6 @@
-<div ng-if="exp.serviceEnabled === true">
-  <div class="expressway-service hercules hercules-fix-paragraphs">
+<div ng-if="exp.serviceEnabled === true || exp.featureToggled">
+  <div class="expressway-service hercules hercules-fix-paragraphs"
+       ng-class="{'with-user-statuses-bar': exp.servicesId[0] !== 'squared-fusion-mgmt'}">
     <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs"></cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-left>
@@ -8,14 +9,8 @@
         </div>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
-        <div ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'" class="hercules-export-list">
-          <i class="icon icon-circle-user"></i>
-          <span class="export-number" translate="hercules.overview.activated" translate-values="{number: exp.userStatusSummary.activated || 0}"></span>
-          <span class="export-number" ng-if="exp.userStatusSummary.notActivated > 0"><span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
-          <a class="export-number" ng-if="exp.userStatusSummary.error > 0" ng-click="exp.openUserErrorsModal()"><span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></a>
-          <a class="icon-download-container" ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" ng-click="exp.openUserStatusReportModal(exp.servicesId[0])" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
-            <span translate="hercules.overview.report"></span> <i class="icon icon-download"></i>
-          </a>
+        <div ng-if="exp.servicesId[0] !== 'squared-fusion-mgmt'">
+          <a href="" ng-click="exp.openUserStatusReportModal(exp.servicesId[0])" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true" translate="hercules.overview.report"></a>
         </div>
         <button class="btn btn--people add-resource-button" type="submit"
                 translate="hercules.overview.add-resource-button" ng-click="exp.openAddResourceModal()"></button>
@@ -24,14 +19,14 @@
     <div ui-view="fullPane" class="small-padding-top content-container"></div>
   </div>
 </div>
-<div ng-if="exp.serviceEnabled === false">
+<div ng-if="exp.serviceEnabled === false && !exp.featureToggled">
   <div class="hercules content-container" cs-scroll>
     <div class="centered-info-pane full-height">
       <div ng-include src="'modules/hercules/overview/activate-service.html'"></div>
     </div>
   </div>
 </div>
-<div ng-if="exp.serviceEnabled === null">
+<div ng-if="exp.serviceEnabled === null && !exp.featureToggled">
   <div class="hercules content-container" cs-scroll>
     <div class="centered-info-pane full-height">
       <i class="icon icon-spinner icon-2x"></i>

@@ -29,6 +29,7 @@ plato
 typings
 /ts/*manifest.txt
 .cache
+flist-split.*.karma.shim.js
 
 bower_components
 node_modules

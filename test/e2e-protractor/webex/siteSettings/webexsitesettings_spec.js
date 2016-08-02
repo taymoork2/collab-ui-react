@@ -9,12 +9,12 @@ while (1 >= webExCommon.testInfo.describeCount) {
   switch (webExCommon.testInfo.describeCount) {
   case 1:
     webExCommon.testInfo.testType = 'T30';
-    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS1.siteUrl;
     break;
 
   default:
     webExCommon.testInfo.testType = 'T31';
-    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx site settings iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS4.siteUrl;
   }
 
   describe(webExCommon.testInfo.describeText, function () {
@@ -24,10 +24,10 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t31RegressionTestAdmin',
-          webExCommon.t31Info.testAdminUsername,
-          webExCommon.t31Info.testAdminPassword,
-          webExCommon.t31Info.siteUrl
+          'wbx-t31BTSTestAdmin-Reports-Configure',
+          webExCommon.BTS4.testAdminUsername,
+          webExCommon.BTS4.testAdminPassword,
+          webExCommon.BTS4.siteUrl
         );
 
         promise.then(
@@ -44,10 +44,10 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t30RegressionTestAdmin',
-          webExCommon.t30Info.testAdminUsername,
-          webExCommon.t30Info.testAdminPassword,
-          webExCommon.t30Info.siteUrl
+          'wbx-t30BTSTestAdmin-Reports-Configure',
+          webExCommon.BTS1.testAdminUsername,
+          webExCommon.BTS1.testAdminPassword,
+          webExCommon.BTS1.siteUrl
         );
 
         promise.then(
@@ -63,33 +63,33 @@ while (1 >= webExCommon.testInfo.describeCount) {
     }
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('shsetupould sign in as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS4.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteSettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + webExCommon.t31Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.BTS4.siteUrl, function () {
         if (setup) {
-          utils.click(webExCommon.t31ConfigureCog);
+          utils.click(webExCommon.BTS4.configCog);
           utils.wait(webExSiteSettings.siteSettingsPanel);
-          utils.wait(webExCommon.t31CardsSectionId);
+          utils.wait(webExCommon.BTS4.cardSectionId);
         }
       });
     } else {
-      it('should sign in as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to webex site list', function () {
+      it('should sign in as ' + webExCommon.BTS1.testAdminUsername + ' and navigate to webex site list', function () {
         if (setup) {
           navigation.clickServicesTab();
           utils.click(webExSiteSettings.conferencing);
         }
       });
 
-      it('should click on configure site icon for ' + webExCommon.t30Info.siteUrl, function () {
+      it('should click on configure site icon for ' + webExCommon.BTS1.siteUrl, function () {
         if (setup) {
-          utils.click(webExCommon.t30ConfigureCog);
+          utils.click(webExCommon.BTS1.configCog);
           utils.wait(webExSiteSettings.siteSettingsPanel);
-          utils.wait(webExCommon.t30CardsSectionId);
+          utils.wait(webExCommon.BTS1.cardSectionId);
         }
       });
     }
@@ -101,19 +101,19 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + webExCommon.t31Info.siteUrl, function () {
+      it('should click on configure site cog for ' + webExCommon.BTS4.siteUrl, function () {
         if (setup) {
-          utils.click(webExCommon.t31ConfigureCog);
+          utils.click(webExCommon.BTS4.configCog);
           utils.wait(webExSiteSettings.siteSettingsPanel);
-          utils.wait(webExCommon.t31CardsSectionId);
+          utils.wait(webExCommon.BTS4.cardSectionId);
         }
       });
     } else {
-      it('should click on configure site cog for ' + webExCommon.t30Info.siteUrl, function () {
+      it('should click on configure site cog for ' + webExCommon.BTS1.siteUrl, function () {
         if (setup) {
-          utils.click(webExCommon.t30ConfigureCog);
+          utils.click(webExCommon.BTS1.configCog);
           utils.wait(webExSiteSettings.siteSettingsPanel);
-          utils.wait(webExCommon.t30CardsSectionId);
+          utils.wait(webExCommon.BTS1.cardSectionId);
         }
       });
     }
@@ -280,7 +280,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    it('should click on common settings partner delegated authentication link', function () {
+    xit('should click on common settings partner delegated authentication link', function () {
       if (setup) {
         utils.click(webExSiteSettings.configureCommonPartnerAuthLink);
         utils.wait(webExSiteSettings.siteSettingPanel);
@@ -289,7 +289,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       }
     });
 
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
+    xit('should click on settings index breadcrumb and navigate to site settings index', function () {
       if (setup) {
         utils.click(webExSiteSettings.siteSettingsCrumb);
         utils.wait(webExSiteSettings.siteSettingsPanel);
@@ -341,14 +341,14 @@ while (1 >= webExCommon.testInfo.describeCount) {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
           utils.click(webExSiteSettings.siteListCrumb);
-          utils.wait(webExCommon.t31ConfigureCog);
+          utils.wait(webExCommon.BTS4.configCog);
         }
       });
     } else {
       it('should click on configure site cog and navigate to site settings index', function () {
         if (setup) {
           utils.click(webExSiteSettings.siteListCrumb);
-          utils.wait(webExCommon.t30ConfigureCog);
+          utils.wait(webExCommon.BTS1.configCog);
         }
       });
     }

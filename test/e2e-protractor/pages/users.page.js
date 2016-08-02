@@ -30,7 +30,7 @@ var UsersPage = function () {
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
-  this.manageDialog = element(by.id('modalContent'));
+  this.manageDialog = element(by.css('.modal-content'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
   this.squaredPanel = element(by.id('conversations-link'));
   this.entitlementPanel = element(by.id('entitlementPanel'));
@@ -81,7 +81,7 @@ var UsersPage = function () {
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
-  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+  this.paidMtgCheckbox = element(by.css('label[for="paid-conf"]'));
   this.paidCareCheckbox = element(by.cssContainingText('cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));
@@ -102,6 +102,7 @@ var UsersPage = function () {
 
   this.cancelButton = element(by.buttonText('Cancel'));
   this.saveButton = element(by.buttonText('Save'));
+  this.finishButton = element(by.buttonText('Finish'));
 
   this.clearButton = element(by.id('btnClear'));
   this.backButton = element(by.buttonText('Clear'));
@@ -248,7 +249,8 @@ var UsersPage = function () {
     users.createUser(alias);
     utils.click(checkbox);
     utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsDisplayed(users.finishButton);
+    utils.click(users.finishButton);
     utils.expectIsNotDisplayed(users.manageDialog);
 
     activate.setup(null, alias);
@@ -273,8 +275,8 @@ var UsersPage = function () {
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {
-      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
-      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+      utils.expectInputCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectInputCheckbox(users.paidMtgCheckbox, expectedMtgState);
 
       // Uncheck license...
       utils.click(clickService);

@@ -14,13 +14,10 @@
     }
   }
 
-  @include vr-spacing(ml, 3);
-
   .ct-customer-card {
     width: rem-calc(414px);
     display: flex;
     flex-flow: column;
-    @include vr-spacing(mr, 1);
     .cardHeader1 {
       text-align: center;
       color: $gray-dark-1;
@@ -131,6 +128,10 @@
     }
   }
 
+  .ct-left-cs-input:focus {
+    border-color: $gray-light-3 !important;
+  }
+
   .ct-footer {
     color: $gray-light-1;
     border-top: 1px solid $gray-light-3;
@@ -141,7 +142,6 @@
   .ct-selectable-element {
     &.active {
       color: $color-primary-darker;
-      border-color: $color-primary-darker;
     }
   }
 

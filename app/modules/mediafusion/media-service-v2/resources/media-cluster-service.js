@@ -2,166 +2,184 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMockV2, MediaConverterServiceV2, MediaConfigServiceV2, Authinfo, CsdmHubFactory, Notification, UrlConfig) {
-    var clusterCache = {};
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2, $log) {
+    var clusterCache = {
+      mf_mgmt: {}
+    };
 
     function extractDataFromResponse(res) {
       return res.data;
     }
 
+    function extractClustersFromResponse(response) {
+      return extractDataFromResponse(response).clusters;
+    }
+
     var fetch = function () {
-      if ($location.absUrl().match(/mediaservice-backend=mock/)) {
-        var data = MediaConverterServiceV2.convertClusters(MediaConnectorMockV2.mockData());
-        var defer = $q.defer();
-        defer.resolve(data);
-        CsdmCacheUpdater.update(clusterCache, data);
-        return defer.promise;
-      }
-
-      if ($location.absUrl().match(/mediaservice-backend=nodata/)) {
-        var defer2 = $q.defer();
-        defer2.resolve([]);
-        return defer2.promise;
-      }
-
       return $http
-        .get(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
-        .then(extractDataFromResponse)
-        .then(MediaConverterServiceV2.convertClusters)
-        .then(_.partial(CsdmCacheUpdater.update, clusterCache));
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractClustersFromResponse)
+        .then(function (clusters) {
+          // start modeling the response to match how the UI uses it
+          var onlyMfMgmt = _.filter(clusters, 'targetType', 'mf_mgmt');
+          return {
+            mf_mgmt: onlyMfMgmt
+          };
+        })
+        .then(function (clusters) {
+          var result = {
+            mf_mgmt: addAggregatedData('mf_mgmt', clusters.mf_mgmt)
+          };
+          return result;
+        })
+        .then(function (clusters) {
+          var result = {
+            mf_mgmt: _.indexBy(clusters.mf_mgmt, 'id')
+          };
+          return result;
+        })
+        .then(function (clusters) {
+          CsdmCacheUpdater.update(clusterCache.mf_mgmt, clusters.mf_mgmt);
+          return clusterCache;
+        });
     };
+
+    function overrideStateIfAlarms(connector) {
+      if (connector.alarms.length > 0) {
+        connector.state = 'has_alarms';
+      }
+      return connector;
+    }
+
+    function getRunningStateSeverity(state) {
+      // we give a severity and a weight to all possible states
+      // this has to be synced with the server generating the API consumed
+      // by the general overview page (state of Call connectors, etc.)
+      var label, value;
+      switch (state) {
+      case 'running':
+        label = 'ok';
+        value = 0;
+        break;
+      case 'not_installed':
+        label = 'neutral';
+        value = 1;
+        break;
+      case 'disabled':
+      case 'downloading':
+      case 'installing':
+      case 'not_configured':
+      case 'uninstalling':
+      case 'registered':
+      case 'initializing':
+        label = 'warning';
+        value = 2;
+        break;
+      case 'has_alarms':
+      case 'offline':
+      case 'stopped':
+      case 'not_operational':
+      case 'unknown':
+      default:
+        label = 'error';
+        value = 3;
+      }
+
+      return {
+        label: label,
+        value: value
+      };
+    }
+
+    function getMostSevereRunningState(previous, connector) {
+      var stateSeverity = getRunningStateSeverity(connector.state);
+      if (stateSeverity.value > previous.stateSeverityValue) {
+        return {
+          state: connector.state,
+          stateSeverity: stateSeverity.label,
+          stateSeverityValue: stateSeverity.value
+        };
+      } else {
+        return previous;
+      }
+    }
+
+    function mergeAllAlarms(connectors) {
+      return _.reduce(connectors, function (acc, connector) {
+        return acc.concat(connector.alarms);
+      }, []);
+    }
+
+    function getUpgradeState(connectors) {
+      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      return allAreUpgraded ? 'upgraded' : 'upgrading';
+    }
+
+    function mergeRunningState(connectors) {
+      if (connectors.length == 0) {
+        return {
+          state: 'no_hosts'
+        };
+      }
+      return _.chain(connectors)
+        .map(overrideStateIfAlarms)
+        .reduce(getMostSevereRunningState, {
+          stateSeverityValue: -1
+        })
+        // .get('state')
+        .value();
+    }
+
+    function buildAggregates(type, cluster) {
+      var connectors = cluster.connectors;
+      var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
+        return connector.runningVersion !== provisioning.availableVersion;
+      });
+      var hosts = _.chain(connectors)
+        .pluck('hostname')
+        .uniq()
+        .value();
+      return {
+        alarms: mergeAllAlarms(connectors),
+        state: mergeRunningState(connectors).state,
+        upgradeState: getUpgradeState(connectors),
+        provisioning: provisioning,
+        upgradeAvailable: upgradeAvailable,
+        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
+        hosts: _.map(hosts, function (host) {
+          // 1 host = 1 connector (for a given type)
+          var connector = _.find(connectors, 'hostname', host);
+          return {
+            alarms: connector.alarms,
+            hostname: host,
+            state: connector.state,
+            upgradeState: connector.upgradeState
+          };
+        })
+      };
+    }
+
+    function addAggregatedData(type, clusters) {
+      // We add aggregated data like alarms, states and versions to the cluster
+      return _.map(clusters, function (cluster) {
+        cluster.aggregates = buildAggregates(type, cluster);
+        return cluster;
+      });
+    }
+
+    function clusterType(type, clusters) {
+      $log.log("cluster details", clusters);
+      return _.chain(clusters)
+        .map(function (cluster) {
+          cluster = angular.copy(cluster);
+          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
+          return cluster;
+        }).value();
+    }
 
     var getClusters = function () {
-      return clusterCache;
-    };
-
-    var getAggegatedClusters = function (clusters, groupList) {
-      $log.log("In getAggregatedClusters");
-      //$log.log("clusterCache : ", clusterCache);
-      return MediaConverterServiceV2.aggregateClusters(clusters, groupList);
-    };
-
-    var setProperty = function (clusterId, property, value) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
-      var payload = {};
-      payload[property] = value;
-      return $http.post(url, payload);
-    };
-
-    var deleteCluster = function (clusterId) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      return $http.delete(url).then(function () {
-        if (clusterCache[clusterId]) {
-          delete clusterCache[clusterId];
-        }
-      });
-    };
-
-    var deleteHost = function (clusterId, serial) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
-      return $http.delete(url).then(function () {
-        var cluster = clusterCache[clusterId];
-        if (cluster && cluster.hosts) {
-          _.remove(cluster.hosts, {
-            serial: serial
-          });
-          if (cluster.hosts.length === 0) {
-            delete clusterCache[clusterId];
-          }
-        }
-      });
-    };
-
-    var getClusterList = function () {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
-      return $http.get(url).then(extractDataFromResponse);
-    };
-
-    var getConnector = function (connectorId) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
-      return $http.get(url).then(extractDataFromResponse);
-    };
-
-    var defuseConnector = function (clusterId, callback) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      $http
-        .delete(url)
-        .success(callback)
-        .error(createErrorHandler('Unable to defuse', callback));
-    };
-
-    function createSuccessCallback(callback) {
-      return function (data) {
-        callback(null, data);
-      };
-    }
-
-    function createErrorHandler(message, callback) {
-      return function () {
-        Notification.notify(message, arguments);
-        callback(arguments);
-      };
-    }
-
-    var getGroups = function () {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
-      return $http.get(url).then(extractDataFromResponse);
-    };
-
-    var updateGroupAssignment = function (clusterId, propertySetId) {
-      var clusterAssignedPropertySet = {
-        'property_set_id': propertySetId
-      };
-
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
-      return $http.post(url, clusterAssignedPropertySet);
-    };
-
-    var removeGroupAssignment = function (clusterId, propertySetId) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
-      return $http.delete(url);
-    };
-
-    var createGroup = function (groupName) {
-      var grp = {
-        'orgId': Authinfo.getOrgId(),
-        'type': 'mf.group',
-        'name': groupName,
-        'properties': {
-          'mf.group.displayName': groupName,
-        }
-      };
-
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
-      return $http
-        .post(url, grp);
-      //.success(callback);
-    };
-
-    var deleteGroup = function (propertySetId) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySetId;
-      return $http.delete(url);
-    };
-
-    var changeRole = function (role, clusterId) {
-      var grp = {
-        'mf.role': role
-      };
-
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
-      return $http
-        .post(url, grp);
-      //.success(callback);
-    };
-
-    var getPropertySet = function (propertySet) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
-      return $http.get(url).then(extractDataFromResponse);
-    };
-
-    var setPropertySet = function (propertySet, value) {
-      var url = MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
-      return $http.post(url, value);
+      return clusterCache['mf_mgmt'];
     };
 
     var getOrganization = function (callback) {
@@ -225,7 +243,7 @@
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractClustersFromResponse)
-        .then(onlyKeepFusedClusters)
+        // .then(onlyKeepFusedClusters)
         //.then(addServicesStatuses)
         .then(sort);
     }
@@ -281,29 +299,18 @@
       return $http.post(url);
     }
 
+    function getClustersByConnectorType(type) {
+      return _.values(clusterCache[type]);
+    }
+
     var hub = CsdmHubFactory.create();
-    var clusterPoller = CsdmPoller.create(fetch, hub);
+    var poller = CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
-      deleteHost: deleteHost,
       getClusters: getClusters,
-      getConnector: getConnector,
-      deleteCluster: deleteCluster,
-      setProperty: setProperty,
-      defuseConnector: defuseConnector,
-      getGroups: getGroups,
-      updateGroupAssignment: updateGroupAssignment,
-      removeGroupAssignment: removeGroupAssignment,
-      createGroup: createGroup,
-      deleteGroup: deleteGroup,
-      changeRole: changeRole,
       subscribe: hub.on,
-      getAggegatedClusters: getAggegatedClusters,
-      getPropertySet: getPropertySet,
-      setPropertySet: setPropertySet,
       getOrganization: getOrganization,
-      getClusterList: getClusterList,
       getClustersV2: getClustersV2,
       createClusterV2: createClusterV2,
       addRedirectTarget: addRedirectTarget,
@@ -312,7 +319,12 @@
       deleteV2Cluster: deleteV2Cluster,
       updateV2Cluster: updateV2Cluster,
       defuseV2Connector: defuseV2Connector,
-      moveV2Host: moveV2Host
+      moveV2Host: moveV2Host,
+      getClustersByConnectorType: getClustersByConnectorType,
+      getRunningStateSeverity: getRunningStateSeverity,
+      mergeAllAlarms: mergeAllAlarms,
+      getMostSevereRunningState: getMostSevereRunningState,
+      buildAggregates: buildAggregates
     };
   }
 

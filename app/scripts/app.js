@@ -12,18 +12,6 @@
    * Main module of the application.
    */
 
-  (function (l, y, t, i, c, s) {
-    l['LocalyticsGlobal'] = i;
-    l[i] = function () {
-      (l[i].q = l[i].q || []).push(arguments);
-    };
-    l[i].t = +new Date();
-    (s = y.createElement(t)).type = 'text/javascript';
-    s.src = 'https://web.localytics.com/v3/localytics.min.js';
-    (c = y.getElementsByTagName(t)[0]).parentNode.insertBefore(s, c);
-    window.ll('init', 'f725f885fe2646751d3c8a3-075b0c4e-a82c-11e5-c7e0-00d0fea82624', {});
-  }(window, document, 'script', 'll'));
-
   /** start Mixpanel, code from: https://mixpanel.com/help/reference/javascript **/
   /* eslint-disable no-unused-expressions */
   (function (e, b) {
@@ -69,76 +57,48 @@
   /* eslint-enable no-unused-expressions */
   /** end Mixpanel **/
 
-  angular.module('Core', [
-      'angular-cache',
-      'cisco.ui',
-      'cisco.formly',
-      'core.trial',
-      'core.onboard',
-      'csDonut',
-      'ct.ui.router.extras.sticky',
-      'ct.ui.router.extras.future',
-      'ct.ui.router.extras.previous',
-      'cwill747.phonenumber',
-      'ngAnimate',
-      'ngclipboard',
-      'ngCookies',
-      'ngResource',
-      'ngSanitize',
-      'ngMessages',
-      'ngFileUpload',
-      'ngCsv',
-      'pascalprecht.translate',
-      'templates-app',
-      'ui.router',
-      'ui.grid',
-      'ui.grid.selection',
-      'ui.grid.saveState',
-      'ui.grid.infiniteScroll',
-      'timer',
-      'toaster'
-    ])
-    .constant('pako', window.pako)
-    .constant('addressparser', window['emailjs-addressparser']);
+  require('./app.dependencies');
 
-  angular.module('Squared', ['Core']);
-
-  angular.module('Huron', [
-    'Core',
-    'uc.moh',
-    'uc.device',
-    'uc.callrouting',
-    'uc.didadd',
-    'uc.overview',
-    'uc.hurondetails',
-    'uc.cdrlogsupport',
-    'ngIcal'
-  ]);
-
-  angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
-
-  angular.module('Ediscovery', ['Core']);
-
-  angular.module('Mediafusion', ['Core']);
-
-  angular.module('WebExApp', ['Core']);
-
-  angular.module('Messenger', ['Core']);
-
-  angular.module('Sunlight', [
-    'Core',
-    'CareDetails'
-  ]);
+  angular.module('atlas.templates', []);
+  // ngtemplate-loader will load templates into atlas.templates
+  requireAll(require.context("modules/", true, /\.\/.*\.html$/));
 
   angular.module('wx2AdminWebClientApp', [
-    'Core',
-    'Squared',
-    'Huron',
-    'Hercules',
-    'Ediscovery',
-    'Mediafusion',
-    'WebExApp',
-    'Messenger',
-    'Sunlight'
-  ]);
+    require('modules/core/scripts/controllers/bodyCtrl'),
+    require('modules/core/auth/auth'),
+    require('modules/core/auth/token.service'),
+    require('modules/core/config/config'),
+    require('modules/core/featureToggle/featureToggle.service'),
+    require('modules/core/l10n/languages'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/storage'),
+    require('modules/core/scripts/services/localize'),
+    require('modules/core/scripts/services/utils'),
+    require('modules/core/scripts/services/log'),
+    require('modules/core/scripts/services/sessionstorage'),
+    require('modules/core/scripts/services/logmetricsservice'),
+    require('modules/core/scripts/services/responseinterceptor'),
+    require('modules/core/scripts/services/readonly.interceptor'),
+    require('modules/core/scripts/services/timingInterceptor'),
+    require('modules/core/scripts/services/serverErrorInterceptor'),
+    require('modules/core/stateRedirect/previousState.service'),
+    require('modules/core/trackingId/trackingId.module'),
+    'atlas.templates',
+    'cisco.ui',
+    'ct.ui.router.extras.sticky',
+    'ct.ui.router.extras.future',
+    'ct.ui.router.extras.previous',
+    'ngAnimate',
+    'ngCookies',
+    'ngResource',
+    'ngSanitize',
+    'oc.lazyLoad',
+    'pascalprecht.translate',
+    'ui.router',
+  ]).run(require('./apprun'));
+  require('./appconfig');
+
+  function requireAll(requireContext) {
+    return requireContext.keys().forEach(requireContext);
+  }
 }());

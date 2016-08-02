@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('OAuthConfig', OAuthConfig);
+  module.exports = angular
+    .module('core.oauthconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('OAuthConfig', OAuthConfig)
+    .name;
 
   function OAuthConfig(Utils, Config) {
 
@@ -17,6 +21,7 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'ccc_config:admin',
+      'cloud-contact-center:admin',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write'

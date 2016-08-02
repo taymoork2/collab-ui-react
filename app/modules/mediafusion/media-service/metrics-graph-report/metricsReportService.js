@@ -3,7 +3,6 @@
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
-    var urlTemp = 'http://10.196.5.245:8080/athena/api/v1/' + 'organizations/' + Authinfo.getOrgId();
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var detailed = 'detailed';
     var topn = 'topn';
@@ -13,6 +12,7 @@
     var clusterAvailability = '/clusters_availability';
     var agg_availability = '/agg_availability';
     var agg_cpu_utilization = '/agg_cpu_utilization';
+    var total_calls = '/total_calls';
 
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -28,13 +28,15 @@
     var activePromiseForUtilization = null;
     var activePromiseForClusterAvailability = null;
     var activePromiseForCPUUtilization = null;
+    var activePromiseForTotalCalls = null;
 
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
-      getCPUUtilizationData: getCPUUtilizationData
+      getCPUUtilizationData: getCPUUtilizationData,
+      getTotalCallsData: getTotalCallsData
     };
 
     function getUtilizationData(time, cluster) {
@@ -45,7 +47,7 @@
       var returnData = {
         graphData: []
       };
-      return getService(urlBase + utilizationUrl + getQuery(cluster, time), activePromiseForUtilization).then(function (response) {
+      return getService(urlBase + getQuerys(utilizationUrl, cluster, time), activePromiseForUtilization).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].cpuUtilValues) && angular.isArray(response.data[0].cpuUtilValues) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].cpuUtilValues);
           return adjustUtilizationData(response.data[0].cpuUtilValues, returnData, response.data[0].startTime, response.data[0].endTime);
@@ -66,7 +68,7 @@
       var returnData = {
         graphData: []
       };
-      return getService(urlBase + callVolumeUrl + getQuery(cluster, time), activePromise).then(function (response) {
+      return getService(urlBase + getQuerys(callVolumeUrl, cluster, time), activePromise).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].values) && angular.isArray(response.data[0].values) && angular.isDefined(response.data[0])) {
           returnData.graphData.push(response.data[0].values);
           return adjustCallVolumeData(response.data[0].values, returnData, response.data[0].startTime, response.data[0].endTime);
@@ -85,7 +87,7 @@
       }
       activePromiseForAvailability = $q.defer();
       var returnData = [];
-      return getService(urlBase + clusterAvailability + getQuery(cluster, time), activePromiseForAvailability).then(function (response) {
+      return getService(urlBase + getQuerys(clusterAvailability, cluster, time), activePromiseForAvailability).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data[0]) && angular.isDefined(response.data[0].clusterCategories) && angular.isArray(response.data[0].clusterCategories)) {
           return response;
         } else {
@@ -103,7 +105,7 @@
       }
       activePromiseForClusterAvailability = $q.defer();
       var returnData = [];
-      return getService(urlBase + agg_availability + getQuery(cluster, time), activePromiseForClusterAvailability).then(function (response) {
+      return getService(urlBase + getQuerys(agg_availability, cluster, time), activePromiseForClusterAvailability).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data)) {
           return response;
         } else {
@@ -121,7 +123,7 @@
       }
       activePromiseForCPUUtilization = $q.defer();
       var returnData = [];
-      return getService(urlBase + agg_cpu_utilization + getQuery(cluster, time), activePromiseForCPUUtilization).then(function (response) {
+      return getService(urlBase + getQuerys(agg_cpu_utilization, cluster, time), activePromiseForCPUUtilization).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data)) {
           return response;
         } else {
@@ -132,18 +134,40 @@
       });
     }
 
+    function getTotalCallsData(time, cluster) {
+      // cancel any currently running jobs
+      if (activePromiseForTotalCalls !== null && angular.isDefined(activePromiseForTotalCalls)) {
+        activePromiseForTotalCalls.resolve(ABORT);
+      }
+      activePromiseForTotalCalls = $q.defer();
+      var returnData = [];
+      return getService(urlBase + getQuerys(total_calls, cluster, time), activePromiseForTotalCalls).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data)) {
+          return response;
+        } else {
+          return returnData;
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Total Number of Calls not returned for customer.', $translate.instant('mediaFusion.metrics.overallTotalNumberOfCallsError'), returnData);
+      });
+    }
+
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null
       };
       var startDate = {
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
+        call_reject: 0,
+        active_calls: 0,
         timestamp: startTime
       };
       activeData.unshift(startDate);
@@ -155,8 +179,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.brandRoyalBlue,
-        colorTwo: chartColors.brandSkyBlue,
+        colorOne: chartColors.metricBlue,
+        colorTwo: chartColors.metricYellow,
         timestamp: endTime
       };
       returnDataArray.push(endDate);
@@ -168,16 +192,18 @@
       var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         balloon: true,
         average_cpu: 0.0,
         peak_cpu: 0.0,
         timestamp: null
       };
       var startDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
+        average_cpu: 0.0,
+        peak_cpu: 0.0,
         timestamp: startTime
       };
       activeData.unshift(startDate);
@@ -189,8 +215,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.colorPurple,
-        colorTwo: chartColors.colorPurple,
+        colorOne: chartColors.metricDarkGreen,
+        colorTwo: chartColors.metricLightGreen,
         timestamp: endTime
       };
       returnDataArray.push(endDate);
@@ -204,28 +230,26 @@
       returnGraph.push(item);
       return returnGraph;
     }
-    /*function getQuery(filter, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
-        cacheOption = cacheValue;
-      }
-      if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
-      } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
-      } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
-      }
-    }*/
+
     function getQuery(cluster, time, cacheOption) {
       if (angular.isUndefined(cacheOption) || cacheOption === null) {
         cacheOption = cacheValue;
       }
-      if (cluster == "All") {
-        //$log.log('the vlaue of cluster is ' + cluster + time);
+      if (cluster == "All Clusters") {
         return formRelativeTime(time);
       } else {
-        //$log.log('the vlaue of cluster is ' + cluster);
         return '/cluster/' + cluster + formRelativeTime(time);
+      }
+    }
+
+    function getQuerys(link, cluster, time, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
+      if (cluster == "All Clusters") {
+        return link + formRelativeTime(time);
+      } else {
+        return '/cluster/' + cluster + link + formRelativeTime(time);
       }
     }
 
@@ -254,7 +278,7 @@
     function returnErrorCheck(error, debugMessage, message, returnItem) {
       if (error.status === 401 || error.status === 403) {
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
-        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
+        Notification.error('reportsPage.unauthorizedError');
         return returnItem;
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
         if (error.status !== 0) {

@@ -3,8 +3,8 @@
 describe('Controller: OrganizationAddCtrl', function () {
   var controller, $scope, $q, $translate, $state, Notification, AccountService;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _AccountService_) {
     $scope = $rootScope.$new();

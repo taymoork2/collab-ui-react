@@ -8,7 +8,7 @@
   <div class="ct-customer ct-sa-content">
     <cs-card-layout>
       <cs-card class="ct-customer-card">
-        <header class="cardHeader1 h4" translate="careChatTpl.screenCard"></header>
+        <header class="cardHeader1 h4" translate="careChatTpl.preview"></header>
 
         <article class="customer-preview-article ct-article header-border header-background articleHeight">
 
@@ -40,7 +40,7 @@
       </cs-card>
 
       <cs-card class="ct-customer-card">
-        <header class="cardHeader1 h4" translate="careChatTpl.attributesCard"></header>
+        <header class="cardHeader1 h4" translate="careChatTpl.attributes"></header>
         <article class="customer-attributes-article ct-article articleHeight">
           <section class="ct-attribute-section ct-flex-center" ng-hide="careChatSA.activeItem !== undefined">
             <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
@@ -150,8 +150,7 @@
                  class="row ct-attribute-row" >
               <label class="cs-input__label ct-attribute-field-label  h4 large-11" translate="careChatTpl.defaultOrgLabel">
               </label>
-               <input ng-disabled= "careChatSA.isUserProfileSelected()"
-                      id="orgText"
+               <input id="orgText"
                       class="h5 inputField ct-attribute-field-textbox large-11"
                       type="text"
                       ng-model="careChatSA.orgName"/>

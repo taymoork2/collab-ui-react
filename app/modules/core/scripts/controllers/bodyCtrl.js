@@ -1,8 +1,11 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .controller('BodyCtrl', BodyCtrl);
+  module.exports = angular.module('core.body', [
+      require('modules/core/scripts/services/authinfo')
+    ])
+    .controller('BodyCtrl', BodyCtrl)
+    .name;
 
   /* @ngInject */
   function BodyCtrl($scope, $rootScope, Authinfo) {

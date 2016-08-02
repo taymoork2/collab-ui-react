@@ -1,9 +1,28 @@
 'use strict';
 
+var scopes = [
+  'webexsquare:admin',
+  'webexsquare:billing',
+  'ciscouc:admin',
+  'Identity:SCIM',
+  'Identity:Config',
+  'Identity:Organization',
+  'cloudMeetings:login',
+  'webex-messenger:get_webextoken',
+  'ccc_config:admin',
+  'cloud-contact-center:admin',
+  'compliance:spark_conversations_read',
+  'contact-center-context:pod_read',
+  'contact-center-context:pod_write'
+];
+var oauth2Scope = scopes.join(' ');
+
+exports.oauth2Scope = oauth2Scope;
+
 exports.oauthClientRegistration = {
   id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
   secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
-  scope: 'webexsquare%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+  scope: encodeURIComponent(oauth2Scope),
 };
 
 exports.oauth2Url = 'https://idbroker.webex.com/idb/oauth2/v1/';

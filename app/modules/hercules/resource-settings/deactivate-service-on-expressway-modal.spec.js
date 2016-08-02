@@ -1,7 +1,7 @@
 'use strict';
 
 describe('DeactivateServiceModalView', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
   var $scope;
   var view;
   var html;

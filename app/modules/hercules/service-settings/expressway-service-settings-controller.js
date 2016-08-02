@@ -6,13 +6,14 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService, $translate) {
     var vm = this;
     vm.emailSubscribers = '';
     vm.connectorType = $state.current.data.connectorType;
     vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
+    vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
 
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
@@ -85,13 +86,36 @@
         Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (err) {
-          vm.savingEmail = false;
-          if (err) {
-            return XhrNotificationService.notify(err);
+        ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (statusCode) {
+          if (statusCode === 204) {
+            Notification.success('hercules.settings.emailNotificationsSavingSuccess');
+          } else {
+            Notification.error('hercules.settings.emailNotificationsSavingError');
           }
+          vm.savingEmail = false;
         });
       }
+    };
+
+    function init() {
+      ServiceDescriptor.getDisableEmailSendingToUser()
+        .then(function (calSvcDisableEmailSendingToEndUser) {
+          vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
+        });
+    }
+
+    vm.enableEmailSendingToUser = false;
+    init();
+
+    vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
+      ServiceDescriptor.setDisableEmailSendingToUser(value);
+    }, 2000, {
+      'leading': true,
+      'trailing': false
+    });
+
+    vm.setEnableEmailSendingToUser = function () {
+      vm.writeEnableEmailSendingToUser(vm.enableEmailSendingToUser);
     };
 
     vm.disableService = function (serviceId) {
@@ -100,11 +124,7 @@
         if (error !== null) {
           XhrNotificationService.notify(error);
         } else {
-          $state.go(FusionUtils.connectorType2RouteName(FusionUtils.serviceId2ConnectorType(serviceId)) + '.list', {
-            connectorType: FusionUtils.serviceId2ConnectorType(serviceId)
-          }, {
-            reload: true
-          });
+          $state.go('overview'); // once F410 goes public, let's go to to 'services-overview' instead.
         }
       });
     };
@@ -183,4 +203,5 @@
       $modalInstance.dismiss();
     };
   }
+
 }());

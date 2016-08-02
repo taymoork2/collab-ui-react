@@ -14,7 +14,7 @@
     $timeout,
     $window,
     Authinfo,
-    Storage,
+    TokenService,
     WebExUtilsFact
   ) {
 
@@ -58,11 +58,12 @@
     }
 
     // iframe request variables
-    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+    if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
       iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+    }
     $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
-    $scope.authToken = Storage.get('accessToken');
+    $scope.authToken = TokenService.getAccessToken();
     $scope.siteName = $stateParams.siteUrl;
     $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
     $scope.fullSparkDNS = $window.location.origin;

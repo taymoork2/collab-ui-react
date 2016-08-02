@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -15,11 +15,14 @@
     var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
+    var debounceTimeout = 2000;
 
     vm.trialData = TrialService.getData();
 
     vm.nameError = false;
     vm.emailError = false;
+    vm.uniqueName = false;
+    vm.uniqueEmail = false;
     vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.showCare = false;
@@ -60,26 +63,116 @@
       name: 'trialAdd.call'
     });
 
+    function validateField($viewValue, scope, key, uniqueFlag, errorMsg) {
+      // Show loading glyph
+      vm.loading = true;
+      vm[errorMsg] = null;
+
+      // Fetch list of trials based on email in edit box...
+      return TrialService.shallowValidation(key, $viewValue).then(function (response) {
+        vm.loading = false;
+        if (angular.isDefined(response.unique)) {
+          // name unique
+          vm[uniqueFlag] = true;
+          return true;
+        }
+
+        // Name in use, or API call failed
+        vm[errorMsg] = response.error;
+        scope.options.validation.show = true;
+        return false;
+      });
+    }
+
+    function errorMessage(key) {
+      if (angular.isUndefined(vm[key]) || vm[key] === '') {
+        vm[key] = 'trialModal.errorFailSafe';
+      }
+      return $translate.instant(vm[key]);
+    }
+
     vm.custInfoFields = [{
       model: vm.details,
       key: 'customerName',
-      type: 'input',
+      type: 'cs-input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        type: 'text',
         required: true,
         maxlength: 50,
+        onInput: function (value, options) {
+          options.validation.show = false;
+          vm.uniqueName = false;
+        },
+        onBlur: function (value, options) {
+          options.validation.show = null;
+        }
       },
+      asyncValidators: {
+        uniqueName: {
+          expression: function ($viewValue, $modelValue, scope) {
+            return $q(function (resolve, reject) {
+              validateField($viewValue, scope, 'organizationName', 'uniqueName', 'uniqueNameError').then(function (valid) {
+                if (valid) {
+                  resolve();
+                } else {
+                  reject();
+                }
+              });
+            });
+          },
+          message: function () {
+            return errorMessage('uniqueNameError');
+          },
+        }
+      },
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: {
+          default: debounceTimeout,
+          blur: 0
+        },
+      }
     }, {
       model: vm.details,
       key: 'customerEmail',
-      type: 'input',
-      className: '',
+      type: 'cs-input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
         type: 'email',
         required: true,
+        onInput: function (value, options) {
+          options.validation.show = false;
+          vm.uniqueEmail = false;
+        },
+        onBlur: function (value, options) {
+          options.validation.show = null;
+        }
       },
+      asyncValidators: {
+        uniqueEmail: {
+          expression: function ($viewValue, $modelValue, scope) {
+            return $q(function (resolve, reject) {
+              validateField($viewValue, scope, 'endCustomerEmail', 'uniqueEmail', 'uniqueEmailError').then(function (valid) {
+                if (valid) {
+                  resolve();
+                } else {
+                  reject();
+                }
+              });
+            });
+          },
+          message: function () {
+            return errorMessage('uniqueEmailError');
+          }
+        }
+      },
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: {
+          default: debounceTimeout,
+          blur: 0
+        },
+      }
     }];
 
     vm.nonTrialServices = [{
@@ -340,7 +433,7 @@
         vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
-        vm.showContextServiceTrial = results[2];
+        vm.showContextServiceTrial = true;
 
         if (vm.webexTrial.enabled) {
           vm.showWebex = true;
@@ -486,6 +579,7 @@
     function previousStep() {
       var state = getBackState();
       if (state) {
+        Analytics.trackTrialSteps('back', state);
         $state.go(state);
       }
     }
@@ -506,6 +600,7 @@
       if (!hasNextStep()) {
         return startTrial(callback);
       } else {
+        Analytics.trackTrialSteps('next', $state.current.name);
         return $state.go(getNextState());
       }
     }

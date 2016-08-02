@@ -1,7 +1,7 @@
 'use strict';
 
 describe('RedirectAddResourceController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
   var vm, controller, cluster, RedirectTargetService, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock;
   var hostname = "MFA";
   var enteredCluster = "blr-ecp-246";

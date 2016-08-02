@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('core.trackingId')
     .factory('TrackingIdInterceptor', TrackingIdInterceptor);
 
   /* @ngInject */

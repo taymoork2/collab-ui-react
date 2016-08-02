@@ -60,6 +60,7 @@
     };
 
     this.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -70,6 +71,7 @@
     };
 
     this.csvStatusTypes = [
+      this.csvStates.authTokenError,
       this.csvStates.none,
       this.csvStates.exportInProgress,
       this.csvStates.exportCompletedNoErr,

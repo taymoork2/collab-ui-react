@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate, HuronCustomer,
     ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService, ExternalNumberService,
-    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService) {
+    CeService, HuntGroupServiceV2, ModalService, DirectoryNumberService, VoicemailMessageAction) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -28,8 +28,9 @@
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
+    //TODO: re-enable option '8' once it is an acceptable steering digit
     vm.steeringDigits = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+      '0', '1', '2', '3', '4', '5', '6', '7', '9'
     ];
     vm.availableExtensions = [
       '3', '4', '5'
@@ -54,7 +55,8 @@
       displayNumberRanges: [],
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
-        ftswCompanyVoicemailNumber: undefined
+        ftswCompanyVoicemailNumber: undefined,
+        ftswVoicemailToEmail: false
       },
       ftswSteeringDigit: undefined,
       disableExtensions: false
@@ -561,6 +563,17 @@
               }
             });
           }
+        }, {
+          key: 'ftswVoicemailToEmail',
+          type: 'cs-input',
+          templateOptions: {
+            label: $translate.instant('serviceSetupModal.voicemailToEmailLabel'),
+            type: 'checkbox',
+            helpText: $translate.instant('serviceSetupModal.voicemailToEmailHelpText')
+          },
+          hideExpression: function () {
+            return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+          }
         }]
       }
     }];
@@ -674,7 +687,7 @@
       return ServiceSetup.getTimeZones().then(function (timezones) {
         vm.timeZoneOptions = ServiceSetup.getTranslatedTimeZones(timezones);
         if (vm.hasVoicemailService) {
-          return listVoicemailTimezone(timezones);
+          return loadVoicemailTimeZone().then(loadVoicemailToEmail);
         }
       });
     }
@@ -725,19 +738,33 @@
       return $q.all(promises);
     }
 
-    function listVoicemailTimezone(timezones) {
-      return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
-        if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
-          vm.timeZone = '' + usertemplates[0].timeZone;
-          vm.objectId = usertemplates[0].objectId;
-          var currentTimeZone = timezones.filter(function (timezone) {
-            return timezone.id === vm.timeZone;
-          });
-          if (currentTimeZone.length > 0) {
-            vm.model.site.timeZone = currentTimeZone[0];
+    function loadVoicemailTimeZone() {
+      return ServiceSetup.listVoicemailTimezone()
+        .then(function (usertemplates) {
+          if ((_.isArray(usertemplates)) && (usertemplates.length > 0)) {
+            vm.voicemailTimeZone = {
+              enum: (_.toString(usertemplates[0].timeZone)),
+              objectId: usertemplates[0].objectId,
+              timeZoneName: usertemplates[0].timeZoneName
+            };
           }
-        }
-      });
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.voicemailTimeZoneGetError');
+          return $q.reject(response);
+        });
+    }
+
+    function loadVoicemailToEmail() {
+      return VoicemailMessageAction.get(_.get(vm, 'voicemailTimeZone.objectId'))
+        .then(function (messageAction) {
+          vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail = VoicemailMessageAction.isVoicemailToEmailEnabled(messageAction.voicemailAction);
+          vm.voicemailMessageAction = messageAction;
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.voicemailToEmailGetError');
+          return $q.reject(response);
+        });
     }
 
     function listInternalExtensionRanges() {
@@ -803,14 +830,14 @@
                 endNumber: ''
               });
             }
-            Notification.notify([$translate.instant('serviceSetupModal.extensionDeleteSuccess', {
+            Notification.success('serviceSetupModal.extensionDeleteSuccess', {
               extension: internalNumberRange.name
-            })], 'success');
+            });
           })
           .catch(function (response) {
-            Notification.errorResponse(response, $translate.instant('serviceSetupModal.extensionDeleteError', {
+            Notification.errorResponse(response, 'serviceSetupModal.extensionDeleteError', {
               extension: internalNumberRange.name
-            }));
+            });
           });
       } else {
         //delete the range from display list
@@ -880,7 +907,7 @@
 
     function initNext() {
       if (vm.form.$invalid) {
-        Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
+        Notification.error('serviceSetupModal.fieldValidationFailed');
         return $q.reject('Field validation failed.');
       }
 
@@ -942,6 +969,11 @@
         currentSite.timeZone = currentSite.timeZone.id;
 
         return ServiceSetup.createSite(currentSite)
+          .then(function () {
+            if (voicemailToggleEnabled && currentSite.voicemailPilotNumber) {
+              return updateVoicemailSettings();
+            }
+          })
           .catch(function (response) {
             vm.hasSites = false;
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
@@ -952,6 +984,11 @@
       function updateSite(siteData) {
         if (!_.isEmpty(siteData)) {
           return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
+            .then(function () {
+              if (vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled && siteData && siteData.voicemailPilotNumber) {
+                return updateVoicemailSettings();
+              }
+            })
             .catch(function (response) {
               // unset the site voicemail pilot number
               vm.model.site.voicemailPilotNumber = undefined;
@@ -961,6 +998,23 @@
         } else {
           return $q.when();
         }
+      }
+
+      function updateVoicemailSettings() {
+        vm.hasVoicemailService = true;
+        return loadVoicemailTimeZone()
+          .then(function () {
+            if (_.get(vm, 'voicemailTimeZone.objectId')) {
+              return VoicemailMessageAction.get(_.get(vm, 'voicemailTimeZone.objectId'))
+                .then(function (messageAction) {
+                  vm.voicemailMessageAction = messageAction;
+                })
+                .catch(function (response) {
+                  Notification.errorResponse(response, 'serviceSetupModal.voicemailToEmailGetError');
+                  return $q.reject(response);
+                });
+            }
+          });
       }
 
       function saveSite() {
@@ -1009,7 +1063,7 @@
           return $q.reject('TimeZone Id is not a String');
         }
 
-        return ServiceSetup.updateVoicemailTimezone(timeZone, vm.objectId)
+        return ServiceSetup.updateVoicemailTimezone(timeZone, _.get(vm, 'voicemailTimeZone.objectId'))
           .catch(function (response) {
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
             return $q.reject(response);
@@ -1017,10 +1071,30 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone')) && voicemailToggleEnabled && vm.hasVoicemailService) {
-
+        if (vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled &&
+          (_.get(vm, 'model.site.timeZone') !== _.get(vm, 'previousTimeZone'))) {
           return updateTimezone(_.get(vm, 'model.site.timeZone.id'));
         }
+      }
+
+      function saveVoicemailToEmail() {
+        return $q.when(true)
+          .then(function () {
+            if (shouldSaveVoicemailToEmail()) {
+              return VoicemailMessageAction.update(vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail, vm.voicemailTimeZone.objectId, vm.voicemailMessageAction.objectId)
+                .catch(function (response) {
+                  errors.push(Notification.processErrorResponse(response, 'huronSettings.voicemailToEmailUpdateError'));
+                  return $q.reject(response);
+                });
+            }
+          });
+      }
+
+      function shouldSaveVoicemailToEmail() {
+        // validate parameters exist and model value is changing
+        return vm.hasVoicemailService && vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled &&
+          _.get(vm, 'voicemailMessageAction.voicemailAction') && _.get(vm, 'voicemailMessageAction.objectId') && _.get(vm, 'voicemailTimeZone.objectId') &&
+          (vm.model.ftswCompanyVoicemail.ftswVoicemailToEmail !== VoicemailMessageAction.isVoicemailToEmailEnabled(vm.voicemailMessageAction.voicemailAction));
       }
 
       function createInternalNumbers(internalNumberRange) {
@@ -1098,6 +1172,7 @@
           .then(saveCustomer)
           .then(saveSite)
           .then(saveTimezone)
+          .then(saveVoicemailToEmail)
           .catch(_.noop);
       }
 
@@ -1107,7 +1182,6 @@
         var promises = [];
         promises.push(saveInternalNumbers());
         promises.push(saveCompanySite());
-
         return $q.all(promises);
       }
 

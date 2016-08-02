@@ -6,14 +6,14 @@
     .controller('UserCsvCtrl', UserCsvCtrl);
 
   /* @ngInject */
-  function UserCsvCtrl($rootScope, $scope, $q, $translate, $timeout, $state, Config, UserCsvService, Notification, FeatureToggleService, Userservice, Orgservice, CsvDownloadService, LogMetricsService, NAME_DELIMITER, TelephoneNumberService, HuronCustomer) {
+  function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, CsvDownloadService, FeatureToggleService, HuronCustomer, LogMetricsService, NAME_DELIMITER, Notification, Orgservice, TelephoneNumberService, UserCsvService, Userservice) {
     // variables
     var vm = this;
-
+    vm.licenseUnavailable = false;
     vm.isCancelledByUser = false;
 
     var maxUsers = 1100;
-    var userArray = [];
+    var csvUsersArray = [];
     var isCsvValid = false;
     var cancelDeferred;
     var saveDeferred;
@@ -28,8 +28,7 @@
     FeatureToggleService.supportsDirSync().then(function (enabled) {
       isDirSync = enabled;
     });
-    var csvPromise = $q.when();
-    var tempUserArray = [];
+    var csvPromiseChain = $q.when();
     var uniqueEmails = [];
     var processingError;
     var headers;
@@ -59,6 +58,14 @@
       numTotalUsers: 0,
       numNewUsers: 0,
       numExistingUsers: 0,
+
+      numRetriesToAttempt: 3,
+      retryAfter: null,
+      retryAfterDefault: 60 * 1000,
+      retryTimer: 0,
+      usersToRetry: [],
+      isRetrying: false,
+
       userArray: [],
       userErrorArray: [],
       csvChunk: 0
@@ -96,11 +103,11 @@
       isCsvValid = false;
       if (vm.model.file) {
         setUploadProgress(0);
-        userArray = $.csv.toArrays(vm.model.file);
-        if (_.isArray(userArray) && userArray.length > 0 && _.isArray(userArray[0])) {
-          if (_.indexOf(userArray[0], 'User ID/Email (Required)') > -1) {
-            csvHeaders = userArray.shift();
-            if (userArray.length > 0 && userArray.length <= maxUsers) {
+        csvUsersArray = $.csv.toArrays(vm.model.file);
+        if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
+          if (_.indexOf(csvUsersArray[0], 'User ID/Email (Required)') > -1) {
+            csvHeaders = csvUsersArray.shift();
+            if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
               isCsvValid = true;
             }
           }
@@ -123,13 +130,24 @@
       $scope.$broadcast('timer-stop');
     };
 
+    vm.licenseBulkErrorModal = function () {
+      if (Authinfo.isOnline()) {
+        $modal.open({
+          type: 'dialog',
+          templateUrl: "modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html",
+        }).result.then(function () {
+          $state.go('my-company.subscriptions');
+        });
+      }
+    };
+
     // functions
     function beforeSubmitCsv() {
       return $q(function (resolve, reject) {
         if (isCsvValid) {
           resolve();
         } else {
-          if (userArray.length > maxUsers) {
+          if (csvUsersArray.length > maxUsers) {
             Notification.error('firstTimeWizard.csvMaxLinesError', {
               max: String(maxUsers)
             });
@@ -237,13 +255,13 @@
     function calculateProcessProgress() {
       $timeout(function () {
         vm.model.numTotalUsers = vm.model.numNewUsers + vm.model.numExistingUsers + vm.model.userErrorArray.length;
-        vm.model.processProgress = Math.round(vm.model.numTotalUsers / userArray.length * 100);
+        vm.model.processProgress = Math.round(vm.model.numTotalUsers / csvUsersArray.length * 100);
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
           processProgress: vm.model.processProgress
         });
 
-        if (vm.model.numTotalUsers >= userArray.length) {
+        if (vm.model.numTotalUsers >= csvUsersArray.length) {
           vm.model.userErrorArray.sort(function (a, b) {
             return a.row - b.row;
           });
@@ -296,11 +314,24 @@
     }
 
     function bulkSaveWithIndividualLicenses() {
-      function successCallback(response, startIndex, length) {
+
+      // received successful result from Userservice.bulkOnboardUsers
+      // NOTE: must check httpStatus to see if onboard succeeded for each user)
+      function successCallback(response, onboardedUsers) {
+
+        function onboardedUserWithEmail(email) {
+          return _.find(onboardedUsers, {
+            'address': email
+          });
+        }
+
         if (_.isArray(response.data.userResponse)) {
           var addedUsersList = [];
+          var onboardUser = null;
 
           _.forEach(response.data.userResponse, function (user, index) {
+            onboardUser = onboardedUserWithEmail(user.email);
+
             if (user.httpStatus === 200 || user.httpStatus === 201) {
               if (user.httpStatus === 200) {
                 $timeout(function () {
@@ -324,42 +355,77 @@
               if (addItem.address.length > 0) {
                 addedUsersList.push(addItem);
               }
+            } else if ((user.httpStatus === 503 || user.httpStatus === 429) && vm.model.numRetriesToAttempt > 0) {
+              // service unavailable or we tried to add too many users too quickly.  Add this
+              // user to a retry list so we can retry adding again later
+              vm.model.retryAfter = vm.model.retryAfterDefault;
+
+              if (onboardUser) {
+                vm.model.usersToRetry.push(onboardUser);
+              } else {
+                // can't find this user in the original list, so error
+                addUserErrorWithTrackingID(-1, user.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, userArray[startIndex + index][idIndex], UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
+              if (user.message === '400112') {
+                vm.licenseUnavailable = true;
+              }
+              addUserErrorWithTrackingID(onboardUser.csvRow, onboardUser.email, UserCsvService.getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
-          for (var i = 0; i < length; i++) {
-            addUserErrorWithTrackingID(startIndex + i + 1, userArray[startIndex + i][idIndex], $translate.instant('firstTimeWizard.processBulkResponseError'), response);
-          }
+          // for some reason the userResponse is incorrect.  We need to error every user.
+          _.forEach(onboardedUsers, function (user, idx) {
+            addUserErrorWithTrackingID(user.csvRow, user.email, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+          });
         }
       }
 
-      function errorCallback(response, startIndex, length) {
-        for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(
-            startIndex + k + 1,
-            userArray[startIndex + k][idIndex],
-            UserCsvService.getBulkErrorResponse(
-              response.status,
-              vm.isCancelledByUser ? '0' : '1',
-              userArray[startIndex + k][idIndex]
-            ),
-            response
-          );
+      // Error in the call to Userservice.bulkOnboardUsers
+      // if 429 or 503, we need to retry the whole set of users
+      function errorCallback(response, onboardedUsers) {
+
+        if (response.status === 503 || response.status === 429 && vm.model.numRetriesToAttempt > 0) {
+          // need to retry this set of users
+          vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
+
+          _.forEach(onboardedUsers, function (user, index) {
+            vm.model.usersToRetry.push(user);
+          });
+        } else {
+          // fatal error.  flag all users as having an error
+          _.forEach(onboardedUsers, function (user, index) {
+            addUserErrorWithTrackingID(
+              user.csvRow,
+              user.email,
+              UserCsvService.getBulkErrorResponse(
+                response.status,
+                vm.isCancelledByUser ? '0' : '1',
+                user.email
+              ),
+              response
+            );
+          });
         }
       }
 
-      function onboardCsvUsers(startIndex, userArray, csvPromise) {
+      /**
+       * Schedules bulk onboarding of users after the passed promise has resolved.
+       * Returns a new promise that resolves once these users have been onboarded (or error)
+       */
+      function onboardCsvUsers(usersToOnboard, csvPromise) {
         return csvPromise.then(function () {
           return $q(function (resolve, reject) {
-            if (userArray.length > 0) {
-              Userservice.bulkOnboardUsers(userArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+            if (usersToOnboard.length > 0) {
+              Userservice.bulkOnboardUsers(usersToOnboard, cancelDeferred.promise).then(function (response) {
+                successCallback(response, usersToOnboard);
               }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                errorCallback(response, usersToOnboard);
               }).finally(function () {
                 calculateProcessProgress();
+                if (vm.licenseUnavailable) {
+                  vm.licenseBulkErrorModal();
+                }
                 resolve();
               });
             } else {
@@ -369,164 +435,246 @@
         });
       }
 
+      function processCsvRow(userRow, csvRowIndex) {
+        processingError = false;
+        var firstName = '',
+          lastName = '',
+          displayName = '',
+          id = '';
+        var directoryNumber = '',
+          directLine = '';
+        var idxDirectoryNumber = -1,
+          idxDirectLine = -1;
+        var licenseList = [];
+        var entitleList = [];
+        var numOfActiveMessageLicenses = 0;
+        var isWrongLicenseFormat = false;
+
+        // Basic data
+        firstName = _.trim(userRow[findHeaderIndex('First Name')]);
+        lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
+        displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
+        id = _.trim(userRow[idIndex]);
+        idxDirectoryNumber = findHeaderIndex('Directory Number');
+        if (idxDirectoryNumber !== -1) {
+          directoryNumber = _.trim(userRow[idxDirectoryNumber]);
+        }
+        idxDirectLine = findHeaderIndex('Direct Line');
+        if (idxDirectLine !== -1) {
+          directLine = _.trim(userRow[idxDirectLine]);
+        }
+        licenseList = [];
+        entitleList = [];
+
+        // validations
+        if (!id) {
+          // Report required field is missing
+          processingError = true;
+          addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+        } else if (_.contains(uniqueEmails, id)) {
+          // Report a duplicate email
+          processingError = true;
+          addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+        } else if (directLine && !isValidDID(directLine)) {
+          // Report an invalid DID format
+          processingError = true;
+          addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+        } else {
+          // get license and entitlements
+          _.forEach(headers, function (header, k) {
+            var input = _.trim(userRow[k]);
+            if (header.license) { // if this is a license column
+              if (isTrue(input)) {
+                licenseList.push(new LicenseFeature(header.license, true));
+                // Check Active Spark Message
+                if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
+                  numOfActiveMessageLicenses++;
+                }
+              } else if (isFalse(input)) {
+                if (vm.model.enableRemove) {
+                  licenseList.push(new LicenseFeature(header.license, false));
+                }
+              } else if (input !== '') {
+                isWrongLicenseFormat = true;
+              }
+            } else if (_.isArray(header.entitlements) && header.entitlements.length > 0) {
+              if (isTrue(input) || isFalse(input)) {
+                _.forEach(header.entitlements, function (entitlement) {
+                  // if lincense is Calendar Service, only process if it is enabled
+                  if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
+                    if (isTrue(input)) {
+                      entitleList.push(new Feature(entitlement, true));
+                    } else if (isFalse(input)) {
+                      if (vm.model.enableRemove) {
+                        entitleList.push(new Feature(entitlement, false));
+                      }
+                    }
+                  }
+                });
+              } else if (input !== '') {
+                isWrongLicenseFormat = true;
+              }
+            }
+          });
+
+          if (isWrongLicenseFormat) {
+            processingError = true;
+            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
+          } else if (numOfActiveMessageLicenses > 1) {
+            processingError = true;
+            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+          } else {
+            uniqueEmails.push(id);
+            // Do not send name and displayName if it's a DirSync org
+            if (isDirSync) {
+              firstName = '';
+              lastName = '';
+              displayName = '';
+            }
+          }
+
+          if (!processingError) {
+            return {
+              'csvRow': csvRowIndex,
+              'address': id,
+              'name': firstName + NAME_DELIMITER + lastName,
+              'displayName': displayName,
+              'internalExtension': directoryNumber,
+              'directLine': directLine,
+              'licenses': licenseList,
+              'entitlements': entitleList
+            };
+          } else {
+            return null;
+          }
+        }
+
+      }
+
+      /**
+       * Process all of the pending csv rows in userArray and onboard all of the
+       * users that are correctly defined.
+       */
       function processCsvRows() {
+
         vm.isCancelledByUser = false;
+
         headers = generateHeaders(orgHeaders || null, csvHeaders || null);
         idIndex = findHeaderIndex('User ID/Email (Required)');
+
+        var tempUserArray = [];
 
         // TODO
         // deal with AUDP -- only one column - Phone Number
 
-        _.forEach(userArray, function (userRow, j) {
-          processingError = false;
-          var firstName = '',
-            lastName = '',
-            displayName = '',
-            id = '';
-          var directoryNumber = '',
-            directLine = '';
-          var idxDirectoryNumber = -1,
-            idxDirectLine = -1;
-          var licenseList = [];
-          var entitleList = [];
-          var numOfActiveMessageLicenses = 0;
-          var isWrongLicenseFormat = false;
+        _.forEach(csvUsersArray, function (userRow, idx) {
 
-          // If we haven't met the chunk size, process the next user
-          if (tempUserArray.length < vm.model.csvChunk) {
-            // Basic data
-            firstName = _.trim(userRow[findHeaderIndex('First Name')]);
-            lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
-            displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
-            id = _.trim(userRow[idIndex]);
-            idxDirectoryNumber = findHeaderIndex('Directory Number');
-            if (idxDirectoryNumber !== -1) {
-              directoryNumber = _.trim(userRow[idxDirectoryNumber]);
-            }
-            idxDirectLine = findHeaderIndex('Direct Line');
-            if (idxDirectLine !== -1) {
-              directLine = _.trim(userRow[idxDirectLine]);
-            }
-            licenseList = [];
-            entitleList = [];
-
-            // validations
-            if (!id) {
-              // Report required field is missing
-              processingError = true;
-              addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-            } else if (_.contains(uniqueEmails, id)) {
-              // Report a duplicate email
-              processingError = true;
-              addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-            } else if (directLine && !isValidDID(directLine)) {
-              // Report an invalid DID format
-              processingError = true;
-              addUserError(j + 1, id, $translate.instant('firstTimeWizard.bulkInvalidDID'));
-            } else {
-              // get license and entitlements
-              _.forEach(headers, function (header, k) {
-                var input = _.trim(userRow[k]);
-                if (header.license) { // if this is a license column
-                  if (isTrue(input)) {
-                    licenseList.push(new LicenseFeature(header.license, true));
-                    // Check Active Spark Message
-                    if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                      numOfActiveMessageLicenses++;
-                    }
-                  } else if (isFalse(input)) {
-                    if (vm.model.enableRemove) {
-                      licenseList.push(new LicenseFeature(header.license, false));
-                    }
-                  } else if (input !== '') {
-                    isWrongLicenseFormat = true;
-                  }
-                } else if (_.isArray(header.entitlements) && header.entitlements.length > 0) {
-                  if (isTrue(input) || isFalse(input)) {
-                    _.forEach(header.entitlements, function (entitlement) {
-                      // if lincense is Calendar Service, only process if it is enabled
-                      if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                        if (isTrue(input)) {
-                          entitleList.push(new Feature(entitlement, true));
-                        } else if (isFalse(input)) {
-                          if (vm.model.enableRemove) {
-                            entitleList.push(new Feature(entitlement, false));
-                          }
-                        }
-                      }
-                    });
-                  } else if (input != '') {
-                    isWrongLicenseFormat = true;
-                  }
-                }
-              });
-
-              if (isWrongLicenseFormat) {
-                processingError = true;
-                addUserError(j + 1, id, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-              } else if (numOfActiveMessageLicenses > 1) {
-                processingError = true;
-                addUserError(j + 1, id, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
-              } else {
-                uniqueEmails.push(id);
-                // Do not send name and displayName if it's a DirSync org
-                if (isDirSync) {
-                  firstName = '';
-                  lastName = '';
-                  displayName = '';
-                }
-                tempUserArray.push({
-                  'address': id,
-                  'name': firstName + NAME_DELIMITER + lastName,
-                  'displayName': displayName,
-                  'internalExtension': directoryNumber,
-                  'directLine': directLine,
-                  'licenses': licenseList,
-                  'entitlements': entitleList
-                });
-              }
-            }
+          // note: the idx is 0-based, and the first row in the csv is the header, so we need
+          // to add 2 to the array index to get the csv row.
+          var userData = processCsvRow(userRow, idx + 2);
+          if (userData) {
+            // parsed CSV data successfully.  Add to array of users to bulk-add
+            tempUserArray.push(userData);
           }
 
-          // Onboard all the previous users in the temp array if there was an error processing a row
-          if (processingError) {
-            csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
-            tempUserArray = [];
-          } else if (tempUserArray.length === vm.model.csvChunk || j === (userArray.length - 1)) {
-            // Onboard the current temp array if we've met the chunk size or is the last user in list
-            csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
+          if (tempUserArray.length === vm.model.csvChunk || idx === (csvUsersArray.length - 1)) {
+            // We filled out chunk or this is the last user. Process the bulk onboard
+            // we pass idx since this is used for reference to original CSV in error reporting
+            csvPromiseChain = onboardCsvUsers(tempUserArray, csvPromiseChain);
             tempUserArray = [];
           }
 
           calculateProcessProgress();
         });
+
+        csvPromiseChain.then(processRetryUsers);
+      }
+
+      function msToTime(millisec) {
+        return {
+          seconds: millisec / 1e3 % 60 | 0,
+          minutes: millisec / 6e4 % 60 | 0,
+          hours: millisec / 36e5 % 24 | 0
+        };
+      }
+
+      /**
+       * Process all of the users that need onboarding retried
+       */
+      function processRetryUsers() {
+        return $q(function (resolve, reject) {
+
+          vm.model.numRetriesToAttempt--;
+
+          if (vm.model.usersToRetry.length === 0) {
+            resolve();
+          } else {
+            vm.model.retryTimer = vm.model.retryAfter;
+            vm.model.isRetrying = true;
+            vm.model.retryTimerParts = msToTime(vm.model.retryTimer);
+
+            var ip = $interval(function () {
+
+              vm.model.retryTimer -= 1000;
+              vm.model.retryTimerParts = msToTime(vm.model.retryTimer);
+
+              if (vm.model.retryTimer <= 0) {
+
+                vm.model.isRetrying = false;
+                $interval.cancel(ip);
+
+                var retryPromises = $q.when();
+                var tempUserArray = [];
+                var users = vm.model.usersToRetry;
+                vm.model.usersToRetry = [];
+                _.forEach(users, function (userData, idx) {
+                  tempUserArray.push(userData);
+
+                  if (tempUserArray.length === vm.model.csvChunk || idx === (users.length - 1)) {
+                    retryPromises = onboardCsvUsers(tempUserArray, retryPromises);
+                    tempUserArray = [];
+                  }
+
+                  calculateProcessProgress();
+                });
+
+                retryPromises.then(function () {
+                  processRetryUsers().then(resolve);
+                });
+              }
+              calculateProcessProgress();
+            }, 1000);
+          }
+        });
       }
 
       vm.model.csvChunk = 0;
-      csvPromise = $q.when();
-      tempUserArray = [];
+      csvPromiseChain = $q.when();
       uniqueEmails = [];
 
       saveDeferred = $q.defer();
       cancelDeferred = $q.defer();
       vm.model.isProcessing = true;
       vm.model.userErrorArray = [];
-      vm.model.numMaxUsers = userArray.length;
+      vm.model.numMaxUsers = csvUsersArray.length;
+      vm.model.usersToRetry = [];
+      vm.model.isRetrying = false;
+
       vm.model.processProgress = vm.model.numTotalUsers = vm.model.numNewUsers = vm.model.numExistingUsers = 0;
       UserCsvService.setCsvStat({
         isProcessing: true,
-        numMaxUsers: userArray.length,
+        numMaxUsers: csvUsersArray.length,
         processProgress: 0,
         numTotalUsers: 0,
         numNewUsers: 0,
         numExistingUsers: 0,
-        userArray: userArray,
+        userArray: csvUsersArray,
         userErrorArray: []
       }, true);
 
       initBulkMetric();
       hasSparkCallVoicemailService().then(function () {
-        vm.model.csvChunk = hasVoicemailService ? 2 : 10; // Rate limit for Huron
+        vm.model.csvChunk = hasVoicemailService ? UserCsvService.chunkSizeWithSparkCall : UserCsvService.chunkSizeWithoutSparkCall; // Rate limit for Huron
         processCsvRows();
       });
 

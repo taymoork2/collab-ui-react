@@ -9,7 +9,7 @@
     'ctFeedback',
     'ctAgentUnavailable',
     'ctOffHours',
-    'ctChatStrings',
+    'ctChatStatusMessages',
     'ctSummary'
   ];
 

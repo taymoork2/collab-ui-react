@@ -1,12 +1,12 @@
 'use strict';
 
 describe('ResponseInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.responseinterceptor'));
 
   var $httpBackend, Interceptor, Auth;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Auth = {
         logout: sinon.stub(),
         refreshAccessTokenAndResendRequest: sinon.stub()

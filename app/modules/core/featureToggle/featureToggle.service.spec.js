@@ -1,11 +1,9 @@
 'use strict';
 
 describe('FeatureToggleService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
 
-  var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
+  var httpBackend, $q, $state, Config, Authinfo, FeatureToggleService;
   var forOrg = false;
   var forUser = true;
   var userId = '1';
@@ -14,20 +12,18 @@ describe('FeatureToggleService', function () {
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
   var orgRegex = /.*\/features\/rules\.*/;
+  var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
     $q = _$q_;
+    $state = _$state_;
     Config = _Config_;
-    AuthInfo = _Authinfo_;
-    Userservice = _Userservice_;
+    Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
-
-    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
-      callback(getUserMe, 200);
-    });
+    httpBackend.whenGET(identityMe).respond(200, getUserMe);
   }));
 
   afterEach(function () {
@@ -94,6 +90,35 @@ describe('FeatureToggleService', function () {
       expect(result).toBe(true);
     });
     httpBackend.flush();
+  });
+
+  describe('function stateSupportsFeature', function () {
+    beforeEach(function () {
+      spyOn($state, 'go');
+      spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+      httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
+      installPromiseMatchers();
+    });
+
+    it('should resolve successfully if a feature is supported', function () {
+      var promise = FeatureToggleService.stateSupportsFeature('android-add-guest-release');
+      httpBackend.flush();
+      expect(promise).toBeResolvedWith(true);
+    });
+
+    it('should reject if a feature is not supported while on a current state', function () {
+      $state.$current.name = 'some-state';
+      var promise = FeatureToggleService.stateSupportsFeature('non-existant-feature');
+      httpBackend.flush();
+      expect(promise).toBeRejected();
+    });
+
+    it('should redirect to login if a feature is not supported and no current state', function () {
+      $state.$current.name = '';
+      FeatureToggleService.stateSupportsFeature('non-existant-feature');
+      httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('login');
+    });
   });
 
 });

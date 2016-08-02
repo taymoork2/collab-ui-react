@@ -5,9 +5,9 @@ describe('Controller: UserOverviewCtrl', function () {
 
   var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();
@@ -97,7 +97,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should not set features list by default', function () {
-      $httpBackend.flush();
       expect(controller.features).toBeUndefined();
     });
 
@@ -178,7 +177,6 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('AuthCodeLink', function () {
     it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
-      $httpBackend.flush();
       controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
       expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
@@ -186,7 +184,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should find existing auth code link when addGenerateAuthCodeLink is called second time', function () {
-      $httpBackend.flush();
       controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
     });
@@ -195,11 +192,8 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('getAccountStatus should be called properly', function () {
     it('should check if status is pending', function () {
-      $httpBackend.flush();
       expect(controller.pendingStatus).toBe(true);
       expect(controller.currentUser.pendingStatus).toBe(true);
-      expect(controller.currentUser.invitations.ms).toBe(true);
-      expect(controller.currentUser.invitations.cf).toBe('CF_5761413b-5bad-4d6a-b40d-c157c0f99062');
     });
   });
 
@@ -214,7 +208,6 @@ describe('Controller: UserOverviewCtrl', function () {
     });
 
     it('should call resendInvitation successfully', function () {
-      $httpBackend.flush();
       controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       $rootScope.$apply();
       expect(Notification.success).toHaveBeenCalled();
@@ -223,8 +216,8 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('When Authinfo.isCSB returns false', function () {
     it('should set the controller.isCSB to false', function () {
-      $httpBackend.flush();
       expect(controller.isCSB).toBe(false);
     });
   });
+
 });

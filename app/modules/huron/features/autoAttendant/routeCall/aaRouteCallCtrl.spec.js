@@ -3,7 +3,7 @@
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };
@@ -19,9 +19,9 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     "label": 'autoAttendant.phoneMenuRouteVM',
   }];
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;

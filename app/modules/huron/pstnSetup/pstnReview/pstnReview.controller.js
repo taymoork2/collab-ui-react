@@ -39,7 +39,9 @@
     }
 
     function goToNextSteps() {
-      $state.go('pstnSetup.nextSteps');
+      $state.go('pstnSetup.nextSteps', {
+        portOrders: vm.portOrders
+      });
     }
 
     function createCustomer() {

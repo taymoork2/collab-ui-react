@@ -1,10 +1,10 @@
 
-<div class="aa-flex-row aa-route-call aa-help-wrapper">
+<div class="aa-flex-row aa-route-call">
   <div class="aa-route-call-select">
     <cs-select ng-model="aaRouteCallMenu.selected" options="aaRouteCallMenu.options" labelfield="label" valuefield="value" placeholder="aaRouteCallMenu.actionPlaceholder" icon="icon-chevron-down" filter="false" on-change-fn="aaRouteCallMenu.selectChanged()">
     </cs-select>
   </div>
-  <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+  <aa-help content=" {{ :: 'autoAttendant.routeCallPopover' | translate }} "></aa-help>
 </div>
 
 <div class="aa-flex-row">

@@ -2,7 +2,7 @@
 
 describe('Config', function () {
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var Config, $location, tabConfig, Storage;
   beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
@@ -119,7 +119,7 @@ describe('Config', function () {
 
   describe('service states', function () {
     it('spark-room-system should contain devices state', function () {
-      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
+      expect(Config.serviceStates['spark-room-system']).toContain('devices');
     });
   });
 

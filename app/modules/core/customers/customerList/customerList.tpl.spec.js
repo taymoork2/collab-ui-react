@@ -3,12 +3,13 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, Orgservice, PartnerService, FeatureToggleService, TrialService;
+    var Authinfo, customerListToggle, Orgservice, PartnerService, FeatureToggleService, TrialService;
     var ADD_BUTTON = '#addTrial';
     var SEARCH_FILTER = '#searchFilter';
-    beforeEach(module('Core'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
+
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
 
     beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _Orgservice_, _PartnerService_, _FeatureToggleService_, _TrialService_) {
       $scope = $rootScope.$new();
@@ -26,6 +27,8 @@
         USER: 1,
         CUSTOMER: 2
       };
+
+      customerListToggle = false;
 
       spyOn(TrialService, 'getTrialsList').and.returnValue($q.when({
         data: {}
@@ -72,7 +75,8 @@
 
     function initAndCompile() {
       controller = $controller('CustomerListCtrl', {
-        $scope: $scope
+        $scope: $scope,
+        customerListToggle: customerListToggle
       });
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');
       view = $compile(angular.element(template))($scope);

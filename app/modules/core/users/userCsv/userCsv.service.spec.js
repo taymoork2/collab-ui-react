@@ -36,7 +36,7 @@ describe('Controller: UserCsvService', function () {
     userErrorArray: []
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(function (_UserCsvService_, _Notification_) {
     UserCsvService = _UserCsvService_;
     Notification = _Notification_;
@@ -87,7 +87,7 @@ describe('Controller: UserCsvService', function () {
     });
 
     it('getBulkErrorResponse should return expected response for status:403 messageCode:400096', function () {
-      expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.notSetupForManUserAddError');
+      expect(UserCsvService.getBulkErrorResponse(403, '400096', email)).toEqual('usersPage.unableToMigrateError');
     });
 
     it('getBulkErrorResponse should return expected response for status:403 messageCode:400110', function () {

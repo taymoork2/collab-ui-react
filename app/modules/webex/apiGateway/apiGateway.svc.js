@@ -11,7 +11,7 @@
     $window,
     $log,
     Authinfo,
-    Storage,
+    TokenService,
     WebExUtilsFact,
     WebExXmlApiFact,
     WebExXmlApiInfoSvc,
@@ -35,7 +35,7 @@
           if (csvApi == csvAPI.request) {
             csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
 
-            accessToken = Storage.get('accessToken');
+            accessToken = TokenService.getAccessToken();
 
             httpsObj = {
               url: csvUrl,
@@ -177,6 +177,10 @@
           logMsg = funcName + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
+
+          errorResult.details = response;
+          errorResult.errorId = response.errorCode;
+          errorResult.errorDesc = response.errorMessage;
 
           deferredResponse.reject(errorResult);
         }

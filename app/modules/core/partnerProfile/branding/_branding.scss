@@ -40,6 +40,10 @@
     &.dragover-error {
       border-color: $brand-danger;
     }
+
+    .icon-upload{
+      font-size: 2.5rem;
+    }
   }
 }
 
@@ -59,12 +63,20 @@
     padding-top: 2rem;
   }
 
+  img {
+    width: 100%;
+  }
+
   .modal-body {
     overflow-y: auto;
     display: flex;
     height: calc(100vh - 210px);
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
+  }
+
+  .item-padding-space {
+    padding-bottom: 2rem;
   }
 
   .columns {

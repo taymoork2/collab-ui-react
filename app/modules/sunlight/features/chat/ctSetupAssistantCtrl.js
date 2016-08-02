@@ -22,18 +22,20 @@
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
+    vm.setDay = setDay;
+    vm.setEndTimeOptions = setEndTimeOptions;
     vm.animation = 'slide-left';
     vm.submitChatTemplate = submitChatTemplate;
 
     // Setup Assistant pages with index
     vm.states = ['name',
-      'profile',
       'overview',
       'customerInformation',
-      'feedback',
       'agentUnavailable',
       'offHours',
-      'chatStrings',
+      'feedback',
+      'profile',
+      'chatStatusMessages',
       'summary'
     ];
     vm.currentState = vm.states[0];
@@ -55,56 +57,67 @@
     vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
+    vm.logoUrl = undefined;
     vm.categoryTokensId = 'categoryTokensElement';
     vm.categoryOptionTag = '';
     vm.saveCTErrorOccurred = false;
     vm.creatingChatTemplate = false;
+    vm.days = CTService.getDays();
+    vm.isOffHoursMessageValid = true;
+    vm.isBusinessHoursDisabled = false;
+    vm.timings = CTService.getDefaultTimes();
+    vm.startTimeOptions = CTService.getTimeOptions();
+    vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
+    vm.scheduleTimeZone = CTService.getDefaultTimeZone();
+    vm.timezoneOptions = CTService.getTimezoneOptions();
+    vm.daysPreview = CTService.getPreviewDays(vm.days, true, 1, 5);
+    vm.ChatTemplateButtonText = $translate.instant('common.finish');
 
     /**
      * Type enumerations
      */
 
     vm.STATIC_FIELD_TYPES = {
-      "welcome": {
-        text: "welcome",
-        htmlType: "label"
+      welcome: {
+        text: 'welcome',
+        htmlType: 'label'
       }
     };
 
     vm.typeOptions = [{
-      id: "email",
+      id: 'email',
       text: $translate.instant('careChatTpl.typeEmail'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Work_Email"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Work_Email'
       }
     }, {
-      id: "name",
+      id: 'name',
       text: $translate.instant('careChatTpl.typeName'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_First_Name"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_First_Name'
       }
     }, {
-      id: "category",
+      id: 'category',
       text: $translate.instant('careChatTpl.typeCategory'),
       dictionaryType: {
-        fieldSet: "cisco.base.ccc.pod",
-        fieldName: "category"
+        fieldSet: 'cisco.base.ccc.pod',
+        fieldName: 'category'
       }
     }, {
-      id: "phone",
+      id: 'phone',
       text: $translate.instant('careChatTpl.typePhone'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Mobile_Phone"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Mobile_Phone'
       }
     }, {
-      id: "id",
+      id: 'id',
       text: $translate.instant('careChatTpl.typeId'),
       dictionaryType: {
-        fieldSet: "cisco.base.customer",
-        fieldName: "Context_Customer_External_ID"
+        fieldSet: 'cisco.base.customer',
+        fieldName: 'Context_Customer_External_ID'
       }
     }];
 
@@ -138,7 +151,6 @@
     };
 
     /* Template */
-
     vm.template = {
       name: '',
       mediaType: 'chat',
@@ -146,7 +158,7 @@
         mediaSpecificConfiguration: {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: '',
+          orgLogoUrl: vm.logoUrl,
           useAgentRealName: false
         },
         pages: {
@@ -224,45 +236,80 @@
             }
           },
           agentUnavailable: {
-            enabled: true
+            enabled: true,
+            fields: {
+              agentUnavailableMessage: {
+                displayText: $translate.instant('careChatTpl.agentUnavailableMessage')
+              }
+            }
           },
           offHours: {
-            enabled: true
+            enabled: true,
+            message: $translate.instant('careChatTpl.offHoursDefaultMessage'),
+            schedule: {
+              businessDays: _.map(_.filter(vm.days, 'isSelected'), 'label'),
+              open24Hours: true,
+              timings: {
+                startTime: vm.timings.startTime.label,
+                endTime: vm.timings.endTime.label
+              },
+              timezone: vm.scheduleTimeZone.value
+            }
           },
           feedback: {
             enabled: true,
             fields: {
-              "feedbackQuery": {
-                "displayText": $translate.instant('careChatTpl.feedbackQuery')
+              feedbackQuery: {
+                displayText: $translate.instant('careChatTpl.feedbackQuery')
               },
-              "ratings": [{
-                "displayText": $translate.instant('careChatTpl.rating1Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+              ratings: [{
+                displayText: $translate.instant('careChatTpl.rating1Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating2Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+                displayText: $translate.instant('careChatTpl.rating2Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }, {
-                "displayText": $translate.instant('careChatTpl.rating3Text'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingPoints"
+                displayText: $translate.instant('careChatTpl.rating3Text'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingPoints'
                 }
               }],
-              "comment": {
-                "displayText": $translate.instant('careChatTpl.ratingComment'),
-                "dictionaryType": {
-                  fieldSet: "cisco.base.ccc.pod",
-                  fieldName: "cccRatingComments"
+              comment: {
+                displayText: $translate.instant('careChatTpl.ratingComment'),
+                dictionaryType: {
+                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldName: 'cccRatingComments'
                 }
               }
             }
           }
+        },
+        chatStatusMessages: {
+          messages: {
+            connectingMessage: {
+              displayText: $translate.instant('careChatTpl.connectingMessage')
+            },
+            waitingMessage: {
+              displayText: $translate.instant('careChatTpl.waitingMessage')
+            },
+            enterRoomMessage: {
+              displayText: $translate.instant('careChatTpl.enterRoomMessage')
+            },
+            leaveRoomMessage: {
+              displayText: $translate.instant('careChatTpl.leaveRoomMessage')
+            },
+            chattingMessage: {
+              displayText: $translate.instant('careChatTpl.chattingMessage')
+            }
+          }
+
         }
       }
     };
@@ -296,10 +343,7 @@
     }
 
     function isNamePageValid() {
-      if (vm.template.name === '') {
-        return false;
-      }
-      return true;
+      return (vm.template.name !== '');
     }
 
     function isProfilePageValid() {
@@ -310,12 +354,28 @@
       return false;
     }
 
+    function isAgentUnavailablePageValid() {
+      return (vm.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText !== '');
+    }
+
+    function isOffHoursPageValid() {
+      setOffHoursWarning();
+      if (vm.template.configuration.pages.offHours.message != '' && _.find(vm.days, 'isSelected')) {
+        setOffHoursData();
+        return true;
+      }
+    }
+
     function nextButton() {
       switch (vm.currentState) {
       case 'name':
         return isNamePageValid();
       case 'profile':
         return isProfilePageValid();
+      case 'agentUnavailable':
+        return isAgentUnavailablePageValid();
+      case 'offHours':
+        return isOffHoursPageValid();
       case 'summary':
         return 'hidden';
       default:
@@ -439,14 +499,24 @@
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: true,
           displayText: vm.orgName,
-          image: ''
+          orgLogoUrl: vm.logoUrl
         };
       } else if (vm.selectedTemplateProfile === vm.profiles.agent) {
         vm.template.configuration.mediaSpecificConfiguration = {
           useOrgProfile: false,
-          useAgentRealName: false
+          useAgentRealName: false,
+          orgLogoUrl: vm.logoUrl,
+          displayText: vm.orgName
         };
       }
+    }
+
+    function setOffHoursData() {
+      vm.template.configuration.pages.offHours.enabled = true;
+      vm.template.configuration.pages.offHours.schedule.businessDays = _.map(_.filter(vm.days, 'isSelected'), 'label');
+      vm.template.configuration.pages.offHours.schedule.timings.startTime = vm.timings.startTime.label;
+      vm.template.configuration.pages.offHours.schedule.timings.endTime = vm.timings.endTime.label;
+      vm.template.configuration.pages.offHours.schedule.timezone = vm.scheduleTimeZone.value;
     }
 
     function setAgentProfile() {
@@ -462,7 +532,7 @@
       SunlightConfigService.createChatTemplate(vm.template)
         .then(function (response) {
           handleChatTemplateCreation(response);
-        }, function (error) {
+        }, function () {
           handleChatTemplateError();
         });
     }
@@ -474,25 +544,51 @@
       Notification.success('careChatTpl.createSuccessText', {
         featureName: vm.template.name
       });
-      $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctEmbedCodeModal.tpl.html',
-        size: 'lg',
-        controller: 'EmbedCodeCtrl',
-        controllerAs: 'embedCodeCtrl',
-        resolve: {
-          templateId: function () {
-            return responseTemplateId;
-          }
-        }
-      });
+      CTService.openEmbedCodeModal(responseTemplateId, vm.template.name);
+    }
+
+    function setDay(index) {
+      vm.days[index].isSelected = !vm.days[index].isSelected;
+      setDayPreview();
+    }
+
+    function setEndTimeOptions() {
+      vm.endTimeOptions = CTService.getEndTimeOptions(vm.timings.startTime);
+      if (vm.timings.endTime.value < vm.endTimeOptions[0].value) {
+        vm.timings.endTime = vm.endTimeOptions[0];
+      }
+    }
+
+    function setDayPreview() {
+      var firstSelectedDayIndex = _.findIndex(vm.days, 'isSelected');
+      var lastSelectedDayIndex = _.findLastIndex(vm.days, 'isSelected');
+
+      vm.isBusinessHoursDisabled = firstSelectedDayIndex == -1;
+
+      if (!vm.isBusinessHoursDisabled) {
+        var isDiscontinuous = _.some(
+          _.slice(vm.days, firstSelectedDayIndex, lastSelectedDayIndex + 1), {
+            isSelected: false
+          });
+
+        vm.daysPreview = CTService.getPreviewDays(vm.days, !isDiscontinuous, firstSelectedDayIndex, lastSelectedDayIndex);
+      }
+    }
+
+    function setOffHoursWarning() {
+      vm.isOffHoursMessageValid = vm.template.configuration.pages.offHours.message !== '';
     }
 
     function handleChatTemplateError() {
       vm.saveCTErrorOccurred = true;
       vm.creatingChatTemplate = false;
+      vm.ChatTemplateButtonText = $translate.instant('common.retry');
     }
 
     function init() {
+      CTService.getLogoUrl().then(function (url) {
+        vm.logoUrl = url;
+      });
       CTService.getLogo().then(function (data) {
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;

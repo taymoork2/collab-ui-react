@@ -3,7 +3,7 @@
 describe('Service: MohService', function () {
   var mohService, httpBackend, playlistsData, playlistData1;
 
-  beforeEach(module('uc.moh'));
+  beforeEach(angular.mock.module('uc.moh'));
 
   beforeEach(
     inject(
@@ -12,7 +12,6 @@ describe('Service: MohService', function () {
         playlistData1 = getJSONFixture('huron/json/moh/playlists/BBD5656B-E92B-12F5-10EF-1B01CB23A7C0.json');
         httpBackend = $httpBackend;
         // httpBackend.when('GET', '/modules/huron/moh/mohData/playlists.json').respond(function (method, url, data) {
-        //   //console.log('getting playlists');
         //   return [200, playlistsData, {}];
         // });
         httpBackend.when('GET', '/modules/huron/moh/mohData/playlists.json').respond(200, playlistsData);

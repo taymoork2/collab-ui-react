@@ -26,65 +26,18 @@
     state: 'users',
     link: '/users'
   }, {
-    tab: 'servicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    feature: 'atlas-services-overview',
-    state: 'services-overview',
-    link: 'services/overview'
+    tab: 'placeTab',
+    icon: 'icon-meeting-room',
+    title: 'tabs.placeTab',
+    feature: 'csdm-places',
+    state: 'places',
+    link: '/places'
   }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: "!atlas-services-overview",
-    subPages: [{
-      title: 'tabs.conferencing',
-      desc: 'tabs.conferencingDesc',
-      state: 'site-list',
-      link: '#site-list'
-    }, {
-      title: 'tabs.huronLineDetailsTab',
-      desc: 'tabs.huronLineDetailsTabDesc',
-      state: 'huronsettings',
-      link: '#hurondetails/settings'
-    }, {
-      title: 'tabs.careTab',
-      desc: 'tabs.careTabDesc',
-      state: 'care.Features',
-      link: '#careDetails/features'
-    }, {
-      title: 'tabs.fusionDetailsTab',
-      desc: 'tabs.fusionDetailsTabDesc',
-      state: 'fusion',
-      link: '#fusion'
-    }, {
-      title: 'tabs.expresswayManagementServiceTab',
-      desc: 'tabs.expresswayManagementServiceTabDesc',
-      state: 'management-service',
-      link: '#services/expressway-management'
-    }, {
-      title: 'tabs.calendarServiceTab',
-      desc: 'tabs.calendarServiceTabDesc',
-      state: 'calendar-service',
-      link: '#services/calendar'
-    }, {
-      title: 'tabs.callServiceTab',
-      desc: 'tabs.callServiceTabDesc',
-      state: 'call-service',
-      link: '#services/call'
-    }, {
-      title: 'tabs.MediafusionDetailsTab',
-      desc: 'tabs.MediafusionDetailsTabDesc',
-      //state: 'mediafusionconnector',
-      //link: '#mediafusionconnector'
-      state: 'media-service',
-      link: '#mediaservice'
-    }, {
-      title: 'tabs.messengerTab',
-      desc: 'tabs.messengerTabDesc',
-      state: 'messenger',
-      link: '#messenger'
-    }]
+    state: 'services-overview',
+    link: 'services/overview'
   }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
@@ -114,13 +67,14 @@
     icon: 'icon-sliders',
     title: 'tabs.accountTab',
     state: 'profile',
+    feature: '!atlas-settings-page',
     link: '/profile'
   }, {
     tab: 'settingsTab',
     icon: 'icon-sliders',
     title: 'tabs.settingsTab',
     state: 'settings',
-    feature: "atlas-global-settings",
+    feature: "atlas-settings-page",
     link: '/settings'
   }, {
     tab: 'organizationTab',
@@ -152,8 +106,9 @@
     }]
   }];
 
-  angular
-    .module('Core')
-    .value('tabConfig', tabs);
+  module.exports = angular
+    .module('core.tabconfig', [])
+    .value('tabConfig', tabs)
+    .name;
 
 }());

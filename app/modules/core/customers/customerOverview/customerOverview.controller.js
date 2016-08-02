@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -19,7 +19,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isOrgSetup = isOrgSetup;
+    vm.isSetupDone = isSetupDone;
     vm.isOwnOrg = isOwnOrg;
     vm.deleteTestOrg = deleteTestOrg;
 
@@ -31,27 +31,35 @@
     vm.allowCustomerLogoOrig = false;
     vm.isTest = false;
     vm.isDeleting = false;
-    vm.atlasPartnerAdminFeatureToggle = false;
+    vm.isOrgSetup = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
-    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasPartnerAdminFeatures),
-      FeatureToggleService.atlasCareTrialsGetStatus()
-    ]).then(function (result) {
-      if (_.find(vm.currentCustomer.offers, {
-          id: Config.offerTypes.roomSystems
-        })) {
-        vm.showRoomSystems = true;
-      }
-      vm.atlasPartnerAdminFeatureToggle = result[0];
-      setOffers(result[1]);
-    });
+    vm.freeOrPaidServices = null;
+    vm.meetingServices = null;
+
+    vm.newCustomerViewToggle = newCustomerViewToggle;
+
+    FeatureToggleService.atlasCareTrialsGetStatus()
+      .then(function (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = true;
+        }
+        setOffers(result);
+      });
 
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      if (vm.newCustomerViewToggle) {
+        var nonTrialServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = nonTrialServices.freeOrPaidServices;
+        vm.meetingServices = nonTrialServices.meetingServices;
+      }
     }
 
     init();
@@ -71,6 +79,10 @@
       initCustomer();
       getLogoSettings();
       getIsTestOrg();
+      isSetupDone().
+      then(function (results) {
+        vm.isOrgSetup = results;
+      });
     }
 
     function resetForm() {
@@ -209,10 +221,15 @@
       return false;
     }
 
-    function isOrgSetup() {
-      return _.every(vm.currentCustomer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
+    function isSetupDone() {
+      return Orgservice.isSetupDone(vm.customerOrgId)
+        .catch(function (error) {
+          Notification.error('customerPage.isSetupDoneError', {
+            orgName: vm.customerName,
+            message: error.data.message
+          });
+          return false;
+        });
     }
 
     function isOwnOrg() {

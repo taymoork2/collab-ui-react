@@ -3,6 +3,7 @@
 describe('Directive: setupAssistantPages', function () {
   var $compile, $rootScope;
 
+  // ct-name and ct-summary are not being tested as they dont have any titles
   var pageDirectives = [
     'ct-profile',
     'ct-overview',
@@ -10,11 +11,10 @@ describe('Directive: setupAssistantPages', function () {
     'ct-feedback',
     'ct-agent-unavailable',
     'ct-off-hours',
-    'ct-chat-strings',
-    'ct-summary'
+    'ct-chat-status-messages'
   ];
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;

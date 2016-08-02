@@ -1,8 +1,9 @@
-@import '../../node_modules/collab-ui/scss/collab-ui';
+@import './common';
+@import '~collab-ui/scss/collab-ui';
+@import '~ng-tags-input/build/ng-tags-input.css';
 
-$fa-font-path: "../fonts";
-
-@import "../../node_modules/font-awesome/scss/font-awesome";
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome';
 
 // ******** Variables **********
 

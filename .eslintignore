@@ -1,0 +1,5 @@
+build/*
+dist/*
+plato/*
+test/coverage/*
+typings/*

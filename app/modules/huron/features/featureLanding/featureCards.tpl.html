@@ -11,13 +11,16 @@
           </div>
         </header>
         <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
-          <div class="card-section">
+          <div class="card-section" ng-if="huronFeature.filterValue !== 'CP'">
             <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)" ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
             <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
           </div>
+          <div class="card-section" ng-if="huronFeature.filterValue === 'CP'">
+            <span class="card-section-num">{{ ::huronFeature.startRange }}</span><span class="card-section-num" ng-if="huronFeature.endRange !== huronFeature.startRange"> - {{ ::huronFeature.endRange }}</span>
+          </div>
         </section>
         <footer class="card-footer ">
-          <div ><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
+          <div ><span ng-if="(huronFeature.filterValue === 'HG' || huronFeature.filterValue === 'CP')" class="card-members left">
                 {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
           <div class="card-icons">
             <a class="icon icon-link" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature))"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>

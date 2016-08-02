@@ -1,12 +1,26 @@
-<h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
-<p translate="{{'hercules.settings.emailNotifications'}}"></p>
-<tags-input add-on-blur="false"
+<h5 translate="hercules.settings.emailNotificationsHeading"></h5>
+<h6><strong translate="hercules.settings.emailAdministratorHeading"></strong></h6>
+<p><span translate="hercules.settings.emailAdministratorNotification"></span><br>
+</p>
+
+<tags-input add-on-blur="true"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
             on-invalid-tag="expresswayServiceSettings.invalidEmail($tag)"
-            placeholder="Add email addresses"
+            placeholder={{expresswayServiceSettings.localizedAddEmailWatermark}}
             ng-disabled="expresswayServiceSettings.savingEmail"
             ng-model="expresswayServiceSettings.emailSubscribers"
             type="email"
             allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
 <span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
+
+<h6><strong translate="hercules.settings.emailUserHeading"></strong></h6>
+<p><span translate="hercules.settings.emailUserNotification"></span><br>
+</p>
+
+<cs-toggle-switch ng-model="expresswayServiceSettings.enableEmailSendingToUser"
+                  ng-click="expresswayServiceSettings.setEnableEmailSendingToUser()"
+                  toggle-id="toggleEnableEmailSendingToUser"
+                  name="toggleEnableEmailSendingToUser"
+                  size="small">
+</cs-toggle-switch>

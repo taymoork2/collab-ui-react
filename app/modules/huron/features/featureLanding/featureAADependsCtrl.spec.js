@@ -4,8 +4,8 @@ describe('Controller: HuronFeatureAADependsCtrl', function () {
   var controller, createController;
   var $rootScope, $scope, $stateParams;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, $controller) {
     $rootScope = _$rootScope_;

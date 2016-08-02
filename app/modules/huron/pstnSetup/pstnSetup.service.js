@@ -55,6 +55,7 @@
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       getFormattedNumberOrders: getFormattedNumberOrders,
+      translateStatusMessage: translateStatusMessage,
       listPendingNumbers: listPendingNumbers,
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
@@ -286,7 +287,8 @@
                 carrierOrderId: _.get(order, 'carrierOrderId'),
                 response: _.get(order, 'response'),
                 operation: _.get(order, 'operation'),
-                statusMessage: _.get(order, 'statusMessage')
+                statusMessage: _.get(order, 'statusMessage') === 'None' ? null : _.get(order, 'statusMessage'),
+                tooltip: translateStatusMessage(order)
               };
               //translate order status
               if (order.status === PROVISIONED) {
@@ -313,6 +315,29 @@
           .compact()
           .value();
       });
+    }
+
+    function translateStatusMessage(order) {
+      var translations = {
+        'Account Number and PIN Required': $translate.instant('pstnSetup.orderStatus.pinRequired'),
+        'Address Mismatch': $translate.instant('pstnSetup.orderStatus.addressMismatch'),
+        'BTN Mismatch': $translate.instant('pstnSetup.orderStatus.btnMismatch'),
+        'Customer has Trial Status': $translate.instant('pstnSetup.orderStatus.trialStatus'),
+        'FOC Received': $translate.instant('pstnSetup.orderStatus.focReceived'),
+        'Invalid Authorization Signature': $translate.instant('pstnSetup.orderStatus.invalidSig'),
+        'LOA Not Signed': $translate.instant('pstnSetup.orderStatus.loaNotSigned'),
+        'Master Service Agreement not signed': $translate.instant('pstnSetup.orderStatus.msaNotSigned'),
+        'Pending FOC from Vendor': $translate.instant('pstnSetup.orderStatus.pendingVendor'),
+        'Rejected': $translate.instant('pstnSetup.orderStatus.rejected')
+      };
+
+      if (angular.isDefined(translations[order.statusMessage])) {
+        return translations[order.statusMessage];
+      } else if (order.statusMessage !== 'None') {
+        return order.statusMessage;
+      } else {
+        return;
+      }
     }
 
     function listPendingNumbers(customerId) {

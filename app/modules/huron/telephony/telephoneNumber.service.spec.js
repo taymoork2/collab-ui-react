@@ -10,7 +10,7 @@ describe('Service: TelephoneNumberService', function () {
   var tollFreeNumber = '+18003287448';
   var premiumNumber = '+19003287448';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_TelephoneNumberService_) {
     TelephoneNumberService = _TelephoneNumberService_;
@@ -51,8 +51,8 @@ describe('Service: TelephoneNumberService', function () {
     expect(TelephoneNumberService.getDIDLabel(invalidE164)).toEqual(invalidE164);
   });
 
-  it('should reject a toll free number', function () {
-    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(false);
+  it('should accept a toll free number', function () {
+    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(true);
   });
 
   it('should reject a premium rate number', function () {

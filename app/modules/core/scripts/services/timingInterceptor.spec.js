@@ -1,7 +1,7 @@
 'use strict';
 
 describe('TimingInterceptor', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.timinginterceptor'));
 
   var Interceptor, Config, Authinfo, $log, now, $rootScope;
 

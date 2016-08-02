@@ -104,6 +104,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveButton);
 
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -136,6 +137,7 @@ describe('Huron Auto Attendant', function () {
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.phoneMenuSay);
+
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
@@ -158,7 +160,8 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuKeyOptions.first().all(by.tagName('li')).first());
       utils.click(autoattendant.phoneMenuAction.first());
-      utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
+      autoattendant.scrollIntoView(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
+      utils.click(autoattendant.phoneMenuActionOptions.all(by.linkText(autoattendant.repeatMenu)).first());
 
     });
 
@@ -255,7 +258,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // first menu option is Add Say Message
-      utils.click(autoattendant.newStepSelectFirst);
+      utils.click(autoattendant.newStepSelectSayMessage);
 
       // Since the AA already contained 2 Say Message, we should now have 3
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
@@ -279,6 +282,7 @@ describe('Huron Auto Attendant', function () {
       // Verify we have 1 Say Message already:
       // On timing issues here, see AUTOATTN-556
       autoattendant.scrollIntoView(autoattendant.phoneMenuAll.first());
+
       utils.expectCount(autoattendant.phoneMenuAll, 1);
 
       autoattendant.scrollIntoView(autoattendant.addStep(1));
@@ -289,9 +293,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // middle/2nd menu option is Add Phone Menu
-      utils.click(autoattendant.newStepSelectSecond);
-
-      utils.click(autoattendant.saveButton);
+      utils.click(autoattendant.newStepSelectPhoneMenu);
 
       // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 2);
@@ -301,6 +303,10 @@ describe('Huron Auto Attendant', function () {
 
       // Set langauage to Galician
       utils.click(autoattendant.phoneLanguageDropDownOptionsTenth);
+
+      utils.click(autoattendant.saveButton);
+
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       // phone menu has been completely tested elsewhere
 
@@ -319,7 +325,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newStepMenu);
 
       // 4th/last menu option is Route Call
-      utils.click(autoattendant.newStepSelectLast);
+      utils.click(autoattendant.newStepSelectRouteCall);
 
       // stop here as the complete menu has been tested elsewhere
       utils.expectIsDisplayed(autoattendant.routeCall);
@@ -337,8 +343,8 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addStepLast);
       utils.expectIsDisplayed(autoattendant.newStep);
       utils.click(autoattendant.newStepMenu);
-      // 3rd menu option is Dial By Extension 
-      utils.click(autoattendant.newStepSelectThird);
+      // 3rd menu option is Dial By Extension
+      utils.click(autoattendant.newStepSelectDialByExt);
 
       utils.expectIsDisplayed(autoattendant.dialByExtension);
 
@@ -391,7 +397,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
-      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
@@ -437,6 +443,17 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
+    it('should be able to change time zone for AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.timeZone);
+      utils.click(autoattendant.firstTimeZoneElement);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      expect(autoattendant.aaTimeZone.getText()).toEqual(autoattendant.firstTimeZone);
+    }, 120000);
+
     it('should delete a AA Schedule', function () {
       utils.click(autoattendant.schedule);
       utils.expectIsDisabled(autoattendant.modalsave);
@@ -466,11 +483,31 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      utils.wait(autoattendant.testCardName, 20000);
 
       utils.expectIsEnabled(autoattendant.testCardName);
 
-    });
+      utils.click(autoattendant.testCardClick);
 
+      utils.wait(autoattendant.addAANumbers, 20000);
+
+      utils.expectIsDisplayed(autoattendant.addAANumbers);
+      // Verify we have 3 Say Messages (2 sayMessage and PhoneMenu's) already:
+      utils.expectCount(autoattendant.sayMessageAll, 4);
+
+      // Verify two phone messages
+
+      autoattendant.scrollIntoView(autoattendant.phoneMenuAll.first());
+
+      utils.expectCount(autoattendant.phoneMenuAll, 2);
+
+      autoattendant.scrollIntoView(autoattendant.dialByExtension);
+
+      utils.expectIsDisplayed(autoattendant.dialByExtension);
+
+      utils.click(autoattendant.closeEditButton);
+
+    });
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA
@@ -483,7 +520,6 @@ describe('Huron Auto Attendant', function () {
       });
 
     });
-
   });
 
 });

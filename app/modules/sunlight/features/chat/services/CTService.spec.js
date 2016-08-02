@@ -2,12 +2,15 @@
 
 describe('Chat Template Service', function () {
 
-  var $httpBackend, $q, BrandService, CTService, logoUrlDeferred;
+  var $httpBackend, $q, BrandService, CTService, logoUrlDeferred, orgSettingsDeferred;
   var orgId = 'a-b-c-d';
-  var logoUrl = 'logoUrl';
+  var logoUrl = 'https://www.example.com/logo.png';
   var logoResponse = 'logo';
   var appName = 'testApp.ciscoservice.com';
   var templateId = 'abcd';
+  var orgSettings = {
+    'logoUrl': logoUrl
+  };
 
   var spiedUrlConfig = {
     getSunlightBubbleUrl: jasmine.createSpy('getSunlightBubbleUrl').and.returnValue(appName)
@@ -16,8 +19,9 @@ describe('Chat Template Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId)
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("UrlConfig", spiedUrlConfig);
     $provide.value("Authinfo", spiedAuthinfo);
   }));
@@ -28,7 +32,9 @@ describe('Chat Template Service', function () {
     BrandService = _BrandService_;
     CTService = _CTService_;
     logoUrlDeferred = $q.defer();
-    return spyOn(BrandService, 'getLogoUrl').and.returnValue(logoUrlDeferred.promise);
+    orgSettingsDeferred = $q.defer();
+    spyOn(BrandService, 'getLogoUrl').and.returnValue(logoUrlDeferred.promise);
+    return spyOn(BrandService, 'getSettings').and.returnValue(orgSettingsDeferred.promise);
   }));
 
   it('should return image data when logo url is present', function () {
@@ -47,5 +53,12 @@ describe('Chat Template Service', function () {
     expect(result).toContainText(templateId);
     expect(result).toContainText(orgId);
     expect(result).toContainText(appName);
+  });
+
+  it('should return a promise that resolves to a url, if getting org setting succeeds', function () {
+    orgSettingsDeferred.resolve(orgSettings);
+    return CTService.getLogoUrl().then(function (url) {
+      expect(angular.equals(url, logoUrl)).toBeTruthy();
+    });
   });
 });

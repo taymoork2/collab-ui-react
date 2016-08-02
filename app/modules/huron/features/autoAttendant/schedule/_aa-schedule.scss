@@ -1,3 +1,5 @@
+$aa-schedule-text-color: $gray-light-1;
+
 // Schedule Panel
 .aa-schedule-container {
    &:hover {
@@ -15,10 +17,20 @@
   h3 {
     display: inline-block;
   }
+
+  &-timezone {
+    @include vr-spacing(pt, .75);
+    @include vr-spacing(pb, .25)
+    color: $aa-schedule-text-color;
+  }
 }
 
 // Schedule Modal
 .aa-schedule {
+  h3 {
+    display: inline-block;
+  }
+
   .modal-body &-subtitle {
     font-size: 1.25rem;
     line-height: 1;
@@ -37,6 +49,23 @@
     color: $aa-builder-icon-color;
     &:hover {
       color: $aa-builder-icon-click-color;
+    }
+  }
+
+  .aa-help-icon {
+    color:$color-primary-lighter;
+    &:hover {
+      color: $white;
+      cursor: pointer;
+    }
+    &:focus {
+      color: $white;
+      outline: none;
+    }
+  }
+  .aa-help-wrapper {
+    & .popover {
+      @include vr-spacing(mt, 0);
     }
   }
   .down {
@@ -58,6 +87,9 @@
   &-trash {
     font-size: 1.25rem;
     float: right;
+    &:hover {
+      cursor: pointer;
+    }
   }
   &-days {
     display: flex;
@@ -203,7 +235,7 @@
 
   &-hours {
     @extend .aa-schedule-info-item;
-    color: $gray-light-1;
+    color: $aa-schedule-text-color;
     text-align: left;
   }
 

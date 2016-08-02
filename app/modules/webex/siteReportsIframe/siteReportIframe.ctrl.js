@@ -14,7 +14,7 @@
     $timeout,
     $window,
     Authinfo,
-    Storage,
+    TokenService,
     WebExUtilsFact
   ) {
 
@@ -32,11 +32,12 @@
     $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
     // for iframe request
-    if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+    if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0) {
       $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
+    }
     $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
     $scope.adminEmail = Authinfo.getPrimaryEmail();
-    $scope.authToken = Storage.get('accessToken');
+    $scope.authToken = TokenService.getAccessToken();
     $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
     $scope.siteName = $stateParams.siteUrl;
     $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);

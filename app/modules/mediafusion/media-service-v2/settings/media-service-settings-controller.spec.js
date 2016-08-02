@@ -3,50 +3,52 @@
 describe('Controller: MediaServiceSettingsControllerV2', function () {
 
   // load the service's module
-  //  beforeEach(module('Hercules'));
-  //beforeEach(module('Core'));
-  beforeEach(module('wx2AdminWebClientApp'));
-  //  beforeEach(module('mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, httpMock, $q, $modal, log, $translate, $state, $stateParams, redirectTargetPromise;
-  var ServiceDescriptor, NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2;
+  var Authinfo, controller, $q, $modal, log, $translate, $state, $stateParams, redirectTargetPromise;
+  var $rootScope;
+  var ServiceDescriptor, NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivationV2, FeatureToggleService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
 
   var authInfo = {
-    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
+    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
+    isSquaredUC: sinon.stub().returns(true)
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
   //expect(XhrNotificationService.notify).toHaveBeenCalled();
-  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_) {
+  beforeEach(inject(function (_$rootScope_, $state, $controller, $stateParams, _$q_, _$modal_, $log, $translate, _MediaServiceActivationV2_, _MailValidatorService_, _XhrNotificationService_, _Notification_, _ServiceDescriptor_, _FeatureToggleService_) {
+    $rootScope = _$rootScope_;
     $state = $state;
     $stateParams = $stateParams;
     log = $log;
     log.reset();
-    httpMock = $httpBackend;
     $q = _$q_;
     $modal = _$modal_;
 
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     MailValidatorService = _MailValidatorService_;
     XhrNotificationService = _XhrNotificationService_;
+    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     ServiceDescriptor = _ServiceDescriptor_;
-    httpMock.when('GET', /^\w+.*/).respond({});
     redirectTargetPromise = {
       then: sinon.stub()
     };
+    FeatureToggleService.features = {
+      atlasHybridServicesResourceList: 'atlas-hybrid-services-resource-list'
+    };
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     sinon.stub(ServiceDescriptor, 'getEmailSubscribers');
     ServiceDescriptor.getEmailSubscribers.returns(redirectTargetPromise);
     sinon.stub($state, 'go');
     controller = $controller('MediaServiceSettingsControllerV2', {
       $state: $state,
       $stateParams: $stateParams,
-      httpMock: httpMock,
       $q: $q,
       $modal: $modal,
       log: log,
@@ -60,12 +62,6 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     });
 
   }));
-
-  afterEach(function () {
-    httpMock.verifyNoOutstandingRequest();
-    //httpMock.verifyNoOutstandingExpectation();
-
-  });
 
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
@@ -117,11 +113,10 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     sinon.stub(controller, 'disableOrpheusForMediaFusion');
     controller.disableOrpheusForMediaFusion(redirectTargetPromise);
 
-    httpMock.flush();
+    $rootScope.$apply();
     controller.disableMediaService(serviceId);
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
     expect(controller.disableOrpheusForMediaFusion).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
   });
   it('should disable media service error call', function () {
     var getResponse = {
@@ -134,11 +129,10 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
     sinon.stub(XhrNotificationService, 'notify');
     XhrNotificationService.notify(redirectTargetPromise);
 
-    httpMock.flush();
+    $rootScope.$apply();
     controller.disableMediaService(serviceId);
     expect(MediaServiceActivationV2.setServiceEnabled).toHaveBeenCalled();
     expect(XhrNotificationService.notify).toHaveBeenCalled();
-    httpMock.verifyNoOutstandingExpectation();
   });
 
 });

@@ -2,7 +2,7 @@
   'use strict';
 
   describe('TrackingId', function () {
-    beforeEach(module('Core'));
+    beforeEach(angular.mock.module('Core'));
 
     var SEPARATOR = "_";
     var TrackingId, $http;

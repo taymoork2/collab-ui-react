@@ -6,7 +6,7 @@
     .service('ServiceDescriptor', ServiceDescriptor);
 
   /* @ngInject */
-  function ServiceDescriptor($http, UrlConfig, Authinfo) {
+  function ServiceDescriptor($http, UrlConfig, Authinfo, Orgservice, XhrNotificationService) {
     var services = function (callback, includeStatus) {
       $http
         .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
@@ -80,11 +80,29 @@
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           emailSubscribers: emailSubscribers
         })
-        .success(function () {
-          callback(null);
-        })
-        .error(function () {
-          callback(arguments);
+        .then(function (res) {
+          callback(res.status);
+        });
+    };
+
+    var getDisableEmailSendingToUser = function () {
+      return Orgservice.getOrg(_.noop, Authinfo.getOrgId(), true)
+        .then(function (response) {
+          var settings = response.data.orgSettings;
+          if (!_.isEmpty(settings)) {
+            return settings.calSvcDisableEmailSendingToEndUser;
+          }
+        });
+    };
+
+    var setDisableEmailSendingToUser = function (calSvcDisableEmailSendingToEndUser) {
+      var settings = {
+        calSvcDisableEmailSendingToEndUser: !!calSvcDisableEmailSendingToEndUser
+      };
+
+      return Orgservice.setOrgSettings(Authinfo.getOrgId(), settings)
+        .catch(function () {
+          return XhrNotificationService.notify("error in setting disable email sending for Org.");
         });
     };
 
@@ -137,7 +155,9 @@
       getServices: getServices,
       servicesInOrg: servicesInOrg,
       getEmailSubscribers: getEmailSubscribers,
-      setEmailSubscribers: setEmailSubscribers
+      setEmailSubscribers: setEmailSubscribers,
+      getDisableEmailSendingToUser: getDisableEmailSendingToUser,
+      setDisableEmailSendingToUser: setDisableEmailSendingToUser
     };
   }
 }());

@@ -13,7 +13,7 @@
     vm.moreReports = false;
 
     $scope.downloadReport = downloadReport;
-    $scope.downloadReportId = undefined;
+    $scope.downloadingReportId = undefined;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -42,13 +42,13 @@
     pollAvalonReport();
 
     function downloadReport(report) {
-      $scope.downloadReportId = report.id;
+      $scope.downloadingReportId = report.id;
       EdiscoveryService.downloadReport(report)
         .catch(function (err) {
-          Notification.error($translate.instant("ediscovery.unableToDownloadFile"));
+          Notification.error('ediscovery.unableToDownloadFile');
         })
         .finally(function (res) {
-          $scope.downloadReportId = undefined;
+          $scope.downloadingReportId = undefined;
         });
     }
 
@@ -61,12 +61,12 @@
         state: "ABORTED"
       }).then(function (res) {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
-          Notification.success($translate.instant('ediscovery.search.reportCancelled'));
+          Notification.success('ediscovery.search.reportCancelled');
         }
         pollAvalonReport();
       }, function (err) {
         if (err.status !== 410) {
-          Notification.error($translate.instant('ediscovery.search.reportCancelFailed'));
+          Notification.error('ediscovery.search.reportCancelFailed');
         }
       }).finally(function () {
         delete $scope.reportsBeingCancelled[id];
