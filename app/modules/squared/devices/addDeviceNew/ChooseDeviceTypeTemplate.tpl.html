@@ -68,9 +68,11 @@
     translate="common.cancel">
   </button>
   <button
+    cs-btn
     class="btn btn--primary"
+    loading="chooseDeviceType.isLoading"
     ng-disabled="!chooseDeviceType.selectedDeviceType"
-    sq-click-promise="chooseDeviceType.next()"
-    translate="common.next">
+    ng-click="chooseDeviceType.next()">
+    <span translate="common.next"></span>
   </button>
 </div>

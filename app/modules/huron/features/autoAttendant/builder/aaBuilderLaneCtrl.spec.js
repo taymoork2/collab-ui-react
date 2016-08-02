@@ -9,8 +9,8 @@ describe('Controller: AABuilderLaneCtrl', function () {
     openHours: {}
   };
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;

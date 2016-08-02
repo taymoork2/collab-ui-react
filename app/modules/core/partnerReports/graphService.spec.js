@@ -14,7 +14,7 @@ describe('Service: Graph Service', function () {
   var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
   var callMetricsData = angular.copy(dummyData.callMetrics);
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_GraphService_) {
     GraphService = _GraphService_;

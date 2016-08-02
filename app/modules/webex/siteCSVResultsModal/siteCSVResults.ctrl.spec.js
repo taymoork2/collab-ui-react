@@ -1,7 +1,7 @@
 'use strict';
 
 describe('SiteCSVResultsCtr: export results', function () {
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var $controller;
   var $rootScope;
@@ -63,7 +63,7 @@ describe('SiteCSVResultsCtr: export results', function () {
 }); // describe()
 
 describe('SiteCSVResultsCtr: import results', function () {
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var $controller;
   var $rootScope;

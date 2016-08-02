@@ -1,22 +1,17 @@
 'use strict';
 describe('Controller: EdiscoverySearchController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Ediscovery'));
 
-  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, httpBackend, $translate, $scope, Notification;
+  var ediscoverySearchController, EdiscoveryService, EdiscoveryNotificationService, $q, $controller, $translate, $scope, Notification;
 
-  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, $httpBackend, _$controller_, _Notification_) {
+  beforeEach(inject(function (_$translate_, _EdiscoveryService_, _EdiscoveryNotificationService_, _$q_, _$rootScope_, _$controller_, _Notification_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
-    httpBackend = $httpBackend;
     EdiscoveryService = _EdiscoveryService_;
     EdiscoveryNotificationService = _EdiscoveryNotificationService_;
     $translate = _$translate_;
     $q = _$q_;
     Notification = _Notification_;
-
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
 
     ediscoverySearchController = $controller('EdiscoverySearchController', {
       $translate: $translate,
@@ -60,7 +55,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryService.getAvalonRoomInfo.returns(promise);
 
       ediscoverySearchController.searchForRoom("myRoomId");
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(ediscoverySearchController.searchingForRoom).toBeFalsy();
 
@@ -89,7 +84,7 @@ describe('Controller: EdiscoverySearchController', function () {
         ediscoverySearchController.searchForRoom("myRoomId");
         expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
         expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-        httpBackend.flush();
+        $scope.$apply();
 
         expect(ediscoverySearchController.searchCriteria.roomId).toEqual("myRoomId");
         expect(ediscoverySearchController.searchCriteria.displayName).toEqual("whatever");
@@ -112,7 +107,7 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchForRoom("myRoomId");
       expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
       expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
@@ -130,7 +125,7 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchForRoom("myRoomId");
       expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
       expect(ediscoverySearchController.error).toEqual("ediscovery.search.invalidRoomId");
@@ -149,7 +144,7 @@ describe('Controller: EdiscoverySearchController', function () {
       ediscoverySearchController.searchForRoom("myRoomId");
       expect(ediscoverySearchController.searchingForRoom).toBeTruthy();
       expect(ediscoverySearchController.searchButtonDisabled()).toBeTruthy();
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(ediscoverySearchController.searchButtonDisabled()).toBeFalsy();
       expect(ediscoverySearchController.error).toEqual("ediscovery.search.roomNotFound");
@@ -179,7 +174,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryService.createReport.returns(promise);
 
       ediscoverySearchController.createReport();
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
       expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
@@ -200,7 +195,7 @@ describe('Controller: EdiscoverySearchController', function () {
       });
       EdiscoveryService.createReport.returns(promise);
       ediscoverySearchController.createReport();
-      httpBackend.flush();
+      $scope.$apply();
       expect(errorNotification.called).toBeTruthy();
       expect(ediscoverySearchController.report).toBe(null);
     });
@@ -236,7 +231,7 @@ describe('Controller: EdiscoverySearchController', function () {
       EdiscoveryService.getReport.returns(promise);
 
       ediscoverySearchController.createReport();
-      httpBackend.flush();
+      $scope.$apply();
 
       expect(EdiscoveryService.runReport.callCount).toBe(1);
       expect(EdiscoveryService.createReport.withArgs(sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).toBe(1);
@@ -250,18 +245,13 @@ describe('Controller: EdiscoverySearchController', function () {
 
     var $stateParams;
 
-    beforeEach(inject(function (_$stateParams_, _$translate_, _EdiscoveryService_, _$q_, _$rootScope_, $httpBackend, _$controller_) {
+    beforeEach(inject(function (_$stateParams_, _$translate_, _EdiscoveryService_, _$q_, _$rootScope_, _$controller_) {
       $scope = _$rootScope_.$new();
       $controller = _$controller_;
-      httpBackend = $httpBackend;
       EdiscoveryService = _EdiscoveryService_;
       $translate = _$translate_;
       $q = _$q_;
       $stateParams = _$stateParams_;
-
-      httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
     }));
 
     it('inits a rerun using stateParams content', function () {

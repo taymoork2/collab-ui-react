@@ -3,8 +3,8 @@
 describe('Service: ExcelService', function () {
   var ExcelService, $window;
 
-  beforeEach(module('Hercules'));
-  beforeEach(module(provide));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(provide));
   beforeEach(inject(dependencies));
 
   function provide($provide) {

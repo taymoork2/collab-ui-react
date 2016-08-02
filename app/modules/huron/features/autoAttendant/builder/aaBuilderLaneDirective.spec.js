@@ -7,9 +7,9 @@ describe('Directive: aaBuilderLane', function () {
 
   var aaUiModel = {};
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;

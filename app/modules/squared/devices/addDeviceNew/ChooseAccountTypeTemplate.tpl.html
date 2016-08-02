@@ -43,9 +43,11 @@
       translate="common.back">
   </button>
   <button
+      cs-btn
+      loading="chooseAccountType.isLoading"
       class="btn btn--primary"
       ng-disabled="!chooseAccountType.radioSelect"
-      sq-click-promise="chooseAccountType.next()"
-      translate="common.next">
+      sq-click-promise="chooseAccountType.next()">
+      <span translate="common.next"></span>
   </button>
 </div>

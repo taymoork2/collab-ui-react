@@ -18,8 +18,8 @@ describe('Service: AALanguageService', function () {
   var defaultVoice = "Vanessa";
   var defaultLanguage = en_US;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AALanguageService_, _$translate_) {
     AALanguageService = _AALanguageService_;

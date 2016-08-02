@@ -6,14 +6,14 @@ describe('Controller: PartnerHomeCtrl', function () {
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
   var trialsListFixture = getJSONFixture('core/json/partner/trialsResponse.json');
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   var authInfo = {
     isCustomerPartner: true
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

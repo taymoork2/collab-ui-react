@@ -1,9 +1,12 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('ResponseInterceptor', ResponseInterceptor);
+  module.exports = angular
+    .module('core.responseinterceptor', [
+      require('modules/core/scripts/services/log')
+    ])
+    .factory('ResponseInterceptor', ResponseInterceptor)
+    .name;
 
   /* @ngInject */
   function ResponseInterceptor($q, $injector, Log) {

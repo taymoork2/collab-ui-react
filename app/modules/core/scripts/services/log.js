@@ -3,8 +3,11 @@
 
   /* eslint no-console:0 */
 
-  angular.module('Core')
-    .service('Log', Log);
+  module.exports = angular.module('core.log', [
+      require('modules/core/config/config')
+    ])
+    .service('Log', Log)
+    .name;
 
   /* @ngInject */
   function Log($rootScope, Config) {

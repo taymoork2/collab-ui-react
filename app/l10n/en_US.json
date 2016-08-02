@@ -1457,6 +1457,7 @@
     },
     "notifications": {
       "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
         "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
@@ -1489,6 +1490,17 @@
         "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
         "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
         "generate-report": "Generate Report"
+      },
+      "add-SIP-destination": {
+        "title": "Complete Call Service Connect Configuration",
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+      },
+      "no-fuse-yet": {
+        "title": "Register your Cisco Expressways for Hybrid Services"
+      },
+      "add-call-service-connect": {
+        "title": "Add Call Service Connect",
+        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
       }
     },
     "fusion": {
@@ -2169,6 +2181,13 @@
     "addNew": "Add New",
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
+  "multipleCalls": {
+    "title": "Simultaneous Calls",
+    "two": "2",
+    "eight": "8",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
+    "mulitpleCallsLoadError": "Multiple Calls failed to load."
+  },
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>",
@@ -2838,7 +2857,7 @@
       "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
       "existingPlace": "Existing Place",
       "existingPlaceInstructions": "If the place you are searching for isn’t listed, it either has 10 associated desk phones or an assigned Cisco Spark Room System license. A place can only have up to 10 desk phones associated to it. Desk phones and room systems cannot share the same place.",
-      "searchRoom": "Search for a room",
+      "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
@@ -4618,6 +4637,8 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "organizationId": "Org. ID",
+    "userId": "User ID",
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",

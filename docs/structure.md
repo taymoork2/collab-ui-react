@@ -1,7 +1,7 @@
 ## Project structure
 
 * Every functional group has a directory structure under `app/modules`
-* There is no need to edit the index.html file, all dependencies are managed through `gulp.config.js`
+* There is no need to edit the index.html file, all dependencies are managed through webpack
 * Each module has a feature directory that contains the following content:
   - html template files
   - javacript controllers

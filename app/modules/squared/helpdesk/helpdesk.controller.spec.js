@@ -1,6 +1,6 @@
 'use strict';
 describe('Controller: HelpdeskController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config, Authinfo;
 
@@ -48,16 +48,11 @@ describe('Controller: HelpdeskController', function () {
     Authinfo = _Authinfo_;
 
     httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-
-    httpBackend
       .when('GET', 'https://ciscospark.statuspage.io/index.json')
       .respond({});
   }));
 
   afterEach(function () {
-    httpBackend.flush();
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });

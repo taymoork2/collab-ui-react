@@ -27,16 +27,16 @@ describe('assignServices', function () {
     }).entitlementState === 'ACTIVE').toBe(state);
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
-    _Orgservice_, _Userservice_, _WebExUtilsFact_) {
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,
+    _HybridService_, _Orgservice_, _Userservice_, _WebExUtilsFact_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
@@ -94,8 +94,8 @@ describe('assignServices', function () {
     setupAuthinfo();
     authinfo.updateAccountInfo(accountData);
 
-    spyOn(Orgservice, 'getUnlicensedUsers');
-    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(_Orgservice_, 'getUnlicensedUsers');
+    spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {

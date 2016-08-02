@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Partner Service -', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   var $httpBackend, $q, $rootScope, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getOrgId: function () {
           return '12345';

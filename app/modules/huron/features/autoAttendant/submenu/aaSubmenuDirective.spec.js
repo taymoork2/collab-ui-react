@@ -16,8 +16,8 @@ describe('Directive: aaSubmenu', function () {
   var menuId = 'menu1';
   var submenu;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $compile = _$compile_;

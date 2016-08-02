@@ -1,7 +1,7 @@
 'use strict';
 
 describe('URI Verification Service', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var service;
 
@@ -19,7 +19,7 @@ describe('URI Verification Service', function () {
     status: 'claimed'
   }];
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("DomainManagementService", {
       getVerifiedDomains: function () {
         return null;

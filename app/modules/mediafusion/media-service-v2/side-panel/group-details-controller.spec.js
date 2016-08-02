@@ -2,7 +2,7 @@
 
 describe('Controller: GroupDetailsControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $modal, $stateParams, controller, $rootScope, httpBackend;
 

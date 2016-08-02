@@ -2,7 +2,7 @@
 
 describe('UrlConfigSpec', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('core.urlconfig'));
 
   var UrlConfig, $location;
   beforeEach(inject(function (_$location_, _UrlConfig_) {

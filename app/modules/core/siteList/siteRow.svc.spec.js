@@ -190,10 +190,10 @@ describe('Service: WebExSiteRowService', function () {
     "capacity": "100"
   }];
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
 

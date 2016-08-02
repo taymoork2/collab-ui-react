@@ -27,8 +27,8 @@ describe('Service: AANotificationService', function () {
     status: '500'
   };
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AANotificationService_, _Notification_, _$translate_) {
     AANotificationService = _AANotificationService_;

@@ -15,7 +15,7 @@ describe('Service: Common  Metrics Graph Service', function () {
   var PREFIXES = 'prefixesOfBigNumbers';
   var dummyData = 'dummyData';
 
-  beforeEach(module('Mediafusion'));
+  beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(inject(function (_CommonMetricsGraphService_) {
     CommonMetricsGraphService = _CommonMetricsGraphService_;
   }));

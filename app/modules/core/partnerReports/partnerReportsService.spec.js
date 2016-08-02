@@ -5,8 +5,8 @@ describe('Service: Partner Reports Service', function () {
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
   var activeUserDetailedResponse, activeUserDetailedAPI, mediaQualityResponse;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
@@ -42,7 +42,7 @@ describe('Service: Partner Reports Service', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

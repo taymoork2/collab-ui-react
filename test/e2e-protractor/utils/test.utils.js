@@ -76,11 +76,10 @@ exports.sendRequest = function (options) {
   return flow.execute(function () {
     var defer = protractor.promise.defer();
     request(options, function (error, response, body) {
-      var status = response && response.statusCode ? response.statusCode : 'unknown';
-      if (error) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
-      } else if (response && response.statusCode >= 400) {
-        defer.reject('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
+      var status = _.get(response, 'statusCode');
+      if (error || status >= 400) {
+        console.error('Send ' + options.method + ' request to ' + options.url + ' failed with status ' + status + '.  ' + (error || body));
+        defer.reject(response);
       } else {
         defer.fulfill(body);
       }
@@ -482,6 +481,21 @@ exports.expectCheckbox = function (elem, value) {
         });
       });
     }, TIMEOUT, 'Waiting for checkbox to be ' + value + ': ' + elem.locator());
+  });
+};
+
+exports.expectInputCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+      var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+      return input.getAttribute('ng-model').then(function (ngModel) {
+        // Have to navigate up out of the isolated scope from cs-input
+        return input.element(by.xpath('../..')).evaluate(ngModel).then(function (_value) {
+          return value === _value;
+        });
+      });
+    }, TIMEOUT, 'Waiting for input checkbox to be ' + value + ': ' + elem.locator());
   });
 };
 

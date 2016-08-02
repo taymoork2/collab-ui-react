@@ -11,7 +11,7 @@ describe('Languages', function () {
         return this.$window;
       }.bind(this),
     };
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       $provide.provider('$window', $windowProvider);
     });
     this.initModules('Core');

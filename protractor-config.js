@@ -1,13 +1,16 @@
 'use strict';
 
-/* eslint global-require:0 */
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var gulpConfig = require('./gulp/gulp.config')();
-var processEnvUtil = require('./gulp/utils/processEnvUtil.gulp')();
+var appConfig = require('./config/config');
+var processEnvUtil = require('./utils/processEnvUtil')();
+var args = require('yargs').argv;
+var _ = require('lodash');
+
+var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -17,11 +20,15 @@ var agent = mkProxyAgent();
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
-var E2E_FAIL_RETRY = gulpConfig.e2eFailRetry;
+var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 exports.config = {
   framework: "jasmine2",
+
+  suites: _.extend({}, appConfig.e2eSuites, {
+    jenkins: gatingSuites,
+  }),
 
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
@@ -63,8 +70,7 @@ exports.config = {
   onPrepare: function() {
     browser.ignoreSynchronization = true;
 
-    global.isProductionBackend = browser.params.isProductionBackend === 'true';
-
+    global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
@@ -221,7 +227,7 @@ exports.config = {
         }
 
         this.specDone = function (spec) {
-          if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
+          if (spec.status === 'failed' && !args.nofailfast) {
               disableSpecs();
           }
         };
@@ -252,7 +258,7 @@ function Logger() {
   var lastLogMessageCount = 0;
 
   function log(message) {
-    if (log.verbose || browser.params.log === 'true') {
+    if (log.verbose || args.verbose) {
       if (lastLogMessage === message) {
         lastLogMessageCount++;
       } else {

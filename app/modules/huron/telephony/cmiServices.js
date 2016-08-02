@@ -29,6 +29,7 @@
     .factory('CompanyNumberService', CompanyNumberService)
     // Will remove this service later
     .factory('CallRouterService', CallRouterService)
+    .factory('SimultaneousCallsServiceV2', SimultaneousCallsServiceV2)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
     .factory('AlternateNumberService', AlternateNumberService)
@@ -501,6 +502,22 @@
       get: {
         method: 'GET',
         transformResponse: transformEnvelope
+      }
+    });
+  }
+
+  /* @ngInject */
+  function SimultaneousCallsServiceV2($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId/numbers/:numberId', {
+      customerId: '@customerId',
+      numberId: '@numberId',
+      placesId: '@placesId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }

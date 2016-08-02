@@ -1,4 +1,3 @@
-///<reference path="../../../../typings/tsd-testing.d.ts"/>
 describe('DomainManagementService', () => {
 
   beforeEach(angular.mock.module('Core'));

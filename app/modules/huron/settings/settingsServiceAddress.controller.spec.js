@@ -6,7 +6,7 @@ describe('Controller: SettingsServiceAddressCtrl', function () {
   var updatedAddress = angular.copy(address);
   updatedAddress.streetAddress += 'updated';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$timeout_, _PstnServiceAddressService_, _Authinfo_, _Notification_) {
     $scope = $rootScope.$new();

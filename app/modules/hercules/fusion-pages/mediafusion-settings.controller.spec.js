@@ -2,7 +2,7 @@
 
 describe('Controller: MediafusionClusterSettingsController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $stateParams, httpMock, MediaClusterServiceV2, XhrNotificationService, FusionClusterService, redirectTargetPromise, controller, authInfo, redirectTargetPromise;
   redirectTargetPromise = {
@@ -12,7 +12,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

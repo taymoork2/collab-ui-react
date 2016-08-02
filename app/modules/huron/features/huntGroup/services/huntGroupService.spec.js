@@ -15,8 +15,8 @@ describe('Hunt Group Service', function () {
   };
   var huntList = getJSONFixture('huron/json/features/huntGroup/hgList.json');
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

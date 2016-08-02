@@ -7,8 +7,8 @@ describe('Service: TelephonyInfoService', function () {
   var internalNumbers, externalNumbers, getExternalNumberPool;
   var cosRestrictions;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var customer = {
     "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",

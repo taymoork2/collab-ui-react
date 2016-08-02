@@ -4,8 +4,8 @@
     var $timeout, $compile, $rootScope, $scope, $q;
     var AAScrollBar, container, target0, target1;
 
-    beforeEach(module('uc.autoattendant'));
-    beforeEach(module('Huron'));
+    beforeEach(angular.mock.module('uc.autoattendant'));
+    beforeEach(angular.mock.module('Huron'));
     beforeEach(inject(function (_$timeout_, _$compile_, _$rootScope_, _AAScrollBar_) {
       $timeout = _$timeout_;
       $compile = _$compile_;

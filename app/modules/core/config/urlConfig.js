@@ -170,9 +170,13 @@
 
   };
 
-  angular
-    .module('Core')
-    .factory('UrlConfig', UrlConfig);
+  module.exports = angular
+    .module('core.urlconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('UrlConfig', UrlConfig)
+    .name;
 
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {

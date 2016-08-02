@@ -67,9 +67,9 @@ describe('Controller: AASubmenuCtrl', function () {
     "name": 'phoneMenuSayMessage',
   }];
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;

@@ -13,9 +13,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var menuId = 'menu1';
   var attempts = 4;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
@@ -56,7 +56,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   /**
    * name value is not read from properties file in unit test cases. It will treat the key provided into vm.keyActions for name
-   * as text only. Sorting is based on the key itself and not on values of title. 
+   * as text only. Sorting is based on the key itself and not on values of title.
    * But Submenu and Route to Queue will be absent as we mock featuretoggle to return false;
    */
   describe('AAPhoneMenuCtrl', function () {

@@ -37,7 +37,7 @@ describe('Controller: Overview Reports', function () {
     validate: emptyFunction
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   describe('OverviewReportsCtrl - Expected Responses', function () {
     beforeEach(inject(function ($controller, _$rootScope_, _$q_, _Notification_) {
