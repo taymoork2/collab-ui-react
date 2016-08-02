@@ -78,7 +78,7 @@
       vm.administrators.push(adminProfile);
       patchSalesAdminRole(email);
       Notification.success('customerAdminPanel.customerAdministratorAddSuccess');
-      Analytics.trackPartnerActions('assign', uuid);
+      Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid);
     }
 
     function filterList(newValue, oldValue) {
@@ -120,7 +120,7 @@
             var index = vm.administrators.indexOf(someUser);
             vm.administrators.splice(index, 1);
             Notification.success('customerAdminPanel.customerAdministratorRemoveSuccess');
-            Analytics.trackPartnerActions('remove', uuid);
+            Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, uuid);
           })
           .catch(function () {
             Notification.error('customerAdminPanel.customerAdministratorRemoverFailure');

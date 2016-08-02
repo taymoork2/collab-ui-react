@@ -144,23 +144,21 @@
      */
     function trackPartnerActions(state, UUID) {
       if (!state || !UUID) {
-        return;
+        $q.reject('state or uuid not passed');
       }
-
-      var step = '';
 
       switch (state) {
         case eventNames.ASSIGN:
-          step = ASSIGN_PARTNER;
+          trackEvent(ASSIGN_PARTNER, {
+            uuid: UUID
+          });
           break;
         case eventNames.REMOVE:
-          step = REMOVE_PARTNER;
+          trackEvent(REMOVE_PARTNER, {
+            uuid: UUID
+          });
           break;
       }
-
-      trackEvent(step, {
-        uuid: UUID
-      });
     }
 
     function trackUserPatch(orgId, UUID) {

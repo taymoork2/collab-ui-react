@@ -530,7 +530,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps('start', $state.current.name);
+        Analytics.trackTrialSteps(Analytics.eventNames.START, $state.current.name);
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);
