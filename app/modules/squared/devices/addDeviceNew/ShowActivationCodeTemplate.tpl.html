@@ -33,16 +33,16 @@
           <span translate="generateActivationCodeModal.copyToClipboard"></span>
         </a>
 
-        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
-          <span translate="generateActivationCodeModal.print"></span>
-        </a>
-
         <a
           class="qrCodeRightButton"
           ng-show="showActivationCode.wizardData.deviceType==='huron'"
           ng-disabled="genAuthCode.showEmail"
           ng-click="showActivationCode.activateEmail()"
           translate="generateActivationCodeModal.emailCode">
+        </a>
+
+        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
+          <span translate="generateActivationCodeModal.print"></span>
         </a>
       </div>
       <div class="sendEmailWrapper" ng-if="showActivationCode.showEmail">

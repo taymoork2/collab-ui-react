@@ -43,7 +43,7 @@
                typeahead="room for room in choosePlace.rooms() | filter:$viewValue | limitTo:6"
                typeahead-template-url="placeTemplate.html"
                typeahead-on-select="choosePlace.selectPlace($item)"
-               placeholder="{{'addDeviceWizard.chooseSharedSpace.searchRoom' | translate}}"
+               placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
                typeahead-wait-ms="500"/>
         <script type="text/ng-template" id="placeTemplate.html">
           <a>
