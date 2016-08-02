@@ -45,6 +45,7 @@
 
     vm.isNewCollapsed = true;
     vm.isExistingCollapsed = vm.wizardData.allowUserCreation;
+    vm.isLoading = false;
 
     vm.validateTokens = function () {
       vm.deviceName = "NOT IMPLEMENTED";
@@ -118,8 +119,11 @@
     };
 
     vm.next = function () {
+      console.log('next');
+      vm.isLoading = true;
       if (vm.cisUuid) {
         OtpService.generateOtp(vm.userName).then(function (code) {
+          vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.deviceName,
             activationCode: code.code,
@@ -131,6 +135,7 @@
             organizationId: vm.organizationId
           }, vm.radioSelect);
         }, function (err) {
+          vm.isLoading = false;
           Notification.error(err.statusText);
         });
       } else {

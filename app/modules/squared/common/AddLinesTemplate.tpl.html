@@ -33,11 +33,11 @@
       translate="common.back">
   </button>
   <button
+      cs-btn
+      loading="addLines.isLoading"
       id="create-place-button"
       class="btn btn--primary"
-      sq-click-promise="addLines.next()"
-      translate="common.next">
+      ng-click="addLines.next()">
+      <span translate="common.next"></span>
   </button>
 </div>
-
-

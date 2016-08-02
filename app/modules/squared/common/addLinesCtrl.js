@@ -23,15 +23,18 @@
     vm.mapDidToDn = mapDidToDn;
     vm.resetDns = resetDns;
     vm.activateDID = activateDID;
+    vm.isLoading = false;
 
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberlist;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     vm.next = function () {
+      vm.isLoading = true;
 
       function successCallback(code) {
         if (code && code.activationCode && code.activationCode.length > 0) {
+          vm.isLoading = false;
           $stateParams.wizard.next({
             deviceName: vm.wizardData.deviceName,
             code: code,
@@ -41,12 +44,13 @@
             organizationId: Authinfo.getOrgId()
           });
         } else {
+          vn.isLoading = false;
           $state.go('users.list');
         }
       }
 
       function failCallback() {
-
+        vm.isLoading = false;
       }
 
       function addPlace() {

@@ -109,10 +109,12 @@
     translate="common.back">
   </button>
   <button
+    cs-btn
+    loading="choosePersonal.isLoading"
     id="create-place-button"
     class="btn btn--primary"
-    sq-click-promise="choosePersonal.next()"
-    ng-disabled="!choosePersonal.isNameValid()"
-    translate="common.next">
+    ng-click="choosePersonal.next()"
+    ng-disabled="!choosePersonal.isNameValid()">
+    <span translate="common.next"></span>
   </button>
 </div>

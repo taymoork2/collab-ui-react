@@ -14,6 +14,7 @@
 
     vm.wizardData = $stateParams.wizard.state().data;
     vm.selectedDeviceType = null;
+    vm.isLoading = false;
 
     vm.isNewPlaceFlow = function () {
       return vm.wizardData.showPlaces && vm.wizardData.function !== 'addDevice';
@@ -23,6 +24,7 @@
     vm.hideBackButton = !vm.isNewPlaceFlow();
 
     vm.next = function () {
+      vm.isLoading = true;
       $stateParams.wizard.next({
         deviceType: vm.selectedDeviceType,
         deviceName: vm.wizardData.deviceName
