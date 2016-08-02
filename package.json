@@ -31,6 +31,7 @@
     "serve": "lite-server -c config/lite-server-dev.js",
     "serve-dist": "lite-server -c config/lite-server-dist.js",
     "start": "npm run serve --",
+    "stats": "webpack --progress --profile --json > stats.json",
     "test": "npm run ktest-all",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "typings": "rimraf typings && typings install",
