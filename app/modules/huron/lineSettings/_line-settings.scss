@@ -45,6 +45,18 @@
   color: $gray-dark;
 }
 
+.inline-radio {
+  & > * {
+    display: inline-block;
+    & ~ * {
+      @include vr-spacing(ml,1);
+    }
+  }
+}
+
+.multiple-calls-title {
+  padding-top: 20px;
+}
 .side-panel-section {
   & .dn-warning-text {
     @extend .warning;

@@ -121,12 +121,13 @@
     function addResourceButtonClicked() {
       $modal.open({
         resolve: {
-          firstTimeSetup: false
+          firstTimeSetup: false,
+          yesProceed: true,
         },
         type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
-        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
         modalClass: 'redirect-add-resource'
       });
     }
@@ -199,7 +200,7 @@
     };
 
     function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
@@ -215,11 +216,13 @@
     function firstTimeSetup() {
       $modal.open({
         resolve: {
-          firstTimeSetup: true
+          firstTimeSetup: true,
+          yesProceed: false
         },
+        type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
-        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
         modalClass: 'redirect-add-resource'
       });
     }

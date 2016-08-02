@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($q, $state, $stateParams, $translate, $window, $modal, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, newCustomerViewToggle, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
 
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -37,6 +37,11 @@
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
 
+    vm.freeOrPaidServices = null;
+    vm.meetingServices = null;
+
+    vm.newCustomerViewToggle = newCustomerViewToggle;
+
     FeatureToggleService.atlasCareTrialsGetStatus()
       .then(function (result) {
         if (_.find(vm.currentCustomer.offers, {
@@ -50,6 +55,11 @@
     function setOffers(isCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, isCareEnabled);
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+      if (vm.newCustomerViewToggle) {
+        var nonTrialServices = PartnerService.getFreeOrActiveServices(vm.currentCustomer, isCareEnabled);
+        vm.freeOrPaidServices = nonTrialServices.freeOrPaidServices;
+        vm.meetingServices = nonTrialServices.meetingServices;
+      }
     }
 
     init();

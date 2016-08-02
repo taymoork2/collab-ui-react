@@ -20,7 +20,7 @@ namespace servicesOverview {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
 
-      FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList).then(supports => {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList).then(supports => {
         this.forwardEvent('f410FeatureEventHandler', supports);
       });
 

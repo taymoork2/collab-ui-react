@@ -6,7 +6,7 @@
     .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate, firstTimeSetup, $modal, $state, MediaServiceActivationV2, Notification, Authinfo) {
+  function RedirectAddResourceControllerV2(MediaClusterServiceV2, $modalInstance, $window, XhrNotificationService, $log, $translate, firstTimeSetup, yesProceed, $modal, $state, MediaServiceActivationV2, Notification, Authinfo) {
     var vm = this;
     vm.clusterList = [];
     vm.onlineNodeList = [];
@@ -19,6 +19,7 @@
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.redirectPopUpAndClose = redirectPopUpAndClose;
     vm.back = back;
+    vm.next = next;
     //vm.getV2Clusters = getV2Clusters;
     vm.whiteListHost = whiteListHost;
     vm.enableRedirectToTarget = false;
@@ -32,6 +33,9 @@
     vm.currentServiceId = "squared-fusion-media";
     vm.enableMediaService = enableMediaService;
     vm.radio = 1;
+    vm.noProceed = false;
+    vm.yesProceed = yesProceed;
+    vm.canGoNext = canGoNext;
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     MediaClusterServiceV2.getAll()
@@ -106,9 +110,14 @@
       }
     }
 
-    function closeSetupModal() {
+    function closeSetupModal(isCloseOk) {
       if (!firstTimeSetup) {
         $modalInstance.close();
+        return;
+      }
+      if (isCloseOk) {
+        $modalInstance.close();
+        $state.go('services-overview');
         return;
       }
       $modal.open({
@@ -182,6 +191,30 @@
     function back() {
       vm.enableRedirectToTarget = false;
       vm.createNewCluster = false;
+    }
+
+    function next() {
+      if (vm.radio == 0) {
+        vm.noProceed = true;
+      } else if (vm.yesProceed == true) {
+        $log.log(vm.selectedCluster);
+        $log.log(vm.hostName);
+        if (angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '' && angular.isDefined(vm.hostName)) {
+          vm.addRedirectTargetClicked(vm.hostName, vm.selectedCluster);
+        }
+      } else {
+        vm.yesProceed = true;
+      }
+    }
+
+    function canGoNext() {
+      if (vm.firstTimeSetup == true && vm.yesProceed == false) {
+        return true;
+      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != "" && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != "") {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }());

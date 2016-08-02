@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService) {
+  function TypeSelectorController($stateParams, $translate, Authinfo, Config, FusionClusterService, hasMediaFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -17,7 +17,7 @@
     vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm._translation = {};
-
+    vm.hasMediaFeatureToggle = hasMediaFeatureToggle;
     ///////////////
 
     getSetupState()

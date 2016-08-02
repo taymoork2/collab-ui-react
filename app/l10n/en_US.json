@@ -2169,6 +2169,13 @@
     "addNew": "Add New",
     "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
+  "multipleCalls": {
+    "title": "Simultaneous Calls",
+    "two": "2",
+    "eight": "8",
+    "multipleCallsDescription": " The maximum number of simultaneous incoming calls this line can recieve.",
+    "mulitpleCallsLoadError": "Multiple Calls failed to load."
+  },
   "callerIdPanel": {
     "title": "Caller ID",
     "description": "<small>Change the display name for calls from this line</small>",
@@ -2595,6 +2602,7 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
+    "services": "Services",
     "message": "Message",
     "call": "Call",
     "care": "Care",
@@ -2677,7 +2685,8 @@
     "deleteOrgError": "{{orgName}} was not deleted. Message: {{message}}",
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
-    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}"
+    "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
+    "meetingLicenses": "Meeting Licenses"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2773,7 +2782,7 @@
     "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
-    "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
+    "deviceCodeExpires": "The current activation code will expire {{inXDays}}.",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time",
@@ -3220,6 +3229,7 @@
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
+      "text3V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Have you installed and configured the software on your new Hybrid Media Node?",
@@ -3231,7 +3241,14 @@
       "firstStepNo1": "1. Download the latest software from Cisco:",
       "firstStepNo2": "Click here",
       "firstStepNo3": "2. Install and configure your Hybrid Media Node. For details, visit Help Central.",
-      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below."
+      "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
+      "yesProceed": "Yes, I’m ready to proceed.",
+      "noProceed": "No, I'm not ready to proceed.",
+      "noInfo": "Before you can proceed, install and configure the Hybrid Media Node software on your server.",
+      "noDesc1": "For detailed instructions, visit ",
+      "noDesc2": "Help Central.",
+      "noDesc3": "After installation and configuration is complete, return to Cloud Collaboration Management and register your Hybrid Media Node.",
+      "yesInfo": "Assign your Hybrid Media Node to a cluster and enter the hostname or IP address."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
