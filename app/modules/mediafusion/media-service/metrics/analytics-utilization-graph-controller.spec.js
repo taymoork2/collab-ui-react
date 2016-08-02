@@ -3,7 +3,7 @@
 describe('Controller: AnalyticsUtilizationGraphController', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var Authinfo, controller, $scope, httpMock, $q, $modal, log, $state;
   var MediaFusionAnalyticsService;
@@ -12,7 +12,7 @@ describe('Controller: AnalyticsUtilizationGraphController', function () {
   var startTimeTest = '2016-03-28 11:05:56';
   var endTimeTest = '2016-03-28 12:05:56';
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     // $provide.value("Authinfo", authInfo);
   }));
 

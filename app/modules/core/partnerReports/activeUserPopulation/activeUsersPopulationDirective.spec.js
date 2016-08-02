@@ -3,7 +3,7 @@
 describe('Directive: ucActiveUserPopulation', function () {
   var $compile, $rootScope;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;

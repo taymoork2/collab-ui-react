@@ -1,0 +1,77 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{showActivationCode.wizardData.title}}"></h3>
+</div>
+<div class="modal-body device-wizard view-activation-code" id="printActivationCode">
+  <div>
+    <h5 translate="addDeviceWizard.showActivationCode.activationCode"></h5>
+    <p class="wizardDescription">
+      <span ng-if="showActivationCode.wizardData.deviceType==='huron'" translate="addDeviceWizard.showActivationCode.plugInDeskPhone" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
+      <span ng-if="showActivationCode.wizardData.deviceType!=='huron'" translate="addDeviceWizard.showActivationCode.plugInRoomSystem" translate-values="{ belongsTo: showActivationCode.wizardData.deviceName }"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='users'" translate="addDeviceWizard.showActivationCode.newCodeInUsersPage"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='places'" translate="addDeviceWizard.showActivationCode.newCodeInPlacesPage"></span>
+      <span ng-if="showActivationCode.activationFlowType()==='devices'" translate="addDeviceWizard.showActivationCode.newCodeInDevicesPace"></span>
+    </p>
+    <div class="qrCodeSection" ng-if="showActivationCode.isLoading">
+      <i class="loading space icon icon-spinner"></i>
+    </div>
+    <div class="qrCodeSection" ng-if="!showActivationCode.isLoading">
+      <div class="qrCodePlaceholder"></div>
+      <img class="qrCodeImage"
+           ng-show="showActivationCode.wizardData.deviceType==='huron'"
+           ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
+           data-ng-src="data:image/JPEG;base64,{{showActivationCode.qrCode}}">
+      <div class="activation-code">
+        <h4>
+          {{showActivationCode.friendlyActivationCode}}
+        </h4>
+      </div>
+      <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires" translate-values="{ expiryDate: showActivationCode.getExpiresOn() }"></p>
+      <div class="qrCodeButtons">
+        <a sq-clipboard="showActivationCode.getActivationCode()">
+          <span translate="generateActivationCodeModal.copyToClipboard"></span>
+        </a>
+
+        <a
+          class="qrCodeRightButton"
+          ng-show="showActivationCode.wizardData.deviceType==='huron'"
+          ng-disabled="genAuthCode.showEmail"
+          ng-click="showActivationCode.activateEmail()"
+          translate="generateActivationCodeModal.emailCode">
+        </a>
+
+        <a class="qrCodeRightButton" cr-print print-element-id="printActivationCode">
+          <span translate="generateActivationCodeModal.print"></span>
+        </a>
+      </div>
+      <div class="sendEmailWrapper" ng-if="showActivationCode.showEmail">
+        <div class="sendEmailForm">
+          <div class="selectedAddress">
+            <div class="spacingBeforeSearch"></div>
+            <label class="cs-input__label" for="userInput">{{showActivationCode.selectedUser}}</label>
+            <a class="sendMailArrow" ng-click="showActivationCode.sendActivationCodeEmail()"><i class="icon icon-send-email"></i></a>
+          </div>
+          <div class="typeahead-group userSearch">
+            <input id="userInput"
+                       ng-model="showActivationCode.foundUser"
+                       class="underline userInput"
+                       typeahead="user for user in showActivationCode.searchUser($viewValue) | limitTo:6"
+                       typeahead-template-url="stateTemplate.html"
+                       typeahead-on-select="showActivationCode.selectUser($item)"
+                       placeholder="{{'addDeviceWizard.showActivationCode.searchAnotherUser' | translate}}"
+                       ng-click="showActivationCode.onTextClick($event)"
+                       typeahead-wait-ms="500"/>
+            <script type="text/ng-template" id="stateTemplate.html">
+              <a>
+                <span ng-bind-html="'' + match.label.extractedName + ' (' + match.label.userName + ')' | typeaheadHighlight:query" ></span>
+              </a>
+            </script>
+          </div>
+          <div class="scrollSpace"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer"></div>

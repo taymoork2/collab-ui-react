@@ -9,7 +9,7 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test', function () {
 
   var $rootScope;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
     _$rootScope_,
@@ -44,7 +44,7 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test2', function () {
 
   var $rootScope;
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
     _$rootScope_,

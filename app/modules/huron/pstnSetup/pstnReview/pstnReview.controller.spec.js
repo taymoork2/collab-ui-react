@@ -8,7 +8,7 @@ describe('Controller: PstnReviewCtrl', function () {
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
   var swivelNumberTokens = getJSONFixture('huron/json/pstnSetup/swivelNumberTokens.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _$stateParams_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _ExternalNumberPool_) {
     $scope = $rootScope.$new();
@@ -56,7 +56,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
 
       it('should contain one of each order', function () {
@@ -85,7 +87,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
 
@@ -104,7 +108,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
 
@@ -122,7 +128,9 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnServiceAddressService.createCustomerSite).toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps', {
+          portOrders: [orderCart[1]]
+        });
       });
     });
   });

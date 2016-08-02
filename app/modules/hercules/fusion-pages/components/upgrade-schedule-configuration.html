@@ -5,8 +5,8 @@
     is-disabled="$ctrl.state === 'syncing'"
     labelfield="label"
     valuefield="value"
-    ng-model="$ctrl.data.scheduleTime"
-    options="$ctrl.timeOptions"
+    ng-model="$ctrl.formData.scheduleTime"
+    options="$ctrl.formOptions.time"
     placeholder="'Select a time'"
     >
   </cs-select>
@@ -16,8 +16,8 @@
     labelfield="label"
     valuefield="value"
     input-placeholder="sel.inputPlaceholder"
-    ng-model="$ctrl.data.scheduleDay"
-    options="$ctrl.dayOptions"
+    ng-model="$ctrl.formData.scheduleDay"
+    options="$ctrl.formOptions.day"
     placeholder="'Select a day'"
     >
   </cs-select>
@@ -27,16 +27,13 @@
     labelfield="label"
     valuefield="value"
     filter="true"
-    ng-model="$ctrl.data.scheduleTimeZone"
-    options="$ctrl.timezoneOptions"
+    ng-model="$ctrl.formData.scheduleTimeZone"
+    options="$ctrl.formOptions.timeZone"
     placeholder="'Select a timezone'"
     >
   </cs-select>
 </div>
-<p ng-if="!$ctrl.isAdminAcknowledged">
-  <button class="btn btn--cta" ng-click="$ctrl.acknowledge($ctrl.data)" translate="hercules.settings.scheduleUpgrade.defaultWarning"></button>
-</p>
 <p>
   <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
-  <strong class="upgrade-schedule-next-time">{{$ctrl.nextUpdate | date:'MMM d, y h:mm a'}}</strong> <a href="#" ng-click="$ctrl.openModal($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="$ctrl.canPostpone && !$ctrl.postponed"></a>
+  <strong class="upgrade-schedule-next-time">{{$ctrl.upgradeSchedule.nextUpgradeWindow.startTime | date:'MMM d, y h:mm a':$ctrl.nextUpdateOffset}}</strong> <a href="#" ng-click="$ctrl.postpone($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="$ctrl.canPostpone && !$ctrl.upgradeSchedule.moratoria.length > 0"></a>
 </p>

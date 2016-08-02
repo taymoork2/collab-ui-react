@@ -1,18 +1,22 @@
 'use strict';
 
 describe('SetupWizardCtrl', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $scope, $controller, Authinfo, $q, FeatureToggleService;
+  var controller, $controller, $scope, $q, Authinfo, FeatureToggleService, Orgservice;
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_) {
+  var usageFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
+
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _Authinfo_, _FeatureToggleService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $controller = _$controller_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
+    Orgservice = _Orgservice_;
 
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
@@ -21,6 +25,8 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(false));
+    spyOn(Orgservice, 'getAdminOrgUsage').and.returnValue($q.when(usageFixture));
   }));
 
   function _expectStepIndex(step, index) {
@@ -133,25 +139,6 @@ describe('SetupWizardCtrl', function () {
     $scope.$apply();
   }
 
-  /**
-   * convenience fn to see the proper ordering of setup tabs:
-   * shows tab name, subtab name (if present), and [step names]
-   *
-  function print() {
-    _.forEach($scope.tabs, function (macroStep) {
-      var microSteps = _.map(macroStep.steps, 'name');
-      if (microSteps.length !== 0) {
-        console.log(macroStep.name, microSteps);
-      } else {
-        _.forEach(macroStep.subTabs, function (subTab) {
-          var microSteps = _.map(subTab.steps, 'name');
-          console.log(macroStep.name, subTab.name, microSteps);
-        });
-      }
-    });
-  }
-  */
-
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
@@ -260,6 +247,20 @@ describe('SetupWizardCtrl', function () {
 
     it('the wizard should have 4 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
+  describe('When there are only shared device licenses', function () {
+    beforeEach(function () {
+      FeatureToggleService.atlasDarlingGetStatus = jasmine.createSpy().and.returnValue($q.when(true));
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+
+      initController();
+    });
+
+    it('the wizard should have 3 tabs', function () {
+      expectStepOrder(['planReview', 'enterpriseSettings', 'finish']);
+      expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl']);
     });
   });
 

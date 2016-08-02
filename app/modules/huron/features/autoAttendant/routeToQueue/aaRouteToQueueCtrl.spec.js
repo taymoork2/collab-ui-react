@@ -50,9 +50,9 @@ describe('Controller: AARouteToQueueCtrl', function () {
     return _ceInfos;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _QueueHelperService_) {
     $translate = _$translate_;
@@ -70,11 +70,13 @@ describe('Controller: AARouteToQueueCtrl', function () {
     $scope.schedule = schedule;
     $scope.index = index;
     $scope.keyIndex = keyIndex;
+    $scope.menuId = 'menu1';
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+    AutoAttendantCeMenuModelService.clearCeMenuMap();
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.when(queues));

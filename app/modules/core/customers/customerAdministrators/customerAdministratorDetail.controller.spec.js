@@ -1,19 +1,20 @@
 'use strict';
 
 describe('Controller: customerAdministratorDetailCtrl', function () {
-  beforeEach(module('Core'));
-  var controller, $controller, $scope, $q, $stateParams, CustomerAdministratorService, Notification, ModalService, Mixpanel;
+  beforeEach(angular.mock.module('Core'));
+  var controller, $controller, $scope, $q, $stateParams, Analytics, CustomerAdministratorService, ModalService, Notification, Orgservice;
   var modalDefer, testUsers = [];
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Notification_, _CustomerAdministratorService_, _ModalService_, _Mixpanel_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$stateParams_, _Analytics_, _Notification_, _CustomerAdministratorService_, _ModalService_, _Orgservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
-    $stateParams = _$stateParams_;
-    CustomerAdministratorService = _CustomerAdministratorService_;
-    Notification = _Notification_;
-    ModalService = _ModalService_;
-    Mixpanel = _Mixpanel_;
     $q = _$q_;
+    $stateParams = _$stateParams_;
+    Analytics = _Analytics_;
+    CustomerAdministratorService = _CustomerAdministratorService_;
+    ModalService = _ModalService_;
+    Notification = _Notification_;
+    Orgservice = _Orgservice_;
 
     $stateParams.currentCustomer = {
       customerOrgId: '5555-6666',
@@ -64,9 +65,13 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
-    spyOn(Mixpanel, 'trackEvent').and.returnValue($q.when({}));
+    spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
+
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
   }));
 
   function initController() {
@@ -127,7 +132,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
         expect(controller.administrators[0].fullName).toEqual('Frank Sinatra');
         expect(controller.administrators[0].avatarSyncEnabled).toEqual(false);
         expect(CustomerAdministratorService.patchSalesAdminRole()).toHaveBeenCalled();
-        expect(Mixpanel.trackEvent()).toHaveBeenCalled();
+        expect(Analytics.trackEvent()).toHaveBeenCalled();
       });
     });
   });

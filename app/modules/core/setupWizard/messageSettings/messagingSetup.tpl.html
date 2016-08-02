@@ -6,16 +6,12 @@
 		</div>
 		<cs-checkbox ckid="chk-messenger-int" ng-model="msgSetup.msgIntegration" label="{{'firstTimeWizard.messengerSetupLabel' | translate}}"></cs-checkbox>
 	</div>
-	<div class="dr-content" ng-if="msgSetup.showDrContent">
+	<div class="dr-content" ng-if="msgSetup.showDataRetentionContent">
 		<h4 translate="firstTimeWizard.dataRetentionTitle"></h4>
 		<p translate="firstTimeWizard.dataRetentionDesc"></p>
 		<div class="col-md-4 dr-selector">
 			<cs-select ng-model="msgSetup.selected" options="msgSetup.options" placeholder="msgSetup.placeholder" labelField="label" valueField="value"></cs-select>
 		</div>
-	</div>
-	<div class="app-launch" ng-if="msgSetup.showAppSecurity">
-		<h4 translate="firstTimeWizard.appSecurity"></h4>
-		<cs-checkbox ckid="chk-app-security" ng-click="msgSetup.currentAppSecurity = !msgSetup.currentAppSecurity" ng-model="msgSetup.currentAppSecurity" label="{{'firstTimeWizard.appSecurityLabel' | translate}}"></cs-checkbox>
 	</div>
 	<div class="data-share">
 		<h4 translate="firstTimeWizard.dataShareTitle"></h4>

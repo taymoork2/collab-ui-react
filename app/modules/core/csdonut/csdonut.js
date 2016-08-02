@@ -3,7 +3,7 @@
 
   /* global d3 */
 
-  angular.module('csDonut', []).directive('csDonut', csDonut);
+  angular.module('csDonut').directive('csDonut', csDonut);
 
   /* @ngInject */
   function csDonut() {
@@ -74,7 +74,7 @@
             $scope.colours = ['#43a942'];
             $scope.text.color = '#6A6B6C';
             $scope.dataset = [1];
-          } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999 || max > 9999 || value <= 0 || max <= 0) {
+          } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999999 || max > 9999999 || value <= 0 || max <= 0) {
             $scope.text.content = 0;
             $scope.text.color = 'lightgray';
             $scope.dataset = [0, 1];

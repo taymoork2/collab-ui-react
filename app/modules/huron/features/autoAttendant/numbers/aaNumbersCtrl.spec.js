@@ -4,7 +4,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
   var controller, AANotificationService, AutoAttendantCeService, ExternalNumberPoolService;
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
-  var $rootScope, $scope, $q, deferred, $translate, $stateParams;
+  var $rootScope, $scope, $q, deferred, $stateParams;
   var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
 
@@ -68,16 +68,16 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     return _ceInfo;
   }
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
     getOrgName: sinon.stub().returns('awesomeco')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

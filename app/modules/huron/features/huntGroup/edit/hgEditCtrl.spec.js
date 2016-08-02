@@ -32,8 +32,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     "isSelected": false
   }];
 
-  beforeEach(module('Huron'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 

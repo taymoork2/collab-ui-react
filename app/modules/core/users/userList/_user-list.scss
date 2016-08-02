@@ -25,6 +25,9 @@
   .user-status {
     font-size: 0.6rem;
     padding-right: rem(3);
+    &-red {
+      color: $color-negative-base;
+    }
     &-yellow {
       color: $brand-warning;
     }

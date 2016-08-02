@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig, WindowLocation) {
+  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, TokenService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -95,8 +95,9 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      if (!vm.masonryRefreshed)
+      if (!vm.masonryRefreshed) {
         reInstantiateMasonry();
+      }
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink() || $scope.showEdiscoveryLink();
     };
 
@@ -109,14 +110,7 @@
       state: "support.status"
     }];
 
-    //TODO remove test
-    /*$scope.tabs.push({
-      title: $translate.instant('supportPage.tabs.logs'),
-      state: "support.logs"
-    });*/
-
-    //ADD BACK
-    if (Authinfo.isInDelegatedAdministrationOrg()) {
+    if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
         title: $translate.instant('supportPage.tabs.logs'),
         state: "support.logs"
@@ -276,7 +270,7 @@
           cache: true,
           ajax: {
             headers: {
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
+              'Authorization': 'Bearer ' + TokenService.getAccessToken()
             }
           }
         }
@@ -390,9 +384,9 @@
           $scope.logSearchBtnLoad = false;
           $scope.gridRefresh = false;
           Log.debug('Failed to retrieve user logs. Status: ' + status);
-          Notification.notify([$translate.instant('supportPage.errLogQuery', {
+          Notification.error('supportPage.errLogQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     }
@@ -489,9 +483,9 @@
         } else {
           Log.debug('Failed to retrieve log information. Status: ' + status);
           $scope.getPending = false;
-          Notification.notify([$translate.instant('supportPage.errCallInfoQuery', {
+          Notification.error('supportPage.errCallInfoQuery', {
             status: status
-          })], 'error');
+          });
         }
       });
     };

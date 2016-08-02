@@ -1,62 +1,107 @@
 .cs-card.header-bar.orange {
-       header:after { 
-	  border-top: 5px solid #EF824F;
-     }      
-  } 
+ header:after { 
+ border-top: 5px solid #EF824F;
+ }      
+} 
 .cs-card.header-bar.green {
-       header:after { 
-	  border-top: 5px solid #7BAF5D;
-     }      
-  } 
+  header:after { 
+	border-top: 5px solid #7BAF5D;
+  }      
+} 
+.cs-card.header-bar.grey {
+  header:after { 
+  border-top: 5px solid #9B9B9B;
+  }      
+}   
 
 .metrics-header {
-        display: -webkit-box;
-        display: -ms-flexbox; 
-        display: flex; 
-        -webkit-box-align: center; 
-        -ms-flex-align: center;
-        align-items: center; 
-       -webkit-box-pack: center;
-       -ms-flex-pack: center;
-       justify-content: center;
-       color: #343537;
-       font-size: 1.625rem; 
-       font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display: -webkit-box;
+    display: -ms-flexbox; 
+    display: flex; 
+    -webkit-box-align: center; 
+    -ms-flex-align: center;
+    align-items: center; 
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #343537;
+    font-size: 1.525rem;
+    font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
- }
+}
 
 .metrics-header span { 
-      font-size: inherit;
-       line-height: 1; 
- }
+  font-size: inherit; 
+}
 
 .metrics-header i { 
-      color: #4F5051; 
-      font-size: 2rem;
-      margin-right: .5rem; 
- }
+  color: #4F5051; 
+  font-size: 2rem;
+  margin-right: .5rem; 
+}
 
 .metrics-paragraph { 
-      font-size: 1rem; 
-      color: #4F5051;
- }
+  font-size: 1rem; 
+  color: #4F5051;
+}
 
 .metrics-info { 
-      font-size: 1rem; 
-      color: #858688; 
-      font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
- }
+  padding-left: .3rem;
+  padding-bottom: .5rem;
+  font-size: 1rem;
+  height: 170px;
+  min-height: 170px; 
+  color: #343537;
+  text-align: center; 
+  font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+.call-counts { 
+  font-size: 3rem; 
+  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  color: #5390E0; 
+  margin-bottom: .1rem; 
+}
 
 .percentage-count { 
-    	font-size: 3rem; 
-    	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-    	color: #EF824F; 
-    	margin-bottom: .5rem; 
- }
+  font-size: 3rem; 
+  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  color: #EF824F; 
+  margin-bottom: .1rem; 
+}
 
 .metrics-count { 
-    	font-size: 3rem; 
-    	font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-    	color: #7BAF5D; 
-    	margin-bottom: .5rem; 
- }
+  font-size: 3rem; 
+  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  color: #7BAF5D; 
+  margin-bottom: .1rem; 
+}
+
+.utilization-count { 
+  font-size: 3rem;
+  padding-top: 2rem; 
+  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  color: #7BAF5D; 
+  margin-bottom: .1rem; 
+}
+
+.availability-count { 
+  font-size: 3rem;
+  padding-top: 1rem; 
+  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  color: #7BAF5D; 
+  margin-bottom: .1rem; 
+}
+
+.last-counts { 
+  font-size: 0.675rem; 
+  color: #5390E0;
+  padding-bottom: .1px;
+}
+
+.last-text { 
+  font-size: 0.675rem; 
+  color: #343537;
+  padding-bottom: .1px;
+}

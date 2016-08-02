@@ -3,7 +3,7 @@
 describe('ServiceStatusSummaryService', function () {
 
   // load the service's module
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
   var Service;
@@ -285,8 +285,9 @@ describe('ServiceStatusSummaryService', function () {
         return "Management Connector";
       } else if (serviceType == "c_cal") {
         return "Calendar Connector";
-      } else
+      } else {
         return "Unknown connector name";
+      }
     };
 
     var services = [];

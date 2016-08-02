@@ -1,8 +1,15 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .service('LogMetricsService', LogMetricsService);
+  module.exports = angular.module('core.logmetricsservice', [
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/storage'),
+      require('modules/core/auth/auth'),
+      require('modules/core/config/urlConfig'),
+    ]).service('LogMetricsService', LogMetricsService)
+    .name;
 
   /* @ngInject */
   function LogMetricsService($http, Authinfo, Config, Log, UrlConfig) {
@@ -14,8 +21,9 @@
       this.units = units;
       this.time = moment().utc().format();
       this.elapsedTime = elapsedTime;
-      if (data !== null)
+      if (data !== null) {
         this.data = data;
+      }
     }
 
     return {
@@ -26,6 +34,8 @@
       },
 
       eventType: {
+        contextServiceEnabled: 'CONTEXTSERVICEENABLED',
+        contextServiceDisabled: 'CONTEXTSERVICEDISABLED',
         inviteUsers: 'INVITEUSERS',
         partnerLogin: 'PARTNERLOGIN',
         partnerCustomersPage: 'PARTNERCUSTOMERSPAGE',

@@ -1,6 +1,6 @@
 'use strict';
 describe('LicenseService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var LicenseService;
 
@@ -15,9 +15,6 @@ describe('LicenseService', function () {
       q = _$q_;
       urlBase = UrlConfig.getAdminServiceUrl();
       $httpBackend = _$httpBackend_;
-      $httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
     }));
 
     it('should get backend data from helpdesk/licences/<orgId>', function () {

@@ -1,15 +1,15 @@
 'use strict';
 
 describe('Service : AccountOrgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var AccountOrgService, $httpBackend, Config, Auth, UrlConfig, Authinfo;
   var authInfo = {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
-  var appSecurityRegex = /.*\/settings\/enforceClientSecurity\.*/;
+  var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -42,7 +42,7 @@ describe('Service : AccountOrgService', function () {
 
   describe('App Security ', function () {
     //App Security Setter check
-    it('should set Appsecurity setting to enforceClientSecurity', function () {
+    it('should set Appsecurity setting to clientSecurityPolicy', function () {
       $httpBackend.whenPUT(appSecurityRegex).respond([200, {}]);
 
       AccountOrgService.setAppSecurity(authInfo.getOrgId(), true).then(function (response) {
@@ -52,17 +52,17 @@ describe('Service : AccountOrgService', function () {
     });
 
     //App Security Getter check
-    it('should get Appsecurity setting from enforceClientSecurity', function () {
+    it('should get Appsecurity setting from clientSecurityPolicy', function () {
 
       $httpBackend.whenGET(appSecurityRegex).respond(function () {
         var data = {
-          enforceClientSecurity: true
+          clientSecurityPolicy: true
         };
         return [200, data];
       });
 
       AccountOrgService.getAppSecurity(authInfo.getOrgId()).then(function (response) {
-        expect(response.data.enforceClientSecurity).toBe(true);
+        expect(response.data.clientSecurityPolicy).toBe(true);
       });
       $httpBackend.flush();
     });

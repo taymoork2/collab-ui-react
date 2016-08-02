@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Authinfo, Auth, Config, Localytics, Log, Mixpanel, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -19,6 +19,16 @@
       NOTE_NO_LICENSE: 0,
       NOTE_CANCELED: 0,
       NOTE_NOT_EXPIRED: 99
+    };
+
+    var helpers = {
+      createConferenceMapping: _createConferenceMapping,
+      createLicenseMapping: _createLicenseMapping,
+      createFreeServicesMapping: _createFreeServicesMapping,
+      buildService: _buildService,
+      addService: _addService,
+      removeFromFreeServices: _removeFromFreeServices,
+      isDisplayablePaidService: _isDisplayablePaidService
     };
 
     var factory = {
@@ -35,10 +45,137 @@
       setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
       exportCSV: exportCSV,
-      parseLicensesAndOffers: parseLicensesAndOffers
+      parseLicensesAndOffers: parseLicensesAndOffers,
+      getFreeOrActiveServices: getFreeOrActiveServices,
+      helpers: helpers
     };
 
     return factory;
+
+    function _createConferenceMapping() {
+      var conferenceMapping = {};
+      conferenceMapping[Config.offerCodes.CF] = $translate.instant('trials.meeting');
+      conferenceMapping[Config.offerCodes.EE] = $translate.instant('customerPage.EE');
+      conferenceMapping[Config.offerCodes.MC] = $translate.instant('customerPage.MC');
+      conferenceMapping[Config.offerCodes.SC] = $translate.instant('customerPage.SC');
+      conferenceMapping[Config.offerCodes.TC] = $translate.instant('customerPage.TC');
+      conferenceMapping[Config.offerCodes.EC] = $translate.instant('customerPage.EC');
+      conferenceMapping[Config.offerCodes.CMR] = $translate.instant('customerPage.CMR');
+
+      conferenceMapping = _.mapValues(conferenceMapping, function (translatedOfferCode) {
+        return {
+          name: translatedOfferCode,
+          icon: 'icon-circle-group',
+          licenseType: Config.licenseTypes.CONFERENCING
+        };
+      });
+      return conferenceMapping;
+
+    }
+
+    function _createLicenseMapping() {
+
+      var licenseMapping = {};
+      licenseMapping[Config.licenseTypes.MESSAGING] = {
+        name: $translate.instant('trials.message'),
+        icon: 'icon-circle-message',
+
+      };
+      licenseMapping[Config.licenseTypes.COMMUNICATION] = {
+        name: $translate.instant('trials.call'),
+        icon: 'icon-circle-call',
+
+      };
+
+      licenseMapping[Config.licenseTypes.SHARED_DEVICES] = {
+        name: $translate.instant('trials.roomSystem'),
+        icon: 'icon-circle-telepresence',
+
+      };
+      licenseMapping[Config.offerTypes.CARE] = {
+        name: $translate.instant('trials.care'),
+        icon: 'icon-circle-contact-centre',
+
+      };
+      return licenseMapping;
+
+    }
+
+    function _createFreeServicesMapping() {
+      var freeServices = [{
+        licenseType: Config.licenseTypes.MESSAGING,
+        name: $translate.instant('trials.message'),
+        icon: 'icon-circle-message',
+        code: Config.offerCodes.MS,
+        qty: 0,
+        free: true
+
+      }, {
+        licenseType: Config.licenseTypes.CONFERENCING,
+        name: $translate.instant('trials.meeting'),
+        icon: 'icon-circle-group',
+        code: Config.offerCodes.CF,
+        qty: 0,
+        free: true
+      }, {
+        licenseType: Config.licenseTypes.COMMUNICATION,
+        name: $translate.instant('trials.call'),
+        icon: 'icon-circle-call',
+        code: Config.offerCodes.CO,
+        qty: 0,
+        free: true
+      }];
+      return freeServices;
+
+    }
+
+    function _buildService(licenseInfo, mapping) {
+      var isConference = (mapping[Config.offerCodes.CF] !== undefined);
+      var service;
+      if (isConference) {
+        service = (licenseInfo.offerName) ? mapping[licenseInfo.offerName] : mapping[Config.offerCodes.CF];
+      } else {
+        service = mapping[licenseInfo.licenseType];
+        service.licenseType = licenseInfo.licenseType;
+      }
+      service.qty = licenseInfo.volume;
+      return service;
+    }
+
+    function _addService(services, service) {
+      var existingService = _.find(services, {
+        name: service.name
+      });
+      if (existingService) {
+        existingService.qty = existingService.qty + service.qty;
+      } else {
+        services.push(service);
+      }
+    }
+
+    function _removeFromFreeServices(freeServices, service) {
+      //remove trial or paid services from 'free'
+      _.remove(freeServices, function (freeService) {
+        if (service.offerName) {
+          return freeService.licenseType === service.licenseType && freeService.code === service.offerName;
+        } else {
+          return freeService.licenseType === service.licenseType;
+        }
+      });
+    }
+
+    function _isDisplayablePaidService(service, isCareEnabled) {
+
+      var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE) || isCareEnabled;
+      if (service.isTrial) {
+        return false;
+      }
+      if ((service.licenseType !== Config.licenseTypes.STORAGE) && serviceNotCareOrCareIsShown) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
     function getManagedOrgsList(searchText) {
       return $http.get(managedOrgsUrl, {
@@ -75,12 +212,7 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             patchManagedOrgs(uuid, customerOrgId);
-            Localytics.tagEvent('patch user call', {
-              by: response.data.orgId
-            });
-            Mixpanel.trackEvent('patch user call', {
-              by: response.data.orgId
-            });
+            Analytics.trackUserPatch(response.data.orgId);
           }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);
@@ -172,7 +304,8 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
-        numUsers: customer.licenseCount,
+        numUsers: _.get(customer, 'license[0].volume', 0), // Note that the actual numUsers isn't available yet
+        activeUsers: 0,
         daysLeft: 0,
         usage: 0,
         licenses: 0,
@@ -228,11 +361,16 @@
       };
 
       // havent figured out what this is doing yet...
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
       dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
+      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
       dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
       dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
       dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
 
@@ -361,9 +499,8 @@
         }
 
         partial.usage = offerInfo.usageCount;
-        if (offerInfo.id === Config.offerTypes.roomSystems) {
-          partial.deviceLicenses = offerInfo.licenseCount;
-        } else {
+        if (offerInfo.id !== Config.offerTypes.roomSystems &&
+          offerInfo.id !== Config.offerTypes.care) {
           partial.licenses = offerInfo.licenseCount;
         }
 
@@ -387,6 +524,7 @@
           break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
+          partial.deviceLicenses = offerInfo.licenseCount;
           break;
         case Config.offerTypes.care:
           if (isCareEnabled) {
@@ -400,6 +538,71 @@
       partial.offer.userServices = _.uniq(userServices).join(', ');
 
       return partial;
+    }
+
+    function getFreeOrActiveServices(customer, isCareEnabled) {
+
+      var paidServices = [];
+      var meetingServices = [];
+      var service = null;
+      var result = {};
+
+      var meetingHeader = {
+        licenseType: 'MEETING',
+        name: $translate.instant('customerPage.meeting'),
+        icon: 'icon-circle-group',
+      };
+
+      var licenseMapping = helpers.createLicenseMapping();
+      var conferenceMapping = helpers.createConferenceMapping();
+      var freeServices = helpers.createFreeServicesMapping();
+
+      _.forEach(_.get(customer, 'licenseList', []), function (licenseInfo) {
+        service = null;
+        if (licenseInfo) {
+          helpers.removeFromFreeServices(freeServices, licenseInfo);
+          //from paid or free services
+          if (helpers.isDisplayablePaidService(licenseInfo, isCareEnabled)) { //if conference
+            if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
+              service = helpers.buildService(licenseInfo, conferenceMapping);
+              helpers.addService(meetingServices, service);
+
+            } else {
+              service = helpers.buildService(licenseInfo, licenseMapping);
+              helpers.addService(paidServices, service);
+
+            }
+          }
+        }
+
+      });
+
+      //if only one meeting service -- move to the services list
+      if (meetingServices.length === 1) {
+        var singleMeetingService = meetingServices.shift();
+        helpers.addService(paidServices, singleMeetingService);
+      }
+
+      if (freeServices.length > 0 || paidServices.length > 0) {
+        result.freeOrPaidServices = _.union(freeServices, paidServices);
+      }
+
+      //if there is more than one
+      if (meetingServices.length >= 1) {
+        var totalQ = _.reduce(meetingServices, function (prev, curr) {
+          return {
+            qty: prev.qty + curr.qty
+          };
+        });
+
+        _.merge(meetingHeader, {
+          qty: totalQ.qty,
+          sub: meetingServices
+        });
+        result.meetingServices = meetingHeader;
+      }
+
+      return result;
     }
   }
 })();

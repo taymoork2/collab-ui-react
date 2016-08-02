@@ -37,6 +37,13 @@ describe('Partner flow', function () {
     });
   });
 
+  describe('Partner landing page reports', function () {
+    it('should show the reports', function () {
+      utils.expectIsDisplayed(partner.entitlementsChart);
+      utils.expectIsDisplayed(partner.entitlementsCount);
+    });
+  });
+
   describe('Add Partner Trial', function () {
 
     it('should view all trials', function () {
@@ -62,10 +69,12 @@ describe('Partner flow', function () {
 
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectIsDisplayed(partner.messageTrialCheckbox);
-      utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, true);
       utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
+      utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
+      utils.expectCheckbox(partner.roomSystemsTrialCheckbox, false);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
@@ -138,7 +147,7 @@ describe('Partner flow', function () {
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
-      utils.click(wizard.finishBtn);
+      utils.click(wizard.saveBtn);
       notifications.clearNotifications();
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
@@ -170,7 +179,6 @@ describe('Partner flow', function () {
     it('Should close customer portal', function () {
       browser.close();
       browser.switchTo().window(appWindow);
-      browser.refresh();
     });
 
   }, LONG_TIMEOUT);
@@ -180,7 +188,7 @@ describe('Partner flow', function () {
     it('should launch partners org view', function () {
       appWindow = browser.getWindowHandle();
 
-      utils.expectIsDisplayed(navigation.userInfoButton);
+      utils.search('', -1); // clear search
       utils.click(partner.allFilter);
       utils.click(partner.myOrganization);
       utils.click(partner.launchButton);
@@ -194,31 +202,20 @@ describe('Partner flow', function () {
 
         browser.close();
         browser.switchTo().window(appWindow);
-
+        utils.click(partner.exitPreviewButton);
       });
     }, LONG_TIMEOUT);
   });
 
-  describe('Partner landing page reports', function () {
-    it('should show the reports', function () {
-      navigation.clickHome();
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-  });
-
   describe("Delete the test customer", function () {
     it('should login navigate to the test customer', function () {
-      navigation.clickCustomers();
       utils.click(partner.trialFilter);
       utils.search(partner.newTrial.customerName, -1);
-      utils.expectIsDisplayed(partner.newTrialRow);
+      utils.click(partner.newTrialRow);
+      utils.expectIsDisplayed(partner.previewPanel);
     });
 
     it('should click the Delete Customer button', function () {
-      utils.click(partner.newTrialRow);
-      utils.expectIsDisplayed(partner.previewPanel);
-
       var webElement = partner.deleteCustomerButton.getWebElement();
       browser.executeScript(function (e) {
         e.scrollIntoView()
@@ -227,7 +224,7 @@ describe('Partner flow', function () {
       utils.click(partner.deleteCustomerButton);
       utils.waitForModal().then(function () {
         utils.click(partner.deleteCustomerOrgConfirm).then(function () {
-          notifications.assertSuccess(partner.newTrial.customerName, 'was successfully deleted');
+          notifications.assertSuccess(partner.newTrial.customerName, 'successfully deleted');
         });
       });
     });

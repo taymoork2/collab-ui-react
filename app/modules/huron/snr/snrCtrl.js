@@ -243,7 +243,7 @@
       } else {
         // Nothing to delete, notify success
         resetForm();
-        Notification.notify([$translate.instant('singleNumberReachPanel.removeSuccess')], 'success');
+        Notification.success('singleNumberReachPanel.removeSuccess');
       }
     }
 

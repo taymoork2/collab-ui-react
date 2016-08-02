@@ -7,7 +7,10 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
+    AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
+    $timeout) {
+
     /*jshint validthis: true */
     var vm = this;
 
@@ -21,6 +24,7 @@
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
+    vm.isAnyHoursInvalid = isAnyHoursInvalid;
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
@@ -29,6 +33,9 @@
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
     vm.changeBehaviour = changeBehaviour;
+    vm.saveTimeZone = saveTimeZone;
+    vm.timeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = true;
@@ -40,6 +47,7 @@
       compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
     };
     vm.messageHours = {
+      required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
     vm.monthOptions = [];
@@ -51,11 +59,79 @@
     vm.openhours = [];
 
     function addRange() {
+      //if there were any invalid hours, we want to
+      //not add a new range to the DOM
+      if (vm.isAnyHoursInvalid()) {
+        return;
+      }
       var openhour = AAICalService.getDefaultRange();
       _.each(openhour.days, function (day) {
         day.label = moment.weekdays(day.index);
       });
       vm.openhours.push(angular.copy(openhour));
+    }
+
+    //check each hours form that exist in the DOM for validity
+    //return true if there were errors found, else return false
+    //this method prints error messages from performing the checks
+    function isAnyHoursInvalid() {
+      var errors = false;
+      var daysErr = false;
+      _.forEach(vm.openhours, function (value, index) {
+        if (isOpenHoursEmpty(index)) {
+          errors = true;
+        }
+        if (isClosedHoursEmptyOrInvalid(index)) {
+          errors = true;
+        }
+        if (daysErr || isDayEmpty(index)) {
+          daysErr = true;
+          errors = true;
+        }
+      });
+      return errors;
+    }
+
+    //check each day in the day portion of the form for emptiness
+    //if there was not at least one day set, then notify the user
+    //with a single toaster error message, otherwise, return no error found
+    function isDayEmpty(index) {
+      var atLeastOneDaySet = _.find(vm.openhours[index].days, {
+        'active': true
+      });
+      if (angular.isUndefined(atLeastOneDaySet)) {
+        AANotificationService.error('autoAttendant.openHoursDaySelect');
+        return true;
+      }
+      return false;
+    }
+
+    //check the start time portion of the form for emptiness, return true if
+    //the open hours was empty, false otherwise
+    function isOpenHoursEmpty(index) {
+      if (_.isEmpty(vm.openhours[index].starttime)) {
+        setRequiredHours('starttime' + index);
+        return true;
+      }
+      return false;
+    }
+
+    //check the closed hours portion of the form for emptiness, or for invalidity,
+    //return true if empty or invalid and return false if neither
+    function isClosedHoursEmptyOrInvalid(index) {
+      if (_.isEmpty(vm.openhours[index].endtime)) {
+        setRequiredHours('endtime' + index);
+        return true;
+      }
+      return vm.hoursForm['endtime' + index].$error.compareTo;
+    }
+
+    //handle the production of the error message, using value as the
+    //form name and index, value guaranteed to be valid
+    function setRequiredHours(value) {
+      vm.hoursForm[value].$error.required = true;
+      vm.hoursForm[value].$setDirty();
+      vm.hoursForm[value].$validate();
     }
 
     function deleteRange(index) {
@@ -153,7 +229,8 @@
       }
     }
 
-    function forceOpenBeforeCloseCheck(index) {
+    function forceOpenBeforeCloseCheck(index, value) {
+      delete vm.hoursForm[value + index].$error.required;
       if (vm.isOpenHoursAfterCloseHours(vm.openhours[index].starttime, vm.openhours[index].endtime)) {
         vm.hoursForm['endtime' + index].$error.compareTo = true;
       } else {
@@ -260,6 +337,8 @@
           vm.toggleHolidays = !vm.toggleHolidays;
         }
       } else {
+        //print out any of the error messages
+        vm.isAnyHoursInvalid();
         vm.forceCheckHoliday();
       }
     }
@@ -273,6 +352,12 @@
         AAICalService.addHoursRange('holiday', vm.calendar, holiday);
       });
       return vm.calendar.toString();
+    }
+
+    function saveTimeZone() {
+      if (vm.timeZoneForm && !vm.timeZoneForm.$pristine) {
+        vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
+      }
     }
 
     function save() {
@@ -294,6 +379,8 @@
           vm.ui.holidaysValue = 'holidays';
         }
 
+        vm.saveTimeZone();
+
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = updateSchedule(calName);
@@ -308,7 +395,7 @@
         savePromise.then(
           function (response) {
             if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
-              //To avoid notification when a CE update fails during calendar creation, 
+              //To avoid notification when a CE update fails during calendar creation,
               //and the newly created orphaned calendar is deleted.
               return;
             }
@@ -411,7 +498,7 @@
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
-          // success removing ScheduleId from CE, delete the calendar 
+          // success removing ScheduleId from CE, delete the calendar
           return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
             delete vm.ui.ceInfo.scheduleId;
           });
@@ -468,6 +555,10 @@
         };
       });
 
+      if (vm.timeZoneForm) {
+        vm.timeZoneForm.$setPristine();
+      }
+
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
 
       if (!_.isEmpty(sectionToToggle)) {
@@ -483,28 +574,37 @@
         controllerAs: 'import'
       });
       importModal.result.then(function (allHours) {
-        if (allHours) {
-          AANotificationService.success('autoAttendant.successImport', {
-            holidays: allHours.holidays.length,
-            hours: allHours.hours.length
-          });
-          allHours.hours.forEach(function (value) {
-            _.each(value.days, function (day) {
-              day.label = moment.weekdays(day.index);
+          if (allHours) {
+            AANotificationService.success('autoAttendant.successImport', {
+              holidays: allHours.holidays.length,
+              hours: allHours.hours.length
             });
-            vm.openhours.unshift(value);
+            allHours.hours.forEach(function (value) {
+              _.each(value.days, function (day) {
+                day.label = moment.weekdays(day.index);
+              });
+              vm.openhours.unshift(value);
+            });
+            allHours.holidays.forEach(function (value) {
+              if (!value.exactDate) {
+                value.month.label = moment.months(value.month.index);
+                value.rank.labelTranslate = $translate.instant(value.rank.label);
+                value.day.label = moment.weekdays(value.day.index);
+              }
+              vm.holidays.unshift(value);
+            });
+            vm.holidaysForm.$setDirty();
+          }
+        },
+        //on 'fail', cancel was clicked and $dismiss will trigger this response
+        function (allHours) {
+          //let Analytics know the property type of 'cancel'
+          var type = 'cancel';
+          //dispatch the metric
+          Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
+            type: type
           });
-          allHours.holidays.forEach(function (value) {
-            if (!value.exactDate) {
-              value.month.label = moment.months(value.month.index);
-              value.rank.labelTranslate = $translate.instant(value.rank.label);
-              value.day.label = moment.weekdays(value.day.index);
-            }
-            vm.holidays.unshift(value);
-          });
-          vm.holidaysForm.$setDirty();
-        }
-      });
+        });
     }
 
     function activate() {

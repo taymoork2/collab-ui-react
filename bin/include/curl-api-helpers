@@ -339,3 +339,8 @@ function get_url_endpoint_prefix {
             ;;
     esac
 }
+
+# output only http status code for a given url
+function curl_http_status {
+    curl -s -o /dev/null -w "%{http_code}" $1
+}

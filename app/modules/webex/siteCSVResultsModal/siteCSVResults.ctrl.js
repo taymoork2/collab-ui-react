@@ -38,10 +38,16 @@
     var formattedStartedTime = startedTime.toUTCString();
     var formattedFinishedTime = finishedTime.toUTCString();
 
+    //Insert "at" between date and time
+    var currentYear = finishedTime.getUTCFullYear();
+    var splitResult = formattedFinishedTime.split(currentYear); //Results in an array of length 2
+    var displayFinishedTime = splitResult[0] + currentYear + " at" + splitResult[1];
+
     var logMsg = funcName + "\n" +
       "formattedCreatedTime=" + formattedCreatedTime + "\n" +
       "formattedStartedTime=" + formattedStartedTime + "\n" +
-      "formattedFinishedTime=" + formattedFinishedTime;
+      "formattedFinishedTime=" + formattedFinishedTime + "\n" +
+      "displayFinishedTime=" + displayFinishedTime;
     $log.log(logMsg);
 
     if (2 === vm.csvStatusObj.details.jobType) { // export results
@@ -51,7 +57,7 @@
       vm.gridRows.push({
         id: 'export-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: formattedFinishedTime
+        value: displayFinishedTime
       });
 
       vm.gridRows.push({
@@ -88,7 +94,7 @@
       vm.gridRows.push({
         id: 'import-finished-time',
         title: $translate.instant("webexCSVResultsModal.csvFinished"),
-        value: formattedFinishedTime
+        value: displayFinishedTime
       });
 
       vm.gridRows.push({

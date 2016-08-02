@@ -1,7 +1,7 @@
 'use strict';
 
 describe('orgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var q, deferred;
 
@@ -9,7 +9,7 @@ describe('orgService', function () {
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Auth = {
         setAccessToken: sinon.stub()
       };
@@ -171,6 +171,26 @@ describe('orgService', function () {
     expect(callback.args[0][0].success).toBe(false);
   });
 
+  it('should successfully get an admin organization for a given orgId as when called as a promise', function () {
+
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(200, {});
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    httpBackend.flush();
+    promise.then(function (data) {
+      expect(data.success).toBe(true);
+    });
+  });
+
+  it('should fail to get an admin organization for getOrgId provided by Authinfo pwhen called as a promise', function () {
+
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "?disableCache=false").respond(500, {});
+    var promise = Orgservice.getAdminOrgAsPromise(Authinfo.getOrgId());
+    httpBackend.flush();
+    promise.then(function (data) {
+      expect(data.success).toBe(false);
+    });
+  });
+
   it('should successfully get unlicensed users for random orgId', function () {
     var callback = sinon.stub();
     httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/unlicensedUsers').respond(200, {});
@@ -236,6 +256,183 @@ describe('orgService', function () {
     var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), payload);
     httpBackend.flush();
     expect(promise).toBeResolved();
+  });
+
+  describe('orgService caching', function () {
+    var baseTime;
+    beforeEach(function () {
+      baseTime = moment().toDate();
+      jasmine.clock().install();
+      jasmine.clock().mockDate(baseTime);
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it('should not leak settings across different org-ids', function () {
+      var save1 = {
+        set1: '1'
+      };
+
+      var save2 = {
+        set2: '2'
+      };
+
+      var payload = _.clone(save1);
+      var payload2 = _.clone(save2);
+      var org2 = 'org-2';
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + org2 + '?disableCache=true').respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', payload).respond(200, {});
+      httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + org2 + '/settings', payload2).respond(200, {});
+      var promise = Orgservice.setOrgSettings(Authinfo.getOrgId(), save1);
+      var promise2 = Orgservice.setOrgSettings(org2, save2);
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+      expect(promise2).toBeResolved();
+    });
+
+    it('with no saved values, a get will have no cached values', function () {
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {
+        orgSettings: [JSON.stringify({
+          a: '1'
+        })]
+      });
+      var promise = Orgservice.getOrg(_.noop, Authinfo.getOrgId())
+        .then(function (response) {
+          expect(response.data.orgSettings).toEqual({
+            a: '1'
+          });
+        });
+      httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
+
+    it('should return the cached values on a getOrg call', function () {
+      var saveData = {
+        a: '2'
+      };
+      testMultiSave({
+        saves: [saveData],
+        saveTimes: [moment(baseTime)],
+        payloads: [_.clone(saveData)]
+      });
+      httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId()).respond(200, {
+        orgSettings: [JSON.stringify({
+          a: '1'
+        })]
+      });
+      var getPromise = Orgservice.getOrg(_.noop).then(function (response) {
+        expect(response.data.orgSettings).toEqual({
+          a: '2'
+        });
+      });
+      httpBackend.flush();
+      expect(getPromise).toBeResolved();
+    });
+
+    it('should successfully set sum of orgsetting across multiple saves', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        allowCrashLogUpload: true
+      };
+
+      var payload = _.clone(save1);
+      var payload2 = _.merge(_.clone(save1), _.clone(save2));
+
+      testMultiSave({
+        saves: [save1, save2],
+        saveTimes: [moment(baseTime), moment(baseTime)],
+        payloads: [payload, payload2]
+      });
+    });
+
+    it('should only use the last org settings on save when previous save was more than five minutes since', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        allowCrashLogUpload: true
+      };
+
+      var payload = _.clone(save1);
+      var payload2 = _.clone(save2);
+      testMultiSave({
+        saves: [save1, save2],
+        saveTimes: [moment(baseTime), moment(baseTime).add(5, 'minutes')],
+        payloads: [payload, payload2]
+      });
+    });
+
+    it('a new save should overwrite same keys as in cache', function () {
+      var save1 = {
+        reportingSiteUrl: 'http://example.com',
+        reportingSiteDesc: 'Description',
+        helpUrl: 'http://example.com/help',
+        isCiscoHelp: true,
+        isCiscoSupport: false
+      };
+
+      var save2 = {
+        isCiscoSupport: true
+      };
+
+      var payload = _.clone(save1);
+      var payload2 = _.merge(_.clone(save1), _.clone(save2));
+      testMultiSave({
+        saves: [save1, save2],
+        saveTimes: [moment(baseTime), moment(baseTime).add(2, 'seconds')],
+        payloads: [payload, payload2]
+      });
+    });
+
+    it('multiple saves should have net result to be save 3 and 4', function () {
+      var fiveMinutes = moment(baseTime).add(5, 'minutes');
+      var saves = [{
+        a: '1'
+      }, {
+        b: '1'
+      }, {
+        b: '2'
+      }, {
+        c: '1'
+      }];
+      var testData = {
+        saves: saves,
+        saveTimes: [moment(baseTime), fiveMinutes, fiveMinutes, fiveMinutes],
+        payloads: [_.clone(saves[0]), _.clone(saves[1]), _.clone(saves[2]), _.merge(_.clone(saves[2]), _.clone(saves[3]))]
+      };
+      testMultiSave(testData);
+    });
+
+    function testMultiSave(testData) {
+      var promises = [];
+      for (var i = 0; i < testData.saves.length; i++) {
+        httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId() + '?disableCache=true').respond(200, {});
+        httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings', testData.payloads[i]).respond(200, {});
+        jasmine.clock().mockDate(testData.saveTimes[i].toDate());
+        promises.push(Orgservice.setOrgSettings(Authinfo.getOrgId(), testData.saves[i]));
+        httpBackend.flush();
+      }
+      expect(promises.length).toBe(testData.saves.length);
+      promises.forEach(function (promise) {
+        expect(promise).toBeResolved();
+      });
+    }
+
   });
 
   it('should fail to set organization settings', function () {

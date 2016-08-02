@@ -5,7 +5,7 @@
     var service;
 
     beforeEach(function () {
-      module('Messenger');
+      angular.mock.module('Messenger');
 
       inject(function (_SyncService_) {
         service = _SyncService_;

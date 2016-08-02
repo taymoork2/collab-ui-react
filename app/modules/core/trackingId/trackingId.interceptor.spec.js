@@ -2,7 +2,7 @@
   'use strict';
 
   describe('TrackingIdInterceptor', function () {
-    beforeEach(module('Core'));
+    beforeEach(angular.mock.module('core.trackingId'));
 
     var TrackingIdInterceptor;
     var EXPOSE_HEADERS = 'Access-Control-Expose-Headers';

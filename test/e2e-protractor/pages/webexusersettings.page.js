@@ -39,13 +39,17 @@ var WebExUserSettingsPage = function () {
   this.callInTeleconfCheckbox = this.callInTeleconf.element(by.className('checkboxValue'));
 
   this.t30TestUser = {
-    username: 'prov9usr@mailinator.com',
+    username: 'provteam+ee@csgtrials.webex.com',
     password: 'Cisco!23',
   };
 
   this.t31TestUser = {
-    username: 'prov6usr@mailinator.com',
+    username: 'provteam+t31ee@csgtrials.webex.com',
     password: 'Cisco!23',
+  };
+
+  this.scrollToBottom = function () {
+    browser.executeScript('window.scrollTo(0,1000);');
   };
 };
 

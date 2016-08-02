@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification, XhrNotificationService) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -18,9 +18,11 @@
     vm.deleteSerial = null;
     vm.showPreview = true;
     vm.deleteConnectorName = null;
-    vm.serviceEnabled = true;
+    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
+    vm.featureToggled = false;
+
     // Added for cs-page-header
     vm.pageTitle = $translate.instant('mediaFusion.page_title');
     vm.tabs = [
@@ -36,8 +38,9 @@
         state: 'media-service-v2.settings',
       }
     ];
-    vm.clusters = _.values(MediaClusterServiceV2.getClusters());
-    vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters());
+    vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt'); //_.values(MediaClusterServiceV2.getClusters());
+    //vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters());
+    vm.getSeverity = MediaClusterServiceV2.getRunningStateSeverity;
     vm.clusterLength = clusterLength;
     vm.showClusterDetails = showClusterDetails;
     vm.sortByProperty = sortByProperty;
@@ -47,7 +50,7 @@
     var clustersCache = [];
 
     vm.clusterListGridOptions = {
-      data: 'med.aggregatedClusters',
+      data: 'med.clusters',
       enableSorting: false,
       multiSelect: false,
       enableRowHeaderSelection: false,
@@ -63,7 +66,7 @@
       },
       columnDefs: [{
         field: 'groupName',
-        displayName: 'Media Node Clusters',
+        displayName: 'Media Clusters',
         cellTemplate: 'modules/mediafusion/media-service-v2/resources/cluster-list-display-name.html',
         width: '35%'
       }, {
@@ -75,9 +78,10 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-media") {
-      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
+      MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+        if (!error) {
+          vm.serviceEnabled = enabled;
+        }
       });
     }
 
@@ -96,45 +100,15 @@
 
     function clustersUpdated() {
 
-      MediaClusterServiceV2.getAll()
-        .then(function (clusters) {
-          clustersCache = clusters;
-          vm.clusters = _.filter(clustersCache, 'targetType', 'mf_mgmt');
-          vm.clusters.sort(sortByProperty('name'));
-          //_.sortBy(vm.clusters, 'name');
-          vm.aggregatedClusters = vm.clusters;
-          $log.log("Clusters is using getall", clustersCache);
-          $log.log("aggregatedClusters is using getall", vm.aggregatedClusters);
-        }, XhrNotificationService.notify);
-
-      /*MediaClusterServiceV2.getClustersV2().then(function (cluster) {
-        $log.log("Clusters is using getc2", cluster);
-        vm.clusters = cluster.clusters;
-        _.each(cluster.clusters, function (cluster) {
-          if (cluster.targetType === "mf_mgmt") {
-            vm.clusterList.push(cluster.name);
-          }
-        });
-        vm.aggregatedClusters = _.values(MediaClusterServiceV2.getClusterAlarmAggregate(vm.clusters));
-      });*/
-
-      /*MediaClusterServiceV2.getGroups().then(function (group) {
-        // vm.groups = group;
-        vm.clusterList = [];
-        _.each(group, function (group) {
-          vm.clusterList.push(group.name);
-        });
-        vm.clusters = _.values(MediaClusterServiceV2.getClusters());
-        //$log.log("clustersUpdated clusters :", vm.clusters);
-        vm.aggregatedClusters = _.values(MediaClusterServiceV2.getAggegatedClusters(vm.clusters, vm.clusterList));
-        //$log.log("clustersUpdated aggregatedClusters :", vm.aggregatedClusters);
-      });*/
+      vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
+      vm.clusters.sort(sortByProperty('name'));
+      vm.loadingClusters = false;
+      $log.log("aggregatedClusters", vm.clusters);
 
     }
 
     function showClusterDetails(cluster) {
       if (vm.showPreview) {
-        $log.log("cluster details ", cluster);
         $state.go('connector-details-v2', {
           clusterName: cluster.name,
           nodes: cluster.connectors,
@@ -146,9 +120,14 @@
 
     function addResourceButtonClicked() {
       $modal.open({
+        resolve: {
+          firstTimeSetup: false,
+          yesProceed: true,
+        },
+        type: 'small',
         controller: 'RedirectAddResourceControllerV2',
         controllerAs: 'redirectResource',
-        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/redirect-add-resource-dialog.html',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
         modalClass: 'redirect-add-resource'
       });
     }
@@ -164,7 +143,7 @@
         },
         function error(data, status) {
           //$log.log("Problems enabling media service");
-          Notification.notify($translate.instant('mediaFusion.mediaServiceActivationFailure'));
+          Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
@@ -214,11 +193,40 @@
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
-          Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
-          })], 'error');
+          });
         });
     };
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        MediaServiceActivationV2.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
+    });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          firstTimeSetup: true,
+          yesProceed: false
+        },
+        type: 'small',
+        controller: 'RedirectAddResourceControllerV2',
+        controllerAs: 'redirectResource',
+        templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+        modalClass: 'redirect-add-resource'
+      });
+    }
+
   }
 
   /* @ngInject */

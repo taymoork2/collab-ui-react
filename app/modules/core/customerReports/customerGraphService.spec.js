@@ -16,7 +16,7 @@ describe('Service: Customer Graph Service', function () {
   var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
   var deviceResponse = angular.copy(devicesJson.response.graphData);
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function (_CustomerGraphService_) {
     CustomerGraphService = _CustomerGraphService_;

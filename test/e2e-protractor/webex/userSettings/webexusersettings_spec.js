@@ -10,12 +10,12 @@ while (1 >= webExCommon.testInfo.describeCount) {
   switch (webExCommon.testInfo.describeCount) {
   case 1:
     webExCommon.testInfo.testType = 'T30';
-    webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t30Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx user settings tests for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS3.siteUrl;
     break;
 
   default:
     webExCommon.testInfo.testType = 'T31';
-    webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.t31Info.siteUrl;
+    webExCommon.testInfo.describeText = 'WebEx user settings tests for ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS6.siteUrl;
   }
 
   describe(webExCommon.testInfo.describeText, function () {
@@ -25,10 +25,10 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t31RegressionTestAdmin',
-          webExCommon.t31Info.testAdminUsername,
-          webExCommon.t31Info.testAdminPassword,
-          webExCommon.t31Info.siteUrl
+          'wbx-t31BTSTestAdmin-UserSettings',
+          webExCommon.BTS6.testAdminUsername,
+          webExCommon.BTS6.testAdminPassword,
+          webExCommon.BTS6.siteUrl
         );
 
         promise.then(
@@ -45,10 +45,10 @@ while (1 >= webExCommon.testInfo.describeCount) {
       beforeAll(function () {
         var promise = webEx.setup(
           1,
-          'wbx-t30RegressionTestAdmin',
-          webExCommon.t30Info.testAdminUsername,
-          webExCommon.t30Info.testAdminPassword,
-          webExCommon.t30Info.siteUrl
+          'wbx-t30BTSTestAdmin-UserSettings',
+          webExCommon.BTS3.testAdminUsername,
+          webExCommon.BTS3.testAdminPassword,
+          webExCommon.BTS3.siteUrl
         );
 
         promise.then(
@@ -64,7 +64,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     }
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should login as ' + webExCommon.t31Info.testAdminUsername + ' and navigate to Users page', function () {
+      it('should login as ' + webExCommon.BTS6.testAdminUsername + ' and navigate to Users page', function () {
         navigation.clickUsers();
       });
 
@@ -72,7 +72,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
         utils.searchAndClick(webExUserSettings.t31TestUser.username);
       });
     } else {
-      it('should login as ' + webExCommon.t30Info.testAdminUsername + ' and navigate to Users page', function () {
+      it('should login as ' + webExCommon.BTS3.testAdminUsername + ' and navigate to Users page', function () {
         navigation.clickUsers();
       });
 
@@ -88,20 +88,20 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     if (webExCommon.testInfo.testType == "T31") {
-      it('should allow click on site name ' + webExCommon.t31SiteElement + ' in panel 2', function () {
+      it('should allow click on site name ' + webExCommon.BTS6.siteElement + ' in panel 2', function () {
         if (setup) {
-          utils.wait(webExCommon.t31SiteElement);
-          expect(webExCommon.t31SiteElement.isPresent()).toBeTruthy();
-          utils.click(webExCommon.t31SiteElement);
+          utils.wait(webExCommon.BTS6.siteElement);
+          expect(webExCommon.BTS6.siteElement.isPresent()).toBeTruthy();
+          utils.click(webExCommon.BTS6.siteElement);
           utils.wait(webExUserSettings.userSettingsPanel);
         }
       });
     } else {
-      it('should allow click on site name ' + webExCommon.t30SiteElement + ' in panel 2', function () {
+      it('should allow click on site name ' + webExCommon.BTS3.siteElement + ' in panel 2', function () {
         if (setup) {
-          utils.wait(webExCommon.t30SiteElement);
-          expect(webExCommon.t30SiteElement.isPresent()).toBeTruthy();
-          utils.click(webExCommon.t30SiteElement);
+          utils.wait(webExCommon.BTS3.siteElement);
+          expect(webExCommon.BTS3.siteElement.isPresent()).toBeTruthy();
+          utils.click(webExCommon.BTS3.siteElement);
           utils.wait(webExUserSettings.userSettingsPanel);
         }
       });
@@ -121,6 +121,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     });
 
     it('should click on privileges link in panel 3', function () {
+      webExUserSettings.scrollToBottom();
       utils.wait(webExUserSettings.userPrivilegesLink);
       utils.click(webExUserSettings.userPrivilegesLink);
     });
@@ -144,9 +145,8 @@ while (1 >= webExCommon.testInfo.describeCount) {
       it('should allow edit and save in panel 3', function () {
         if (setup) {
           utils.wait(webExUserSettings.mcAuoCheckbox);
-          webExUserSettings.mcAuo.click();
+          utils.click(webExUserSettings.mcAuo);
 
-          expect(element(by.id('saveBtn')).isPresent()).toBeTruthy();
           utils.click(element(by.id('saveBtn')));
 
           utils.wait(webExUserSettings.alertSuccess);

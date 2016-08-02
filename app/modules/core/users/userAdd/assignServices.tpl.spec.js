@@ -2,7 +2,7 @@
 
 describe('assignServices', function () {
   var $scope, $state, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, hybridService;
+  var view, authinfo, csvDownloadService, hybridService, Orgservice, Userservice, WebExUtilsFact;
 
   var orgid = '1';
 
@@ -27,28 +27,32 @@ describe('assignServices', function () {
     }).entitlementState === 'ACTIVE').toBe(state);
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
-    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _HybridService_,
-    _Orgservice_, _Userservice_) {
+    $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_,
+    _HybridService_, _Orgservice_, _Userservice_, _WebExUtilsFact_) {
 
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-
+    Orgservice = _Orgservice_;
+    Userservice = _Userservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
     hybridService = _HybridService_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
     var getUserMe = getJSONFixture('core/json/users/me.json');
     var headers = getJSONFixture('core/json/users/headers.json');
     var accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
+    var getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
 
     var current = {
       step: {
@@ -91,7 +95,8 @@ describe('assignServices', function () {
     authinfo.updateAccountInfo(accountData);
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
-    spyOn(_Userservice_, 'getUser').and.returnValue(getUserMe);
+    spyOn(_FeatureToggleService_, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when(getLicensesUsage));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {

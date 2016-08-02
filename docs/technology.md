@@ -10,7 +10,7 @@
 * Localization is done using angular translation
 * Unit testing is written using Jasmine with Karma
 * End to end testing is based on the JS Selenium framework: Protractor
-* Build process is built and run with Gulp.js
+* App is built and run with [Webpack](webpack.md)
 
 ## TypeScript & ES6(ES2015)
 

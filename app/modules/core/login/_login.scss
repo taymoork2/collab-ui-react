@@ -2,6 +2,8 @@
     #LOGIN SPLASH SCREEN
 \*------------------------------------*/
 
+@import "../../../styles/common";
+
 .loading-icon {
   height: vr-adjust(54);
   padding-top: 10px;
@@ -28,7 +30,7 @@
 }
 
 /* Remove when Microsoft fixes flexbox problem *\
-   when min-height is defined.  See 
+   when min-height is defined.  See
 \* messagebox-small in ToolKit.                */
 .vertical-ie-workaround {
   height: 0px;

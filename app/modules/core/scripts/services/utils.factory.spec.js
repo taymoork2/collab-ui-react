@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Utils', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var $location, $rootScope, Utils;
 

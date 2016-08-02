@@ -1,26 +1,29 @@
 <div class="mediafusion typography-airy large-margin">
   <div class="row">
-    
-    <div class="large-4 columns">
-      <div ng-include src="'modules/mediafusion/media-service/settings/email-notification-setting.html'"></div>
-      <div ng-include src="'modules/mediafusion/media-service/settings/deactivate-service-setting.html'"></div>
+    <div class="large-12 columns">
+      <div ng-include src="'modules/mediafusion/media-service-v2/settings/email-notification-setting.html'"></div>
+      <div ng-include src="'modules/mediafusion/media-service-v2/settings/deactivate-service-setting.html'"></div>
       <BR>
-      <h5>
-        {{'mediaFusion.settings.documentationHeading' | translate}}
-      </h5>
-
-      <p>
-        {{'mediaFusion.settings.documentation_1' | translate}} <a href="http://www.cisco.com/go/hybrid-services" target="_blank">{{'mediaFusion.settings.documentation_2' | translate}}</a> {{'mediaFusion.settings.documentation_3' | translate}}
-      </p>
-      <p>
-        {{'mediaFusion.settings.documentation_4' | translate}} <a href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">{{'mediaFusion.settings.documentation_5' | translate}}</a>.
-      </p>
-
+      <form class="cs-form-bottom">
+        <div class="cs-form__section">
+          <div class="section__info">
+            <h5 class="section__title">{{'mediaFusion.settings.documentationHeadingV2' | translate}}</h5>
+          </div>
+          <div class="section__content">
+            <div class="sub-section">
+              <p>
+                {{'mediaFusion.settings.documentation_1' | translate}} <a href="http://www.cisco.com/go/hybrid-services" target="_blank">{{'mediaFusion.settings.documentation_2' | translate}}</a> {{'mediaFusion.settings.documentation_3V2' | translate}}
+              </p>
+              <p>
+                {{'mediaFusion.settings.documentation_4V2' | translate}} <a href="https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova">{{'mediaFusion.settings.documentation_5' | translate}}</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
-
     <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
     <div class="large-4 columns">
     </div>
   </div>
-
 </div>

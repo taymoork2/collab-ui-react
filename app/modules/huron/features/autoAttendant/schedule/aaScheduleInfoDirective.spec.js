@@ -4,7 +4,7 @@ describe('Directive: aaScheduleInfo', function () {
   var $q, $compile, $rootScope, $scope;
   var AAICalService, AAModelService, AutoAttendantCeMenuModelService, AACalendarService;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
   var aaModel = {
     aaRecord: {
       scheduleId: '1',

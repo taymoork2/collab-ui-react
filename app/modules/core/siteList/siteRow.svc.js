@@ -11,6 +11,7 @@
     $interval,
     $translate,
     Authinfo,
+    Auth,
     Userservice,
     FeatureToggleService,
     WebExUtilsFact,
@@ -58,10 +59,10 @@
     this.logSiteRows = function () {
       var funcName = "logSiteRows()";
       var logMsg = funcName + "\n" + JSON.stringify(_this.siteRows.gridData);
-      //$log.log(logMsg);
-      //$log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
-      //$log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
-      //$log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
+      //      $log.log(logMsg);
+      //      $log.log("_this.siteRows.showGridData = " + _this.siteRows.showGridData + "\n");
+      //      $log.log("_this.siteRows.gridOptions = " + JSON.stringify(_this.siteRows.gridOptions) + "\n");
+      //      $log.log("_this.siteRows.showCSVIconAndResults = " + _this.siteRows.showCSVIconAndResults + "\n");
 
     };
 
@@ -128,11 +129,11 @@
 
     this.getConferenceServices = function () {
       var funcName = "getConferenceServices()";
-      var logMsg = funcName + "\n" +
-        "conferenceServices=\n" + JSON.stringify(conferenceServices);
-      //$log.log(logMsg);
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+      var logMsg = funcName + "\n" +
+        "conferenceServices=\n" + JSON.stringify(conferenceServices);
+      //      $log.log(logMsg);
 
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
@@ -154,8 +155,6 @@
 
           if (isNewSiteUrl) {
 
-            conferenceService.isCI = true;
-
             conferenceService.showCSVInfo = false;
             conferenceService.csvStatusObj = null;
             conferenceService.csvPollIntervalObj = null;
@@ -165,12 +164,14 @@
             conferenceService.showSiteLinks = false;
             conferenceService.isError = false;
             conferenceService.isWarn = false;
+            conferenceService.isCI = true;
             conferenceService.isCSVSupported = false;
             conferenceService.adminEmailParam = null;
             conferenceService.userEmailParam = null;
             conferenceService.advancedSettings = null;
             conferenceService.webexAdvancedUrl = null;
             conferenceService.siteUrl = newSiteUrl;
+            conferenceService.siteAdminUrl = null;
 
             conferenceService.showLicenseTypes = false;
             conferenceService.multipleWebexServicesLicensed = false;
@@ -564,6 +565,10 @@
 
       var isCISite = WebExUtilsFact.isCIEnabledSite(siteUrl);
 
+      siteRow.siteAdminUrl = WebExUtilsFact.getSiteAdminUrl(siteUrl);
+
+      siteRow.isCI = isCISite;
+
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "\n" +
         "isCISite=" + isCISite;
@@ -706,6 +711,11 @@
             "siteUrl=" + siteRow.siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           //$log.log(logMsg);
+
+          if (response.errorId == "060502") {
+            //$log.log("Redirect to login...");
+            Auth.redirectToLogin();
+          }
 
           siteRow.csvStatusObj = response;
           siteRow.asyncErr = true;

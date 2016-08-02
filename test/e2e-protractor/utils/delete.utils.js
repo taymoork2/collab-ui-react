@@ -20,9 +20,16 @@ exports.deleteUser = function (email, token) {
         },
       };
 
-      return utils.sendRequest(options).then(function () {
-        return 200;
-      });
+      return utils.sendRequest(options)
+        .then(function () {
+          return 200;
+        })
+        .catch(function (response) {
+          // Ignore 404 errors, otherwise reject with error
+          if (_.get(response, 'statusCode') !== 404) {
+            return Promise.reject(response);
+          }
+        });
     });
 };
 

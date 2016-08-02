@@ -2,7 +2,7 @@
 
 describe('Service: WebExSiteRowService', function () {
 
-  var controller, $rootScope, $scope, $q, WebExSiteRowService, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  var controller, $rootScope, $scope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
   var fakeSiteRow1 = {
     "label": "Meeting Center 200",
@@ -190,13 +190,14 @@ describe('Service: WebExSiteRowService', function () {
     "capacity": "100"
   }];
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
 
+    Auth = _Auth_;
     Authinfo = _Authinfo_;
     WebExSiteRowService = _WebExSiteRowService_;
     FeatureToggleService = _FeatureToggleService_;
@@ -212,6 +213,7 @@ describe('Service: WebExSiteRowService', function () {
     deferredCsvStatus = $q.defer();
 
     WebExApiGatewayConstsService.csvStates = {
+      authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
       exportCompletedNoErr: 'exportCompletedNoErr',
@@ -231,13 +233,20 @@ describe('Service: WebExSiteRowService', function () {
       WebExApiGatewayConstsService.csvStates.importCompletedWithErr
     ];
 
+    spyOn(Auth, 'redirectToLogin');
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
     spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
-
+    spyOn(WebExUtilsFact, "isCIEnabledSite").and.callFake(function (siteUrl) {
+      if (siteUrl === "sjsite04.webex.com") {
+        return true;
+      } else if (siteUrl === "t30citestprov9.webex.com") {
+        return false;
+      }
+    });
   }));
 
   ////////
@@ -596,6 +605,33 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
+  it('can process "Auth token is invalid"', function () {
+
+    WebExSiteRowService.getConferenceServices();
+    WebExSiteRowService.configureGrid();
+
+    deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "sjsite04.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: true
+    });
+
+    deferredCsvStatus.reject({
+      siteUrl: 'sjsite04.webex.com',
+      status: 'error',
+      errorId: '060502',
+      errorDesc: 'Auth token is invalid.',
+      completionDetails: null
+    });
+
+    $rootScope.$apply();
+
+    expect(Auth.redirectToLogin).toHaveBeenCalled();
+  });
+
   it('can process multiple licensed services', function () {
 
     WebExSiteRowService.getConferenceServices();
@@ -621,6 +657,29 @@ describe('Service: WebExSiteRowService', function () {
     expect(searchResult.licenseTypeContentDisplay).toBe("siteList.multipleLicenses");
     expect(searchResult.licenseTooltipDisplay).toBe("helpdesk.licenseDisplayNames.MC<br>helpdesk.licenseDisplayNames.CMR");
 
+  });
+
+  //test to determine CI sites 
+  it('can correctly determine CI sites and display the actions column in sitelist page', function () {
+    var fakeSiteUrl = "sjsite04.webex.com";
+    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    expect(searchResult).toBe(true);
+
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    });
+  });
+
+  it('can correctly determine non CI sites and give cross launch link in the actions column', function () {
+    var fakeSiteUrl = "t30citestprov9.webex.com";
+    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    expect(searchResult).toBe(false);
+
+    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function (e) {
+      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
+    });
   });
 
 });

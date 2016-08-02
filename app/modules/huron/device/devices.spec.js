@@ -3,7 +3,7 @@
 describe('Controller: DevicesCtrlHuron', function () {
   var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, Config, poller;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   var deviceList = {};
 

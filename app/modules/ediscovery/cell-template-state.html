@@ -1,11 +1,11 @@
 <div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents">
-  <span class="fit-in-cell" ng-if="!row.entity.isDone">
-     <div class="progressbar-info">
+  <div ng-if="!row.entity.isDone">
+     <div>
        <span>{{'ediscovery.reportStates.' + row.entity.state | translate}}...</span>
        <span class="progressbar-progress">{{row.entity.progress}}%</span>
      </div>
      <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
-  </span>
+  </div>
   <div ng-if="row.entity.isDone" ng-switch on="row.entity.state">
     <div ng-switch-when="FAILED"
          class="fit-in-cell"
@@ -23,7 +23,7 @@
      class="ui-grid-cell-contents"
      tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
      cs-tooltip="{{'ediscovery.reportTimeout' | translate}}">
-  <div class="progressbar-info">
+  <div>
     <i class="icon icon-warning"></i> <span>{{'ediscovery.timeout' | translate}}</span>
     <span class="progressbar-progress">{{row.entity.progress}}%</span>
   </div>

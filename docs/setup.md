@@ -1,13 +1,21 @@
 ## Setup the environment
 
-* Recommended using [nvm](https://github.com/creationix/nvm) to manage your node versions
+* Project requires node v4 and npm v2.
+* Use [nvm](https://github.com/creationix/nvm) to manage your node versions
+  * `nvm install 4` to install node v4 with npm v2
+* `npm install` to install project dependencies (need to rerun after branch updates for new dependencies)
+* `npm start` or `npm run serve` to serve the dev application
+
+#### Alternative node/npm installation
+* If you dislike the convenience of a node version manager, you can install node/npm directly
 * Install `node4-lts`: `brew tap homebrew/versions && brew install node4-lts`
 * Install npm 2: `brew install npm && npm install -g npm@latest-2`
-  ![g-gif-update](https://sqbu-github.cisco.com/github-enterprise-assets/0000/2093/0000/5682/dbe73b7e-f717-11e5-9cbf-4d1c308fc385.gif)
+
+#### Alternative project dependencies installation
+* `setup.sh` facilitates dependency installation for Jenkins builds by using checksums and archiving last good dependencies
+* Developers can also use `setup.sh` to install their node_modules, but it's **primary** functionality is for Jenkins
 * Run `./setup.sh` (found in the root directory)
   * Use `./setup.sh --restore` if ever needing to restore 'node_modules' dirs from the most recently successfully built dependencies (requires at least 1 successful run)
-* Launch the app: `gulp serve`
-* After git pulls, run npm install to make sure to pull new dependencies.
 
 ## Recommended plugins for your Text Editor / IDE
 
@@ -18,14 +26,14 @@
 
 ## TypeScript Definitions
 
-* Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
+* `npm run typings` to install configured TypeScript definitions from `typings.json`
 * Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
-* Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
+* Add new TypeScript definitions using [typings (TypeScript Definition manager)](https://github.com/typings/typings)
 
 ## Adding External Dependencies
 
 * Dependencies are added to the project through npm
-* Add application dependencies with `npm install package_name --save`
-* Add build dependencies with `npm install package_name --save-dev`
-* Dependencies added to the `gulp.config.js` file will be automatically added to `index.html` and `karma.conf.js` files
+* Add application dependencies with `npm install <package_name> --save`
+* Add build dependencies with `npm install <package_name> --save-dev`
+* [`require`](https://webpack.github.io/docs/commonjs.html) the package in the application for webpack to bundle the dependency in the included module

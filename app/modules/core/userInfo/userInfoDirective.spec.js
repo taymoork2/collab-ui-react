@@ -4,10 +4,10 @@ describe('UserInfoDirective', function () {
   var $compile, $rootScope, Authinfo, Userservice;
   var view, scope;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 

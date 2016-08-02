@@ -13,10 +13,13 @@
       controller: ServiceAddressCtrl,
       scope: {
         address: '=',
-        readOnly: '='
-      }
+        readOnly: '=',
+        hideSearch: '=',
+        formName: '=',
+        addressValidate: '&',
+        modify: '&'
+      },
     };
-
     return directive;
   }
 

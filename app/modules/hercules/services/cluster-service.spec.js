@@ -1,13 +1,13 @@
 'use strict';
 
 describe('ClusterService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('orgId')
     };
@@ -247,12 +247,12 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    it('should say that upgrade is *not possible* when an upgrade available BUT at least one connector is in state not_configured', function () {
+    it('should warn about upgrades when an upgrade available BUT at least one connector is in state offline', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
           connector('c_mgmt', {
-            state: 'not_configured',
+            state: 'offline',
             hostname: 'host2.example.com'
           })
         ], {
@@ -271,7 +271,7 @@ describe('ClusterService', function () {
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
-      expect(managementCluster.aggregates.upgradePossible).toBe(false);
+      expect(managementCluster.aggregates.upgradeWarning).toBe(false);
     });
 
     it('should add hosts to aggregates', function () {
@@ -452,25 +452,6 @@ describe('ClusterService', function () {
     });
   });
 
-  describe('.getReleaseNotes', function () {
-
-    it('should return release notes', function () {
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId/channels/GA/packages/c_cal?fields=@wide')
-        .respond({
-          releaseNotes: 'Example calendar connector release notes.'
-        });
-
-      var callback = sinon.stub();
-      ClusterService.getReleaseNotes('GA', 'c_cal').then(callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-      expect(callback.getCall(0).args[0]).toBe('Example calendar connector release notes.');
-    });
-
-  });
-
   describe('.deleteHost', function () {
     it('should be using the correct backend', function () {
       $httpBackend
@@ -502,43 +483,6 @@ describe('ClusterService', function () {
 
       var callback = sinon.stub();
       ClusterService.deleteHost('clusterid', 'serial').then(undefined, callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-    });
-  });
-
-  describe('.deleteCluster', function () {
-    it('should be using the correct backend', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(200);
-
-      var callback = sinon.stub();
-      ClusterService.deleteCluster('clusterid').then(callback);
-      $httpBackend.flush();
-
-      expect(callback.callCount).toBe(1);
-    });
-
-    it('should call poller.forceAction on success', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(200);
-
-      ClusterService.deleteCluster('clusterid');
-      $httpBackend.flush();
-
-      expect(forceAction.callCount).toBe(1);
-    });
-
-    it('should fail on 500 errors', function () {
-      $httpBackend
-        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
-        .respond(500);
-
-      var callback = sinon.stub();
-      ClusterService.deleteCluster('clusterid').then(undefined, callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);

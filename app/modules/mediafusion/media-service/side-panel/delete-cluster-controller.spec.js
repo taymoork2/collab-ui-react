@@ -2,7 +2,7 @@
 
 describe('Controller: DeleteClusterController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var vm, controller, groupDetail, groupName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
 

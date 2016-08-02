@@ -4,7 +4,7 @@
 describe('Controller: mediafusionConnectorCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
   //Initialize variables
   var Authinfo, controller, $scope, $state, MediaServiceDescriptor, $httpBackend, authinfo, $q, Notification, XhrNotificationService, proxy;
   var mediaAgentOrgIds = ['mediafusion'];
@@ -21,7 +21,7 @@ describe('Controller: mediafusionConnectorCtrl', function () {
   };
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getOrgId: sinon.stub()
       };
@@ -52,7 +52,6 @@ describe('Controller: mediafusionConnectorCtrl', function () {
       MediaServiceDescriptor: MediaServiceDescriptor,
       MediafusionProxy: proxy
     });
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     //$scope.$apply();

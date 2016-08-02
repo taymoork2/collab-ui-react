@@ -17,7 +17,7 @@
     };
     return service;
 
-    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
+    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData) {
       var wildcard = "%";
 
       var queryString = {
@@ -74,18 +74,23 @@
                     return (number.e164 && number.e164 === line.externalNumber);
                   });
                   if (lineFound) {
-                    lineFound.userId = $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage;
+                    dedupGrid(lineFound, gridData);
+                    lineFound.status = order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress');
+                    lineFound.tooltip = PstnSetupService.translateStatusMessage(order);
                     pendingLines.push(lineFound);
                   } else {
                     nonProvisionedPendingLines.push({
                       externalNumber: number.e164,
-                      userId: $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage
+                      status: order.statusMessage !== 'None' ? $translate.instant('linesPage.inProgress') + ' - ' + order.statusMessage : $translate.instant('linesPage.inProgress'),
+                      tooltip: PstnSetupService.translateStatusMessage(order)
                     });
                   }
                 });
               });
 
-              if (filterType === 'pending') {
+              if (startIndex !== 0) {
+                return lines;
+              } else if (filterType === 'pending') {
                 return pendingLines.concat(nonProvisionedPendingLines);
               } else if (filterType === 'all') {
                 return lines.concat(nonProvisionedPendingLines);
@@ -105,6 +110,12 @@
         });
 
     } // end of function getLineList
+
+    function dedupGrid(newLine, grid) {
+      _.remove(grid, function (row) {
+        return row.externalNumber === newLine.externalNumber;
+      });
+    }
 
     function exportCSV(scope) {
       // add export code here

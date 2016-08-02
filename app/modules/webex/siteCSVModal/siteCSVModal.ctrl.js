@@ -7,7 +7,6 @@
   function SiteCSVModalCtrl(
     $scope,
     $stateParams,
-    $translate,
     $log,
     Notification,
     WebExApiGatewayService,
@@ -175,13 +174,13 @@
       //SiteListService.updateCSVStatusInRow(vm.siteRow);
 
       if (isSuccess) {
-        Notification.success($translate.instant(resultMsg));
+        Notification.success(resultMsg);
       } else {
         //If this is a read only admin and WebEx returns "Access denied, additional privileges are required"
         if (errId == "000001" && _.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin()) {
           Notification.notifyReadOnly(errId);
         } else {
-          Notification.error($translate.instant(resultMsg));
+          Notification.error(resultMsg);
         }
       }
 

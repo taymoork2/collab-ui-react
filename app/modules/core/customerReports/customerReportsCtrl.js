@@ -17,10 +17,12 @@
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
-    var currentFilter = vm.allReports;
+    vm.currentFilter = vm.allReports;
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
+
+    vm.tab = $stateParams.tab;
 
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
@@ -81,22 +83,27 @@
     vm.metricStatus = REFRESH;
     vm.metrics = {};
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMetrics).then(function (result) {
-      if (result) {
-        vm.headerTabs = [{
+    vm.headerTabs = [{
+      title: $translate.instant('reportsPage.sparkReports'),
+      state: 'reports'
+    }];
+    var promises = {
+      mf: FeatureToggleService.atlasMediaServiceMetricsGetStatus(),
+      care: FeatureToggleService.atlasCareTrialsGetStatus()
+    };
+    $q.all(promises).then(function (features) {
+      if (features.mf) {
+        vm.headerTabs.unshift({
           title: $translate.instant('mediaFusion.page_title'),
-          state: 'reports-metrics',
-        }, {
-          title: $translate.instant('reportsPage.sparkReports'),
-          state: 'reports'
-        }];
-      } else {
-        vm.headerTabs = [{
-          title: $translate.instant('reportsPage.sparkReports'),
-          state: 'reports'
-        }];
+          state: 'reports-metrics'
+        });
       }
-
+      if (features.care) {
+        vm.headerTabs.push({
+          title: $translate.instant('reportsPage.careTab'),
+          state: 'reports.care'
+        });
+      }
     });
 
     vm.timeOptions = [{
@@ -175,7 +182,7 @@
     };
 
     function init() {
-      if (vm.showEngagement) {
+      if (!vm.tab) {
         setFilterBasedText();
         $timeout(function () {
           setDummyData();
@@ -236,7 +243,7 @@
     }
 
     function resetCards(filter) {
-      if (currentFilter !== filter) {
+      if (vm.currentFilter !== filter) {
         vm.displayEngagement = false;
         vm.displayQuality = false;
         if (filter === vm.allReports || filter === vm.engagement) {
@@ -247,7 +254,7 @@
         }
         resizeCards();
         delayedResize();
-        currentFilter = filter;
+        vm.currentFilter = filter;
       }
     }
 
@@ -493,20 +500,6 @@
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab === 'webex') {
-      vm.showEngagement = false;
-      vm.showWebexReports = true;
-      vm.showMFMetrics = false;
-    } else if ($stateParams.tab === 'metrics') {
-      vm.showEngagement = false;
-      vm.showWebexReports = false;
-      vm.showMFMetrics = true;
-    } else {
-      vm.showEngagement = true;
-      vm.showWebexReports = false;
-      vm.showMFMetrics = false;
-    }
-
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
@@ -561,7 +554,7 @@
           var logMsg = "";
 
           // if we are displaying the webex reports index page then go ahead with the rest of the code
-          if (vm.showWebexReports) {
+          if (vm.tab === 'webex') {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
             // get the information needed for the webex reports index page

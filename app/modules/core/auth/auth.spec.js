@@ -1,11 +1,11 @@
 'use strict';
 
 describe('Auth Service', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.auth'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation;
+  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     Config = _Config_;
@@ -17,6 +17,7 @@ describe('Auth Service', function () {
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
+    TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
 
     spyOn(WindowLocation, 'set');
@@ -102,7 +103,7 @@ describe('Auth Service', function () {
   });
 
   it('should refresh access token', function (done) {
-    Storage.get = sinon.stub().returns('fromStorage');
+    SessionStorage.get = sinon.stub().returns('fromStorage');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -115,7 +116,7 @@ describe('Auth Service', function () {
 
     Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
-      expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
+      expect(SessionStorage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
       _.defer(done);
     });
@@ -200,17 +201,16 @@ describe('Auth Service', function () {
 
     Storage.clear();
     Auth.setAccessToken().then(function () {
-      expect(Storage.get('refreshToken')).toBe('refreshTokenFromAPI');
+      expect(TokenService.getRefreshToken()).toBe('refreshTokenFromAPI');
     });
 
     $httpBackend.flush();
   });
 
-  it('should logout', function () {
+  it('should logout and redirect to a provided url', function () {
     var loggedOut = sinon.stub();
     Storage.clear = sinon.stub();
-    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
-    Storage.get = sinon.stub().returns('accessToken');
+    SessionStorage.get = sinon.stub().returns('accessToken');
     OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
 
@@ -218,13 +218,20 @@ describe('Auth Service', function () {
       .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
       .respond(200, {});
 
-    Auth.logout().then(loggedOut);
+    Auth.logoutAndRedirectTo('logoutUrl').then(loggedOut);
 
     $httpBackend.flush();
 
     expect(loggedOut.callCount).toBe(1);
     expect(Storage.clear.callCount).toBe(1);
     expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+  });
+
+  it('should logout and redirect to the default logout url', function () {
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    Auth.logoutAndRedirectTo = sinon.stub();
+    Auth.logout();
+    expect(Auth.logoutAndRedirectTo.calledWith('logoutUrl')).toBe(true);
   });
 
   describe('authorize', function () {
@@ -411,7 +418,7 @@ describe('Auth Service', function () {
 
     });
 
-    it('will add some webex stuff given some condition', function (done) {
+    it('will add some webex stuff given some condition && when no roles specified', function (done) {
       Authinfo.initialize = sinon.stub();
       UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
 
@@ -439,6 +446,79 @@ describe('Auth Service', function () {
       var result = Authinfo.initialize.getCall(0).args[0];
       expect(result.services.length).toBe(1);
       expect(result.services[0].ciName).toBe('webex-messenger');
+    });
+
+    it('will add some webex stuff given some condition && when Full_Admin', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['Full_Admin'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: ['foo']
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(2);
+      expect(result.services[1].ciName).toBe('webex-messenger');
+    });
+
+    it('will not add some webex stuff given some condition && when PARTNER_ADMIN', function (done) {
+      Authinfo.initialize = sinon.stub();
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          roles: ['PARTNER_ADMIN'],
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('path/organizations/1337/services')
+        .respond(200, {
+          entitlements: []
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(0);
     });
   });
 

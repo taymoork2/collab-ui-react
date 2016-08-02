@@ -65,7 +65,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.holidayBehaviour);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
-      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.date);
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
@@ -129,6 +129,8 @@ describe('Huron Auto Attendant', function () {
 
     it('should click schdule lane header boxes and see the schedule config page can be opened', function () {
 
+      notifications.clearNotifications();
+
       utils.click(autoattendant.selectOpenHoursBox);
       utils.click(autoattendant.scheduleCloseButton);
       utils.click(autoattendant.selectHolidayHoursBox);
@@ -159,7 +161,7 @@ describe('Huron Auto Attendant', function () {
       // confirm dialog with import schedule test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAImportName + ' Auto Attendant?').then(function () {
         utils.click(autoattendant.deleteModalConfirmButton);
-        autoattendant.assertDeleteSuccess(deleteUtils.testAAImportName)
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAImportName);
       });
 
     }, 60000);

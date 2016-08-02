@@ -6,5 +6,29 @@
   .modal-footer .btn + .btn {
     transition: initial;
   }
+
+  .radioNoTranform {
+    transition: initial;
+    display: inline-block;
+  }
+
+  .small-font {
+  	font-size: .75rem;
+  }
+
+  .addResourceBodyInfo {
+    padding-top: 1rem;
+  }
 }
 
+.myAddResourceForm .cs-radio-group{
+  padding-top: 1rem;
+}
+.inputHostNameForm{
+  padding-top: 1rem;
+}
+.inputHostNameForm .dropdown-menu{
+  top: 101%;
+  bottom: auto;
+  height:11rem;
+}

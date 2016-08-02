@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+  </button>
+  <h3 class="modal-title" translate="{{addServices.wizardData.title}}"></h3>
+</div>
+<div class="modal-body device-wizard">
+  <h5 translate="addDeviceWizard.assignServices"></h5>
+  <p class="wizardDescription" translation="addDeviceWizard.selectEntitlements"></p>
+</div>
+<div class="modal-footer">
+  <button
+    cs-btn
+    loading="addServices.isLoading"
+    id="create-place-button"
+    class="btn btn--primary"
+    ng-click="addServices.next()">
+    <span translate="common.next"></span>
+  </button>
+</div>

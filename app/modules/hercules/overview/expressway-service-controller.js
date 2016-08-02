@@ -35,7 +35,6 @@
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.serviceIconClass = FusionUtils.serviceId2Icon(vm.servicesId[0]); // kill?
     vm.openUserStatusReportModal = openUserStatusReportModal;
-    vm.openUserErrorsModal = openUserErrorsModal;
     vm.openAddResourceModal = openAddResourceModal;
     vm.showClusterSidepanel = showClusterSidepanel;
     vm.enableService = enableService;
@@ -95,32 +94,10 @@
     }
 
     function extractSummaryForAService() {
-      var emptySummary = {
-        activated: 0,
-        deactivated: 0,
-        error: 0,
-        notActivated: 0,
-        notEntitled: 0,
-        total: 0
-      };
-      vm.userStatusSummary = _.chain(USSService2.getStatusesSummary())
-        .filter(function (summary) {
-          return _.includes(vm.servicesId, summary.serviceId);
-        })
-        .reduce(function (acc, summary) {
-          return {
-            activated: acc.activated + summary.activated,
-            deactivated: acc.deactivated + summary.deactivated,
-            error: acc.error + summary.error,
-            notActivated: acc.notActivated + summary.notActivated,
-            notEntitled: acc.notEntitled + summary.notEntitled,
-            total: acc.total + summary.total
-          };
-        }, emptySummary)
-        .value();
+      vm.userStatusSummary = USSService2.extractSummaryForAService(vm.servicesId);
     }
 
-    function openUserStatusReportModal(serviceId) {
+    function openUserStatusReportModal() {
       $scope.modal = $modal.open({
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
@@ -155,23 +132,6 @@
       });
     }
 
-    function openUserErrorsModal() {
-      $scope.modal = $modal.open({
-        controller: 'UserErrorsController',
-        controllerAs: 'userErrorsCtrl',
-        templateUrl: 'modules/hercules/user-statuses/user-errors.html',
-        type: 'small',
-        resolve: {
-          servicesId: function () {
-            return vm.servicesId;
-          },
-          userStatusSummary: function () {
-            return vm.userStatusSummary;
-          }
-        }
-      });
-    }
-
     function openAddResourceModal() {
       if (vm.featureToggled) {
         $modal.open({
@@ -181,10 +141,11 @@
             },
             servicesId: function () {
               return vm.servicesId;
-            }
+            },
+            firstTimeSetup: false
           },
           controller: 'AddResourceController',
-          controllerAs: 'addResource',
+          controllerAs: 'vm',
           templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
           type: 'small'
         });
@@ -199,11 +160,36 @@
     }
 
     function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
+      if (vm.featureToggled) {
+        ServiceDescriptor.isServiceEnabled(vm.servicesId[0], function (error, enabled) {
+          if (!enabled) {
+            firstTimeSetup();
+          }
+        });
+      }
     });
+
+    function firstTimeSetup() {
+      $modal.open({
+        resolve: {
+          connectorType: function () {
+            return vm.connectorType;
+          },
+          servicesId: function () {
+            return vm.servicesId;
+          },
+          firstTimeSetup: true
+        },
+        controller: 'AddResourceController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/add-resource/add-resource-modal.html',
+        type: 'small'
+      });
+    }
 
   }
 }());

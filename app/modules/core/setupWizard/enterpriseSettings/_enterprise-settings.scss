@@ -91,6 +91,9 @@
   .paragraphSpacing {
     margin-bottom: 1rem;
   }
+  .redirect-link {
+    font-size: 0.8rem;
+  }
 }
 
 // SSO
@@ -119,6 +122,10 @@
   .SSOSelfSigned {
     text-align: left;
   }
+}
+
+.ftwConfigSSO {
+  margin-top: 1rem;
 }
 
 .sso-status-block {

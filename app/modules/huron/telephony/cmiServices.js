@@ -20,14 +20,16 @@
     .factory('UserSearchServiceV2', UserSearchServiceV2)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
     .factory('HuntGroupServiceV2', HuntGroupServiceV2)
+    .factory('CallParkServiceV2', CallParkServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
-    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
     .factory('VoicemailService', VoicemailService)
+    .factory('VoicemailTimezoneService', VoicemailTimezoneService)
+    .factory('VoicemailMessageActionService', VoicemailMessageActionService)
     .factory('CompanyNumberService', CompanyNumberService)
     // Will remove this service later
     .factory('CallRouterService', CallRouterService)
-    .factory('CallParkService', CallParkService)
+    .factory('SimultaneousCallsServiceV2', SimultaneousCallsServiceV2)
     .factory('InternalNumberPoolService', InternalNumberPoolService)
     .factory('ExternalNumberPoolService', ExternalNumberPoolService)
     .factory('AlternateNumberService', AlternateNumberService)
@@ -190,6 +192,22 @@
   }
 
   /* @ngInject */
+  function CallParkServiceV2($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/callparks/:callParkId', {
+      customerId: '@customerId',
+      callParkId: '@callParkId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      delete: {
+        method: 'DELETE'
+      }
+    });
+  }
+
+  /* @ngInject */
   function AssignAutoAttendantService($resource, HuronConfig) {
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
@@ -223,6 +241,13 @@
   }
 
   /* @ngInject */
+  function VoicemailService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
+      customerId: '@customerId'
+    });
+  }
+
+  /* @ngInject */
   function VoicemailTimezoneService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:objectId', {
       customerId: '@customerId',
@@ -235,9 +260,15 @@
   }
 
   /* @ngInject */
-  function VoicemailService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId', {
-      customerId: '@customerId'
+  function VoicemailMessageActionService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voicemail/customers/:customerId/usertemplates/:userTemplateId/messageactions/:messageActionId', {
+      customerId: '@customerId',
+      userTemplateId: '@userTemplateId',
+      messageActionId: '@messageActionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   }
 
@@ -262,14 +293,6 @@
       update: {
         method: 'PUT'
       }
-    });
-  }
-
-  /* @ngInject */
-  function CallParkService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directedcallparks/:callParkId', {
-      customerId: '@customerId',
-      callParkId: '@callParkId'
     });
   }
 
@@ -479,6 +502,22 @@
       get: {
         method: 'GET',
         transformResponse: transformEnvelope
+      }
+    });
+  }
+
+  /* @ngInject */
+  function SimultaneousCallsServiceV2($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId/numbers/:numberId', {
+      customerId: '@customerId',
+      numberId: '@numberId',
+      placesId: '@placesId'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      get: {
+        method: 'GET'
       }
     });
   }

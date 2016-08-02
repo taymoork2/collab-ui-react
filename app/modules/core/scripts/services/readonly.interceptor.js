@@ -1,12 +1,17 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('ReadonlyInterceptor', ReadonlyInterceptor);
+  module.exports = angular
+    .module('core.readonlyinterceptor', [
+      require('modules/core/notifications/notifications.module'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+    ])
+    .factory('ReadonlyInterceptor', ReadonlyInterceptor)
+    .name;
 
   /*ngInject*/
-  function ReadonlyInterceptor($q, $injector, Log) {
+  function ReadonlyInterceptor($q, $injector, $log) {
 
     var allowedList = [
       '/api/v1/metrics',
@@ -14,6 +19,7 @@
       '/api/v1/logs/',
       '/conversation/api/v1/users/deskFeedbackUrl',
       '/idb/oauth2/v1/revoke',
+      '/idb/oauth2/v1/access_token',
       '/resendinvitation/invoke',
       '/sendverificationcode/invoke',
       '/elevatereadonlyadmin/invoke',
@@ -32,7 +38,7 @@
       var Notification = $injector.get('Notification');
       if (_.isFunction(Authinfo.isReadOnlyAdmin) && Authinfo.isReadOnlyAdmin() && isWriteOp(config.method) && !isInAllowedList(config.url)) {
         Notification.notifyReadOnly(config);
-        Log.error('Intercepting request in read-only mode: ' + config);
+        $log.warn('Intercepting request in read-only mode: ', config);
         return $q.reject(config);
       } else {
         return config;

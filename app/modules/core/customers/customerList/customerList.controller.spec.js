@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
+  var $httpBackend, $q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, customerListToggle, HuronConfig, Log, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -14,9 +14,16 @@ describe('Controller: CustomerListCtrl', function () {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
+    daysLeft: NaN,
     communications: {
-      isTrial: false
-    }
+      isTrial: false,
+      volume: 5
+    },
+    licenseList: [{
+      isTrial: false,
+      volume: 5,
+      name: 'communications'
+    }]
   };
   var numberResponse = {
     numbers: [1, 2, 3]
@@ -25,9 +32,9 @@ describe('Controller: CustomerListCtrl', function () {
     numbers: []
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
@@ -50,6 +57,8 @@ describe('Controller: CustomerListCtrl', function () {
       USER: 1,
       CUSTOMER: 2
     };
+
+    customerListToggle = false;
 
     spyOn($state, 'go');
     spyOn(Notification, 'error');
@@ -83,7 +92,8 @@ describe('Controller: CustomerListCtrl', function () {
       $scope: $scope,
       $state: $state,
       Authinfo: Authinfo,
-      Config: Config
+      Config: Config,
+      customerListToggle: customerListToggle
     });
 
     $scope.$apply();
@@ -93,6 +103,69 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
     it('should initialize', function () {
       expect($scope.activeFilter).toBe('all');
+    });
+  });
+
+  describe('grid column display', function () {
+    var testTrialData = {};
+    beforeEach(initController);
+    beforeEach(function () {
+      testTrialData = {
+        customerOrgId: '1234-34534-afdagfg-425345-acac',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer123@cisco.com',
+        daysLeft: 50,
+        communications: {
+          isTrial: true
+        },
+        licenses: 10,
+        deviceLicenses: 5,
+        licenseList: [{
+          isTrial: false,
+          volume: 5,
+          name: 'communications'
+        }]
+      };
+    });
+
+    function setTestDataTrial() {
+      testTrialData.daysLeft = 30;
+      testTrialData.communications.isTrial = true;
+    }
+
+    function setTestDataExpired() {
+      testTrialData.daysLeft = -10;
+      testTrialData.communications.isTrial = true;
+    }
+
+    function setTestDataActive() {
+      testTrialData.daysLeft = NaN;
+      testTrialData.communications.isTrial = false;
+    }
+
+    it('should return the correct account status', function () {
+      setTestDataExpired();
+      expect($scope.getAccountStatus(testTrialData)).toBe('expired');
+      setTestDataTrial();
+      expect($scope.getAccountStatus(testTrialData)).toBe('trial');
+      setTestDataActive();
+      expect($scope.getAccountStatus(testTrialData)).toBe('active');
+    });
+
+    it('should return expired days left', function () {
+      setTestDataExpired();
+      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expiredWithGracePeriod');
+
+      testTrialData.daysLeft = -90;
+      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expired');
+    });
+
+    it('should return proper license counts', function () {
+      setTestDataActive();
+      expect($scope.getTotalLicenses(testTrialData)).toEqual(5);
+
+      setTestDataTrial();
+      expect($scope.getTotalLicenses(testTrialData)).toEqual(15);
     });
   });
 
@@ -149,16 +222,50 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
   });
+
   describe('getSubfields', function () {
     beforeEach(initController);
 
-    it('should return a proper list of subfields given the field type', function () {
-      $scope.gridOptions.multiFields = {
-        meeting: ['conferencing', 'webexEEConferencing']
+    it('should return the column from columnGroup for single column group', function () {
+      var entry = {
+        'licenseList': [{
+          'licenseId': 'MS_3c4b0cda-7315-430d-b3d6-97fd5b09991b',
+          'licenseType': 'MESSAGING',
+        }, {
+          'licenseId': 'CF_14aee12e-62f0-431b-afe0-58554d064ec3',
+          'licenseType': 'CONFERENCING',
+        }]
       };
-      var result = $scope.getSubfields('meeting');
-      expect(result[0]).toBe('conferencing');
-      expect(result[1]).toBe('webexEEConferencing');
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[0].columnGroup).toBe('conferencing');
+    });
+
+    it('should return the EE for 2nd webex column if there is no webex license', function () {
+      var entry = {
+        'licenseList': [{}]
+      };
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('EE');
+    });
+
+    it('should return webex with license for 2nd webex column if there is one', function () {
+      var entry = {
+        'licenseList': [{
+          'offerName': 'MC',
+          'licenseType': 'CONFERENCING',
+          'status': 'ACTIVE',
+        }, {
+          'licenseId': 'CMR_34302adb-1cb4-4501-a6aa-69b31b7e9558_algendel01.webex.com',
+          'offerName': 'CMR',
+          'licenseType': 'CMR',
+          'status': 'ACTIVE',
+        }]
+      };
+
+      var result = $scope.getSubfields(entry, 'meeting');
+      expect(result[1].offerCode).toBe('CMR');
     });
   });
 

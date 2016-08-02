@@ -28,7 +28,7 @@ describe('Authinfo:', function () {
   };
 
   beforeEach(function () {
-    module('Core', function ($provide) {
+    angular.mock.module('Core', function ($provide) {
       provide = $provide;
     });
     inject(function ($injector) {
@@ -229,6 +229,16 @@ describe('Authinfo:', function () {
       });
 
       expect(Authinfo.isCiscoMock()).toBe(true);
+    });
+
+    it('should return true if the parentState is support and the user is help desk and compliance user only', function () {
+      setupConfig();
+
+      var Authinfo = setupUser({
+        roles: ['Help_Desk', 'Compliance_User']
+      });
+
+      expect(Authinfo.isAllowedState('support')).toBe(true);
     });
   });
 

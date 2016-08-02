@@ -9,9 +9,9 @@ describe('Controller: ModalCtrl', function () {
   var dismiss = 'myDismiss';
   var btnType = 'myBtnType';
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("title", title);
     $provide.value("message", message);
     $provide.value("close", close);

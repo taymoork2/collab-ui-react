@@ -1,0 +1,141 @@
+#!/bin/bash
+
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+if ! type parallel >/dev/null 2>&1; then
+    >&2 echo "Error: no 'parallel' program found, please install 'parallel' first. (Run 'brew install parallel' on Mac, or see: http://www.gnu.org/software/parallel/ )"
+    exit 1
+fi
+
+function ex_usage {
+    echo "Run karma tests on given files."
+    echo ""
+    echo "usage: $(basename "$0") [--help|-h|-?] [--debug] <karma_spec_file>"
+    echo ""
+    echo "ex. single karma spec file"
+    echo "  $(basename "$0") trial.service.spec.js"
+    echo ""
+    echo "ex. all spec files in the parent dir"
+    echo "  $(basename "$0") ../*.spec.js"
+    echo ""
+    echo "ex. all spec files found under the './app' dir"
+    echo "  find ./app -iname \\*spec.js | $(basename "$0")"
+}
+
+# early out if looking for usage
+if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "-?" ]]; then
+    ex_usage
+    exit 1
+fi
+
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
+source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
+
+# ----------
+
+# otherwise collect '--*' args for passing through to gulp
+no_parallel=
+pass_through_opts=
+args=( $@ )
+i=0
+for opt in "${args[@]}"; do
+    case "$opt" in
+        --no-parallel )
+            no_parallel="true"
+            unset -v args[$i]
+            ;;
+        --* )
+            pass_through_opts="$pass_through_opts ${args[$i]}"
+            unset -v args[$i]
+            ;;
+    esac
+    let "i += 1"
+done
+
+# update positional params after filtering out '--*' args
+set -- "${args[@]}"
+
+# remap stdin to positional params
+set -- "${1:-$(</dev/stdin)}" "${@:2}"
+
+# ----------
+# compose the raw file list
+temp_dir=$(mk_temp_dir_for_ktest)
+flist=$(mktemp "$temp_dir/flist.XXXXX")
+
+# shellcheck disable=SC2068
+# generate a file list
+fname=
+for arg in $@; do
+    if [[ "$arg" = /* ]]; then
+        fname="$arg"
+    else
+        fname="$(pwd)/$arg"
+    fi
+    ls -1 "$fname" >> "$flist" 2>/dev/null
+done
+
+# ----------
+# split the raw file list
+shim_tpl="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/karma.shim.tpl.js"
+total_specs=$(wc -l "$flist" | awk '{print $1;}')
+
+# num cores is used to determine num spec files to include / shim file
+# - it also happens to determine:
+#   - how many shim files are generated
+#   - how many processes are spawned by 'parallel'
+# - offset by -1 here to prevent monopolizing the system
+num_cores=$(( $(num_cpus) - 1 ))
+if [ "${no_parallel}" = "true" ]; then
+    num_cores=1
+fi
+lines_per_file=$(calc_lines_per_file $total_specs $num_cores)
+
+# list all spec files, splitting list into roughly equal sizes
+sort "$flist" \
+    | split -l $lines_per_file - "$temp_dir/flist-split."
+
+# ----------
+# process split lists
+# - process them into shim files
+# - compose a string of multiple '--shimFile=...' args
+shim_file_args=""
+for i in "$temp_dir"/flist-split.*; do
+    printf "%-48s %s\n" "[INFO] Running: making list for injection... " "${i}.require-list"
+    mk_require_list_file "${i}" > "${i}.require-list"
+
+    karma_shim_file="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/$(basename $i).karma.shim.js"
+    printf "%-45s %s\n" "[INFO] Running: making temp karma shim files... " "$karma_shim_file"
+    inject_require_list_file "${i}.require-list" "$shim_tpl" > "$karma_shim_file"
+
+    shim_file_args="$shim_file_args --shimFile=$karma_shim_file"
+done
+
+# ----------
+# run tests in gnu 'parallel'
+# loading the correct webpack config requires 'npm_lifecycle_event' be set
+export npm_lifecycle_event=${npm_lifecycle_event=test}
+
+# run 'karma' at the project root dir
+pushd ${WX2_ADMIN_WEB_CLIENT_HOME} > /dev/null
+set -x
+if [ "${no_parallel}" = "true" ]; then
+    karma start $shim_file_args $pass_through_opts
+else
+    parallel karma start $pass_through_opts ::: $shim_file_args
+fi
+exit_status=$?
+set +x
+popd > /dev/null
+
+# ----------
+# tidy up
+set -x
+rm -rf "$temp_dir"
+rm -f "${WX2_ADMIN_WEB_CLIENT_HOME}"/karma/flist-split.*
+set +x
+
+exit $exit_status

@@ -11,7 +11,7 @@ describe('Service: PstnServiceAddressService', function () {
 
   var address, terminusAddress, serviceAddress;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnServiceAddressService_) {
     $httpBackend = _$httpBackend_;

@@ -2,7 +2,7 @@
 
 describe('Controller: HostDetailsControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $selectedRole, $clusterId, sidepanelMock, redirectTargetPromise, $q, httpBackend, $scope, $rootScope, $modal, controller, $stateParams, $state, MediaClusterServiceV2, XhrNotificationService, Notification, $translate;
 
@@ -196,29 +196,6 @@ describe('Controller: HostDetailsControllerV2', function () {
     $rootScope.$digest();
     expect($modal.open.calledOnce).toBe(true);
 
-  });
-  it('should call deleteHost of MediaClusterServiceV2', function () {
-    spyOn(MediaClusterServiceV2, 'deleteHost').and.returnValue(redirectTargetPromise);
-
-    httpBackend.flush();
-    controller.deleteHost();
-    httpBackend.verifyNoOutstandingExpectation();
-
-    expect(MediaClusterServiceV2.deleteHost).toHaveBeenCalled();
-  });
-  it('should call XhrNotificationService notify for reject ', function () {
-    var deleteHostDefered = $q.defer();
-    spyOn(MediaClusterServiceV2, 'deleteHost').and.returnValue(deleteHostDefered.promise);
-
-    deleteHostDefered.reject();
-    sinon.stub(XhrNotificationService, 'notify');
-    XhrNotificationService.notify(redirectTargetPromise);
-    httpBackend.flush();
-    controller.deleteHost();
-    httpBackend.verifyNoOutstandingExpectation();
-
-    expect(MediaClusterServiceV2.deleteHost).toHaveBeenCalled();
-    expect(XhrNotificationService.notify).toHaveBeenCalled();
   });
 
   it('showDeregisterHostDialog should open modal', function () {
