@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
+  function MediaServiceControllerV2(MediaServiceActivationV2, $state, $modal, $scope, $translate, Authinfo, MediaClusterServiceV2, Notification, FeatureToggleService) {
 
     MediaClusterServiceV2.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -47,7 +47,6 @@
     vm.addResourceButtonClicked = addResourceButtonClicked;
     vm.clusterList = [];
     vm.clustersUpdated = clustersUpdated;
-    var clustersCache = [];
 
     vm.clusterListGridOptions = {
       data: 'med.clusters',
@@ -61,7 +60,6 @@
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           vm.showClusterDetails(row.entity);
-          $log.log("entity", row.entity);
         });
       },
       columnDefs: [{
@@ -103,7 +101,6 @@
       vm.clusters = MediaClusterServiceV2.getClustersByConnectorType('mf_mgmt');
       vm.clusters.sort(sortByProperty('name'));
       vm.loadingClusters = false;
-      $log.log("aggregatedClusters", vm.clusters);
 
     }
 
@@ -134,34 +131,26 @@
 
     vm.enableMediaService = function (serviceId) {
       //function enableMediaService(serviceId) {
-      //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivationV2.setServiceEnabled(serviceId, true).then(
         function success() {
-          //$log.log("media service enabled successfully");
           vm.enableOrpheusForMediaFusion();
         },
         function error(data, status) {
-          //$log.log("Problems enabling media service");
           Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
-      //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
     };
 
     vm.enableOrpheusForMediaFusion = function () {
-      //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
-          //$log.log("Identity Org Id:", response.data.identityOrgId);
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
@@ -175,7 +164,6 @@
           }
 
           if (updateMediaAgentOrgId) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           }
         },

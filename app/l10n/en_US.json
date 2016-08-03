@@ -232,12 +232,6 @@
       "instructions": "Select the service entitlements that you want to provide to users."
     }
   },
-  "groupsPage": {
-    "manageGroups": "Groups",
-    "all": "All",
-    "groupNameHeader": "Group name",
-    "membersCountHeader": "Members"
-  },
   "onboardModal": {
     "spark": "Spark",
     "webex": "WebEx",

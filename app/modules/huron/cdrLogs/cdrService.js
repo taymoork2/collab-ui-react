@@ -372,10 +372,6 @@
       return callLegs;
     }
 
-    function setCurrentJobId(jobId) {
-      currentJob = jobId;
-    }
-
     function proxy(query, thisJob) {
       var defer = $q.defer();
       if (thisJob === currentJob) {

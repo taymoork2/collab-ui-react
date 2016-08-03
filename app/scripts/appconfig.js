@@ -1186,21 +1186,7 @@
         //       device: {}
         //     }
         //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
-          })
-          .state('organizations', {
+        .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
             controller: 'ListOrganizationsCtrl',

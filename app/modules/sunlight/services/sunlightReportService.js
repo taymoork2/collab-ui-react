@@ -126,18 +126,6 @@
       };
     }
 
-    function getStatsInLocalTz(data) {
-      _.map(data, convertTimeToLocalTz);
-      return data;
-    }
-
-    function convertTimeToLocalTz(stats) {
-      var utcDate = moment(stats.createdTime);
-      var createdTimeInLocalTz = utcDate.toDate();
-      var formattedDate = moment(createdTimeInLocalTz).format(dayFormat);
-      stats.createdTime = formattedDate;
-    }
-
     function downSampleByHour(data) {
       var statsGroupedByHour = _.groupBy(data, function (stats) {
         return moment(stats.createdTime).toDate().getHours();
@@ -202,7 +190,6 @@
 
     function reduceOrgStatsByWeek(stats1, stats2) {
       var resultStats = reduceOrgStats(stats1, stats2);
-      var isoWeekDay = moment(stats2.createdTime).isoWeekday();
       resultStats.createdTime = moment(stats2.createdTime).endOf('week').format(dayFormat);
 
       return resultStats;

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: partnerProfile', function () {
-  var $scope, $controller, controller, $q, $templateCache, $compile, $log, view;
+  var $scope, $controller, controller, $q, $templateCache, $compile, view;
   var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
 
   var BRAND_TPL = '#brandingTpl';
@@ -25,11 +25,10 @@ describe('Template: partnerProfile', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _$log_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_, _Authinfo_, _BrandService_, _WebexClientVersion_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _FeatureToggleService_, _Authinfo_, _BrandService_, _WebexClientVersion_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
-    $log = _$log_;
     $templateCache = _$templateCache_;
     $compile = _$compile_;
     Notification = _Notification_;

@@ -5,7 +5,7 @@ describe('Controller: MediaServiceController', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
+  var Authinfo, controller, $scope, httpMock, $q, $modal, $translate, $state;
   var MediaServiceActivation, MediaClusterService, Notification, XhrNotificationService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
@@ -20,11 +20,9 @@ describe('Controller: MediaServiceController', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivation_, _MediaClusterService_, _XhrNotificationService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivation_, _MediaClusterService_, _XhrNotificationService_, _Notification_) {
     $scope = $rootScope.$new();
     $state = $state;
-    log = $log;
-    log.reset();
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;
@@ -43,7 +41,6 @@ describe('Controller: MediaServiceController', function () {
       httpMock: httpMock,
       $q: $q,
       $modal: $modal,
-      log: log,
       $translate: $translate,
 
       MediaServiceActivation: MediaServiceActivation,
