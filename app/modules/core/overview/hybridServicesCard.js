@@ -27,11 +27,6 @@
           card.populateServicesWithHealth();
         };
 
-        card.adminOrgServiceStatusEventHandler = function (status) {
-          card.servicesStatus = status;
-          card.populateServicesWithHealth();
-        };
-
         //helpdesk.service.js and modified to concatenate call services.
         card.filterRelevantServices = function (services) {
           var callServices = _.filter(services, function (service) {
