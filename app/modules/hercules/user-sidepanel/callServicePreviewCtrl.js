@@ -19,10 +19,6 @@
 
     //sipUri = {"type": "enterprise", "value":"sqintegration1234@gmail.com"};
 
-    var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {
-      type: "work"
-    });
-
     $scope.isInvitePending = Userservice.isInvitePending($scope.currentUser);
     $scope.localizedServiceName = $translate.instant('hercules.serviceNames.' + $stateParams.extensionId);
     $scope.localizedOnboardingWarning = $translate.instant('hercules.userSidepanel.warningInvitePending', {
@@ -40,11 +36,10 @@
       name: 'squaredFusionEC',
       entitled: isEntitled('squared-fusion-ec'),
       orgEntitled: Authinfo.isFusionEC(),
-      enabledInFMS: false,
-      enterpriseDn: enterpriseDn ? enterpriseDn.value : null
+      enabledInFMS: false
     };
 
-    // Only show callServiceConnect is it's enabled
+    // Only show callServiceConnect if it's enabled
     if ($scope.callServiceConnect.orgEntitled) {
       ServiceDescriptor.isServiceEnabled($scope.callServiceConnect.id, function (error, enabled) {
         if (!error) {
@@ -128,13 +123,17 @@
               }, 2000); // Wait a few seconds and update the status after successful enable
             }
           } else if (userStatus === 404) {
-            entitleResult.msg = 'Entitlements for ' + $scope.currentUser.userName + ' do not exist.';
+            entitleResult.msg = $translate.instant('hercules.userSidepanel.entitlements-dont-exist', {
+              userName: $scope.currentUser.userName
+            });
             entitleResult.type = 'error';
           } else if (userStatus === 409) {
-            entitleResult.msg = 'Entitlement(s) previously updated.';
+            entitleResult.msg = $translate.instant('hercules.userSidepanel.previously-updated');
             entitleResult.type = 'error';
           } else {
-            entitleResult.msg = $scope.currentUser.userName + '\'s entitlements were not updated, status: ' + userStatus;
+            entitleResult.msg = $translate.instant('hercules.userSidepanel.not-updated', {
+              userName: $scope.currentUser.userName
+            });
             entitleResult.type = 'error';
           }
           if (userStatus !== 200) {
@@ -144,7 +143,9 @@
 
         } else {
           entitleResult = {
-            msg: 'Failed to update ' + $scope.currentUser.userName + '\'s entitlements.',
+            msg: $translate.instant('hercules.userSidepanel.not-updated', {
+              userName: $scope.currentUser.userName
+            }),
             type: 'error'
           };
           Notification.notify([entitleResult.msg], entitleResult.type);

@@ -87,10 +87,6 @@
               id="callServiceConnectStatus"
               translate="common.{{callServiceConnect.entitled ? 'on' : 'off'}}"></span>
     </div>
-    <div ng-if="callServiceConnect.enterpriseDn && callServiceConnect.entitled">
-      <span class="cloud-extension-label">{{'cloudExtensions.enterpriseDn' | translate}}:</span>
-      <span class="cloud-extension-label status-notActivated">{{callServiceConnect.enterpriseDn}}</span>
-    </div>
 
     <span
       ng-if="callServiceConnect.entitled

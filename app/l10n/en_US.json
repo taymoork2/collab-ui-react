@@ -1271,7 +1271,10 @@
       "not_operational": "Not Operational"
     },
     "userSidepanel": {
-      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded."
+      "warningInvitePending": "This user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but activation will not succeed until the user has been onboarded.",
+      "entitlements-dont-exist": "Entitlements for {{userName}} do not exist.",
+      "previously-updated": "Could not save entitlements, as they have already been updated somewhere else.",
+      "not-updated": "Entitlements could not be updated for {{userName}}."
     },
     "setup": {
       "label": "Connector Management",
@@ -3916,8 +3919,7 @@
     "enableService": "Activate service for this user",
     "status": "Status",
     "host": "Host",
-    "sipUri": "Directory URI",
-    "enterpriseDn": "Direct Line"
+    "sipUri": "Directory URI"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",

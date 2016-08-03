@@ -1010,8 +1010,8 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
-            controller: 'HybridServicesPreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
             data: {
               displayName: 'Calendar Service'
             },
@@ -1020,7 +1020,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
             data: {
               displayName: 'Call Service'
