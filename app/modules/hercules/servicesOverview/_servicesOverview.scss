@@ -1,4 +1,8 @@
 .servicesOverview {
+  .icon.success, .success {
+    color: $color-cta-base !important;
+  }
+
   .hidden {
     display: none;
   }
