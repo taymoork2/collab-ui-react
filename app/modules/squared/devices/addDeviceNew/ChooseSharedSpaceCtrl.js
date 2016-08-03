@@ -34,7 +34,7 @@
       }
     };
 
-    vm.hasRooms = vm.rooms().length > 0;
+    vm.hasRooms = vm.rooms() && vm.rooms().length > 0;
 
     vm.selectPlace = function ($item) {
       vm.place = $item;
