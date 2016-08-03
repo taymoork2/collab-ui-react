@@ -58,7 +58,7 @@ if [ "`uname`" = "Darwin" ]; then
   BREW_RET=$?
   if [ $BREW_RET -ne 0 ]; then
       echo "BREW not found, installing:"
-      ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   else
       echo "BREW is already installed"
   fi
