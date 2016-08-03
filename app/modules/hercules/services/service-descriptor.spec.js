@@ -91,4 +91,28 @@ describe('ServiceDescriptor', function () {
     });
     $httpBackend.flush();
   });
+
+  it('should GET DisableEmailSendingToUser', function () {
+    var data = {
+      "orgSettings": ["{\"calSvcDisableEmailSendingToEndUser\":true}"]
+    };
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
+      .respond(200, data);
+    Service.getDisableEmailSendingToUser().then(function (calSvcDisableEmailSendingToEndUser) {
+      expect(calSvcDisableEmailSendingToEndUser).toBe(true);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should PATCH DisableEmailSendingToUser', function () {
+    var data = {
+      "calSvcDisableEmailSendingToEndUser": true
+    };
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
+      .respond(200, {});
+    $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organizations/' + authinfo.getOrgId() + '/settings', data)
+      .respond(200, {});
+    Service.setDisableEmailSendingToUser(true);
+    expect($httpBackend.flush).not.toThrow();
+  });
 });
