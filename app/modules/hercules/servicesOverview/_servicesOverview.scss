@@ -1,8 +1,4 @@
 .servicesOverview {
-  .icon.success, .success {
-    color: $color-cta-base !important;
-  }
-
   .hidden {
     display: none;
   }
@@ -134,6 +130,9 @@
           }
           .danger {
             color: $color-negative-base;
+          }
+          .success {
+            color: $color-cta-base;
           }
         }
       }
