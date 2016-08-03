@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChoosePersonalCtrl', ChoosePersonalCtrl);
   /* @ngInject */
-  function ChoosePersonalCtrl($q, UserListService, OtpService, Notification, MailValidatorService, $stateParams, $translate) {
+  function ChoosePersonalCtrl($q, $http, UserListService, OtpService, Notification, MailValidatorService, CsdmConfigService, Authinfo, $stateParams, $translate) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
     vm.radioSelect = null;
@@ -18,6 +18,16 @@
       lastName: undefined,
       emailAddress: undefined
     };
+    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+    var userDeviceCount = {};
+    $http.get(devicesUrl).then(function (res) {
+      _.forEach(res.data, function (device) {
+        if (!userDeviceCount[device.cisUuid]) {
+          userDeviceCount[device.cisUuid] = 0;
+        }
+        userDeviceCount[device.cisUuid] += 1;
+      });
+    });
 
     vm.model = {
       userInputOption: 0,
@@ -79,6 +89,9 @@
             }
             r.extractedName = name;
             return r;
+          });
+          _.filter(userList, function (u) {
+            return userDeviceCount[u.id] && userDeviceCount[u.id] < 10;
           });
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
