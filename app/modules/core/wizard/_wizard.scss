@@ -7,10 +7,21 @@
 
   .btn {
     margin: 0;
+
   }
   a {
     cursor: pointer;
   }
+
+  .skip-link {
+    color: $gray-dark-1;
+    @include vr-spacing(mr, 1);
+
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
+
 }
 
 .wizard-main-wrapper {

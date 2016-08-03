@@ -574,10 +574,12 @@
       };
     }
 
-    $scope.checkCMR = function (confModel, cmrLics) {
-      cmrLics.forEach(function (cmrLic) {
-        cmrLic.cmrModel = confModel;
-      });
+    $scope.checkCMR = function (cfLic, cmrLics) {
+      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
+        cmrLics.forEach(function (cmrLic) {
+          cmrLic.cmrModel = cfLic.confModel;
+        });
+      }
     };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
@@ -926,7 +928,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name);
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
         }
       }, $scope.timeoutVal);
     }
@@ -2039,14 +2041,18 @@
         field: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
-        sortable: true
+        sortable: true,
+        minWidth: 449,
+        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
         resizable: false,
         sort: {
           direction: 'desc',
-          priority: 0
+          priority: 0,
+          minWidth: 449,
+          maxWidth: 449
         },
         sortCellFiltered: true
       }]

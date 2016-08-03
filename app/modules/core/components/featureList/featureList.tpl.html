@@ -1,0 +1,17 @@
+<div class="feature-list">
+  <ul>
+    <li class="feature" ng-repeat="feature in $ctrl.features">
+      <a id="{{feature.icon}}" ui-sref="{{feature.state}}" ng-if="feature.actionsAvailable">
+        <i class="feature-icon"></i>
+        <span class="feature-name">{{feature.name}}</span>
+        <span class="feature-status">{{feature.detail}}</span>
+        <i class="feature-arrow"></i>
+      </a>
+      <a id="{{feature.icon}}" class="no-services" ng-if="!feature.actionsAvailable">
+        <i class="feature-icon"></i>
+        <span class="feature-name">{{feature.name}}</span>
+        <span class="feature-status feature-arrow-match">{{feature.detail}}</span>
+      </a>
+    </li>
+  </ul>
+</div>
