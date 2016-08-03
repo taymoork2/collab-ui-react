@@ -395,7 +395,7 @@
     });
 
     function openTermsAndConditions() {
-      var modalInstance = $modal.open({
+      $modal.open({
         templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
       });
     }
