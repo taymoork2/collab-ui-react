@@ -2873,7 +2873,8 @@
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
-      "insertRoomName": "Insert name of room or shared space"
+      "insertRoomName": "Insert name of room or shared space",
+      "noExistingPlaces": "There is no existing place in your organization with a Cisco Spark Room System license assigned to it. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
