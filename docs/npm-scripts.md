@@ -54,6 +54,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Combines the unit test istanbul coverage results
 
+### `npm run commit`
+
+* Starts a wizard to write a proper [git commit message](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)
+
 ### `npm run e2e`
 
 * Runs protractor against production services and jenkins suite
