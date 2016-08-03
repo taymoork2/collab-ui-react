@@ -98,6 +98,20 @@
     }
   }
 
+  .webex-domains-list {
+
+    .feature-name {
+      color: $gray-dark-2;
+    }
+
+    .secondary {
+      color: $gray-base;
+      display:block;
+
+    }
+
+  }
+
   .btn--delete {
     font-size: .875rem;
     color:  $gray-light-1;

@@ -1,0 +1,36 @@
+
+<cs-sp-section ng-show="customerWebexOverview.domains.length > 0">
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.webexOverview"></span>
+    <span translate="customerPage.domains"></span>
+  </div>
+  <div class="feature-list webex-domains-list" ng-if="customerWebexOverview.domains.length<3">
+    <ul >
+      <li class="feature" ng-repeat="domain in customerWebexOverview.domains">
+        <div class="feature-name">{{domain.siteUrl}}
+         <span class="secondary">{{domain.timeZone}}</span>
+       </div>
+       <div class="status pull-right" ng-show="domain.pending">
+        <i class="icon icon-circle trial-pending"></i>
+        <span translate="common.pending"></span>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="feature-list webex-domains-list" ng-if="customerWebexOverview.domains.length>=3">
+  <ul ng-if="customerWebexOverview.domains.length>1">
+
+   <li class="feature">
+
+   <a ui-sref="customer-overview.domainDetail({webexDomains: customerWebexOverview.domains})">
+     <span class="feature-name" translate="customerPage.domains"></span>
+     <div class="feature-details pull-right">{{customerWebexOverview.domains.length}} </div>
+     <i class="feature-arrow"></i>
+   </a>
+
+ </li>
+
+</ul>
+</div>
+
+</cs-sp-section>

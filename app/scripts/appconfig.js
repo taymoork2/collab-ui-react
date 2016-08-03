@@ -1646,6 +1646,17 @@
               meetingLicenses: {}
             }
           })
+          .state('customer-overview.domainDetail', {
+            controller: 'DomainDetailCtrl',
+            controllerAs: 'domainDetail',
+            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            data: {
+              displayName: 'Domains'
+            },
+            params: {
+              meetingLicenses: {}
+            }
+          })
           .state('customer-overview.pstnOrderDetail', {
             parent: 'customer-overview.pstnOrderOverview',
             controller: 'PstnOrderDetailCtrl',

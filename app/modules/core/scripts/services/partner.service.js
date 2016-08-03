@@ -7,7 +7,7 @@
   /* @ngInject */
   function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
-
+  var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
       FREE: 0,
       TRIAL: 1,
@@ -47,6 +47,7 @@
       exportCSV: exportCSV,
       parseLicensesAndOffers: parseLicensesAndOffers,
       getFreeOrActiveServices: getFreeOrActiveServices,
+      getSiteUrls: getSiteUrls,
       helpers: helpers
     };
 
@@ -622,15 +623,12 @@
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = helpers.buildService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);
-
             } else {
               service = helpers.buildService(licenseInfo, licenseMapping);
               helpers.addService(paidServices, service);
-
             }
           }
         }
-
       });
 
       //if only one meeting service -- move to the services list
@@ -651,15 +649,19 @@
           qty: totalQ.qty,
           sub: _.sortBy(meetingServices, 'order')
         });
-        //result.meetingServices = meetingHeader;
+
         paidServices.push(meetingHeader);
       }
 
       if (freeServices.length > 0 || paidServices.length > 0) {
         result = _.sortBy(_.union(freeServices, paidServices), 'order');
       }
-
       return result;
     }
+
+   function getSiteUrls(customerId) {
+       var url = siteListUrl.replace('%s', customerId);
+       return $http.get(url);
+     }
   }
 })();

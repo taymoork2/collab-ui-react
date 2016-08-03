@@ -2875,7 +2875,9 @@
     "meetingLicenses": "Meeting Licenses",
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
-    "purchased": "Purchased"
+    "purchased": "Purchased",
+    "domains": "Domains",
+    "domain": "Domain"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
