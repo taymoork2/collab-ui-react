@@ -21,11 +21,12 @@
     vm.getPartnerUsers = getPartnerUsers;
     vm.removeSalesAdmin = removeSalesAdmin;
     vm.adminSuggestLimit = 8;
+    vm.resultsError = false;
+    vm.resultsErrorMessage = '';
 
     init();
 
     function init() {
-      getPartnerUsers();
       getAssignedSalesAdministrators();
     }
 
@@ -121,33 +122,47 @@
     }
 
     function getPartnerUsers(str) {
-      return CustomerAdministratorService.getPartnerUsers(str)
+      vm.resultsError = false;
+      return CustomerAdministratorService.getPartnerUsers(str.split(' ')[0])
         .then(function (response) {
           var resources = _.get(response, 'data.Resources', []);
           var searchUsers = [];
           var fullName = '';
           var uuid = '';
-          _.each(resources, function (user) {
-            if (user.name) {
-              var givenName = _.get(user, 'name.givenName');
-              var familyName = _.get(user, 'name.familyName');
-              if (givenName && familyName) {
-                fullName = givenName + ' ' + familyName;
+          /*CI currently only lets you get a max of 1000 objects - so message is displayed if user
+          search returns more than 1000 user objects*/
+          if (resources.length >= 1000) {
+            vm.resultsError = true;
+            vm.resultsErrorMessage = "Search returned too many results. Be more specific to find user";
+          } else {
+            _.every(resources, function (user) {
+              if (user.name) {
+                var givenName = _.get(user, 'name.givenName');
+                var familyName = _.get(user, 'name.familyName');
+                if (givenName && familyName) {
+                  fullName = givenName + ' ' + familyName;
+                }
+              } else if (user.displayName) {
+                fullName = _.get(user, 'displayName');
+              } else {
+                fullName = _.get(user, 'userName');
               }
-            } else if (user.displayName) {
-              fullName = _.get(user, 'displayName');
-            } else {
-              fullName = _.get(user, 'username');
+              uuid = _.get(user, 'id');
+              if (fullName.toLowerCase().indexOf(str.toLowerCase()) != -1 || user.displayName.toLowerCase().indexOf(str.toLowerCase()) != -1 ||
+                 user.userName.toLowerCase().indexOf(str.toLowerCase()) != -1) {
+                searchUsers.push(fullName);
+                vm.users.push({
+                  fullName: fullName,
+                  uuid: uuid
+                });
+              }
+              return searchUsers.length < vm.adminSuggestLimit;
+            });
+            if (searchUsers.length == 0) {
+              vm.resultsError = true;
+              vm.resultsErrorMessage = "No results found";
             }
-            uuid = _.get(user, 'id');
-            if (searchUsers.length < vm.adminSuggestLimit && fullName.toLowerCase().indexOf(str.toLowerCase()) != -1) {
-              searchUsers.push(fullName);
-              vm.users.push({
-                fullName: fullName,
-                uuid: uuid
-              });
-            }
-          });
+          }
           return searchUsers;
         })
         .catch(function () {

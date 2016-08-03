@@ -10,11 +10,13 @@
 	            typeahead-template-url="stateTemplate.html"
 	            typeahead="searchUser for searchUser in customerAdmin.getPartnerUsers($viewValue)"
 	            typeahead-on-select="customerAdmin.selectAdmin($item)"
-	            placeholder="Enter Administrator name"
-	            typeahead-wait-ms="0"
+	            placeholder="Enter new Administrator name or username"
+	            typeahead-wait-ms="500"
+              typeahead-no-results="customerAdmin.resultsError"
 	            ng-disabled="customerAdmin.disableAdminSearch" />
         <span type="button" class="btn btn--primary inline search-add-button" ng-click="customerAdmin.addAdmin(customerAdmin.selected)">Add</span>
       </div>
+      <span ng-if="customerAdmin.resultsError">{{customerAdmin.resultsErrorMessage}}</span>
      </div>
     <div class="section-title-row">
       <span class="section-name" translate="customerAdminPanel.administrators"></span>
