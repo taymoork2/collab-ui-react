@@ -6,7 +6,7 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $q, $rootScope, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
+  function Userservice($http, $q, $rootScope, $translate, Authinfo, Config, HuronUser, Log, NAME_DELIMITER, Notification, SunlightConfigService, TelephoneNumberService, UrlConfig) {
     var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
@@ -462,11 +462,12 @@
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
         if (_helpers.isSunlightUser(userLicenses)) {
           var userData = _helpers.createUserData(userResponseSuccess);
-          SunlightConfigService.createUserInfo(userData)
+          var userId = userResponseSuccess.uuid;
+          SunlightConfigService.updateUserInfo(userData, userId)
             .then(function (response) {
-              Log.debug("SunlightConfigService.createUserInfo success response :" + JSON.stringify(response));
+              Log.debug("SunlightConfigService.updateUserInfo success response :" + JSON.stringify(response));
             }, function (response) {
-              Log.debug("SunlightConfigService.createUserInfo failure response :" + JSON.stringify(response));
+              Notification.error($translate.instant('usersPage.careAddUserError'));
             });
         }
       });
@@ -475,8 +476,7 @@
 
     function createUserData(userResponse) {
       var userData = {};
-      userData.userId = userResponse.uuid;
-      userData.alias = userResponse.displayName;
+      userData.alias = '';
       userData.teamId = Authinfo.getOrgId();
       userData.attributes = [];
       userData.media = ['chat'];
