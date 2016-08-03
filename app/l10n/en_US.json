@@ -99,7 +99,9 @@
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
     "convertUserError": "Failed to convert",
-    "convertUserSearch": "Enter customer name or email address",
+    "convertUserSearch": "Enter display name or email address",
+    "convertUserNoneFound": "No Unlicensed Users Found",
+    "convertUserTryAgain": "Try another search.",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
@@ -987,7 +989,8 @@
     "convert": "Convert",
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Cisco Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise features, and are subject to your organization's policies and administration.",
+    "unlicensedUsers": "Unlicensed Users",
+    "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Spark on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
@@ -2247,7 +2250,7 @@
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or",
+    "or": "or {{ directoryNumber }}",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
@@ -2698,7 +2701,7 @@
     "users": "Users",
     "message": "Message",
     "meeting": "Meeting 25 Party",
-    "webex": "WebEx Enterprise Edition 200 with CMR",
+    "webex": "WebEx Enterprise Edition 200 with CMR/TNU+",
     "call": "Call",
     "care": "Care",
     "callUsOnly": "Call (Currently U.S. only)",
@@ -4184,7 +4187,15 @@
     "reloadMessage": "Please try reloading the page"
   },
   "placesPage": {
-    "placeError": "Add Place failed."
+    "nameHeader": "Name",
+    "typeHeader": "Type",
+    "deviceHeader": "No. of Devices",
+    "actionHeader": "Actions",
+    "featuresHeader": "Features",
+    "placeAdd": "Add Place",
+    "placeError": "Add Place failed.",
+    "deletePlace": "Delete Place",
+    "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?"
   },
   "linesPage": {
     "manageLines": "Numbers",
@@ -4692,7 +4703,8 @@
     "priceHeader": "Price",
     "dateHeader": "Order Date",
     "actionsHeader": "Actions",
-    "downloadPdf": "Download PDF"
+    "downloadPdf": "Download PDF",
+    "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
