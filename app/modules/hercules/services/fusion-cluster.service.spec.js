@@ -494,35 +494,35 @@ describe('Service: FusionClusterService', function () {
 
   });
 
-  describe('.processClustersToSeeIfServiceIsEnabled', function () {
+  describe('.processClustersToSeeIfServiceIsSetup', function () {
 
     describe('Org with Call and Calendar', function () {
 
-      // Test cluster: Two clusters where Call is provisioned on one cluster, and Calendar is provisioned on both clusters
-      var baseClusters, discothequeClusters;
+      // Test cluster: Two clusters where Call is installed on one cluster, and Calendar is installed on both clusters
+      var baseClusters;
       beforeEach(function () {
         jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
         baseClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
       });
 
       it('should find that Call is enabled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-uc', baseClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', baseClusters)).toBe(true);
       });
 
       it('should find that Calendar is enabled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-cal', baseClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', baseClusters)).toBe(true);
       });
 
       it('should find that Management is enabled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-mgmt', baseClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-mgmt', baseClusters)).toBe(true);
       });
 
       it('should find that InvalidService is *not* enabled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-invalid-service', baseClusters)).toBe(false);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
       });
 
       it('should find that Media is *not* enabled in the base cluster list', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-media', baseClusters)).toBe(false);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
       });
     });
 
@@ -536,15 +536,15 @@ describe('Service: FusionClusterService', function () {
       });
 
       it('should find that Media is enabled in the Discotheque org', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-media', discothequeClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', discothequeClusters)).toBe(true);
       });
 
       it('should find that Call is enabled in the Discotheque org', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-uc', discothequeClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', discothequeClusters)).toBe(true);
       });
 
       it('should find that Calendar is enabled in the Discotheque org', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-cal', discothequeClusters)).toBe(true);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
       });
 
     });
@@ -552,22 +552,22 @@ describe('Service: FusionClusterService', function () {
     describe('An org with nothing at all,', function () {
 
       // Test clusters: Two clusters, with nothing provisioned and nothing installed
-      var clustersWithNothingProvisioned;
+      var clustersWithNothingInstalled;
       beforeEach(function () {
         jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        clustersWithNothingProvisioned = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
+        clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
       });
 
       it('should find that Media is *dis*-abled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-media', clustersWithNothingProvisioned)).toBe(false);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clustersWithNothingInstalled)).toBe(false);
       });
 
       it('should find that Call is *dis*-abled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-uc', clustersWithNothingProvisioned)).toBe(false);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clustersWithNothingInstalled)).toBe(false);
       });
 
       it('should find that Calendar is *dis*-abled', function () {
-        expect(FusionClusterService.processClustersToSeeIfServiceIsEnabled('squared-fusion-cal', clustersWithNothingProvisioned)).toBe(false);
+        expect(FusionClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clustersWithNothingInstalled)).toBe(false);
       });
 
     });

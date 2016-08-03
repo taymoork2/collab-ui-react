@@ -27,8 +27,8 @@
       getReleaseNotes: getReleaseNotes,
       getAggregatedStatusForService: getAggregatedStatusForService,
       processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
-      serviceIsEnabled: serviceIsEnabled,
-      processClustersToSeeIfServiceIsEnabled: processClustersToSeeIfServiceIsEnabled
+      serviceIsSetUp: serviceIsSetUp,
+      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup
     };
 
     return service;
@@ -289,14 +289,14 @@
 
     }
 
-    function serviceIsEnabled(serviceId) {
+    function serviceIsSetUp(serviceId) {
       return getAll()
         .then(function (clusterList) {
-          return processClustersToSeeIfServiceIsEnabled(serviceId, clusterList);
+          return processClustersToSeeIfServiceIsSetup(serviceId, clusterList);
         });
     }
 
-    function processClustersToSeeIfServiceIsEnabled(serviceId, clusterList) {
+    function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
 
       if (!Authinfo.isEntitled(serviceId)) {
         return false;
@@ -308,8 +308,8 @@
         return false; // Cannot recognize service, default to *not* enabled
       }
 
-      var provisionedConnectors = _.map(clusterList, 'provisioning');
-      return _.some(provisionedConnectors, function (cluster) {
+      var installedConnectors = _.map(clusterList, 'connectors');
+      return _.some(installedConnectors, function (cluster) {
         return _.some(cluster, function (connector) {
           return connector.connectorType === target_connector;
         });
