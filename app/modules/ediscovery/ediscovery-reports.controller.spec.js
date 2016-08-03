@@ -1,23 +1,18 @@
 'use strict';
 describe('Controller: EdiscoveryReportsController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Ediscovery'));
 
-  var $controller, $q, $scope, $state, $translate, Authinfo, controller, EdiscoveryService, httpBackend, ReportUtilService;
+  var $controller, $q, $scope, $state, $translate, Authinfo, controller, EdiscoveryService, ReportUtilService;
 
-  beforeEach(inject(function (_$controller_, $httpBackend, _$q_, _$rootScope_, _$state_, _$translate_, _Authinfo_, _EdiscoveryService_, _ReportUtilService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$translate_, _Authinfo_, _EdiscoveryService_, _ReportUtilService_) {
     $state = _$state_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
-    httpBackend = $httpBackend;
     $translate = _$translate_;
     $q = _$q_;
     Authinfo = _Authinfo_;
     EdiscoveryService = _EdiscoveryService_;
     ReportUtilService = _ReportUtilService_;
-
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
 
     sinon.stub(Authinfo, 'getOrgId');
     Authinfo.getOrgId.returns("ce8d17f8-1734-4a54-8510-fae65acc505e");
@@ -50,7 +45,7 @@ describe('Controller: EdiscoveryReportsController', function () {
 
     it('gets reports', function () {
       expect(controller.readingReports).toBeTruthy();
-      httpBackend.flush();
+      $scope.$apply();
       expect(EdiscoveryService.getReports.callCount).toBe(1);
       expect(controller.readingReports).toBeFalsy();
     });

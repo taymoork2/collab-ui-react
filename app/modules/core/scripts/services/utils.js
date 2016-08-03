@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .factory('Utils', Utils);
+  module.exports = angular.module('core.utils', [])
+    .factory('Utils', Utils)
+    .name;
 
   /* @ngInject */
   function Utils($rootScope, $location, $window) {

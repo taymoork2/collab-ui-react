@@ -3,7 +3,7 @@
 describe('Service: Care Reports Service', function () {
   var CareReportsService;
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_CareReportsService_) {
     CareReportsService = _CareReportsService_;

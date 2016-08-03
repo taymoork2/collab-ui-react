@@ -11,7 +11,7 @@ describe('Huron Call Park Setup Assistant Ctrl', function () {
   var testGroupNumber = '5654';
   var testGroupMember = 'testUser';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _CallParkService_, _$q_, _$state_) {
     $scope = $rootScope.$new();

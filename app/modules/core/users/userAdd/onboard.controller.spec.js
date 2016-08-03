@@ -197,9 +197,12 @@ describe('OnboardCtrl: Ctrl', function () {
   });
   describe('License redirect modal', function () {
     beforeEach(initController);
+    beforeEach(function () {
+      spyOn(this.$scope, 'licenseCheckModal');
+    });
     it('should define the modal when sufficient licenses are not available', function () {
       this.$scope.checkLicenseAvailability('MESSAGING', true);
-      expect(this.$scope.licenseCheckModal).toBeDefined();
+      expect(this.$scope.licenseCheckModal).toHaveBeenCalled();
     });
     it('should not launch modal when sufficient licenses are available', function () {
       this.$scope.checkLicenseAvailability('COMMUNICATION', false);

@@ -1,13 +1,19 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  module.exports = angular.module('core.featuretoggle', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/org.service'),
+      require('modules/huron/telephony/telephonyConfig'),
+    ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
     .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
-    .service('FeatureToggleService', FeatureToggleService);
+    .service('FeatureToggleService', FeatureToggleService)
+    .name;
 
   /* @ngInject */
-  function FeatureToggleService($q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig, Userservice) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig) {
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
@@ -319,8 +325,10 @@
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          Userservice.getUser('me', function (data, status) {
-            getFeatureForUser(data.id, feature)
+          $http.get(UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/me', {
+            cache: true,
+          }).then(function (response) {
+            return getFeatureForUser(_.get(response, 'data.id'), feature)
               .then(function (result) {
                 if (!result) {
                   return getHuronToggle(false, Authinfo.getOrgId(), feature);
@@ -331,6 +339,8 @@
                 toggles[feature] = toggleValue;
                 resolve(toggleValue);
               });
+          }).catch(function () {
+            return false;
           });
         }
       });

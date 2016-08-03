@@ -3,7 +3,7 @@
 describe('Directive: csvDownload', function () {
   var $compile, $rootScope, $scope, $timeout, $httpBackend, CsvDownloadService;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
 

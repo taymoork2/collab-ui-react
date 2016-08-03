@@ -1,18 +1,14 @@
 'use strict';
 describe('HelpdeskHttpRequestCancellerSpec', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var HelpdeskHttpRequestCanceller;
-  var $scope, $httpBackend, $timeout;
+  var $scope, $timeout;
 
-  beforeEach(inject(function (_$timeout_, _HelpdeskHttpRequestCanceller_, _$rootScope_, _$httpBackend_) {
+  beforeEach(inject(function (_$timeout_, _HelpdeskHttpRequestCanceller_, _$rootScope_) {
     $scope = _$rootScope_.$new();
     $timeout = _$timeout_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
-    $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('timers cancelled adds a truthy cancelled attribute on the promise', function () {

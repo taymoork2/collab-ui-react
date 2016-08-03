@@ -3,7 +3,7 @@
 describe('RedirectTargetController', function () {
   var controller, $controller, translateMock, $scope, $q, RedirectTargetService, modalInstanceMock, windowMock;
 
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

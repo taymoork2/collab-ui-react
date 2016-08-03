@@ -6,7 +6,7 @@
     .controller('ProcessorderCtrl', ProcessorderCtrl);
 
   /* @ngInject */
-  function ProcessorderCtrl($location, Auth, Orgservice) {
+  function ProcessorderCtrl($location, $translate, Auth, Orgservice, ModalService) {
     var vm = this;
     var enc = $location.search().enc;
 
@@ -21,7 +21,11 @@
       })
       .catch(function () {
         vm.isProcessing = false;
-        $('#processOrderErrorModal').modal('show');
+        ModalService.open({
+          title: $translate.instant('processOrderPage.info'),
+          message: $translate.instant('processOrderPage.errOrgCreation'),
+          dismiss: false,
+        });
       });
   }
 })();

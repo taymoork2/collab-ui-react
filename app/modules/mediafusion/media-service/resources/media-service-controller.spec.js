@@ -3,7 +3,7 @@
 describe('Controller: MediaServiceController', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
   var MediaServiceActivation, MediaClusterService, Notification, XhrNotificationService;
@@ -16,7 +16,7 @@ describe('Controller: MediaServiceController', function () {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
@@ -34,8 +34,6 @@ describe('Controller: MediaServiceController', function () {
     MediaServiceActivation = _MediaServiceActivation_;
     XhrNotificationService = _XhrNotificationService_;
     Notification = _Notification_;
-
-    //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
 
     //spyOn(Notification, 'errorResponse');
 

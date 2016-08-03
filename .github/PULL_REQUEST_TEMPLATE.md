@@ -13,8 +13,8 @@
 **Please check if the PR fulfills these requirements**
 - [ ] The commit messages follow our guidelines: https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit-message-format
 - [ ] A unit test has been written for this change. Some examples can be found here: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/tree/master/examples/unit
-- [ ] Running `gulp build` produced a successful build. (Unit testing can be done by running `gulp karma`; end-to-end testing can be done by running `gulp e2e`.)
-- [ ] My code has been beautified. (This is a gulp task run within `gulp build`, but can be run independently with `gulp jsBeautifier:beautify`.)
+- [ ] Running `npm run build` produced a successful build. (Unit testing can be done by running `npm test`; end-to-end testing can be done by running `npm run e2e`.)
+- [ ] My code has been beautified. (`npm run jsb` to do this. `npm run build` will fail if there are unbeautified files.)
 
 
 **Please provide a screenshot of this feature before and after your code changes, if applicable.**

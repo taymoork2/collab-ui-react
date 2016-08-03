@@ -2,13 +2,13 @@
 
 describe('ServiceDescriptor', function () {
   // load the service's module
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   // instantiate service
   var Service, $httpBackend, authinfo;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub()
       };
@@ -90,5 +90,29 @@ describe('ServiceDescriptor', function () {
       done();
     });
     $httpBackend.flush();
+  });
+
+  it('should GET DisableEmailSendingToUser', function () {
+    var data = {
+      "orgSettings": ["{\"calSvcDisableEmailSendingToEndUser\":true}"]
+    };
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
+      .respond(200, data);
+    Service.getDisableEmailSendingToUser().then(function (calSvcDisableEmailSendingToEndUser) {
+      expect(calSvcDisableEmailSendingToEndUser).toBe(true);
+    });
+    $httpBackend.flush();
+  });
+
+  it('should PATCH DisableEmailSendingToUser', function () {
+    var data = {
+      "calSvcDisableEmailSendingToEndUser": true
+    };
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/' + authinfo.getOrgId() + '?disableCache=true')
+      .respond(200, {});
+    $httpBackend.expectPATCH('https://atlas-integration.wbx2.com/admin/api/v1/organizations/' + authinfo.getOrgId() + '/settings', data)
+      .respond(200, {});
+    Service.setDisableEmailSendingToUser(true);
+    expect($httpBackend.flush).not.toThrow();
   });
 });

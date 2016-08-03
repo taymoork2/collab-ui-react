@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .factory('Localize', Localize);
+  module.exports = angular.module('core.localize', [
+      require('modules/core/scripts/services/utils'),
+      require('modules/core/scripts/services/sessionstorage'),
+    ])
+    .factory('Localize', Localize)
+    .name;
 
   /* @ngInject */
   function Localize($filter, Utils, SessionStorage) {

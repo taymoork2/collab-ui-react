@@ -6,9 +6,9 @@ describe('Controller: TrialPstnCtrl', function () {
   var customerName = 'Wayne Enterprises';
   var customerEmail = 'batman@darknight.com';
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_) {
     $scope = $rootScope.$new();

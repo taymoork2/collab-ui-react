@@ -5,7 +5,7 @@ var roomId = 'abc';
 var reportId = '123';
 
 describe('Service: EdiscoveryService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Ediscovery'));
 
   var Service, httpBackend, UrlConfig, Authinfo, avalonRunUrl, urlBase, responseUrl;
 

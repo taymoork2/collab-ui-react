@@ -6,11 +6,11 @@ describe('Template: trialDevice.tpl.spec.js:', function () {
   var controller, view;
   var skipBtn, backBtn;
 
-  beforeEach(module('Core'));
-  beforeEach(module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
   // TODO - check for removal of Huron and Sunlight when DX80 and MX300 are officially supported
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 

@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Service: MediaFusionAnalyticsService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var $httpBackend, $location, Service, overload, utilization;
   var rootPath = 'https://athena-integration.wbx2.com/athena/api/v1';
   var ping = rootPath + '/ping';
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
 
       utilization = {
         cluster: sinon.stub(),
@@ -36,10 +36,6 @@ describe('Service: MediaFusionAnalyticsService', function () {
   beforeEach(inject(function ($injector, _MediaFusionAnalyticsService_) {
     Service = _MediaFusionAnalyticsService_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-
   }));
 
   afterEach(function () {

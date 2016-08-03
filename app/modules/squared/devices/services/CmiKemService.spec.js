@@ -10,10 +10,10 @@ describe('Service: CmiKemService', function () {
   var successSpy;
   var failureSpy;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

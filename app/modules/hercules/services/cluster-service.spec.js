@@ -1,13 +1,13 @@
 'use strict';
 
 describe('ClusterService', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     var Authinfo = {
       getOrgId: sinon.stub().returns('orgId')
     };

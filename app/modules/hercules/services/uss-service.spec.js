@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: USSService', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var $httpBackend, Service, authinfo;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';

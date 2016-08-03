@@ -16,8 +16,8 @@ describe('Controller: VoicemailInfoCtrl', function () {
   };
   var url;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_, _DirectoryNumber_, _LineSettings_) {
     $scope = $rootScope.$new();

@@ -3,7 +3,7 @@
 describe('Directive: featureCards', function () {
   var $compile, $rootScope;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;

@@ -36,8 +36,8 @@
 
     var states;
 
-    beforeEach(module('Core'));
-    beforeEach(module(function (_$provide_) {
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module(function (_$provide_) {
       $provide = _$provide_;
       $provide.value("FeatureToggleService", featureToggleService);
     }));

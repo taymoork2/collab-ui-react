@@ -3,8 +3,8 @@
 describe('Service: AAMetricNameService', function () {
 
   var AAMetricNameService;
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AAMetricNameService_) {
     AAMetricNameService = _AAMetricNameService_;

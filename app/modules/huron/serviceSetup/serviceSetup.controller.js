@@ -28,8 +28,9 @@
     vm.processing = true;
     vm.externalNumberPool = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
+    //TODO: re-enable option '8' once it is an acceptable steering digit
     vm.steeringDigits = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+      '0', '1', '2', '3', '4', '5', '6', '7', '9'
     ];
     vm.availableExtensions = [
       '3', '4', '5'

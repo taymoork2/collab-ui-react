@@ -1,6 +1,6 @@
 'use strict';
 describe('HelpdeskCardsService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var HelpdeskCardsUserService;
   var LicenseService;

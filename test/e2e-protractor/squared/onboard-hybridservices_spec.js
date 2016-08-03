@@ -25,7 +25,7 @@ describe('Onboard users with Hybrid Services', function () {
       });
   });
 
-  it('should ensure services enabled', function () {
+  xit('should ensure services enabled', function () {
     navigation.ensureHybridService(navigation.calendarServicePage);
     navigation.ensureHybridService(navigation.callServicePage);
     navigation.ensureCallServiceAware();

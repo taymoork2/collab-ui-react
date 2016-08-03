@@ -145,9 +145,8 @@ while (1 >= webExCommon.testInfo.describeCount) {
       it('should allow edit and save in panel 3', function () {
         if (setup) {
           utils.wait(webExUserSettings.mcAuoCheckbox);
-          webExUserSettings.mcAuo.click();
+          utils.click(webExUserSettings.mcAuo);
 
-          expect(element(by.id('saveBtn')).isPresent()).toBeTruthy();
           utils.click(element(by.id('saveBtn')));
 
           utils.wait(webExUserSettings.alertSuccess);

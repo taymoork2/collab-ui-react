@@ -77,24 +77,18 @@ User: ['say-hello',..]
 * ***if your code is a core journey***
   * add a functional test folder for your module
     * `test/e2e-protractor/helloWorld`
-  * add the new test directory to `config.testFiles.e2e` in **gulp/gulp.config.js**:
+  * add the new test directory to `config.e2eSuites` in `config/config.js`:
     * `helloWorld: e2e + '/helloWorld/**/*_spec.js'`
-      * by adding this you get the `gulp karma-helloWorld` task that runs just the unit tests for your module
 * **Testing Resources**
   * https://docs.angularjs.org/guide/unit-testing
   * http://www.pluralsight.com/courses/play-by-play-angular-testing-papa-bell
   * http://www.bradoncode.com/tutorials/angularjs-unit-testing/
 
 **3. Test and Run**
-* run your module specific unit tests using:
-```bash
-# this is added when you add to the `gulp/gulp.config.js` file
-$ gulp karma-helloWorld
-```
 * run the app using:
 ```bash
-$ gulp serve
+$ npm start
 ```
 * you should see your new menu and when you click on it you should see the hello world page
-* test the app using `gulp e2e --specs=[your module]`, this will test your module
-* test the entire suite by running: `gulp e2e`
+* test the app using `npm run protractor -- --suite <module>`, this will test your module
+* test the entire suite by running: `npm run protractor -- --suite jenkins`

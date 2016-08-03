@@ -1,13 +1,13 @@
 'use strict';
 
 describe('ExportUserStatusesController', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService2, ClusterService, ExcelService;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Authinfo = {
         getServices: function () {
           return [{

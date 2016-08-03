@@ -10,7 +10,7 @@ describe('Controller: PstnProvidersCtrl', function () {
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
   var customerSiteList = getJSONFixture('huron/json/pstnSetup/customerSiteList.json');
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$state_, _PstnSetup_, _PstnSetupService_, _PstnServiceAddressService_, _Notification_) {
     $scope = $rootScope.$new();
