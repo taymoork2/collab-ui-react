@@ -6,9 +6,9 @@ describe('Controller: WizardCtrl', function () {
 
   var getUserMe, getMyFeatureToggles;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
 
   tabs = [{
     name: 'planReview',

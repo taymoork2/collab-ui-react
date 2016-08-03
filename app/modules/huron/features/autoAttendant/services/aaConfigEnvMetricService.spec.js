@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Service: AAConfigEnvMetricService', function () {
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
   var $location, $q, AAConfigEnvMetricService, Config, Analytics, AAMetricNameService;
 
   beforeEach(inject(function (_$q_, _AAConfigEnvMetricService_, _Config_, _Analytics_, _AAMetricNameService_) {

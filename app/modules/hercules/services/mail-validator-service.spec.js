@@ -1,7 +1,7 @@
 'use strict';
 
 describe('MailValidatorService', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var Service;
 

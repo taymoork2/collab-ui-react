@@ -10,7 +10,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
   var siteUrl = 'go.webex.com';
   var email = "mojoco@webex.com";
 
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
     _Authinfo_,

@@ -2,7 +2,7 @@
 
 describe('Controller: DeleteClusterSettingControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var vm, $q, httpBackend, deferred, controller, cluster, redirectTargetPromise, redirectTargetPromise1, $log, $modalInstance, $filter, MediaClusterServiceV2, $state, $translate, XhrNotificationService, Notification;
 

@@ -11,8 +11,8 @@ describe('Service: CommonLineService', function () {
   var nameTemplate;
   var entitylist;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_Notification_, _TelephonyInfoService_, $translate, _CommonLineService_) {
 

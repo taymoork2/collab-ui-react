@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive Controller: HybridServicesCtrl', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var vm, $rootScope, $controller, $timeout, $q, Authinfo, Config, USSService, ServiceDescriptor;
 

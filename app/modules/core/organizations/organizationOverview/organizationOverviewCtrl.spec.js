@@ -8,11 +8,11 @@ describe('Controller: organizationOverviewCtrl', function () {
     getOrgId: sinon.stub()
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_) {
     $scope = $rootScope.$new();

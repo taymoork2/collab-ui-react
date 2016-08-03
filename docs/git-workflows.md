@@ -23,13 +23,13 @@ To summarize, this is the process:
 1. You fork the wx2-admin-web-client repository
 2. You make changes on your fork
 3. You commit and push your changes to your fork (`git add`, `git commit`)
-    Update and test your code by executing the following:
-    'git fetch upstream'
-    'git merge upstream/master'
-    'git push origin'
-    'gulp e2e --nofailfaist'
-    Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
+  * Update and test your code by executing the following:
+  * `git fetch upstream`
+  * `git merge upstream/master`
+  * `git push origin`
+  * `npm run e2e`
+  * Confirm all tests have passed and rerun any that didn't using the specs option
+    (e.g. `npm run protractor -- --specs test/e2e-protractor/squared/failedtest`)
 4. You create a pull request
 5. Someone reviews your code and gives you feedback
 6. Eventually, your code will get approved
@@ -50,12 +50,12 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
 5. Once you've finished fixing the defect, add your changes and commit: `git add file1 file2 ...`, `git commit -m "DE123: Users weren't being saved properly"`
 6. Push the changes on the `de123` branch to your local account: `git push origin de123`. You'll notice that when you visit your GitHub account's fork (https://github-sqbu.cisco.com/username/wx2-admin-web-client), it will have a new branch in the drop down menu. You might also see a highlighted pop-up that asks you if you want to Compare & create a pull request.
   - Prior to doing a PR, sync your code with master and test as follows:
-    'git fetch upstream'
-    'git merge upstream/master'
-    'git push -f origin'
-    'gulp e2e --nofailfaist'
-    Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
+  * `git fetch upstream`
+  * `git merge upstream/master`
+  * `git push -f origin`
+  * `npm run e2e`
+  * Confirm all tests have passed and rerun any that didn't using the specs option
+    (e.g. `npm run protractor -- --specs test/e2e-protractor/squared/failedtest`)
 7. When your pull request gets accepted and you need to push to Jenkins, you'll want to push your specific branch: `git push jenkins de123:master`
   - Prior to pushing, repeat the sync steps outlined in step #6
 

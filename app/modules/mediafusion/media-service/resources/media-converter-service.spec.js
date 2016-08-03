@@ -3,7 +3,7 @@
 describe('MediaConverterService', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
   var Service, $q;

@@ -5,10 +5,10 @@
   var ctrl;
 
   describe('Controller: CiSyncCtrl', function () {
-    beforeEach(module('Core'));
-    beforeEach(module('Huron'));
-    beforeEach(module('Sunlight'));
-    beforeEach(module('Messenger'));
+    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module('Huron'));
+    beforeEach(angular.mock.module('Sunlight'));
+    beforeEach(angular.mock.module('Messenger'));
 
     beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _Authinfo_, _Notification_, _CiService_, _SyncService_) {
       $scope = _$rootScope_.$new();

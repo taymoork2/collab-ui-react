@@ -1,7 +1,7 @@
 'use strict';
 
 describe('KemService', function () {
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Squared'));
 
   var KemService;
 

@@ -1400,8 +1400,11 @@
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsWatermark": "Add email addresses",
+      "emailAdministratorHeading": "Administrators",
+      "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
+      "emailUserHeading": "Users",
+      "emailUserNotification": "Turn on/off email notifications to users, such as entitlement, error message, high notification rate from Exchange Server, etc.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
       "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
@@ -1457,6 +1460,7 @@
     },
     "notifications": {
       "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "no-notifications": "No notifications.",
       "callAware": {
         "title": "Enable Call Service Aware for Users",
         "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
@@ -1489,6 +1493,17 @@
         "aware-user-errors": "There are {{numberUsers}} users with Call Service Aware activation errors.",
         "connect-user-errors": "There are {{numberUsers}} users with Call Service Connect activation errors.",
         "generate-report": "Generate Report"
+      },
+      "add-SIP-destination": {
+        "title": "Complete Call Service Connect Configuration",
+        "description": "Add the SIP Destination for call routing under <a ng-click=\"{{onclick}}\">Settings.</a>"
+      },
+      "no-fuse-yet": {
+        "title": "Register your Cisco Expressways for Hybrid Services"
+      },
+      "add-call-service-connect": {
+        "title": "Add Call Service Connect",
+        "description": "Activate Call Service Connect and add SIP destination under <a ng-click=\"{{onclick}}\">Settings.</a>"
       }
     },
     "fusion": {
@@ -2614,9 +2629,12 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "daysRemaining": "{{count}} days remaining",
+    "daysRemaining": "{count, plural, one{# day remaining} other{# days remaining}}",
+    "daysLeftToPurchase": "{count, plural, one{# day left to purchase} other{# days left to purchase}}",
+    "daysLeftToRenew": "{count, plural, one{# day left to renew} other{# days left to renew}}",
     "expiringToday": "Expiring today",
     "expired": "Expired",
+    "expiredWithGracePeriod": "Expired. Purchase now",
     "suspended": "This account has been suspended.",
     "licenseInfoNotAvailable": "No license information available.",
     "licenseHeader": "Licenses",
@@ -2647,6 +2665,8 @@
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
     "licenses": "Number of Licenses",
+    "totalQuantity": "Total Quantity",
+    "totalLicenses": "Total Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
@@ -2686,7 +2706,10 @@
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
-    "meetingLicenses": "Meeting Licenses"
+    "meetingLicenses": "Meeting Licenses",
+    "accountStatus": "Account Status",
+    "totalUsers": "Total Users",
+    "purchased": "Purchased"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2845,7 +2868,7 @@
       "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
       "existingPlace": "Existing Place",
       "existingPlaceInstructions": "If the place you are searching for isn’t listed, it either has 10 associated desk phones or an assigned Cisco Spark Room System license. A place can only have up to 10 desk phones associated to it. Desk phones and room systems cannot share the same place.",
-      "searchRoom": "Search for a room",
+      "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
@@ -4625,6 +4648,8 @@
     "contact": "Contact",
     "managedBy": "Managed By",
     "supportedBy": "Supported By",
+    "organizationId": "Org. ID",
+    "userId": "User ID",
     "ts": "TS(TAC)",
     "trials": "Trials",
     "administratorUsers": "Administrator Users",

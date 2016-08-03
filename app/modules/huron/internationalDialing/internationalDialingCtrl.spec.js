@@ -11,8 +11,8 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
     currentUser: currentUser
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$httpBackend_, _InternationalDialing_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();

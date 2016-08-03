@@ -72,7 +72,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     zip: '77777'
   };
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_) {
     $scope = $rootScope.$new();

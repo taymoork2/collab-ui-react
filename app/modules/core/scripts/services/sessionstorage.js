@@ -1,9 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('SessionStorage', SessionStorage);
+  module.exports = angular
+    .module('core.sessionstorage', [])
+    .service('SessionStorage', SessionStorage)
+    .name;
 
   /* @ngInject */
   function SessionStorage($window) {

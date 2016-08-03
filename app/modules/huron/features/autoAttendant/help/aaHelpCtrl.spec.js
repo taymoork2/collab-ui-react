@@ -7,9 +7,9 @@ describe('Controller: AAHelpCtrl', function () {
 
   var text = "Help me if you can.";
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _Config_) {
     $rootScope = _$rootScope_;

@@ -1,10 +1,10 @@
 'use strict';
 
 describe('SiteCSVModalCtrl: initiate export', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var $q;
   var $rootScope;
@@ -202,10 +202,10 @@ describe('SiteCSVModalCtrl: initiate export', function () {
 }); // describe()
 
 describe('SiteCSVModalCtrl read only', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   var $rootScope;
   var $scope;

@@ -1,10 +1,10 @@
 'use strict';
 describe('Controller: HelpdeskOrgController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, httpBackend, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService;
+  var Authinfo, q, XhrNotificationService, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService;
 
-  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, $httpBackend, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_, _FeatureToggleService_) {
+  beforeEach(inject(function (_Authinfo_, _LicenseService_, _$q_, _XhrNotificationService_, _$stateParams_, _$translate_, _$rootScope_, _HelpdeskService_, _$controller_, _Config_, _FeatureToggleService_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
@@ -13,7 +13,6 @@ describe('Controller: HelpdeskOrgController', function () {
     $stateParams = _$stateParams_;
     XhrNotificationService = _XhrNotificationService_;
     q = _$q_;
-    httpBackend = $httpBackend;
     LicenseService = _LicenseService_;
     $translate = _$translate_;
     Authinfo = _Authinfo_;
@@ -74,13 +73,6 @@ describe('Controller: HelpdeskOrgController', function () {
       sinon.stub(HelpdeskService, 'getOrgDisplayName').returns(q.resolve("Marvel"));
       sinon.stub(FeatureToggleService, 'supports').returns(q.resolve(false));
 
-      httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
-    });
-
-    afterEach(function () {
-      httpBackend.verifyNoOutstandingExpectation();
     });
 
     it('sets cardsAvailable and adminUsersAvailable to true when data has been collected', function () {
@@ -107,7 +99,7 @@ describe('Controller: HelpdeskOrgController', function () {
       });
       expect(orgController.cardsAvailable).toBeFalsy();
       expect(orgController.adminUsersAvailable).toBeFalsy();
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.cardsAvailable).toBeTruthy();
       expect(orgController.adminUsersAvailable).toBeTruthy();
     });
@@ -136,7 +128,7 @@ describe('Controller: HelpdeskOrgController', function () {
         XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.supportsExtendedInformation).toBeFalsy();
     });
 
@@ -167,7 +159,7 @@ describe('Controller: HelpdeskOrgController', function () {
         XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.supportsExtendedInformation).toBeTruthy();
     });
 
@@ -194,7 +186,7 @@ describe('Controller: HelpdeskOrgController', function () {
         XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeTruthy();
     });
 
@@ -220,7 +212,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $stateParams: $stateParams,
         XhrNotificationService: XhrNotificationService
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
     });
 
@@ -247,7 +239,7 @@ describe('Controller: HelpdeskOrgController', function () {
         XhrNotificationService: XhrNotificationService,
         Authinfo: Authinfo
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeTruthy();
     });
 
@@ -273,7 +265,7 @@ describe('Controller: HelpdeskOrgController', function () {
         $stateParams: $stateParams,
         XhrNotificationService: XhrNotificationService
       });
-      httpBackend.flush();
+      $scope.$apply();
       expect(orgController.allowLaunchAtlas).toBeFalsy();
     });
 

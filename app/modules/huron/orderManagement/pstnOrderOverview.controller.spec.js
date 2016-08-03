@@ -3,7 +3,7 @@
 describe('Controller: PstnOrderOverviewCtrl', function () {
   var controller, $controller, $q, $scope, $stateParams, PstnSetupService;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$stateParams_, _PstnSetupService_) {
     $scope = $rootScope.$new();

@@ -1,7 +1,6 @@
 'use strict';
 describe('cell-template-action', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Ediscovery'));
+  beforeEach(angular.mock.module('Ediscovery'));
   var $templateCache, $scope, $compile, httpBackend, view, html;
 
   beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_, _$httpBackend_) {

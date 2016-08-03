@@ -1,9 +1,8 @@
 'use strict';
 describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
-  beforeEach(module('Huron'));
-
+  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(angular.mock.module('Huron'));
   var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
   var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise, FeatureToggleService;
   var mediaAgentOrgIds = ['mediafusion'];
@@ -13,7 +12,7 @@ describe('Controller: MediaServiceControllerV2', function () {
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
   beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {

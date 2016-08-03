@@ -1,9 +1,9 @@
 'use strict';
 
 describe('CsdmHuronOrgDeviceService', function () {
-  beforeEach(module('Squared'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   var csdmHuronOrgDeviceService, Authinfo, $httpBackend, HuronConfig;
 

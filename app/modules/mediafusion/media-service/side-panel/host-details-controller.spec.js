@@ -2,7 +2,7 @@
 
 describe('Controller: HostDetailsController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var controller, $stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate;
 

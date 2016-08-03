@@ -1,6 +1,6 @@
 'use strict';
 describe('Controller: SupportCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var Userservice, httpBackend, $compile, controller, Authinfo, $scope, $templateCache;
 

@@ -14,9 +14,16 @@ describe('Controller: CustomerListCtrl', function () {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
+    daysLeft: NaN,
     communications: {
-      isTrial: false
-    }
+      isTrial: false,
+      volume: 5
+    },
+    licenseList: [{
+      isTrial: false,
+      volume: 5,
+      name: 'communications'
+    }]
   };
   var numberResponse = {
     numbers: [1, 2, 3]
@@ -25,9 +32,9 @@ describe('Controller: CustomerListCtrl', function () {
     numbers: []
   };
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$controller_, _$httpBackend_, _$q_, $rootScope, _$state_, _$stateParams_, _$translate_, _$window_, _Authinfo_, _HuronConfig_, _FeatureToggleService_, _Notification_, _Orgservice_, _PartnerService_, _TrialService_) {
     $controller = _$controller_;
@@ -99,6 +106,69 @@ describe('Controller: CustomerListCtrl', function () {
     });
   });
 
+  describe('grid column display', function () {
+    var testTrialData = {};
+    beforeEach(initController);
+    beforeEach(function () {
+      testTrialData = {
+        customerOrgId: '1234-34534-afdagfg-425345-acac',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer123@cisco.com',
+        daysLeft: 50,
+        communications: {
+          isTrial: true
+        },
+        licenses: 10,
+        deviceLicenses: 5,
+        licenseList: [{
+          isTrial: false,
+          volume: 5,
+          name: 'communications'
+        }]
+      };
+    });
+
+    function setTestDataTrial() {
+      testTrialData.daysLeft = 30;
+      testTrialData.communications.isTrial = true;
+    }
+
+    function setTestDataExpired() {
+      testTrialData.daysLeft = -10;
+      testTrialData.communications.isTrial = true;
+    }
+
+    function setTestDataActive() {
+      testTrialData.daysLeft = NaN;
+      testTrialData.communications.isTrial = false;
+    }
+
+    it('should return the correct account status', function () {
+      setTestDataExpired();
+      expect($scope.getAccountStatus(testTrialData)).toBe('expired');
+      setTestDataTrial();
+      expect($scope.getAccountStatus(testTrialData)).toBe('trial');
+      setTestDataActive();
+      expect($scope.getAccountStatus(testTrialData)).toBe('active');
+    });
+
+    it('should return expired days left', function () {
+      setTestDataExpired();
+      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expiredWithGracePeriod');
+
+      testTrialData.daysLeft = -90;
+      expect($scope.getExpiredNotesColumnText(testTrialData)).toBe('customerPage.expired');
+    });
+
+    it('should return proper license counts', function () {
+      setTestDataActive();
+      expect($scope.getTotalLicenses(testTrialData)).toEqual(5);
+
+      setTestDataTrial();
+      expect($scope.getTotalLicenses(testTrialData)).toEqual(15);
+    });
+  });
+
   describe('Click setup PSTN', function () {
     beforeEach(initController);
 
@@ -152,6 +222,7 @@ describe('Controller: CustomerListCtrl', function () {
     });
 
   });
+
   describe('getSubfields', function () {
     beforeEach(initController);
 
