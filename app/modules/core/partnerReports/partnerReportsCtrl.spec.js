@@ -136,7 +136,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUserPopulationRefresh).toEqual('set');
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(2);
+        expect(controller.activeUsersTotalPages).toEqual(4);
         expect(controller.activeUserCurrentPage).toEqual(1);
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);

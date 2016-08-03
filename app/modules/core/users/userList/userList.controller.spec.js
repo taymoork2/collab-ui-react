@@ -205,13 +205,19 @@ describe('UserListCtrl: Ctrl', function () {
     it('should emit csv-download-request', function () {
       $scope.startExportUserList();
       $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", "user");
+      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
+        csvType: "user",
+        tooManyUsers: false
+      });
     });
     it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
       $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD + 1;
       $scope.startExportUserList();
       $scope.$apply();
-      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", "user", true);
+      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
+        csvType: "user",
+        tooManyUsers: true
+      });
     });
   });
 
