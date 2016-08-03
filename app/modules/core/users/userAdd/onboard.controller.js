@@ -574,10 +574,12 @@
       };
     }
 
-    $scope.checkCMR = function (confModel, cmrLics) {
-      cmrLics.forEach(function (cmrLic) {
-        cmrLic.cmrModel = confModel;
-      });
+    $scope.checkCMR = function (cfLic, cmrLics) {
+      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
+        cmrLics.forEach(function (cmrLic) {
+          cmrLic.cmrModel = cfLic.confModel;
+        });
+      }
     };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
