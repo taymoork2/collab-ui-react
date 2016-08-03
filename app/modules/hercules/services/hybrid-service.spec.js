@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Service: HybridService', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var Service, $httpBackend, authinfo;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub(),
         isEntitled: sinon.stub()

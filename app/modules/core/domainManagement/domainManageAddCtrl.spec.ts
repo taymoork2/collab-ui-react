@@ -1,4 +1,3 @@
-///<reference path="../../../../typings/tsd-testing.d.ts"/>
 namespace domainManagement {
   declare let punycode:any;
 

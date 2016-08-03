@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  angular.module('core.notifications')
     .directive('csConfirmation', csConfirmation);
 
   /* @ngInject */

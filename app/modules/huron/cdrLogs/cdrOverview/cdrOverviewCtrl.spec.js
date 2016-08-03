@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: CdrOverviewCtrl', function () {
-  beforeEach(module('uc.cdrlogsupport'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.cdrlogsupport'));
+  beforeEach(angular.mock.module('Huron'));
 
   var $scope, controller, $state, $stateParams, CdrService;
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');

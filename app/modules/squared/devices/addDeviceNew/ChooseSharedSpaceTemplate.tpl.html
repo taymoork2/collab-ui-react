@@ -18,6 +18,10 @@
           <h4 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h4>
           <span>&nbsp;</span>
         </div>
+        <div class="errorBox" ng-hide="choosePlace.hasRooms || choosePlace.isExistingCollapsed">
+          <i class="icon icon-warning"></i>
+          <span translate="addDeviceWizard.chooseSharedSpace.noExistingPlaces"></span>
+        </div>
       </div>
       <div class="typeButtonWrapper">
         <div class="typeButton"
@@ -33,7 +37,7 @@
     </div>
   </div>
 
-  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed">
+  <div class="chooseExistingPlace" ng-hide="choosePlace.isExistingCollapsed || !choosePlace.hasRooms">
     <form class="chooseExistingPlaceForm" onsubmit="$('#next-button').click()">
       <h5 translate="addDeviceWizard.chooseSharedSpace.existingPlace"></h5>
       <p translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
@@ -43,7 +47,7 @@
                typeahead="room for room in choosePlace.rooms() | filter:$viewValue | limitTo:6"
                typeahead-template-url="placeTemplate.html"
                typeahead-on-select="choosePlace.selectPlace($item)"
-               placeholder="{{'addDeviceWizard.chooseSharedSpace.searchRoom' | translate}}"
+               placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"
                typeahead-wait-ms="500"/>
         <script type="text/ng-template" id="placeTemplate.html">
           <a>

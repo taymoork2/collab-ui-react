@@ -11,8 +11,8 @@ describe('Controller: SingleNumberReachInfoCtrl', function () {
     currentUser: currentUser
   };
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _TelephonyInfoService_, _Notification_, _HuronConfig_) {
     $scope = $rootScope.$new();

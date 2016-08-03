@@ -34,6 +34,8 @@
       }
     };
 
+    vm.hasRooms = vm.rooms().length > 0;
+
     vm.selectPlace = function ($item) {
       vm.place = $item;
       vm.deviceName = $item.displayName;
@@ -63,7 +65,7 @@
       }),
       max: $translate.instant('common.invalidMaxLength', {
         'max': maxlength
-      }),
+      })
     };
     vm.isNameValid = function () {
       if (vm.place) {

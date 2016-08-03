@@ -233,6 +233,8 @@
 
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
 
+    deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isOnline;
+
     deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
     function resetSelectedChannel() {

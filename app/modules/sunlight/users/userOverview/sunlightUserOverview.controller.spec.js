@@ -15,7 +15,7 @@ describe('sunlightUserOverviewCtrl', function () {
     'statusText': 'Intenal Server Error'
   };
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _SunlightConfigService_, _Notification_, _$translate_, _formlyValidationMessages_, _Log_) {
     $scope = $rootScope.$new();

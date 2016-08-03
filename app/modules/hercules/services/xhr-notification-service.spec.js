@@ -1,11 +1,11 @@
 'use strict';
 
 describe('XhrNotificationService', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var notification;
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       notification = {
         notify: sinon.stub()
       };

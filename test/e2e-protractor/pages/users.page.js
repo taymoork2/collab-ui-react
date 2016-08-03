@@ -81,7 +81,7 @@ var UsersPage = function () {
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
   this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
-  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+  this.paidMtgCheckbox = element(by.css('label[for="paid-conf"]'));
   this.paidCareCheckbox = element(by.cssContainingText('cs-checkbox', 'Care'));
 
   this.closePreview = element(by.id('exitPreviewButton'));
@@ -275,8 +275,8 @@ var UsersPage = function () {
     utils.click(users.editServicesButton);
 
     utils.waitForModal().then(function () {
-      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
-      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+      utils.expectInputCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectInputCheckbox(users.paidMtgCheckbox, expectedMtgState);
 
       // Uncheck license...
       utils.click(clickService);

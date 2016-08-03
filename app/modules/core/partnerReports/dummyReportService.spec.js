@@ -55,7 +55,7 @@ describe('Controller: Dummy Reports', function () {
     return data;
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   describe('Dummy Data Responses', function () {
     beforeEach(inject(function (_DummyReportService_) {

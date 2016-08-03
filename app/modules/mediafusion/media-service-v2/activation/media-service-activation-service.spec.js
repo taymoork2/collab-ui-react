@@ -2,7 +2,7 @@
 
 describe('MediaServiceDescriptor', function () {
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   // instantiate service
   var Service, $httpBackend, authinfo, $rootScope;
@@ -10,7 +10,7 @@ describe('MediaServiceDescriptor', function () {
   var mediaAgentOrgIds = ['mediafusion'];
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       authinfo = {
         getOrgId: sinon.stub()
       };
@@ -22,9 +22,6 @@ describe('MediaServiceDescriptor', function () {
   beforeEach(inject(function ($injector, _MediaServiceDescriptor_) {
     Service = _MediaServiceDescriptor_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {

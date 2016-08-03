@@ -1,23 +1,32 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Squared')
-    .controller('ActivateCtrl', ActivateCtrl);
+  module.exports = angular
+    .module('squared.activate', [
+      require('modules/core/config/urlConfig'),
+      require('modules/core/windowLocation/windowLocation'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/utils'),
+      require('modules/squared/scripts/services/activateService'),
+    ])
+    .controller('ActivateCtrl', ActivateCtrl)
+    .name;
 
   /* @ngInject */
-  function ActivateCtrl($scope, $location, Log, Utils, Activateservice, UrlConfig, WindowLocation) {
+  function ActivateCtrl($scope, $location, Log, Utils, ActivateService, UrlConfig, WindowLocation) {
     //initialize ng-show variables
     $scope.result = {
       provisionSuccess: false,
       codeExpired: false,
-      resendSuccess: false
+      resendSuccess: false,
+      errmsg: false
     };
 
     var hideAllMessages = function () {
       $scope.result.provisionSuccess = false;
       $scope.result.codeExpired = false;
       $scope.result.resendSuccess = false;
+      $scope.result.errmsg = false;
     };
 
     var showProvisionSuccessMessage = function () {
@@ -49,7 +58,7 @@
 
     if (encryptedParam) {
 
-      Activateservice.activateUser(encryptedParam)
+      ActivateService.activateUser(encryptedParam)
         .then(function (res) {
           var data = res.data;
 
@@ -81,8 +90,7 @@
     }
 
     $scope.resendCode = function () {
-
-      Activateservice.resendCode(encryptedParam)
+      ActivateService.resendCode(encryptedParam)
         .then(function (res) {
           if (res.data) {
             showResendSuccessMessage();
@@ -97,7 +105,6 @@
             $scope.result.errmsg = 'status: ' + status;
           }
         });
-
     };
   }
 })();

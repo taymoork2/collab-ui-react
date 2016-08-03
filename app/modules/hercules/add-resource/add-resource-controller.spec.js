@@ -6,8 +6,8 @@ describe('Controller: AddResourceController', function () {
   var clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
   var newConnectorType = 'c_cal';
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initController);
   beforeEach(initSpies);

@@ -1403,8 +1403,11 @@
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsWatermark": "Add email addresses",
+      "emailAdministratorHeading": "Administrators",
+      "emailAdministratorNotification": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
+      "emailUserHeading": "Users",
+      "emailUserNotification": "Turn on/off email notifications to users, such as entitlement, error message, high notification rate from Exchange Server, etc.",
       "emailNotificationsSaving": "Saving.",
       "emailNotificationsSavingSuccess": "The email subscriber list was successfully saved.",
       "emailNotificationsSavingError": "Your changes to the email subscriber list could not be saved. Try again later.",
@@ -2629,9 +2632,12 @@
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
-    "daysRemaining": "{{count}} days remaining",
+    "daysRemaining": "{count, plural, one{# day remaining} other{# days remaining}}",
+    "daysLeftToPurchase": "{count, plural, one{# day left to purchase} other{# days left to purchase}}",
+    "daysLeftToRenew": "{count, plural, one{# day left to renew} other{# days left to renew}}",
     "expiringToday": "Expiring today",
     "expired": "Expired",
+    "expiredWithGracePeriod": "Expired. Purchase now",
     "suspended": "This account has been suspended.",
     "licenseInfoNotAvailable": "No license information available.",
     "licenseHeader": "Licenses",
@@ -2662,6 +2668,8 @@
     "trialOverview": "Trial",
     "webexOverview": "WebEx",
     "licenses": "Number of Licenses",
+    "totalQuantity": "Total Quantity",
+    "totalLicenses": "Total Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
@@ -2701,7 +2709,10 @@
     "pstnOrders": "PSTN Orders",
     "addNumbers": "Add Numbers",
     "isSetupDoneError": "Unable to determine if {{orgName}} is setup. Message: {{message}}",
-    "meetingLicenses": "Meeting Licenses"
+    "meetingLicenses": "Meeting Licenses",
+    "accountStatus": "Account Status",
+    "totalUsers": "Total Users",
+    "purchased": "Purchased"
   },
   "customerAdminPanel": {
     "addAdministrators": "Add Administrators",
@@ -2838,6 +2849,7 @@
       "userOrPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. All devices under a single user or place will share the same calling configuration. For example, desk phones will share the same lines.",
       "personalUsage": "Personal Usage",
       "place": "Place",
+      "user":"Existing User",
       "sharedUsage": "Shared Usage"
     },
     "choosePersonal": {
@@ -2860,12 +2872,13 @@
       "existingOrNewPlaceInstructions": "Creating a place with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this place, if it does not have one already.",
       "existingPlace": "Existing Place",
       "existingPlaceInstructions": "If the place you are searching for isn’t listed, it either has 10 associated desk phones or an assigned Cisco Spark Room System license. A place can only have up to 10 desk phones associated to it. Desk phones and room systems cannot share the same place.",
-      "searchRoom": "Search for a room",
+      "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
-      "insertRoomName": "Insert name of room or shared space"
+      "insertRoomName": "Insert name of room or shared space",
+      "noExistingPlaces": "There is no existing place in your organization with a Cisco Spark Room System license assigned to it. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",

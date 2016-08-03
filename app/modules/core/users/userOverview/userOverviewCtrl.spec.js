@@ -5,9 +5,9 @@ describe('Controller: UserOverviewCtrl', function () {
 
   var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, invitations;
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
     $scope = _$rootScope_.$new();

@@ -35,8 +35,8 @@ describe('Features Controller', function () {
     toggle: 'huronHuntGroup'
   }];
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _HuronFeaturesListService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;

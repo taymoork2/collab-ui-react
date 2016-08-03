@@ -10,10 +10,10 @@ describe('AddLinesCtrl: Ctrl', function () {
   var sites;
   var entitylist;
 
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Squared'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Squared'));
 
   beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _PlaceService_, _CommonLineService_, _DialPlanService_) {
     $scope = $rootScope.$new();

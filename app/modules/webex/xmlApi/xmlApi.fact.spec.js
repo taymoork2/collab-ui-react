@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 'use strict';
 
@@ -11,7 +11,7 @@ describe('WebExXmlApiFact', function () {
   var SessionStorage;
   var TokenService;
 
-  /**  
+  /**
     var MyReporter = function () {
       jasmineRequire.JsApiReporter.apply(this, arguments);
     };
@@ -27,8 +27,7 @@ describe('WebExXmlApiFact', function () {
     env.addReporter(new MyReporter());
 	**/
 
-  beforeEach(module('Core'));
-  beforeEach(module('WebExApp'));
+  beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _Auth_, _SessionStorage_, _TokenService_) {
     $rootScope = _$rootScope_;

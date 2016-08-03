@@ -1,7 +1,7 @@
 'use strict';
 
 describe('CsdmHubFactory', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var hub;
 

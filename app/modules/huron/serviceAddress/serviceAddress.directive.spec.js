@@ -5,7 +5,7 @@ describe('Directive: hrServiceAddress', function () {
   var SEARCH_BUTTON = '.search-custom';
   var HIDE = 'ng-hide';
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$httpBackend_, _$compile_, $rootScope) {
     $httpBackend = _$httpBackend_;

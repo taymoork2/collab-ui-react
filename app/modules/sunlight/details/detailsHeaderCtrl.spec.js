@@ -1,6 +1,6 @@
 describe('Care details ctrl', function () {
   var detailsCtrl;
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function ($controller) {
     detailsCtrl = $controller('DetailsHeaderCtrl');
   }));

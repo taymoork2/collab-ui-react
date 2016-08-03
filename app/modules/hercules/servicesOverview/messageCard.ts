@@ -1,29 +1,27 @@
-/// <reference path="ServicesOverviewCard.ts"/>
-namespace servicesOverview {
+import { CardButton, CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
-  export class ServicesOverviewMessageCard extends ServicesOverviewCard {
-    getShowMoreButton():servicesOverview.CardButton {
-      return undefined;
-    }
+export class ServicesOverviewMessageCard extends ServicesOverviewCard {
+  getShowMoreButton():CardButton {
+    return undefined;
+  }
 
-    private _buttons:Array<servicesOverview.CardButton>;
+  private _buttons:Array<CardButton>;
 
-    getButtons():Array<servicesOverview.CardButton> {
-      return this._buttons;
-    }
+  getButtons():Array<CardButton> {
+    return this._buttons;
+  }
 
-    public constructor(Authinfo) {
-      super({
-        name: 'servicesOverview.cards.message.title',
-        description: 'servicesOverview.cards.message.description',
-        icon: 'icon-circle-message',
-      });
+  public constructor(Authinfo) {
+    super({
+      name: 'servicesOverview.cards.message.title',
+      description: 'servicesOverview.cards.message.description',
+      icon: 'icon-circle-message',
+    });
 
-      this._buttons = Authinfo.isAllowedState('messenger')
-        ? [{name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link'}]
-        : [];
+    this._buttons = Authinfo.isAllowedState('messenger')
+      ? [{name: 'servicesOverview.cards.message.buttons.webexMessenger', link: 'messenger', buttonClass: 'btn-link'}]
+      : [];
 
-      this._loading = false;
-    }
+    this._loading = false;
   }
 }

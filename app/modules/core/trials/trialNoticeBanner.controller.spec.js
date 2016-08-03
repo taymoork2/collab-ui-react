@@ -46,10 +46,10 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     'license': {}
   }];
 
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   /* @ngInject */
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _Authinfo_, _EmailService_,

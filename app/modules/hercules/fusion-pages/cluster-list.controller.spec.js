@@ -3,8 +3,8 @@
 describe('Controller: FusionClusterListController', function () {
   var controller, $controller, $q, $rootScope, FusionClusterService, XhrNotificationService;
 
-  beforeEach(module('Squared'));
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Squared'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 

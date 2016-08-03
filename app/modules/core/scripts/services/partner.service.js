@@ -304,7 +304,8 @@
         customerName: customer.customerName || customer.displayName,
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
-        numUsers: customer.licenseCount,
+        numUsers: _.get(customer, 'license[0].volume', 0), // Note that the actual numUsers isn't available yet
+        activeUsers: 0,
         daysLeft: 0,
         usage: 0,
         licenses: 0,

@@ -2,7 +2,7 @@
 
 describe('Controller: GroupSettingsController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
   var controller, $stateParams, MediaClusterService, $q;
 

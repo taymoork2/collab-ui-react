@@ -5,42 +5,5 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     exit 1
 fi
 
-if [ ! -d "${WX2_ADMIN_WEB_CLIENT_HOME}/build" ]; then
-    >&2 echo "Error: no 'build' dir, please build this project first."
-    exit 1
-fi
-
-if ! type parallel >/dev/null 2>&1; then
-    >&2 echo "Error: no 'parallel' program found, please install 'parallel' first. (Run 'brew install parallel' on Mac, or see: http://www.gnu.org/software/parallel/ )"
-    exit 1
-fi
-
-source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
-
-function find_specs {
-    find "${WX2_ADMIN_WEB_CLIENT_HOME}/app" -iname \*.spec.\*js
-}
-
-num_cores=$(num_cpus)
-total_specs=$(find_specs | wc -l)
-specs_per_core=$(( total_specs / num_cores + 1 ))
-temp_dir=$(mktemp -d -t ktest-all.XXXXX)
-
-# list all spec files, splitting list into roughly equal sizes
-find_specs \
-    | sort \
-    | split -l $specs_per_core - "$temp_dir/"
-
-# pipe complete 'gulp' commands to 'parallel'
-for i in $temp_dir/*; do
-    cmd="echo '[INFO] Running: gulp karma-custom --files-from=$i'"
-    cmd="$cmd && gulp karma-custom --files-from=$i"
-    echo "$cmd"
-done \
-    | parallel -k
-exit_status=$?
-
-# tidy up
-rm -rf "$temp_dir"
-
-exit $exit_status
+find "${WX2_ADMIN_WEB_CLIENT_HOME}/app" -iname \*spec.js -o -iname \*spec.ts \
+    | "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/ktest" $@

@@ -10,11 +10,11 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     getOrgId: sinon.stub().returns('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(installPromiseMatchers);
 

@@ -28,10 +28,10 @@
             return options.message || '';
           },
           close: function () {
-            return options.close || $translate.instant('common.ok');
+            return !_.isUndefined(options.close) ? options.close : $translate.instant('common.ok');
           },
           dismiss: function () {
-            return options.dismiss || $translate.instant('common.cancel');
+            return !_.isUndefined(options.dismiss) ? options.dismiss : $translate.instant('common.cancel');
           },
           btnType: function () {
             return 'btn--' + (options.type || 'primary');

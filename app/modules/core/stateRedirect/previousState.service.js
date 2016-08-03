@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
-    .factory('PreviousState', PreviousState);
+  module.exports = angular.module('core.previousstate', [
+      'ui.router',
+    ]).factory('PreviousState', PreviousState)
+    .name;
 
   /* @ngInject */
   function PreviousState($state) {

@@ -43,8 +43,8 @@ describe('Features Controller', function () {
 
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _HuntGroupService_, _CallParkService_, _FeatureToggleService_) {
     $rootScope = _$rootScope_;
