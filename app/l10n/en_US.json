@@ -2846,6 +2846,7 @@
       "userOrPlaceInstructions": "A place can be a meeting room, a reception area or even a whole department. All devices under a single user or place will share the same calling configuration. For example, desk phones will share the same lines.",
       "personalUsage": "Personal Usage",
       "place": "Place",
+      "user":"Existing User",
       "sharedUsage": "Shared Usage"
     },
     "choosePersonal": {
