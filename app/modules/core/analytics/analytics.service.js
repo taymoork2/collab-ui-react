@@ -116,8 +116,8 @@
      */
 
     function trackTrialSteps(state, name, id) {
-      if (!state || !name) {
-        $q.reject('state or name not passed');
+      if (!state || !name || !id) {
+        $q.reject('state, name or id not passed');
       }
 
       var step = '';
@@ -144,8 +144,8 @@
      * Partner Events
      */
     function trackPartnerActions(state, UUID, id) {
-      if (!state || !UUID) {
-        $q.reject('state or uuid not passed');
+      if (!state || !UUID || !id) {
+        $q.reject('state, uuid or id not passed');
       }
 
       switch (state) {
@@ -189,8 +189,8 @@
     }
 
     function trackConvertUser(name, id) {
-      if (!name) {
-        $q.reject('name not passed');
+      if (!name || !id) {
+        $q.reject('name or id not passed');
       }
 
       trackEvent(CONVERT_USER, {
