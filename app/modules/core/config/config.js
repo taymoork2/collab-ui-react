@@ -281,6 +281,7 @@
         'addDeviceFlow',
         'autoattendant',
         'callpark',
+        'callparkedit',
         'callpickup',
         'callrouting',
         'device-overview',

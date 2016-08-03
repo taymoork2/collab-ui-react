@@ -2189,6 +2189,16 @@
             controller: 'CallParkSetupAssistantCtrl',
             controllerAs: 'callParkSA'
           })
+          .state('callparkedit', {
+            url: '/features/cp/edit',
+            parent: 'main',
+            templateUrl: 'modules/huron/features/callPark/edit/cpEdit.tpl.html',
+            controller: 'CallParkEditCtrl',
+            controllerAs: 'cpe',
+            params: {
+              feature: null
+            }
+          })
           .state('huronHuntGroup', {
             url: '/huronHuntGroup',
             parent: 'hurondetails',
