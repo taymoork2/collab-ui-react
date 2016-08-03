@@ -340,7 +340,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://config.dev.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
-      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+      prod: 'https://config.produs1.ciscoccservice.com/config/v1'
     });
   });
 
@@ -349,7 +349,7 @@ describe('UrlConfigSpec', function () {
       dev: 'https://bubble.dev.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
-      prod: 'https://bubble.rciad.ciscoccservice.com'
+      prod: 'https://bubble.produs1.ciscoccservice.com'
     });
   });
 
