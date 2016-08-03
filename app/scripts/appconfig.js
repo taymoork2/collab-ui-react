@@ -472,11 +472,17 @@
           })
           .state('activate', {
             url: '/activate',
-            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 templateUrl: 'modules/squared/views/activate.html',
                 controller: 'ActivateCtrl'
+              }
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/squared/scripts/controllers/activate'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
               }
             },
             authenticate: false
@@ -729,7 +735,7 @@
             params: {
               deleteUserOrgId: null,
               deleteUserUuId: null,
-              deleteUsername: null,
+              deleteUsername: null
             }
           })
           .state('users.deleteSelf', {
@@ -758,6 +764,7 @@
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
+                controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
@@ -804,7 +811,77 @@
               }
             }
           })
-          .state('users.convert', {
+
+        ///////////////////////////
+        // todo - I-35 feature
+        .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ctrl',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
+            }
+          })
+          .state('users.manage.org', {
+            controller: 'UserManageOrgController',
+            controllerAs: 'umoc',
+            templateUrl: 'modules/core/users/userManage/userManageOrg.tpl.html'
+          })
+          .state('users.manage.activedir', {
+            controller: 'UserManageActiveDirController',
+            controllerAs: 'umadc',
+            templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
+          })
+
+        .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
+          .state('users.manage.advanced.add', {
+            abstract: true,
+            controller: 'AddUserCtrl',
+            controllerAs: 'auc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob', {
+            abstract: true,
+            controller: 'OnboardCtrl',
+            controllerAs: 'obc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob.installConnector', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.syncStatus', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.dirsyncServices', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.dirsyncInitForServices();
+            }
+          })
+          .state('users.manage.advanced.add.ob.dirsyncResult', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedResults.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.umac.isBusy = true;
+              $scope.csv.model = $scope.model;
+              $scope.bulkSave().then(function () {
+                $scope.umac.isBusy = false;
+              });
+            }
+          })
+
+        //////////////////
+
+        .state('users.convert', {
             parent: 'modal',
             views: {
               'modal@': {
@@ -844,7 +921,7 @@
             }
           })
           .state('users.csv', {
-            parent: 'modal',
+            parent: 'users.manage',
             views: {
               'modal@': {
                 controller: 'UserCsvCtrl',
@@ -1004,8 +1081,8 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
-            controller: 'HybridServicesPreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
             data: {
               displayName: 'Calendar Service'
             },
@@ -1014,7 +1091,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
             data: {
               displayName: 'Call Service'
@@ -1342,8 +1419,8 @@
           })
 
         /*
-          devices
-        */
+         devices
+         */
         .state('places', {
             url: '/places',
             templateUrl: 'modules/squared/places/places.html',

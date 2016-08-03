@@ -1,17 +1,67 @@
-<div id="modalContent">
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h3 class="modal-title" translate="csvUpload.fileModalTitle"></h3>
-  </div>
-  <div class="modal-body">
-    <cr-user-csv-file></cr-user-csv-file>
-  </div>
-  <div class="template-anchor">
-    <csv-download type="template" filename="template.csv" no-icon anchor-text="{{csv.model.templateAnchorText}}"></csv-download>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn--primary" ng-disabled="!csv.model.file" ng-click="csv.startUpload();" translate="common.submit"></button>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" id="closeUserCsvFile">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
+<div class="modal-body user-csv-bulk">
+  <div ng-if="csv.isDirSyncEnabled">
+    <h4 translate="userManage.bulk.ad.title"></h4>
+    <p translate="userManage.bulk.ad.instructions"></p>
+  </div>
+  <div ng-if="!csv.isDirSyncEnabled">
+    <h4 translate="userManage.bulk.org.title"></h4>
+    <p translate="userManage.bulk.org.instructions"></p>
+  </div>
+
+  <div class="row text-center">
+    <div class="columns medium-6">
+      <div class="box">
+        <div class="box-content" ng-class="{'disabled': csv.isCsvValid}">
+          <cr-user-csv-export is-over-export-threshold="csv.isOverExportThreshold"
+                              on-status-change="csv.onExportDownloadStatus(isExporting, dataUrl)"
+                              use-csv-download-directive="true">
+          </cr-user-csv-export>
+          <div class="disable-mask" ng-click="" ng-if="csv.isCsvValid"></div>
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-6">
+      <div class="box file-content">
+        <div class="box-content" ng-class="{'disabled': csv.isExporting}">
+          <cr-user-csv-file></cr-user-csv-file>
+          <div class="disable-mask" ng-click="" ng-if="csv.isExporting"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="csv.isCsvValid">
+
+    <div class="import-options">
+      <h4 translate="userManage.bulk.import.title"></h4>
+      <p translate="userManage.bulk.import.body"></p>
+
+      <div class="cs-radio-group">
+        <ul>
+          <li>
+            <input cs-input type="radio" ng-model="csv.model.enableRemove" id="import-add-only" ng-value="false"
+                   cs-input-label="{{::'userManage.bulk.import.addOnlyTitle'|translate}}">
+            <div class="cs-radio-help" translate="userManage.bulk.import.addOnlyBody"></div>
+          </li>
+          <li>
+            <input cs-input type="radio" ng-model="csv.model.enableRemove" id="import-add-remove" ng-value="true"
+                   cs-input-label="{{::'userManage.bulk.import.addRemoveTitle'|translate}}">
+            <div class="cs-radio-help" translate="userManage.bulk.import.addRemoveBody"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" id="btnBack" class="btn" ng-click="csv.onBack()"><span translate="common.back"></span></button>
+  <button type="button" class="btn btn--primary" ng-disabled="!csv.model.file || !csv.isCsvValid" ng-click="csv.startUpload();"
+          translate="common.submit"></button>
+</div>
+

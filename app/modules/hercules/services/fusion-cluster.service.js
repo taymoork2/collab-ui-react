@@ -8,7 +8,7 @@
     .factory('FusionClusterService', FusionClusterService);
 
   /* @ngInject */
-  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService) {
+  function FusionClusterService($http, UrlConfig, Authinfo, FusionClusterStatesService, FusionUtils) {
     var service = {
       preregisterCluster: preregisterCluster,
       addPreregisteredClusterToAllowList: addPreregisteredClusterToAllowList,
@@ -26,7 +26,9 @@
       deregisterCluster: deregisterCluster,
       getReleaseNotes: getReleaseNotes,
       getAggregatedStatusForService: getAggregatedStatusForService,
-      processClustersToAggregateStatusForService: processClustersToAggregateStatusForService
+      processClustersToAggregateStatusForService: processClustersToAggregateStatusForService,
+      serviceIsSetUp: serviceIsSetUp,
+      processClustersToSeeIfServiceIsSetup: processClustersToSeeIfServiceIsSetup
     };
 
     return service;
@@ -285,6 +287,33 @@
       // if no other rule applies, assume we're operational!
       return 'operational';
 
+    }
+
+    function serviceIsSetUp(serviceId) {
+      return getAll()
+        .then(function (clusterList) {
+          return processClustersToSeeIfServiceIsSetup(serviceId, clusterList);
+        });
+    }
+
+    function processClustersToSeeIfServiceIsSetup(serviceId, clusterList) {
+
+      if (!Authinfo.isEntitled(serviceId)) {
+        return false;
+      }
+
+      var target_connector = FusionUtils.serviceId2ConnectorType(serviceId);
+
+      if (target_connector === '') {
+        return false; // Cannot recognize service, default to *not* enabled
+      }
+
+      var installedConnectors = _.map(clusterList, 'connectors');
+      return _.some(installedConnectors, function (cluster) {
+        return _.some(cluster, function (connector) {
+          return connector.connectorType === target_connector;
+        });
+      });
     }
 
   }

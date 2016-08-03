@@ -94,7 +94,7 @@
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',
       controller: 'hybridServicesPanelCtrl',
-      templateUrl: 'modules/hercules/hybridServices/hybridServicesPanel.tpl.html'
+      templateUrl: 'modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html'
     };
 
     return directive;
