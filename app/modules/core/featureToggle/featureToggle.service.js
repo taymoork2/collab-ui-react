@@ -13,7 +13,7 @@
     .name;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
@@ -168,6 +168,10 @@
         method: 'GET',
         cache: true
       }
+    });
+
+    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
+      customerId: '@customerId'
     });
 
     var service = {
@@ -347,17 +351,21 @@
     }
 
     function supportsDirSync() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data.success) {
-          deferred.resolve(data.dirsyncEnabled);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: false
+      return dirSyncConfigurationResource.get({
+        customerId: Authinfo.getOrgId()
+      }).$promise.then(function (response) {
+        return response.serviceMode === 'ENABLED';
+      }).catch(function (response) {
+        Orgservice.getOrgCacheOption(function (data, status) {
+          if (data.success) {
+            return data.dirsyncEnabled;
+          } else {
+            return $q.reject(response);
+          }
+        }, null, {
+          cache: false
+        });
       });
-      return deferred.promise;
     }
 
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {

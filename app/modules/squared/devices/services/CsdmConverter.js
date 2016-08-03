@@ -188,10 +188,13 @@
 
       function Place(obj) {
         this.url = obj.url;
-        this.cisUuid = obj.cisUuid;
-        this.displayName = obj.displayName;
+        this.type = obj.type || 'cloudberry';
+        this.entitlements = obj.entitlements;
+        this.cisUuid = obj.cisUuid || obj.uuid;
+        this.displayName = obj.displayName || obj.name;
         this.sipUrl = obj.sipUrl;
-        this.devices = convertCloudberryDevices(obj.devices);
+        this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
+        this.numbers = obj.numbers;
         this.isUnused = obj.devices || false;
         this.canDelete = true;
         this.accountType = obj.placeType || 'MACHINE';
@@ -248,7 +251,7 @@
       }
 
       function getProduct(obj) {
-        return obj.product == 'UNKNOWN' ? '' : obj.product;
+        return obj.product == 'UNKNOWN' ? '' : obj.product || obj.description;
       }
 
       function getSoftware(obj) {

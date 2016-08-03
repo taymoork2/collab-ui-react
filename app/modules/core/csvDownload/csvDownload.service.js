@@ -42,12 +42,13 @@
       tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
       isTooManyUsers = tooManyUsers;
       if (tooManyUsers) {
-        return UserListService.exportCSV().then(function (csvData) {
+        canceler = UserListService.exportCSV().then(function (csvData) {
           var csvString = $.csv.fromObjects(csvData, {
             headers: false
           });
           return createObjectUrl(csvString, csvType, fileName);
         });
+        return canceler;
       } else {
         var url = '';
         if (csvType === typeUser) {

@@ -13,7 +13,9 @@
     var eventNames = {
       START: 'start',
       NEXT: 'next',
-      BACK: 'back'
+      BACK: 'back',
+      ASSIGN: 'assign',
+      REMOVE: 'remove'
     };
 
     var service = {
@@ -22,8 +24,7 @@
       trackEvent: trackEvent,
       checkIfTestOrg: checkIfTestOrg,
       trackTrialSteps: trackTrialSteps,
-      trackAssignPartner: trackAssignPartner,
-      trackRemovePartner: trackRemovePartner,
+      trackPartnerActions: trackPartnerActions,
       trackUserPatch: trackUserPatch,
       trackSelectedCheckbox: trackSelectedCheckbox,
       trackConvertUser: trackConvertUser,
@@ -114,9 +115,9 @@
      * Trial Events
      */
 
-    function trackTrialSteps(state, name) {
-      if (!state || !name) {
-        return;
+    function trackTrialSteps(state, name, id) {
+      if (!state || !name || !id) {
+        $q.reject('state, name or id not passed');
       }
 
       var step = '';
@@ -134,40 +135,43 @@
       }
 
       trackEvent(step, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
 
     /**
      * Partner Events
      */
-    function trackAssignPartner(UUID) {
-      if (!UUID) {
-        return;
+    function trackPartnerActions(state, UUID, id) {
+      if (!state || !UUID || !id) {
+        $q.reject('state, uuid or id not passed');
       }
 
-      trackEvent(ASSIGN_PARTNER, {
-        uuid: UUID
-      });
-    }
-
-    function trackRemovePartner(UUID) {
-      if (!UUID) {
-        return;
+      switch (state) {
+      case eventNames.ASSIGN:
+        trackEvent(ASSIGN_PARTNER, {
+          uuid: UUID,
+          orgId: id
+        });
+        break;
+      case eventNames.REMOVE:
+        trackEvent(REMOVE_PARTNER, {
+          uuid: UUID,
+          orgId: id
+        });
+        break;
       }
-
-      trackEvent(REMOVE_PARTNER, {
-        uuid: UUID
-      });
     }
 
-    function trackUserPatch(orgId) {
-      if (!orgId) {
-        return;
+    function trackUserPatch(orgId, UUID) {
+      if (!orgId || !UUID) {
+        $q.reject('orgId or uuid not passed');
       }
 
       trackEvent(PATCH_USER, {
-        by: orgId
+        by: orgId,
+        uuid: UUID
       });
     }
 
@@ -176,7 +180,7 @@
      */
     function trackSelectedCheckbox(id) {
       if (!id) {
-        return;
+        $q.reject('id not passed');
       }
 
       trackEvent(CMR_CHECKBOX, {
@@ -184,13 +188,14 @@
       });
     }
 
-    function trackConvertUser(name) {
-      if (!name) {
-        return;
+    function trackConvertUser(name, id) {
+      if (!name || !id) {
+        $q.reject('name or id not passed');
       }
 
       trackEvent(CONVERT_USER, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
   }

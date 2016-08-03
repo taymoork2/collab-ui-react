@@ -23,12 +23,21 @@
       exportCSV: exportCSV,
       listPartners: listPartners,
       listPartnersAsPromise: listPartnersAsPromise,
-      getUserCount: getUserCount
+      getUserCount: getUserCount,
+      queryUser: queryUser,
     };
 
     return service;
 
     ////////////////
+
+    function queryUser(searchEmail) {
+      return listUsers(0, 1, null, null, _.noop, searchEmail, false)
+        .then(function (response) {
+          var user = _.get(response, 'data.Resources[0]');
+          return user || $q.reject('Not found');
+        });
+    }
 
     function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements) {
       var listUrl = scimUrl;
@@ -80,7 +89,7 @@
         listUrl = listUrl + '&sortOrder=' + sortOrder;
       }
 
-      $http.get(listUrl)
+      return $http.get(listUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;

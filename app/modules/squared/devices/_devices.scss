@@ -269,6 +269,8 @@
 }
 
 .device-wizard {
+  position: relative;
+
   h5 {
     margin-bottom: 8px;
   }
@@ -373,11 +375,11 @@
 .choose-personal {
   display: flex;
 
-  .createNewUser, .chooseExistingUser {
+  .chooseExistingUser {
     flex-grow: 1;
     display: flex;
 
-    .createNewUserForm, .chooseExistingUserForm {
+    .chooseExistingUserForm {
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
@@ -389,28 +391,8 @@
     }
   }
 
-  .createNewUserForm {
-    flex-grow: 1;
-  }
-
   .chooseExistingUserForm input {
     width: 250px;
-  }
-
-  .createNewUserInputs {
-    margin-top: 16px;
-    display: flex;
-
-    .cs-input-group {
-      flex-grow: 1;
-      input.cs-input {
-        width: 100%;
-      }
-    }
-
-    .notRight {
-      margin-right: 15px;
-    }
   }
 
   .existingUserSpacing {

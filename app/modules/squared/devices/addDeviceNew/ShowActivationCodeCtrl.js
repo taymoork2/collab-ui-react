@@ -49,7 +49,7 @@
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           vm.isLoading = true;
-          CsdmPlaceService.createPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmPlaceService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmCodeService
               .createCodeForExisting(place.cisUuid)

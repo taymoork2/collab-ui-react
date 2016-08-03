@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, PlaceService, CsdmCodeService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $state, $scope, Notification, $translate, $q, CommonLineService, Authinfo, CsdmPlaceService, CsdmCodeService, DialPlanService) {
     var vm = this;
     vm.wizardData = $stateParams.wizard.state().data;
 
@@ -59,15 +59,12 @@
             name: entity.name,
             directoryNumber: entity.assignedDn.pattern
           };
+
           if (entity.externalNumber && entity.externalNumber.pattern !== 'None') {
             placeEntity.externalNumber = entity.externalNumber.pattern;
           }
-          PlaceService.save({
-              customerId: Authinfo.getOrgId()
-            }, placeEntity, function (data, headers) {
-              data.uuid = headers('location').split("/").pop();
-              return data;
-            }).$promise
+
+          CsdmPlaceService.createCmiPlace(entity.name, entity.assignedDn.pattern)
             .then(successcb)
             .catch(function (error) {
               Notification.errorResponse(error, 'placesPage.placeError');
@@ -78,7 +75,7 @@
       function successcb(place) {
         vm.place = place;
         CsdmCodeService
-          .createCodeForExisting(place.uuid)
+          .createCodeForExisting(place.cisUuid)
           .then(successCallback) //, XhrNotificationService.notify)
           .catch(failCallback); //, XhrNotificationService.notify);
       }
