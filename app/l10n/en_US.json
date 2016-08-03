@@ -4695,7 +4695,8 @@
     "priceHeader": "Price",
     "dateHeader": "Order Date",
     "actionsHeader": "Actions",
-    "downloadPdf": "Download PDF"
+    "downloadPdf": "Download PDF",
+    "loadError": "An error occurred while loading order history."
   },
   "ciRoles": {
     "atlas-portal.support": "Support",
