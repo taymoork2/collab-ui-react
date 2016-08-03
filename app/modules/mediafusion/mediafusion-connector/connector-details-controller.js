@@ -53,7 +53,6 @@
           if ($event.keyCode === 13) {
             $scope.showbutton = true;
             $scope.clusterVal = $item;
-            // $log.log("The value in enter is ", $scope.clusterVal);
           }
         };
 
@@ -63,8 +62,6 @@
         };
 
         $scope.changeRole = function ($selectedRole) {
-          // $log.log("The new value is ", $selectedRole);
-          // $log.log("The value of selectedCluster is", $scope.selectedCluster);
           MediafusionClusterService.changeRole($selectedRole, $scope.selectedCluster)
             .success(function (data) {
               Notification.success('mediaFusion.roleAssignmentSuccess');
@@ -77,13 +74,8 @@
         };
 
         $scope.updateCluster = function ($name, $event) {
-          // $log.log($event);
-          // $log.log("name in update", $name);
-          // $log.log("the vvalue in $scope.clusterVal is", $scope.clusterVal);
-          // $log.log("displayname in update", $scope.displayName);
           $event.stopPropagation();
           if ($event.offsetX !== 0 && $event.clientX !== 0) {
-            // $log.log("entered autosave");
             $scope.showbutton = false;
             $scope.oldClusterVal = $scope.displayName;
             /*$scope.currentPropertySet = _.chain($scope.groups)
@@ -114,7 +106,6 @@
                   });
               });
             } else {
-              // $log.log("inside else bloc");
               $scope.displayName = $scope.clusterVal;
               // First check if the new value has an entry in group
               /*$scope.newPropertySet = _.chain($scope.groups)
@@ -134,17 +125,12 @@
                   getGroups();
                   MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySet.id)
                     .success(function (data) {
-                      // $log.log("Removal success");
                       MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, createPromise.$$state.value.data.id)
                         .success(function (data) {
-                          // $log.log("success data :", data);
                           $scope.oldClusterVal = $name;
                           Notification.success('mediaFusion.groupAssignmentSuccess');
                         })
                         .error(function (data, status) {
-                          // $log.log("error data :", data);
-                          // $log.log("error message :", data.message);
-                          // $log.log("error status :", status);
                           Notification.error('mediaFusion.groupAssignmentFailure', {
                             failureMessage: data.message
                           });
@@ -184,7 +170,6 @@
           $scope.clusterVal = $item.name;
           $scope.newGrpId = $item.id;
           $scope.oldClusterVal = $scope.displayName;
-          // $log.log("new grp id", $scope.newGrpId);
         };
       }
     );

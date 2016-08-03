@@ -14,11 +14,9 @@
     var qualityUrl = '/managedOrgs/callQuality';
     var registeredUrl = 'trend/managedOrgs/registeredEndpoints';
     var orgId = "&orgId=";
-    var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
-    var customerList = null;
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
 
     var overallPopulation = 0;
@@ -150,7 +148,6 @@
     }
 
     function getActiveUserData(customer, filter) {
-      var tableData = [];
       var overallStatus = TIMEOUT;
       var promise = null;
 

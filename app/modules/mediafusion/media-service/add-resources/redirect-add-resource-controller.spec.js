@@ -2,11 +2,11 @@
 
 describe('RedirectAddResourceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var vm, controller, cluster, RedirectTargetService, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock;
+  var vm, controller, cluster, RedirectTargetService, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, $modal, modalInstanceMock, windowMock;
   var hostname = "MFA";
   var enteredCluster = "blr-ecp-246";
 
-  beforeEach(inject(function ($controller, _$q_, _XhrNotificationService_, $log, _$modal_) {
+  beforeEach(inject(function ($controller, _$q_, _XhrNotificationService_, _$modal_) {
 
     redirectTargetPromise = {
       then: sinon.stub()
@@ -28,8 +28,6 @@ describe('RedirectAddResourceController', function () {
       open: sinon.stub()
     };
     XhrNotificationService = _XhrNotificationService_;
-    log = $log;
-    log.reset();
     $modal = _$modal_;
 
     controller = $controller('RedirectAddResourceController', {
@@ -39,7 +37,6 @@ describe('RedirectAddResourceController', function () {
       $modalInstance: modalInstanceMock,
       $window: windowMock,
       XhrNotificationService: XhrNotificationService,
-      log: log,
       $modal: $modal
 
     });

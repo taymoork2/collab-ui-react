@@ -6,7 +6,7 @@
     .controller("RedirectAddResourceController", RedirectAddResourceController);
 
   /* @ngInject */
-  function RedirectAddResourceController(RedirectTargetService, MediaClusterService, $modalInstance, $window, XhrNotificationService, $log) {
+  function RedirectAddResourceController(RedirectTargetService, MediaClusterService, $modalInstance, $window, XhrNotificationService) {
     var vm = this;
     vm.clusterList = [];
     vm.onlineClusterList = [];
@@ -110,9 +110,6 @@
     function redirectPopUpAndClose(hostName, enteredCluster, propertSetId) {
       $modalInstance.close();
       vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?groupName=" + encodeURIComponent(enteredCluster) + "&propertySetId=" + encodeURIComponent(propertSetId));
-      if (!vm.popup || vm.popup.closed || typeof vm.popup.closed == 'undefined') {
-        $log.log('popup.closed');
-      }
     }
 
     function back() {

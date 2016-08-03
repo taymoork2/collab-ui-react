@@ -4,9 +4,6 @@
   /* @ngInject */
   function MetricsReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
-    var detailed = 'detailed';
-    var topn = 'topn';
-    var timechart = 'timeCharts';
     var utilizationUrl = '/cpu_utilization';
     var callVolumeUrl = '/call_volume';
     var clusterAvailability = '/clusters_availability';
@@ -14,15 +11,9 @@
     var agg_cpu_utilization = '/agg_cpu_utilization';
     var total_calls = '/total_calls';
 
-    var dateFormat = "MMM DD, YYYY";
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var timezone = "Etc/GMT";
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
-    var timeFilter = null;
     // Promise Tracking
     var ABORT = 'ABORT';
-    var TIMEOUT = 'TIMEOUT';
     var activePromise = null;
     var activePromiseForAvailability = null;
     var activePromiseForUtilization = null;
@@ -153,7 +144,6 @@
     }
 
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
-      var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
         colorOne: chartColors.metricBlue,
@@ -189,7 +179,6 @@
     }
 
     function adjustUtilizationData(activeData, returnData, startTime, endTime) {
-      var emptyGraph = true;
       var returnDataArray = [];
       var graphItem = {
         colorOne: chartColors.metricDarkGreen,
@@ -222,24 +211,6 @@
       returnDataArray.push(endDate);
       returnData.graphData = returnDataArray;
       return returnData;
-    }
-
-    function getReturnGraph(graphItem) {
-      var returnGraph = [];
-      var item = angular.copy(graphItem);
-      returnGraph.push(item);
-      return returnGraph;
-    }
-
-    function getQuery(cluster, time, cacheOption) {
-      if (angular.isUndefined(cacheOption) || cacheOption === null) {
-        cacheOption = cacheValue;
-      }
-      if (cluster == "All Clusters") {
-        return formRelativeTime(time);
-      } else {
-        return '/cluster/' + cluster + formRelativeTime(time);
-      }
     }
 
     function getQuerys(link, cluster, time, cacheOption) {

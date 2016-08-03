@@ -168,22 +168,6 @@
       return USSService.decorateWithStatus(status);
     };
 
-    var findEnterpriseSipUri = function () {
-      USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-        if (!activationStatus || !activationStatus.userStatuses) {
-          return;
-        }
-        $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
-          return $scope.callServiceAware.id === status.serviceId;
-        });
-        if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
-          ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
-            $scope.callServiceAware.homedConnector = connector;
-          });
-        }
-      });
-    };
-
     $scope.domainVerificationError = false; // need to be to be backwards compatible.
     $scope.checkIfDomainIsVerified = function (awareEntitled) {
       if (awareEntitled) {

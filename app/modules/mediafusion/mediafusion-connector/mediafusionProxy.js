@@ -27,7 +27,6 @@
 
     var defuseConnector = function (clusterId) {
       clusterService.defuseConnector(clusterId, function () {
-        var args = arguments;
         poll(function () {
           //if (callback) callback.apply(args);
         });

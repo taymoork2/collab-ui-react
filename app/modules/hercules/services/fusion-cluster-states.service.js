@@ -55,7 +55,6 @@
       // by Atlas' general overview page (in the Hybrid Services card)
 
       // Also note that this function accepts both a connector or just a string
-      var value = 0;
       var state = data;
       if (angular.isString(data.state)) {
         // Duck typing, if it has a state it must be a connector!

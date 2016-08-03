@@ -3,9 +3,6 @@
 
   /* @ngInject */
   function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, Auth, Authinfo, Log, LogMetricsService, PageParam, SessionStorage, TokenService, Utils) {
-    var loadingDelay = 2000;
-    var logoutDelay = 5000;
-
     var storedState = 'storedState';
     var storedParams = 'storedParams';
     var queryParams = SessionStorage.popObject('queryParams');

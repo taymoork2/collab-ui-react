@@ -170,7 +170,6 @@
       vm.cmrServices.services = Authinfo.getCmrServices();
 
       vm.sites = {};
-      var lastservice = {};
       angular.forEach(vm.confServices.services, function (service) {
         if (service.license) {
           if (service.license.siteUrl) {
