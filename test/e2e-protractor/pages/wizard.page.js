@@ -20,6 +20,7 @@ var Wizard = function () {
   this.backBtn = element(by.buttonText('Back'));
   this.nextBtn = element(by.buttonText('Next'));
   this.saveBtn = element(by.buttonText('Save'));
+  this.skipBtn = element(by.css('.skip-link'));
   this.finishBtn = element(by.buttonText('Finish'));
   this.esEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'enterpriseSettings\')"]'));
   this.toExpCloudDataBtn = element.all(by.css('[ng-click="changeStep(\'exportCloudData\')"]'));
