@@ -98,13 +98,6 @@
           vm.isLoading = false;
           Notification.error(err.statusText);
         });
-      } else {
-        // create user!!!
-        $stateParams.wizard.next({
-          deviceName: "JUST A MOCK",
-          activationCode: '1234567887654321',
-          expiryTime: "never"
-        }, vm.userType);
       }
     };
 
