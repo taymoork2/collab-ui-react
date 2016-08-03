@@ -8,7 +8,6 @@
   function CustomerReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
-    var topn = 'topn';
     var timechart = 'timeCharts';
     var activeUserUrl = '/activeUsers';
     var groupUrl = '/conversations';
