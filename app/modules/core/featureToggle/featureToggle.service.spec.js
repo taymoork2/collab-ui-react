@@ -13,6 +13,7 @@ describe('FeatureToggleService', function () {
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
   var orgRegex = /.*\/features\/rules\.*/;
   var identityMe = 'https://identity.webex.com/identity/scim/null/v1/Users/me';
+  var dirSyncRegex = /.*\/organization\/.*\/dirsync\.*/;
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _$state_, _Config_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
@@ -118,6 +119,32 @@ describe('FeatureToggleService', function () {
       FeatureToggleService.stateSupportsFeature('non-existant-feature');
       httpBackend.flush();
       expect($state.go).toHaveBeenCalledWith('login');
+    });
+  });
+
+  describe('function supportsDirSync', function () {
+    beforeEach(function () {
+      spyOn(Authinfo, 'getOrgId').and.returnValue('1');
+    });
+
+    it('should return true for a DirSync org', function () {
+      httpBackend.whenGET(dirSyncRegex).respond(200, {
+        serviceMode: 'ENABLED'
+      });
+      FeatureToggleService.supportsDirSync().then(function (data) {
+        expect(data).toBe(true);
+      });
+      httpBackend.flush();
+    });
+
+    it('should return false for a non-DirSync org', function () {
+      httpBackend.whenGET(dirSyncRegex).respond(200, {
+        serviceMode: 'DISABLED'
+      });
+      FeatureToggleService.supportsDirSync().then(function (data) {
+        expect(data).toBe(false);
+      });
+      httpBackend.flush();
     });
   });
 

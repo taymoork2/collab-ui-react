@@ -104,8 +104,8 @@ var UsersPage = function () {
   this.saveButton = element(by.buttonText('Save'));
   this.finishButton = element(by.buttonText('Finish'));
 
-  this.clearButton = element(by.id('btnClear'));
-  this.backButton = element(by.buttonText('Clear'));
+  this.clearButton = element(by.css('.clear-button'));
+  this.backButton = element(by.buttonText('Back'));
   this.nextButton = element(by.buttonText('Next'));
 
   this.currentPage = element(by.css('.pagination-current a'));
@@ -255,7 +255,7 @@ var UsersPage = function () {
 
     activate.setup(null, alias);
     utils.search(alias);
-  }
+  };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
     function expectDisplayed(elem, state) {
@@ -298,7 +298,7 @@ var UsersPage = function () {
       .value();
     utils.writeFile(path, fileText);
     return userList;
-  }
+  };
 };
 
 module.exports = UsersPage;

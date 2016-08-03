@@ -203,7 +203,7 @@
       bindToController: {
         user: '='
       },
-      templateUrl: 'modules/hercules/hybridServices/hybridServices.tpl.html'
+      templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html'
     };
   }
 }());
