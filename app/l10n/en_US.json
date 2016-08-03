@@ -213,6 +213,7 @@
       "removeFile": "Remove File",
       "confirmCsvDownloadTitle": "Export User Attributes",
       "confirmCsvDownloadMsg": "Gathering data for export may take awhile. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+      "confirmCsvDownloadMsg10K": "Because you have more than {{maxUsers}} users, the exported list will not show the entitlements that are assigned to your users.",
 
       "newUsers": "Added",
       "existingUsers": "Updated",

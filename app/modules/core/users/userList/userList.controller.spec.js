@@ -211,7 +211,7 @@ describe('UserListCtrl: Ctrl', function () {
       });
     });
     it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
-      $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD + 1;
+      $scope.totalUsers = $scope.userExportThreshold + 1;
       $scope.startExportUserList();
       $scope.$apply();
       expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", {
@@ -251,11 +251,11 @@ describe('UserListCtrl: Ctrl', function () {
       initController();
     });
 
-    it('should set user count to USER_EXPORT_THRESHOLD + 1', function () {
+    it('should set user count to userExportThreshold + 1', function () {
       // $scope.obtainedTotalUserCount = false;
       $scope.getUserList(); // 0 index
       expect($scope.obtainedTotalUserCount).toEqual(true);
-      expect($scope.totalUsers).toEqual($scope.USER_EXPORT_THRESHOLD + 1);
+      expect($scope.totalUsers).toEqual($scope.userExportThreshold + 1);
     });
   });
 });

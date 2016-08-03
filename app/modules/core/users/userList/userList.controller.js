@@ -57,7 +57,7 @@
     $scope.isCSB = Authinfo.isCSB();
 
     $scope.exportType = $rootScope.typeOfExport.USER;
-    $scope.USER_EXPORT_THRESHOLD = 10000;
+    $scope.userExportThreshold = CsvDownloadService.userExportThreshold;
     $scope.totalUsers = 0;
     $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
@@ -275,12 +275,12 @@
 
           if (!$scope.obtainedTotalUserCount) {
             if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
-              $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD;
+              $scope.totalUsers = $scope.userExportThreshold;
               $scope.obtainedTotalUserCount = true;
             } else {
               UserListService.getUserCount().then(function (count) {
                 if (_.isNull(count) || _.isNaN(count) || count === -1) {
-                  count = $scope.USER_EXPORT_THRESHOLD + 1;
+                  count = $scope.userExportThreshold + 1;
                 }
                 $scope.totalUsers = count;
                 $scope.obtainedTotalUserCount = true;
@@ -553,14 +553,14 @@
     function startExportUserList() {
       var options = {
         csvType: CsvDownloadService.typeUser,
-        tooManyUsers: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+        tooManyUsers: ($scope.totalUsers > $scope.userExportThreshold)
       };
       $scope.$emit('csv-download-request', options);
     }
 
     function onManageUsers() {
       $state.go('users.manage', {
-        isOverExportThreshold: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+        isOverExportThreshold: ($scope.totalUsers > $scope.userExportThreshold)
       });
     }
 
