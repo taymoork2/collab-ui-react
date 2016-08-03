@@ -7,7 +7,7 @@
   <div class="dir-number-list col-md-12">
     <div ng-repeat="directoryNumber in vm.telephonyInfo.directoryNumbers track by directoryNumber.uuid" class="dir-number sub-service">
       <a id="{{directoryNumber.uuid}}" ui-sref="users.list.preview.directorynumber({directoryNumber: directoryNumber})" ui-sref-active="selected" ng-click="vm.showDirectoryNumberPanel(directoryNumber)">
-        <span class="sub-service-title"><span class="number">{{directoryNumber.pattern}}</span><span class="number" ng-if="directoryNumber.altDnPattern !== ''"> {{'telephonyPreview.or' | translate}} {{directoryNumber.altDnPattern}}</span></span>
+        <span class="sub-service-title"><span class="number">{{directoryNumber.pattern}}</span><span class="number" ng-if="directoryNumber.altDnPattern !== ''" translate="telephonyPreview.or" translate-values="{directoryNumber: directoryNumber.altDnPattern}"></span></span>
         <span class="usage" ng-if="directoryNumber.dnUsage">{{directoryNumber.dnUsage}}</span>
         <i class="icon icon-arrow-next pull-right"></i>
       </a>
