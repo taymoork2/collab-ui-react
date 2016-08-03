@@ -148,16 +148,16 @@
       }
 
       switch (state) {
-        case eventNames.ASSIGN:
-          trackEvent(ASSIGN_PARTNER, {
-            uuid: UUID
-          });
-          break;
-        case eventNames.REMOVE:
-          trackEvent(REMOVE_PARTNER, {
-            uuid: UUID
-          });
-          break;
+      case eventNames.ASSIGN:
+        trackEvent(ASSIGN_PARTNER, {
+          uuid: UUID
+        });
+        break;
+      case eventNames.REMOVE:
+        trackEvent(REMOVE_PARTNER, {
+          uuid: UUID
+        });
+        break;
       }
     }
 
