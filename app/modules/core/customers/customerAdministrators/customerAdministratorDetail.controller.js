@@ -128,44 +128,41 @@
           var resources = _.get(response, 'data.Resources', []);
           var searchUsers = [];
           var fullName = '';
-          var uuid = '';
-          /*CI currently only lets you get a max of 1000 objects - so message is displayed if user
-          search returns more than 1000 user objects*/
-          if (resources.length >= 1000) {
-            vm.resultsError = true;
-            vm.resultsErrorMessage = "Search returned too many results. Be more specific to find user";
-          } else {
-            _.every(resources, function (user) {
-              if (user.name) {
-                var givenName = _.get(user, 'name.givenName');
-                var familyName = _.get(user, 'name.familyName');
-                if (givenName && familyName) {
-                  fullName = givenName + ' ' + familyName;
-                }
-              } else if (user.displayName) {
-                fullName = _.get(user, 'displayName');
-              } else {
-                fullName = _.get(user, 'userName');
+          var uuid = '';          
+          _.every(resources, function (user) {
+            if (user.name) {
+              var givenName = user.name.givenName;
+              var familyName = user.name.familyName;
+              if (givenName && familyName) {
+                fullName = givenName + ' ' + familyName;
               }
-              uuid = _.get(user, 'id');
-              if (fullName.toLowerCase().indexOf(str.toLowerCase()) != -1 || user.displayName.toLowerCase().indexOf(str.toLowerCase()) != -1 ||
-                 user.userName.toLowerCase().indexOf(str.toLowerCase()) != -1) {
-                searchUsers.push(fullName);
-                vm.users.push({
-                  fullName: fullName,
-                  uuid: uuid
-                });
-              }
-              return searchUsers.length < vm.adminSuggestLimit;
-            });
-            if (searchUsers.length == 0) {
-              vm.resultsError = true;
-              vm.resultsErrorMessage = "No results found";
+            } else if (user.displayName) {
+              fullName = user.displayName;
+            } else {
+              fullName = user.userName;
             }
+            uuid = user.id;
+            if (fullName.toLowerCase().indexOf(str.toLowerCase()) !== -1 || user.displayName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+               user.userName.toLowerCase().indexOf(str.toLowerCase()) !== -1) {
+              searchUsers.push(fullName);
+              vm.users.push({
+                fullName: fullName,
+                uuid: uuid
+              });
+            }
+            return searchUsers.length < vm.adminSuggestLimit;
+          });
+          if (searchUsers.length === 0) {
+            vm.resultsError = true;
+            vm.resultsErrorMessage = "No results found";
           }
           return searchUsers;
         })
-        .catch(function () {
+        .catch(function (err) {
+          if (err.data.Errors[0].code === "500") {
+            vm.resultsError = true;
+            vm.resultsErrorMessage = "Search returned too many results. Be more specific to find user";
+          }
           Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
@@ -180,15 +177,15 @@
             var avatarSyncEnabled = false;
             var adminProfile = {};
             if (user.name) {
-              var givenName = _.get(user, 'name.givenName');
-              var familyName = _.get(user, 'name.familyName');
+              var givenName = user.name.givenName;
+              var familyName = user.name.familyName;
               if (givenName && familyName) {
                 fullName = givenName + ' ' + familyName;
               }
             } else if (user.displayName) {
-              fullName = _.get(user, 'displayName');
+              fullName = user.displayName;
             } else {
-              fullName = _.get(user, 'username');
+              fullName = user.userName;
             }
             var userEmails = _.get(response.data, 'emails', []);
             var email = '';
@@ -197,8 +194,8 @@
                 email = emailDetail.value;
               }
             });
-            uuid = _.get(user, 'id');
-            avatarSyncEnabled = _.get(user, 'avatarSyncEnabled');
+            uuid = user.id;
+            avatarSyncEnabled = user.avatarSyncEnabled;
             adminProfile = {
               uuid: uuid,
               fullName: fullName,
