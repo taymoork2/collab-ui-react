@@ -35,7 +35,6 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers"
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 
 # ----------
-
 # otherwise collect '--*' args for passing through to gulp
 no_parallel=
 pass_through_opts=
@@ -60,6 +59,15 @@ set -- "${args[@]}"
 
 # remap stdin to positional params
 set -- "${1:-$(</dev/stdin)}" "${@:2}"
+
+# ----------
+# special case:
+# - OS X users report slower run-times using parallel over single process
+# - disable parallel usage for OS X for now
+# - allow override by export of 'KTEST_ALLOW_PARALLEL'
+if [ "$(uname)" = "Darwin" -a -z "$KTEST_ALLOW_PARALLEL" ]; then
+    no_parallel="true"
+fi
 
 # ----------
 # compose the raw file list
