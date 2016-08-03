@@ -928,7 +928,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name);
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
         }
       }, $scope.timeoutVal);
     }

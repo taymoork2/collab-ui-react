@@ -115,7 +115,7 @@
      * Trial Events
      */
 
-    function trackTrialSteps(state, name) {
+    function trackTrialSteps(state, name, id) {
       if (!state || !name) {
         $q.reject('state or name not passed');
       }
@@ -135,14 +135,15 @@
       }
 
       trackEvent(step, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
 
     /**
      * Partner Events
      */
-    function trackPartnerActions(state, UUID) {
+    function trackPartnerActions(state, UUID, id) {
       if (!state || !UUID) {
         $q.reject('state or uuid not passed');
       }
@@ -150,12 +151,14 @@
       switch (state) {
       case eventNames.ASSIGN:
         trackEvent(ASSIGN_PARTNER, {
-          uuid: UUID
+          uuid: UUID,
+          orgId: id
         });
         break;
       case eventNames.REMOVE:
         trackEvent(REMOVE_PARTNER, {
-          uuid: UUID
+          uuid: UUID,
+          orgId: id
         });
         break;
       }
@@ -185,13 +188,14 @@
       });
     }
 
-    function trackConvertUser(name) {
+    function trackConvertUser(name, id) {
       if (!name) {
         $q.reject('name not passed');
       }
 
       trackEvent(CONVERT_USER, {
-        from: name
+        from: name,
+        orgId: id
       });
     }
   }

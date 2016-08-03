@@ -62,7 +62,7 @@ describe('Service: Analytics', function () {
 
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
-      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser');
+      Analytics.trackTrialSteps(Analytics.eventNames.START, 'testUser', '123');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
@@ -70,7 +70,7 @@ describe('Service: Analytics', function () {
 
   describe('when calling partner events', function () {
     it('should call _track when trackPartnerActions is called', function () {
-      Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, '4567');
+      Analytics.trackPartnerActions(Analytics.eventNames.REMOVE, '4567', '1234');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
@@ -90,7 +90,7 @@ describe('Service: Analytics', function () {
     });
 
     it('should call _track when trackConvertUser is called', function () {
-      Analytics.trackConvertUser('1234');
+      Analytics.trackConvertUser('1234', '1234');
       $scope.$apply();
       expect(Analytics._track).toHaveBeenCalled();
     });
