@@ -10,6 +10,7 @@ describe('Controller: ExpresswayServiceSettingsController', function () {
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/orgs/null').respond(500, []);
     $httpBackend.expectGET('https://hercules-integration.wbx2.com/v1/organizations/null/services').respond(500, []);
+    $httpBackend.expectGET('https://identity.webex.com/organization/scim/v1/Orgs/null?disableCache=true').respond(500, []);
 
     $scope = $rootScope.$new();
     controller = $controller('ExpresswayServiceSettingsController', {

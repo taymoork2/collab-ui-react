@@ -14,6 +14,31 @@ function unset_setup_helpers {
     unset unset_setup_helpers
 }
 
+# test if given arg is defined for the current shell
+function is_installed {
+    type $1 >/dev/null 2>&1
+    return $?
+}
+
+# install GNU Parallel for known used OS's
+function install_parallel_as_needed {
+    set -x
+    if ! is_installed "parallel"; then
+        if is_installed "brew"; then
+            brew install parallel                  # Mac (as of Yosemite)
+        elif is_installed "dnf"; then
+            sudo dnf install -y parallel           # Fedora (as of F23)
+        elif is_installed "apt-get"; then
+            sudo apt-get update                    # Ubuntu (as of 14.04)
+            sudo apt-get install -y parallel
+        else
+            >&2 echo "Error: package manager on this OS is not supported."
+            return 1
+        fi
+    fi
+    set +x
+}
+
 # generate a new timestamp file
 function mk_last_refreshed_file {
     local timestamp_file=${1:-$last_refreshed_file}

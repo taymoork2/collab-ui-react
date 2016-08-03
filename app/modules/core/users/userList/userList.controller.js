@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -84,6 +84,7 @@
     $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
+    $scope.onManageUsers = onManageUsers;
 
     var promises = {
       csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
@@ -95,9 +96,9 @@
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
     }).finally(init);
 
-    ////////////////
-
     configureGrid();
+
+    ////////////////
 
     function init() {
       checkOrg();
@@ -526,11 +527,17 @@
     }
 
     function startExportUserList() {
-      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
-        $scope.$emit('csv-download-request', 'user', true);
-      } else {
-        $scope.$emit('csv-download-request', 'user');
-      }
+      var options = {
+        csvType: CsvDownloadService.typeUser,
+        tooManyUsers: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+      };
+      $scope.$emit('csv-download-request', options);
+    }
+
+    function onManageUsers() {
+      $state.go('users.manage', {
+        isOverExportThreshold: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+      });
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

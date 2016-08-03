@@ -39,6 +39,8 @@
         return ['squared-fusion-uc', 'squared-fusion-ec'];
       case 'c_mgmt':
         return ['squared-fusion-mgmt'];
+      case 'mf_mgmt':
+        return ['squared-fusion-media'];
       default:
         return [];
       }
@@ -53,6 +55,8 @@
         return 'c_ucmc';
       case 'squared-fusion-mgmt':
         return 'c_mgmt';
+      case 'squared-fusion-media':
+        return 'mf_mgmt';
       default:
         return '';
       }

@@ -1,0 +1,103 @@
+.modal-usermanage-dialog {
+  width: 900px;
+}
+
+.modal-usermanage-header {
+  padding: 20px;
+  border-bottom: 0px;
+  background-color: $brand-white;
+}
+
+.user-manage {
+
+  form {
+    .columns {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .sync-status {
+
+    .ds-inline {
+      display: inline;
+    }
+
+    hr {
+      margin: 3rem 0 3rem 0;
+    }
+
+    .icon-refresh {
+      font-weight: bolder;
+      position: relative;
+      top: .1rem;
+      margin: .5rem;
+    }
+
+    .ui-grid .grid-refresh {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+    }
+
+    .ds-sync {
+      display: inline-flex;
+      flex-direction: row;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+
+      h5 {
+        margin-left: .5rem;
+      }
+
+      div.details {
+        margin-left: .5rem;
+      }
+
+      div.details h5 {
+        margin-left: 0;
+      }
+
+      div.details p {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .working {
+        color: $brand-success;
+        top: .25rem;
+      }
+
+      .failing {
+        color: $brand-danger;
+      }
+    }
+  }
+
+  li {
+    list-style-type: none;
+    padding-bottom: 1rem;
+
+    .cs-input-radio.cs-input-group {
+      margin-bottom: 0.25rem;
+
+      p {
+        @extend .cs-radio-help;
+
+        margin-top: .25rem;
+      }
+    }
+
+    label {
+      margin-bottom: 0rem;
+    }
+
+  }
+
+  .dirsync-info {
+    width: 100%;
+
+    .ftwdirgridStyle {
+      height: 100%;
+    }
+  }
+}
