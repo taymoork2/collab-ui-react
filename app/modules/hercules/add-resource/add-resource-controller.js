@@ -78,7 +78,10 @@
     }
 
     function provisionConnector(connectorType, clusterId) {
-      FusionClusterService.provisionConnector(clusterId, connectorType)
+      return FusionClusterService.provisionConnector(clusterId, connectorType)
+        .then(function () {
+          return clusterId;
+        })
         .catch(function () {
           if (connectorType === 'c_mgmt') {
             throw $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
@@ -89,7 +92,6 @@
             ConnectorName: vm.localizedConnectorName
           });
         });
-      return clusterId;
     }
 
     function addPreregisteredClusterToAllowList(clusterId) {
