@@ -73,6 +73,7 @@
           0: 'validSite',
           434057: 'domainInvalid',
           439012: 'duplicateSite',
+          439015: 'reservedSite',
           431397: 'duplicateSite'
         };
         var isValid = (data.isValid === 'true');

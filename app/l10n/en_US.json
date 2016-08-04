@@ -2601,6 +2601,7 @@
       "invalidSite": "Site URL is invalid. Re-enter a Site URL.",
       "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
       "domainInvalid": "Site URL must contain the webex.com domain name.",
+      "reservedSite": "Site URL is is already reserved. Enter a different Site URL.", 
       "validationHttpError": "Could not reach server to validate Site URL. Try again."
     },
     "call": {
