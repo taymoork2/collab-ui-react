@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, $rootScope, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $q, $translate, Auth, Authinfo, Config, PartnerService, TrialService, UrlConfig;
 
   var testData;
 
@@ -20,10 +20,9 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _$rootScope_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _$translate_, _Auth_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-    $rootScope = _$rootScope_;
     $translate = _$translate_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
@@ -384,13 +383,13 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
-              id: Config.offerTypes.spark1
-            }, {
-              id: Config.offerTypes.squaredUC
-            }, // presence anywhere in this list will set the property to true
-            {
-              id: Config.offerTypes.collab
-            },
+            id: Config.offerTypes.spark1
+          }, {
+            id: Config.offerTypes.squaredUC
+          }, // presence anywhere in this list will set the property to true
+          {
+            id: Config.offerTypes.collab
+          },
           ]
         }, true);
         expect(data.isSquaredUcOffer).toBe(true);
@@ -406,13 +405,13 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           licenses: [{
-              licenseType: Config.licenseTypes.MESSAGING
-            }, {
-              licenseType: Config.licenseTypes.COMMUNICATION
-            }, // presence anywhere in this list should set the property to true
-            {
-              licenseType: Config.licenseTypes.CONFERENCING
-            }
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }, // presence anywhere in this list should set the property to true
+          {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }
           ]
         }, true);
         expect(data.isSquaredUcOffer).toBe(true);
@@ -439,10 +438,10 @@ describe('Partner Service -', function () {
 
         data = PartnerService.parseLicensesAndOffers({
           licenses: [{
-              licenseType: undefined
-            }, {
-              licenseType: Config.licenseTypes.COMMUNICATION
-            },
+            licenseType: undefined
+          }, {
+            licenseType: Config.licenseTypes.COMMUNICATION
+          },
             undefined
           ]
         }, true);

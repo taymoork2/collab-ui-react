@@ -62,7 +62,7 @@
             canceler = undefined;
           });
         } else if (csvType === typeError) {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             var csvErrorArray = UserCsvService.getCsvStat().userErrorArray;
             var csvString = $.csv.fromObjects(_.union([{
               row: 'Row Number',

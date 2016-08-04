@@ -132,13 +132,13 @@
         return WebexClientVersion.postOrPutTemplate(pid, selected, brand.useLatestWbxVersion);
       });
       //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, brand.useLatestWbxVersion);
-      p.then(function (s) {
+      p.then(function () {
         if (alwaysSelectLatest) {
           Notification.success('partnerProfile.webexVersionUseLatestTrue');
         } else {
           Notification.success('partnerProfile.webexVersionUseLatestFalse');
         }
-      }).catch(function (e) {
+      }).catch(function () {
         Notification.error('partnerProfile.webexVersionUseLatestUpdateFailed');
       });
     }
@@ -158,9 +158,9 @@
 
       Log.info("New version selected is " + versionSelected);
 
-      p.then(function (s) {
+      p.then(function () {
         Notification.success('partnerProfile.webexClientVersionUpdated');
-      }).catch(function (e) {
+      }).catch(function () {
         Notification.error('partnerProfile.webexClientVersionUpdatedFailed');
       });
     }
@@ -181,7 +181,7 @@
         'trailing': false
       });
 
-    brand.upload = function (file, event) {
+    brand.upload = function (file) {
       if (validateLogo(file)) {
         openModal();
         brand.progress = 0;
@@ -190,7 +190,7 @@
       }
     };
 
-    function openModal(size) {
+    function openModal() {
       brand.uploadModal = $modal.open({
         type: 'small',
         scope: $scope,
@@ -229,7 +229,7 @@
     };
 
     function validateLogo(logo) {
-      // avoid sencond click upload panel, trigger upload direct,  
+      // avoid sencond click upload panel, trigger upload direct,
       if (!logo) {
         return false;
       }
@@ -250,7 +250,7 @@
       }
     }
 
-    function uploadSuccess(response) {
+    function uploadSuccess() {
       $timeout(function () {
         if (brand.uploadModal) {
           brand.uploadModal.close();
@@ -267,7 +267,7 @@
       brand.toggleLogo(false);
     }
 
-    function uploadError(error) {
+    function uploadError() {
       brand.logoError = 'unknown';
     }
 

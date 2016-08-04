@@ -9,7 +9,6 @@ describe('Controller: OverviewCtrl', function () {
 
   var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
-  var usageJSONFixture = getJSONFixture('core/json/organizations/usage.json');
   var services = getJSONFixture('squared/json/services.json');
 
   describe('Wire up', function () {
@@ -279,7 +278,7 @@ describe('Controller: OverviewCtrl', function () {
     TrialService = _TrialService_;
 
     ServiceDescriptor = {
-      services: function (eventHandler) {}
+      services: function () {}
     };
 
     ServiceStatusDecriptor = {
@@ -290,14 +289,14 @@ describe('Controller: OverviewCtrl', function () {
       }
     };
     Orgservice = {
-      getAdminOrg: function (orgEventHandler) {},
+      getAdminOrg: function () {},
       getAdminOrgUsage: function () {
         return $q.when({
           data: orgServiceJSONFixture.getLicensesUsage.singleSub
         });
       },
-      getUnlicensedUsers: function (unlicencedUsersHandler) {},
-      getOrg: jasmine.createSpy().and.callFake(function (callback, status) {
+      getUnlicensedUsers: function () {},
+      getOrg: jasmine.createSpy().and.callFake(function (callback) {
         callback(orgServiceJSONFixture.getOrgNoSip, 200);
       }),
       getHybridServiceAcknowledged: function () {
@@ -323,8 +322,8 @@ describe('Controller: OverviewCtrl', function () {
     };
 
     ReportsService = {
-      getOverviewMetrics: function (backendCach) {},
-      healthMonitor: function (eventHandler) {}
+      getOverviewMetrics: function () {},
+      healthMonitor: function () {}
     };
 
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{

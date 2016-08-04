@@ -104,9 +104,9 @@
           if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
-                href: url,
-                download: FILENAME
-              })
+              href: url,
+              download: FILENAME
+            })
               .removeAttr('disabled');
           } else {
             // IE download option since IE won't download the created url
@@ -124,8 +124,8 @@
         $timeout(function () {
           scope.downloadCsv = downloadCsv;
           downloadAnchor.attr({
-              href: ''
-            })
+            href: ''
+          })
             .removeAttr('download');
         });
       }
@@ -154,7 +154,7 @@
       }
 
       function cancelDownload() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
           if (CsvDownloadService.downloadInProgress) {
             CsvDownloadService.cancelDownload();
             flagDownloading(false);

@@ -45,7 +45,7 @@
       notify($translate.instant(messageKey, messageParams), 'error');
     }
 
-    function notifyReadOnly(rejection) {
+    function notifyReadOnly() {
       notify($translate.instant('readOnlyMessages.notAllowed'), 'warning');
       preventToasters = true;
       $timeout(function () {

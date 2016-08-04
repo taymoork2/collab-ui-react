@@ -77,7 +77,7 @@
         event.dataTransfer.dropEffect = 'copy';
       }
 
-      function onDragEndOrLeave(event) {
+      function onDragEndOrLeave() {
         element.removeClass(DRAG_OVER);
       }
 

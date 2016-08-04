@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: Partner Reports Service', function () {
-  var $httpBackend, PartnerReportService, Config, Notification;
+  var $httpBackend, PartnerReportService, Notification;
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
   var activeUserDetailedResponse, activeUserDetailedAPI, mediaQualityResponse;
 
@@ -62,7 +62,7 @@ describe('Service: Partner Reports Service', function () {
     callMetricsUrl = baseUrl + 'detailed/managedOrgs/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     registeredEndpointsUrl = baseUrl + 'trend/managedOrgs/registeredEndpoints?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
-    angular.forEach(customerData.customerOptions, function (org, index, array) {
+    angular.forEach(customerData.customerOptions, function (org) {
       mostActiveUsersUrl += '&orgId=' + org.value;
       mediaQualityUrl += '&orgId=' + org.value;
       callMetricsUrl += '&orgId=' + org.value;

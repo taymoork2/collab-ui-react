@@ -72,7 +72,7 @@
 
             $state.go(state, params);
           }
-        }).catch(function (error) {
+        }).catch(function () {
           $state.go('login-error');
         });
     };

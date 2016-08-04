@@ -4,8 +4,8 @@
   /* eslint no-console:0 */
 
   module.exports = angular.module('core.log', [
-      require('modules/core/config/config')
-    ])
+    require('modules/core/config/config')
+  ])
     .service('Log', Log)
     .name;
 

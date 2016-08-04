@@ -69,7 +69,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     spyOn(Notification, 'error');
     spyOn(Notification, 'success');
 
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
   }));

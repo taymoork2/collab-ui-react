@@ -101,23 +101,17 @@
           $scope.licenses = result[0].licenses;
           _.forEach($scope.licenses, function (license) {
             switch (license.licenseType) {
-            case Config.licenseTypes.MESSAGING:
-              {
+              case Config.licenseTypes.MESSAGING:
                 $scope.messagingLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            case Config.licenseTypes.COMMUNICATION:
-              {
+              case Config.licenseTypes.COMMUNICATION:
                 $scope.communicationLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            case Config.licenseTypes.CONFERENCING:
-              {
+              case Config.licenseTypes.CONFERENCING:
                 $scope.conferencingLicenseAvailability = license.volume - license.usage;
                 break;
-              }
-            default:
-              break;
+              default:
+                break;
             }
           });
         });
@@ -259,7 +253,7 @@
       });
 
       // don't select any DID on loading the page
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         user.externalNumber = $scope.externalNumberPool[0];
         user.didDnMapMsg = undefined;
       });
@@ -273,7 +267,7 @@
         $scope.validateDnForUser();
         $scope.isReset = true;
         $scope.isResetInProgress = false;
-      }).catch(function (response) {
+      }).catch(function () {
         $scope.isResetInProgress = false;
         $scope.validateDnForUser();
       });
@@ -799,7 +793,7 @@
 
     // To differentiate the user list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('usrlist', function (newVal, oldVal) {
+    $scope.$watch('usrlist', function () {
       if ($scope.isMapped) {
         $scope.isMapped = false;
       } else {
@@ -829,7 +823,7 @@
       }
     });
 
-    $scope.$watch('wizard.current.step', function (newVal, oldVal) {
+    $scope.$watch('wizard.current.step', function () {
       if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
         if (shouldAddCallService()) {
           $scope.$emit('wizardNextText', 'next');
@@ -1042,7 +1036,7 @@
       $scope.btnSaveEntLoad = true;
 
       // make sure we have any internal extension and direct line set up for the users
-      _.forEach(users, function (user, idx) {
+      _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
         if (user.externalNumber && user.externalNumber.pattern !== 'None') {
           user.directLine = user.externalNumber.pattern;
@@ -1192,7 +1186,7 @@
           $scope.invalidcount--;
         }
       },
-      removedtoken: function (e) {
+      removedtoken: function () {
         // Reset the token list and validate all tokens
         $timeout(function () {
           $scope.invalidcount = 0;
@@ -1358,7 +1352,6 @@
       $scope.results = {
         resultList: []
       };
-      var isComplete = true;
       usersList = getUsersList();
       Log.debug('Entitlements: ', usersList);
 
@@ -1367,8 +1360,6 @@
         $rootScope.$broadcast('USER_LIST_UPDATED');
         $scope.numAddedUsers = 0;
         $scope.numUpdatedUsers = 0;
-        var hybridCheck = false;
-
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
@@ -1420,10 +1411,8 @@
             });
           } else if (userStatus === 400 && user.message === '400087') {
             userResult.message = $translate.instant('usersPage.hybridServicesError');
-            hybridCheck = true;
           } else if (userStatus === 400 && user.message === '400094') {
             userResult.message = $translate.instant('usersPage.hybridServicesComboError');
-            hybridCheck = true;
           } else {
             userResult.message = $translate.instant('usersPage.onboardError', {
               email: userResult.email,
@@ -1433,7 +1422,6 @@
 
           if (userStatus !== 200 && userStatus !== 201) {
             userResult.alertType = 'danger';
-            isComplete = false;
           }
 
           $scope.results.resultList.push(userResult);
@@ -1504,7 +1492,6 @@
           Notification.notify(error, 'error');
         }
         Notification.notify([error], 'error');
-        isComplete = false;
         $scope.btnOnboardLoading = false;
         deferred.reject();
       };
@@ -1865,7 +1852,7 @@
       }
 
       // copy numbers to convertSelectedList
-      _.forEach($scope.usrlist, function (user, index) {
+      _.forEach($scope.usrlist, function (user) {
         var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
           return user.address === selectedUser.userName;
         });
@@ -1890,7 +1877,7 @@
         $scope.processing = true;
         // Copying selected users to user list
         $scope.usrlist = [];
-        _.forEach($scope.convertSelectedList, function (selectedUser, index) {
+        _.forEach($scope.convertSelectedList, function (selectedUser) {
           var user = {};
           var givenName = "";
           var familyName = "";
@@ -1929,7 +1916,7 @@
     function convertUsersInBatch() {
       var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
       $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
-      Userservice.migrateUsers(batch, function (data, status) {
+      Userservice.migrateUsers(batch, function (data) {
         var successMovedUsers = [];
 
         for (var i = 0; i < data.userResponse.length; i++) {
@@ -2221,7 +2208,7 @@
 
       function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
         return csvPromise.then(function () {
-          return $q(function (resolve, reject) {
+          return $q(function (resolve) {
             if (userArray.length > 0) {
               Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
                 successCallback(response, startIndex - userArray.length + 1, userArray.length);

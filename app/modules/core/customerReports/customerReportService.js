@@ -88,7 +88,7 @@
       return getService(urlBase + mostActiveUrl + query + cacheValue, mostActivePromise).then(function (response) {
         var data = [];
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
-          angular.forEach(response.data.data, function (item, index, array) {
+          angular.forEach(response.data.data, function (item) {
             data.push({
               'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
               'totalActivity': parseInt(item.details.totalActivity),
@@ -193,7 +193,7 @@
       var query = getQuery(filter);
 
       var groupData = [];
-      var groupPromise = getService(urlBase + timechart + groupUrl + query + customerView, groupCancelPromise).success(function (response, status) {
+      var groupPromise = getService(urlBase + timechart + groupUrl + query + customerView, groupCancelPromise).success(function (response) {
         groupData = response.data;
         return;
       }).error(function (response, status) {
@@ -203,7 +203,7 @@
       promises.push(groupPromise);
 
       var oneToOneData = [];
-      var oneToOnePromise = getService(urlBase + timechart + oneToOneUrl + query + customerView, oneToOneCancelPromise).success(function (response, status) {
+      var oneToOnePromise = getService(urlBase + timechart + oneToOneUrl + query + customerView, oneToOneCancelPromise).success(function (response) {
         oneToOneData = response.data;
         return;
       }).error(function (response, status) {
@@ -213,7 +213,7 @@
       promises.push(oneToOnePromise);
 
       var avgData = [];
-      var avgPromise = getService(urlBase + timechart + avgUrl + query + customerView, avgCancelPromise).success(function (response, status) {
+      var avgPromise = getService(urlBase + timechart + avgUrl + query + customerView, avgCancelPromise).success(function (response) {
         avgData = response.data;
         return;
       }).error(function (response, status) {
@@ -270,7 +270,7 @@
       }
       var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
-      angular.forEach(groupData, function (groupItem, groupIndex, groupArray) {
+      angular.forEach(groupData, function (groupItem) {
         var modDate = moment.tz(groupItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(groupItem.date, timezone).format(monthFormat);
@@ -291,7 +291,7 @@
         }
       });
 
-      angular.forEach(oneToOneData, function (oneToOneItem, oneToOneIndex, oneToOneArray) {
+      angular.forEach(oneToOneData, function (oneToOneItem) {
         var modDate = moment.tz(oneToOneItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(oneToOneItem.date, timezone).format(monthFormat);
@@ -312,7 +312,7 @@
       });
 
       if (!emptyGraph) {
-        angular.forEach(avgData, function (avgItem, avgIndex, avgArray) {
+        angular.forEach(avgData, function (avgItem) {
           var modDate = moment.tz(avgItem.date, timezone).format(dayFormat);
           if (filter.value === 2) {
             modDate = moment.tz(avgItem.date, timezone).format(monthFormat);
@@ -349,7 +349,7 @@
       var query = getQuery(filter);
 
       var contentSharedData = [];
-      var contentSharedPromise = getService(urlBase + timechart + contentShared + query + customerView, contentSharedCancelPromise).success(function (response, status) {
+      var contentSharedPromise = getService(urlBase + timechart + contentShared + query + customerView, contentSharedCancelPromise).success(function (response) {
         contentSharedData = response.data;
         return;
       }).error(function (response, status) {
@@ -359,7 +359,7 @@
       promises.push(contentSharedPromise);
 
       var contentShareSizesData = [];
-      var contentShareSizesPromise = getService(urlBase + timechart + contentShareSizes + query + customerView, contentShareSizesCancelPromise).success(function (response, status) {
+      var contentShareSizesPromise = getService(urlBase + timechart + contentShareSizes + query + customerView, contentShareSizesCancelPromise).success(function (response) {
         contentShareSizesData = response.data;
         return;
       }).error(function (response, status) {
@@ -409,7 +409,7 @@
       }
       var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
-      angular.forEach(contentSharedData, function (contentItem, contentIndex, contentArray) {
+      angular.forEach(contentSharedData, function (contentItem) {
         var modDate = moment.tz(contentItem.date, timezone).format(dayFormat);
         if (filter.value === 2) {
           modDate = moment.tz(contentItem.date, timezone).format(monthFormat);
@@ -429,7 +429,7 @@
       });
 
       if (!emptyGraph) {
-        angular.forEach(contentShareSizesData, function (shareItem, shareIndex, shareArray) {
+        angular.forEach(contentShareSizesData, function (shareItem) {
           var modDate = moment.tz(shareItem.date, timezone).format(dayFormat);
           if (filter.value === 2) {
             modDate = moment.tz(shareItem.date, timezone).format(monthFormat);
@@ -462,7 +462,7 @@
         displayData: {}
       };
 
-      return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response, status) {
+      return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response) {
         if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
           var details = response.data.data[0].data[0].details;
           var totalCalls = parseInt(details.totalCalls);
@@ -485,7 +485,7 @@
           }
         }
         return returnArray;
-      }, function (response, status) {
+      }, function (response) {
         return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
       });
     }
@@ -497,7 +497,7 @@
       }
       mediaCancelPromise = $q.defer();
 
-      return getService(urlBase + detailed + mediaQuality + getQuery(filter), mediaCancelPromise).then(function (response, status) {
+      return getService(urlBase + detailed + mediaQuality + getQuery(filter), mediaCancelPromise).then(function (response) {
         var emptyGraph = true;
         if (response !== null && angular.isDefined(response)) {
           var data = response.data.data[0].data;
@@ -527,7 +527,7 @@
           }
           var graph = getReturnGraph(filter, dayOffset, graphItem);
 
-          angular.forEach(data, function (item, index, array) {
+          angular.forEach(data, function (item) {
             var totalSum = parseInt(item.details.totalDurationSum);
             var goodSum = parseInt(item.details.goodQualityDurationSum);
             var fairSum = parseInt(item.details.fairQualityDurationSum);
@@ -618,7 +618,7 @@
         var dayOffset = 0;
         var responseLength = 0;
 
-        angular.forEach(data, function (item, index, array) {
+        angular.forEach(data, function (item) {
           if (responseLength < item.details.length) {
             responseLength = item.details.length;
             dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'));
@@ -644,7 +644,7 @@
         });
         filterIndex++;
 
-        angular.forEach(data, function (item, index, array) {
+        angular.forEach(data, function (item) {
           deviceArray.filterArray.push({
             value: filterIndex,
             label: item.deviceType
@@ -657,7 +657,7 @@
             balloon: true
           };
 
-          angular.forEach(item.details, function (detail, detailIndex, detailArray) {
+          angular.forEach(item.details, function (detail) {
             if (detail.totalRegisteredDevices > 0) {
               tempGraph.emptyGraph = false;
               deviceArray.graphData[0].emptyGraph = false;

@@ -216,41 +216,41 @@
       },
       multiFields: {
         meeting: [{
-            columnGroup: 'conferencing',
-            columnName: 'conferencing',
-            offerCode: 'CF',
-            tooltip: $translate.instant('customerPage.meeting')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EE',
-            columnName: 'webexEEConferencing',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'CMR',
-            columnName: 'webexCMR',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'MC',
-            columnName: 'webexMeetingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'SC',
-            columnName: 'webexSupportCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'TC',
-            columnName: 'webexTrainingCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }, {
-            columnGroup: 'webex',
-            offerCode: 'EC',
-            columnName: 'webexEventCenter',
-            tooltip: $translate.instant('customerPage.webex')
-          }
+          columnGroup: 'conferencing',
+          columnName: 'conferencing',
+          offerCode: 'CF',
+          tooltip: $translate.instant('customerPage.meeting')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EE',
+          columnName: 'webexEEConferencing',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'CMR',
+          columnName: 'webexCMR',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'MC',
+          columnName: 'webexMeetingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'SC',
+          columnName: 'webexSupportCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'TC',
+          columnName: 'webexTrainingCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }, {
+          columnGroup: 'webex',
+          offerCode: 'EC',
+          columnName: 'webexEventCenter',
+          tooltip: $translate.instant('customerPage.webex')
+        }
 
         ]
       },

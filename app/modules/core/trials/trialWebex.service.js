@@ -80,7 +80,7 @@
           'isValid': isValid && data.errorCode === '0',
           'errorCode': errorCodes[data.errorCode] || 'invalidSite'
         };
-      }).catch(function (response) {
+      }).catch(function () {
         Notification.error('trialModal.meeting.validationHttpError');
       });
     }
