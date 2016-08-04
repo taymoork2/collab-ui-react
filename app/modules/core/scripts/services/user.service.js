@@ -31,7 +31,7 @@
     };
 
     var _helpers = {
-      isSunlightUser: isSunlightUser,
+      isSunlightUserUpdateRequired: isSunlightUserUpdateRequired,
       getUserLicence: getUserLicence,
       createUserData: createUserData
     };
@@ -460,7 +460,7 @@
       });
       _.each(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _helpers.getUserLicence(userResponseSuccess.email, users);
-        if (_helpers.isSunlightUser(userLicenses)) {
+        if (_helpers.isSunlightUserUpdateRequired(userLicenses)) {
           var userData = _helpers.createUserData(userResponseSuccess);
           var userId = userResponseSuccess.uuid;
           SunlightConfigService.updateUserInfo(userData, userId)
@@ -513,11 +513,11 @@
       });
     }
 
-    function isSunlightUser(licenses) {
-      var sunlightLicense = _.find(licenses, function (license) {
-        return license.id.indexOf(Config.offerCodes.CDC) >= 0;
+    function isSunlightUserUpdateRequired(licenses) {
+      var addedSunlightLicense = _.find(licenses, function (license) {
+        return license.id.indexOf(Config.offerCodes.CDC) >= 0 && license.idOperation === 'ADD';
       });
-      return typeof sunlightLicense !== 'undefined';
+      return (typeof addedSunlightLicense === 'undefined') ? false : true;
     }
 
     function isHuronUser(allEntitlements) {
