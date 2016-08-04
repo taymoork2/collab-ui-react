@@ -38,79 +38,79 @@
     }
 
     function getReportingData(reportName, timeSelected, mediaType) {
-      var dataPromise;
+      var config, startTimeStamp, endTimeStamp, dataPromise;
       switch (timeSelected) {
         // today
-      case 0:
-        var startTimeStamp = moment().startOf('day');
-        var endTimeStamp = moment();
-        var config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
-        var dataPromise = getStats(reportName, config)
+        case 0:
+          startTimeStamp = moment().startOf('day');
+          endTimeStamp = moment();
+          config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
+          dataPromise = getStats(reportName, config)
           .then(function (response) {
             var localTimeData = downSampleByHour(response.data.data);
             return fillEmptyData(
               (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.add(1, 'days').startOf('day').toDate())),
               'h', localTimeData, hourFormat, false);
           });
-        break;
+          break;
 
         // yesterday
-      case 1:
-        var startTimeStamp = moment().subtract(1, 'days').startOf('day');
-        var endTimeStamp = moment().startOf('day');
-        var config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
-        var dataPromise = getStats(reportName, config)
+        case 1:
+          startTimeStamp = moment().subtract(1, 'days').startOf('day');
+          endTimeStamp = moment().startOf('day');
+          config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
+          dataPromise = getStats(reportName, config)
           .then(function (response) {
             var localTimeData = downSampleByHour(response.data.data);
             return fillEmptyData(
               (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
               'h', localTimeData, hourFormat, false);
           });
-        break;
+          break;
 
         // last week
-      case 2:
-        var startTimeStamp = moment().subtract(7, 'days').startOf('day');
-        var endTimeStamp = moment().startOf('day');
-        var config = getQueryConfig('hourly', mediaType, startTimeStamp, endTimeStamp);
-        var dataPromise = getStats(reportName, config)
+        case 2:
+          startTimeStamp = moment().subtract(7, 'days').startOf('day');
+          endTimeStamp = moment().startOf('day');
+          config = getQueryConfig('hourly', mediaType, startTimeStamp, endTimeStamp);
+          dataPromise = getStats(reportName, config)
           .then(function (response) {
             var localTimeData = downSampleByDay(response.data.data);
             return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
               'd', localTimeData, dayFormat, true);
           });
-        break;
+          break;
 
         // last month
-      case 3:
-        var endTimeStamp = moment().startOf('week');
-        var startTimeStamp = moment(endTimeStamp).subtract(28, 'days').startOf('day');
-        var config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
-        var dataPromise = getStats(reportName, config)
+        case 3:
+          endTimeStamp = moment().startOf('week');
+          startTimeStamp = moment(endTimeStamp).subtract(28, 'days').startOf('day');
+          config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
+          dataPromise = getStats(reportName, config)
           .then(function (response) {
             var localTimeData = downSampleByWeek(response.data.data);
             return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
               'w', localTimeData, dayFormat, true);
           });
-        break;
+          break;
 
         // last 3 month
-      case 4:
-        var startTimeStamp = moment().subtract(2, 'months').startOf('month');
-        var endTimeStamp = moment().startOf('day');
-        var config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
-        var dataPromise = getStats(reportName, config)
+        case 4:
+          startTimeStamp = moment().subtract(2, 'months').startOf('month');
+          endTimeStamp = moment().startOf('day');
+          config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
+          dataPromise = getStats(reportName, config)
           .then(function (response) {
             var localTimeData = downSampleByMonth(response.data.data);
             return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
               'M', localTimeData, monthFormat, false);
           });
-        break;
+          break;
 
-      default:
-        var deferred = $q.defer();
-        deferred.resolve([]);
-        dataPromise = deferred.promise;
+        default:
+          var deferred = $q.defer();
+          deferred.resolve([]);
+          dataPromise = deferred.promise;
       }
       return dataPromise;
     }
@@ -261,10 +261,10 @@
 
     function getFormatter(interval) {
       switch (interval) {
-      case 'w':
-        return weekFormatter;
-      default:
-        return momentFormatter;
+        case 'w':
+          return weekFormatter;
+        default:
+          return momentFormatter;
       }
     }
 

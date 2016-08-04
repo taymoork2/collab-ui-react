@@ -330,11 +330,11 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-      case vm.escapeKey:
-        cancelModal();
-        break;
-      default:
-        break;
+        case vm.escapeKey:
+          cancelModal();
+          break;
+        default:
+          break;
       }
     }
 
@@ -368,18 +368,18 @@
 
     function nextButton() {
       switch (vm.currentState) {
-      case 'name':
-        return isNamePageValid();
-      case 'profile':
-        return isProfilePageValid();
-      case 'agentUnavailable':
-        return isAgentUnavailablePageValid();
-      case 'offHours':
-        return isOffHoursPageValid();
-      case 'summary':
-        return 'hidden';
-      default:
-        return true;
+        case 'name':
+          return isNamePageValid();
+        case 'profile':
+          return isProfilePageValid();
+        case 'agentUnavailable':
+          return isAgentUnavailablePageValid();
+        case 'offHours':
+          return isOffHoursPageValid();
+        case 'summary':
+          return 'hidden';
+        default:
+          return true;
       }
     }
 
