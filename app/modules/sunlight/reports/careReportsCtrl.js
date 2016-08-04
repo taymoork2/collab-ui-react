@@ -46,7 +46,6 @@
     }
 
     function init() {
-      var selectedIndex = vm.timeSelected.value;
       setFilterBasedTextForCare();
       $timeout(function () {
         setDummyData();

@@ -20,17 +20,13 @@
     var mostActiveUrl = 'useractivity';
     var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
-    var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
 
-    var timeFilter = null;
-
     // Promise Tracking
     var ABORT = 'ABORT';
-    var TIMEOUT = 'TIMEOUT';
     var activePromse = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;

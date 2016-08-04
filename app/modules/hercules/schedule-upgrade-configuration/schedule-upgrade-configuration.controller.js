@@ -77,7 +77,6 @@
       var values = _.range(0, 24).map(function (time) {
         return _.padLeft(time, 2, '0') + ':00';
       });
-      var labels = angular.copy(values);
       return _.map(values, function (value) {
         return {
           label: labelForTime(value),

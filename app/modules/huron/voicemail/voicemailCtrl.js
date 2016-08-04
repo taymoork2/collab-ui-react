@@ -50,8 +50,6 @@
     }
 
     function saveVoicemail() {
-      var promise;
-      var promises = [];
       var voicemailPayload = {
         'services': [],
         'voicemail': {}

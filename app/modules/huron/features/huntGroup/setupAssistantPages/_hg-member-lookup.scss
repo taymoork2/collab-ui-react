@@ -59,7 +59,7 @@
     cursor: pointer;
     border-radius: 0.25rem !important;
     & i {
-      @include vr-spacing(mr, 1, 0px, true);
+      @include vr-spacing(mr, 0, 0px, true);
     }
   }
 
@@ -75,6 +75,7 @@
   & article > section {
     z-index: 200;
     position: absolute;
+    top: 100%;
     background-color: $brand-white;
     border-style: solid;
     border-width: rem-calc(1);

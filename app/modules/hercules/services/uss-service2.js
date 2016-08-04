@@ -41,7 +41,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary, hub);
+    CsdmPoller.create(fetchStatusesSummary, hub);
 
     var statusesParameterRequestString = function (serviceId, state, offset, limit) {
       var statefilter = state ? "&state=" + state : "";

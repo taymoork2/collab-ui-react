@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, UrlConfig) {
+  function MediaClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, UrlConfig) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -36,8 +36,6 @@
     };
 
     var getAggegatedClusters = function (clusters, groupList) {
-      $log.log("In getAggregatedClusters");
-      //$log.log("clusterCache : ", clusterCache);
       return MediaConverterService.aggregateClusters(clusters, groupList);
     };
 
@@ -89,12 +87,6 @@
         .success(callback)
         .error(createErrorHandler('Unable to defuse', callback));
     };
-
-    function createSuccessCallback(callback) {
-      return function (data) {
-        callback(null, data);
-      };
-    }
 
     function createErrorHandler(message, callback) {
       return function () {
@@ -186,7 +178,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var clusterPoller = CsdmPoller.create(fetch, hub);
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,

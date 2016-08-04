@@ -56,7 +56,7 @@
           vm.isMove = false;
         }
       }
-      if (vm.isMove == true) {
+      if (vm.isMove) {
         if (vm.hosts.length == 0) {
           deleteCluster();
           return;

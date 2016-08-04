@@ -1,9 +1,5 @@
 import { CardType, ServicesOverviewCard } from './ServicesOverviewCard';
 
-export enum CardFilter{
-  all,
-  active
-}
 export class ServicesOverviewCtrl {
 
   private cards:Array<ServicesOverviewCard>;

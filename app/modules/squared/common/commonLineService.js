@@ -9,13 +9,9 @@
     var entitylist = [];
     var internalNumberPool = [];
     var externalNumberPool = [];
-    var externalNumberMapping = [];
     var telephonyInfo = {};
-    var assignedDn;
     var PATTERN_LIMIT = 50;
     var nameTemplate;
-    var internalExtensionTemplate;
-    var externalExtensionTemplate;
 
     var service = {
       loadPrimarySiteInfo: loadPrimarySiteInfo,
@@ -57,7 +53,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(entity) {
-      var dnFirstCharacter = "";
       var steeringDigit = telephonyInfo.steeringDigit;
       return _.startsWith(_.get(entity, 'assignedDn.pattern'), steeringDigit);
     }

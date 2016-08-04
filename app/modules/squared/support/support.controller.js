@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, TokenService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $scope, $timeout, $translate, $state, $stateParams, $window, Authinfo, CallflowService, Config, FeedbackService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -253,42 +253,6 @@
       }
     }
 
-    var initializeTypeahead = function () {
-      var suggestUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
-      var engine = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        limit: 5,
-        remote: {
-          url: suggestUsersUrl,
-          filter: function (data) {
-            return data.Resources;
-          },
-          replace: function (url, query) {
-            return url + encodeURIComponent(query) + '%22'; //%22 is encoded double-quote
-          },
-          cache: true,
-          ajax: {
-            headers: {
-              'Authorization': 'Bearer ' + TokenService.getAccessToken()
-            }
-          }
-        }
-      });
-
-      engine.initialize();
-
-      $('#logsearchfield').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 2
-      }, {
-        name: 'email',
-        displayKey: 'userName',
-        source: engine.ttAdapter()
-      });
-    };
-
     //TODO: Fix $(...).typeahead is not a function console error
     //initializeTypeahead();
 
@@ -404,91 +368,6 @@
       }
       return callstart;
     }
-
-    var getLogInfo = function (locusId, startTime) {
-      $scope.getPending = true;
-      ReportsService.getLogInfo(locusId, startTime, function (data, status) {
-        if (data.success) {
-          if (data.callRecords.length > 0) {
-            for (var index in data.callRecords) {
-              var errorInfo = data.callRecords[index].errorInfo;
-              var mediaStats = data.callRecords[index].mediaStats;
-              var audioStart, videoStart, audioRxJitter, audioTxJitter, videoRxJitter, videoTxJitter;
-              var audioRxLossRatio, audioTxLossRatio, videoRxLossRatio, videoTxLossRatio;
-              var component, errMessage;
-              var errorCode = 0;
-              var starttime = moment(data.callRecords[index].locusCallStartTime);
-              var graphUrl = UrlConfig.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
-              var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId;
-              var graphLocusIdUrl = graphUrl + '&lid=' + data.callRecords[index].locusId;
-              var graphTrackingIdUrl = graphUrl + '&tid=' + data.callRecords[index].trackingId;
-              if (mediaStats) {
-                audioStart = mediaStats.audioStart;
-                videoStart = mediaStats.videoStart;
-                audioRxJitter = mediaStats.audioRxJitter;
-                audioTxJitter = mediaStats.audioTxJitter;
-                videoRxJitter = mediaStats.videoRxJitter;
-                videoTxJitter = mediaStats.videoTxJitter;
-                audioRxLossRatio = mediaStats.audioRxLossRatio;
-                audioTxLossRatio = mediaStats.audioTxLossRatio;
-                videoRxLossRatio = mediaStats.videoRxLossRatio;
-                videoTxLossRatio = mediaStats.videoTxLossRatio;
-              }
-              if (errorInfo) {
-                if (errorInfo.component) {
-                  component = errorInfo.component;
-                  errorCode = 1;
-                }
-                if (errorInfo.message) {
-                  errMessage = errorInfo.message;
-                  errorCode = 1;
-                }
-              }
-              var info = {
-                userId: data.callRecords[index].userId,
-                emailAddress: data.callRecords[index].emailAddress,
-                orgId: data.callRecords[index].orgId,
-                locusId: data.callRecords[index].locusId,
-                locusCallStartTime: data.callRecords[index].locusCallStartTime,
-                deviceId: data.callRecords[index].deviceId,
-                isGroupCall: data.callRecords[index].isGroupCall,
-                callDuration: data.callRecords[index].callDuration,
-                usrAgent: data.callRecords[index].usrAgent,
-                networkName: data.callRecords[index].networkName,
-                networkType: data.callRecords[index].networkType,
-                trackingId: data.callRecords[index].trackingId,
-                audioStart: audioStart,
-                videoStart: videoStart,
-                audioRxJitter: audioRxJitter,
-                audioTxJitter: audioTxJitter,
-                videoRxJitter: videoRxJitter,
-                videoTxJitter: videoTxJitter,
-                audioRxLossRatio: audioRxLossRatio,
-                audioTxLossRatio: audioTxLossRatio,
-                videoRxLossRatio: videoRxLossRatio,
-                videoTxLossRatio: videoTxLossRatio,
-                errorCode: errorCode,
-                component: component,
-                errMessage: errMessage,
-                graphUserIdUrl: graphUserIdUrl,
-                graphLocusIdUrl: graphLocusIdUrl,
-                graphTrackingIdUrl: graphTrackingIdUrl
-              };
-              $scope.logInfo.push(info);
-            }
-          } else {
-            $scope.getPending = false;
-            Log.debug('No records found for : ' + locusId + ' startTime :' + startTime);
-          }
-        } else {
-          Log.debug('Failed to retrieve log information. Status: ' + status);
-          $scope.getPending = false;
-          Notification.error('supportPage.errCallInfoQuery', {
-            status: status
-          });
-        }
-      });
-    };
 
     $scope.downloadLog = function (filename) {
       LogService.downloadLog(filename, function (data, status) {

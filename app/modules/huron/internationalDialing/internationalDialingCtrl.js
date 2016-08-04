@@ -111,10 +111,6 @@
         restriction: InternationalDialing.INTERNATIONAL_DIALING,
         blocked: false
       };
-      var result = {
-        msg: null,
-        type: 'null'
-      };
 
       if (vm.model.internationalDialingEnabled.value === "0") {
         cosType.blocked = true;

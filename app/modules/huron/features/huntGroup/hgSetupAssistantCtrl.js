@@ -118,38 +118,17 @@
     function nextButton($index) {
       switch ($index) {
       case 0:
-        if (vm.huntGroupName === '') {
-          return false;
-        } else {
-          return true;
-        }
-        break;
+        return !(vm.huntGroupName === '');
       case 1:
-        if (vm.selectedPilotNumbers.length === 0) {
-          return false;
-        } else {
-          return true;
-        }
-        break;
+        return !(vm.selectedPilotNumbers.length === 0);
       case 2:
-        if (vm.huntGroupMethod === '') {
-          return false;
-        } else {
-          return true;
-        }
-        break;
+        return !(vm.huntGroupMethod === '');
       case 3:
-        if (vm.selectedHuntMembers.length === 0) {
-          return false;
-        } else {
-          return true;
-        }
-        break;
+        return !(vm.selectedHuntMembers.length === 0);
       case 4:
         return 'hidden';
-      default:
-        return true;
       }
+      return true;
     }
 
     function previousButton($index) {
