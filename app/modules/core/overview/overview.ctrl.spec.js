@@ -278,6 +278,10 @@ describe('Controller: OverviewCtrl', function () {
     OverviewNotificationFactory = _OverviewNotificationFactory_;
     TrialService = _TrialService_;
 
+    FeatureToggleService.features = {
+      atlasHybridServicesResourceList: 'atlas-media-service-onboarding'
+    };
+
     ServiceDescriptor = {
       services: function (eventHandler) {}
     };
@@ -349,6 +353,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDaysLeftForCurrentUser').and.returnValue($q.when(1));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,
