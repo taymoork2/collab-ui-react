@@ -228,7 +228,7 @@ describe('UserListCtrl: Ctrl', function () {
       UserListService.listUsers.calls.reset();
 
       var sortColumns = [{
-        'colDef' : {
+        'colDef': {
           'id': 'displayName'
         },
         'sort': {
