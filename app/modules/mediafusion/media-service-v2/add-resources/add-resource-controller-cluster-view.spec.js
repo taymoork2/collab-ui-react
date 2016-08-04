@@ -1,36 +1,39 @@
   'use strict';
-  describe('RedirectAddResourceControllerV2', function () {
+  describe('AddResourceControllerClusterViewV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-    var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
-    beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
+    var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modal, firstTimeSetup, yesProceed;
+    beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
       $q = _$q_;
       httpBackend = $httpBackend;
       httpBackend.when('GET', /^\w+.*/).respond({});
       redirectTargetPromise = {
         then: sinon.stub()
       };
-      $state = _$state_;
+      $state = {
+        "params": {
+          "wizard": {},
+          "firstTimeSetup": false,
+          "yesProceed": true,
+          "fromClusters": true
+        },
+        "modal": {
+          close: sinon.stub()
+        }
+      };
       $stateParams = _$stateParams_;
       AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
       $translate = _$translate_;
       XhrNotificationService = _XhrNotificationService_;
-      $modalInstance = {
-        close: sinon.stub()
-      };
       $modal = _$modal_;
       yesProceed = true;
       firstTimeSetup = true;
-      controller = $controller('RedirectAddResourceControllerV2', {
+      controller = $controller('AddResourceControllerClusterViewV2', {
         $q: $q,
         XhrNotificationService: XhrNotificationService,
         $translate: $translate,
         $state: $state,
         $stateParams: $stateParams,
         AddResourceCommonServiceV2: AddResourceCommonServiceV2,
-        $modalInstance: $modalInstance,
-        $modal: $modal,
-        yesProceed: yesProceed,
-        firstTimeSetup: firstTimeSetup
       });
     }));
     it('controller should be defined', function () {

@@ -3,10 +3,10 @@
 
   angular
     .module("Mediafusion")
-    .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
+    .controller("AddResourceControllerClusterViewV2", AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2(XhrNotificationService, $modalInstance, $translate, firstTimeSetup, yesProceed, $modal, $state, AddResourceCommonServiceV2) {
+  function AddResourceControllerClusterViewV2(XhrNotificationService, $translate, $state, $stateParams, AddResourceCommonServiceV2) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -14,16 +14,22 @@
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.back = back;
     vm.next = next;
+    //vm.getV2Clusters = getV2Clusters;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
+    vm.clusterDetail = null;
+    vm.popup = '';
     vm.selectedClusterId = '';
-    vm.firstTimeSetup = firstTimeSetup;
+    vm.firstTimeSetup = $state.params.firstTimeSetup;
     vm.closeSetupModal = closeSetupModal;
+    vm.currentServiceId = "squared-fusion-media";
     vm.radio = 1;
     vm.noProceed = false;
-    vm.yesProceed = yesProceed;
+    vm.yesProceed = $state.params.yesProceed;
+    vm.fromClusters = $state.params.fromClusters;
     vm.canGoNext = canGoNext;
 
+    // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
     });
@@ -35,34 +41,22 @@
     }
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-      $modalInstance.close();
+      $state.modal.close();
       AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
     }
 
     function closeSetupModal(isCloseOk) {
-      if (!firstTimeSetup) {
-        $modalInstance.close();
-        return;
-      }
-      if (isCloseOk) {
-        $modalInstance.close();
-        $state.go('services-overview');
-        return;
-      }
-      $modal.open({
-          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-          type: 'dialog'
-        })
-        .result.then(function (isAborting) {
-          if (isAborting) {
-            $modalInstance.close();
-            $state.go('services-overview');
-          }
-        });
+      $state.modal.close();
     }
 
     function back() {
-      vm.enableRedirectToTarget = false;
+      if (vm.yesProceed != true) {
+        $stateParams.wizard.back();
+      } else if (vm.enableRedirectToTarget == true) {
+        vm.enableRedirectToTarget = false;
+      } else {
+        vm.yesProceed = false;
+      }
     }
 
     function next() {
@@ -78,7 +72,8 @@
     }
 
     function canGoNext() {
-      if (vm.firstTimeSetup == true && vm.yesProceed == false) {
+
+      if (vm.fromClusters && vm.yesProceed == false) {
         return true;
       } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != "" && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != "") {
         return true;
