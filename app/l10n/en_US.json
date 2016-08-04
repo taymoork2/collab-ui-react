@@ -967,7 +967,8 @@
     "continue": "Continue",
     "warning": "Warning",
     "error": "Error",
-    "turnOff": "Turn Off"
+    "turnOff": "Turn Off",
+    "overview":"Overview"
   },
   "notifications": {
     "success": "Success notifications",

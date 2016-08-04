@@ -1581,37 +1581,51 @@
                   .then(function (result) {
                     return result;
                   });
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
               }
             },
             params: {
               currentCustomer: {}
             },
             data: {
-              displayName: 'Overview'
             }
           })
           .state('customer-overview.externalNumbers', {
             controller: 'ExternalNumberDetailCtrl',
             controllerAs: 'externalNumbers',
             templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
+              }
+            },
             data: {
-              displayName: 'Phone Numbers'
             }
           })
           .state('customer-overview.customerAdministrators', {
             controller: 'CustomerAdministratorDetailCtrl',
             controllerAs: 'customerAdmin',
             templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
+              }
+            },
             data: {
-              displayName: 'Partner Administrators'
             }
           })
           .state('customer-overview.pstnOrderOverview', {
             controller: 'PstnOrderOverviewCtrl',
             controllerAs: 'pstnOrderOverview',
             templateUrl: 'modules/huron/orderManagement/pstnOrderOverview.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'PSTN Orders'
             },
             params: {
               currentCustomer: {}
@@ -1621,8 +1635,12 @@
             controller: 'MeetingDetailCtrl',
             controllerAs: 'meetingDetail',
             templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
+              }
+            },
             data: {
-              displayName: 'Meeting Detail'
             },
             params: {
               meetingLicenses: {}
@@ -1633,8 +1651,12 @@
             controller: 'PstnOrderDetailCtrl',
             controllerAs: 'pstnOrderDetail',
             templateUrl: 'modules/huron/orderManagement/pstnOrderDetail.tpl.html',
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.pstnOrderDetaill').data.displayName = $translate.instant('customerPage.pstnOrders');
+              }
+            },
             data: {
-              displayName: 'Order'
             },
             params: {
               currentOrder: {}
