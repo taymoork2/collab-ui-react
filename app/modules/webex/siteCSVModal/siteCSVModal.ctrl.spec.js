@@ -11,13 +11,10 @@ describe('SiteCSVModalCtrl: initiate export', function () {
   var $scope;
   var $controller;
 
-  var Authinfo;
-  var UrlConfig;
   var WebExApiGatewayService;
   var WebExSiteRowService;
   var SiteCSVModalCtrl;
   var Notification;
-  var WebExApiGatewayConstsService;
 
   var fakeSiteRow;
   var fakeCSVImportFileContents;
@@ -28,12 +25,9 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     _$q_,
     _$controller_,
     _$rootScope_,
-    _Authinfo_,
-    _UrlConfig_,
     _WebExApiGatewayService_,
     _WebExSiteRowService_,
-    _Notification_,
-    _WebExApiGatewayConstsService_
+    _Notification_
   ) {
 
     $q = _$q_;
@@ -41,12 +35,9 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $scope = $rootScope.$new();
     $controller = _$controller_;
 
-    Authinfo = _Authinfo_;
-    UrlConfig = _UrlConfig_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExSiteRowService = _WebExSiteRowService_;
     Notification = _Notification_;
-    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
 
     deferredCSVImport = $q.defer();
     deferredCSVExport = $q.defer();

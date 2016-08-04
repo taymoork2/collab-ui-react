@@ -5,7 +5,7 @@ describe('WebexClientVersion Test', function () {
 
   beforeEach(angular.mock.module('WebExApp'));
 
-  var WebexClientVersion, httpBackend, $translate, UrlConfig;
+  var WebexClientVersion, httpBackend, UrlConfig;
   var clientVersions1;
 
   beforeEach(inject(function (_$httpBackend_, _UrlConfig_, _WebexClientVersion_) {

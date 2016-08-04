@@ -1,7 +1,6 @@
 'use strict';
 
 describe('WebExUserSettingsFact multi-center licenses tests', function () {
-  var $q;
   var $rootScope;
 
   var deferredOrgLicenses;
@@ -92,28 +91,27 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
   }));
 
   beforeEach(inject(function (
-    _$q_,
+    $q,
     _$rootScope_,
-    _Orgservice_,
-    _WebExXmlApiFact_
+    Orgservice,
+    WebExXmlApiFact
   ) {
 
-    $q = _$q_;
     $rootScope = _$rootScope_;
 
-    deferredOrgLicenses = _$q_.defer();
-    deferredWebExSessionTicket = _$q_.defer();
-    deferredWebExSiteVersionXml = _$q_.defer();
-    deferredWebExUserInfoXml = _$q_.defer();
-    deferredWebExSiteInfoXml = _$q_.defer();
-    deferredWebExMeetingTypeInfoXml = _$q_.defer();
+    deferredOrgLicenses = $q.defer();
+    deferredWebExSessionTicket = $q.defer();
+    deferredWebExSiteVersionXml = $q.defer();
+    deferredWebExUserInfoXml = $q.defer();
+    deferredWebExSiteInfoXml = $q.defer();
+    deferredWebExMeetingTypeInfoXml = $q.defer();
 
-    spyOn(_Orgservice_, "getValidLicenses").and.returnValue(deferredOrgLicenses.promise);
-    spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferredWebExSessionTicket.promise);
-    spyOn(_WebExXmlApiFact_, "getSiteVersion").and.returnValue(deferredWebExSiteVersionXml.promise);
-    spyOn(_WebExXmlApiFact_, "getUserInfo").and.returnValue(deferredWebExUserInfoXml.promise);
-    spyOn(_WebExXmlApiFact_, "getSiteInfo").and.returnValue(deferredWebExSiteInfoXml.promise);
-    spyOn(_WebExXmlApiFact_, "getMeetingTypeInfo").and.returnValue(deferredWebExMeetingTypeInfoXml.promise);
+    spyOn(Orgservice, "getValidLicenses").and.returnValue(deferredOrgLicenses.promise);
+    spyOn(WebExXmlApiFact, "getSessionTicket").and.returnValue(deferredWebExSessionTicket.promise);
+    spyOn(WebExXmlApiFact, "getSiteVersion").and.returnValue(deferredWebExSiteVersionXml.promise);
+    spyOn(WebExXmlApiFact, "getUserInfo").and.returnValue(deferredWebExUserInfoXml.promise);
+    spyOn(WebExXmlApiFact, "getSiteInfo").and.returnValue(deferredWebExSiteInfoXml.promise);
+    spyOn(WebExXmlApiFact, "getMeetingTypeInfo").and.returnValue(deferredWebExMeetingTypeInfoXml.promise);
   }));
 
   it('can initialize user settings', inject(function (WebExUserSettingsFact) {
@@ -172,7 +170,6 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
 }); // describe()
 
 describe('WebExUserSettingsFact read-only admin tests', function () {
-  var $q;
   var $rootScope;
   var Notification;
   var deferredWebExReadOnlyXML;
@@ -181,17 +178,16 @@ describe('WebExUserSettingsFact read-only admin tests', function () {
   beforeEach(angular.mock.module('WebExApp'));
 
   beforeEach(inject(function (
-    _$q_,
+    $q,
     _$rootScope_,
     _WebExXmlApiFact_,
     _Notification_,
     _Authinfo_
   ) {
 
-    $q = _$q_;
     $rootScope = _$rootScope_;
 
-    deferredWebExReadOnlyXML = _$q_.defer();
+    deferredWebExReadOnlyXML = $q.defer();
     spyOn(_WebExXmlApiFact_, "updateUserSettings2").and.returnValue(deferredWebExReadOnlyXML.promise);
 
     Notification = _Notification_;

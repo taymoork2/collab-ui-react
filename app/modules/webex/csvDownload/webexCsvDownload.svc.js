@@ -14,7 +14,6 @@
   ) {
 
     var _this = this;
-    var objectUrl;
 
     this.getWebExCsv = function (
       fileDownloadUrl
@@ -32,13 +31,13 @@
           method: 'POST',
           // override transformResponse function to return JSON; otherwise, $resource
           // returns string array in the case of CSV file download
-          transformResponse: function (data, headers) {
-              var resultData = {
-                content: data
-              };
+          transformResponse: function (data) {
+            var resultData = {
+              content: data
+            };
 
-              return resultData;
-            } // transformResponse()
+            return resultData;
+          } // transformResponse()
         } // get
       }); // $resource()
 
