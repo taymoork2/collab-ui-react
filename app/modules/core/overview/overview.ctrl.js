@@ -112,6 +112,7 @@
         });
       }
     }
+
     function setEnableDevice(deviceEnabled) {
       (_.find(vm.cards, function (card) {
         return card.name === 'overview.cards.roomSystem.title';
