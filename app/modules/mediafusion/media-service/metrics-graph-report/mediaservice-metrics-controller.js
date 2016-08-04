@@ -2,7 +2,7 @@
   'use strict';
   angular.module('Mediafusion').controller('MediaServiceMetricsContoller', MediaServiceMetricsContoller);
   /* @ngInject */
-  function MediaServiceMetricsContoller($timeout, $log, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
+  function MediaServiceMetricsContoller($timeout, $translate, MediaClusterServiceV2, XhrNotificationService, MetricsReportService, MetricsGraphService, DummyMetricsReportService) {
     var vm = this;
     vm.ABORT = 'ABORT';
     vm.REFRESH = 'refresh';
@@ -269,27 +269,22 @@
           if (response === vm.ABORT) {
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0) {
-            $log.log("inside here");
             vm.onprem = 'N/A';
               vm.cloud = 'N/A';
               vm.total = 'N/A';
             } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
-              $log.log("inside here 1");
               vm.onprem = 'N/A';
               vm.cloud = response.data.callsOverflow;
               vm.total = vm.cloud;
             } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
-              $log.log("inside here 2");
               vm.onprem = response.data.callsOnPremise;
               vm.cloud = 'N/A';
               vm.total = vm.onprem;
             } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
-              $log.log("inside here 3");
               vm.onprem = 'N/A';
               vm.cloud = 'N/A';
               vm.total = 'N/A';
             } else {
-            $log.log("inside here 4");
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.onprem + vm.cloud;
@@ -299,27 +294,22 @@
           if (response === vm.ABORT) {
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0) {
-            $log.log("inside here");
             vm.onprem = 'N/A';
               vm.cloud = 'N/A';
               vm.total = 'N/A';
             } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
-              $log.log("inside here 1");
               vm.onprem = 'N/A';
               vm.cloud = response.data.callsRedirect;
               vm.total = vm.cloud;
             } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
-              $log.log("inside here 2");
               vm.onprem = response.data.callsOnPremise;
               vm.cloud = 'N/A';
               vm.total = vm.onprem;
             } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
-              $log.log("inside here 3");
               vm.onprem = 'N/A';
               vm.cloud = 'N/A';
               vm.total = 'N/A';
             } else {
-            $log.log("inside here 4");
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.onprem + vm.cloud;
