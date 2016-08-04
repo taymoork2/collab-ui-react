@@ -2,10 +2,11 @@
 
 describe('Auth Service', function () {
   beforeEach(angular.mock.module('core.auth'));
+  beforeEach(angular.mock.module('ngSanitize'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $sanitize, $q, OAuthConfig, UrlConfig, WindowLocation, TokenService;
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _TokenService_, _$rootScope_, _$sanitize_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
     $q = _$q_;
     Auth = _Auth_;
     Config = _Config_;
@@ -14,6 +15,7 @@ describe('Auth Service', function () {
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     $rootScope = _$rootScope_;
+    $sanitize = _$sanitize_;
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
@@ -211,20 +213,35 @@ describe('Auth Service', function () {
     var loggedOut = sinon.stub();
     Storage.clear = sinon.stub();
     SessionStorage.get = sinon.stub().returns('accessToken');
-    OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
-    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    OAuthConfig.getOauthListTokenUrl = sinon.stub().returns('OauthListTokenUrl');
+    OAuthConfig.getOauthDeleteRefreshTokenUrl = sinon.stub().returns('refreshtoken=');
 
     $httpBackend
-      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
-      .respond(200, {});
+      .expectGET('OauthListTokenUrl')
+      .respond(200, {
+        total: 1,
+        data: [{
+          device_type: null,
+          create_time: '2016-07-28 21:39:06',
+          client_id: 'ewvmpibn34inbr433f23f4',
+          last_used_time: '2016-07-28 21:39:06',
+          token_id: 'OauthDeleteRefreshTokenUrl',
+          client_name: 'Admin Portal'
+        }]
+      });
 
-    Auth.logoutAndRedirectTo('logoutUrl').then(loggedOut);
+    $httpBackend
+      .expectDELETE('refreshtoken=OauthDeleteRefreshTokenUrl')
+      .respond(204, 'No Content');
+
+    Auth.logoutAndRedirectTo().then(loggedOut);
 
     $httpBackend.flush();
 
     expect(loggedOut.callCount).toBe(1);
     expect(Storage.clear.callCount).toBe(1);
-    expect(WindowLocation.set).toHaveBeenCalledWith('logoutUrl');
+    expect(WindowLocation.set).toHaveBeenCalled();
   });
 
   it('should logout and redirect to the default logout url', function () {
