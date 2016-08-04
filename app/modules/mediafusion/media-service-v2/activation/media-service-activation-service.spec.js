@@ -54,6 +54,15 @@ describe('MediaServiceActivationV2', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
+  it('should set service acknowledged', function () {
+    var data = {
+      "acknowledged": true
+    };
+    $httpBackend.when('PATCH', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
+    Service.setServiceAcknowledged(extensionEntitlements[0], true);
+    expect($httpBackend.flush).not.toThrow();
+  });
+
   it('should set user identity org to media agent org id mapping', function () {
     var data = {
       "identityOrgId": "12345",

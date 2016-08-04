@@ -10,7 +10,7 @@
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
     vm.featureToggled = false;
-
+    //"acknowledged":false
     function isFeatureToggled() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }
@@ -21,6 +21,7 @@
     vm.disableMediaService = function (serviceId) {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
           if (vm.featureToggled) {
             $state.go('services-overview');

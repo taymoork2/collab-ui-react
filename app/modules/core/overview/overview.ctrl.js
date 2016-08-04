@@ -38,6 +38,8 @@
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+              } else if (item.id === Config.entitlements.mediafusion) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               }
             }
           });

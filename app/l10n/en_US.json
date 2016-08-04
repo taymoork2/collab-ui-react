@@ -1016,6 +1016,7 @@
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your Room System devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
+    "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
