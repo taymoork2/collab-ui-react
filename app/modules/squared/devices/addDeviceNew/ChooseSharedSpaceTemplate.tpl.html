@@ -61,10 +61,9 @@
 
   <div class="createNewPlace" ng-hide="choosePlace.isNewCollapsed">
     <form name="placeForm" class="createNewPlaceForm" onsubmit="$('#next-button').click()">
-      <h5 ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
-      <h5 ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
-      <p ng-hide="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.newPlaceInstructions"></p>
-      <p ng-show="choosePlace.onlyNew()" translate="addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions"></p>
+      <h5 ng-show="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.newPlace"></h5>
+      <h5 ng-hide="choosePlace.wizardData.showPlaces" translate="addDeviceWizard.chooseSharedSpace.deviceInstalled"></h5>
+      <p>{{ choosePlace.localizedCreateInstructions() }}</p>
       <div class="newPlaceSpacing" ng-show="choosePlace.onlyNew()"></div>
       <div class="cs-input-group" ng-class="{'error': placeForm.newPlace.$invalid && placeForm.newPlace.$touched}">
         <input
