@@ -50,8 +50,8 @@
 
     function setVoiceOption() {
       if (vm.voiceBackup && _.findWhere(vm.voiceOptions, {
-          "value": vm.voiceBackup.value
-        })) {
+        "value": vm.voiceBackup.value
+      })) {
         vm.voiceOption = vm.voiceBackup;
       } else if (_.findWhere(vm.voiceOptions, AALanguageService.getVoiceOption())) {
         vm.voiceOption = AALanguageService.getVoiceOption();

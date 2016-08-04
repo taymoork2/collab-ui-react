@@ -2,8 +2,8 @@
 
 describe('Controller: AASayMessageCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AALanguageService;
-  var $rootScope, $scope, $translate;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
+  var $rootScope, $scope;
 
   var aaUiModel = {
     openHours: {}
@@ -13,8 +13,6 @@ describe('Controller: AASayMessageCtrl', function () {
   var keyIndex = '0';
   var valueInput = 'This is another test.';
   var voice = 'Tom';
-
-  var phoneMenuData = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
   function getBasePhoneMenuWithHeader() {
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
@@ -46,16 +44,12 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
+  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $translate = _$translate_;
 
     AAUiModelService = _AAUiModelService_;
-    AutoAttendantCeService = _AutoAttendantCeService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    AALanguageService = _AALanguageService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
@@ -237,7 +231,7 @@ describe('Controller: AASayMessageCtrl', function () {
 
       // setup the options menu
       AutoAttendantCeMenuModelService.clearCeMenuMap();
-      var menu = getBasePhoneMenuWithHeader();
+      getBasePhoneMenuWithHeader();
       controller = $controller('AASayMessageCtrl', {
         $scope: $scope
       });

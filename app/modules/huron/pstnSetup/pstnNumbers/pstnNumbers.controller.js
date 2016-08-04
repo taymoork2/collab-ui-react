@@ -261,15 +261,15 @@
 
     function addToCart(type) {
       switch (type) {
-      case NUMBER_ORDER:
-        addToOrder();
-        break;
-      case PORT_ORDER:
-        addPortNumbersToOrder();
-        break;
-      case BLOCK_ORDER:
-        addAdvancedOrder();
-        break;
+        case NUMBER_ORDER:
+          addToOrder();
+          break;
+        case PORT_ORDER:
+          addPortNumbersToOrder();
+          break;
+        case BLOCK_ORDER:
+          addAdvancedOrder();
+          break;
       }
     }
 
@@ -351,16 +351,16 @@
 
     function formatTelephoneNumber(telephoneNumber) {
       switch (_.get(telephoneNumber, 'type')) {
-      case NUMBER_ORDER:
-        return getCommonPattern(telephoneNumber.data.numbers);
-      case PORT_ORDER:
-        return PORTING_NUMBERS;
-      case BLOCK_ORDER:
-        return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
-      case undefined:
-        return getCommonPattern(telephoneNumber);
-      default:
-        return;
+        case NUMBER_ORDER:
+          return getCommonPattern(telephoneNumber.data.numbers);
+        case PORT_ORDER:
+          return PORTING_NUMBERS;
+        case BLOCK_ORDER:
+          return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
+        case undefined:
+          return getCommonPattern(telephoneNumber);
+        default:
+          return;
       }
     }
 
@@ -521,14 +521,14 @@
 
     function getOrderQuantity(order) {
       switch (_.get(order, 'type')) {
-      case NUMBER_ORDER:
-        return order.data.numbers.length;
-      case PORT_ORDER:
-        return order.data.numbers.length;
-      case BLOCK_ORDER:
-        return order.data.length;
-      case undefined:
-        return;
+        case NUMBER_ORDER:
+          return order.data.numbers.length;
+        case PORT_ORDER:
+          return order.data.numbers.length;
+        case BLOCK_ORDER:
+          return order.data.length;
+        case undefined:
+          return;
       }
     }
 

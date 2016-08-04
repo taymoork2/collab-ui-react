@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $controller, $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService, FeatureToggleService;
+  var controller, $controller, $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
 
@@ -764,14 +764,14 @@ describe('Controller: ServiceSetup', function () {
 
     it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
       controller.hideFieldInternalNumberRange = false;
-      var promise = controller.initNext();
+      controller.initNext();
       $scope.$apply();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
     });
 
     it('should call not createInternalNumberRange() if hideFieldInternalNumberRange is true', function () {
       controller.hideFieldInternalNumberRange = true;
-      var promise = controller.initNext();
+      controller.initNext();
       $scope.$apply();
       expect(ServiceSetup.createInternalNumberRange).not.toHaveBeenCalled();
     });

@@ -3,9 +3,7 @@
 describe('Controller: AARouteToExtNumCtrl', function () {
   var $controller;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
-  var $rootScope, $scope, $translate;
-
-  var $q;
+  var $rootScope, $scope;
 
   var aaModel = {
 
@@ -48,11 +46,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $q = _$q_;
 
     $controller = _$controller_;
     AAModelService = _AAModelService_;

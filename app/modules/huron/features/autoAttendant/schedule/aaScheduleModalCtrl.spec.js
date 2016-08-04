@@ -3,9 +3,8 @@
 describe('Controller: AAScheduleModalCtrl', function () {
   var AANotificationService, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $scope, $translate, $modalInstance, $controller, $modal, $timeout;
+  var $scope, $modalInstance, $controller, $modal, $timeout;
   var ical;
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
   var aaModel, aaUiModel, aaModelWithScheduleId, holidays, starttime, endtime, openhours, controller;
 
@@ -55,8 +54,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
-    $translate = _$translate_;
+  beforeEach(inject(function (_ical_, $q, _$controller_, _$modal_, $rootScope, _$timeout_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $scope = $rootScope.$new();
     ical = _ical_;
     $controller = _$controller_;
