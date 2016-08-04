@@ -23,6 +23,15 @@
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
+    vm.hasMediaFeatureToggle = false;
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.hasMediaFeatureToggle = reply;
+    });
+
     function init() {
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -38,6 +47,8 @@
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               }
             }
           });

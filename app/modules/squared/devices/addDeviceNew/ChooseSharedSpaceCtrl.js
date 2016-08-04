@@ -18,6 +18,16 @@
     vm.radioSelect = null;
     vm.isLoading = false;
 
+    vm.localizedCreateInstructions = function () {
+      if (!vm.wizardData.showPlaces) {
+        return $translate.instant('addDeviceWizard.chooseSharedSpace.deviceInstalledInstructions');
+      }
+      if (vm.onlyNew()) {
+        return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceOnlyInstructions');
+      }
+      return $translate.instant('addDeviceWizard.chooseSharedSpace.newPlaceInstructions');
+    };
+
     vm.rooms = function () {
       if (vm.wizardData.showPlaces) {
         var placesList = CsdmPlaceService.getPlacesList();
