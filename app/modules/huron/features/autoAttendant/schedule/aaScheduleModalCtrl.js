@@ -356,7 +356,8 @@
 
     function saveTimeZone() {
       if (vm.timeZoneForm && !vm.timeZoneForm.$pristine) {
-        if (angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+        if ((vm.ui.isClosedHours || vm.ui.isHolidays) &&
+          angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
           // log event for first-time timezone change in a schedule
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {

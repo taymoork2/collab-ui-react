@@ -102,7 +102,9 @@ describe('Controller: AAScheduleModalCtrl', function () {
       timeZone: {
         id: 'America/Los_Angeles',
         label: 'America/Los_Angeles'
-      }
+      },
+      isClosedHours: true,
+      isHolidays: false
     };
     starttime = "08:00 AM";
     endtime = "05:00 PM";
@@ -499,6 +501,18 @@ describe('Controller: AAScheduleModalCtrl', function () {
         $pristine: false
       };
       controller.aaModel.aaRecord.assignedTimeZone = aaUiModel.timeZone.id;
+
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+    });
+
+    it('should NOT log a timezone event for 24 Hours schedule', function () {
+      controller.timeZoneForm = {
+        $pristine: false
+      };
+      controller.ui.isClosedHours = false;
+      controller.ui.isHolidays = false;
 
       controller.saveTimeZone();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
