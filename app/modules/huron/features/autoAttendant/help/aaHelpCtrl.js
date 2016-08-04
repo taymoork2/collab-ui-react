@@ -6,7 +6,7 @@
     .controller('AAHelpCtrl', AAHelpCtrl);
 
   /* @ngInject */
-  function AAHelpCtrl($scope, $translate, Config) {
+  function AAHelpCtrl($scope, $translate, Config, AAMetricNameService, Analytics) {
 
     var vm = this;
 
@@ -14,12 +14,14 @@
     vm.showLink = false;
     vm.trigger = "focus";
     vm.placement = "auto right";
+    vm.metric = "";
 
     vm.optionHelp = $translate.instant("autoAttendant.aaHelpFAQ");
     vm.helpUrlAATag = Config.helpUrl + "/tags#/?tags=auto%20attendant";
     vm.optionHelpLink = "<a href='" + vm.helpUrlAATag + "' target='blank'>" + vm.helpUrlAATag + "</a>";
 
     vm.getHelpText = getHelpText;
+    vm.sendMetrics = sendMetrics;
 
     /////////////////////
 
@@ -37,9 +39,18 @@
       return helpText;
     }
 
+    function sendMetrics() {
+      if (vm.metric) {
+        Analytics.trackEvent(AAMetricNameService.UI_HELP, {
+          type: vm.metric
+        });
+      }
+    }
+
     function activate() {
       vm.content = $scope.content;
       vm.showLink = $scope.showLink;
+      vm.metric = $scope.metric;
     }
 
     activate();

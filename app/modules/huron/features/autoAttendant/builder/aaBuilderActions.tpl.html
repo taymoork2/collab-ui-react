@@ -4,7 +4,7 @@
     <div class="aa-panel-body">
       <div class="aa-flex-row">
         <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
-        <aa-help content="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}"></aa-help>
+        <aa-help content="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}" metric="autoAttendant.builderNewStepHelp"></aa-help>
         <div class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>
@@ -16,7 +16,7 @@
       </div>
       <div class="aa-flex-row">
         <cs-select ng-model="actions.option" options="actions.options" labelfield="title" placeholder="actions.actionPlaceholder" icon="icon-chevron-down" id="actionSelect{{schedule + index}}" on-change-fn="actions.selectOption()"></cs-select>
-        <aa-help content="{{ :: actions.getSelectHint() }}"></aa-help>
+        <aa-help content="{{ :: actions.getSelectHint() }}" metric="builderActionsHint"></aa-help>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <div class="aa-panel-body" name="{{actions.option.title}}">
       <div class="aa-flex-row">
         <h3 class="text-info" translate="{{actions.option.title}}"></h3>
-        <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink"></aa-help>
+        <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink" metric="{{ :: actions.option.metric }}"></aa-help>
         <div class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>
