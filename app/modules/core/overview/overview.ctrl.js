@@ -74,12 +74,17 @@
                   });
                 });
               });
-              if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-              } else if (sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-              } else if (sharedDevicesUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+              if (sharedDevicesUsage === 0 || sparkBoardsUsage === 0) {
+                setEnableDevice(true);
+                if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+                } else if (sparkBoardsUsage === 0) {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+                } else {
+                  vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
+                }
+              } else {
+                setEnableDevice(false);
               }
             });
         }
@@ -95,6 +100,11 @@
           name: 'overview.cards.users.title'
         });
       }
+    }
+    function setEnableDevice(deviceEnabled) {
+      (_.find(vm.cards, function (card) {
+        return card.name === 'overview.cards.roomSystem.title';
+      })).isDeviceEnabled = deviceEnabled;
     }
 
     function dismissNotification(notification) {

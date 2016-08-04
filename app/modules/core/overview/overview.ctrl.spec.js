@@ -10,6 +10,7 @@ describe('Controller: OverviewCtrl', function () {
   var controller, $rootScope, $scope, $q, $state, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, OverviewNotificationFactory, ReportsService, ServiceDescriptor, ServiceStatusDecriptor, TrialService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var usageJSONFixture = getJSONFixture('core/json/organizations/usage.json');
+  var usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
   var services = getJSONFixture('squared/json/services.json');
 
   describe('Wire up', function () {
@@ -32,6 +33,18 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should have properly set trialDaysLeft', function () {
       expect(controller.trialDaysLeft).toEqual(1);
+    });
+  });
+
+  describe('Enable Devices', function () {
+    beforeEach(function () {
+      Orgservice.getAdminOrgUsage = jasmine.createSpy().and.returnValue($q.when(usageOnlySharedDevicesFixture));
+      inject(defaultWireUpFunc);
+    });
+
+    it('should call do something', function () {
+      var roomSystemsCard = getCard('overview.cards.roomSystem.title');
+      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy;
     });
   });
 

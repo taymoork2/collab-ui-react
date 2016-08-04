@@ -4588,6 +4588,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
+        "enableDevices": "Enable Devices",
         "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
