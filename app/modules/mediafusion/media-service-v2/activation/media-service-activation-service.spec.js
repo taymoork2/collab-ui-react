@@ -1,6 +1,6 @@
 'use strict';
 
-describe('MediaServiceDescriptor', function () {
+describe('MediaServiceActivationV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
 
@@ -19,8 +19,8 @@ describe('MediaServiceDescriptor', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaServiceDescriptor_) {
-    Service = _MediaServiceDescriptor_;
+  beforeEach(inject(function ($injector, _MediaServiceActivationV2_) {
+    Service = _MediaServiceActivationV2_;
     $httpBackend = $injector.get('$httpBackend');
   }));
 
