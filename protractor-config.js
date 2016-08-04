@@ -3,7 +3,6 @@
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
-var touch = require('touch');
 var fs = require('fs');
 var appConfig = require('./config/config');
 var processEnvUtil = require('./utils/processEnvUtil')();
@@ -17,7 +16,7 @@ var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
 // - and at the end of each spec run, a connection back to sauce is made to report results
 var agent = mkProxyAgent();
 
-var TIMEOUT      = 1000 * 60;
+var TIMEOUT = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
@@ -67,7 +66,7 @@ exports.config = {
   // with relative paths will be prepended with this.
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
-  onPrepare: function() {
+  onPrepare: function () {
     browser.ignoreSynchronization = true;
 
     global.isProductionBackend = !!args.productionBackend;
@@ -115,7 +114,6 @@ exports.config = {
     var FirstTimeWizard = require('./test/e2e-protractor/pages/wizard.page.js');
     var ServiceSetup = require('./test/e2e-protractor/pages/servicesetup.page.js');
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
-    var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var WebExUserSettingsPage = require('./test/e2e-protractor/pages/webexusersettings.page.js');
     var WebExSiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
     var WebExSiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
@@ -228,7 +226,7 @@ exports.config = {
 
         this.specDone = function (spec) {
           if (spec.status === 'failed' && !args.nofailfast) {
-              disableSpecs();
+            disableSpecs();
           }
         };
       }
@@ -243,7 +241,7 @@ exports.config = {
     onComplete: null,
     isVerbose: true,
     showColors: true,
-    print: function() {},
+    print: function () {},
     includeStackTrace: true,
     defaultTimeoutInterval: VERY_LONG_TIMEOUT
   },
@@ -275,7 +273,7 @@ function Logger() {
   return log;
 }
 
-function mkProxyAgent () {
+function mkProxyAgent() {
   if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
     return;
   }

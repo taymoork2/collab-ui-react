@@ -9,20 +9,20 @@ runProtractor();
 function runProtractor() {
   if (args.filesFrom) {
     try {
-    args.specs = fileListParser.toList(args.filesFrom);
-    delete args.suite; // if running a suite previously
+      args.specs = fileListParser.toList(args.filesFrom);
+      delete args.suite; // if running a suite previously
     } catch (err) {
       console.log('Failed to read tests from file', args.filesFrom);
     }
   }
   if (_.isString(args.specs)) {
-      args.specs = processFilePatterns_(args.specs);
+    args.specs = processFilePatterns_(args.specs);
   }
   protractorLauncher.init('./protractor-config.js', args);
 }
 
 function processFilePatterns_(list) {
   return list.split(',').map(function (spec) {
-      return path.resolve(process.cwd(), spec);
+    return path.resolve(process.cwd(), spec);
   });
 }
