@@ -136,7 +136,7 @@
         function success() {
           vm.enableOrpheusForMediaFusion();
         },
-        function error(data, status) {
+        function error() {
           Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
@@ -168,7 +168,7 @@
           }
         },
 
-        function error(errorResponse, status) {
+        function error() {
           // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
           var mediaAgentOrgIdsArray = [];
           mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
@@ -179,8 +179,8 @@
 
     vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success(response) {},
-        function error(errorResponse, status) {
+        function success() {},
+        function error(errorResponse) {
           Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
             failureMessage: errorResponse.message
           });

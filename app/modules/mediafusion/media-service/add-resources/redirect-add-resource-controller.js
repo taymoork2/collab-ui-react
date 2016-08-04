@@ -49,7 +49,7 @@
     }
     vm.getClusters();
 
-    function addRedirectTargetClicked(hostName, enteredCluster) {
+    function addRedirectTargetClicked(hostName) {
       RedirectTargetService.addRedirectTarget(hostName).then(function () {
 
         if (vm.onlineClusterList.indexOf(hostName) > -1) {

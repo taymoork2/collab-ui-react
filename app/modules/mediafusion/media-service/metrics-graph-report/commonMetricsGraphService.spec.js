@@ -8,8 +8,6 @@ describe('Service: Common  Metrics Graph Service', function () {
   var AXIS = 'axis';
   var LEGEND = 'legend';
   var NUMFORMAT = 'numFormat';
-  var SMOOTHLINED = 'smoothedLine';
-  var GUIDEAXIS = 'guideaxis';
   var BALLOON = 'balloon';
   var EXPORT = 'export';
   var PREFIXES = 'prefixesOfBigNumbers';

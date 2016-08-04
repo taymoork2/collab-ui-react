@@ -18,7 +18,7 @@
       vm.featureToggled = reply;
     });
 
-    vm.disableMediaService = function (serviceId) {
+    vm.disableMediaService = function () {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
           vm.disableOrpheusForMediaFusion();
@@ -32,7 +32,7 @@
             });
           }
         },
-        function error(data, status) {
+        function error() {
           XhrNotificationService.notify(error);
         });
     };
@@ -63,16 +63,16 @@
 
           if (mediaAgentOrgIdsArray.length > 0) {
             MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });
               });
           } else {
             MediaServiceActivationV2.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });

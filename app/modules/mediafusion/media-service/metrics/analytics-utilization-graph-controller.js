@@ -70,7 +70,7 @@
     //vm.optionsCluster = 'GraphCtrl.clusterData';
 
     function getClusters() {
-      MediaFusionAnalyticsService.getClusters(function (data, status) {
+      MediaFusionAnalyticsService.getClusters(function (data) {
         if (data.success) {
           vm.clusterData = data;
           _.each(data, function (clusterData) {
@@ -85,7 +85,7 @@
     }
 
     function getClustersOnly() {
-      MediaFusionAnalyticsService.getClusters(function (data, status) {
+      MediaFusionAnalyticsService.getClusters(function (data) {
         if (data.success) {
           vm.clusterData = data;
           _.each(data, function (clusterData) {
@@ -100,7 +100,7 @@
     }
 
     function getHosts() {
-      MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data, status) {
+      MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data) {
         if (data.success) {
           vm.hostData = data;
           vm.optionsHost = [
@@ -118,7 +118,7 @@
     }
 
     function getHostsOnly() {
-      MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data, status) {
+      MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data) {
         if (data.success) {
           vm.hostData = data;
           vm.optionsHost = [
@@ -206,7 +206,7 @@
     };
 
     function getActiveMediaCounts(cluster, starttime, endtime) {
-      MediaFusionAnalyticsService.getActiveMediaCount(cluster, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getActiveMediaCount(cluster, starttime, endtime, function (data) {
         if (data.success) {
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
@@ -215,7 +215,7 @@
     }
 
     function getActiveMediaCountForHost(cluster, hostname, starttime, endtime) {
-      MediaFusionAnalyticsService.getActiveMediaCountForHost(cluster, hostname, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getActiveMediaCountForHost(cluster, hostname, starttime, endtime, function (data) {
         if (data.success) {
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
@@ -224,7 +224,7 @@
     }
 
     function getRelativeTimeActiveMediaCount(cluster, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeActiveMediaCount(cluster, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeActiveMediaCount(cluster, relativetime, function (data) {
         if (data.success) {
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
@@ -233,7 +233,7 @@
     }
 
     function getRelativeTimeActiveMediaCountForHost(cluster, hostname, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeActiveMediaCountForHost(cluster, hostname, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeActiveMediaCountForHost(cluster, hostname, relativetime, function (data) {
         if (data.success) {
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
@@ -296,7 +296,7 @@
     }
 
     function getClusterAvailability(cluster, starttime, endtime) {
-      MediaFusionAnalyticsService.getClusterAvailability(cluster, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getClusterAvailability(cluster, starttime, endtime, function (data) {
         if (data.success) {
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
@@ -305,7 +305,7 @@
     }
 
     function getClusterAvailabilityForHost(cluster, hostname, starttime, endtime) {
-      MediaFusionAnalyticsService.getClusterAvailabilityForHost(cluster, hostname, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getClusterAvailabilityForHost(cluster, hostname, starttime, endtime, function (data) {
         if (data.success) {
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
@@ -314,7 +314,7 @@
     }
 
     function getRelativeTimeClusterAvailability(cluster, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeClusterAvailability(cluster, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeClusterAvailability(cluster, relativetime, function (data) {
         if (data.success) {
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
@@ -323,7 +323,7 @@
     }
 
     function getRelativeTimeClusterAvailabilityForHost(cluster, hostname, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeClusterAvailabilityForHost(cluster, hostname, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeClusterAvailabilityForHost(cluster, hostname, relativetime, function (data) {
         if (data.success) {
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
@@ -386,7 +386,7 @@
     }
 
     function getCallRejects(cluster, starttime, endtime) {
-      MediaFusionAnalyticsService.getCallReject(cluster, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getCallReject(cluster, starttime, endtime, function (data) {
         if (data.success) {
           vm.cpuCallReject = data[0].values;
           plotCallReject();
@@ -396,7 +396,7 @@
     }
 
     function getCallRejectsForHost(cluster, hostname, starttime, endtime) {
-      MediaFusionAnalyticsService.getCallRejectForHost(cluster, hostname, starttime, endtime, function (data, status) {
+      MediaFusionAnalyticsService.getCallRejectForHost(cluster, hostname, starttime, endtime, function (data) {
         if (data.success) {
           vm.cpuCallReject = data[0].values;
           plotCallReject();
@@ -405,7 +405,7 @@
     }
 
     function getRelativeTimeCallReject(cluster, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeCallReject(cluster, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeCallReject(cluster, relativetime, function (data) {
         if (data.success) {
           vm.cpuCallReject = data[0].values;
           plotCallReject();
@@ -414,7 +414,7 @@
     }
 
     function getRelativeTimeCallRejectForHost(cluster, hostname, relativetime) {
-      MediaFusionAnalyticsService.getRelativeTimeCallRejectForHost(cluster, hostname, relativetime, function (data, status) {
+      MediaFusionAnalyticsService.getRelativeTimeCallRejectForHost(cluster, hostname, relativetime, function (data) {
         if (data.success) {
           vm.cpuCallReject = data[0].values;
           plotCallReject();
