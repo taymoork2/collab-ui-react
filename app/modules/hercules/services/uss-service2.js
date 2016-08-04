@@ -30,15 +30,15 @@
         return 'not_entitled';
       }
       switch (status.state) {
-      case 'error':
-        return 'error';
-      case 'deactivated':
-      case 'notActivated':
-        return 'pending_activation';
-      case 'activated':
-        return 'activated';
-      default:
-        return 'unknown';
+        case 'error':
+          return 'error';
+        case 'deactivated':
+        case 'notActivated':
+          return 'pending_activation';
+        case 'activated':
+          return 'activated';
+        default:
+          return 'unknown';
       }
     }
 
@@ -46,7 +46,7 @@
       return getStatusesForUserInOrg(userId, Authinfo.getOrgId());
     }
 
-    function getStatusesForUserInOrg(userId, orgId) {
+    function getStatusesForUserInOrg(userId) {
       return $http
         .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
         .then(function (res) {

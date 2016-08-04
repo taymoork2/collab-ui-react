@@ -25,26 +25,26 @@
     function mapStateToSeverity(state) {
       var value = 0;
       switch (state) {
-      case 'running':
-        break;
-      case 'not_installed':
-        value = 1;
-        break;
-      case 'disabled':
-      case 'downloading':
-      case 'installing':
-      case 'not_configured':
-      case 'uninstalling':
-      case 'registered':
-        value = 2;
-        break;
-      case 'not_operational':
-      case 'has_alarms':
-      case 'offline':
-      case 'stopped':
-      case 'unknown':
-      default:
-        value = 3;
+        case 'running':
+          break;
+        case 'not_installed':
+          value = 1;
+          break;
+        case 'disabled':
+        case 'downloading':
+        case 'installing':
+        case 'not_configured':
+        case 'uninstalling':
+        case 'registered':
+          value = 2;
+          break;
+        case 'not_operational':
+        case 'has_alarms':
+        case 'offline':
+        case 'stopped':
+        case 'unknown':
+        default:
+          value = 3;
       }
       return value;
     }
@@ -72,18 +72,18 @@
     function getSeverityLabel(value) {
       var label = '';
       switch (value) {
-      case 0:
-        label = 'ok';
-        break;
-      case 1:
-        label = 'unknown';
-        break;
-      case 2:
-        label = 'warning';
-        break;
-      case 3:
-        label = 'error';
-        break;
+        case 0:
+          label = 'ok';
+          break;
+        case 1:
+          label = 'unknown';
+          break;
+        case 2:
+          label = 'warning';
+          break;
+        case 3:
+          label = 'error';
+          break;
       }
       return label;
     }
