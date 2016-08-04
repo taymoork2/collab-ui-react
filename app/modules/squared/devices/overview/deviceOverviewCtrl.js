@@ -139,9 +139,9 @@
       }
 
       uploadLogsPromise.then(function () {
-          var appType = 'Atlas_' + $window.navigator.userAgent;
-          return FeedbackService.getFeedbackUrl(appType, feedbackId);
-        })
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        return FeedbackService.getFeedbackUrl(appType, feedbackId);
+      })
         .then(function (res) {
           $window.open(res.data.url, '_blank');
         })

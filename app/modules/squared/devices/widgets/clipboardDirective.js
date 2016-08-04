@@ -14,13 +14,13 @@
       scope: {
         sqClipboard: '&'
       },
-      link: function ($scope, $element, $attr) {
+      link: function ($scope, $element) {
         if (!$window.document.queryCommandSupported('copy')) {
           $element.remove();
           return;
         }
         var clipBoard = new Clipboard($element[0], {
-          text: function (trigger) {
+          text: function () {
             return $scope.sqClipboard();
           }
         });
