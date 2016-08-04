@@ -125,13 +125,31 @@
         filterValue: filter
       });
 
+      var cardsFilteredByStartRange = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: "!" + filterText,
+        startRange: filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByEndRange = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: "!" + filterText,
+        startRange: "!" + filterText,
+        endRange: filterText,
+        filterValue: filter
+      });
+
       var cardsFilteredByMemberCount = $filter('filter')(list, {
         cardName: "!" + filterText,
         numbers: "!" + filterText,
+        startRange: "!" + filterText,
+        endRange: "!" + filterText,
         memberCount: filterText,
         filterValue: filter
       });
-      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount));
+
+      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByStartRange, cardsFilteredByEndRange, cardsFilteredByMemberCount));
     }
 
     function orderByCardName(list) {

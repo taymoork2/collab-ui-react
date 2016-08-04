@@ -2240,7 +2240,22 @@
     "successSave": "'{{callParkName}}' call park has been created successfully",
     "successUpdate": "'{{callParkName}}' call park has been updated successfully",
     "errorSave": "Failed to create the '{{callParkName}}' Call Park",
-    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park",
+    "invalidMember": "Select at least one member",
+    "nameLabel": "Call Park Name",
+    "nameDesc": "The call park name appears on the call park members' devices",
+    "numberLabel": "Call Park Number",
+    "numberDesc": "Select a single extension number or number range",
+    "memberLabel": "Call Park Members",
+    "memberDesc": "These users or places' devices will be part of this call park",
+    "memberPlaceholder": "Search & Add Members",
+    "reversionLabel": "Call Reversion Rule",
+    "reversionDesc": "If the call is not answered, send it to this destination",
+    "personWhoParked": "Person who parked the call",
+    "firstRange": "First Range",
+    "secondRange": "Second Range",
+    "saveLabel": "Do you want to save your changes?",
+    "memberFetchFailure": "Unable to get members."
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -4481,7 +4496,7 @@
     "continueButton": "Continue Creation",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
-    "invalidMember": "Select atleast one member",
+    "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "digitalRiver": {
