@@ -44,7 +44,7 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should call do something', function () {
       var roomSystemsCard = getCard('overview.cards.roomSystem.title');
-      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy;
+      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy();
     });
   });
 
