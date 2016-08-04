@@ -34,6 +34,8 @@
       }
     };
 
+    vm.hasRooms = vm.rooms() && vm.rooms().length > 0;
+
     vm.selectPlace = function ($item) {
       vm.place = $item;
       vm.deviceName = $item.displayName;
@@ -63,7 +65,7 @@
       }),
       max: $translate.instant('common.invalidMaxLength', {
         'max': maxlength
-      }),
+      })
     };
     vm.isNameValid = function () {
       if (vm.place) {
@@ -106,7 +108,7 @@
           .then(success, error);
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
-          CsdmPlaceService.createPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmPlaceService.createCsdmPlace(vm.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmCodeService
               .createCodeForExisting(place.cisUuid)

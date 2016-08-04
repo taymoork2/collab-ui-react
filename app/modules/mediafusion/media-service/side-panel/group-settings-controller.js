@@ -27,7 +27,6 @@
     } else {
       MediaClusterService.getGroups().then(function (group) {
         _.each(group, function (group) {
-          // $log.log("grp ", group.properties["fms.releaseChannel"]);
           if (angular.equals(group.name, vm.dispName)) {
             vm.selected = group.properties["fms.releaseChannel"];
           }

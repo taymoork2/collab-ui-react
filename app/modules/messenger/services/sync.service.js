@@ -365,7 +365,7 @@
           newSyncString = primaryKey + syncStringFromServer.substr(indexSemicolon, syncStringFromServer.length - 1);
         }
         params = {
-          ciSyncMode: syncStringFromServer,
+          ciSyncMode: newSyncString,
           authRedirect: syncStatus.isAuthRedirect
         };
       }

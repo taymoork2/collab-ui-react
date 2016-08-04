@@ -94,6 +94,7 @@
     vm.wizardNextLoad = false;
 
     vm.firstTimeSetup = true;
+    vm.showSkipTabBtn = false;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -383,6 +384,9 @@
       } else {
         vm.nextText = $translate.instant('common.next');
       }
+
+      // enable/disable skip tab button
+      vm.showSkipTabBtn = (isFirstTime() && vm.current.tab.name === 'addUsers');
     }
 
     $scope.$on('wizardNextButtonDisable', function (event, status) {
@@ -391,7 +395,7 @@
     });
 
     function openTermsAndConditions() {
-      var modalInstance = $modal.open({
+      $modal.open({
         templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html'
       });
     }

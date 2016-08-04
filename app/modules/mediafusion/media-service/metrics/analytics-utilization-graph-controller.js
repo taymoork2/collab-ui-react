@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, $stateParams, $log) {
+  function AnalyticsUtilizationGraphController(MediaFusionAnalyticsService, $stateParams) {
 
     var vm = this;
     vm.clusterName = 'default-cluster-name';
@@ -75,15 +75,11 @@
           vm.clusterData = data;
           _.each(data, function (clusterData) {
             vm.optionsCluster.push(clusterData.name);
-            //$log.log("value of cluster" + clusterData.name);
           });
           vm.selectPlaceholderCluster = vm.optionsCluster[0];
           vm.selectedCluster = vm.optionsCluster[0];
           plotGraphForCluster();
           getHosts(vm.selectedCluster);
-          //$log.log("the value of clusterData 1 is" + vm.clusterData);
-        } else {
-          $log.debug('Status: ' + status);
         }
       });
     }
@@ -94,22 +90,17 @@
           vm.clusterData = data;
           _.each(data, function (clusterData) {
             vm.optionsCluster.push(clusterData.name);
-            //$log.log("value of cluster" + clusterData.name);
           });
           vm.selectPlaceholderCluster = vm.optionsCluster[0];
           vm.selectedCluster = vm.clusterName;
           //plotGraphForCluster();
           getHostsOnly(vm.selectedCluster);
-          //$log.log("the value of clusterData 1 is" + vm.clusterData);
-        } else {
-          $log.debug('Status: ' + status);
         }
       });
     }
 
     function getHosts() {
       MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data, status) {
-        //$log.log("selectedCluster" + vm.selectedCluster);
         if (data.success) {
           vm.hostData = data;
           vm.optionsHost = [
@@ -118,21 +109,16 @@
           _.each(data, function (hostData) {
 
             vm.optionsHost.push(hostData.name);
-            //$log.log("value of host" + vm.optionsHost);
           });
           vm.selectPlaceholderHost = vm.optionsHost[0];
           vm.selectedHost = vm.optionsHost[0];
           plotGraphForHost();
-          //$log.log("the value of hostData 1 is" + vm.hostData);
-        } else {
-          $log.debug('Status: ' + status);
         }
       });
     }
 
     function getHostsOnly() {
       MediaFusionAnalyticsService.getHosts(vm.selectedCluster, function (data, status) {
-        //$log.log("selectedCluster" + vm.selectedCluster);
         if (data.success) {
           vm.hostData = data;
           vm.optionsHost = [
@@ -141,21 +127,14 @@
           _.each(data, function (hostData) {
 
             vm.optionsHost.push(hostData.name);
-            //$log.log("value of host" + vm.optionsHost);
           });
           vm.selectPlaceholderHost = vm.optionsHost[0];
           vm.selectedHost = vm.optionsHost[0];
-          //$log.log("the value of hostData 1 is" + vm.hostData);
-        } else {
-          $log.debug('Status: ' + status);
         }
       });
     }
 
     function plotGraphForCluster() {
-      //$log.log("plot plotGraphForCluster called");
-      //$log.log("the value of cluster is " + vm.selectedCluster);
-      //$log.log("the value of time is " + vm.selectedTime);
       getRelativeTimeActiveMediaCount(vm.selectedCluster, vm.selectedTime);
       getRelativeTimeClusterAvailability(vm.selectedCluster, vm.selectedTime);
       getRelativeTimeCallReject(vm.selectedCluster, vm.selectedTime);
@@ -163,9 +142,6 @@
     }
 
     function plotGraphForHost() {
-      //$log.log("plot plotGraphForHost called");
-      //$log.log("the value of host is " + vm.selectedHost);
-      //$log.log("the value of time is " + vm.selectedTime);
       if (vm.selectedTime !== 'select') {
         if (vm.selectedHost != 'Cluster') {
           getRelativeTimeClusterAvailabilityForHost(vm.selectedCluster, vm.selectedHost, vm.selectedTime);
@@ -205,10 +181,6 @@
     }
 
     vm.changeDate = function () {
-
-      //$log.log(" cluster is " + vm.fromDate);
-      //$log.log(" time is " + vm.toDate);
-
       var date1 = new Date(vm.fromDate).getTime();
       var date2 = new Date(vm.toDate).getTime();
       var diff = date2 - date1;
@@ -218,13 +190,11 @@
         vm.dateRange = false;
 
         if (vm.selectedHost != 'Cluster') {
-          $log.log(" cluster is " + vm.selectedHost);
           getActiveMediaCountForHost(vm.selectedCluster, vm.selectedHost, vm.fromDate, vm.toDate);
           getClusterAvailabilityForHost(vm.selectedCluster, vm.selectedHost, vm.fromDate, vm.toDate);
           getCallRejectsForHost(vm.selectedCluster, vm.selectedHost, vm.fromDate, vm.toDate);
           vm.selectedTime = 'select';
         } else {
-          $log.log(" cluster is " + vm.selectedHost);
           getActiveMediaCounts(vm.selectedCluster, vm.fromDate, vm.toDate);
           getClusterAvailability(vm.selectedCluster, vm.fromDate, vm.toDate);
           getCallRejects(vm.selectedCluster, vm.fromDate, vm.toDate);
@@ -236,66 +206,38 @@
     };
 
     function getActiveMediaCounts(cluster, starttime, endtime) {
-
       MediaFusionAnalyticsService.getActiveMediaCount(cluster, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getActiveMediaCountForHost(cluster, hostname, starttime, endtime) {
-
       MediaFusionAnalyticsService.getActiveMediaCountForHost(cluster, hostname, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getRelativeTimeActiveMediaCount(cluster, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeActiveMediaCount(cluster, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getRelativeTimeActiveMediaCountForHost(cluster, hostname, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeActiveMediaCountForHost(cluster, hostname, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.activeMediaCount = data[0].values;
           plotActiveMediaCount();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
@@ -354,66 +296,38 @@
     }
 
     function getClusterAvailability(cluster, starttime, endtime) {
-
       MediaFusionAnalyticsService.getClusterAvailability(cluster, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getClusterAvailabilityForHost(cluster, hostname, starttime, endtime) {
-
       MediaFusionAnalyticsService.getClusterAvailabilityForHost(cluster, hostname, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getRelativeTimeClusterAvailability(cluster, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeClusterAvailability(cluster, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getRelativeTimeClusterAvailabilityForHost(cluster, hostname, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeClusterAvailabilityForHost(cluster, hostname, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.availabilityCount = data[0].values;
           plotClusterAvailability();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
@@ -472,67 +386,39 @@
     }
 
     function getCallRejects(cluster, starttime, endtime) {
-
       MediaFusionAnalyticsService.getCallReject(cluster, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.cpuCallReject = data[0].values;
           plotCallReject();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
       });
 
     }
 
     function getCallRejectsForHost(cluster, hostname, starttime, endtime) {
-
       MediaFusionAnalyticsService.getCallRejectForHost(cluster, hostname, starttime, endtime, function (data, status) {
-
         if (data.success) {
-
           vm.cpuCallReject = data[0].values;
           plotCallReject();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 
     function getRelativeTimeCallReject(cluster, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeCallReject(cluster, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.cpuCallReject = data[0].values;
           plotCallReject();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
-
     }
 
     function getRelativeTimeCallRejectForHost(cluster, hostname, relativetime) {
-
       MediaFusionAnalyticsService.getRelativeTimeCallRejectForHost(cluster, hostname, relativetime, function (data, status) {
-
         if (data.success) {
-
           vm.cpuCallReject = data[0].values;
           plotCallReject();
-
-        } else {
-          $log.debug('Status: ' + status);
         }
-
       });
     }
 

@@ -1,11 +1,11 @@
   'use strict';
   describe('RedirectAddResourceControllerV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
-    var vm, yesProceed, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, log, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
+    var vm, yesProceed, controller, cluster, RedirectTargetService, MediaClusterServiceV2, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, $modal, modalInstanceMock, windowMock, $scope, firstTimeSetup;
     var hostname = "MFA";
     var enteredCluster = "blr-ecp-246";
     var $rootScope, getClusterListDiffered, getGroupsDiffered, addRedirectTargetDiffered;
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _XhrNotificationService_, $log, _$modal_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _XhrNotificationService_, _$modal_) {
       $q = _$q_;
       $scope = _$rootScope_.$new();
       firstTimeSetup = false;
@@ -33,8 +33,6 @@
         open: sinon.stub()
       };
       XhrNotificationService = _XhrNotificationService_;
-      log = $log;
-      log.reset();
       $modal = _$modal_;
       controller = $controller('RedirectAddResourceControllerV2', {
         MediaClusterServiceV2: MediaClusterServiceV2,
@@ -42,7 +40,6 @@
         $modalInstance: modalInstanceMock,
         $window: windowMock,
         XhrNotificationService: XhrNotificationService,
-        log: log,
         $modal: $modal,
         $scope: $scope,
         firstTimeSetup: firstTimeSetup,

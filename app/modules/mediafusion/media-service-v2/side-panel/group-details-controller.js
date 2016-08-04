@@ -5,7 +5,7 @@
     .controller('GroupDetailsControllerV2',
 
       /* @ngInject */
-      function ($stateParams, $modal, $log, $state) {
+      function ($stateParams, $modal, $state) {
 
         var vm = this;
         vm.displayName = null;
@@ -19,12 +19,10 @@
 
         if (!angular.equals($stateParams.nodes, {})) {
           vm.nodeList = $stateParams.nodes;
-          $log.log("node details ", vm.nodeList);
         }
 
         if (!angular.equals($stateParams.cluster, {})) {
           vm.clusterDetail = $stateParams.cluster;
-          $log.log("cluster details ", vm.clusterDetail);
         }
 
         function openSettings(type, id) {

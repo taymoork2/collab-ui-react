@@ -74,9 +74,9 @@ fi
 temp_dir=$(mk_temp_dir_for_ktest)
 flist=$(mktemp "$temp_dir/flist.XXXXX")
 
-# shellcheck disable=SC2068
 # generate a file list
 fname=
+# shellcheck disable=SC2068
 for arg in $@; do
     if [[ "$arg" = /* ]]; then
         fname="$arg"
@@ -95,13 +95,14 @@ total_specs=$(wc -l "$flist" | awk '{print $1;}')
 # - it also happens to determine:
 #   - how many shim files are generated
 #   - how many processes are spawned by 'parallel'
-# - offset by -1 here to prevent monopolizing the system
-num_cores=$(( $(num_cpus) - 1 ))
+num_cores=$(num_cpus)
 if [ "${no_parallel}" = "true" ]; then
     num_cores=1
 fi
+# shellcheck disable=SC2086
 lines_per_file=$(calc_lines_per_file $total_specs $num_cores)
 
+# shellcheck disable=SC2086
 # list all spec files, splitting list into roughly equal sizes
 sort "$flist" \
     | split -l $lines_per_file - "$temp_dir/flist-split."
@@ -115,7 +116,7 @@ for i in "$temp_dir"/flist-split.*; do
     printf "%-48s %s\n" "[INFO] Running: making list for injection... " "${i}.require-list"
     mk_require_list_file "${i}" > "${i}.require-list"
 
-    karma_shim_file="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/$(basename $i).karma.shim.js"
+    karma_shim_file="${WX2_ADMIN_WEB_CLIENT_HOME}/karma/$(basename "$i").karma.shim.js"
     printf "%-45s %s\n" "[INFO] Running: making temp karma shim files... " "$karma_shim_file"
     inject_require_list_file "${i}.require-list" "$shim_tpl" > "$karma_shim_file"
 
@@ -128,8 +129,9 @@ done
 export npm_lifecycle_event=${npm_lifecycle_event=test}
 
 # run 'karma' at the project root dir
-pushd ${WX2_ADMIN_WEB_CLIENT_HOME} > /dev/null
+pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
 set -x
+# shellcheck disable=SC2086
 if [ "${no_parallel}" = "true" ]; then
     karma start $shim_file_args $pass_through_opts
 else

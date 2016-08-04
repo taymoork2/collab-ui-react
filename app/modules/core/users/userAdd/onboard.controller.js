@@ -6,7 +6,9 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, WebExUtilsFact) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
+    var vm = this;
+
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
@@ -14,6 +16,8 @@
     $scope.telephonyInfo = {};
     $scope.cmrLicensesForMetric = {};
     $scope.currentUserCount = 0;
+
+    vm.maxUsersInManual = OnboardService.maxUsersInManual;
 
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
@@ -86,11 +90,6 @@
 
     initController();
 
-    function initController() {
-      $scope.currentUserCount = 1;
-      setLicenseAvailability();
-    }
-
     /****************************** License Enforcement START *******************************/
     //***
     //***
@@ -154,6 +153,24 @@
     //***
     //***
     //***********************************************************************************/
+    function initController() {
+      $scope.currentUserCount = 1;
+      setLicenseAvailability();
+    }
+
+    $scope.isCsvEnhancement = false;
+    FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement)
+      .then(function (result) {
+        $scope.isCsvEnhancement = result;
+      });
+
+    var rootState = $previousState.get().state.name;
+    $scope.onBack = function () {
+      $state.go(rootState);
+    };
+
+    // initiate the bulkSave operation for ADSync
+    $scope.bulkSave = bulkSave;
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -184,7 +201,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var dnFirstCharacter = "";
       var steeringDigit = $scope.telephonyInfo.steeringDigit;
       return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
     }
@@ -557,10 +573,12 @@
       };
     }
 
-    $scope.checkCMR = function (confModel, cmrLics) {
-      cmrLics.forEach(function (cmrLic) {
-        cmrLic.cmrModel = confModel;
-      });
+    $scope.checkCMR = function (cfLic, cmrLics) {
+      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
+        cmrLics.forEach(function (cmrLic) {
+          cmrLic.cmrModel = cfLic.confModel;
+        });
+      }
     };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
@@ -909,7 +927,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name);
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
         }
       }, $scope.timeoutVal);
     }
@@ -1006,16 +1024,6 @@
           return new Feature(entry.entitlementName, entry.entitlementState);
         })
         .value();
-    };
-
-    var getEntitlementStrings = function (entList) {
-      var entStrings = [];
-      for (var e = 0; e < entList.length; e++) {
-        if (entList[e].entitlementName) {
-          entStrings.push(entList[e].entitlementName);
-        }
-      }
-      return entStrings;
     };
 
     $scope.updateUserLicense = function () {
@@ -1117,7 +1125,8 @@
       $scope.$emit('wizardNextText', action);
     };
 
-    var invalidcount = 0;
+    $scope.invalidcount = 0;
+    $scope.invalidDirSyncUsersCount = 0;
     $scope.tokenfieldid = "usersfield";
     $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
     $scope.tokenoptions = {
@@ -1125,6 +1134,39 @@
       createTokensOnBlur: true
     };
     var isDuplicate = false;
+
+    FeatureToggleService.supportsDirSync().then(function (supportsDirSync) {
+      $scope.isDirSyncEnabled = supportsDirSync;
+    });
+
+    function setInvalidToken(token) {
+      angular.element(token.relatedTarget).addClass('invalid');
+      $scope.invalidcount++;
+    }
+
+    function validateDirSyncUser(e) {
+      if ($scope.isDirSyncEnabled) {
+        UserListService.queryUser(e.attrs.value)
+          .catch(function () {
+            setInvalidToken(e);
+            sortTokens();
+            $scope.invalidDirSyncUsersCount++;
+          });
+      }
+    }
+
+    $scope.getNumUsersInTokenField = function () {
+      return angular.element('#usersfield').tokenfield('getTokens').length;
+    };
+
+    $scope.hasErrors = function () {
+      var haserr = ($scope.invalidcount > 0);
+      if ($scope.isCsvEnhancement && $scope.getNumUsersInTokenField() >= vm.maxUsersInManual) {
+        haserr = true;
+      }
+      return haserr;
+    };
+
     $scope.tokenmethods = {
       createtoken: function (e) {
         //Removing anything in brackets from user data
@@ -1137,23 +1179,27 @@
       },
       createdtoken: function (e) {
         if (!validateEmail(e.attrs.value) || isDuplicate) {
-          angular.element(e.relatedTarget).addClass('invalid');
-          invalidcount++;
+          setInvalidToken(e);
+        } else {
+          validateDirSyncUser(e);
         }
+        sortTokens();
         wizardNextText();
         checkPlaceholder();
       },
       edittoken: function (e) {
         if (angular.element(e.relatedTarget).hasClass('invalid')) {
-          invalidcount--;
+          $scope.invalidcount--;
         }
       },
       removedtoken: function (e) {
         // Reset the token list and validate all tokens
         $timeout(function () {
-          invalidcount = 0;
+          $scope.invalidcount = 0;
+          $scope.invalidDirSyncUsersCount = 0;
           angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
         }).then(function () {
+          sortTokens();
           wizardNextText();
           checkPlaceholder();
         });
@@ -1210,6 +1256,34 @@
       }
     }
 
+    // sort the token list so that error tokens appear first in the list
+    function sortTokens() {
+      // this is just a sh*tty way of sorting this.  The only info we have
+      // if a token has an error is if it has an 'invalid' class on the element.
+      // the model.userList SHOULD contain this info, but it doesn't.  So,
+      // in order to sort all of the invalid tokens to the front of the list,
+      // we need to do this in the DOM directly. Thankfully, tokenfield doesn't
+      // break when we do this.
+      var start = $(angular.element('.tokenfield input[type=text]')[0]);
+      if (start.length > 0) {
+
+        var tokens = start.siblings('.token');
+        tokens.sort(function (a, b) {
+          var ainvalid = $(a).hasClass('invalid');
+          var binvalid = $(b).hasClass('invalid');
+          if (ainvalid && !binvalid) {
+            return -1;
+          } else if (!ainvalid && binvalid) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
+        tokens.detach().insertAfter(start);
+      }
+    }
+
     var getUsersList = function () {
       return addressparser.parse($scope.model.userList);
     };
@@ -1217,7 +1291,7 @@
     $scope.validateTokensBtn = function () {
       var usersListLength = angular.element('.token-label').length;
       $scope.validateTokens().then(function () {
-        if (invalidcount === 0 && usersListLength > 0) {
+        if ($scope.invalidcount === 0 && usersListLength > 0) {
           $scope.currentUserCount = usersListLength;
           $state.go('users.add.services');
         } else if (usersListLength === 0) {
@@ -1230,12 +1304,15 @@
       });
     };
 
+    $scope.allowNext = function () {
+      return ($scope.model.userList && !$scope.hasErrors());
+    };
+
     $scope.validateTokens = function () {
       wizardNextText();
       return $timeout(function () {
-        var tokenfield = angular.element('#usersfield');
         //reset the invalid count
-        invalidcount = 0;
+        $scope.invalidcount = 0;
         angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
       }, 100);
     };
@@ -1267,7 +1344,8 @@
       angular.element('#usersfield').tokenfield('setTokens', ' ');
       $scope.model.userList = '';
       checkPlaceholder();
-      invalidcount = 0;
+      $scope.invalidcount = 0;
+      $scope.invalidDirSyncUsersCount = 0;
     };
 
     $scope.clearPanel = function () {
@@ -1434,19 +1512,18 @@
       if (angular.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
-        var i, j;
-        for (i = 0; i < usersList.length; i++) {
+        _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == usersList[i].address);
+            return (user.address == userItem.address);
           });
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
           if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
-            usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
-        }
+        });
 
         var tempUserArray = [],
           entitleList = [],
@@ -1459,7 +1536,7 @@
         }
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
-        for (i = 0; i < usersList.length; i += chunk) {
+        for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
             .then(successCallback)
@@ -1644,7 +1721,7 @@
           deferred.reject();
         });
       } else {
-        if (invalidcount === 0) {
+        if ($scope.invalidcount === 0) {
           deferred.resolve();
         } else {
           var error = [$translate.instant('usersPage.validEmailInput')];
@@ -1951,14 +2028,18 @@
         field: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
-        sortable: true
+        sortable: true,
+        minWidth: 449,
+        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
         resizable: false,
         sort: {
           direction: 'desc',
-          priority: 0
+          priority: 0,
+          minWidth: 449,
+          maxWidth: 449
         },
         sortCellFiltered: true
       }]
@@ -2045,6 +2126,22 @@
       });
     };
 
+    // hack to allow adding services when exiting the users.manage.advanced.add.ob.syncStatus state
+    $scope.dirsyncInitForServices = function () {
+      userArray = [];
+      if ($scope.userList && $scope.userList.length > 0) {
+        userArray = $scope.userList.map(function (user) {
+          return user.Email;
+        });
+      }
+
+      if (userArray.length === 0) {
+        Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+      } else {
+        $scope.model.numMaxUsers = userArray.length;
+      }
+    };
+
     $scope.dirsyncProcessingNext = bulkSave;
 
     function bulkSave() {
@@ -2054,6 +2151,8 @@
       $scope.model.userErrorArray = [];
       $scope.model.numMaxUsers = userArray.length;
       $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
+      $scope.model.isProcessing = true;
+      $scope.model.cancelProcessCsv = $scope.cancelProcessCsv;
 
       function addUserError(row, errorMsg) {
         $scope.model.userErrorArray.push({
@@ -2149,6 +2248,8 @@
           });
           $rootScope.$broadcast('USER_LIST_UPDATED');
           saveDeferred.resolve();
+          $scope.model.isProcessing = false;
+          $scope.$broadcast('timer-stop');
         }
       }
 
@@ -2196,4 +2297,5 @@
     }
 
   }
-})();
+})
+();

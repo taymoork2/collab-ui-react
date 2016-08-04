@@ -5,12 +5,20 @@
     .controller('RemPlaceController',
 
       /* @ngInject */
-      function ($modalInstance, CsdmPlaceService, XhrNotificationService, place) {
+      function ($modalInstance, CsdmPlaceService, XhrNotificationService, place, $rootScope, $timeout) {
         var rdc = this;
+        rdc.place = place;
+
+        rdc.refreshPlaceList = function () {
+          $rootScope.$broadcast('PLACE_LIST_UPDATED');
+        };
 
         rdc.deletePlace = function () {
           return CsdmPlaceService.deletePlace(place)
-            .then($modalInstance.close, XhrNotificationService.notify);
+            .then(function () {
+              $modalInstance.close();
+              $timeout(rdc.refreshPlaceList, 500);
+            }, XhrNotificationService.notify);
         };
       }
     )
@@ -24,7 +32,8 @@
             },
             controllerAs: 'rdc',
             controller: 'RemPlaceController',
-            templateUrl: 'modules/squared/places/remPlace/remPlace.html'
+            templateUrl: 'modules/squared/places/remPlace/remPlace.html',
+            type: 'dialog'
           }).result;
         }
 

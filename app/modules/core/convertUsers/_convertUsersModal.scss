@@ -3,9 +3,10 @@
     margin-right: 10px;
   }
   .gridStyle {
-    width: 860px;
-    height: 400px;
+    width: 898px;
+    height: 491px;
     background-color: $brand-white;
+    border: solid $gray-light-2 1px;
   }
 
   .explanation {
@@ -13,13 +14,14 @@
   }
 
   .search {
-    width: 870px;
+    width: 898px;
     position: relative;
     margin-bottom: 15px;
     margin-top: 15px;
+    padding: 0px;
 
     input {
-      width: 860px;
+      width: 100%;
       height: 32px;
       text-indent: 20px;
     }
@@ -33,5 +35,10 @@
    .spinner-example--large {
     font-size: 2rem;
     padding-left: 425px;
+  }
+
+  .noUnlicensedUsers {
+    @include vr-spacing(mt, 5);
+    text-align: center;
   }
 }

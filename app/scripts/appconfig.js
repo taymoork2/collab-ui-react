@@ -702,6 +702,13 @@
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
               }
+            },
+            resolve: {
+              isOnline: /* @ngInject */ function ($q, Authinfo) {
+                if (!Authinfo.isOnline()) {
+                  return $q.reject();
+                }
+              }
             }
           })
           .state('users', {
@@ -735,7 +742,7 @@
             params: {
               deleteUserOrgId: null,
               deleteUserUuId: null,
-              deleteUsername: null,
+              deleteUsername: null
             }
           })
           .state('users.deleteSelf', {
@@ -764,6 +771,7 @@
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
+                controllerAs: 'obc',
                 template: '<div ui-view="usersAdd"></div>'
               },
               'usersAdd@users.add': {
@@ -810,7 +818,77 @@
               }
             }
           })
-          .state('users.convert', {
+
+        ///////////////////////////
+        // todo - I-35 feature
+        .state('users.manage', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                controller: 'UserManageModalController',
+                controllerAs: 'ctrl',
+                template: '<div ui-view></div>'
+              }
+            },
+            params: {
+              isOverExportThreshold: {}
+            }
+          })
+          .state('users.manage.org', {
+            controller: 'UserManageOrgController',
+            controllerAs: 'umoc',
+            templateUrl: 'modules/core/users/userManage/userManageOrg.tpl.html'
+          })
+          .state('users.manage.activedir', {
+            controller: 'UserManageActiveDirController',
+            controllerAs: 'umadc',
+            templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html'
+          })
+
+        .state('users.manage.advanced', {
+            abstract: true,
+            controller: 'UserManageAdvancedController',
+            controllerAs: 'umac',
+            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html'
+          })
+          .state('users.manage.advanced.add', {
+            abstract: true,
+            controller: 'AddUserCtrl',
+            controllerAs: 'auc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob', {
+            abstract: true,
+            controller: 'OnboardCtrl',
+            controllerAs: 'obc',
+            template: '<div ui-view class="flex-container flex-item-resize"></div>'
+          })
+          .state('users.manage.advanced.add.ob.installConnector', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.syncStatus', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'
+          })
+          .state('users.manage.advanced.add.ob.dirsyncServices', {
+            templateUrl: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.dirsyncInitForServices();
+            }
+          })
+          .state('users.manage.advanced.add.ob.dirsyncResult', {
+            templateUrl: 'modules/core/users/userManage/userManageAdvancedResults.tpl.html',
+            controller: /* @ngInject */ function ($scope) {
+              $scope.umac.isBusy = true;
+              $scope.csv.model = $scope.model;
+              $scope.bulkSave().then(function () {
+                $scope.umac.isBusy = false;
+              });
+            }
+          })
+
+        //////////////////
+
+        .state('users.convert', {
             parent: 'modal',
             views: {
               'modal@': {
@@ -850,7 +928,7 @@
             }
           })
           .state('users.csv', {
-            parent: 'modal',
+            parent: 'users.manage',
             views: {
               'modal@': {
                 controller: 'UserCsvCtrl',
@@ -920,7 +998,6 @@
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
                 var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1010,8 +1087,8 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
-            controller: 'HybridServicesPreviewCtrl',
+            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+            controller: 'CalendarServicePreviewCtrl',
             data: {
               displayName: 'Calendar Service'
             },
@@ -1020,7 +1097,7 @@
             }
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
+            templateUrl: 'modules/hercules/user-sidepanel/callServicePreview.tpl.html',
             controller: 'CallServicePreviewCtrl',
             data: {
               displayName: 'Call Service'
@@ -1115,21 +1192,7 @@
         //       device: {}
         //     }
         //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
-          })
-          .state('organizations', {
+        .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
             controller: 'ListOrganizationsCtrl',
@@ -1348,8 +1411,8 @@
           })
 
         /*
-          devices
-        */
+         devices
+         */
         .state('places', {
             url: '/places',
             templateUrl: 'modules/squared/places/places.html',
@@ -1364,9 +1427,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1398,6 +1459,15 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
             }
           })
           .state('devices', {

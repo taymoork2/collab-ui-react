@@ -5,9 +5,11 @@
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($scope, $state, $templateCache, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory) {
+      function ($scope, $state, $templateCache, $translate, CsdmPlaceService, PlaceFilter, Authinfo, WizardFactory, RemPlaceModal) {
         var vm = this;
 
+        vm.data = [];
+        vm.dataLoading = false;
         vm.placeFilter = PlaceFilter;
 
         vm.existsDevices = function () {
@@ -34,6 +36,8 @@
             .value();
           return PlaceFilter.getFilteredList(filtered);
         };
+
+        vm.updateListAndFilter();
 
         vm.numDevices = function (place) {
           return _.size(place.devices);
@@ -71,7 +75,7 @@
             width: 70
           }, {
             field: 'displayName',
-            displayName: 'Name',
+            displayName: $translate.instant('placesPage.nameHeader'),
             sortingAlgorithm: sortFn,
             sort: {
               direction: 'asc',
@@ -79,20 +83,25 @@
             },
             sortCellFiltered: true
           }, {
+            field: 'type',
+            displayName: $translate.instant('placesPage.typeHeader'),
+            cellTemplate: getTemplate('_typeTpl'),
+            sortable: true
+          }, {
             field: 'devices',
-            displayName: 'Devices',
+            displayName: $translate.instant('placesPage.deviceHeader'),
             cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortStateFn,
-            sort: {
-              direction: 'asc',
-              priority: 0
-            }
+            sortingAlgorithm: sortStateFn
+          }, {
+            field: 'action',
+            displayName: $translate.instant('placesPage.actionHeader'),
+            cellTemplate: getTemplate('_actionsTpl'),
+            sortable: false
           }]
         };
 
         vm.startAddPlaceFlow = function () {
-
           var wizardState = {
             data: {
               function: "addPlace",
@@ -128,6 +137,11 @@
           $state.go(wizardState.currentStateName, {
             wizard: wizard
           });
+        };
+
+        vm.deletePlace = function ($event, place) {
+          $event.stopPropagation();
+          RemPlaceModal.open(place);
         };
 
         function getTemplate(name) {

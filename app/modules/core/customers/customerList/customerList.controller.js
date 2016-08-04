@@ -186,6 +186,7 @@
       sortingAlgorithm: notesSort
     };
 
+    var myOrgDetails = {};
     var noFreeLicense = ['roomSystems', 'webexEEConferencing'];
 
     $scope.gridColumns = [];
@@ -442,7 +443,8 @@
               licenseType: 'CONFERENCING',
               offerName: 'EE'
             }));
-            resolve(myOrg);
+            myOrgDetails = myOrg;
+            resolve(myOrgDetails);
           } else {
             reject('Unable to query for signed-in users org');
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
@@ -454,15 +456,17 @@
     function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
+      var myOrgName = Authinfo.getOrgName();
+      var isPartnerAdmin = Authinfo.isPartnerAdmin();
+      var isPartnerReadOnlyAdmin = Authinfo.isPartnerReadOnlyAdmin();
+      var getOrgNameSearch = Authinfo.getOrgName().indexOf(searchText);
+      var attachMyOrg = false;
 
-      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
-        // move our org to the top of the list
-        // dont know why this is here yet
-        // this should be handled by a sorting fn
-        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
-          promiselist.push(getMyOrgDetails());
+      if (isPartnerAdmin || isPartnerReadOnlyAdmin) {
+        if (searchText === '' || getOrgNameSearch !== -1) {
+          attachMyOrg = true;
+          getMyOrgDetails();
         }
-
       }
 
       return $q.all(promiselist)
@@ -477,15 +481,22 @@
         .then(function (results) {
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false,
             $scope.isCareEnabled);
+          var myOrgItem = _.find(managed, {
+            customerName: myOrgName
+          });
 
-          if (results[1]) {
-            // 4/11/2016 admolla
-            // TODO: for some reason if I refactor this to not need an array, karma acts up....
-            if (_.isArray(results[1])) {
-              managed.unshift(results[1][0]);
+          // is MyOrg returned in managedOrgs list
+          if (myOrgItem) {
+            // remove from list
+            _.remove(managed, myOrgItem);
+            // add to top
+            managed.unshift(myOrgItem);
+          } else {
+            if (attachMyOrg) {
+              // add myOrg to the top of the list
+              managed.unshift(myOrgDetails[0]);
             }
           }
-
           $scope.managedOrgsList = managed;
           $scope.totalOrgs = $scope.managedOrgsList.length;
 
@@ -519,7 +530,7 @@
 
     function openAddTrialModal() {
       if ($scope.isTestOrg) {
-        Analytics.trackTrialSteps('start', $state.current.name);
+        Analytics.trackTrialSteps(Analytics.eventNames.START, $state.current.name, Authinfo.getOrgId());
       }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);

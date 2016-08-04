@@ -14,11 +14,9 @@
     var qualityUrl = '/managedOrgs/callQuality';
     var registeredUrl = 'trend/managedOrgs/registeredEndpoints';
     var orgId = "&orgId=";
-    var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
-    var customerList = null;
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
 
     var overallPopulation = 0;
@@ -150,7 +148,6 @@
     }
 
     function getActiveUserData(customer, filter) {
-      var tableData = [];
       var overallStatus = TIMEOUT;
       var promise = null;
 
@@ -311,17 +308,23 @@
       if (angular.isUndefined(customerIds)) {
         return $q.when([]);
       } else {
-        return getService(topn + activeUserUrl + getQueryForOnePeriod(filter) + customerIds, activeTableCancelPromise).then(function (response) {
+        var query = "?reportType=weeklyUsage&cache=";
+        if (filter.value === 1) {
+          query = "?reportType=monthlyUsage&cache=";
+        } else if (filter.value === 2) {
+          query = "?reportType=threeMonthUsage&cache=";
+        }
+        return getService(topn + activeUserUrl + query + cacheValue + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
-          if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
+          if (response.data && angular.isArray(response.data.data)) {
             angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
-              if (angular.isDefined(org.data)) {
+              if (org.data) {
                 angular.forEach(org.data, function (item, index, array) {
                   tableData.push({
                     orgName: org.orgName,
-                    numCalls: parseInt(item.details.numCalls),
+                    numCalls: parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
                     totalActivity: parseInt(item.details.totalActivity),
-                    sparkMessages: parseInt(item.details.totalActivity) - parseInt(item.details.numCalls),
+                    sparkMessages: parseInt(item.details.sparkMessages),
                     userName: item.details.userName
                   });
                 });

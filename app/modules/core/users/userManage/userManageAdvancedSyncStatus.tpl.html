@@ -1,0 +1,35 @@
+<div class="flex-container flex-item-resize sync-status" ng-init="getStatus()">
+
+  <h3 class="flex-item-no-resize" translate="firstTimeWizard.syncStatus"></h3>
+
+  <div class="flex-item-no-resize ds-sync">
+    <i class="working icon icon-circle" ng-class="{'failing': !isDirSyncEnabled}"></i>
+    <h5 ng-if="isDirSyncEnabled" translate="userManage.ad.adStatus"></h5>
+    <h5 ng-if="!isDirSyncEnabled" translate="userManage.ad.adStatusDisabled"></h5>
+  </div>
+
+  <div class="flex-item-no-resize ds-inline">
+    <span>{{::'firstTimeWizard.results'|translate}}:</span>
+    <strong>{{umac.dirSyncStatusMessage}}</strong>
+    <span ng-if="numUsersInSync > 0">
+      <span> - </span>
+      <strong>{{numUsersInSync}}</strong>
+      <span>{{dirsyncUserCountText}}</span>
+    </span>
+  </div>
+
+  <div class="dirsync-info sync-dirsync-refresh-button flex-item-no-resize ds-inline">
+    <span translate="userManage.ad.lastSynced"></span>
+    <span>{{lastEndTime | date:'MMM d yyyy h:mm a'}}</span>
+    <a href ng-click="getStatus()" ng-if="!umac.isBusy"><i class="icon icon-refresh"></i></a>
+  </div>
+
+  <div class="dirsync-info flex-item-resize">
+    <div class="ftwdirgridStyle flex-item-resize" ui-grid="gridOptions">
+      <div class="grid-refresh" ng-if="umac.isBusy">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
+    </div>
+  </div>
+
+</div>
