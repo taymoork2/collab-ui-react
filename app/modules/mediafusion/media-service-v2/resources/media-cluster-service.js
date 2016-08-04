@@ -284,7 +284,7 @@
     }
 
     var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub);
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
