@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -212,7 +212,7 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             patchManagedOrgs(uuid, customerOrgId);
-            Analytics.trackUserPatch(response.data.orgId);
+            Analytics.trackUserPatch(response.data.orgId, uuid);
           }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);
@@ -392,9 +392,6 @@
     }
 
     function exportCSV(isCareEnabled) {
-      var deferred = $q.defer();
-
-      var customers = [];
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 

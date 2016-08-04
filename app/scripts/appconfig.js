@@ -702,6 +702,13 @@
               'tabContent': {
                 template: '<my-company-orders></my-company-orders>'
               }
+            },
+            resolve: {
+              isOnline: /* @ngInject */ function ($q, Authinfo) {
+                if (!Authinfo.isOnline()) {
+                  return $q.reject();
+                }
+              }
             }
           })
           .state('users', {
@@ -991,7 +998,6 @@
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
                 var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
-
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1186,21 +1192,7 @@
         //       device: {}
         //     }
         //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
-          })
-          .state('organizations', {
+        .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
             controller: 'ListOrganizationsCtrl',
@@ -1435,9 +1427,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'PlaceOverviewCtrl',
-                controllerAs: 'placeOverview',
-                templateUrl: 'modules/squared/places/overview/placeOverview.tpl.html'
+                template: '<place-overview></place-overview>'
               },
               'header@place-overview': {
                 templateUrl: 'modules/squared/places/overview/placeHeader.tpl.html'
@@ -1469,6 +1459,15 @@
             },
             data: {
               displayName: 'Device Configuration'
+            }
+          })
+          .state('place-overview.communication', {
+            template: '<place-call-overview></place-call-overview>',
+            params: {
+              reloadToggle: false
+            },
+            data: {
+              displayName: 'Call'
             }
           })
           .state('devices', {

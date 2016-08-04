@@ -8,8 +8,6 @@
   function DummyReportService($translate, chartColors) {
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
-    var dummyPopulation = null;
-    var customers = null;
     var loadingCustomer = $translate.instant('activeUserPopulation.loadingCustomer');
 
     return {

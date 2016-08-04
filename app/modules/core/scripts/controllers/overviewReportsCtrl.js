@@ -15,12 +15,10 @@
     var entitlementsChart;
     var entId = 'entitlementsdiv';
     var entTitle = $translate.instant('reports.UsersOnboarded');
-    var entitlementRefresh = 'entitlements';
     var partnerCharts = ['entitlements', 'entitlementCount'];
     var entRefreshDiv = 'entitlements-refresh';
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
     var dummyChartVals = [];
-    var orgNameMap = {};
     var customerList = [];
     var allCustomers = {
       value: 0,

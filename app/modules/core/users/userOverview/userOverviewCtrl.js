@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $stateParams, $translate, $resource, Authinfo, FeatureToggleService, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -295,16 +295,6 @@
           Notification.errorResponse(error, 'usersPage.emailError');
         });
       angular.element('.open').removeClass('open');
-    }
-
-    function getOrg() {
-      Orgservice.getOrg(function (data, status) {
-        if (data.success) {
-          vm.dirsyncEnabled = data.dirsyncEnabled;
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-        }
-      });
     }
   }
 })();

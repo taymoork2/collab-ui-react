@@ -234,7 +234,6 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
-        'groups',
         'my-company',
         'overview',
         'profile',

@@ -6,7 +6,6 @@
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
-    var LEGEND = 'legend';
     var NUMFORMAT = 'numFormat';
     var SMOOTHLINED = 'smoothedLine';
     var GUIDEAXIS = 'guideaxis';
@@ -18,11 +17,6 @@
     //availablility variable
     var availabilitydiv = 'availabilitydiv';
     var utilizationdiv = 'utilizationdiv';
-    var clusterAvailableTitle = $translate.instant('mediaFusion.metrics.clusterAvailableTitle');
-    var clusterUnavailableTitle = $translate.instant('mediaFusion.metrics.clusterUnavailableTitle');
-    var clusterPartialTitle = $translate.instant('mediaFusion.metrics.clusterPartialTitle');
-    var hostAvailableTitle = $translate.instant('mediaFusion.metrics.hostAvailableTitle');
-    var hostUnavailableTitle = $translate.instant('mediaFusion.metrics.hostUnavailableTitle');
     //variables for utilization graph
     var peakUtilization = $translate.instant('mediaFusion.metrics.peakutilization');
     var averageUtilization = $translate.instant('mediaFusion.metrics.averageutilization');
@@ -76,7 +70,6 @@
 
     function callVolumeGraphs(data) {
       var colors = ['colorOne', 'colorTwo'];
-      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['active_calls', 'call_reject'];
       var titles = [callLocalTitle, callRejectTitle];
       var graphs = [];
@@ -161,7 +154,6 @@
     }
 
     function utilizationGraphs(data) {
-      var colors = ['colorOne', 'colorTwo'];
       var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['average_cpu', 'peak_cpu'];
       var titles = [averageUtilization, peakUtilization];
@@ -236,54 +228,6 @@
         return utilizationChart;
       }
 
-    }
-
-    function createLegendsForAvailabilty(dummydata, selectedCluster) {
-      if (dummydata === true) {
-        var legendData = [];
-        if (selectedCluster == 'All Clusters') {
-          var length = 3;
-          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
-          var colors = [chartColors.grayLight, chartColors.grayLight, chartColors.grayLight];
-        } else {
-          var length = 2;
-          var titles = [hostAvailableTitle, hostUnavailableTitle];
-          var colors = [chartColors.grayLight, chartColors.grayLight];
-        }
-        for (var i = 0; i < length; i++) {
-          var legend = {};
-          legendData.push(legend);
-          legendData[i].title = titles[i];
-          legendData[i].color = colors[i];
-        }
-        //      var legend = new AmCharts.AmLegend();
-        //     legend.align = 'right';
-        //    legend.position = 'top';
-        //   legend.data = legendData;
-        return legendData;
-      } else {
-        var legendData = [];
-        if (selectedCluster == 'All Clusters') {
-          var length = 3;
-          var titles = [clusterAvailableTitle, clusterUnavailableTitle, clusterPartialTitle];
-          var colors = [chartColors.colorGreen, chartColors.colorRed, chartColors.colorYellow];
-        } else {
-          var length = 2;
-          var titles = [hostAvailableTitle, hostUnavailableTitle];
-          var colors = [chartColors.colorGreen, chartColors.colorRed];
-        }
-        for (var i = 0; i < length; i++) {
-          var legend = {};
-          legendData.push(legend);
-          legendData[i].title = titles[i];
-          legendData[i].color = colors[i];
-        }
-        //      var legend = new AmCharts.AmLegend();
-        //     legend.align = 'right';
-        //    legend.position = 'top';
-        //   legend.data = legendData;
-        return legendData;
-      }
     }
 
     function createValueAxis(data) {

@@ -579,7 +579,7 @@
     function previousStep() {
       var state = getBackState();
       if (state) {
-        Analytics.trackTrialSteps('back', state);
+        Analytics.trackTrialSteps(Analytics.eventNames.BACK, state, Authinfo.getOrgId());
         $state.go(state);
       }
     }
@@ -600,7 +600,7 @@
       if (!hasNextStep()) {
         return startTrial(callback);
       } else {
-        Analytics.trackTrialSteps('next', $state.current.name);
+        Analytics.trackTrialSteps(Analytics.eventNames.NEXT, $state.current.name, Authinfo.getOrgId());
         return $state.go(getNextState());
       }
     }

@@ -201,7 +201,6 @@
     // Check to see if the currently selected directory number's first digit is
     // the same as the company steering digit.
     function checkDnOverlapsSteeringDigit(userEntity) {
-      var dnFirstCharacter = "";
       var steeringDigit = $scope.telephonyInfo.steeringDigit;
       return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
     }
@@ -574,10 +573,12 @@
       };
     }
 
-    $scope.checkCMR = function (confModel, cmrLics) {
-      cmrLics.forEach(function (cmrLic) {
-        cmrLic.cmrModel = confModel;
-      });
+    $scope.checkCMR = function (cfLic, cmrLics) {
+      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
+        cmrLics.forEach(function (cmrLic) {
+          cmrLic.cmrModel = cfLic.confModel;
+        });
+      }
     };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
@@ -926,7 +927,7 @@
         if (str.length >= 3 || str === '') {
           $scope.searchStr = str;
           getUnlicensedUsers();
-          Analytics.trackConvertUser($state.current.name);
+          Analytics.trackConvertUser($state.current.name, Authinfo.getOrgId());
         }
       }, $scope.timeoutVal);
     }
@@ -1023,16 +1024,6 @@
           return new Feature(entry.entitlementName, entry.entitlementState);
         })
         .value();
-    };
-
-    var getEntitlementStrings = function (entList) {
-      var entStrings = [];
-      for (var e = 0; e < entList.length; e++) {
-        if (entList[e].entitlementName) {
-          entStrings.push(entList[e].entitlementName);
-        }
-      }
-      return entStrings;
     };
 
     $scope.updateUserLicense = function () {
@@ -1320,7 +1311,6 @@
     $scope.validateTokens = function () {
       wizardNextText();
       return $timeout(function () {
-        var tokenfield = angular.element('#usersfield');
         //reset the invalid count
         $scope.invalidcount = 0;
         angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
@@ -1522,19 +1512,18 @@
       if (angular.isArray(usersList) && usersList.length > 0) {
         $scope.btnOnboardLoading = true;
 
-        var i, j;
-        for (i = 0; i < usersList.length; i++) {
+        _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == usersList[i].address);
+            return (user.address == userItem.address);
           });
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
           if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
-            usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+            userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }
-        }
+        });
 
         var tempUserArray = [],
           entitleList = [],
@@ -1547,7 +1536,7 @@
         }
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
-        for (i = 0; i < usersList.length; i += chunk) {
+        for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
             .then(successCallback)
@@ -2039,14 +2028,18 @@
         field: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
         resizable: false,
-        sortable: true
+        sortable: true,
+        minWidth: 449,
+        maxWidth: 449
       }, {
         field: 'userName',
         displayName: $translate.instant('homePage.emailAddress'),
         resizable: false,
         sort: {
           direction: 'desc',
-          priority: 0
+          priority: 0,
+          minWidth: 449,
+          maxWidth: 449
         },
         sortCellFiltered: true
       }]

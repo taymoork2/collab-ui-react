@@ -27,14 +27,6 @@
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
 
-    function scrollToTopOfPage() {
-      $scope.$on('$stateChangeSuccess', function (state) {
-        $("html, body").animate({
-          scrollTop: 0
-        }, 500);
-      });
-    }
-
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
       setCurrentSearch(search);
@@ -446,7 +438,7 @@
     }
 
     function reportSearchSummary(searchString, res, startTime, orgId) {
-      var stats = HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
+      HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
     }
 
   }
