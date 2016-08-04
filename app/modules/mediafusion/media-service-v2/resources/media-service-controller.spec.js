@@ -3,7 +3,7 @@ describe('Controller: MediaServiceControllerV2', function () {
   // load the service's module
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Huron'));
-  var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
+  var Authinfo, controller, $scope, httpMock, $q, $modal, $translate, $state;
   var MediaServiceActivationV2, MediaClusterServiceV2, Notification, XhrNotificationService, redirectTargetPromise, FeatureToggleService;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
@@ -15,11 +15,9 @@ describe('Controller: MediaServiceControllerV2', function () {
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
-  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = $state;
-    log = $log;
-    log.reset();
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;
@@ -48,7 +46,6 @@ describe('Controller: MediaServiceControllerV2', function () {
       httpMock: httpMock,
       $q: $q,
       $modal: $modal,
-      log: log,
       $translate: $translate,
       MediaServiceActivationV2: MediaServiceActivationV2,
       MediaClusterServiceV2: MediaClusterServiceV2,

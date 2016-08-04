@@ -4,10 +4,6 @@
   /* @ngInject */
   function DummyMetricsReportService(chartColors) {
     var timeFormat = "YYYY-MM-DDTHH:mm:ss";
-    var dayFormat = "MMM DD";
-    var monthFormat = "MMMM";
-    var dummyPopulation = null;
-    var customers = null;
     return {
       dummyCallVolumeData: dummyCallVolumeData,
       dummyAvailabilityData: dummyAvailabilityData,
@@ -83,7 +79,6 @@
 
     function dummyCallVolumeData(filter) {
       var dummyGraphVal = [];
-      var abs = 0;
       if (filter.value === 0) {
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({
@@ -134,7 +129,6 @@
 
     function dummyUtilizationData(filter) {
       var dummyGraphVal = [];
-      var abs = 0;
       if (filter.value === 0) {
         for (var i = 288; i >= 1; i--) {
           dummyGraphVal.push({

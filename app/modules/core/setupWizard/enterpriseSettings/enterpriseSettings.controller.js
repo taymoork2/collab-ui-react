@@ -14,7 +14,6 @@
     var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
     var bindingStr = 'Binding="' + _BINDINGS;
     var strBindingEnd = '" ';
-    var oldSSOValue = 0;
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -148,8 +147,7 @@
     $scope.$watch('idpFile.file', function (value) {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          var r = $window.confirm($translate.instant('ssoModal.idpOverwriteWarning'));
-          if (r == true) {
+          if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
             $timeout($scope.importRemoteIdp);
           } else {
             //reset
@@ -170,7 +168,6 @@
     $scope.importRemoteIdp = importRemoteIdp;
 
     function importRemoteIdp() {
-      var metaUrl = null;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
           if (data.data.length > 0) {

@@ -1050,7 +1050,7 @@
 
     function addSharedLineUsers() {
       //Associate new Sharedline users
-      var uuid, name;
+      var name;
       var promises = [];
       var promise;
       if (vm.selectedUsers) {

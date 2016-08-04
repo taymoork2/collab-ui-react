@@ -5,7 +5,7 @@
     .controller('mediafusionConnectorCtrl', mediafusionConnectorCtrl);
 
   /* @ngInject */
-  function mediafusionConnectorCtrl($scope, $state, MediafusionProxy, Authinfo, $log, MediaServiceDescriptor, Notification) {
+  function mediafusionConnectorCtrl($scope, $state, MediafusionProxy, Authinfo, MediaServiceDescriptor, Notification) {
     $scope.loading = true;
     $scope.pollHasFailed = false;
     $scope.showInfoPanel = true;
@@ -72,12 +72,10 @@
     }; */
 
     if ($scope.currentServiceId == "squared-fusion-media") {
-      //$log.log("checking isServiceEnabled");
       $scope.serviceEnabled = false;
       MediaServiceDescriptor.isServiceEnabled($scope.currentServiceId, function (a, b) {
         $scope.serviceEnabled = b;
         $scope.loading = false;
-        //$log.log("isServiceEnabled :", b);
       });
     }
 
@@ -130,42 +128,25 @@
       //});
     };
 
-    function deleteSuccess() {
-      Notification.success('mediaFusion.defuseSuccess');
-      //Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
-
-      setTimeout(function () {
-        MediafusionProxy.getClusters();
-      }, 500);
-    }
-
     $scope.enableMediaService = function (serviceId) {
-      //$log.log("Entered enableService, serviceId: ", serviceId);
       MediaServiceDescriptor.setServiceEnabled(serviceId, true).then(
         function success() {
-          //$log.log("media service enabled successfully");
           $scope.enableOrpheusForMediaFusion();
         },
         function error(data, status) {
-          //$log.log("Problems enabling media service");
           Notification.error('mediaFusion.mediaServiceActivationFailure');
         });
       //$scope.enableOrpheusForMediaFusion();
       $scope.serviceEnabled = true;
-      //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
     };
 
     $scope.enableOrpheusForMediaFusion = function () {
-      $log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceDescriptor.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
-          //$log.log("Identity Org Id:", response.data.identityOrgId);
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
@@ -179,7 +160,6 @@
           }
 
           if (updateMediaAgentOrgId) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             $scope.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           }
         },

@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -392,9 +392,6 @@
     }
 
     function exportCSV(isCareEnabled) {
-      var deferred = $q.defer();
-
-      var customers = [];
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 

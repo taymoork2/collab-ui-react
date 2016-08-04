@@ -107,7 +107,6 @@
         }
       },
       lessThan: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
         // we only validate this if endNumber is valid or populated
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
