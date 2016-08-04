@@ -10,7 +10,7 @@
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
     vm.featureToggled = false;
-    //"acknowledged":false
+
     function isFeatureToggled() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }

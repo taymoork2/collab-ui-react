@@ -267,21 +267,12 @@
         if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
-            if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
-              vm.onprem = '';
-              vm.cloud = response.data.callsOverflow;
-              vm.total = vm.cloud;
-            } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
-              vm.onprem = response.data.callsOnPremise;
-              vm.cloud = '';
-              vm.total = vm.onprem;
-            } else {
-              vm.onprem = '';
-              vm.cloud = '';
-              vm.total = '';
-            }
-
+          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = vm.EMPTY;
+            vm.cloud = vm.EMPTY;
+            vm.onprem = '';
+            vm.cloud = '';
+            vm.total = '';
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
@@ -291,20 +282,12 @@
         } else {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
-            if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
-              vm.onprem = '';
-              vm.cloud = response.data.callsRedirect;
-              vm.total = vm.cloud;
-            } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
-              vm.onprem = response.data.callsOnPremise;
-              vm.cloud = '';
-              vm.total = vm.onprem;
-            } else {
-              vm.onprem = '';
-              vm.cloud = '';
-              vm.total = '';
-            }
+          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = vm.EMPTY;
+            vm.cloud = vm.EMPTY;
+            vm.onprem = '';
+            vm.cloud = '';
+            vm.total = '';
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsRedirect;
