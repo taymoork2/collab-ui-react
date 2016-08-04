@@ -1,17 +1,16 @@
 'use strict';
 
 describe('CsdmPoller', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var Poller, Hub, $q, $timeout, $rootScope;
 
-  beforeEach(inject(function (_$q_, CsdmPoller, _$timeout_, _$rootScope_, $httpBackend, CsdmHubFactory) {
+  beforeEach(inject(function (_$q_, CsdmPoller, _$timeout_, _$rootScope_, CsdmHubFactory) {
     $q = _$q_;
     Hub = CsdmHubFactory;
     Poller = CsdmPoller;
     $timeout = _$timeout_;
     $rootScope = _$rootScope_;
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
   }));
 
   it('should poll and cancel polling if there are no subscribers', function () {

@@ -23,6 +23,15 @@
     vm.trialDaysLeft = undefined;
     vm.dismissNotification = dismissNotification;
 
+    vm.hasMediaFeatureToggle = false;
+
+    function isFeatureToggled() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceOnboarding);
+    }
+    isFeatureToggled().then(function (reply) {
+      vm.hasMediaFeatureToggle = reply;
+    });
+
     function init() {
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -38,6 +47,8 @@
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (item.id === Config.entitlements.fusion_ec) {
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+              } else if (item.id === Config.entitlements.mediafusion && vm.hasMediaFeatureToggle) {
+                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               }
             }
           });
@@ -58,10 +69,10 @@
       FeatureToggleService.atlasDarlingGetStatus().then(function (toggle) {
         if (toggle) {
           Orgservice.getAdminOrgUsage()
-            .then(function (subscriptions) {
+            .then(function (response) {
               var sharedDevicesUsage = -1;
               var sparkBoardsUsage = -1;
-              _.each(subscriptions, function (subscription) {
+              _.each(response.data, function (subscription) {
                 _.each(subscription, function (licenses) {
                   _.each(licenses, function (license) {
                     if (license.status === Config.licenseStatus.ACTIVE) {
@@ -77,9 +88,9 @@
               if (sharedDevicesUsage === 0 && sparkBoardsUsage === 0) {
                 vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
               } else if (sparkBoardsUsage === 0) {
-                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-              } else if (sharedDevicesUsage === 0) {
                 vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+              } else if (sharedDevicesUsage === 0) {
+                vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
               }
             });
         }

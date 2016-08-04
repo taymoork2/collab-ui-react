@@ -3,7 +3,7 @@
 describe('Controller: ListOrganizationsCtrl', function () {
   var controller, $scope, $rootScope, $state, $q, $timeout, Orgservice;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, $state, $q, _$timeout_, _Orgservice_) {
     $scope = $rootScope.$new();

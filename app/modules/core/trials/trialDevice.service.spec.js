@@ -2,8 +2,8 @@
 'use strict';
 
 describe('Service: Trial Device Service:', function () {
-  beforeEach(module('core.trial'));
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('core.trial'));
+  beforeEach(angular.mock.module('Core'));
 
   beforeEach(function () {
     bard.inject(this, 'TrialCallService', 'TrialRoomSystemService', 'TrialDeviceService');

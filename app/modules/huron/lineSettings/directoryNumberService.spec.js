@@ -3,14 +3,14 @@
 describe('Service: DirectoryNumber', function () {
   var $httpBackend, $rootScope, DirectoryNumber, HuronConfig;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('ngResource'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('ngResource'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 

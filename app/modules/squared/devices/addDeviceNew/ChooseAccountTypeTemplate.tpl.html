@@ -16,7 +16,7 @@
           <div class="typeImageBox">
             <img class="typeImage" type="image" src="images/devices/user-illustration.png" />
           </div>
-          <h4 translate="common.user"></h4>
+          <h4 translate="addDeviceWizard.chooseAccountType.user"></h4>
           <span translate="addDeviceWizard.chooseAccountType.personalUsage"></span>
         </div>
       </div>
@@ -43,9 +43,11 @@
       translate="common.back">
   </button>
   <button
+      cs-btn
+      loading="chooseAccountType.isLoading"
       class="btn btn--primary"
       ng-disabled="!chooseAccountType.radioSelect"
-      sq-click-promise="chooseAccountType.next()"
-      translate="common.next">
+      sq-click-promise="chooseAccountType.next()">
+      <span translate="common.next"></span>
   </button>
 </div>

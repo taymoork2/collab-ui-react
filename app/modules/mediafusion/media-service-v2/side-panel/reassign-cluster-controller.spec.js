@@ -1,8 +1,8 @@
 'use strict';
 describe('Controller: ReassignClusterControllerV2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
-  var vm, redirectTargetPromise, connector, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
-  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(angular.mock.module('Mediafusion'));
+  var vm, redirectTargetPromise, connector, controller, cluster, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
+  beforeEach(inject(function ($controller, _MediaClusterServiceV2_, _XhrNotificationService_, _$q_, _$translate_) {
     connector = {
       hostname: 'hostname',
       id: 'id'
@@ -28,8 +28,6 @@ describe('Controller: ReassignClusterControllerV2', function () {
     windowMock = {
       open: sinon.stub()
     };
-    log = $log;
-    log.reset();
     controller = $controller('ReassignClusterControllerV2', {
       cluster: cluster,
       MediaClusterServiceV2: MediaClusterServiceV2,
@@ -38,7 +36,6 @@ describe('Controller: ReassignClusterControllerV2', function () {
       $translate: $translate,
       $modalInstance: modalInstanceMock,
       $window: windowMock,
-      log: log,
       connector: connector
     });
   }));

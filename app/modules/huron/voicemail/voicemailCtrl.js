@@ -17,7 +17,7 @@
     init();
 
     $scope.$on('telephonyInfoUpdated', function () {
-      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      init();
     });
 
     function init() {
@@ -50,8 +50,6 @@
     }
 
     function saveVoicemail() {
-      var promise;
-      var promises = [];
       var voicemailPayload = {
         'services': [],
         'voicemail': {}

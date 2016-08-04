@@ -24,7 +24,8 @@
       getBulkErrorResponse: getBulkErrorResponse,
       addErrorWithTrackingID: addErrorWithTrackingID,
       chunkSizeWithSparkCall: 2,
-      chunkSizeWithoutSparkCall: 10
+      chunkSizeWithoutSparkCall: 10,
+      maxUsersInCSV: 1100
     };
 
     return service;

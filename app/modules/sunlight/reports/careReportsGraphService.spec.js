@@ -8,7 +8,7 @@ describe('Service: Care Reports Graph Service', function () {
   dummyReport.legendTitles = ['dummy1', 'dummy1'];
   dummyReport.colors = ['color1', 'color2'];
 
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(function (_CareReportsGraphService_) {
     CareReportsGraphService = _CareReportsGraphService_;
   }));

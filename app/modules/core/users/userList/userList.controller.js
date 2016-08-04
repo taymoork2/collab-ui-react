@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils) {
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, CsvDownloadService) {
     // variables to prevent userlist 'bounce' after all users/admins have been loaded
     var endOfAdminList = false;
     var endOfUserList = false;
@@ -77,16 +77,17 @@
     $scope.canShowUserDelete = canShowUserDelete;
     $scope.canShowResendInvite = canShowResendInvite;
     $scope.handleDeleteUser = handleDeleteUser;
-    $scope.getUserPhoto = getUserPhoto;
+    $scope.getUserPhoto = Userservice.getUserPhoto;
     $scope.firstOfType = firstOfType;
-    $scope.isValidThumbnail = isValidThumbnail;
+    $scope.isValidThumbnail = Userservice.isValidThumbnail;
     $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
 
     $scope.getUserList = getUserList;
+    $scope.onManageUsers = onManageUsers;
 
     var promises = {
-      csvEnhancement: FeatureToggleService.csvEnhancementGetStatus(),
+      csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
       atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus()
     };
 
@@ -95,9 +96,9 @@
       $scope.isEmailStatusToggled = results.atlasEmailStatus;
     }).finally(init);
 
-    ////////////////
-
     configureGrid();
+
+    ////////////////
 
     function init() {
       checkOrg();
@@ -519,43 +520,24 @@
       });
     }
 
-    function getUserPhoto(user) {
-      if (user && user.photos) {
-        for (var i in user.photos) {
-          if (user.photos[i].type === 'thumbnail') {
-            $scope.currentUserPhoto = user.photos[i].value;
-            break;
-          }
-        } //end for
-      } else {
-        $scope.currentUserPhoto = null;
-      }
-      return $scope.currentUserPhoto;
-    }
-
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
       return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
     }
 
-    function isValidThumbnail(user) {
-      var photos = _.get(user, 'photos', []);
-      var thumbs = _.filter(photos, {
-        type: 'thumbnail'
-      });
-      var validThumbs = _.filter(thumbs, function (thumb) {
-        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
-      });
-      return !_.isEmpty(validThumbs);
+    function startExportUserList() {
+      var options = {
+        csvType: CsvDownloadService.typeUser,
+        tooManyUsers: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+      };
+      $scope.$emit('csv-download-request', options);
     }
 
-    function startExportUserList() {
-      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
-        $scope.$emit('csv-download-request', 'user', true);
-      } else {
-        $scope.$emit('csv-download-request', 'user');
-      }
+    function onManageUsers() {
+      $state.go('users.manage', {
+        isOverExportThreshold: ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD)
+      });
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

@@ -1,20 +1,15 @@
 'use strict';
 describe('Service: HelpdeskLogService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
-  var Service, LogService, q, scope, httpBackend, urlBase;
+  var Service, LogService, q, scope, urlBase;
 
-  beforeEach(inject(function (UrlConfig, $httpBackend, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (UrlConfig, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
     Service = _HelpdeskLogService_;
     LogService = _LogService_;
-    httpBackend = $httpBackend;
     scope = _$rootScope_.$new();
     q = _$q_;
     urlBase = UrlConfig.getAdminServiceUrl();
-
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
 
     var logs = {
       success: true,

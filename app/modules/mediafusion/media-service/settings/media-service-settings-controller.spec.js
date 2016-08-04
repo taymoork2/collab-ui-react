@@ -3,9 +3,9 @@
 describe('Controller: MediaServiceSettingsController', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var Authinfo, controller, httpMock, $q, $modal, log, $translate, $state, $stateParams;
+  var Authinfo, controller, httpMock, $q, $modal, $translate, $state, $stateParams;
   var NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivation;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
@@ -14,15 +14,13 @@ describe('Controller: MediaServiceSettingsController', function () {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _Notification_) {
+  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _Notification_) {
     $state = $state;
     $stateParams = $stateParams;
-    log = $log;
-    log.reset();
     httpMock = $httpBackend;
     $q = _$q_;
     $modal = _$modal_;
@@ -38,7 +36,6 @@ describe('Controller: MediaServiceSettingsController', function () {
       httpMock: httpMock,
       $q: $q,
       $modal: $modal,
-      log: log,
       $translate: $translate,
 
       MediaServiceActivation: MediaServiceActivation,

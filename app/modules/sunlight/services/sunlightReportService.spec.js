@@ -13,8 +13,8 @@ describe(' sunlightReportService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('676a82cd-64e9-4ebd-933c-4dce087a02bd')
   };
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
@@ -128,6 +128,16 @@ describe(' sunlightReportService', function () {
 
   it('should get ReportingData for org for time selected yesterday for mediaType chat', function () {
     sunlightReportService.getReportingData('org_stats', 1, 'chat').then(function (response) {
+      expect(response.length).toBe(24);
+      _.each(response, function (reportData) {
+        expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);
+      });
+    });
+    $httpBackend.flush();
+  });
+
+  it('should get ReportingData for org for time selected today for mediaType chat', function () {
+    sunlightReportService.getReportingData('org_stats', 0, 'chat').then(function (response) {
       expect(response.length).toBe(24);
       _.each(response, function (reportData) {
         expect(moment(reportData.createdTime, 'HH:mm', true).isValid()).toBe(true);

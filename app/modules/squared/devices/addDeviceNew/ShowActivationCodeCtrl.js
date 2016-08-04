@@ -10,7 +10,6 @@
     vm.hideBackButton = vm.wizardData.function == "showCode";
     vm.showEmail = false;
     vm.selectedUser = "" + vm.wizardData.displayName + " (" + vm.wizardData.userName + ")";
-    vm.belongsTo = vm.wizardData.accountType === "shared" ? vm.wizardData.deviceName : vm.wizardData.displayName;
     vm.email = {
       to: vm.wizardData.userName
     };
@@ -50,7 +49,7 @@
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           vm.isLoading = true;
-          CsdmPlaceService.createPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmPlaceService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmCodeService
               .createCodeForExisting(place.cisUuid)

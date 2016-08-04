@@ -25,8 +25,11 @@
       isHuronUser: isHuronUser,
       isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
-      sendSparkWelcomeEmail: sendSparkWelcomeEmail
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail,
+      getUserPhoto: getUserPhoto,
+      isValidThumbnail: isValidThumbnail
     };
+
     var _helpers = {
       isSunlightUser: isSunlightUser,
       getUserLicence: getUserLicence,
@@ -338,7 +341,11 @@
         });
     }
 
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
     function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+      // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
         entitlements: entitlements
@@ -347,6 +354,9 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
+    /**
+     * Onboard users with each user specifiying their own set of licenses and entitlements
+     */
     function bulkOnboardUsers(usersDataArray, cancelPromise) {
       var userPayload = getUserPayloadForOnboardAPI(usersDataArray, false);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -356,6 +366,9 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
+    /**
+     * Generate the payload used for onboard API call.
+     */
     function getUserPayloadForOnboardAPI(users, hasSameLicenses) {
       var thisParams = this;
       users = _.isArray(users) ? users : [];
@@ -540,6 +553,21 @@
           }
         });
       });
+    }
+
+    function getUserPhoto(user) {
+      return _.chain(user)
+        .get('photos')
+        .find(function (photo) {
+          return photo.type === 'thumbnail';
+        })
+        .get('value')
+        .value();
+    }
+
+    function isValidThumbnail(user) {
+      var userPhotoValue = getUserPhoto(user);
+      return !(_.startsWith(userPhotoValue, 'file:') || _.isEmpty(userPhotoValue));
     }
 
   }

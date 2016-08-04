@@ -1,52 +1,41 @@
-<div class="user-csv-upload">
-  <div class="csv-desc">{{csv.model.desc}}</div>
-  <div
-    ng-if="!csv.model.file"
-    class="file-drop"
-    cr-file-drop
-    file="csv.model.file"
-    file-name="csv.model.fileName"
-    file-max-size="10"
-    file-max-size-error="csv.onFileSizeError()"
-    file-type="text/csv, application/csv, application/vnd.ms-excel"
-    file-suffix="csv"
-    file-type-error="csv.onFileTypeError()">
-    <div class="file-drop-content">
-      <div class="icon icon-circle-upload"></div>
-      <input
-        id="upload"
-        name="upload"
-        type="file"
-        cr-file-read
-        file="csv.model.file"
-        file-name="csv.model.fileName"
-        file-max-size="10"
-        file-max-size-error="csv.onFileSizeError()"
-        file-type="text/csv, application/csv, application/vnd.ms-excel"
-        file-suffix="csv"
-        file-type-error="csv.onFileTypeError()"/>
-      <div translate="csvUpload.uploadPrompt"></div>
-      <label for='upload' translate="csvUpload.fileBrowser"></label>
+<div class="user-csv-upload" ng-disabled="vm.disabled">
+  <div ng-if="!csv.isCsvValid">
+    <div class="file-drop"
+         cr-file-drop
+         file="csv.model.file"
+         file-name="csv.model.fileName"
+         file-max-size="10"
+         file-max-size-error="csv.onFileSizeError()"
+         file-type="text/csv, application/csv, application/vnd.ms-excel"
+         file-suffix="csv"
+         file-type-error="csv.onFileTypeError()">
+
+        <div class="icon icon-upload-contain"></div>
+        <div translate="userManage.bulk.import.label"></div>
+        <input
+          id="upload"
+          name="upload"
+          type="file"
+          cr-file-read
+          file="csv.model.file"
+          file-name="csv.model.fileName"
+          file-max-size="10"
+          file-max-size-error="csv.onFileSizeError()"
+          file-type="text/csv, application/csv, application/vnd.ms-excel"
+          file-suffix="csv"
+          file-type-error="csv.onFileTypeError()"/>
+        <div class="prompt">
+          <span translate="userManage.bulk.uploadPrompt"></span>
+          <label for='upload' translate="userManage.bulk.fileBrowser"></label>
+        </div>
     </div>
   </div>
-  <div ng-if="csv.model.file" class="file-drop-inactive">
-    <div class="file-drop-content">
-      <div class="icon icon-check"></div>
-      <div class="file-name">{{csv.model.fileName}}</div>
-      <a ng-click="csv.resetFile()" translate="csvUpload.removeFile"></a>
+  <div ng-if="csv.isCsvValid" class="file-drop-inactive">
+    <div class="center-vert">
+      <h5 translate="userManage.bulk.readyForImport"></h5>
+      <p>{{csv.model.fileName}}</p>
+      <a href="" ng-click="csv.resetFile()" translate="userManage.bulk.removeFile" class="ng-scope"></a>
     </div>
-  </div>
-  <div class="csv-enable-remove">
-    <div class="csv-enable-remove-checkbox">
-      <input
-        class="center"
-        cs-input
-        type="checkbox"
-        ng-model="csv.model.enableRemove"
-        id="cbEnableRemove"
-        name="cbEnableRemove"
-        cs-input-label="{{::'csvUpload.enableRemoveLabel' | translate}}"
-        cs-input-help-text="{{::'csvUpload.enableRemoveNote' | translate}}" />
-    </div>
+
   </div>
 </div>

@@ -60,8 +60,8 @@ describe('Service: AACalendarService', function () {
     number: -1
   }];
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_AAICalService_, _ical_) {
     AAICalService = _AAICalService_;

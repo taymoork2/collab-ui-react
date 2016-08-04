@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: CdrLadderDiagramService', function () {
-  beforeEach(module('uc.cdrlogsupport'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.cdrlogsupport'));
+  beforeEach(angular.mock.module('Huron'));
 
   var $httpBackend, $q, CdrLadderDiagramService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrDiagram/proxyResponse.json');

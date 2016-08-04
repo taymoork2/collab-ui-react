@@ -1,6 +1,6 @@
 'use strict';
 describe('HelpdeskService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
 
@@ -16,9 +16,6 @@ describe('HelpdeskService', function () {
     CsdmConverter = _CsdmConverter_;
 
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('searching orgs', function () {

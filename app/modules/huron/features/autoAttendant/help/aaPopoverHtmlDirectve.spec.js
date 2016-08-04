@@ -4,7 +4,7 @@ describe('Directive: aaPopoverHtml', function () {
   var $compile, $rootScope, $timeout, $scope;
   var element, divElement;
 
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('Huron'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;

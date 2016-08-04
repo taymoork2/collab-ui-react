@@ -45,13 +45,13 @@
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }
-  
+
   .cs-card > article graphheader {
    padding-right: 1rem;
       padding-left: .1rem;
       padding-top: .1rem;
   }
-  
+
   .report-card.hideCard {
     height: 0;
     margin: 0;
@@ -66,7 +66,7 @@
     }
   }
   .report-card {
-    
+
     animation: scaleUpCard .5s linear;
     article {
       min-height: vr-adjust(390);
@@ -75,11 +75,11 @@
       animation: scaleUpCard .5s linear;
     }
     .report-section-header {
-      
+
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
       text-align: left;
-      
+
     }
     .report-description {
       position: relative;

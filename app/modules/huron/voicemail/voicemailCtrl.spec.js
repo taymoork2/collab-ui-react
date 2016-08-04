@@ -16,8 +16,8 @@ describe('Controller: VoicemailInfoCtrl', function () {
   };
   var url;
 
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_, _DirectoryNumber_, _LineSettings_) {
     $scope = $rootScope.$new();
@@ -63,6 +63,22 @@ describe('Controller: VoicemailInfoCtrl', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  describe('init voicemail', function () {
+    it('should set enableVoicemail to true when telephonyInfo is updated with voicemail service', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithVoicemail);
+      $scope.$broadcast('telephonyInfoUpdated');
+      $scope.$apply();
+      expect(controller.enableVoicemail).toBe(true);
+    });
+
+    it('should set enableVoicemail to false when telephonyInfo is updated with no voicemail service', function () {
+      // default is voice service only
+      $scope.$broadcast('telephonyInfoUpdated');
+      $scope.$apply();
+      expect(controller.enableVoicemail).toBe(false);
+    });
+  });
+
   describe('saveVoicemail', function () {
     describe('enable voicemail', function () {
       beforeEach(function () {
@@ -106,11 +122,12 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
     describe('disable voicemail', function () {
       beforeEach(function () {
-        controller.enableVoicemail = false;
         spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
         TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithVoicemail);
         $scope.$broadcast('telephonyInfoUpdated');
         $scope.$apply();
+
+        controller.enableVoicemail = false;
       });
 
       it('should notify on success', function () {

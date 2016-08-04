@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller:MediaServiceMetricsContoller', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
   var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService, redirectTargetPromise;
 
   var ABORT = 'ABORT';

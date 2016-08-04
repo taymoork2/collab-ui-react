@@ -4,8 +4,8 @@ describe('Service: AATrackChangeService', function () {
 
   var AATrackChangeService;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(function (_AATrackChangeService_) {
     AATrackChangeService = _AATrackChangeService_;
   }));

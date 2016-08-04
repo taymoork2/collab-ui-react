@@ -58,9 +58,9 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var startTimeOptions = businessHours.startTimeOptions;
   var defaultTimings = businessHours.defaultTimings;
 
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Hercules'));
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", spiedAuthinfo);
 
     $provide.value("SunlightConfigService", {

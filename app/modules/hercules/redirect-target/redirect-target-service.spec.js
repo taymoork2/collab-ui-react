@@ -1,12 +1,12 @@
 'use strict';
 
 describe('RedirectTargetService', function () {
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
 
   var service;
   var httpBackend;
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", {
       getOrgId: function () {
         return "foo";

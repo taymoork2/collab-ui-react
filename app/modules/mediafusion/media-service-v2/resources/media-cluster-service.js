@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2, $log) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
     var clusterCache = {
       mf_mgmt: {}
     };
@@ -11,19 +11,19 @@
       return res.data;
     }
 
+    function extractClustersFromResponse(response) {
+      return extractDataFromResponse(response).clusters;
+    }
+
     var fetch = function () {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
-        //removing the below code as state is no longer available
-        .then(function (response) {
-          // only keep fused clusters
-          return response.clusters; //_.filter(response.clusters, 'state', 'fused');
-        })
+        .then(extractClustersFromResponse)
         .then(function (clusters) {
-          // start modeling the response to match how the UI uses it, per connectorType
+          // start modeling the response to match how the UI uses it
+          var onlyMfMgmt = _.filter(clusters, 'targetType', 'mf_mgmt');
           return {
-            mf_mgmt: clusterType('mf_mgmt', clusters)
+            mf_mgmt: onlyMfMgmt
           };
         })
         .then(function (clusters) {
@@ -168,16 +168,6 @@
       });
     }
 
-    function clusterType(type, clusters) {
-      $log.log("cluster details", clusters);
-      return _.chain(clusters)
-        .map(function (cluster) {
-          cluster = angular.copy(cluster);
-          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
-          return cluster;
-        }).value();
-    }
-
     var getClusters = function () {
       return clusterCache['mf_mgmt'];
     };
@@ -252,10 +242,6 @@
       return response.data.clusters;
     }
 
-    function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, 'state', 'fused');
-    }
-
     function extractDataFromResponse(res) {
       return res.data;
     }
@@ -282,12 +268,6 @@
     }
 
     function moveV2Host(connectorId, fromCluster, toCluster) {
-      var payLoad = {
-        "managementConnectorId": connectorId,
-        "fromClusterId": fromCluster,
-        "toClusterId": toCluster
-      };
-
       //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http

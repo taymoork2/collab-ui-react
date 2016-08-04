@@ -1,12 +1,26 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('Auth', Auth);
+  module.exports = angular
+    .module('core.auth', [
+      'pascalprecht.translate',
+      'ui.router',
+      require('modules/core/auth/token.service'),
+      require('modules/core/config/config'),
+      require('modules/core/config/oauthConfig'),
+      require('modules/core/config/urlConfig'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/log'),
+      require('modules/core/scripts/services/sessionstorage'),
+      require('modules/core/scripts/services/storage'),
+      require('modules/core/scripts/services/utils'),
+      require('modules/core/windowLocation/windowLocation'),
+    ])
+    .factory('Auth', Auth)
+    .name;
 
   /* @ngInject */
-  function Auth($injector, $translate, $q, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -63,7 +77,6 @@
 
     function refreshAccessToken() {
       var refreshToken = TokenService.getRefreshToken();
-
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
@@ -97,18 +110,39 @@
     }
 
     function logoutAndRedirectTo(redirectUrl) {
-      var revokeUrl = OAuthConfig.getOauthDeleteTokenUrl();
-      var data = 'token=' + TokenService.getAccessToken();
-      var token = OAuthConfig.getOAuthClientRegistrationCredentials();
-      return httpPOST(revokeUrl, data, token)
-        .catch(handleError('Failed to delete the oAuth token'))
-        .finally(function () {
-          clearStorage();
-          // We store a key value in sessionStorage to  
-          // prevent a login when multiple tabs are open
-          SessionStorage.put('logout', 'logout');
-          WindowLocation.set(redirectUrl);
+      var listTokensUrl = OAuthConfig.getOauthListTokenUrl();
+      return httpGET(listTokensUrl)
+        .then(function (response) {
+          var promises = [];
+          var refreshTokenData = _.each(response.data.data, function (tokenData) {
+            var refreshTokenId = tokenData.token_id;
+            var revoke = revokeAuthTokens(refreshTokenId, redirectUrl);
+            promises.push(revoke);
+          });
+          $q.all(promises).catch(function () {
+              handleError('Failed to revoke the refresh tokens');
+            })
+            .finally(function () {
+              completeLogout(redirectUrl);
+            });
+        })
+        .catch(function (response) {
+          handleError('Failed to retrieve token_id');
         });
+    }
+
+    function revokeAuthTokens(tokenId) {
+      var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
+      return $http.delete(revokeUrl)
+        .catch(handleError('Failed to delete the oAuth token'));
+    }
+
+    function completeLogout(redirectUrl) {
+      clearStorage();
+      // We store a key value in sessionStorage to  
+      // prevent a login when multiple tabs are open
+      SessionStorage.put('logout', 'logout');
+      WindowLocation.set(redirectUrl);
     }
 
     function isLoggedIn() {

@@ -37,14 +37,11 @@
     };
 
     vm.disableOrpheusForMediaFusion = function () {
-      //$log.log("Entered disableOrpheusForMediaFusion");
       MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
@@ -53,7 +50,6 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success(response) {},
               function error(errorResponse, status) {

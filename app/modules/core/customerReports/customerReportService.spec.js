@@ -33,7 +33,7 @@ describe('Service: Customer Reports Service', function () {
   var devicesData = devicesJson.deviceData;
   var deviceResponse = devicesJson.response;
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
@@ -64,7 +64,7 @@ describe('Service: Customer Reports Service', function () {
     message: 'error'
   };
 
-  beforeEach(module(function ($provide) {
+  beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 

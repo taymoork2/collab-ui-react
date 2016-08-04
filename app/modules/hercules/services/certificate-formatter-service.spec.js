@@ -3,7 +3,7 @@
 describe('Service: CertificateFormatterService', function () {
   var CertificateFormatterService;
 
-  beforeEach(module('Hercules'));
+  beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
 
   function dependencies(_CertificateFormatterService_) {

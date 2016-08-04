@@ -11,12 +11,13 @@
     var clusterId = null;
     vm.name = wizardData.mediafusion.hostname;
     vm.next = next;
+    vm.canGoNext = canGoNext;
     vm.handleKeypress = handleKeypress;
     vm.provisioning = false;
     vm._translation = {
       help: $translate.instant('hercules.fusion.add-resource.mediafusion.name.help')
     };
-    vm.minlength = 3;
+    vm.minlength = 1;
     vm.validationMessages = {
       required: $translate.instant('common.invalidRequired'),
       minlength: $translate.instant('common.invalidMinLength', {

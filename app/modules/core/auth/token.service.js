@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .service('TokenService', TokenService);
+  module.exports = angular
+    .module('core.token', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/sessionstorage'),
+    ])
+    .service('TokenService', TokenService)
+    .name;
 
   /* @ngInject */
   function TokenService($injector, $rootScope, $window, Config, SessionStorage) {

@@ -1,17 +1,17 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $controller, $modal, $scope, $timeout, $q, $state, $stateParams, modalDefer, $interval, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
+  var controller, $controller, $modal, $scope, $timeout, $q, $state, $stateParams, $previousState, modalDefer, $interval, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, Authinfo, CsvDownloadService, HuronCustomer, UserCsvService;
   var getUserMe, getMigrateUsers, getMyFeatureToggles, sites;
   var fusionServices, headers, getLicensesUsage;
   var getLicensesUsageSpy, customer;
-  beforeEach(module('Core'));
-  beforeEach(module('Hercules'));
-  beforeEach(module('Huron'));
-  beforeEach(module('Sunlight'));
-  beforeEach(module('Messenger'));
+  beforeEach(angular.mock.module('Core'));
+  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$stateParams_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
+  beforeEach(inject(function (_$controller_, _$interval_, _$modal_, _$q_, $rootScope, _$state_, _$stateParams_, _$previousState_, _$timeout_, _Authinfo_, _CsvDownloadService_, _FeatureToggleService_, _HuronCustomer_, _Notification_, _Orgservice_, _UserCsvService_, _Userservice_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -20,6 +20,8 @@ describe('OnboardCtrl: Ctrl', function () {
     $state = _$state_;
     $stateParams = _$stateParams_;
     $modal = _$modal_;
+    $previousState = _$previousState_;
+
     Notification = _Notification_;
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
@@ -65,6 +67,12 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'updateUsers');
     spyOn($scope, '$broadcast').and.callThrough();
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+
+    spyOn($previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
   }));
 
   function initController() {

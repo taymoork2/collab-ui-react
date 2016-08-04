@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$modal', '$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice', 'WebExUtilsFact');
     initDependencySpies.apply(this);
   }
 
@@ -25,9 +25,17 @@ describe('OnboardCtrl: Ctrl', function () {
     function isLastStep() {
       return false;
     }
+
     this.$scope.wizard.isLastStep = isLastStep;
 
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+
     spyOn(this.$state, 'go');
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
 
     this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     this.mock.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
@@ -197,9 +205,12 @@ describe('OnboardCtrl: Ctrl', function () {
   });
   describe('License redirect modal', function () {
     beforeEach(initController);
+    beforeEach(function () {
+      spyOn(this.$scope, 'licenseCheckModal');
+    });
     it('should define the modal when sufficient licenses are not available', function () {
       this.$scope.checkLicenseAvailability('MESSAGING', true);
-      expect(this.$scope.licenseCheckModal).toBeDefined();
+      expect(this.$scope.licenseCheckModal).toHaveBeenCalled();
     });
     it('should not launch modal when sufficient licenses are available', function () {
       this.$scope.checkLicenseAvailability('COMMUNICATION', false);

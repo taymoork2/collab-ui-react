@@ -7,7 +7,10 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService, $timeout) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
+    AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
+    $timeout) {
+
     /*jshint validthis: true */
     var vm = this;
 
@@ -30,6 +33,9 @@
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
     vm.changeBehaviour = changeBehaviour;
+    vm.saveTimeZone = saveTimeZone;
+    vm.timeZonePlaceholder = $translate.instant('serviceSetupModal.searchTimeZone');
+
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = true;
@@ -348,6 +354,12 @@
       return vm.calendar.toString();
     }
 
+    function saveTimeZone() {
+      if (vm.timeZoneForm && !vm.timeZoneForm.$pristine) {
+        vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
+      }
+    }
+
     function save() {
       if (vm.isSavable()) {
         // create calendar
@@ -366,6 +378,8 @@
         } else {
           vm.ui.holidaysValue = 'holidays';
         }
+
+        vm.saveTimeZone();
 
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
@@ -423,7 +437,6 @@
     }
 
     function createSchedule(calName) {
-      var ceName = vm.aaModel.aaRecord.callExperienceName;
       return AACalendarService.createCalendar(calName, vm.calendar).then(
         function (response) {
           // success
@@ -467,9 +480,6 @@
     }
 
     function deleteSchedule() {
-      var id = vm.aaModel.aaRecord.scheduleId;
-      var ceName = vm.aaModel.aaRecord.callExperienceName;
-
       delete vm.aaModel.aaRecord.scheduleId;
 
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
@@ -540,6 +550,10 @@
           label: moment.weekdays(index)
         };
       });
+
+      if (vm.timeZoneForm) {
+        vm.timeZoneForm.$setPristine();
+      }
 
       vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
 

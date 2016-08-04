@@ -1,4 +1,4 @@
-(function ($log) {
+(function () {
   'use strict';
 
   function Cluster(cluster) {

@@ -2,11 +2,11 @@
 
 describe('Controller: HostDeregisterControllerV2', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, $rootScope, $scope, httpBackend, controller, cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var vm, $rootScope, $scope, controller, cluster, connector, orgName, MediaClusterServiceV2, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
-  beforeEach(inject(function (_$rootScope_, $httpBackend, $controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function (_$rootScope_, $controller, _XhrNotificationService_, _$q_, _$translate_) {
     $rootScope = _$rootScope_;
     cluster = {
       id: 'id',
@@ -31,12 +31,6 @@ describe('Controller: HostDeregisterControllerV2', function () {
     windowMock = {
       open: sinon.stub()
     };
-    log = $log;
-    log.reset();
-    httpBackend = $httpBackend;
-    httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
     controller = $controller('HostDeregisterControllerV2', {
       $scope: $rootScope.$new(),
       connector: connector,
@@ -47,8 +41,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock,
-      log: log
+      $window: windowMock
     });
 
   }));
@@ -76,22 +69,20 @@ describe('Controller: HostDeregisterControllerV2', function () {
     var deregisterDefered = $q.defer();
     spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
     deregisterDefered.resolve();
-    httpBackend.flush();
+    $rootScope.$apply();
 
     controller.deregister();
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
+    $rootScope.$apply();
     expect(controller.saving).toBe(false);
   });
   it('Should go to failure module of deregister', function () {
     var deregisterDefered = $q.defer();
     spyOn(MediaClusterServiceV2, 'defuseV2Connector').and.returnValue(deregisterDefered.promise);
     deregisterDefered.reject();
-    httpBackend.flush();
+    $rootScope.$apply();
 
     controller.deregister();
-    //  httpBackend.verifyNoOutstandingRequest();
-    httpBackend.verifyNoOutstandingExpectation();
+    $rootScope.$apply();
     expect(controller.saving).toBe(false);
   });
 });

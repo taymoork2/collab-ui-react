@@ -8,7 +8,6 @@
   function CustomerReportService($http, $translate, $q, Authinfo, Notification, Log, chartColors, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
-    var topn = 'topn';
     var timechart = 'timeCharts';
     var activeUserUrl = '/activeUsers';
     var groupUrl = '/conversations';
@@ -21,17 +20,13 @@
     var mostActiveUrl = 'useractivity';
     var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
-    var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
 
-    var timeFilter = null;
-
     // Promise Tracking
     var ABORT = 'ABORT';
-    var TIMEOUT = 'TIMEOUT';
     var activePromse = null;
     var mostActivePromise = null;
     var groupCancelPromise = null;

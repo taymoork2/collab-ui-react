@@ -14,7 +14,6 @@
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
-    var activeUserRefreshDiv = 'activeUsersRefreshDiv';
     var activeUsersBalloonText = '<span class="graph-text">' + $translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + $translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     var usersTitle = $translate.instant('activeUsers.users');
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
@@ -156,7 +155,6 @@
 
     function mediaQualityGraphs(data) {
       var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
       var colors = [chartColors.blue, chartColors.brandWarning, chartColors.brandDanger];
       if (!data[0].balloon) {

@@ -36,7 +36,7 @@ describe('Controller: UserCsvService', function () {
     userErrorArray: []
   };
 
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
   beforeEach(inject(function (_UserCsvService_, _Notification_) {
     UserCsvService = _UserCsvService_;
     Notification = _Notification_;

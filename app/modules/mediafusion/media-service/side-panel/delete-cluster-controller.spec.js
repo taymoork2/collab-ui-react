@@ -2,11 +2,11 @@
 
 describe('Controller: DeleteClusterController', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, controller, groupDetail, groupName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var vm, controller, groupDetail, groupName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
-  beforeEach(inject(function ($controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function ($controller, _XhrNotificationService_, _$q_, _$translate_) {
     groupName = 'trichy';
 
     groupDetail = {
@@ -35,8 +35,6 @@ describe('Controller: DeleteClusterController', function () {
     windowMock = {
       open: sinon.stub()
     };
-    log = $log;
-    log.reset();
 
     controller = $controller('DeleteClusterController', {
       groupName: groupName,
@@ -46,8 +44,7 @@ describe('Controller: DeleteClusterController', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock,
-      log: log
+      $window: windowMock
     });
     sinon.spy(controller, 'deleteCluster');
     sinon.spy(controller, 'delete');

@@ -2,7 +2,7 @@
 'use strict';
 
 describe('User Service', function () {
-  beforeEach(module('Sunlight'));
+  beforeEach(angular.mock.module('Sunlight'));
   beforeEach(function () {
     bard.appModule('Huron');
     bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
@@ -92,6 +92,65 @@ describe('User Service', function () {
       .respond(200, testData.onboard_success_response);
     Userservice.onboardUsers(testData.usersDataArray, testData.entitlements, [testData.non_sunlight_license]);
     $httpBackend.flush();
+  });
+
+  describe('User Photo', function () {
+
+    beforeEach(function () {
+      this.photoUrl = "https://example.com/V1~b184c46919c0653716f712618bba017e~1A9RhIk6SueEdU-_4-nKJw==~1600";
+      this.thumbnailUrl = "https://example.com/V1~b184c46919c0653716f712618bba017e~1A9RhIk6SueEdU-_4-nKJw==~80";
+    });
+
+    it('should correctly test for an existing thumbnail photo', function () {
+
+      var user;
+
+      expect(Userservice.isValidThumbnail(user)).toBeFalsy();
+
+      user = {};
+
+      user.photos = [{
+        "type": "photo",
+        "value": this.photoUrl
+      }];
+      expect(Userservice.isValidThumbnail(user)).toBeFalsy();
+
+      user.photos = [{
+        "type": "photo",
+        "value": this.photoUrl
+      }, {
+        "type": "thumbnail",
+        "value": this.thumbnailUrl
+      }];
+
+      expect(Userservice.isValidThumbnail(user)).toBeTruthy();
+
+    });
+
+    it('should correctly return thumbnail photo', function () {
+
+      var user;
+
+      expect(Userservice.getUserPhoto(user)).toBeUndefined();
+
+      user = {};
+      user.photos = [{
+        "type": "photo",
+        "value": this.photoUrl
+      }];
+      expect(Userservice.getUserPhoto(user)).toBeUndefined();
+
+      user.photos = [{
+        "type": "photo",
+        "value": this.photoUrl
+      }, {
+        "type": "thumbnail",
+        "value": this.thumbnailUrl
+      }];
+      expect(Userservice.getUserPhoto(user)).toEqual(this.thumbnailUrl);
+
+    });
+
   });
 
 });

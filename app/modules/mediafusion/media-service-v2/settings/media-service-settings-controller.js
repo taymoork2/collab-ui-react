@@ -12,7 +12,7 @@
     vm.featureToggled = false;
 
     function isFeatureToggled() {
-      return FeatureToggleService.supports(FeatureToggleService.features.hybridServicesResourceList);
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridServicesResourceList);
     }
     isFeatureToggled().then(function (reply) {
       vm.featureToggled = reply;
@@ -21,6 +21,7 @@
     vm.disableMediaService = function (serviceId) {
       MediaServiceActivationV2.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          MediaServiceActivationV2.setServiceAcknowledged(vm.serviceId, false);
           vm.disableOrpheusForMediaFusion();
           if (vm.featureToggled) {
             $state.go('services-overview');
@@ -49,14 +50,11 @@
     };
 
     vm.disableOrpheusForMediaFusion = function () {
-      //$log.log("Entered disableOrpheusForMediaFusion");
       MediaServiceActivationV2.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
           var orgId = Authinfo.getOrgId();
-          var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
-          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
           var index = mediaAgentOrgIdsArray.indexOf(orgId);
           mediaAgentOrgIdsArray.splice(index, 1);
@@ -65,7 +63,6 @@
           mediaAgentOrgIdsArray.splice(index, 1);
 
           if (mediaAgentOrgIdsArray.length > 0) {
-            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
             MediaServiceActivationV2.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success(response) {},
               function error(errorResponse, status) {

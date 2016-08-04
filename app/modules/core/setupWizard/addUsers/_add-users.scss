@@ -125,6 +125,7 @@
       .action-link {
         position: absolute;
         left: 0;
+        bottom: 0;
         width: 100%;
         display: flex;
         align-items: center;
@@ -270,6 +271,21 @@
   }
   .installStepWarning {
     margin-bottom: rem(25);
+    display: inline-flex;
+
+    .icon-warning {
+      color: $color-attention-base;
+      top: .1rem;
+    }
+
+    .block {
+      display: inline;
+
+      div {
+        padding-top: 1rem;
+      }
+    }
+
     .alert-text {
       color: $color-alerts-base;
       font-weight: bold;

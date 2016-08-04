@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Core')
-    .factory('OAuthConfig', OAuthConfig);
+  module.exports = angular
+    .module('core.oauthconfig', [
+      require('modules/core/config/config'),
+      require('modules/core/scripts/services/utils')
+    ])
+    .factory('OAuthConfig', OAuthConfig)
+    .name;
 
   function OAuthConfig(Utils, Config) {
 
@@ -20,7 +24,14 @@
       'cloud-contact-center:admin',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
-      'contact-center-context:pod_write'
+      'contact-center-context:pod_write',
+      'spark-admin:people_read',
+      'spark-admin:people_write',
+      'spark-admin:customers_read',
+      'spark-admin:customers_write',
+      'spark-admin:organizations_read',
+      'spark-admin:licenses_read',
+      'spark-admin:logs_read'
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));
@@ -50,10 +61,12 @@
 
     return {
       getLogoutUrl: getLogoutUrl,
+      getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,
+      getOauthListTokenUrl: getOauthListTokenUrl,
       getAccessTokenUrl: getAccessTokenUrl,
       getOauthAccessCodeUrl: getOauthAccessCodeUrl,
-      getOauthDeleteTokenUrl: getOauthDeleteTokenUrl,
+      getOauthDeleteRefreshTokenUrl: getOauthDeleteRefreshTokenUrl,
       getAccessTokenPostData: getAccessTokenPostData,
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
@@ -70,8 +83,8 @@
       return getOauth2Url() + 'access_token';
     }
 
-    function getOauthDeleteTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/revoke';
+    function getOauthDeleteRefreshTokenUrl() {
+      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
     }
 
     function getOAuthClientRegistrationCredentials() {
@@ -98,6 +111,10 @@
       return Utils.sprintf(pattern, params);
     }
 
+    function getOauthListTokenUrl() {
+      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
+    }
+
     function getOauthAccessCodeUrl(refresh_token) {
       var params = [
         refresh_token,
@@ -113,6 +130,16 @@
 
     function getAccessTokenPostData() {
       return config.oauthUrl.oauth2ClientUrlPattern + oauth2Scope;
+    }
+
+    function getClientId() {
+      var clientId = {
+        'cfe': config.oauthClientRegistration.cfe.id,
+        'dev': config.oauthClientRegistration.atlas.id,
+        'prod': config.oauthClientRegistration.atlas.id,
+        'integration': config.oauthClientRegistration.atlas.id,
+      };
+      return clientId[Config.getEnv()];
     }
 
     // private
@@ -142,16 +169,6 @@
         'integration': config.oauthClientRegistration.atlas.secret,
       };
       return clientSecret[Config.getEnv()];
-    }
-
-    function getClientId() {
-      var clientId = {
-        'cfe': config.oauthClientRegistration.cfe.id,
-        'dev': config.oauthClientRegistration.atlas.id,
-        'prod': config.oauthClientRegistration.atlas.id,
-        'integration': config.oauthClientRegistration.atlas.id,
-      };
-      return clientId[Config.getEnv()];
     }
 
     function getOauth2Url() {

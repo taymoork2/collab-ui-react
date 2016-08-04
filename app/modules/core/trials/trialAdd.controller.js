@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialContextService, TrialPstnService, TrialService, ValidationService, Orgservice) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var _careDefaultQuantity = 15;
@@ -579,6 +579,7 @@
     function previousStep() {
       var state = getBackState();
       if (state) {
+        Analytics.trackTrialSteps(Analytics.eventNames.BACK, state, Authinfo.getOrgId());
         $state.go(state);
       }
     }
@@ -599,6 +600,7 @@
       if (!hasNextStep()) {
         return startTrial(callback);
       } else {
+        Analytics.trackTrialSteps(Analytics.eventNames.NEXT, $state.current.name, Authinfo.getOrgId());
         return $state.go(getNextState());
       }
     }

@@ -5,8 +5,8 @@ describe('Service: AADependencyService', function () {
   var $q, $rootScope, AACalendarService, AADependencyService, AANotificationService;
   var updateCalendarNameDeferred;
 
-  beforeEach(module('uc.autoattendant'));
-  beforeEach(module('Huron'));
+  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('Huron'));
   beforeEach(inject(function (_$q_, _$rootScope_, _AACalendarService_, _AADependencyService_, _AANotificationService_) {
     $q = _$q_;
     $rootScope = _$rootScope_;

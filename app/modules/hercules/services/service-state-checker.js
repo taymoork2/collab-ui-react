@@ -150,7 +150,7 @@
             serviceId: 'squared-fusion-ec'
           });
 
-          if (awareStatus.error > 0 || (connectStatus && connectStatus.error > 0)) {
+          if ((awareStatus && awareStatus.error > 0) || (connectStatus && connectStatus.error > 0)) {
             var userErrorsId = serviceId + ':userErrors';
             var data = [];
             if (awareStatus.error > 0) {

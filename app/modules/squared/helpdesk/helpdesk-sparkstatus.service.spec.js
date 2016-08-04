@@ -1,17 +1,13 @@
 'use strict';
 describe('Service: HelpdeskSparkStatusService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(angular.mock.module('Squared'));
 
-  var $httpBackend, ReportsService, Service, ServiceDescriptor, $scope, q;
+  var ReportsService, Service, ServiceDescriptor, $scope, q;
 
-  beforeEach(inject(function (_$httpBackend_, _ReportsService_, _$rootScope_, _HelpdeskSparkStatusService_) {
+  beforeEach(inject(function (_ReportsService_, _$rootScope_, _HelpdeskSparkStatusService_) {
     Service = _HelpdeskSparkStatusService_;
     ReportsService = _ReportsService_;
     $scope = _$rootScope_.$new();
-    $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   describe("health report returns success", function () {

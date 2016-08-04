@@ -1,7 +1,7 @@
 'use strict';
 
 describe('orgService', function () {
-  beforeEach(module('Core'));
+  beforeEach(angular.mock.module('Core'));
 
   var q, deferred;
 
@@ -9,7 +9,7 @@ describe('orgService', function () {
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
-    module(function ($provide) {
+    angular.mock.module(function ($provide) {
       Auth = {
         setAccessToken: sinon.stub()
       };
@@ -514,6 +514,15 @@ describe('orgService', function () {
     };
     httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
+    expect(httpBackend.flush).not.toThrow();
+  });
+
+  it('should set Acknowledged for media service', function () {
+    var data = {
+      "acknowledged": true
+    };
+    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.mediafusion, data).respond(200, {});
+    Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
     expect(httpBackend.flush).not.toThrow();
   });
 

@@ -56,17 +56,41 @@
       </div>
       <div class="feature-list trials-list">
         <ul>
-          <li class="feature">
-            <div class="feature-name" id="trial-info">{{customerOverview.offer.userServices}}</div>
-            <div class="feature-details">{{::'common.quantity' | translate}}:&nbsp;{{customerOverview.currentCustomer.licenses}}</div>
+          <li class="feature" ng-if="customerOverview.offer.userServices">
+            <div class="feature-name" id="trial-info"> <i class="icon icon-circle-group feature-icon"></i>{{:: customerOverview.offer.userServices | translate}}</div>
+            <div class="feature-details pull-right">{{customerOverview.currentCustomer.licenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
-          <li class="feature" ng-if="customerOverview.showRoomSystems">
-            <div class="feature-name" translate={{customerOverview.offer.deviceBasedServices}}></div>
-            <div class="feature-details">{{::'common.quantity' | translate}}:&nbsp;{{customerOverview.currentCustomer.deviceLicenses}}</div>
+          <li class="feature" ng-if="customerOverview.showRoomSystems && customerOverview.offer.deviceBasedServices">
+            <div class="feature-name"><i class="icon icon-circle-telepresence feature-icon"></i>{{::customerOverview.offer.deviceBasedServices | translate}}</div>
+            <div class="feature-details pull-right">{{customerOverview.currentCustomer.deviceLicenses}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
           </li>
         </ul>
       </div>
     </cs-sp-section>
+  <!-- services -->
+  <cs-sp-section  ng-if= "customerOverview.newCustomerViewToggle && (customerOverview.freeOrPaidServices|| customerOverview.meetingServices)">
+    <div class="section-title-row">
+      <span class="section-name" translate="customerPage.services"></span>
+    </div>
+    <div class="feature-list services-list" >
+      <ul ng-class="{'has-meeting': customerOverview.meetingServices}">
+        <!-- paid services -->
+        <li class="feature" ng-repeat = "service in customerOverview.freeOrPaidServices">
+          <div class="feature-name" ><i class="icon  feature-icon " ng-class="service.icon"></i>{{:: service.name | translate}}</div>
+            <div class="feature-details pull-right" ng-show="!service.free">{{service.qty}}&nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <div class="feature-details pull-right" ng-show="service.free">{{::'customerPage.free' | translate | uppercase}}</div>
+          </li>
+          <!-- if there is meeting -->
+          <li class="feature" id="meeting" ng-if="customerOverview.meetingServices">
+           <a ui-sref="customer-overview.meetingDetail({meetingLicenses: customerOverview.meetingServices.sub})">
+            <div class="feature-name"><i class="icon  feature-icon  {{customerOverview.meetingServices.icon}}"></i>{{::customerOverview.meetingServices.name}}</div>
+            <div class="feature-details pull-right">{{customerOverview.meetingServices.qty}} &nbsp;{{::'common.quantity' | translate | uppercase}}</div>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
     <trial-webex-overview></trial-webex-overview>
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
     <cs-sp-section>
@@ -95,8 +119,8 @@
     <uc-customer-administrator-overview ng-if="customerOverview.isPartnerAdmin"></uc-customer-administrator-overview>
    <button id="deleteCustomer" cs-btn class="btn btn--link btn--negative btn--delete " ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
       ng-click="customerOverview.deleteTestOrg()" loading="customerOverview.isDeleting">
-     <i class="icon icon-trash"></i>    <span translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}"></span>
+     <i class="icon icon-trash"></i>
+     <span translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}"></span>
     </button>
   </cs-sp-container>
-
 </div>
