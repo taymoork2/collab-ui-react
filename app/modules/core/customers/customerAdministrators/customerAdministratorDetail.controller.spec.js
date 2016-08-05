@@ -41,7 +41,18 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
       avatarSyncEnabled: false
     }));
-    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
+    // spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
+    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
+      data: {
+        Errors: [{
+          code: '403',
+          description: 'Organization has too many users.',
+          errorCode: '200046'
+        }]
+      },
+      status: 403
+    }));
+
     spyOn(CustomerAdministratorService, 'patchSalesAdminRole').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
       data: {
@@ -92,6 +103,18 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       expect(controller.administrators[1].uuid).toEqual('2');
       expect(controller.administrators[1].fullName).toEqual('John Doe');
       expect(controller.administrators[1].avatarSyncEnabled).toEqual(true);
+    });
+  });
+
+  describe('getPartnerUsers', function () {
+    beforeEach(initController);
+
+    it('must display too many results error message', function () {
+      controller.getPartnerUsers('a');
+      $scope.$apply();
+
+      expect(controller.resultsError).toEqual(true);
+      expect(controller.resultsErrorMessage).toEqual('customerAdminPanel.tooManyResultsError');
     });
   });
 

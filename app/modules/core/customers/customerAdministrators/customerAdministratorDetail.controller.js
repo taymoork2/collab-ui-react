@@ -128,7 +128,7 @@
           var resources = _.get(response, 'data.Resources', []);
           var searchUsers = [];
           var fullName = '';
-          var uuid = '';          
+          var uuid = '';
           _.every(resources, function (user) {
             if (user.name) {
               var givenName = user.name.givenName;
@@ -142,8 +142,9 @@
               fullName = user.userName;
             }
             uuid = user.id;
-            if (fullName.toLowerCase().indexOf(str.toLowerCase()) !== -1 || user.displayName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
-               user.userName.toLowerCase().indexOf(str.toLowerCase()) !== -1) {
+            if (fullName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+              user.displayName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+              user.userName.toLowerCase().indexOf(str.toLowerCase()) !== -1) {
               searchUsers.push(fullName);
               vm.users.push({
                 fullName: fullName,
@@ -154,14 +155,14 @@
           });
           if (searchUsers.length === 0) {
             vm.resultsError = true;
-            vm.resultsErrorMessage = "No results found";
+            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.noResultsError');
           }
           return searchUsers;
         })
         .catch(function (err) {
-          if (err.data.Errors[0].code === "500") {
+          if (_.get(err, 'status') === 403 && _.get(err, 'data.Errors[0].errorCode') === '200046') {
             vm.resultsError = true;
-            vm.resultsErrorMessage = "Search returned too many results. Be more specific to find user";
+            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.tooManyResultsError');
           }
           Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
