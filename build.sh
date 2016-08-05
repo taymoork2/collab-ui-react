@@ -90,7 +90,6 @@ fi
 # -----
 # Phase 3: Build
 set -e
-time npm run jsb-verify
 time npm run eslint
 time npm run json-verify
 time npm run languages-verify
