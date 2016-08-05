@@ -44,9 +44,9 @@ describe('Service: Common  Metrics Graph Service', function () {
 
     it('getBaseStackSerialGraph should return expected defaults for a column graph', function () {
       responseData.getBaseStackSerialGraph[BALLOON] = responseData.baseVariables[BALLOON];
-      responseData.getBaseStackSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
+      //responseData.getBaseStackSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
       responseData.getBaseStackSerialGraph[PREFIXES] = responseData.baseVariables[PREFIXES];
-      expect(CommonMetricsGraphService.getBaseStackSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData)).toEqual(responseData.getBaseStackSerialGraph);
+      expect(CommonMetricsGraphService.getBaseStackSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData)).toEqual(responseData.getBaseStackSerialGraph);
     });
 
     it('getGanttGraph should return expected defaults for a pie chart', function () {

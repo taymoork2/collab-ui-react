@@ -16,7 +16,6 @@
     //vm.getClusters = getClusters;
     vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
-    vm.setTotalCallsData = setTotalCallsData;
     vm.isRefresh = isRefresh;
     vm.isEmpty = isEmpty;
     vm.setAllGraphs = setAllGraphs;
@@ -24,6 +23,7 @@
     vm.setAvailabilityData = setAvailabilityData;
     vm.setUtilizationData = setUtilizationData;
     vm.setCPUUtilizationData = setCPUUtilizationData;
+    vm.setTotalCallsData = setTotalCallsData;
     vm.setClusterAvailability = setClusterAvailability;
     //vm.averageUtilization = vm.REFRESH;
     //vm.clusterAvailability = vm.REFRESH;
@@ -185,7 +185,7 @@
     }
 
     function setCallVolumeGraph(data) {
-      var tempCallVolumeChart = MetricsGraphService.setCallVolumeGraph(data, vm.callVolumeChart);
+      var tempCallVolumeChart = MetricsGraphService.setCallVolumeGraph(data, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected.label);
       if (tempCallVolumeChart !== null && angular.isDefined(tempCallVolumeChart)) {
         vm.callVolumeChart = tempCallVolumeChart;
       }
@@ -240,7 +240,7 @@
     }
 
     function setUtilizationGraph(data) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart);
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart, vm.clusterSelected, vm.timeSelected.label);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
