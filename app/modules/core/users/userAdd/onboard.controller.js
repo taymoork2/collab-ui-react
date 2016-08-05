@@ -1637,10 +1637,10 @@
 
         //Displaying notifications
         if (method !== 'convertUser') {
-          if ($scope.numAddedUsers + $scope.numUpdatedUsers + $scope.results.errors.length) {
+          if ($scope.results.errors.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
-            Notification.error($scope.results.errors);
+            Notification.notify($scope.results.errors, 'error');
           }
         }
 
