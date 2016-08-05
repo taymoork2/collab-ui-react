@@ -37,7 +37,6 @@
             var errors = {
               'domainInvalid': $translate.instant('trialModal.meeting.domainInvalid'),
               'duplicateSite': $translate.instant('trialModal.meeting.duplicateSite'),
-              'reservedSite': $translate.instant('trialModal.meeting.reservedSite'),
               'invalidSite': $translate.instant('trialModal.meeting.invalidSite')
             };
 
