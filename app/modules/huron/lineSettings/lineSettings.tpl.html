@@ -34,7 +34,7 @@
         <p>{{lineSettings.callerIdInfo.callerIdSelection.value.pattern}}</p>
       </div>
     </cs-sp-section>
-      <cs-sp-section  cr-feature-toggle feature-show="huron-multiple-calls">
+    <cs-sp-section ng-show="!FeatureToggleService.huronMultipleCallsGetStatus()">
       <h4 class="multiple-calls-title" translate="multipleCalls.title"></h4>
       <label translate="multipleCalls.multipleCallsDescription" class = "caller-id-description"></label>
       <formly-form model="lineSettings.simultaneousModel" class="inline-radio" fields="lineSettings.simultaneousCalls"></formly-form>
