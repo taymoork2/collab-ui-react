@@ -44,7 +44,7 @@
       <div>
         <input type="text"
                ng-model="choosePlace.selected"
-               typeahead="room for room in choosePlace.rooms() | filter:$viewValue | limitTo:6"
+               typeahead="room for room in choosePlace.rooms | filter:$viewValue | limitTo:6"
                typeahead-template-url="placeTemplate.html"
                typeahead-on-select="choosePlace.selectPlace($item)"
                placeholder="{{'addDeviceWizard.chooseSharedSpace.selectPlace' | translate}}"

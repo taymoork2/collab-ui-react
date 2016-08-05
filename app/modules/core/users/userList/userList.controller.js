@@ -85,6 +85,7 @@
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
+    $scope.sortDirection = sortDirection;
 
     var promises = {
       csvEnhancement: FeatureToggleService.atlasCsvEnhancementGetStatus(),
@@ -469,6 +470,7 @@
               $scope.gridApi.infiniteScroll.dataLoaded();
             }
           });
+          gridApi.core.on.sortChanged($scope, sortDirection);
         },
         columnDefs: [{
           field: 'photos',
@@ -478,22 +480,27 @@
           width: 70
         }, {
           field: 'name.givenName',
+          id: 'givenName',
           displayName: $translate.instant('usersPage.firstnameHeader'),
           sortable: true
         }, {
           field: 'name.familyName',
+          id: 'familyName',
           displayName: $translate.instant('usersPage.lastnameHeader'),
           sortable: true
         }, {
           field: 'displayName',
+          id: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
           sortable: true
         }, {
           field: 'userName',
+          id: 'userName',
           displayName: $translate.instant('usersPage.emailHeader'),
           sortable: true
         }, {
           field: 'userStatus',
+          id: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
           cellTemplate: getTemplate('status.tpl'),
@@ -524,6 +531,23 @@
     // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
       return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
+    }
+
+    function sortDirection(scope, sortColumns) {
+      if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+        return;
+      }
+
+      if ($scope.load) {
+        $scope.load = false;
+        var sortBy = sortColumns[0].colDef.id;
+        var sortOrder = sortColumns[0].sort.direction === 'asc' ? 'ascending' : 'descending';
+        if ($scope.sort.by !== sortBy || $scope.sort.order !== sortOrder) {
+          $scope.sort.by = sortBy;
+          $scope.sort.order = sortOrder.toLowerCase();
+        }
+        getUserList();
+      }
     }
 
     function startExportUserList() {

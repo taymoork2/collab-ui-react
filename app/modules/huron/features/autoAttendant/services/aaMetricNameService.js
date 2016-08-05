@@ -15,6 +15,7 @@
       BUILDER_PAGE: prefix + 'builder',
       UI_HELP: prefix + 'help',
       UI_NOTIFICATION: prefix + 'notification',
+      TIME_ZONE: prefix + 'timezone'
     };
     return service;
   }

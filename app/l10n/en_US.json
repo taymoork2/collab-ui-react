@@ -4607,6 +4607,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
+        "enableDevices": "Enable Devices",
         "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
@@ -5525,5 +5526,9 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
+  },
+  "clipboard": {
+    "success": "Copied to clipboard",
+    "error": "Copy to clipboard failed"
   }
 }

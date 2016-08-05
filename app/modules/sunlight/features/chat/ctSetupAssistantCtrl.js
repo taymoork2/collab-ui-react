@@ -190,7 +190,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('name'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -210,7 +210,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('email'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               },
 
@@ -230,7 +230,7 @@
                 }, {
                   name: 'type',
                   value: vm.getTypeObject('category'),
-                  categoryOptions: []
+                  categoryOptions: ''
                 }]
               }
             }
