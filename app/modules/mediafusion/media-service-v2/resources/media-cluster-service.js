@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2, $log) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
     var clusterCache = {
       mf_mgmt: {}
     };
@@ -168,16 +168,6 @@
       });
     }
 
-    function clusterType(type, clusters) {
-      $log.log("cluster details", clusters);
-      return _.chain(clusters)
-        .map(function (cluster) {
-          cluster = angular.copy(cluster);
-          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
-          return cluster;
-        }).value();
-    }
-
     var getClusters = function () {
       return clusterCache['mf_mgmt'];
     };
@@ -252,10 +242,6 @@
       return response.data.clusters;
     }
 
-    function onlyKeepFusedClusters(clusters) {
-      return _.filter(clusters, 'state', 'fused');
-    }
-
     function extractDataFromResponse(res) {
       return res.data;
     }
@@ -282,12 +268,6 @@
     }
 
     function moveV2Host(connectorId, fromCluster, toCluster) {
-      var payLoad = {
-        "managementConnectorId": connectorId,
-        "fromClusterId": fromCluster,
-        "toClusterId": toCluster
-      };
-
       //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http
@@ -304,7 +284,7 @@
     }
 
     var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub);
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,

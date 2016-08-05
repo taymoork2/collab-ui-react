@@ -1192,21 +1192,7 @@
         //       device: {}
         //     }
         //   })
-        .state('groups', {
-            abstract: true,
-            template: '<div ui-view></div>',
-            parent: 'main'
-          })
-          .state('groups.list', {
-            url: '/groups',
-            templateUrl: 'modules/core/groups/groupList/groupList.tpl.html',
-            controller: 'ListGroupsCtrl'
-          })
-          .state('groups.list.preview', {
-            templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
-            controller: 'GroupPreviewCtrl'
-          })
-          .state('organizations', {
+        .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
             controller: 'ListOrganizationsCtrl',
@@ -2317,13 +2303,10 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                /*                controller: 'AddResourceControllerClusterViewV2',
-                                controllerAs: 'redirectResource',
-                                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
-                                modalClass: 'redirect-add-resource'*/
-                controller: 'MediafusionEnterHostnameController',
-                controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+                controller: 'AddResourceControllerClusterViewV2',
+                controllerAs: 'redirectResource',
+                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                modalClass: 'redirect-add-resource'
               }
             },
             params: {

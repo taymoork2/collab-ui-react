@@ -356,6 +356,15 @@
 
     function saveTimeZone() {
       if (vm.timeZoneForm && !vm.timeZoneForm.$pristine) {
+        if ((vm.ui.isClosedHours || vm.ui.isHolidays) &&
+          angular.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+          // log event for first-time timezone change in a schedule
+          var type = 'change';
+          Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
+            type: type,
+            timezone: vm.ui.timeZone.id
+          });
+        }
         vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
       }
     }
@@ -437,7 +446,6 @@
     }
 
     function createSchedule(calName) {
-      var ceName = vm.aaModel.aaRecord.callExperienceName;
       return AACalendarService.createCalendar(calName, vm.calendar).then(
         function (response) {
           // success
@@ -481,9 +489,6 @@
     }
 
     function deleteSchedule() {
-      var id = vm.aaModel.aaRecord.scheduleId;
-      var ceName = vm.aaModel.aaRecord.callExperienceName;
-
       delete vm.aaModel.aaRecord.scheduleId;
 
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
@@ -600,7 +605,6 @@
         function (allHours) {
           //let Analytics know the property type of 'cancel'
           var type = 'cancel';
-          //dispatch the metric
           Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
             type: type
           });

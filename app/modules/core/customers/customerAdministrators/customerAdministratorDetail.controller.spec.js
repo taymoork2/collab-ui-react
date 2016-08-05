@@ -41,7 +41,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       id: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
       avatarSyncEnabled: false
     }));
-    // spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
       data: {
         Errors: [{
@@ -52,7 +51,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       },
       status: 403
     }));
-
     spyOn(CustomerAdministratorService, 'patchSalesAdminRole').and.returnValue($q.when({}));
     spyOn(CustomerAdministratorService, 'getAssignedSalesAdministrators').and.returnValue($q.when({
       data: {

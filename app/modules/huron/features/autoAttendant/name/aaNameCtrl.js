@@ -22,9 +22,6 @@
     vm.evalKeyPress = evalKeyPress;
     vm.name = '';
 
-    var name = "";
-    var aaBuilderMainCtrl_saveAARecords;
-
     /////////////////////
 
     function saveAARecord() {
