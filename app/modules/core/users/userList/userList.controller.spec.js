@@ -221,6 +221,27 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
+  describe('getUserList sort event', function () {
+    beforeEach(initController);
+
+    it('should getUserList with sort parameters', function () {
+      UserListService.listUsers.calls.reset();
+
+      var sortColumns = [{
+        'colDef': {
+          'id': 'displayName'
+        },
+        'sort': {
+          'direction': 'asc'
+        }
+      }];
+
+      $scope.sortDirection($scope, sortColumns);
+      expect(UserListService.listUsers.calls.count()).toEqual(2);
+      expect(UserListService.listUsers.calls.mostRecent().args[0]).toEqual(0, 100, 'displayName', 'ascending', Function, '');
+    });
+  });
+
   describe('getUserCount() returns NaN', function () {
     beforeEach(function () {
       UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {

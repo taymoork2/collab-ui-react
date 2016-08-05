@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: PstnSetupService', function () {
-  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup;
+  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup, FeatureToggleService;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
   var partnerId = '4e2befa3-9d82-4fdf-ad31-bb862133f078';
@@ -19,7 +19,10 @@ describe('Service: PstnSetupService', function () {
   var acceptedOrder = getJSONFixture('huron/json/orderManagement/acceptedOrders.json');
   var pendingOrder = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbers.json'));
 
-  var numbers = ['123', '456'];
+  var onlyPstnNumbers = ['+14694691234', '+19724564567'];
+  var onlyTollFreeNumbers = []; // Add valid toll-free numbers when tollfree APIs are available
+  var invalidNumbers = ['123', '456'];
+  var numbers = onlyPstnNumbers.concat(onlyTollFreeNumbers, invalidNumbers);
 
   var customerPayload = {
     uuid: customerId,
@@ -45,21 +48,31 @@ describe('Service: PstnSetupService', function () {
     numbers: numbers
   };
 
+  var pstnOrderPayload = {
+    numbers: onlyPstnNumbers
+  };
+
+  var tollFreeOrderPayload = {
+    numbers: onlyTollFreeNumbers
+  };
+
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
   };
 
   beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_) {
+  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_, _FeatureToggleService_) {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
+    FeatureToggleService = _FeatureToggleService_;
   }));
 
   afterEach(function () {
@@ -149,7 +162,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a number order', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', orderPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', pstnOrderPayload).respond(201);
     PstnSetupService.orderNumbers(customerId, carrierId, orderPayload.numbers);
     $httpBackend.flush();
   });
