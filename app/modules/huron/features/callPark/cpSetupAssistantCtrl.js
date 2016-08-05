@@ -209,6 +209,12 @@
 
     function fetchMembers(nameHint) {
       return $q.when(CallParkMemberDataService.fetchCallParkMembers(nameHint)).then(function (members) {
+        angular.forEach(members, function (member) {
+          member.user.primaryNumber = _.find(member.user.numbers, {
+            'primary': true
+          });
+        });
+
         if (CallParkService.suggestionsNeeded(nameHint)) {
           vm.errorMemberInput = (members && members.length === 0);
         } else {

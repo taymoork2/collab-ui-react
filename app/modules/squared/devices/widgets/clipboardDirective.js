@@ -14,22 +14,24 @@
       scope: {
         sqClipboard: '&'
       },
-      link: function ($scope, $element) {
+      link: function (scope, element) {
         if (!$window.document.queryCommandSupported('copy')) {
-          $element.remove();
+          element.remove();
           return;
         }
-        var clipBoard = new Clipboard($element[0], {
+        var clipBoard = new Clipboard(element[0], {
           text: function () {
-            return $scope.sqClipboard();
+            return scope.sqClipboard();
           }
         });
-
         clipBoard.on('success', function () {
-          Notification.success('Copied to clipboard');
+          Notification.success('clipboard.success');
         });
         clipBoard.on('error', function () {
-          Notification.error('Copy to clipboard failed');
+          Notification.error('clipboard.error');
+        });
+        scope.$on('$destroy', function () {
+          clipBoard.destroy();
         });
       }
     };

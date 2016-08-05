@@ -1016,6 +1016,7 @@
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your Room System devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Spark Board devices when they arrive.",
+    "setUpHybridMediaService": "Hybrid Media Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
@@ -2239,7 +2240,22 @@
     "successSave": "'{{callParkName}}' call park has been created successfully",
     "successUpdate": "'{{callParkName}}' call park has been updated successfully",
     "errorSave": "Failed to create the '{{callParkName}}' Call Park",
-    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park"
+    "errorUpdate": "Failed to update the '{{callParkName}}' Call Park",
+    "invalidMember": "Select at least one member",
+    "nameLabel": "Call Park Name",
+    "nameDesc": "The call park name appears on the call park members' devices",
+    "numberLabel": "Call Park Number",
+    "numberDesc": "Select a single extension number or number range",
+    "memberLabel": "Call Park Members",
+    "memberDesc": "These users or places' devices will be part of this call park",
+    "memberPlaceholder": "Search & Add Members",
+    "reversionLabel": "Call Reversion Rule",
+    "reversionDesc": "If the call is not answered, send it to this destination",
+    "personWhoParked": "Person who parked the call",
+    "firstRange": "First Range",
+    "secondRange": "Second Range",
+    "saveLabel": "Do you want to save your changes?",
+    "memberFetchFailure": "Unable to get members."
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -2383,6 +2399,7 @@
     "advanceOrder": "Advance Numbers",
     "newNumberOrder": "New Numbers",
     "portNumberOrder": "Porting Numbers",
+    "tollFreeNumberOrder": "Toll-Free Numbers",
     "searchPlaceholder": "Search Orders"
   },
   "pstnOrderDetail": {
@@ -2403,8 +2420,9 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
-    "newNumbersTab": "New Numbers",
-    "portNumbersTab": "Port Numbers",
+    "newNumbersTab": "Standard Numbers",
+    "newTollFreeTab": "Toll-Free Numbers",
+    "portNumbersTab": "Porting Numbers",
     "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
     "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
@@ -2463,7 +2481,13 @@
     },
     "errors": {
       "states": "Failed to retrieve states",
-      "inventory": "Failed to get PSTN inventory"
+      "inventory": "Failed to get PSTN inventory",
+      "tollfree": {
+        "areacodes": "Failed to retrieve toll-free area codes.",
+        "inventory": "Failed to retrieve toll-free number inventory."
+      },
+      "unsupportedNumberType": "The number type {{type}} for phone number {{number}} is currently not supported yet.",
+      "unsupportedOrderType": "Error while adding your order to the order cart. The order type {{type}} is currently not supported yet."
     },
     "orderStatus": {
       "pinRequired": "Customer needs to sign PSTN Contract.",
@@ -2983,6 +3007,7 @@
       "selectPlace": "Select a place",
       "newPlace": "New Place",
       "newPlaceInstructions": "What would you like to call this place? A place can be a meeting room, a reception area or even a whole department.",
+      "newPlaceOnlyInstructions": "What would you like to call the place that this room system will be assigned to? A place can be a meeting room, a reception area or even a whole department.",
       "deviceInstalled": "Where will this device be installed?",
       "deviceInstalledInstructions": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
       "insertRoomName": "Insert name of room or shared space",
@@ -4471,7 +4496,7 @@
     "continueButton": "Continue Creation",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
-    "invalidMember": "Select atleast one member",
+    "invalidMember": "Select at least one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "digitalRiver": {
@@ -4582,6 +4607,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
+        "enableDevices": "Enable Devices",
         "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
@@ -5500,5 +5526,9 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
+  },
+  "clipboard": {
+    "success": "Copied to clipboard",
+    "error": "Copy to clipboard failed"
   }
 }

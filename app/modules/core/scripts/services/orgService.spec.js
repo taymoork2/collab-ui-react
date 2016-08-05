@@ -514,6 +514,15 @@ describe('orgService', function () {
     expect(httpBackend.flush).not.toThrow();
   });
 
+  it('should set Acknowledged for media service', function () {
+    var data = {
+      "acknowledged": true
+    };
+    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.mediafusion, data).respond(200, {});
+    Orgservice.setHybridServiceAcknowledged('squared-fusion-media');
+    expect(httpBackend.flush).not.toThrow();
+  });
+
   it('should verify that a proper setting is passed to setEftSetting call', function () {
     Orgservice.setEftSetting().catch(function (response) {
       expect(response).toBe('A proper EFT setting and organization ID is required.');

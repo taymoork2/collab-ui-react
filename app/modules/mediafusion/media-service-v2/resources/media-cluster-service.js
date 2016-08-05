@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo, MediaConfigServiceV2) {
     var clusterCache = {
       mf_mgmt: {}
     };
@@ -276,6 +276,7 @@
     }
 
     var hub = CsdmHubFactory.create();
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,

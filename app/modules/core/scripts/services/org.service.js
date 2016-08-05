@@ -345,6 +345,8 @@
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
       } else if (serviceName === 'call-connect-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
+      } else if (serviceName === 'squared-fusion-media') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.mediafusion);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);

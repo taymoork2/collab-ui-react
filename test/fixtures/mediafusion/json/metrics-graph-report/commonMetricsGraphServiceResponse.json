@@ -130,6 +130,7 @@
     "gridAboveGraphs": true,
     "categoryField": "dummyData",
     "categoryAxis": "dummyData",
+    "export": "dummyData",
     "mouseWheelZoomEnabled": true,
     "chartCursor": {
       "cursorColor": "#55bb76",
