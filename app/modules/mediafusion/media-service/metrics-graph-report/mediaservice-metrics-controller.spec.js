@@ -132,20 +132,20 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
 
     });
-  });  
+  });
 
   describe('Evaluating Total calls Card', function () {
     it('should return total calls count when both onprem and cloud values are there', function () {
-    controller.clusterSelected = 'All Clusters';
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "callsOnPremise": 8,
-           "callsOverflow": 4
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 8,
+          "callsOverflow": 4
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
@@ -158,15 +158,15 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('should return total calls count when  onprem value only is there', function () {
-    controller.clusterSelected = 'All Clusters';
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "callsOnPremise": 23
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 23
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
@@ -179,15 +179,15 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('should return total calls count when  cloud value only is there', function () {
-    controller.clusterSelected = 'All Clusters';
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "callsOverflow": 14
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOverflow": 14
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
@@ -200,16 +200,16 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('should return total calls as 0 when zero values are present', function () {
-    controller.clusterSelected = 'All Clusters';
+      controller.clusterSelected = 'All Clusters';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'All Clusters';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "callsOnPremise": 0,
-           "callsOverflow": 0
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 0,
+          "callsOverflow": 0
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
@@ -224,16 +224,16 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('should return total calls count when  cloud value only is there for a host', function () {
-    controller.clusterSelected = 'MFA';
+      controller.clusterSelected = 'MFA';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'MFA';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "clusterId": "MFA",
-           "callsRedirect": 14
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "clusterId": "MFA",
+          "callsRedirect": 14
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 
@@ -246,15 +246,15 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     });
 
     it('should return N/A as there is no response data with calls', function () {
-    controller.clusterSelected = 'MFA';
+      controller.clusterSelected = 'MFA';
       controller.timeSelected = timeOptions[0];
       controller.clusterId = 'MFA';
-      var response  = {
+      var response = {
         "data": {
-           "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-           "clusterId": "MFA"
-          }
-        };
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "clusterId": "MFA"
+        }
+      };
 
       spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
 

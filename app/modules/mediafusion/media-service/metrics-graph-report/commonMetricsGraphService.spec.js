@@ -35,8 +35,6 @@ describe('Service: Common  Metrics Graph Service', function () {
       expect(CommonMetricsGraphService.getBaseVariable(BALLOON)).toEqual(responseData.baseVariables[BALLOON]);
       expect(CommonMetricsGraphService.getBaseVariable(EXPORT)).toEqual(responseData.baseVariables[EXPORT]);
       expect(CommonMetricsGraphService.getBaseVariable(PREFIXES)).toEqual(responseData.baseVariables[PREFIXES]);
-      //expect(CommonMetricsGraphService.getBaseVariable(SMOOTHLINED)).toEqual(responseData.baseVariables[SMOOTHLINED]);
-      //expect(CommonMetricsGraphService.getBaseVariable(GUIDEAXIS)).toEqual(responseData.baseVariables[GUIDEAXIS]);
 
       // incorrect key response
       expect(CommonMetricsGraphService.getBaseVariable('col')).toEqual({});
@@ -44,13 +42,11 @@ describe('Service: Common  Metrics Graph Service', function () {
 
     it('getBaseStackSerialGraph should return expected defaults for a column graph', function () {
       responseData.getBaseStackSerialGraph[BALLOON] = responseData.baseVariables[BALLOON];
-      //responseData.getBaseStackSerialGraph[EXPORT] = responseData.baseVariables[EXPORT];
       responseData.getBaseStackSerialGraph[PREFIXES] = responseData.baseVariables[PREFIXES];
       expect(CommonMetricsGraphService.getBaseStackSerialGraph(dummyData, dummyData, dummyData, dummyData, dummyData, dummyData, dummyData)).toEqual(responseData.getBaseStackSerialGraph);
     });
 
     it('getGanttGraph should return expected defaults for a pie chart', function () {
-      //responseData.getGanttGraph[BALLOON] = responseData.baseVariables[BALLOON];
       responseData.getGanttGraph[EXPORT] = responseData.baseVariables[EXPORT];
       expect(CommonMetricsGraphService.getGanttGraph(dummyData, dummyData, dummyData)).toEqual(responseData.getGanttGraph);
     });

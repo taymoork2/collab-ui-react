@@ -13,7 +13,6 @@
     vm.callVolumeChart = null;
     vm.availabilityChart = null;
     vm.utilizationChart = null;
-    //vm.getClusters = getClusters;
     vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
     vm.isRefresh = isRefresh;
@@ -25,9 +24,6 @@
     vm.setCPUUtilizationData = setCPUUtilizationData;
     vm.setTotalCallsData = setTotalCallsData;
     vm.setClusterAvailability = setClusterAvailability;
-    //vm.averageUtilization = vm.REFRESH;
-    //vm.clusterAvailability = vm.REFRESH;
-    //vm.card = vm.REFRESH;
     vm.resizeCards = resizeCards;
     vm.delayedResize = delayedResize;
     vm.setDummyData = setDummyData;
@@ -37,7 +33,6 @@
     vm.clusterOptions = ['All Clusters'];
     vm.clusterSelected = vm.clusterOptions[0];
     vm.clusterId = vm.clusterOptions[0];
-    //getClusters();
     vm.Map = {};
     vm.timeOptions = [{
       value: 0,
@@ -181,7 +176,6 @@
       setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
       setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
       resizeCards();
-      //delayedResize();
     }
 
     function setCallVolumeGraph(data) {
@@ -202,7 +196,6 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
@@ -235,7 +228,6 @@
           vm.availabilityStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
@@ -258,7 +250,6 @@
           vm.utilizationStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
@@ -270,50 +261,50 @@
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0) {
             vm.onprem = 'N/A';
-              vm.cloud = 'N/A';
-              vm.total = 'N/A';
-            } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
-              vm.onprem = 'N/A';
-              vm.cloud = response.data.callsOverflow;
-              vm.total = vm.cloud;
-            } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
-              vm.onprem = response.data.callsOnPremise;
-              vm.cloud = 'N/A';
-              vm.total = vm.onprem;
-            } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
-              vm.onprem = 'N/A';
-              vm.cloud = 'N/A';
-              vm.total = 'N/A';
-            } else {
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = 'N/A';
+            vm.cloud = response.data.callsOverflow;
+            vm.total = vm.cloud;
+          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = 'N/A';
+            vm.total = vm.onprem;
+          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.onprem + vm.cloud;
-            }
+          }
 
         } else {
           if (response === vm.ABORT) {
             return;
           } else if (!angular.isDefined(response.data) || response.data.length === 0) {
             vm.onprem = 'N/A';
-              vm.cloud = 'N/A';
-              vm.total = 'N/A';
-            } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
-              vm.onprem = 'N/A';
-              vm.cloud = response.data.callsRedirect;
-              vm.total = vm.cloud;
-            } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
-              vm.onprem = response.data.callsOnPremise;
-              vm.cloud = 'N/A';
-              vm.total = vm.onprem;
-            } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
-              vm.onprem = 'N/A';
-              vm.cloud = 'N/A';
-              vm.total = 'N/A';
-            } else {
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = 'N/A';
+            vm.cloud = response.data.callsRedirect;
+            vm.total = vm.cloud;
+          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = 'N/A';
+            vm.total = vm.onprem;
+          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.onprem + vm.cloud;
-            }
+          }
         }
         resizeCards();
       });

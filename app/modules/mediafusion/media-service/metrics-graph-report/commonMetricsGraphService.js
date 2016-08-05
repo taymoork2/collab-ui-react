@@ -139,7 +139,7 @@
         'marginRight': 60,
         'usePrefixes': true,
         'prefixesOfBigNumbers': baseVariables['prefixesOfBigNumbers'],
-        'export': exportData, //baseVariables['export'],
+        'export': exportData,
         'startDuration': startDuration,
         'dataProvider': data,
         'valueAxes': valueAxes,
