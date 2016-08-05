@@ -1022,7 +1022,7 @@
             },
             resolve: {
               currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
-                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
+                var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUserId;
                 return $http.get(userUrl)
                   .then(function (response) {
                     angular.copy(response.data, this.currentUser);
@@ -1034,7 +1034,7 @@
             params: {
               currentUser: {},
               entitlements: {},
-              queryuserslist: {}
+              currentUserId: ''
             },
             data: {
               displayName: 'Overview'
