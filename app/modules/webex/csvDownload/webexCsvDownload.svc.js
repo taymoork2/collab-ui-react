@@ -56,11 +56,11 @@
       logMsg = funcName + "\n" +
         "data.length=" + data.length + "\n" +
         "fileName=" + fileName;
-      $log.log(logMsg);
+      //$log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "data=" + JSON.stringify(data);
-      $log.log(logMsg);
+      //$log.log(logMsg);
 
       var intBytes = WebExUtilsFact.utf8ToUtf16le(data);
       var newData = new Uint8Array(intBytes);
@@ -68,7 +68,7 @@
 
       logMsg = funcName + "\n" +
         "intBytes=" + intBytes;
-      $log.log(logMsg);
+      //$log.log(logMsg);
 
       // IE download option since IE won't download the created url
       if (_this.isWindowsIE()) {
@@ -99,7 +99,7 @@
 
       logMsg = funcName + "\n" +
         "result=" + result;
-      $log.log(logMsg);
+      //$log.log(logMsg);
 
       return result;
     }; // isWindowsIE()
