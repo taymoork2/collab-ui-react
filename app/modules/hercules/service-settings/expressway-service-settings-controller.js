@@ -14,7 +14,7 @@
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
     vm.localizedAddEmailWatermark = $translate.instant('hercules.settings.emailNotificationsWatermark');
-
+    vm.enableEmailSendingToUser = false;
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     if (vm.squaredFusionEcEntitled) {
@@ -103,12 +103,14 @@
           vm.enableEmailSendingToUser = !calSvcDisableEmailSendingToEndUser;
         });
     }
-
-    vm.enableEmailSendingToUser = false;
     init();
 
     vm.writeEnableEmailSendingToUser = _.debounce(function (value) {
-      ServiceDescriptor.setDisableEmailSendingToUser(value);
+      ServiceDescriptor.setDisableEmailSendingToUser(value)
+        .catch(function () {
+          vm.enableEmailSendingToUser = !vm.enableEmailSendingToUser;
+          return Notification.error('hercules.settings.emailUserNotificationsSavingError');
+        });
     }, 2000, {
       'leading': true,
       'trailing': false
