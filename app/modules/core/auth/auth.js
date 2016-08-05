@@ -76,21 +76,34 @@
     }
 
     function refreshAccessToken() {
+      var redirectUrl = OAuthConfig.getLogoutUrl();
       var refreshToken = TokenService.getRefreshToken();
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
-      return httpPOST(url, data, token)
+      if (refreshToken) {
+        return httpPOST(url, data, token)
         .then(updateOauthTokens)
-        .catch(handleError('Failed to refresh access token'));
+        .catch(function () {
+          handleError('Failed to refresh access token');
+          completeLogout(redirectUrl);
+        });
+      } else {
+        return $q.reject('refreshtoken not found');
+      }
     }
 
     function refreshAccessTokenAndResendRequest(response) {
+      var redirectUrl = OAuthConfig.getLogoutUrl();
+
       return refreshAccessToken()
         .then(function () {
           var $http = $injector.get('$http');
           return $http(response.config);
+        })
+        .catch(function () {
+          completeLogout(redirectUrl);
         });
     }
 
@@ -128,6 +141,7 @@
         })
         .catch(function (response) {
           handleError('Failed to retrieve token_id');
+          completeLogout(redirectUrl);
         });
     }
 
