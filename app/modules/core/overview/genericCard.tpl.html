@@ -8,9 +8,12 @@
   <div class="overview-info">
     <div>{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
     <div class="overview-count">{{(card.current | number) || 'N/A'}}</div>
-    <div class="last-count">{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) ||
+    <section>
+      <a ng-if="card.isDeviceEnabled" ng-href="{{card.settingsUrl}}" type="button" class="btn btn--cta" translate="overview.cards.roomSystem.enableDevices"></a>
+      <div ng-if="!card.isDeviceEnabled" class="last-count">{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) ||
       'N/A'}}
-    </div>
+  	  </div>
+    </section>
   </div>
 </section>
 <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"

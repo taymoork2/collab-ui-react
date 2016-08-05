@@ -17,7 +17,8 @@
       validateDID: validateDID,
       getDIDValue: getDIDValue,
       getDIDLabel: getDIDLabel,
-      getExampleNumbers: getExampleNumbers
+      getExampleNumbers: getExampleNumbers,
+      getPhoneNumberType: getPhoneNumberType
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
@@ -54,6 +55,10 @@
       countryCode = _.result(_.findWhere(CountryCodes, {
         code: regionCode
       }), 'number');
+    }
+
+    function getPhoneNumberType(number) {
+      return phoneUtils.getNumberType(number, regionCode);
     }
 
     function getRegionCode() {

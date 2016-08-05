@@ -11,7 +11,9 @@
         <div ng-show="buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="headerCtrl.showLicenseUsageDropDown()">
           <cs-header-push-trigger icon="icon" state="state" label="label" ng-if="isCustomer"></cs-header-push-trigger>
         </div>
-        <cr-setup-dropdown ng-if="headerCtrl.showFirstTimeSetupDropDown()"></cr-setup-dropdown>
+        <cr-setup-dropdown
+          ng-if="headerCtrl.showFirstTimeSetupDropDown() && !headerCtrl.newTabDisplay">
+        </cr-setup-dropdown>
         <button ui-sref="my-company.info" ng-controller="UserInfoController" ng-if="headerCtrl.showMyCompany()" class="btn btn--header btn--myCompany">
           <div>
             <span class="header-label">{{orgname}}</span>
