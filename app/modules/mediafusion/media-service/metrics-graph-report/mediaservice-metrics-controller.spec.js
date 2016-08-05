@@ -66,7 +66,6 @@ describe('Controller:MediaServiceMetricsContoller', function () {
     spyOn(MetricsReportService, 'getAvailabilityData').and.returnValue($q.when(clusteravailabilityData));
     spyOn(MetricsReportService, 'getUtilizationData').and.returnValue($q.when(dummydata));
     spyOn(XhrNotificationService, 'notify');
-    //spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(totalcallsdata));
 
     controller = $controller('MediaServiceMetricsContoller', {
       $stateParams: $stateParams,
@@ -131,6 +130,139 @@ describe('Controller:MediaServiceMetricsContoller', function () {
       expect(MetricsReportService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
       //expect(MetricsReportService.getUtilizationData).toHaveBeenCalledWith(timeOptions[0], controller.clusterSelected);
+
+    });
+  });
+
+  describe('Evaluating Total calls Card', function () {
+    it('should return total calls count when both onprem and cloud values are there', function () {
+      controller.clusterSelected = 'All Clusters';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'All Clusters';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 8,
+          "callsOverflow": 4
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.total).toBe(12);
+
+      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'All Clusters');
+
+    });
+
+    it('should return total calls count when  onprem value only is there', function () {
+      controller.clusterSelected = 'All Clusters';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'All Clusters';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 23
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.onprem).toBe(23);
+      expect(controller.cloud).toBe('N/A');
+      expect(controller.total).toBe(23);
+
+    });
+
+    it('should return total calls count when  cloud value only is there', function () {
+      controller.clusterSelected = 'All Clusters';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'All Clusters';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOverflow": 14
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.onprem).toBe('N/A');
+      expect(controller.cloud).toBe(14);
+      expect(controller.total).toBe(14);
+
+    });
+
+    it('should return total calls as 0 when zero values are present', function () {
+      controller.clusterSelected = 'All Clusters';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'All Clusters';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "callsOnPremise": 0,
+          "callsOverflow": 0
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.onprem).toBe(0);
+      expect(controller.cloud).toBe(0);
+      expect(controller.total).toBe(0);
+
+      expect(MetricsReportService.getTotalCallsData).toHaveBeenCalledWith(timeOptions[0], 'All Clusters');
+
+    });
+
+    it('should return total calls count when  cloud value only is there for a host', function () {
+      controller.clusterSelected = 'MFA';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'MFA';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "clusterId": "MFA",
+          "callsRedirect": 14
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.onprem).toBe('N/A');
+      expect(controller.cloud).toBe(14);
+      expect(controller.total).toBe(14);
+
+    });
+
+    it('should return N/A as there is no response data with calls', function () {
+      controller.clusterSelected = 'MFA';
+      controller.timeSelected = timeOptions[0];
+      controller.clusterId = 'MFA';
+      var response = {
+        "data": {
+          "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+          "clusterId": "MFA"
+        }
+      };
+
+      spyOn(MetricsReportService, 'getTotalCallsData').and.returnValue($q.when(response));
+
+      controller.setTotalCallsData();
+      $scope.$apply();
+      expect(controller.onprem).toBe('N/A');
+      expect(controller.cloud).toBe('N/A');
+      expect(controller.total).toBe('N/A');
 
     });
   });
