@@ -5526,5 +5526,9 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
+  },
+  "clipboard": {
+    "success": "Copied to clipboard",
+    "error": "Copy to clipboard failed"
   }
 }
