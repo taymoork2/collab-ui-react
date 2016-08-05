@@ -30,7 +30,7 @@
         clipBoard.on('error', function (e) {
           Notification.error('clipboard.error');
         });
-        scope.$on('$destroy', function() {
+        scope.$on('$destroy', function () {
           clipBoard.destroy();
         });
       }
