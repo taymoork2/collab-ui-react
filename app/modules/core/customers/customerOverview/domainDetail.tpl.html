@@ -3,14 +3,9 @@
     <div class="section-title-row">
       <span class="section-name" translate="customerPage.domains"></span>
     </div>
-    <div class="feature-list services-list" ng-if="domainDetail.domains">
+    <div class="feature-list webex-domains-list" ng-if="domainDetail.domains">
      <ul>
-
-
-
-
-
-      <li class="feature" ng-repeat="service in domainDetail.domains track by $index">
+       <li class="feature" ng-repeat="domain in domainDetail.domains track by $index">
         <div class="feature-name">{{domain.siteUrl}}
          <span class="secondary">{{domain.timeZone}}</span>
        </div>
@@ -19,9 +14,7 @@
         <span translate="common.pending"></span>
       </div>
     </li>
-
-
-
-      </ul></div>
-    </cs-sp-section>
-  </cs-sp-container>
+  </ul>
+  </div>
+</cs-sp-section>
+</cs-sp-container>

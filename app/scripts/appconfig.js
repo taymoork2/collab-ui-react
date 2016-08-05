@@ -1650,11 +1650,14 @@
             controller: 'DomainDetailCtrl',
             controllerAs: 'domainDetail',
             templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
-            data: {
-              displayName: 'Domains'
+            resolve: {
+              data: /*ngInject */ function ($state, $translate) {
+                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
+              }
             },
+            data: {},
             params: {
-              meetingLicenses: {}
+              webexDomains: {}
             }
           })
           .state('customer-overview.pstnOrderDetail', {

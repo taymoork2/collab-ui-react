@@ -7,7 +7,7 @@
   /* @ngInject */
   function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
-  var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
+    var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/siteUrls';
     var customerStatus = {
       FREE: 0,
       TRIAL: 1,
@@ -659,9 +659,9 @@
       return result;
     }
 
-   function getSiteUrls(customerId) {
-       var url = siteListUrl.replace('%s', customerId);
-       return $http.get(url);
-     }
+    function getSiteUrls(customerId) {
+      var url = siteListUrl.replace('%s', customerId);
+      return $http.get(url);
+    }
   }
 })();

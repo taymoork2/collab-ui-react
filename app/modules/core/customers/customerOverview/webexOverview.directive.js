@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('Core')
-  .directive('customerWebexOverview', customerWebexOverview);
+    .module('Core')
+    .directive('customerWebexOverview', customerWebexOverview);
 
   function customerWebexOverview() {
     var directive = {
