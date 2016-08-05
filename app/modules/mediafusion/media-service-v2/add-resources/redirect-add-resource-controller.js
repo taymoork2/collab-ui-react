@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-    .module("Mediafusion")
-    .controller("RedirectAddResourceControllerV2", RedirectAddResourceControllerV2);
+    .module('Mediafusion')
+    .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
   function RedirectAddResourceControllerV2(XhrNotificationService, $modalInstance, $translate, firstTimeSetup, yesProceed, $modal, $state, AddResourceCommonServiceV2) {
@@ -80,7 +80,7 @@
     function canGoNext() {
       if (vm.firstTimeSetup == true && vm.yesProceed == false) {
         return true;
-      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != "" && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != "") {
+      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

@@ -8,7 +8,7 @@
     vm.offlineNodeList = [];
     vm.clusterList = [];
     vm.selectedClusterId = '';
-    vm.currentServiceId = "squared-fusion-media";
+    vm.currentServiceId = 'squared-fusion-media';
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     function updateClusterLists() {
@@ -21,10 +21,10 @@
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, 'targetType', 'mf_mgmt');
           _.each(clusters, function (cluster) {
-            if (cluster.targetType === "mf_mgmt") {
+            if (cluster.targetType === 'mf_mgmt') {
               vm.clusterList.push(cluster.name);
               _.each(cluster.connectors, function (connector) {
-                if ("running" == connector.state) {
+                if ('running' == connector.state) {
                   vm.onlineNodeList.push(connector.hostname);
                 } else {
                   vm.offlineNodeList.push(connector.hostname);
@@ -62,14 +62,12 @@
         var deferred = $q.defer();
         MediaClusterServiceV2.createClusterV2(enteredCluster, 'GA').then(function (resp) {
           vm.selectedClusterId = resp.data.id;
-          // return whiteListHost(hostName, vm.selectedClusterId);
           deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
         });
         return deferred.promise;
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
         return whiteListHost(hostName, vm.selectedClusterId);
-        //vm.redirectPopUpAndClose(hostName, enteredCluster, vm.clusterDetail.id);
       }
     }
 
@@ -81,7 +79,7 @@
       if (firstTimeSetup) {
         enableMediaService(vm.currentServiceId);
       }
-      vm.popup = $window.open("https://" + encodeURIComponent(hostName) + "/?clusterName=" + encodeURIComponent(enteredCluster) + "&clusterId=" + encodeURIComponent(vm.selectedClusterId));
+      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
     }
 
     function enableMediaService(serviceId) {
@@ -107,9 +105,9 @@
             mediaAgentOrgIdsArray.push(orgId);
             updateMediaAgentOrgId = true;
           }
-          // See if "squared" org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
-            mediaAgentOrgIdsArray.push("squared");
+          // See if 'squared' org id is already mapped to user org id
+          if (mediaAgentOrgIdsArray.indexOf('squared') == -1) {
+            mediaAgentOrgIdsArray.push('squared');
             updateMediaAgentOrgId = true;
           }
 
@@ -122,7 +120,7 @@
           // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
           var mediaAgentOrgIdsArray = [];
           mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
-          mediaAgentOrgIdsArray.push("squared");
+          mediaAgentOrgIdsArray.push('squared');
           vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
         });
     };

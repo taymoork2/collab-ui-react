@@ -1,6 +1,6 @@
   'use strict';
   describe('RedirectAddResourceControllerV2', function () {
-  beforeEach(angular.mock.module('Mediafusion'));
+    beforeEach(angular.mock.module('Mediafusion'));
     var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
     beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
       $q = _$q_;
@@ -50,8 +50,8 @@
     });
 
     it('controller.addRedirectTargetClicked should be called for next', function () {
-      controller.selectedCluster = "selectedCluster";
-      controller.hostName = "hostName";
+      controller.selectedCluster = 'selectedCluster';
+      controller.hostName = 'hostName';
       spyOn(controller, 'addRedirectTargetClicked').and.returnValue(redirectTargetPromise);
       controller.next();
       expect(controller.addRedirectTargetClicked).toHaveBeenCalled();

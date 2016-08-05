@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-    .module("Mediafusion")
-    .controller("AddResourceControllerClusterViewV2", AddResourceControllerClusterViewV2);
+    .module('Mediafusion')
+    .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
   function AddResourceControllerClusterViewV2(XhrNotificationService, $translate, $state, $stateParams, AddResourceCommonServiceV2) {
@@ -14,7 +14,6 @@
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.back = back;
     vm.next = next;
-    //vm.getV2Clusters = getV2Clusters;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
     vm.clusterDetail = null;
@@ -22,7 +21,7 @@
     vm.selectedClusterId = '';
     vm.firstTimeSetup = $state.params.firstTimeSetup;
     vm.closeSetupModal = closeSetupModal;
-    vm.currentServiceId = "squared-fusion-media";
+    vm.currentServiceId = 'squared-fusion-media';
     vm.radio = 1;
     vm.noProceed = false;
     vm.yesProceed = $state.params.yesProceed;
@@ -75,7 +74,7 @@
 
       if (vm.fromClusters && vm.yesProceed == false) {
         return true;
-      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != "" && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != "") {
+      } else if (vm.yesProceed == true && angular.isDefined(vm.hostName) && vm.hostName != '' && angular.isDefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;
