@@ -5,7 +5,13 @@
   var loadedModules = [];
 
   function loadModuleAndResolve($ocLazyLoad, resolve) {
-    return function loadModuleCallback(moduleName) {
+    return function loadModuleCallback(loadModule) {
+      var moduleName;
+      if (_.isObject(loadModule) && _.has(loadModule, 'default')) {
+        moduleName = loadModule.default;
+      } else {
+        moduleName = loadModule;
+      }
       // Don't reload a loaded module or core angular module
       if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
         resolve();
@@ -1157,42 +1163,7 @@
               displayName: 'Roles'
             }
           })
-
-        // .state('users.list.preview', {
-        //     templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
-        //     controller: 'UserPreviewCtrl'
-        //   })
-        //   .state('users.list.preview.conversations', {
-        //     template: '<div user-entitlements current-user="currentUser" entitlements="entitlements" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.roles', {
-        //     template: '<div class="sub-details-full" user-roles current-user="currentUser" entitlements="entitlements" roles="roles" queryuserslist="queryuserslist"></div>'
-        //   })
-        //   .state('users.list.preview.directorynumber', {
-        //     templateUrl: 'modules/huron/lineSettings/lineSettings.tpl.html',
-        //     controller: 'LineSettingsCtrl',
-        //     controllerAs: 'lineSettings',
-        //     params: {
-        //       showAddUsers: {},
-        //       directoryNumber: {}
-        //     }
-        //   })
-        //   .state('users.list.preview.voicemail', {
-        //     template: '<div uc-voicemail></div>'
-        //   })
-        //   .state('users.list.preview.snr', {
-        //     template: '<div uc-single-number-reach></div>'
-        //   })
-        //   .state('users.list.preview.device', {
-        //     templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-        //     controller: 'DeviceDetailCtrl',
-        //     controllerAs: 'ucDeviceDetail',
-        //     params: {
-        //       showAddUsers: {},
-        //       device: {}
-        //     }
-        //   })
-        .state('organizations', {
+          .state('organizations', {
             url: '/organizations',
             templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
             controller: 'ListOrganizationsCtrl',
@@ -1468,6 +1439,19 @@
             },
             data: {
               displayName: 'Call'
+            }
+          })
+          .state('place-overview.communication.line-overview', {
+            template: '<line-overview owner-type="place"></line-overview>',
+            data: {
+              displayName: 'Line Configuration'
+            },
+            resolve: {
+              lazy: /* @ngInject */ function lazyLoad($q, $ocLazyLoad) {
+                return $q(function resolveLogin(resolve) {
+                  require(['modules/huron/lines/lineOverview/lineOverview.component'], loadModuleAndResolve($ocLazyLoad, resolve));
+                });
+              }
             }
           })
           .state('devices', {

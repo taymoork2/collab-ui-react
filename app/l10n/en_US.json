@@ -2261,7 +2261,6 @@
   "telephonyPreview": {
     "lines": "Lines",
     "features": "Features",
-    "or": "or {{ directoryNumber }}",
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "internationalDialing": "International Dialing"
