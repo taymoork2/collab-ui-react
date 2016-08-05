@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $scope, $state, $stateParams, $translate, $resource, $window, Authinfo, FeatureToggleService, Notification, SunlightConfigService, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -92,10 +92,15 @@
         vm.services.push(commState);
       }
       if (hasEntitlement('cloud-contact-center')) {
-        if (getServiceDetails('CC')) {
-          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        if (getServiceDetails('CD')) {
+          SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+              function(response) {
+                contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                vm.services.push(contactCenterState);
+              }
+          );
         }
-        vm.services.push(contactCenterState);
+
       }
 
       initActionList();
@@ -302,10 +307,14 @@
               vm.services.push(confState);
               vm.currentUser.invitations.cf = confId;
             }
-            if (getInvitationDetails(response.effectiveLicenses, 'CC')) {
-              contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-              vm.services.push(contactCenterState);
-              vm.currentUser.invitations.cc = true;
+            if (getInvitationDetails(response.effectiveLicenses, 'CD')) {
+              SunlightConfigService.getUserInfo(vm.currentUser.id).then(
+                  function(response) {
+                    contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+                    vm.services.push(contactCenterState);
+                    vm.currentUser.invitations.cc = true;
+                  }
+              );
             }
           }
         });

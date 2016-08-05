@@ -6,7 +6,7 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Authinfo, Analytics, chartColors, Config, DialPlanService, FeatureToggleService, Log, LogMetricsService, NAME_DELIMITER, Notification, OnboardService, Orgservice, SunlightConfigService, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -538,7 +538,7 @@
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         } else if (userEnts[x] === 'cloud-contact-center') {
-          $scope.radioStates.careRadio = true;
+          setCareSeviceIfUserExistInSunlight();
         }
       }
     }
@@ -547,6 +547,18 @@
       if (userInvites.ms) {
         $scope.radioStates.msgRadio = true;
       }
+      if (userInvites.cc) {
+        setCareSeviceIfUserExistInSunlight();
+      }
+    }
+
+    function setCareSeviceIfUserExistInSunlight() {
+      SunlightConfigService.getUserInfo($scope.currentUser.id)
+          .then(function (response) {
+            $scope.radioStates.careRadio = true;
+          }, function (response) {
+            $scope.radioStates.careRadio = false;
+          });
     }
 
     function shouldAddCallService() {
