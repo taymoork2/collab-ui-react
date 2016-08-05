@@ -2303,13 +2303,10 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                /*                controller: 'AddResourceControllerClusterViewV2',
-                                controllerAs: 'redirectResource',
-                                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
-                                modalClass: 'redirect-add-resource'*/
-                controller: 'MediafusionEnterHostnameController',
-                controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-hostname.html'
+                controller: 'AddResourceControllerClusterViewV2',
+                controllerAs: 'redirectResource',
+                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                modalClass: 'redirect-add-resource'
               }
             },
             params: {
