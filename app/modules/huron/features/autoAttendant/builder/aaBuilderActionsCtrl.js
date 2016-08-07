@@ -74,7 +74,13 @@
       if (!vm.selectHint) {
         _.each(vm.options, function (option, index) {
           if (option.title && option.hint) {
-            vm.selectHint = vm.selectHint.concat("<i>").concat(option.title).concat("</i>").concat(" - ").concat(option.hint).concat("<br>");
+            vm.selectHint = vm.selectHint
+              .concat("<i>")
+              .concat(option.title)
+              .concat("</i>")
+              .concat(" - ")
+              .concat(option.hint)
+              .concat("<br>");
             if (index < vm.options.length - 1) {
               vm.selectHint = vm.selectHint.concat("<br>");
             }

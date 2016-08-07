@@ -706,7 +706,8 @@
           return {
             customerOrgId: vm.customerOrgId
           };
-        }).finally(function () {
+        })
+        .finally(function () {
           vm.loading = false;
         });
     }

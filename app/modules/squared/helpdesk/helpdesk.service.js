@@ -133,9 +133,9 @@
         return deferredResolve(HelpdeskMockData.users);
       }
 
-      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ?
-          '&orgId=' +
-          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      var includeUnlicensedStr = includeUnlicensed ? '&includeUnlicensed=true' : '';
+      var roleStr = role ? '&role=' + encodeURIComponent(role) : '';
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : includeUnlicensedStr) + roleStr)
         .then(extractUsers);
     }
 

@@ -311,7 +311,7 @@
     function loadInternalNumberPool(pattern, limit) {
       var intNumPool = [];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-      var patternlimit = limit ? limit : undefined;
+      var patternlimit = limit || undefined;
       return InternalNumberPoolService.query({
         customerId: Authinfo.getOrgId(),
         directorynumber: '',

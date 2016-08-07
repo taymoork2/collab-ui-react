@@ -1090,7 +1090,7 @@
             if (users.length > 1) {
               vm.sharedLineUsers = users;
             }
-            vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
+            vm.sharedLineBtn = !!vm.sharedLineUsers;
             return users;
           })
           .then(function (users) {
@@ -1233,7 +1233,7 @@
       var userName = '';
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
-      userName = (userName) ? userName : userId;
+      userName = userName || userId;
       return userName;
     }
 

@@ -10,7 +10,7 @@
     $scope.saveLoading = false;
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
-      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
+      return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1;
     };
 
     var sipUri = _.find($scope.currentUser.sipAddresses, {

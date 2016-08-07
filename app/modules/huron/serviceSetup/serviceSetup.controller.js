@@ -599,15 +599,19 @@
       }).then(function () {
         // Determine if extension ranges and length can be modified
         return enableExtensionLengthModifiable();
-      }).then(function () {
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
-      }).then(function () {
+      })
+      .then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
-      }).then(function () {
+      })
+      .then(function () {
         return setServiceValues();
-      }).then(function () {
+      })
+      .then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
             return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
@@ -631,7 +635,8 @@
             });
           }
         });
-      }).then(function () {
+      })
+      .then(function () {
         if (vm.hasVoicemailService) {
           return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
             if (voicemail.pilotNumber === Authinfo.getOrgId()) {
@@ -653,7 +658,8 @@
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
         }
-      }).then(function () {
+      })
+      .then(function () {
         vm.fields = vm.initialFields;
         return loadExternalNumberPool();
       });

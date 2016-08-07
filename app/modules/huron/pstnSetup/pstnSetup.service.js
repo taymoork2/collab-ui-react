@@ -504,7 +504,11 @@
     }
 
     function getAreaCode(order) {
-      return _.chain(order).get('description').slice(-3).join('').value();
+      return _.chain(order)
+        .get('description')
+        .slice(-3)
+        .join('')
+        .value();
     }
 
   }

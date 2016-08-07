@@ -15,9 +15,15 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureFilter = $stateParams.deleteFeatureType;
-    vm.featureType = vm.featureFilter === 'AA' ? $translate.instant('autoAttendant.title') : vm.featureFilter === 'HG' ?
-      $translate.instant('huronHuntGroup.title') : vm.featureFilter === 'CP' ? $translate.instant('callPark.title') : 'Feature';
-
+    if (vm.featureFilter === 'AA') {
+      vm.featureType = $translate.instant('autoAttendant.title');
+    } else if (vm.featureFilter === 'HG') {
+      vm.featureType = $translate.instant('huronHuntGroup.title');
+    } else if (vm.featureFilter === 'CP') {
+      vm.featureType = $translate.instant('callPark.title');
+    } else {
+      vm.featureType = 'Feature';
+    }
     vm.deleteBtnDisabled = false;
 
     vm.deleteFeature = deleteFeature;

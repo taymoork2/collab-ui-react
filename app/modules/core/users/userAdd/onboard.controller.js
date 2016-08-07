@@ -590,16 +590,27 @@
           confId: 'conf-' + i
         };
 
-        var confNoUrl = _.chain(confs).filter(function (conf) {
-          return conf.license.licenseType !== 'freeConferencing';
-        }).filter(function (conf) {
-          return !_.has(conf, 'license.siteUrl');
-        }).map(createFeatures).remove(undefined).value();
+        var confNoUrl = _.chain(confs)
+          .filter(function (conf) {
+            return conf.license.licenseType !== 'freeConferencing';
+          })
+          .filter(function (conf) {
+            return !_.has(conf, 'license.siteUrl');
+          })
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
-        var confFeatures = _.chain(confs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
-        var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
-          .map(createFeatures).remove(undefined).value();
+        var confFeatures = _.chain(confs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
+        var cmrFeatures = _.chain(cmrs)
+          .filter('license.siteUrl')
+          .map(createFeatures)
+          .remove(undefined)
+          .value();
 
         var siteUrls = _.map(confFeatures, function (lic) {
           return lic.siteUrl;
@@ -613,7 +624,7 @@
           var cmrMatches = _.filter(cmrFeatures, {
             siteUrl: site
           });
-          var isCISiteFlag = (WebExUtilsFact.isCIEnabledSite(site)) ? true : false;
+          var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
           return {
             site: site,
             billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
@@ -898,13 +909,23 @@
         if (!_.isArray(license) && license.confModel === state) {
           idList.push(license.licenseId);
         }
-        idList = idList.concat(_(license.confLic).filter({
-          confModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.confLic)
+          .filter({
+            confModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
-        idList = idList.concat(_(license.cmrLic).filter({
-          cmrModel: state
-        }).pluck('licenseId').remove(undefined).value());
+        idList = idList.concat(_(license.cmrLic)
+          .filter({
+            cmrModel: state
+          })
+          .pluck('licenseId')
+          .remove(undefined)
+          .value()
+        );
 
       });
 
@@ -1986,7 +2007,7 @@
     };
 
     $scope.convertDisabled = function () {
-      return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
+      return $scope.gridApi.selection.getSelectedRows().length === 0;
     };
 
     getUnlicensedUsers();

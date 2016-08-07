@@ -720,13 +720,19 @@
       } else if (filter.value === 1) {
         for (var x = 3; x >= 0; x--) {
           var temp = angular.copy(graphItem);
-          temp.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          temp.modifiedDate = moment().tz(timezone)
+            .startOf('week')
+            .subtract(dayOffset + (x * 7), 'day')
+            .format(dayFormat);
           returnGraph.push(temp);
         }
       } else {
         for (var y = 2; y >= 0; y--) {
           var item = angular.copy(graphItem);
-          item.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          item.modifiedDate = moment().tz(timezone)
+            .subtract(y, 'month')
+            .startOf('month')
+            .format(monthFormat);
           returnGraph.push(item);
         }
       }

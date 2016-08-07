@@ -146,7 +146,7 @@
         var userName = '';
         userName = (user.firstName) ? user.firstName : '';
         userName = (user.lastName) ? (userName + ' ' + user.lastName) : userName;
-        userName = (userName) ? userName : data.userName;
+        userName = userName || data.userName;
         return CallerId.updateInternalCallerId(uuid, userName);
       });
     }

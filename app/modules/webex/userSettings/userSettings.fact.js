@@ -164,10 +164,10 @@
 
         var userInfoJson = WebexUserSettingsSvc.userInfo.bodyJson;
 
-        WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_meetingCenter) ? true : false;
-        WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_trainingCenter) ? true : false;
-        WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_eventCenter) ? true : false;
-        WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_supportCenter) ? true : false;
+        WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_meetingCenter);
+        WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_trainingCenter);
+        WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_eventCenter);
+        WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_supportCenter);
 
         // logMsg = funcName + "\n" +
         //   "meetingCenter.isEntitledOnWebEx=" + WebexUserSettingsSvc.meetingCenter.isEntitledOnWebEx + "\n" +
@@ -322,12 +322,12 @@
 
         WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
-          siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false") ? true : false; // not MP audio
+          siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false"); // not MP audio
 
-        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true") ? true : false;
+        WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true");
 
         // logMsg = funcName + ": " + "\n" +
         //   "Hybrid audio=" + WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled + "\n" +
@@ -338,24 +338,24 @@
         // Start of call-in teleconf
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.value = (
           "true" == userInfoJson.use_privilege.use_teleConfCallIn
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.value = (
           "true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = (
           (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.toll.value) ||
           (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.value)
-        ) ? true : false;
+        );
 
         if (WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.tollFree.value) {
           WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
@@ -367,19 +367,19 @@
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallInTeleconferencing
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value = (
           "true" == userInfoJson.use_privilege.use_teleConfCallInInternational
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value = (
           "true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled
-        ) ? true : false;
+        );
 
         // logMsg = funcName + ": " + "\n" +
         //   "ns1_callInTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing + "\n" +
@@ -397,37 +397,37 @@
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.value = (
           "true" == userInfoJson.use_privilege.use_teleConfCallOut
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallBackTeleconferencing
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = (
           "true" == userInfoJson.use_privilege.use_teleConfCallOutInternational
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_supportOtherTypeTeleconf
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.value = (
           "true" == userInfoJson.use_privilege.use_otherTelephony
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.otherTeleconfServices.label = siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_otherTeleServiceName;
 
         WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_internetPhone
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = (
           "true" == userInfoJson.use_privilege.use_voiceOverIp
-        ) ? true : false;
+        );
 
         // logMsg = funcName + ": " + "\n" +
         //   "integratedVoIP.isSiteEnabled=" + WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.isSiteEnabled + "\n" +
@@ -448,58 +448,58 @@
         var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
         WebexUserSettingsSvc.pmr.isSiteEnabled = (
           "true" == enablePMRSiteLevel
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.pmr.value = (
           "true" == userInfoJson.use_privilege.use_isEnablePMR
-        ) ? true : false;
+        );
         // $log.log("PMR = " + WebexUserSettingsSvc.pmr.value);
 
         WebexUserSettingsSvc.cmr.value = (
           "true" == userInfoJson.use_privilege.use_isEnableCET
-        ) ? true : false;
+        );
         // $log.log("CMR = " + WebexUserSettingsSvc.cmr.value);
 
         // Start of Video privileges
         WebexUserSettingsSvc.videoSettings.hiQualVideo.isSiteEnabled = (
           "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.videoSettings.hiQualVideo.value = (
           "true" == userInfoJson.use_privilege.use_HQvideo
-        ) ? true : false;
+        );
 
         if (!WebexUserSettingsSvc.videoSettings.hiQualVideo.isSiteEnabled) {
           WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = false;
         } else {
           WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo
-          ) ? true : false;
+          );
         }
 
         WebexUserSettingsSvc.videoSettings.hiQualVideo.hiDefVideo.value = (
           "true" == userInfoJson.use_privilege.use_HDvideo
-        ) ? true : false;
+        );
         // End of Video privileges
 
         // Start of Event Center
         WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.isSiteEnabled = (
           ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage)
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.eventCenter.optimizeBandwidthUsage.value = (
           "true" == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage
-        ) ? true : false;
+        );
         // End of Event Center
 
         // Start of Training Center privileges
         WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.isSiteEnabled = (
           ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab)
-        ) ? true : false;
+        );
 
         WebexUserSettingsSvc.trainingCenter.handsOnLabAdmin.value = (
           "true" == userInfoJson.use_privilege.use_labAdmin
-        ) ? true : false;
+        );
         // End of Training Center privileges
       }, // updateUserSettingsModelPart3()
 
@@ -679,7 +679,7 @@
                 WebexUserSettingsSvc.isT31Site = (
                   (null != trainReleaseOrder) &&
                   (400 <= +trainReleaseOrder)
-                ) ? true : false;
+                );
 
                 logMsg = funcName + ": " + "\n" +
                   "trainReleaseVersion=" + trainReleaseVersion + "\n" +
@@ -770,7 +770,7 @@
                 (WebexUserSettingsSvc.trainingCenter.isEntitledOnWebEx == WebexUserSettingsSvc.trainingCenter.isEntitledOnAtlas) &&
                 (WebexUserSettingsSvc.eventCenter.isEntitledOnWebEx == WebexUserSettingsSvc.eventCenter.isEntitledOnAtlas) &&
                 (WebexUserSettingsSvc.supportCenter.isEntitledOnWebEx == WebexUserSettingsSvc.supportCenter.isEntitledOnAtlas)
-              ) ? true : false;
+              );
 
               if (!isValidLicenseEntitlement) {
                 logMsg = funcName + "\n" +

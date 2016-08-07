@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Analytics, Authinfo, Config, customerListToggle, ExternalNumberService, FeatureToggleService, Log, Notification, Orgservice, PartnerService, TrialService) {
-    $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isCustomerPartner = !!Authinfo.isCustomerPartner;
     $scope.isPartnerAdmin = Authinfo.isPartnerAdmin();
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
@@ -663,7 +663,7 @@
     }
 
     function getIsTrial(org) {
-      if (!!org.isPartner) return false;
+      if (org.isPartner) return false;
       return _.get(org, 'communications.isTrial', true);
     }
 
