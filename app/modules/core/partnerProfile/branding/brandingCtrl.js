@@ -272,7 +272,7 @@
     }
 
     function uploadProgress(evt) {
-      brand.progress = parseInt(100.0 * evt.loaded / evt.total);
+      brand.progress = parseInt(100.0 * evt.loaded / evt.total, 10);
     }
   }
 

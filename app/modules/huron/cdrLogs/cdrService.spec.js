@@ -21,12 +21,12 @@ describe('Controller: CdrService', function () {
   var formDate = function (date, time) {
     var returnDate = moment(date);
     if (time.substring(9, 10).toLowerCase() === 'p') {
-      returnDate.hours(parseInt(time.substring(0, 2)) + 12);
+      returnDate.hours(parseInt(time.substring(0, 2), 10) + 12);
     } else {
-      returnDate.hours(parseInt(time.substring(0, 2)));
+      returnDate.hours(parseInt(time.substring(0, 2), 10));
     }
-    returnDate.minutes(parseInt(time.substring(3, 5)));
-    returnDate.seconds(parseInt(time.substring(6, 8)));
+    returnDate.minutes(parseInt(time.substring(3, 5), 10));
+    returnDate.seconds(parseInt(time.substring(6, 8), 10));
     return returnDate.utc().format();
   };
 

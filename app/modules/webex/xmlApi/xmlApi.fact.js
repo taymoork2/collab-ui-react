@@ -403,12 +403,12 @@
               var sessionTicket = JsonData.body.serv_body.serv_bodyContent.use_sessionTicket;
               var createTime = JsonData.body.serv_body.serv_bodyContent.use_createTime;
               var ttl = JsonData.body.serv_body.serv_bodyContent.use_timeToLive;
-              var ttlMSec = (parseInt(ttl) - 100) * 1000;
+              var ttlMSec = (parseInt(ttl, 10) - 100) * 1000;
               if (sessionTicket !== null) {
                 var ticket = {}; //new object
                 ticket.site = wbxSiteName;
                 ticket.sessionTik = sessionTicket;
-                ticket.validUntil = parseInt(createTime) + ttlMSec;
+                ticket.validUntil = parseInt(createTime, 10) + ttlMSec;
                 $log.log(ticket.validUntil);
                 if (!$rootScope.sessionTickets) {
                   $rootScope.sessionTickets = {};

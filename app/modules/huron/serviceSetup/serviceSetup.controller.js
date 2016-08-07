@@ -666,7 +666,7 @@
     }
 
     function adjustExtensionRanges(range, char) {
-      var length = parseInt(vm.model.site.extensionLength);
+      var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padRight(range, length, char);
     }

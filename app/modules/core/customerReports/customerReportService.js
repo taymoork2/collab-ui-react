@@ -23,7 +23,7 @@
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
-    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
+    var cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
 
     // Promise Tracking
     var ABORT = 'ABORT';
@@ -90,9 +90,9 @@
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
           angular.forEach(response.data.data, function (item) {
             data.push({
-              'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
-              'totalActivity': parseInt(item.details.totalActivity),
-              'sparkMessages': parseInt(item.details.sparkMessages),
+              'numCalls': parseInt(item.details.sparkCalls, 10) + parseInt(item.details.sparkUcCalls, 10),
+              'totalActivity': parseInt(item.details.totalActivity, 10),
+              'sparkMessages': parseInt(item.details.sparkMessages, 10),
               'userId': item.details.userId,
               'userName': item.details.userName
             });
@@ -114,7 +114,7 @@
         colorTwo: chartColors.brandSuccessDark,
         balloon: true
       };
-      var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'));
+      var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'), 10);
       if (dayOffset >= 4) {
         dayOffset = 7 - dayOffset;
       } else {
@@ -128,18 +128,18 @@
           date = moment.tz(item.date, timezone).format(monthFormat);
         }
 
-        var activeUsers = parseInt(item.details.activeUsers);
-        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+        var activeUsers = parseInt(item.details.activeUsers, 10);
+        var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers, 10);
 
         // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
         if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
           if (index !== 0) {
-            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers);
+            previousTotal = parseInt(activeArray[index - 1].details.totalRegisteredUsers, 10);
           }
           if (index < (activeArray.length - 1)) {
-            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers);
+            nextTotal = parseInt(activeArray[index + 1].details.totalRegisteredUsers, 10);
           }
 
           if (previousTotal < activeUsers && nextTotal < activeUsers) {
@@ -248,19 +248,19 @@
       };
       var dayOffset = 0;
       if (groupData.length > 0) {
-        dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'), 10);
         if ((oneToOneData.length > 0) && (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1])) {
-          dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
+          dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'), 10);
         } else if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
-          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'), 10);
         }
       } else if (oneToOneData.length > 0) {
-        dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'), 10);
         if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
-          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'), 10);
         }
       } else if (avgData.length > 0) {
-        dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'), 10);
       }
 
       if (dayOffset >= 4) {
@@ -280,8 +280,8 @@
           var returnItem = returnGraph[index];
 
           if (returnItem.modifiedDate === modDate) {
-            returnItem.groupRooms = parseInt(groupItem.count);
-            returnItem.totalRooms += parseInt(groupItem.count);
+            returnItem.groupRooms = parseInt(groupItem.count, 10);
+            returnItem.totalRooms += parseInt(groupItem.count, 10);
 
             if (returnItem.groupRooms !== 0) {
               emptyGraph = false;
@@ -301,8 +301,8 @@
           var returnItem = returnGraph[index];
 
           if (returnItem.modifiedDate === modDate) {
-            returnItem.oneToOneRooms = parseInt(oneToOneItem.count);
-            returnItem.totalRooms += parseInt(oneToOneItem.count);
+            returnItem.oneToOneRooms = parseInt(oneToOneItem.count, 10);
+            returnItem.totalRooms += parseInt(oneToOneItem.count, 10);
             if (returnItem.oneToOneRooms !== 0) {
               emptyGraph = false;
             }
@@ -394,12 +394,12 @@
 
       var dayOffset = 0;
       if (contentSharedData.length > 0) {
-        dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'), 10);
         if ((contentShareSizesData.length > 0) && (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1])) {
-          dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
+          dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'), 10);
         }
       } else if (contentShareSizesData.length > 0) {
-        dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
+        dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'), 10);
       }
 
       if (dayOffset >= 4) {
@@ -419,7 +419,7 @@
           var returnItem = returnGraph[index];
 
           if (returnItem.modifiedDate === modDate) {
-            returnItem.contentShared = parseInt(contentItem.count);
+            returnItem.contentShared = parseInt(contentItem.count, 10);
             if (returnItem.contentShared !== 0) {
               emptyGraph = false;
             }
@@ -465,22 +465,22 @@
       return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response) {
         if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
           var details = response.data.data[0].data[0].details;
-          var totalCalls = parseInt(details.totalCalls);
+          var totalCalls = parseInt(details.totalCalls, 10);
           if (totalCalls > 0) {
             returnArray.dataProvider = [{
               "callCondition": $translate.instant('callMetrics.audioCalls'),
-              "numCalls": parseInt(details.sparkUcAudioCalls),
-              "percentage": Math.round((parseInt(details.sparkUcAudioCalls) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "numCalls": parseInt(details.sparkUcAudioCalls, 10),
+              "percentage": Math.round((parseInt(details.sparkUcAudioCalls, 10) / parseInt(details.totalSuccessfulCalls, 10)) * 100),
               "color": chartColors.colorAttentionBase
             }, {
               "callCondition": $translate.instant('callMetrics.videoCalls'),
-              "numCalls": parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls),
-              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls)) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "numCalls": parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10),
+              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls, 10) + parseInt(details.sparkVideoCalls, 10)) / parseInt(details.totalSuccessfulCalls, 10)) * 100, 10),
               "color": chartColors.primaryColorBase
             }];
 
             returnArray.displayData.totalCalls = totalCalls;
-            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration);
+            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration, 10);
             returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * 100).toFixed(2);
           }
         }
@@ -519,7 +519,7 @@
             partialVideoSum: 0,
             balloon: true
           };
-          var dayOffset = parseInt(moment.tz(data[(data.length - 1)].date, timezone).format('e'));
+          var dayOffset = parseInt(moment.tz(data[(data.length - 1)].date, timezone).format('e'), 10);
           if (dayOffset >= 4) {
             dayOffset = 7 - dayOffset;
           } else {
@@ -528,15 +528,15 @@
           var graph = getReturnGraph(filter, dayOffset, graphItem);
 
           angular.forEach(data, function (item) {
-            var totalSum = parseInt(item.details.totalDurationSum);
-            var goodSum = parseInt(item.details.goodQualityDurationSum);
-            var fairSum = parseInt(item.details.fairQualityDurationSum);
-            var poorSum = parseInt(item.details.poorQualityDurationSum);
+            var totalSum = parseInt(item.details.totalDurationSum, 10);
+            var goodSum = parseInt(item.details.goodQualityDurationSum, 10);
+            var fairSum = parseInt(item.details.fairQualityDurationSum, 10);
+            var poorSum = parseInt(item.details.poorQualityDurationSum, 10);
             var partialSum = fairSum + poorSum;
 
-            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum) + parseInt(item.details.sparkUcGoodVideoDurationSum);
-            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum) + parseInt(item.details.sparkUcFairVideoDurationSum);
-            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum) + parseInt(item.details.sparkUcPoorVideoDurationSum);
+            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum, 10) + parseInt(item.details.sparkUcGoodVideoDurationSum, 10);
+            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum, 10) + parseInt(item.details.sparkUcFairVideoDurationSum, 10);
+            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum, 10) + parseInt(item.details.sparkUcPoorVideoDurationSum, 10);
             var totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
             var partialVideoSum = fairVideoQualityDurationSum + poorVideoQualityDurationSum;
 
@@ -621,7 +621,7 @@
         angular.forEach(data, function (item) {
           if (responseLength < item.details.length) {
             responseLength = item.details.length;
-            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'));
+            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'), 10);
           }
         });
         if (dayOffset >= 4) {
@@ -668,8 +668,8 @@
 
               for (var i = 0; i < baseGraph.length; i++) {
                 if (baseGraph[i].modifiedDate === modifiedDate) {
-                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices);
-                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices);
+                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices, 10);
+                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices, 10);
                   break;
                 }
               }

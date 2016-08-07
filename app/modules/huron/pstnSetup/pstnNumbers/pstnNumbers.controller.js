@@ -523,7 +523,7 @@
       var advancedOrder = {
         data: {
           areaCode: model.areaCode.code,
-          length: parseInt(model.quantity),
+          length: parseInt(model.quantity, 10),
           consecutive: model.consecutive
         },
         type: type
