@@ -7,8 +7,6 @@ describe('Component: directoryNumberList', () => {
       "uuid":"6d3f07a6-f868-4ae7-990d-286ce033834d",
       "pattern":"2329",
       "userDnUuid":"e67db8f7-4193-4b29-aa67-9a1096c2d87f",
-      "altDnUuid":"8595e628-877c-4d29-b5c8-2c617922b151",
-      "altDnPattern":"7100XXXX",
       "dnSharedUsage":"Primary"
    },
    {
@@ -26,7 +24,10 @@ describe('Component: directoryNumberList', () => {
     this.initModules('Huron');
     this.injectDependencies('$scope');
     this.$scope.directoryNumbers = directoryNumbers;
-    this.compileComponent('directoryNumberList', {'directoryNumbers': 'directoryNumbers'});
+    this.compileComponent('directoryNumberList', {
+      directoryNumbers: 'directoryNumbers',
+      directoryNumberSref: 'test.state',
+    });
   });
 
   it('should expose a `directoryNumbers` object', function() {
@@ -35,8 +36,20 @@ describe('Component: directoryNumberList', () => {
     expect(this.controller.directoryNumbers[0].pattern).toBe('2329');
   });
 
-  it('should list at least each directoryNumber', function() {
-    expect(this.view).toContainElement('a#6d3f07a6-f868-4ae7-990d-286ce033834d');
-    expect(this.view).toContainElement('a#35fb962b-824c-44f3-9e13-2ed171e69249');
+  it('should create directory number link with usage type', function() {
+    let firstNumber = this.view.find('li a').first();
+
+    expect(firstNumber).toHaveAttr('ui-sref', 'test.state');
+    expect(firstNumber).toContainText('2329');
+    expect(firstNumber).not.toContainText('common.or');
+    expect(firstNumber).toContainText('Primary');
+  });
+
+  it('should create directory number link with alt dn pattern', function() {
+    let lastNumber = this.view.find('li a').last();
+
+    expect(lastNumber).toHaveAttr('ui-sref', 'test.state');
+    expect(lastNumber).toContainText('5015');
+    expect(lastNumber).toContainText('common.or 7100XXXX');
   });
 });

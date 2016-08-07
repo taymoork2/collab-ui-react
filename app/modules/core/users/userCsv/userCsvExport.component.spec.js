@@ -75,7 +75,7 @@ describe('crUserCsvExport Component', function () {
   describe('Component', function () {
 
     beforeEach(function () {
-      this.$scope.testIsOverExportThreshold = true;
+      this.$scope.testIsOverExportThreshold = false;
       this.$scope.onTestExportDownloadStatus = function () {};
       spyOn(this.$scope, 'onTestExportDownloadStatus');
 
@@ -85,7 +85,7 @@ describe('crUserCsvExport Component', function () {
     it('should have required HTML', function () {
 
       expect(this.vm.onStatusChange).toBeDefined();
-      expect(this.vm.isOverExportThreshold).toBeTruthy();
+      expect(this.vm.isOverExportThreshold).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).not.toHaveBeenCalled();
 
       expect(this.vm.isDownloading).toBeFalsy();
@@ -128,6 +128,9 @@ describe('crUserCsvExport Component', function () {
 
       // tell the modal it should close (OK)
       fakeModal.close();
+
+      expect(this.$modal.open).toHaveBeenCalledTimes(1);
+
       expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-begin');
 
       expect(this.vm.isDownloading).toBeTruthy();
@@ -155,6 +158,34 @@ describe('crUserCsvExport Component', function () {
       expect(this.vm.isDownloading).toBeFalsy();
       expect(this.$scope.onTestExportDownloadStatus).not.toHaveBeenCalled();
       expect(this.$rootScope.$emit).not.toHaveBeenCalledWith('csv-download-begin');
+    });
+
+    it('should display warning if download exceeds maxUserThreshold', function () {
+      this.$scope.testIsOverExportThreshold = true;
+
+      expect(this.vm.isDownloading).toBeFalsy();
+
+      // press the download CSV button
+      this.clickElement('[ng-click="$ctrl.exportCsv()"]');
+
+      // close the first export confirm dialog
+      fakeModal.close();
+
+      // warning dialog should appear.  close it to start download
+      fakeModal.close();
+
+      expect(this.$modal.open).toHaveBeenCalledTimes(2);
+
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-begin');
+
+      expect(this.vm.isDownloading).toBeTruthy();
+      expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(true, undefined);
+
+      this.$timeout.flush();
+      expect(this.vm.isDownloading).toBeFalsy();
+      expect(this.$scope.onTestExportDownloadStatus).toHaveBeenCalledWith(false, DATA_URL);
+      expect(this.Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith('csv-download-end');
     });
 
   });
