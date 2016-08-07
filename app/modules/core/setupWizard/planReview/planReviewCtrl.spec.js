@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, $q, UrlConfig, Userservice, FeatureToggleService, WebExUtilsFact;
+  var $scope, controller, $httpBackend, UrlConfig, Userservice, FeatureToggleService, WebExUtilsFact;
   var getUserMe;
 
   beforeEach(angular.mock.module('Core'));

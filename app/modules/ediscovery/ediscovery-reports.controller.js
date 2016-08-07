@@ -44,10 +44,10 @@
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;
       EdiscoveryService.downloadReport(report)
-        .catch(function (err) {
+        .catch(function () {
           Notification.error('ediscovery.unableToDownloadFile');
         })
-        .finally(function (res) {
+        .finally(function () {
           $scope.downloadingReportId = undefined;
         });
     }
@@ -59,7 +59,7 @@
       $scope.reportsBeingCancelled[id] = true;
       EdiscoveryService.patchReport(id, {
         state: "ABORTED"
-      }).then(function (res) {
+      }).then(function () {
         if (!EdiscoveryNotificationService.notificationsEnabled()) {
           Notification.success('ediscovery.search.reportCancelled');
         }
@@ -169,7 +169,7 @@
         if (vm.gridApi) {
           vm.gridApi.infiniteScroll.dataLoaded(false, true);
         }
-      }).finally(function (res) {
+      }).finally(function () {
         vm.readingReports = false;
       });
     }

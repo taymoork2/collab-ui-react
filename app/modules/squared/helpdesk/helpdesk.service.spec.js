@@ -114,26 +114,13 @@ describe('HelpdeskService', function () {
       }]
     };
 
-    var userSearchResult = [{
-      "active": true,
-      "id": "1111",
-      "organization": {
-        id: "2222"
-      },
-      "userName": "bill.gates",
-      "displayName": "Bill Gates"
-    }];
-
     $httpBackend
       .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
       .respond(orgSearchResponseMock);
 
-    var result;
     var error;
 
-    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
-      result = res;
-    }).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
       error = err;
     });
 
@@ -155,26 +142,14 @@ describe('HelpdeskService', function () {
       }]
     };
 
-    var userSearchResult = [{
-      "active": true,
-      "id": "1111",
-      "organization": {
-        id: "2222"
-      },
-      "userName": "bill.gates",
-      "displayName": "Bill Gates"
-    }];
 
     $httpBackend
       .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
       .respond(orgSearchResponseMock);
 
-    var result;
     var error;
 
-    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
-      result = res;
-    }).catch(function (err) {
+    Service.searchUsers("whatever", "1111", 30, null, null).then(function () {}).catch(function (err) {
       error = err;
     });
 

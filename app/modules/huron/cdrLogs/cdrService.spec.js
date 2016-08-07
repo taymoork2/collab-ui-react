@@ -4,7 +4,7 @@ describe('Controller: CdrService', function () {
   beforeEach(angular.mock.module('uc.cdrlogsupport'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $q, CdrService, Notification, Authinfo;
+  var $httpBackend, CdrService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
   var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/logstash*/_search?pretty';
   var name = 'call0CDR0';
@@ -31,10 +31,9 @@ describe('Controller: CdrService', function () {
   };
 
   describe("browsers: chrome, firefox, and misc - ", function () {
-    beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_, $window) {
+    beforeEach(inject(function (_$httpBackend_, _CdrService_, _Notification_, _Authinfo_, $window) {
       CdrService = _CdrService_;
       Notification = _Notification_;
-      $q = _$q_;
       $httpBackend = _$httpBackend_;
       Authinfo = _Authinfo_;
       $window.URL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {

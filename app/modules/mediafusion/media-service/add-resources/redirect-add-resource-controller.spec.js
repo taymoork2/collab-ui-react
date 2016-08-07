@@ -2,7 +2,7 @@
 
 describe('RedirectAddResourceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var vm, controller, cluster, RedirectTargetService, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, MediaClusterService, $q, XhrNotificationService, $modal, modalInstanceMock, windowMock;
+  var controller, redirectTargetServiceMock, redirectTargetPromise, mediaClusterServiceMock, $q, XhrNotificationService, $modal, modalInstanceMock, windowMock;
   var hostname = "MFA";
   var enteredCluster = "blr-ecp-246";
 

@@ -349,19 +349,6 @@
       return $q.all(promises);
     }
 
-    function orderTollFreeBlock(customerId, carrierId, npa, quantity, isSequential) {
-      var payload = {
-        npa: npa,
-        quantity: quantity,
-        sequential: isSequential
-      };
-      return TerminusCustomerCarrierTollFreeService.save({
-        customerId: customerId,
-        carrierId: carrierId,
-        type: TOLLFREEBLOCK
-      }, payload).$promise;
-    }
-
     function portNumbers(customerId, carrierId, numbers) {
       var payload = {
         numbers: numbers

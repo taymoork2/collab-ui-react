@@ -292,17 +292,13 @@
 
               // retrieve locus and callstart from metadata
               var locus = '-NA-',
-                callstart = '-NA-',
-                feedbackid = '-NA-';
+                callstart = '-NA-';
               if (metadata) {
                 if (metadata.locusid) {
                   locus = metadata.locusid;
                 }
                 if (metadata.callstart) {
                   callstart = metadata.callstart;
-                }
-                if (metadata.feedbackid) {
-                  feedbackid = metadata.feedbackid;
                 }
               } else {
                 //no metadata, for backward compatibility get locus and callstart from log filename

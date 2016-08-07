@@ -345,7 +345,7 @@
 
     function searchMostActive() {
       var returnArray = [];
-      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+      angular.forEach(vm.mostActiveUsers, function (item) {
         var userName = item.userName;
         if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
           returnArray.push(item);
@@ -540,7 +540,7 @@
                 }
               },
 
-              function getSiteSupportsIframeError(error) {
+              function getSiteSupportsIframeError() {
                 //no-op, but needed
               }
             )
@@ -594,7 +594,7 @@
     } else {
       Userservice.getUser(
         'me',
-        function (data, status) {
+        function (data) {
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);

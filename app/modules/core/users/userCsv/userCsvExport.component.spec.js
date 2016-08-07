@@ -76,7 +76,7 @@ describe('crUserCsvExport Component', function () {
 
     beforeEach(function () {
       this.$scope.testIsOverExportThreshold = false;
-      this.$scope.onTestExportDownloadStatus = function (isExporting, dataUrl) {};
+      this.$scope.onTestExportDownloadStatus = function () {};
       spyOn(this.$scope, 'onTestExportDownloadStatus');
 
       initComponent.apply(this);

@@ -178,7 +178,7 @@
 
     function getAdmins(startIndex) {
       //get the admin users
-      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
+      UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status) {
         if (data.success) {
           $timeout(function () {
             $scope.load = true;
@@ -291,7 +291,7 @@
     }
 
     function getPartners() {
-      UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
+      UserListService.listPartners(Authinfo.getOrgId(), function (data, status) {
         if (data.success) {
           $timeout(function () {
             $scope.load = true;

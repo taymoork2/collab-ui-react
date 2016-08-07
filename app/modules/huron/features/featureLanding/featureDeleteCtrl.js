@@ -64,21 +64,21 @@
           .then(function (data) {
             var scheduleId = data.scheduleId;
             AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl())
-              .then(function (data) {
-                  aaModel.ceInfos.splice(delPosition, 1);
-                  AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                  if (angular.isDefined(scheduleId)) {
-                    AACalendarService.deleteCalendar(scheduleId);
-                  }
-                  deleteSuccess();
-                },
+              .then(function () {
+                aaModel.ceInfos.splice(delPosition, 1);
+                AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
+                if (angular.isDefined(scheduleId)) {
+                  AACalendarService.deleteCalendar(scheduleId);
+                }
+                deleteSuccess();
+              },
                 function (response) {
                   deleteError(response);
                 });
           });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(
-          function (data) {
+          function () {
             deleteSuccess();
           },
           function (response) {
@@ -87,7 +87,7 @@
         );
       } else if (vm.featureFilter === 'CP') {
         CallParkService.deleteCallPark(vm.featureId).then(
-          function (data) {
+          function () {
             deleteSuccess();
           },
           function (response) {

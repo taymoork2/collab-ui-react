@@ -1,7 +1,7 @@
 'use strict';
 
 describe('UserListCtrl: Ctrl', function () {
-  var controller, $controller, $scope, $rootScope, $state, $timeout, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
+  var $controller, $scope, $state, $q, Userservice, UserListService, Orgservice, Authinfo, Config, Notification, FeatureToggleService;
   var photoUsers, currentUser, listUsers, listUsersMore, listAdmins, listAdminsMore, listPartners, getOrgJson;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements, telstraUser, failedData;
   photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
@@ -16,9 +16,8 @@ describe('UserListCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$state_, _$controller_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
-    $timeout = _$timeout_;
     $state = _$state_;
     $controller = _$controller_;
     $q = _$q_;
@@ -62,7 +61,7 @@ describe('UserListCtrl: Ctrl', function () {
       callback(_.extend(listPartners, successData), 200);
     });
     spyOn(UserListService, 'getUserCount').and.returnValue($q.when(100));
-    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgJson, 200);
     });
     spyOn(Authinfo, 'isCSB').and.returnValue(true);
@@ -76,7 +75,7 @@ describe('UserListCtrl: Ctrl', function () {
   }));
 
   function initController() {
-    controller = $controller('UserListCtrl', {
+    $controller('UserListCtrl', {
       $scope: $scope,
       $state: $state,
       Userservice: Userservice,
@@ -244,7 +243,7 @@ describe('UserListCtrl: Ctrl', function () {
 
   describe('getUserCount() returns NaN', function () {
     beforeEach(function () {
-      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
+      UserListService.listUsers.and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr) {
         callback(failedData, 200, searchStr);
       });
       UserListService.getUserCount.and.returnValue($q.when(NaN));

@@ -18,11 +18,11 @@
       reject
     ) {
 
-      var funcName = "sendRestApiReq()";
-      var logMsg = "";
+      // var funcName = "sendRestApiReq()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "httpReq.url=" + JSON.stringify(httpReq.url);
+      // logMsg = funcName + "\n" +
+      //   "httpReq.url=" + JSON.stringify(httpReq.url);
       // $log.log(logMsg);
 
       $http(
@@ -46,8 +46,8 @@
         httpsReqObj
       ) {
 
-        var funcName = "csvApiRequest()";
-        var logMsg = "";
+        // var funcName = "csvApiRequest()";
+        // var logMsg = "";
 
         // $log.log(funcName);
 

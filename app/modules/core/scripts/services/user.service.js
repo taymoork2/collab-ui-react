@@ -142,8 +142,8 @@
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       return $http.get(scimUrl, {
-          cache: true
-        })
+        cache: true
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -165,10 +165,10 @@
       }
 
       return $http({
-          method: 'PATCH',
-          url: scimUrl,
-          data: userData
-        })
+        method: 'PATCH',
+        url: scimUrl,
+        data: userData
+      })
         .success(function (data, status) {
           data = data || {};
           // This code is being added temporarily to update users on Squared UC
@@ -298,10 +298,10 @@
       };
 
       $http({
-          method: 'PATCH',
-          url: patchUrl,
-          data: requestBody
-        })
+        method: 'PATCH',
+        url: patchUrl,
+        data: requestBody
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;

@@ -272,7 +272,6 @@ var getAccessToken = function (req, code) {
       }
     };
     req.post(opts, function (err, res, body) {
-      var e;
       if (err) {
         console.error(err, body);
         reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
@@ -281,8 +280,7 @@ var getAccessToken = function (req, code) {
         try {
           return JSON.parse(body);
         } catch (_error) {
-          e = _error;
-          console.error(body);
+          console.error(_error);
           reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : void 0));
         }
       })();

@@ -57,32 +57,32 @@
       // by the general overview page (state of Call connectors, etc.)
       var label, value;
       switch (state) {
-      case 'running':
-        label = 'ok';
-        value = 0;
-        break;
-      case 'not_installed':
-        label = 'neutral';
-        value = 1;
-        break;
-      case 'disabled':
-      case 'downloading':
-      case 'installing':
-      case 'not_configured':
-      case 'uninstalling':
-      case 'registered':
-      case 'initializing':
-        label = 'warning';
-        value = 2;
-        break;
-      case 'has_alarms':
-      case 'offline':
-      case 'stopped':
-      case 'not_operational':
-      case 'unknown':
-      default:
-        label = 'error';
-        value = 3;
+        case 'running':
+          label = 'ok';
+          value = 0;
+          break;
+        case 'not_installed':
+          label = 'neutral';
+          value = 1;
+          break;
+        case 'disabled':
+        case 'downloading':
+        case 'installing':
+        case 'not_configured':
+        case 'uninstalling':
+        case 'registered':
+        case 'initializing':
+          label = 'warning';
+          value = 2;
+          break;
+        case 'has_alarms':
+        case 'offline':
+        case 'stopped':
+        case 'not_operational':
+        case 'unknown':
+        default:
+          label = 'error';
+          value = 3;
       }
 
       return {
@@ -236,14 +236,6 @@
         // .then(onlyKeepFusedClusters)
         //.then(addServicesStatuses)
         .then(sort);
-    }
-
-    function extractClustersFromResponse(response) {
-      return response.data.clusters;
-    }
-
-    function extractDataFromResponse(res) {
-      return res.data;
     }
 
     function sort(clusters) {

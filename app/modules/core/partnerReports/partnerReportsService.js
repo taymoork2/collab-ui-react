@@ -219,7 +219,7 @@
       };
       var date = undefined;
       var activeDataSet = [];
-      angular.forEach(customer, function (org, orgIndex, orgArray) {
+      angular.forEach(customer, function (org) {
         var orgData = activeUserCustomerGraphs[org.value];
         var emptyPopGraph = {
           customerName: org.label,
@@ -267,7 +267,7 @@
       // combine the active user data into a single graph
       var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
       var emptyGraph = true;
-      angular.forEach(activeDataSet, function (item, index, array) {
+      angular.forEach(activeDataSet, function (item) {
         if (angular.isArray(item) && (item.length > 0)) {
           baseGraph = combineMatchingDates(baseGraph, item);
           emptyGraph = false;
@@ -317,9 +317,9 @@
         return getService(topn + activeUserUrl + query + cacheValue + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
           if (response.data && angular.isArray(response.data.data)) {
-            angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
+            angular.forEach(response.data.data, function (org) {
               if (org.data) {
-                angular.forEach(org.data, function (item, index, array) {
+                angular.forEach(org.data, function (item) {
                   tableData.push({
                     orgName: org.orgName,
                     numCalls: parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
@@ -355,7 +355,7 @@
             balloon: true
           };
           var date = undefined;
-          angular.forEach(response.data.data, function (offset, offsetIndex, offsetArray) {
+          angular.forEach(response.data.data, function (offset) {
             if (angular.isArray(offset.data) && (angular.isUndefined(date) || offset.data[(offset.data.length - 1)].date)) {
               date = offset.data[(offset.data.length - 1)].date;
             }
@@ -369,7 +369,7 @@
           var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
           var graphUpdated = false;
 
-          angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
+          angular.forEach(response.data.data, function (org) {
             if (angular.isArray(org.data)) {
               var graph = parseMediaQualityData(org, filter);
               if (graph.length > 0) {
@@ -391,7 +391,7 @@
 
     function parseMediaQualityData(org, filter) {
       var graph = [];
-      angular.forEach(org.data, function (item, index, array) {
+      angular.forEach(org.data, function (item) {
         if (angular.isDefined(item.details)) {
           var totalSum = parseInt(item.details.totalDurationSum);
           var goodSum = parseInt(item.details.goodQualityDurationSum);
@@ -420,8 +420,8 @@
     }
 
     function combineQualityGraphs(baseGraph, graph) {
-      angular.forEach(graph, function (graphItem, graphIndex, graphArray) {
-        angular.forEach(baseGraph, function (baseGraphItem, baseGraphIndex, baseGraphArray) {
+      angular.forEach(graph, function (graphItem) {
+        angular.forEach(baseGraph, function (baseGraphItem) {
           if (graphItem.modifiedDate === baseGraphItem.modifiedDate) {
             baseGraphItem.totalDurationSum += graphItem.totalDurationSum;
             baseGraphItem.goodQualityDurationSum += graphItem.goodQualityDurationSum;
@@ -463,7 +463,7 @@
             }
           };
 
-          angular.forEach(response.data.data, function (item, index, array) {
+          angular.forEach(response.data.data, function (item) {
             if (angular.isDefined(item.data) && angular.isArray(item.data) && angular.isDefined(item.data[0].details) && (item.data[0].details !== null)) {
               var details = item.data[0].details;
               var totalCalls = parseInt(details.totalCalls);
@@ -496,7 +496,7 @@
       return getService(registeredUrl + getTrendQuery(time) + getCustomerUuids(customer), endpointsCancelPromise).then(function (response) {
         var returnArray = [];
         if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
-          angular.forEach(response.data.data, function (item, index, array) {
+          angular.forEach(response.data.data, function (item) {
             if (angular.isDefined(item.details) && (item.details !== null)) {
               var returnObject = item.details;
               returnObject.customer = getCustomerName(customer, returnObject.orgId);
@@ -547,7 +547,7 @@
     function getCustomerName(customer, uuid) {
       if (angular.isArray(customer)) {
         var customerName = "";
-        angular.forEach(customer, function (org, orgIndex, orgArray) {
+        angular.forEach(customer, function (org) {
           if (org.value === uuid) {
             customerName = org.label;
           }
@@ -561,7 +561,7 @@
     function getCustomerUuids(customer) {
       var url = "";
       if (angular.isArray(customer)) {
-        angular.forEach(customer, function (item, index, array) {
+        angular.forEach(customer, function (item) {
           url += orgId + item.value;
         });
       } else {
@@ -573,7 +573,7 @@
     function getAllowedCustomerUuids(customer) {
       var url = undefined;
       if (angular.isArray(customer)) {
-        angular.forEach(customer, function (item, index, array) {
+        angular.forEach(customer, function (item) {
           if (item.isAllowedToManage && angular.isDefined(url)) {
             url += orgId + item.value;
           } else {

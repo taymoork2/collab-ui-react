@@ -316,7 +316,7 @@
       if (FeatureToggleService.supports(FeatureToggleService.features.atlasEmailStatus)) {
         return isEmailBlocked(email).then(function () {
           $http.delete(urlBase + 'email/bounces?email=' + email)
-            .then(function (response) {
+            .then(function () {
               return invokeInviteEmail(displayName, email);
             });
         }).catch(function () {
@@ -329,11 +329,11 @@
 
     function invokeInviteEmail(displayName, email) {
       return $http.post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
-          inviteList: [{
-            displayName: displayName,
-            email: email
-          }]
-        })
+        inviteList: [{
+          displayName: displayName,
+          email: email
+        }]
+      })
         .then(extractData);
     }
 

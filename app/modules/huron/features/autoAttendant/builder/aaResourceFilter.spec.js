@@ -10,8 +10,6 @@ describe('Filter: aaResourceFilter', function () {
   var ceInfos = [];
 
   var AutoAttendantCeInfoModelService;
-  var successSpy;
-  var failureSpy;
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();

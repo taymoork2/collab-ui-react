@@ -4,7 +4,7 @@ describe('Controller: ReassignClusterController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
+  var controller, cluster, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
   beforeEach(inject(function ($controller, _MediaClusterService_, _XhrNotificationService_, _$q_, _$translate_) {
     cluster = {

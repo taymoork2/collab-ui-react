@@ -5,7 +5,7 @@ describe('Controller: NewFeatureModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  var controller, $scope;
+  var $scope;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
@@ -16,7 +16,7 @@ describe('Controller: NewFeatureModalCtrl', function () {
 
     spyOn($state, 'go');
 
-    controller = $controller('NewFeatureModalCtrl', {
+    $controller('NewFeatureModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake
     });

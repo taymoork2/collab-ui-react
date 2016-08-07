@@ -258,7 +258,7 @@
     function saveForm() {
       vm.saveInProgress = true;
       var updateJSONRequest = hgUpdateReqBody();
-      HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function (data) {
+      HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function () {
         vm.saveInProgress = false;
         Notification.success('huronHuntGroup.successUpdate', {
           huntGroupName: vm.model.name

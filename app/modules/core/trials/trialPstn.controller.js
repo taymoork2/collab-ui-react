@@ -199,7 +199,7 @@
       vm.areaCodeOptions = [];
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
-          _.forEach(response.areaCodes, function (areaCode, index) {
+          _.forEach(response.areaCodes, function (areaCode) {
             if (areaCode.count >= pstnTokenLimit) {
               vm.areaCodeOptions.push(areaCode);
             }
@@ -234,7 +234,7 @@
       e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
     }
 
-    function editedToken(e) {
+    function editedToken() {
       $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
       $('#didfield-tokenfield').attr('placeholder', '');
     }
@@ -307,9 +307,9 @@
 
     function _getCarriers(localScope) {
       PstnSetupService.listResellerCarriers().then(function (carriers) {
-          _showCarriers(carriers, localScope);
-        })
-        .catch(function (response) {
+        _showCarriers(carriers, localScope);
+      })
+        .catch(function () {
           PstnSetupService.listDefaultCarriers().then(function (carriers) {
             _showCarriers(carriers, localScope);
           });

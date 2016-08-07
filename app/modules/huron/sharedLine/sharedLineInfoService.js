@@ -41,9 +41,9 @@
       sharedLineUsers = [];
       var promises = [];
       return DirectoryNumberUserService.query({
-          'customerId': Authinfo.getOrgId(),
-          'directoryNumberId': dnUuid
-        }).$promise
+        'customerId': Authinfo.getOrgId(),
+        'directoryNumberId': dnUuid
+      }).$promise
         .then(function (dnUserInfo) {
           for (var i = 0; i < dnUserInfo.length; i++) {
             var promise;
@@ -84,9 +84,9 @@
       var promises = [];
 
       return UserEndpointService.query({
-          customerId: Authinfo.getOrgId(),
-          userId: userUuid
-        }).$promise
+        customerId: Authinfo.getOrgId(),
+        userId: userUuid
+      }).$promise
         .then(function (devices) {
           for (var i = 0; i < devices.length; i++) {
             var promise;
@@ -161,9 +161,9 @@
         externalCallerIdType: null
       };
       return SipEndpointDirectoryNumberService.query({
-          'customerId': Authinfo.getOrgId(),
-          'sipendpointId': deviceUuid
-        }).$promise
+        'customerId': Authinfo.getOrgId(),
+        'sipendpointId': deviceUuid
+      }).$promise
         .then(function (endpointDn) {
           if (angular.isDefined(endpointDn)) {
             angular.forEach(endpointDn, function (d) {
@@ -196,9 +196,9 @@
 
     function getUserLineCount(userUuid) {
       return UserDirectoryNumberService.query({
-          'customerId': Authinfo.getOrgId(),
-          'userId': userUuid
-        }).$promise
+        'customerId': Authinfo.getOrgId(),
+        'userId': userUuid
+      }).$promise
         .then(function (data) {
           if (data) {
             return data.length;
@@ -219,7 +219,7 @@
       }, directoryNumberInfo).$promise;
     }
 
-    function disassociateSharedLineUser(userUuid, userDnUuid, dnuuid) {
+    function disassociateSharedLineUser(userUuid, userDnUuid) {
       return UserDirectoryNumberService.delete({
         'customerId': Authinfo.getOrgId(),
         'userId': userUuid,

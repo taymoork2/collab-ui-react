@@ -2,7 +2,7 @@
 describe('Service: HelpdeskSparkStatusService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var ReportsService, Service, ServiceDescriptor, $scope, q;
+  var ReportsService, Service, $scope;
 
   beforeEach(inject(function (_ReportsService_, _$rootScope_, _HelpdeskSparkStatusService_) {
     Service = _HelpdeskSparkStatusService_;
@@ -95,8 +95,7 @@ describe('Service: HelpdeskSparkStatusService', function () {
       sinon.stub(ReportsService, 'healthMonitor');
       ReportsService.healthMonitor.yields(healthReport);
 
-      var result;
-      Service.getHealthStatuses().then(function (res) {
+      Service.getHealthStatuses().then(function () {
         fail();
       }).finally(done);
 

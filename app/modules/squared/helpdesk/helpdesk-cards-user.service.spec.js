@@ -3,11 +3,9 @@ describe('HelpdeskCardsService', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var HelpdeskCardsUserService;
-  var LicenseService;
 
-  beforeEach(inject(function (_HelpdeskCardsUserService_, _LicenseService_) {
+  beforeEach(inject(function (_HelpdeskCardsUserService_) {
     HelpdeskCardsUserService = _HelpdeskCardsUserService_;
-    LicenseService = _LicenseService_;
   }));
 
   var entFalse = {

@@ -2,7 +2,7 @@
 
 describe('Service: TelephonyInfoService', function () {
   var $httpBackend, $q, $translate, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
-  var $rootScope, FeatureToggleService, Authinfo;
+  var $rootScope, Authinfo;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
   var cosRestrictions;

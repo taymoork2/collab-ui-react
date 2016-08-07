@@ -144,7 +144,7 @@
     };
 
     $scope.idpFile = {};
-    $scope.$watch('idpFile.file', function (value) {
+    $scope.$watch('idpFile.file', function () {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
           if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
@@ -252,7 +252,7 @@
     function reEnableSSO() {
       var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
       var metaUrl = null;
-      SSOService.getMetaInfo(function (data, status) {
+      SSOService.getMetaInfo(function (data) {
         $scope.wizard.wizardNextLoad = true;
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
@@ -325,7 +325,7 @@
       });
     }
 
-    function checkNewEntityId(data) {
+    function checkNewEntityId() {
       var start = $scope.idpFile.file.indexOf(strEntityDesc);
       start = $scope.idpFile.file.indexOf(strEntityId, start) + strEntityId.length;
       var end = $scope.idpFile.file.indexOf(strEntityIdEnd, start);
@@ -333,7 +333,7 @@
       return newEntityId;
     }
 
-    function checkReqBinding(data) {
+    function checkReqBinding() {
       var start = $scope.idpFile.file.indexOf(strSignOn);
       start = $scope.idpFile.file.indexOf(bindingStr, start);
       var end = $scope.idpFile.file.indexOf(strLocation, start) - strBindingEnd.length;

@@ -4,14 +4,13 @@ describe('Controller: HostDetailsController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate;
+  var controller, MediaClusterService, XhrNotificationService;
 
-  beforeEach(inject(function ($controller, $stateParams, $state, _MediaClusterService_, _XhrNotificationService_, _Notification_, $translate) {
+  beforeEach(inject(function ($controller, $stateParams, $state, _MediaClusterService_, _XhrNotificationService_, $translate) {
     $stateParams = $stateParams;
     $state = $state;
     MediaClusterService = _MediaClusterService_;
     XhrNotificationService = _XhrNotificationService_;
-    Notification = _Notification_;
     $translate = $translate;
 
     controller = $controller('GroupDetailsController', {

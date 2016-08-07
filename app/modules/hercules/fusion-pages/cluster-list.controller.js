@@ -14,7 +14,6 @@
 
     var vm = this;
     var clustersCache = [];
-    var activeFilter = 'all';
 
     vm.loading = true;
     vm.backState = 'services-overview';
@@ -110,7 +109,6 @@
     }
 
     function setFilter(filter) {
-      activeFilter = filter.filterValue || 'all';
       if (filter.filterValue === 'expressway') {
         vm.displayedClusters = _.filter(clustersCache, 'targetType', 'c_mgmt');
       } else if (filter.filterValue === 'mediafusion') {

@@ -143,7 +143,7 @@
       if (customerOrgId) {
         DialPlanService.getCustomerDialPlanCountryCode(customerOrgId)
           .then(TelephoneNumberService.setCountryCode)
-          .catch(function (response) {
+          .catch(function () {
             // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
             return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
               .catch(function (response) {
@@ -244,7 +244,7 @@
 
       if (newDids.length > 0) {
         _.forEach(newDids, function (newDid) {
-          var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function (response) {
+          var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function () {
             vm.addedCount++;
           }).catch(function (response) {
             errors.push({
@@ -305,10 +305,10 @@
             $scope.trial.model.customerEmail,
             $scope.trial.model.licenseDuration,
             $scope.trial.model.customerOrgId)
-          .then(function (response) {
+          .then(function () {
             Notification.success('didManageModal.emailSuccessText');
           })
-          .catch(function (response) {
+          .catch(function () {
             Notification.error('didManageModal.emailFailText');
           })
           .finally(function () {
