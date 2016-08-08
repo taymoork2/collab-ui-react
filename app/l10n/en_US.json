@@ -3346,7 +3346,8 @@
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
       "movedTo": "{{nodeName}} moved to: {{clusterName}}",
-      "upgradeSchedule": "Upgrade Schedule"
+      "upgradeSchedule": "Upgrade Schedule",
+      "everyDay": "Every Day in"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
