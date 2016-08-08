@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: ExpresswayAlarmController', function () {
+describe('Controller: ExpresswayAlarmController', function () {
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(angular.mock.module('Squared'));
