@@ -4,7 +4,7 @@ describe('Service: CustomerAdministratorService', function () {
   beforeEach(angular.mock.module('Core'));
   var $httpBackend, CustomerAdministratorService;
   var customerId, userUuid;
-  var getSalesAdminRegex = /.*\%2212345-67890-12345%22\.*/;
+  var getSalesAdminRegex = /.*%2212345-67890-12345%22\.*/;
   var userUuidRegex = /.*\/6e6347b4-5acf-4a91-9c50-658b2f5a9f4a\.*/;
 
   beforeEach(inject(function (_$httpBackend_, _CustomerAdministratorService_) {

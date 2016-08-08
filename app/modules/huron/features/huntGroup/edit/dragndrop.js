@@ -145,7 +145,7 @@
           var targetSize = targetNode.offsetHeight;
           var targetPosition = targetNode.offsetTop;
           targetPosition = relativeToParent ? targetPosition : 0;
-          return mousePointer < targetPosition + targetSize / 2;
+          return mousePointer < targetPosition + (targetSize / 2);
         }
 
         function stopDragover() {

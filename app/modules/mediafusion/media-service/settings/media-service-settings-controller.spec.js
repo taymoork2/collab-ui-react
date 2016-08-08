@@ -18,8 +18,6 @@ describe('Controller: MediaServiceSettingsController', function () {
   }));
 
   beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _Notification_) {
-    $state = $state;
-    $stateParams = $stateParams;
     httpMock = $httpBackend;
     $q = _$q_;
     $modal = _$modal_;

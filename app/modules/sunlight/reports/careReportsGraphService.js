@@ -86,7 +86,7 @@
       }
     }
 
-    //This function creates a deep copy of baseSerialGraph object with the arguments 
+    //This function creates a deep copy of baseSerialGraph object with the arguments
     function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor, selectedIndex) {
       var legend = {};
       if (selectedIndex == 0) {

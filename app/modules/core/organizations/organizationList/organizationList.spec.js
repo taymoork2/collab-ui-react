@@ -7,7 +7,6 @@ describe('Controller: ListOrganizationsCtrl', function () {
 
   beforeEach(inject(function ($rootScope, $controller, $state, $q, _$timeout_, _Orgservice_) {
     $scope = $rootScope.$new();
-    $state = $state;
     $timeout = _$timeout_;
     Orgservice = _Orgservice_;
 

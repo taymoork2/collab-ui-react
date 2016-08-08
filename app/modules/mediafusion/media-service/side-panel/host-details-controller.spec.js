@@ -7,11 +7,8 @@ describe('Controller: HostDetailsController', function () {
   var controller, MediaClusterService, XhrNotificationService;
 
   beforeEach(inject(function ($controller, $stateParams, $state, _MediaClusterService_, _XhrNotificationService_, $translate) {
-    $stateParams = $stateParams;
-    $state = $state;
     MediaClusterService = _MediaClusterService_;
     XhrNotificationService = _XhrNotificationService_;
-    $translate = $translate;
 
     controller = $controller('GroupDetailsController', {
       $stateParams: $stateParams,

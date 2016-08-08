@@ -26,7 +26,6 @@ describe('Controller: PlanReviewCtrl', function () {
   beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    $q = $q;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;

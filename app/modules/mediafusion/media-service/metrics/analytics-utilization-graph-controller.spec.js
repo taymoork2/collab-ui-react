@@ -18,7 +18,6 @@ describe('Controller: AnalyticsUtilizationGraphController', function () {
 
   beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _MediaFusionAnalyticsService_) {
     $scope = $rootScope.$new();
-    $state = $state;
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;

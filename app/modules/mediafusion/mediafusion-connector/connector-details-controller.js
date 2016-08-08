@@ -39,11 +39,9 @@
         function getGroups() {
           var groupResponse = MediafusionClusterService.getGroups();
           groupResponse.then(function () {
-            _.chain(groupResponse)
-              .filter(function (group) {
-                $scope.groups = group.value;
-              })
-              .value();
+            _.forEach(groupResponse, function (group) {
+              $scope.groups = group.value;
+            });
           });
         }
         getGroups();
