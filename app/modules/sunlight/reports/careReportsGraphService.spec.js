@@ -25,14 +25,22 @@ describe('Service: Care Reports Graph Service', function () {
       expect(CareReportsGraphService.getBaseVariable('balloon')).toEqual(responseData.baseVariables['balloon']);
       expect(CareReportsGraphService.getBaseVariable('chartCursor')).toEqual(responseData.baseVariables['chartCursor']);
       expect(CareReportsGraphService.getBaseVariable('export')).toEqual(responseData.baseVariables['export']);
+      expect(CareReportsGraphService.getBaseVariable('graph')).toEqual(responseData.baseVariables['graph']);
 
       // incorrect key response
       expect(CareReportsGraphService.getBaseVariable('col')).toEqual({});
     });
 
     it('getBaseSerialGraph should return expected defaults for an area graph', function () {
-      var serialGraph = CareReportsGraphService.buildChartConfig(dummyReport, {}, {}, 'dummyData', {}, {}, {}, {});
-      expect(serialGraph).toBeDefined();
+      var legend = CareReportsGraphService.getBaseVariable('legend');
+      var graph = CareReportsGraphService.getBaseVariable('graph');
+      var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
+      var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
+      var valueAxis = CareReportsGraphService.getBaseVariable('axis');
+      var exportMenu = CareReportsGraphService.getBaseVariable('export')
+
+      var serialGraph = CareReportsGraphService.buildChartConfig('dummyData', legend , graph, chartCursor, 'dummyField', categoryAxis, valueAxis, exportMenu);
+      expect(serialGraph).toEqual(responseData.getBaseSerialGraph);
     });
 
   });
