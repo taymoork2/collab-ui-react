@@ -29,6 +29,7 @@
       getUserPhoto: getUserPhoto,
       isValidThumbnail: isValidThumbnail
     };
+
     var _helpers = {
       isSunlightUser: isSunlightUser,
       getUserLicence: getUserLicence,
@@ -141,8 +142,8 @@
       var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       return $http.get(scimUrl, {
-          cache: true
-        })
+        cache: true
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -164,10 +165,10 @@
       }
 
       return $http({
-          method: 'PATCH',
-          url: scimUrl,
-          data: userData
-        })
+        method: 'PATCH',
+        url: scimUrl,
+        data: userData
+      })
         .success(function (data, status) {
           data = data || {};
           // This code is being added temporarily to update users on Squared UC
@@ -297,10 +298,10 @@
       };
 
       $http({
-          method: 'PATCH',
-          url: patchUrl,
-          data: requestBody
-        })
+        method: 'PATCH',
+        url: patchUrl,
+        data: requestBody
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -340,7 +341,11 @@
         });
     }
 
+    /**
+     * Onboard users that share the same set of entitlements and licenses
+     */
     function onboardUsers(usersDataArray, entitlements, licenses, cancelPromise) {
+      // bind the licenses and entitlements that are shared by all users
       var getUserPayload = getUserPayloadForOnboardAPI.bind({
         licenses: licenses,
         entitlements: entitlements
@@ -349,6 +354,9 @@
       return onboardUsersAPI(userPayload, cancelPromise);
     }
 
+    /**
+     * Onboard users with each user specifiying their own set of licenses and entitlements
+     */
     function bulkOnboardUsers(usersDataArray, cancelPromise) {
       var userPayload = getUserPayloadForOnboardAPI(usersDataArray, false);
       return onboardUsersAPI(userPayload, cancelPromise);
@@ -358,6 +366,9 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
+    /**
+     * Generate the payload used for onboard API call.
+     */
     function getUserPayloadForOnboardAPI(users, hasSameLicenses) {
       var thisParams = this;
       users = _.isArray(users) ? users : [];
@@ -506,7 +517,7 @@
       var sunlightLicense = _.find(licenses, function (license) {
         return license.id.indexOf(Config.offerCodes.CDC) >= 0;
       });
-      return (typeof sunlightLicense === 'undefined') ? false : true;
+      return typeof sunlightLicense !== 'undefined';
     }
 
     function isHuronUser(allEntitlements) {

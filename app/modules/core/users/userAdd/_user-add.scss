@@ -37,9 +37,9 @@
 }
 
 .modal-icon-flex-row {
-	  width: 33px;
-	}
-  
+  width: 33px;
+}
+
 .adduser-desc {
   font-family: $brand-font-cisco-TT-Light;
   font-size: 16px;
@@ -47,6 +47,49 @@
   color: $gray-darkest;
   text-align: left;
   margin-bottom: 15px;
+}
+
+.onboard-users {
+  .unsynced-users {
+    display: inherit;
+    margin-bottom: 1rem;
+
+    .icon-error {
+      color: $color-alerts-dark;
+      margin-right: .5rem;
+      margin-top: .4rem;
+    }
+    p {
+      display: inline-block;
+    }
+  }
+
+  .flex-container {
+    display: flex;
+
+    .adduser-input-desc {
+      flex: 1 1 auto;
+    }
+  }
+
+  .clear-button {
+    float: right;
+    color: $gray-base;
+    min-width: 1rem;
+    border: none;
+    font-size: small;
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    &:active,
+    &:hover,
+    &:focus,
+    &:visited {
+      color: $brand-primary;
+      background-color: transparent;
+    }
+  }
 }
 
 #usersfield-tokenfield {
@@ -57,14 +100,6 @@
   text-align: left;
   width: 100%;
   background-color: transparent;
-}
-
-.adduser-input-desc {
-  font-family: $brand-font-cisco-TT-Light;
-  font-size: 12px;
-  color: $gray-darker;
-  margin-left: 15px;
-  margin-top: 10px;
 }
 
 .adduser-importlink {
@@ -288,7 +323,6 @@
   }
 }
 
-
 /*-------------------------------------------------------------------
   US196818 | Atlas - Add User Modal Update
 -------------------------------------------------------------------*/
@@ -305,13 +339,17 @@
         transition: none;
       }
       /* starting animations for enter */
-      &.ng-enter {}
+      &.ng-enter {
+      }
       /* terminal animations for enter */
-      &.ng-enter.ng-enter-active {}
+      &.ng-enter.ng-enter-active {
+      }
       /* starting animations for leave */
-      &.ng-leave {}
+      &.ng-leave {
+      }
       /* terminal animations for leave */
-      &.ng-leave.ng-leave-active {}
+      &.ng-leave.ng-leave-active {
+      }
       .icon {
         font-size: 75px;
       }
@@ -341,6 +379,7 @@
     margin-right: 2px;
   }
 }
+
 .collab-options {
   padding-bottom: 20px;
 }
@@ -354,7 +393,9 @@
   color: $gray-dark;
   font-family: $brand-font-extra-light;
   font-style: italic;
+  font-size: 12px;
   margin-left: 0;
+  margin-top: 10px;
 }
 
 .license-wrapper {
@@ -367,12 +408,12 @@
   }
 
   .license-wrapper {
-	margin-left: -20px;
-	margin-right: -20px;
+    margin-left: -20px;
+    margin-right: -20px;
   }
 
   .hybrid-services-panel {
-	margin-left: -20px;
+    margin-left: -20px;
     margin-right: -20px;
   }
 }
@@ -565,5 +606,5 @@
 }
 
 .users-upload-results {
-    min-height: 0px;
+  min-height: 0px;
 }

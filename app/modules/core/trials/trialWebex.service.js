@@ -73,6 +73,7 @@
           0: 'validSite',
           434057: 'domainInvalid',
           439012: 'duplicateSite',
+          439015: 'duplicateSite',
           431397: 'duplicateSite'
         };
         var isValid = (data.isValid === 'true');
@@ -80,7 +81,7 @@
           'isValid': isValid && data.errorCode === '0',
           'errorCode': errorCodes[data.errorCode] || 'invalidSite'
         };
-      }).catch(function (response) {
+      }).catch(function () {
         Notification.error('trialModal.meeting.validationHttpError');
       });
     }

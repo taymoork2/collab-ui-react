@@ -1,14 +1,12 @@
 'use strict';
 
 describe('Controller: AABuilderNumbersCtrl', function () {
-  var handler;
-  var controller, AANotificationService, AutoAttendantCeService, ExternalNumberPoolService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
-  var $rootScope, $scope, $q, deferred, $stateParams;
+  var controller, AANotificationService;
+  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AANumberAssignmentService, AACommonService;
+  var $rootScope, $scope, $q;
   var $httpBackend, HuronConfig;
   var url, cmiAAAsignmentURL;
 
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var rawCeInfo = {
@@ -46,9 +44,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   var aaModel = {};
 
-  var listCesSpy;
-  var saveCeSpy;
-
   var errorSpy;
 
   function ce2CeInfo(rawCeInfo) {
@@ -81,17 +76,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _AANotificationService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_,
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _Authinfo_, _AANotificationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
-    deferred = $q.defer();
-    ExternalNumberPoolService = _ExternalNumberPoolService_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
 
-    AAUiModelService = _AAUiModelService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
@@ -113,7 +105,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     // for an external number query, return the number formatted with a +
     var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
     $httpBackend.whenGET(externalNumberQueryUri)
-      .respond(function (method, url, data, headers) {
+      .respond(function (method, url) {
 
         var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
 
@@ -131,7 +123,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     }]);
 
     // CMI assignment will fail when there is any bad number in the list
-    $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond(function (method, url, data, headers) {
+    $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond(function (method, url, data) {
       if (JSON.stringify(data).indexOf("bad") > -1) {
         return [500, 'bad'];
       } else {
@@ -222,7 +214,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      var resources = controller.ui.ceInfo.getResources();
+      controller.ui.ceInfo.getResources();
 
       expect(controller.availablePhoneNums.length === 0);
 
@@ -309,7 +301,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      var resources = controller.ui.ceInfo.getResources();
+      controller.ui.ceInfo.getResources();
 
       expect(controller.availablePhoneNums.length === 2);
 
@@ -409,7 +401,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     it('should not move a bad or missing phone number to available', function () {
-      var index;
 
       controller.availablePhoneNums = [];
 
@@ -495,7 +486,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should load external numbers', function () {
 
-      var ret = controller.getExternalNumbers();
+      controller.getExternalNumbers();
 
       $httpBackend.flush();
 
@@ -523,7 +514,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should load internal numbers', function () {
 
-      var ret = controller.getInternalNumbers();
+      controller.getInternalNumbers();
 
       $httpBackend.flush();
 
@@ -554,13 +545,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should not warn when assignments return no error', function () {
 
-      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
-        onlyCMI = [];
-        onlyResources = [];
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function () {
         return $q.when("{}");
       });
 
-      var ret = controller.warnOnAssignedNumberDiscrepancies();
+      controller.warnOnAssignedNumberDiscrepancies();
 
       expect(errorSpy).not.toHaveBeenCalled();
 
@@ -583,7 +572,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       resources.push(resource);
 
-      var ret = controller.warnOnAssignedNumberDiscrepancies();
+      controller.warnOnAssignedNumberDiscrepancies();
 
       $httpBackend.flush();
 
@@ -597,7 +586,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.reject("bad"));
 
-      var ret = controller.warnOnAssignedNumberDiscrepancies();
+      controller.warnOnAssignedNumberDiscrepancies();
 
       $httpBackend.flush();
 

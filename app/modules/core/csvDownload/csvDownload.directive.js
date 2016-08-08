@@ -6,12 +6,13 @@
 
   /* Sample usage:
    *  <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>
-   *    - $emit event 'csv-download-request' and pass in download type
+   *    - $emit event 'csv-download-request' and pass in options object containing
+   *    --- { csvType, tooManyUsers, suppressWarning, filename}
    *  <csv-download type="template" filename="template.csv"></csv-download>
    *    - static download type
    *    - call scope.downloadCsv()
    * /
-  /* @ngInject */
+   /* @ngInject */
   function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
     var directive = {
       restrict: 'E',
@@ -103,9 +104,9 @@
           if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
-                href: url,
-                download: FILENAME
-              })
+              href: url,
+              download: FILENAME
+            })
               .removeAttr('disabled');
           } else {
             // IE download option since IE won't download the created url
@@ -123,8 +124,8 @@
         $timeout(function () {
           scope.downloadCsv = downloadCsv;
           downloadAnchor.attr({
-              href: ''
-            })
+            href: ''
+          })
             .removeAttr('download');
         });
       }
@@ -141,10 +142,19 @@
         if (scope.type === CsvDownloadService.typeAny) {
           CsvDownloadService.downloadInProgress = flag;
         }
+
+        if (flag) {
+          $rootScope.$emit('csv-download-request-started');
+        } else {
+          $rootScope.$emit('csv-download-request-completed', {
+            dataUrl: FILENAME
+          });
+        }
+
       }
 
       function cancelDownload() {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
           if (CsvDownloadService.downloadInProgress) {
             CsvDownloadService.cancelDownload();
             flagDownloading(false);
@@ -158,27 +168,42 @@
         });
       }
 
+      $rootScope.$on('csv-download-begin', function () {
+        flagDownloading(true);
+      });
+
+      $rootScope.$on('csv-download-end', function () {
+        flagDownloading(false);
+      });
+
       // dynamic CSV download
       if (attrs.type === CsvDownloadService.typeAny) {
-        $rootScope.$on('csv-download-request', function (event, csvType, tooManyUsers) {
-          tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
+        $rootScope.$on('csv-download-request', function (event, options) {
+          FILENAME = (options.filename || FILENAME);
+          var tooManyUsers = !!options.tooManyUsers;
           if (tooManyUsers && CsvDownloadService.downloadInProgress) {
             Notification.error('csvDownload.isRunning');
           } else {
-            $modal.open({
-              type: 'dialog',
-              templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
-              controller: function () {
-                var vm = this;
-                vm.messageBody1 = CsvDownloadService.downloadInProgress ? $translate.instant('csvDownload.confirmCsvCancelMsg') : '';
-                vm.messageBody2 = $translate.instant('csvDownload.confirmCsvDownloadMsg');
-              },
-              controllerAs: 'csv'
-            }).result.then(function () {
-              cancelDownload().then(function () {
-                scope.downloadCsv(csvType, tooManyUsers);
+            if (options.suppressWarning) {
+              // don't warn user, just start export
+              scope.downloadCsv(options.csvType, tooManyUsers);
+            } else {
+              // warn user this might take a while and get confirmation
+              $modal.open({
+                type: 'dialog',
+                templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
+                controller: function () {
+                  var vm = this;
+                  vm.messageBody1 = CsvDownloadService.downloadInProgress ? $translate.instant('csvDownload.confirmCsvCancelMsg') : '';
+                  vm.messageBody2 = $translate.instant('csvDownload.confirmCsvDownloadMsg');
+                },
+                controllerAs: 'csv'
+              }).result.then(function () {
+                cancelDownload().then(function () {
+                  scope.downloadCsv(options.csvType, tooManyUsers);
+                });
               });
-            });
+            }
           }
         });
       }

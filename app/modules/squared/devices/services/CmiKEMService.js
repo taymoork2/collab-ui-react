@@ -30,9 +30,9 @@
         customerId: '@customerId',
         sipEndpointId: '@sipEndpointId'
       }).save({
-          customerId: Authinfo.getOrgId(),
-          sipEndpointId: sipEndpointId
-        },
+        customerId: Authinfo.getOrgId(),
+        sipEndpointId: sipEndpointId
+      },
         data
       ).$promise;
     }

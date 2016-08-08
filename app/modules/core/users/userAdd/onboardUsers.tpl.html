@@ -3,8 +3,15 @@
     <cs-radiolist options="userInputOptions" ng-model="model.userInputOption"></cs-radiolist>
   </div>
   <div ng-if="model.userInputOption === 0">
-    <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" tokenplaceholder="tokenplaceholder" ng-init="validateTokens()"></cs-token-field>
-    <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
+    <div ng-class="{'has-error': hasErrors()}">
+      <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" tokenplaceholder="tokenplaceholder" ng-init="validateTokens()"></cs-token-field>
+    </div>
+    <div class="flex-container">
+      <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
+      <button type="button" class="btn btn--circle btn--link clear-button" ng-click="clearPanel()" cs-tooltip="{{::'onboardModal.clearAll'|translate}}" tooltip-placement="left">
+        <span class="icon icon-trash"></span>
+      </button>
+    </div>
   </div>
   <div  ng-if="model.userInputOption === 1">
     <div class="form-group user-name-email-input" >
@@ -13,8 +20,14 @@
       <input required type="text" class="form-control flex2 input-lg" ng-model="model.emailAddress" id="emailAddress" placeholder="{{::strEmailAddress}}" ng-change="validateEmailField()" ng-keypress="onEnterKey($event)">
       <i class="plus-icon" ng-class="{'plus-icon-inactive': model.userForm.$invalid || !model.userInfoValid, 'plus-icon-active': model.userForm.$valid && model.userInfoValid}" ng-click="addToUsersfield()"></i>
     </div>
-    <div class="onboard-tokens">
+    <div class="onboard-tokens" ng-class="{'has-error': hasErrors()}">
       <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" static="true" ng-init="validateTokens()"></cs-token-field>
+    </div>
+    <div class="flex-container">
+      <div class="adduser-input-desc"></div>
+      <button type="button" class="btn btn--circle btn--link clear-button" ng-click="clearPanel()" cs-tooltip="{{::'onboardModal.clearAll'|translate}}" tooltip-placement="left">
+        <span class="icon icon-trash"></span>
+      </button>
     </div>
   </div>
 </form>

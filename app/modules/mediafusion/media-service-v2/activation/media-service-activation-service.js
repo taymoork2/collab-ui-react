@@ -15,6 +15,14 @@
 
     };
 
+    var setServiceAcknowledged = function (serviceId, acknowledged) {
+      return $http
+        .patch(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          acknowledged: acknowledged
+        });
+
+    };
+
     var isServiceEnabled = function (serviceId, callback) {
       $http
         .get(MediaConfigServiceV2.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
@@ -55,6 +63,7 @@
     return {
       isServiceEnabled: isServiceEnabled,
       setServiceEnabled: setServiceEnabled,
+      setServiceAcknowledged: setServiceAcknowledged,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
       deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping

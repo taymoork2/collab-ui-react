@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService, FeatureToggleService;
+  var controller, $controller, $scope, $state, $previousState, $q, $httpBackend, ServiceSetup, Notification, HuronConfig, HuronCustomer, DialPlanService;
   var Authinfo, VoicemailMessageAction;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer, messageAction;
 
@@ -16,7 +16,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
+  beforeEach(inject(function ($rootScope, _$previousState_, _$controller_, _$q_, _ServiceSetup_, _Notification_, _HuronConfig_, _$httpBackend_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _Authinfo_, _VoicemailMessageAction_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -32,6 +32,7 @@ describe('Controller: ServiceSetup', function () {
     Authinfo = _Authinfo_;
     modalDefer = $q.defer();
     VoicemailMessageAction = _VoicemailMessageAction_;
+    $previousState = _$previousState_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -106,6 +107,12 @@ describe('Controller: ServiceSetup', function () {
     };
 
     messageAction = getJSONFixture('huron/json/settings/messageAction.json');
+
+    spyOn($previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
 
     spyOn(ServiceSetup, 'createInternalNumberRange').and.returnValue($q.when());
     spyOn(ServiceSetup, 'deleteInternalNumberRange').and.returnValue($q.when());
@@ -757,14 +764,14 @@ describe('Controller: ServiceSetup', function () {
 
     it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
       controller.hideFieldInternalNumberRange = false;
-      var promise = controller.initNext();
+      controller.initNext();
       $scope.$apply();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
     });
 
     it('should call not createInternalNumberRange() if hideFieldInternalNumberRange is true', function () {
       controller.hideFieldInternalNumberRange = true;
-      var promise = controller.initNext();
+      controller.initNext();
       $scope.$apply();
       expect(ServiceSetup.createInternalNumberRange).not.toHaveBeenCalled();
     });

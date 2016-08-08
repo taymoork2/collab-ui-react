@@ -234,7 +234,6 @@
         'dr-login-forward',
         'editService',
         'firsttimewizard',
-        'groups',
         'my-company',
         'overview',
         'profile',
@@ -265,7 +264,8 @@
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe'
+        'webex-reports-iframe',
+        'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
@@ -320,6 +320,7 @@
         'call-service',
         'cluster-list',
         'expressway-settings',
+        'services-overview',
       ],
       'squared-fusion-cal': [
         'add-resource',
@@ -340,9 +341,11 @@
         'mediafusion-settings',
         'metrics',
         'reports-metrics',
+        'services-overview',
       ],
       'webex-messenger': [
-        'messenger'
+        'messenger',
+        'services-overview',
       ],
       'contact-center-context': [
         //TODO: Remove these states when sunlight trial stories are implemented and

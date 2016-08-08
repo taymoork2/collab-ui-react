@@ -2,14 +2,12 @@
 describe('Service: HelpdeskLogService', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Service, LogService, q, scope, urlBase;
+  var Service, LogService, scope;
 
-  beforeEach(inject(function (UrlConfig, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_HelpdeskLogService_, _LogService_, _$rootScope_) {
     Service = _HelpdeskLogService_;
     LogService = _LogService_;
     scope = _$rootScope_.$new();
-    q = _$q_;
-    urlBase = UrlConfig.getAdminServiceUrl();
 
     var logs = {
       success: true,

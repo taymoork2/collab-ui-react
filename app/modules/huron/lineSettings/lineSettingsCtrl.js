@@ -26,7 +26,7 @@
     };
 
     vm.validations = {
-      phoneNumber: function (viewValue, modelValue, scope) {
+      phoneNumber: function (viewValue, modelValue) {
         var value = modelValue || viewValue;
         return /^(\+?)?[\d]{10,11}$/.test(value);
       }
@@ -245,7 +245,7 @@
         maxlength: 30,
         label: $translate.instant('callerIdPanel.customName')
       },
-      hideExpression: function ($viewValue, $modelValue, scope) {
+      hideExpression: function () {
         if (vm.callerIdInfo.callerIdSelection) {
           return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
@@ -267,7 +267,7 @@
           }
         }
       },
-      hideExpression: function ($viewValue, $modelValue, scope) {
+      hideExpression: function () {
         if (vm.callerIdInfo.callerIdSelection) {
           return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
@@ -691,14 +691,14 @@
       return listSharedLineUsers(vm.telephonyInfo.currentDirectoryNumber.uuid).then(function () {
         CallerId.loadCompanyNumbers().then(function () {
             // load company numbers first
-            vm.callerIdOptions = CallerId.getCompanyNumberList();
-            vm.callerIdOptions.forEach(function (option) {
-              if (option.value.externalCallerIdType === companyCallerId_type) {
-                hasCompanyCallerID = true;
-                option.label = companyCallerId_label;
-              }
-            });
-          })
+          vm.callerIdOptions = CallerId.getCompanyNumberList();
+          vm.callerIdOptions.forEach(function (option) {
+            if (option.value.externalCallerIdType === companyCallerId_type) {
+              hasCompanyCallerID = true;
+              option.label = companyCallerId_label;
+            }
+          });
+        })
           .then(function () {
             // Direct Line
             if (angular.isDefined(vm.telephonyInfo.alternateDirectoryNumber.uuid) && vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
@@ -981,7 +981,7 @@
 
       var defer = $q.defer();
 
-      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
         if (data.success) {
           defer.resolve(data.Resources);
         } else {
@@ -1050,7 +1050,7 @@
 
     function addSharedLineUsers() {
       //Associate new Sharedline users
-      var uuid, name;
+      var name;
       var promises = [];
       var promise;
       if (vm.selectedUsers) {
@@ -1090,7 +1090,7 @@
             if (users.length > 1) {
               vm.sharedLineUsers = users;
             }
-            vm.sharedLineBtn = (vm.sharedLineUsers) ? true : false;
+            vm.sharedLineBtn = !!vm.sharedLineUsers;
             return users;
           })
           .then(function (users) {
@@ -1233,7 +1233,7 @@
       var userName = '';
       userName = (name && name.givenName) ? name.givenName : '';
       userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
-      userName = (userName) ? userName : userId;
+      userName = userName || userId;
       return userName;
     }
 

@@ -46,7 +46,6 @@
     }
 
     function init() {
-      var selectedIndex = vm.timeSelected.value;
       setFilterBasedTextForCare();
       $timeout(function () {
         setDummyData();
@@ -75,7 +74,7 @@
             vm.taskIncomingStatus = SET;
             CareReportsService.setTaskIncomingGraphs(data, vm.timeSelected.categoryAxisTitle, vm.timeSelected.value);
           }
-        }, function (response) {
+        }, function () {
           vm.taskIncomingStatus = EMPTY;
           Notification.error($translate.instant('careReportsPage.taskIncomingError'));
         });

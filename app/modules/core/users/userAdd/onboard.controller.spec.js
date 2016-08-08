@@ -4,7 +4,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$modal', '$q', '$scope', '$state', '$stateParams', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice', 'WebExUtilsFact');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'Notification', 'Orgservice', 'SyncService', 'TelephonyInfoService', 'Userservice', 'WebExUtilsFact');
     initDependencySpies.apply(this);
   }
 
@@ -25,9 +25,17 @@ describe('OnboardCtrl: Ctrl', function () {
     function isLastStep() {
       return false;
     }
+
     this.$scope.wizard.isLastStep = isLastStep;
 
+    this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
+
     spyOn(this.$state, 'go');
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
 
     this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     this.mock.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
@@ -59,7 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
       callback(this.mock.unlicensedUsers, 200);
     }.bind(this));
-    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback, status) {
+    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
 
@@ -123,7 +131,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('process and save users', function () {
       beforeEach(function () {
         this.$scope.userList = validUserList;
-        var promise = this.$scope.syncStatusNext();
+        this.$scope.syncStatusNext();
         this.$scope.$apply();
         this.$timeout.flush();
       });
@@ -715,9 +723,6 @@ describe('OnboardCtrl: Ctrl', function () {
     it('should check if CF gets checked when CMR gets checked', function () {
       this.mock.allLicensesData.allLicenses.forEach(function (lic) {
         lic.confLic.forEach(function (cfLic) {
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = true; // check CMR license
-          });
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to be checked
         }.bind(this));
@@ -729,9 +734,6 @@ describe('OnboardCtrl: Ctrl', function () {
         lic.confLic.forEach(function (cfLic) {
           cfLic.confModel = true; // check CF license
           this.$scope.checkCMR(cfLic.confModel, lic.cmrLic);
-          lic.cmrLic.forEach(function (cmrLic) {
-            cmrLic = false; // uncheck CMR license
-          });
           expect(cfLic.confModel).toBeTruthy(); // expect CF license to remain checked
         }.bind(this));
       }.bind(this));

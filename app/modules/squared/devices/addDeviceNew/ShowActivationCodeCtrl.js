@@ -16,8 +16,14 @@
     vm.qrCode = undefined;
     vm.timeLeft = '';
 
-    vm.getActivationCode = function () {
-      return vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
+    vm.activationCode = vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
+
+    vm.onCopySuccess = function () {
+      Notification.success('clipboard.success');
+    };
+
+    vm.onCopyError = function () {
+      Notification.success('clipboard.error');
     };
 
     if (vm.wizardData.deviceType === 'huron') {
@@ -49,7 +55,7 @@
       } else {
         if (vm.wizardData.deviceType === "cloudberry") {
           vm.isLoading = true;
-          CsdmPlaceService.createPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
+          CsdmPlaceService.createCsdmPlace(vm.wizardData.deviceName, vm.wizardData.deviceType).then(function (place) {
             vm.place = place;
             CsdmCodeService
               .createCodeForExisting(place.cisUuid)
@@ -78,7 +84,7 @@
       return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
     }
 
-    vm.friendlyActivationCode = formatActivationCode(vm.getActivationCode());
+    vm.friendlyActivationCode = formatActivationCode(vm.activationCode);
 
     vm.activateEmail = function () {
       vm.showEmail = true;
@@ -137,7 +143,7 @@
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
-        oneTimePassword: vm.getActivationCode(),
+        oneTimePassword: vm.activationCode,
         expiresOn: vm.getExpiresOn(),
         userId: vm.wizardData.cisUuid,
         customerId: vm.wizardData.organizationId

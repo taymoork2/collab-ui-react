@@ -4,7 +4,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp');
-    this.injectDependencies('$q', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
+    this.injectDependencies('$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
     this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
   }
@@ -25,9 +25,16 @@ describe('Template: assignDnAndDirectLinesModal', function () {
 
     spyOn(this.FeatureToggleService, 'supportsDirSync').and.returnValue(this.$q.when(false));
     spyOn(this.FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue(this.$q.when(true));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.when(true));
     spyOn(this.Orgservice, 'getHybridServiceAcknowledged').and.returnValue(this.$q.when(this.mock.fusionServices));
     spyOn(this.Orgservice, 'getUnlicensedUsers');
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.when(this.mock.getLicensesUsage));
+
+    spyOn(this.$previousState, 'get').and.returnValue({
+      state: {
+        name: 'test.state'
+      }
+    });
   }
 
   function initSpies() {

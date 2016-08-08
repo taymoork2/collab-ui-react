@@ -14,15 +14,6 @@
       }
     };
 
-    var anyApprovedPackagesForService = function (service, cluster) {
-      if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
-        return _.find(cluster.provisioning_data.approved_packages, function (pkg) {
-          return pkg.service.service_type == service.service_type;
-        });
-      }
-      return false;
-    };
-
     var checkSoftwareUpgradePending = function (service, cluster) {
       if (cluster.provisioning_data && cluster.provisioning_data.approved_packages) {
         var expected_package = _.find(cluster.provisioning_data.approved_packages, function (pkg) {
@@ -105,7 +96,7 @@
       }
     };
 
-    function serviceAndClusterNeedsAttention(service, cluster) {
+    function serviceAndClusterNeedsAttention(service) {
       // cluster.needs_attention = true;
       service.needs_attention = true;
     }

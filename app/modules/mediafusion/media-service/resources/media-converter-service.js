@@ -1,4 +1,4 @@
-(function ($log) {
+(function () {
   'use strict';
 
   function Cluster(cluster) {
@@ -49,7 +49,7 @@
 
     function getServices(cluster) {
 
-      var updateServiceStatus = function (service, cluster) {
+      var updateServiceStatus = function (service) {
         service.alarm_count = 0;
 
         service.running_hosts = _.reduce(service.connectors, function (num, con) {
@@ -197,7 +197,7 @@
       }
     });
 
-    function sortOn(collection, name) {
+    function sortOn(collection) {
       collection.sort(function (a, b) {
         var groupA = a.properties["mf.group.displayName"];
         var groupB = b.properties["mf.group.displayName"];
@@ -247,7 +247,7 @@
       });
 
       // Adding Empty groups
-      //var groupList = 
+      //var groupList =
       _.each(groupList, function (groupName) {
         if (presentGroupNameList.indexOf(groupName) <= -1) {
           group = {

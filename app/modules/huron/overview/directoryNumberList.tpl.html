@@ -1,0 +1,18 @@
+<div class="feature-list">
+  <ul>
+    <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers track by directoryNumber.uuid">
+      <a id="{{::directoryNumber.uuid}}"
+        ng-if="::$ctrl.directoryNumberSref"
+        ui-sref="{{::$ctrl.directoryNumberSref}}">
+        <span class="feature-name">
+          <span ng-bind="::directoryNumber.pattern"></span>
+          <span class="feature-name" ng-if="directoryNumber.altDnPattern">
+            <span translate="common.or"></span> <span ng-bind="::directoryNumber.altDnPattern"></span>
+          </span>
+        </span>
+        <span class="feature-status" ng-bind="directoryNumber.dnSharedUsage"></span>
+        <i class="feature-arrow"></i>
+      </a>
+    </li>
+  </ul>
+</div>

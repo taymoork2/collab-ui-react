@@ -107,7 +107,6 @@
         }
       },
       lessThan: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
         // we only validate this if endNumber is valid or populated
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
@@ -185,7 +184,7 @@
         }
         return result;
       },
-      phoneNumber: function (viewValue, modelValue, scope) {
+      phoneNumber: function (viewValue, modelValue) {
         var value = null;
         if (modelValue || viewValue) {
           value = (modelValue || viewValue);
@@ -198,7 +197,7 @@
       }
     };
 
-    vm.steeringDigitChangeValidation = function ($viewValue, $modelValue, scope) {
+    vm.steeringDigitChangeValidation = function () {
       if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
         return true;
       }
@@ -277,7 +276,7 @@
         }
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+        'templateOptions.disabled': function () {
           return vm.model.disableExtensions;
         }
       }
@@ -344,7 +343,7 @@
                   return vm.model.disableExtensions && angular.isDefined(scope.model.uuid);
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-                'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
+                'templateOptions.minlength': function () {
                   return vm.model.site.extensionLength;
                 },
                 'templateOptions.maxlength': function () {
@@ -407,7 +406,7 @@
                   return scope.fc && scope.fc.$validate();
                 },
                 'templateOptions.isWarn': vm.steerDigitOverLapValidation,
-                'templateOptions.minlength': function ($viewValue, $modelValue, scope) {
+                'templateOptions.minlength': function () {
                   return vm.model.site.extensionLength;
                 },
                 'templateOptions.maxlength': function () {
@@ -575,7 +574,7 @@
             return !vm.model.callerId.callerIdEnabled;
           },
           expressionProperties: {
-            'templateOptions.required': function (newValue, oldValue) {
+            'templateOptions.required': function () {
               if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
@@ -723,12 +722,12 @@
     function showDisableVoicemailWarning() {
       if (_.get(vm, 'model.site.voicemailPilotNumber') && !vm.model.companyVoicemail.companyVoicemailEnabled) {
         return ModalService.open({
-            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
-            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
-            close: $translate.instant('common.disable'),
-            dismiss: $translate.instant('common.cancel'),
-            btnType: 'negative'
-          })
+          title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+          message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+          close: $translate.instant('common.disable'),
+          dismiss: $translate.instant('common.cancel'),
+          btnType: 'negative'
+        })
           .result
           .catch(function () {
             vm.model.companyVoicemail.companyVoicemailEnabled = true;
@@ -1068,12 +1067,12 @@
     }
 
     function adjustExtensionRanges(range, char) {
-      var length = parseInt(vm.model.site.extensionLength);
+      var length = parseInt(vm.model.site.extensionLength, 10);
 
       return (length < range.length) ? range.slice(0, length) : _.padRight(range, length, char);
     }
 
-    function loadExternalNumbers(pattern) {
+    function loadExternalNumbers() {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.unassignedExternalNumbers = ExternalNumberService.getUnassignedNumbers();
         vm.allExternalNumbers = ExternalNumberService.getAllNumbers();
@@ -1260,7 +1259,7 @@
             } else {
               // update if the name is changing
               if (vm.model.callerId.uuid && (vm.existingCallerIdName !== vm.model.callerId.callerIdName)) {
-                var data = {
+                data = {
                   name: vm.model.callerId.callerIdName
                 };
                 return CallerId.updateCompanyNumber(vm.model.callerId.uuid, data);
@@ -1370,7 +1369,7 @@
       resetForm();
     }
 
-    function setModel(data) {
+    function setModel() {
       vm.model.site.siteIndex = savedModel.site.siteIndex;
       vm.model.site.steeringDigit = savedModel.site.steeringDigit;
       vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
@@ -1432,8 +1431,8 @@
         // back into the list of available options
         if ((newValue !== oldValue) && (oldValue && oldValue.label)) {
           if (!_.find(localScope.to.options, function (externalNumberLabel) {
-              return externalNumberLabel === oldValue.label;
-            })) {
+            return externalNumberLabel === oldValue.label;
+          })) {
             localScope.to.options.push(oldValue.label);
           }
         }
@@ -1453,10 +1452,10 @@
         }
         if ((newValue !== oldValue) && oldValue) {
           if (!_.find(localScope.to.options, function (externalNumber) {
-              return externalNumber.label === oldValue;
-            }) && _.find(vm.unassignedExternalNumbers, function (externalNumber) {
-              return externalNumber.label === oldValue;
-            })) {
+            return externalNumber.label === oldValue;
+          }) && _.find(vm.unassignedExternalNumbers, function (externalNumber) {
+            return externalNumber.label === oldValue;
+          })) {
             if (_.get(vm, 'model.serviceNumber.pattern') !== oldValue) {
               localScope.to.options.push({
                 pattern: TelephoneNumberService.getDIDValue(oldValue),
@@ -1493,8 +1492,8 @@
         });
         // add the existing voicemailPilotNumber back into the list of options
         if (vm.model.site.voicemailPilotNumber && !_.find(localScope.to.options, function (externalNumber) {
-            return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
-          })) {
+          return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
+        })) {
           var tmpExternalNumber = {
             pattern: vm.model.site.voicemailPilotNumber,
             label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber)
@@ -1528,8 +1527,8 @@
           .value();
         // add the existing emergencyCallBackNumber back into the list of options
         if (_.get(vm, 'model.site.emergencyCallBackNumber.pattern') && !_.find(localScope.to.options, function (externalNumber) {
-            return externalNumber.pattern === vm.model.site.emergencyCallBackNumber.pattern;
-          })) {
+          return externalNumber.pattern === vm.model.site.emergencyCallBackNumber.pattern;
+        })) {
           var tmpExternalNumber = {
             pattern: vm.model.site.emergencyCallBackNumber.pattern,
             label: TelephoneNumberService.getDIDLabel(vm.model.site.emergencyCallBackNumber.pattern)
@@ -1587,8 +1586,8 @@
 
     function testForExtensions() {
       return DirectoryNumberService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (extensionList) {
           if (angular.isArray(extensionList) && extensionList.length > 0) {
             vm.model.disableExtensions = true;
@@ -1598,26 +1597,26 @@
 
     function testForAutoAttendant() {
       return CeService.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (autoAttendant) {
           if (angular.isArray(autoAttendant) && autoAttendant.length > 0) {
             vm.model.disableExtensions = true;
           }
-        }).catch(function (response) {
+        }).catch(function () {
           // auto attendant does not exist
         });
     }
 
     function testForHuntGroup() {
       return HuntGroupServiceV2.query({
-          customerId: Authinfo.getOrgId()
-        }).$promise
+        customerId: Authinfo.getOrgId()
+      }).$promise
         .then(function (huntGroup) {
           if (angular.isArray(huntGroup) && huntGroup.length > 0) {
             vm.model.disableExtensions = true;
           }
-        }).catch(function (response) {
+        }).catch(function () {
           // hunt group does not exist
         });
     }

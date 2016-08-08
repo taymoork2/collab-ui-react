@@ -84,15 +84,15 @@
     };
 
     var delay = $interval(function () {
-        $interval.cancel(delay);
-        if (TokenService.getAccessToken()) {
-          Log.debug('starting refresh timer...');
+      $interval.cancel(delay);
+      if (TokenService.getAccessToken()) {
+        Log.debug('starting refresh timer...');
           //start refresh cycle after 15 minutes
-          refreshToken();
-        } else {
-          Auth.redirectToLogin();
-        }
-      },
+        refreshToken();
+      } else {
+        Auth.redirectToLogin();
+      }
+    },
       Config.tokenTimers.refreshDelay
     );
 

@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
+  function PartnerService($http, $rootScope, $translate, Analytics, Authinfo, Auth, Config, Log, TrialService, UrlConfig) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -212,7 +212,7 @@
           var uuid = response.data.uuid;
           if (_.indexOf(response.data.managedOrgs, customerOrgId) < 0) {
             patchManagedOrgs(uuid, customerOrgId);
-            Analytics.trackUserPatch(response.data.orgId);
+            Analytics.trackUserPatch(response.data.orgId, uuid);
           }
         } else {
           Log.error('Query for userauthinfo failed. Status: ' + response.status);
@@ -392,9 +392,6 @@
     }
 
     function exportCSV(isCareEnabled) {
-      var deferred = $q.defer();
-
-      var customers = [];
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
@@ -486,9 +483,9 @@
           return;
         }
         switch (licenseInfo.licenseType) {
-        case Config.licenseTypes.COMMUNICATION:
-          partial.isSquaredUcOffer = true;
-          break;
+          case Config.licenseTypes.COMMUNICATION:
+            partial.isSquaredUcOffer = true;
+            break;
         }
       });
 
@@ -505,32 +502,32 @@
         }
 
         switch (offerInfo.id) {
-        case Config.offerTypes.spark1:
-        case Config.offerTypes.message:
-        case Config.offerTypes.collab:
-          userServices.push($translate.instant('trials.message'));
-          break;
-        case Config.offerTypes.call:
-        case Config.offerTypes.squaredUC:
-          partial.isSquaredUcOffer = true;
-          userServices.push($translate.instant('trials.call'));
-          break;
-        case Config.offerTypes.webex:
-        case Config.offerTypes.meetings:
-          userServices.push($translate.instant('customerPage.EE'));
-          break;
-        case Config.offerTypes.meeting:
-          userServices.push($translate.instant('trials.meeting'));
-          break;
-        case Config.offerTypes.roomSystems:
-          deviceServiceText.push($translate.instant('trials.roomSystem'));
-          partial.deviceLicenses = offerInfo.licenseCount;
-          break;
-        case Config.offerTypes.care:
-          if (isCareEnabled) {
-            userServices.push($translate.instant('trials.care'));
-          }
-          break;
+          case Config.offerTypes.spark1:
+          case Config.offerTypes.message:
+          case Config.offerTypes.collab:
+            userServices.push($translate.instant('trials.message'));
+            break;
+          case Config.offerTypes.call:
+          case Config.offerTypes.squaredUC:
+            partial.isSquaredUcOffer = true;
+            userServices.push($translate.instant('trials.call'));
+            break;
+          case Config.offerTypes.webex:
+          case Config.offerTypes.meetings:
+            userServices.push($translate.instant('customerPage.EE'));
+            break;
+          case Config.offerTypes.meeting:
+            userServices.push($translate.instant('trials.meeting'));
+            break;
+          case Config.offerTypes.roomSystems:
+            deviceServiceText.push($translate.instant('trials.roomSystem'));
+            partial.deviceLicenses = offerInfo.licenseCount;
+            break;
+          case Config.offerTypes.care:
+            if (isCareEnabled) {
+              userServices.push($translate.instant('trials.care'));
+            }
+            break;
         }
       }
 

@@ -42,8 +42,8 @@
       };
 
       return calendarService.save({
-          customerId: Authinfo.getOrgId()
-        },
+        customerId: Authinfo.getOrgId()
+      },
         data
       ).$promise;
     }
@@ -56,9 +56,9 @@
       };
 
       return calendarService.update({
-          customerId: Authinfo.getOrgId(),
-          scheduleId: aCalendarId
-        },
+        customerId: Authinfo.getOrgId(),
+        scheduleId: aCalendarId
+      },
         data
       ).$promise;
     }

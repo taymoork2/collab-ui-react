@@ -3,8 +3,6 @@
 
   describe('Controller: TabsCtrl', function () {
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $httpBackend, $provide, $injector;
-    var userService = {};
-    // var AuthinfoService;
     var featureToggleService = {
       supports: function () {}
     };
@@ -93,7 +91,7 @@
       var v = _.merge({
         $scope: $scope,
         $rootScope: injectedRootScope
-      }, args ? args : {});
+      }, args || {});
       tabsController = $controller('TabsCtrl',
         v
       );

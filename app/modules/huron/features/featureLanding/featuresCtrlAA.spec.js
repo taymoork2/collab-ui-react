@@ -14,11 +14,6 @@ describe('Features Controller', function () {
   var getAAListSuccessResp = function (data) {
     return data;
   };
-  var getAAListFailureResp = {
-    'data': 'Internal Server Error',
-    'status': 500,
-    'statusText': 'Internal Server Error'
-  };
   var AAs = [{
     'cardName': 'Main AA',
     'numbers': ['1111'],
@@ -40,8 +35,6 @@ describe('Features Controller', function () {
     'featureName': 'huronHuntGroup.hg',
     'filterValue': 'AA'
   }];
-
-  var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
 
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));

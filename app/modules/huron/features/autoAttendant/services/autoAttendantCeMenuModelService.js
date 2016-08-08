@@ -846,10 +846,6 @@
     }
 
     function updateCustomMenu(ceRecord, actionSetName, aaMenu) {
-      var funcname = 'updateCustomMenu';
-
-      // $log.log(funcname + ': ceRecord: ' + JSON.stringify(ceRecord));
-      // $log.log(funcname + ': aaMenu: ' + JSON.stringify(aaMenu));
       if (angular.isUndefined(aaMenu.type) || aaMenu.type !== 'MENU_CUSTOM') {
         return false;
       }
@@ -867,7 +863,6 @@
       for (var attr in customAction['runCustomActions']) {
         customAction['runCustomActions'][attr] = aaMenu.entries[0][attr];
       }
-      // $log.log(funcname + ': ceRecord: ' + JSON.stringify(ceRecord));
       return true;
     }
 
@@ -1032,7 +1027,7 @@
           newOption.actions = createActionArray(menuEntry.actions);
           newOptionArray.push(newOption);
         } else if (menuEntry.key && _.has(menuEntry, 'entries') && _.has(menuEntry, 'headers')) {
-          var newOption = {};
+          newOption = {};
           if (angular.isDefined(menuEntry.description)) {
             newOption.description = menuEntry.description;
           }

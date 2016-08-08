@@ -46,7 +46,7 @@ describe(
           spyOn($translate, 'use').and.returnValue(useLocale);
           spyOn($sce, 'trustAsResourceUrl').and.returnValue(paramsSettingPageIframeUrl);
 
-          var controller = $controller(
+          $controller(
             'WebExSiteSettingCtrl', {
               $scope: $scope,
               $stateParams: $stateParams,

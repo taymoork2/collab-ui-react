@@ -4,14 +4,14 @@ describe('Controller: GroupSettingsController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $stateParams, MediaClusterService, $q;
+  var MediaClusterService, $q;
 
   beforeEach(inject(function ($controller, $stateParams, _MediaClusterService_, _$q_) {
     $stateParams = $stateParams;
     MediaClusterService = _MediaClusterService_;
     $q = _$q_;
 
-    controller = $controller('GroupSettingsController', {
+    $controller('GroupSettingsController', {
       $stateParams: $stateParams,
       MediaClusterService: MediaClusterService,
       $q: $q

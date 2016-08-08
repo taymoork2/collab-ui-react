@@ -4,9 +4,9 @@ describe('Controller: HostClusterDeregisterController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var vm, controller, cluster, orgName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock, log;
+  var controller, cluster, orgName, MediaClusterService, XhrNotificationService, $q, $translate, modalInstanceMock, windowMock;
 
-  beforeEach(inject(function ($controller, _XhrNotificationService_, _$q_, _$translate_, $log) {
+  beforeEach(inject(function ($controller, _XhrNotificationService_, _$q_, _$translate_) {
     cluster = {
       id: 'a',
       name: 'b',
@@ -31,8 +31,6 @@ describe('Controller: HostClusterDeregisterController', function () {
     windowMock = {
       open: sinon.stub()
     };
-    log = $log;
-    log.reset();
 
     controller = $controller('HostClusterDeregisterController', {
       cluster: cluster,
@@ -42,8 +40,7 @@ describe('Controller: HostClusterDeregisterController', function () {
       $q: $q,
       $translate: $translate,
       $modalInstance: modalInstanceMock,
-      $window: windowMock,
-      log: log
+      $window: windowMock
     });
   }));
 

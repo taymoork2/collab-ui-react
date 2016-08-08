@@ -2,18 +2,18 @@
   'use strict';
 
   module.exports = angular.module('core.featuretoggle', [
-      require('modules/core/config/config'),
-      require('modules/core/scripts/services/authinfo'),
-      require('modules/core/scripts/services/org.service'),
-      require('modules/huron/telephony/telephonyConfig'),
-    ])
+    require('modules/core/config/config'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/org.service'),
+    require('modules/huron/telephony/telephonyConfig'),
+  ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
     .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService)
     .name;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, Orgservice, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $state, Authinfo, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig, Orgservice) {
     var features = {
       dirSync: 'atlas-dir-sync',
       atlasBrandingWordingChange: 'atlas-branding-wording-change',
@@ -170,6 +170,10 @@
       }
     });
 
+    var dirSyncConfigurationResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/:customerId/dirsync', {
+      customerId: '@customerId'
+    });
+
     var service = {
       getUrl: getUrl,
       getFeatureForUser: getFeatureForUser,
@@ -255,7 +259,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         } else {
@@ -265,7 +269,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         }
@@ -284,7 +288,7 @@
         return _.get(_.find(features.developer, {
           key: feature
         }), 'val', false);
-      }).catch(function (err) {
+      }).catch(function () {
         return false;
       });
 
@@ -317,7 +321,7 @@
     }
 
     function supports(feature) {
-      return $q(function (resolve, reject) {
+      return $q(function (resolve) {
         if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
@@ -347,17 +351,21 @@
     }
 
     function supportsDirSync() {
-      var deferred = $q.defer();
-      Orgservice.getOrgCacheOption(function (data, status) {
-        if (data.success) {
-          deferred.resolve(data.dirsyncEnabled);
-        } else {
-          deferred.reject(status);
-        }
-      }, null, {
-        cache: false
+      return dirSyncConfigurationResource.get({
+        customerId: Authinfo.getOrgId()
+      }).$promise.then(function (response) {
+        return response.serviceMode === 'ENABLED';
+      }).catch(function (response) {
+        Orgservice.getOrgCacheOption(function (data) {
+          if (data.success) {
+            return data.dirsyncEnabled;
+          } else {
+            return $q.reject(response);
+          }
+        }, null, {
+          cache: false
+        });
       });
-      return deferred.promise;
     }
 
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {

@@ -171,16 +171,16 @@
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
-          method: "POST",
-          url: callflowDiagramUrl,
-          data: {
-            "data": message
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml'
-          }
-        })
+        method: "POST",
+        url: callflowDiagramUrl,
+        data: {
+          "data": message
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/xml'
+        }
+      })
         .success(function (response) {
           defer.resolve(response);
         })
@@ -203,13 +203,13 @@
     svc.getActivities = function (locusid, start, end) {
       var defer = $q.defer();
       $http({
-          method: "GET",
-          url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        })
+        method: "GET",
+        url: getActivitiesUrl + "?id=lid." + locusid + "&start=" + start + "&end=" + end,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
         .success(function (response) {
           defer.resolve(response);
         })

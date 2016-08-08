@@ -11,7 +11,7 @@ function verifyJsonFiles() {
 
 function readJsonFiles(err, files) {
   if (err) {
-    throw new Error('Error finding json files: ', + err);
+    throw new Error('Error finding json files: ', +err);
   }
   _.forEach(files, function (jsonFile) {
     fs.readJsonSync(jsonFile);
