@@ -26,11 +26,11 @@
       );
     };
 
-    vm.onCopyError = function (error) {
-      Notification.notify(
-        [$translate.instant('generateActivationCodeModal.clipboardError') + " " + error.data.error],
-        'error',
-        $translate.instant('generateActivationCodeModal.clipboardErrorTitle')
+    vm.onCopyError = function () {
+      Notification.error(
+        'generateActivationCodeModal.clipboardError',
+        undefined,
+        'generateActivationCodeModal.clipboardErrorTitle'
       );
     };
 
@@ -165,11 +165,11 @@
           $translate.instant('generateActivationCodeModal.emailSuccessTitle')
         );
 
-      }, function (error) {
+      }, function () {
         Notification.notify(
           [$translate.instant('generateActivationCodeModal.emailError', {
             'address': vm.email.to
-          }) + " " + error.data.error],
+          })],
           'error',
           $translate.instant('generateActivationCodeModal.emailErrorTitle')
         );
