@@ -1,8 +1,7 @@
 'use strict';
 
 describe('Controller: Care Reports Controller', function () {
-  var controller, $scope, $translate, $timeout, SunlightReportService, DummyCareReportService, CareReportsService,
-    $q, deferred;
+  var controller, $translate, $timeout, SunlightReportService, DummyCareReportService, CareReportsService, deferred;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -37,10 +36,8 @@ describe('Controller: Care Reports Controller', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(
-    inject(function ($rootScope, $controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_,
+    inject(function ($controller, _$q_, _$translate_, _$timeout_, _SunlightReportService_,
                      _DummyCareReportService_, _CareReportsService_) {
-      $q = _$q_;
-      $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
       SunlightReportService = _SunlightReportService_;

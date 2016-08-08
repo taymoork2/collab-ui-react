@@ -246,7 +246,7 @@
         bullet: 'circle',
         bulletAlpha: 0,
         bulletBorderAlpha: 0,
-        bulletSize: 2 
+        bulletSize: 2
       };
       var graphsPartial = [csatGraph];
       var graphs = _.map(graphsPartial, function (graph) {

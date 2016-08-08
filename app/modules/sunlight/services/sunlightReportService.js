@@ -225,8 +225,8 @@
     }
 
     function calculateAvgWaitTime(stats1, stats2) {
-      var totalTask1 = Math.max(stats1.numTasksAssignedState + stats1.numTasksAbandonedState - stats1.numTasksAssignedToAbandonedState, 0);
-      var totalTask2 = Math.max(stats2.numTasksAssignedState + stats2.numTasksAbandonedState - stats2.numTasksAssignedToAbandonedState, 0);
+      var totalTask1 = Math.max((stats1.numTasksAssignedState + stats1.numTasksAbandonedState) - stats1.numTasksAssignedToAbandonedState, 0);
+      var totalTask2 = Math.max((stats2.numTasksAssignedState + stats2.numTasksAbandonedState) - stats2.numTasksAssignedToAbandonedState, 0);
       var totalTasks = totalTask1 + totalTask2;
 
       var duration1 = (totalTask1 != 0) ? (totalTask1 * stats1.avgTaskWaitTime) : stats1.avgTaskWaitTime;
@@ -253,7 +253,7 @@
     function calculateAverageCsat(stats1, stats2) {
       var totalCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       var csat = (totalCsatScores > 0) ?
-        (stats1.avgCsatScores * stats1.numCsatScores + stats2.avgCsatScores * stats2.numCsatScores) /
+        ((stats1.avgCsatScores * stats1.numCsatScores) + (stats2.avgCsatScores * stats2.numCsatScores)) /
         (stats1.numCsatScores + stats2.numCsatScores) : 0;
       csat = Math.round(csat * 100) / 100; // precision upto two decimal places
       return csat;
