@@ -209,7 +209,7 @@
             $scope.currentDataPosition++;
             $scope.load = false;
             // lol getTrialsList doesnt take any params...
-            getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
+            getTrialsList(($scope.currentDataPosition * Config.usersperpage) + 1);
             $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });

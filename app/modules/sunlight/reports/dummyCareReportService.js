@@ -82,7 +82,7 @@
         }
         rangeStatsList.push(rangeStats);
         handleCount = handleCount + changeValue;
-        abandonCount = abandonCount - changeValue / 3;
+        abandonCount = abandonCount - (changeValue / 3);
 
         if (abandonCount < 0) {
           abandonCount = 0;
@@ -120,11 +120,11 @@
             abandonCount = 5;
           } else {
             handleCount = handleCount + changeValue;
-            abandonCount = abandonCount - changeValue / 3;
+            abandonCount = abandonCount - (changeValue / 3);
           }
         } else {
           handleCount = handleCount + changeValue;
-          abandonCount = abandonCount - changeValue / 3;
+          abandonCount = abandonCount - (changeValue / 3);
         }
         if (abandonCount < 0) {
           abandonCount = 0;

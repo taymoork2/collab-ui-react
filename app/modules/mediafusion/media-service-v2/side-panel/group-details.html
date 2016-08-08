@@ -21,6 +21,18 @@
   </cs-sp-section>
 
   <cs-sp-section>
+    <div ng-if="groupDetails.clusterDetail.upgradeSchedule">
+      <strong>
+        <div class="section-title-row section-name" translate="mediaFusion.clusters.upgradeSchedule">
+        </div>
+      </strong>
+      <div>
+        <span>
+            {{groupDetails.clusterDetail.upgradeSchedule.scheduleTime}} {{'mediaFusion.clusters.everyDay'}} {{groupDetails.clusterDetail.upgradeSchedule.scheduleTimeZone}} 
+        </span>
+      </div>
+    </div>
+
     <strong>
       <div class="section-title-row section-name" translate="mediaFusion.clusters.releaseChannel">
       </div>

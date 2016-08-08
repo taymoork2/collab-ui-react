@@ -7,7 +7,6 @@ describe('Controller: GroupDetailsControllerV2', function () {
   var $modal, controller, $rootScope, httpBackend;
 
   beforeEach(inject(function ($httpBackend, _$rootScope_, $stateParams, $controller) {
-    $stateParams = $stateParams;
     $rootScope = _$rootScope_;
     $modal = {
       open: sinon.stub().returns({

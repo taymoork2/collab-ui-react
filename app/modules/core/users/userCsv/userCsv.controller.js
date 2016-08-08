@@ -302,7 +302,7 @@
     function calculateProcessProgress() {
       $timeout(function () {
         vm.model.numTotalUsers = vm.model.numNewUsers + vm.model.numExistingUsers + vm.model.userErrorArray.length;
-        vm.model.processProgress = Math.round(vm.model.numTotalUsers / csvUsersArray.length * 100);
+        vm.model.processProgress = Math.round((vm.model.numTotalUsers / csvUsersArray.length) * 100);
         UserCsvService.setCsvStat({
           numTotalUsers: vm.model.numTotalUsers,
           processProgress: vm.model.processProgress
@@ -432,7 +432,7 @@
       // if 429 or 503, we need to retry the whole set of users
       function errorCallback(response, onboardedUsers) {
 
-        if (response.status === 503 || response.status === 429 && vm.model.numRetriesToAttempt > 0) {
+        if ((response.status === 503 || response.status === 429) && vm.model.numRetriesToAttempt > 0) {
           // need to retry this set of users
           vm.model.retryAfter = response.headers('retry-after') || vm.model.retryAfterDefault;
 
@@ -639,9 +639,9 @@
 
       function msToTime(millisec) {
         return {
-          seconds: millisec / 1e3 % 60 | 0,
-          minutes: millisec / 6e4 % 60 | 0,
-          hours: millisec / 36e5 % 24 | 0
+          seconds: (millisec / 1e3) % 60 | 0,
+          minutes: (millisec / 6e4) % 60 | 0,
+          hours: (millisec / 36e5) % 24 | 0
         };
       }
 
