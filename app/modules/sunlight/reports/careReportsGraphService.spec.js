@@ -31,7 +31,7 @@ describe('Service: Care Reports Graph Service', function () {
     });
 
     it('getBaseSerialGraph should return expected defaults for an area graph', function () {
-      var serialGraph = CareReportsGraphService.getBaseSerialGraph(dummyReport, {}, {}, 'dummyData', {}, {}, {});
+      var serialGraph = CareReportsGraphService.buildChartConfig(dummyReport, {}, {}, 'dummyData', {}, {}, {}, {});
       expect(serialGraph).toBeDefined();
     });
 

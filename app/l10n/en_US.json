@@ -379,7 +379,9 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
@@ -515,6 +517,13 @@
     "assigned": "Assigned",
     "in-queue": "In-Queue",
     "abandoned": "Abandoned",
+    "queueTime": "Queue Time",
+    "avgQueueTime": "Avg Queue Time",
+    "avgHandleTime": "Avg Handle Time",
+    "handleTime": "Handle Time",
+    "averageCsat": "Average CSAT",
+    "avgCsat": "Avg CSAT ",
+    "csatRating": "CSAT Rating",
     "todayCategoryAxis": "Hours",
     "yesterdayCategoryAxis": "Hours",
     "weekCategoryAxis": "Days",
@@ -634,6 +643,14 @@
   "taskIncoming": {
     "title": "Tasks Incoming",
     "description": "The graph depicts the total number of incoming tasks {{time}}. Hover over the area chart for a breakdown of total number of {{taskStatus}} tasks for a {{interval}}."
+  },
+  "taskTime": {
+    "title": "Task Time",
+    "description": "A task time refers to the time duration of a task in its queued state or handled state. The graph depicts the task time {{time}}. Hover over the area chart for a breakdown of average queue time and average handle time of the tasks for a {{interval}}."
+  },
+  "averageCsat": {
+    "title": "Average CSAT",
+    "description": "The graph depicts the average CSAT {{time}}. Hover over the trend line to know the average CSAT rating for a {{interval}}."
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -4905,7 +4922,8 @@
     },
     "extended-data-dialog": {
       "copy": "Copy",
-      "copiedToClipboard": "Data copied to clipboard"
+      "copiedToClipboard": "Data copied to clipboard",
+      "unableToCopy": "Unable to copy data to clipboard"
     },
     "verification": "Verification",
     "resend": "Resend Invite",
