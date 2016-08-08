@@ -24,11 +24,13 @@
     vm.hideBackButton = !vm.isNewPlaceFlow();
 
     vm.next = function () {
-      vm.isLoading = true;
-      $stateParams.wizard.next({
-        deviceType: vm.selectedDeviceType,
-        deviceName: vm.wizardData.deviceName
-      }, vm.selectedDeviceType);
+      if (vm.selectedDeviceType) {
+        vm.isLoading = true;
+        $stateParams.wizard.next({
+          deviceType: vm.selectedDeviceType,
+          deviceName: vm.wizardData.deviceName
+        }, vm.selectedDeviceType);
+      }
     };
 
     vm.cloudberry = function () {
