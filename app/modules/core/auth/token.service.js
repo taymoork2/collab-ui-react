@@ -4,21 +4,27 @@
   module.exports = angular
     .module('core.token', [
       require('modules/core/config/config'),
+      require('modules/core/scripts/services/storage'),
       require('modules/core/scripts/services/sessionstorage'),
+      require('modules/core/config/oauthConfig'),
+      require('modules/core/windowLocation/windowLocation'),
     ])
     .service('TokenService', TokenService)
     .name;
 
   /* @ngInject */
-  function TokenService($injector, $rootScope, $window, Config, SessionStorage) {
+  function TokenService($injector, $rootScope, $window, Config, Storage, SessionStorage, OAuthConfig, WindowLocation) {
     var respondSessionStorageEvent = 'sessionStorage' + Config.getEnv();
     var requestSessionStorageEvent = 'getSessionStorage' + Config.getEnv();
+    var logoutEvent = 'logout' + Config.getEnv();
     var service = {
       getAccessToken: getAccessToken,
       getRefreshToken: getRefreshToken,
       setAccessToken: setAccessToken,
       setRefreshToken: setRefreshToken,
       setAuthorizationHeader: setAuthorizationHeader,
+      completeLogout: completeLogout,
+      clearStorage: clearStorage,
       init: init
     };
 
@@ -55,6 +61,19 @@
       $injector.get('$http').defaults.headers.common.Authorization = 'Bearer ' + (token || getAccessToken());
     }
 
+    function completeLogout(redirectUrl) {
+      clearStorage();
+      // We store a key value in sessionStorage to  
+      // prevent a login when multiple tabs are open
+      SessionStorage.put('logout', 'logout');
+      WindowLocation.set(redirectUrl);
+    }
+
+    function clearStorage() {
+      Storage.clear();
+      SessionStorage.clear();
+    }
+
     // This function transfers sessionStorage from one tab to another in the case another tab is logged in
     function sessionTokenTransfer(event) {
       if (!event.newValue) return;
@@ -62,6 +81,8 @@
         // a tab asked for the sessionStorage, so send it
         $window.localStorage.setItem(respondSessionStorageEvent, JSON.stringify($window.sessionStorage));
         $window.localStorage.removeItem(respondSessionStorageEvent);
+      } else if (event.key === logoutEvent) {
+        completeLogout(OAuthConfig.getLogoutUrl());
       } else if (event.key === respondSessionStorageEvent && !$window.sessionStorage.length) {
         // a tab sent data, so get it
         var data = JSON.parse(event.newValue);

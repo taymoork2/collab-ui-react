@@ -33,7 +33,7 @@
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales">
       <a id="videoTutorial-lnk" ng-click="openVideo()" tabindex="0" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-show="loggedIn">
+    <li id="logout-btn" ng-show="loggedIn && (isPartner || isPartnerSales)">
       <a ng-click="logout()" tabindex="0" translate="index.logout"></a>
     </li>
   </ul>

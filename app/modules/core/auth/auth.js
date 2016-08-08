@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($injector, $http, $translate, $q, $sanitize, Log, Authinfo, Utils, Storage, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
+  function Auth($injector, $http, $translate, $q, $sanitize, $window, Log, Authinfo, Config, Utils, SessionStorage, OAuthConfig, TokenService, UrlConfig, WindowLocation) {
 
     var service = {
       logout: logout,
@@ -70,7 +70,7 @@
           .then(updateOauthTokens)
           .catch(handleError('Failed to obtain new oauth access_token.'));
       } else {
-        clearStorage();
+        TokenService.clearStorage();
         return $q.reject();
       }
     }
@@ -106,7 +106,14 @@
 
     function logout() {
       var redirectUrl = OAuthConfig.getLogoutUrl();
+      triggerGlobalLogout();
       return service.logoutAndRedirectTo(redirectUrl);
+    }
+
+    function triggerGlobalLogout() {
+      var logoutEvent = 'logout' + Config.getEnv();
+      $window.localStorage.setItem(logoutEvent, 'logout');
+      $window.localStorage.removeItem(logoutEvent, 'logout');
     }
 
     function logoutAndRedirectTo(redirectUrl) {
@@ -123,7 +130,7 @@
               handleError('Failed to revoke the refresh tokens');
             })
             .finally(function () {
-              completeLogout(redirectUrl);
+              TokenService.completeLogout(redirectUrl);
             });
         })
         .catch(function (response) {
@@ -135,14 +142,6 @@
       var revokeUrl = OAuthConfig.getOauthDeleteRefreshTokenUrl() + $sanitize(tokenId);
       return $http.delete(revokeUrl)
         .catch(handleError('Failed to delete the oAuth token'));
-    }
-
-    function completeLogout(redirectUrl) {
-      clearStorage();
-      // We store a key value in sessionStorage to  
-      // prevent a login when multiple tabs are open
-      SessionStorage.put('logout', 'logout');
-      WindowLocation.set(redirectUrl);
     }
 
     function isLoggedIn() {
@@ -313,11 +312,6 @@
 
     function verifyOauthState(testState) {
       return _.isEqual(testState, getOauthState());
-    }
-
-    function clearStorage() {
-      Storage.clear();
-      SessionStorage.clear();
     }
 
     function handleError(message) {
