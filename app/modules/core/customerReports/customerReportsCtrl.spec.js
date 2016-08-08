@@ -1,12 +1,9 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice, FeatureToggleService;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
-  var ABORT = 'ABORT';
   var REFRESH = 'refresh';
-  var SET = 'set';
-  var EMPTY = 'empty';
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
@@ -125,7 +122,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
       // Webex Requirements
       WebexReportService = {
-        initReportsObject: function (input) {}
+        initReportsObject: function () {}
       };
 
       WebExApiGatewayService = {
@@ -138,35 +135,8 @@ describe('Controller: Customer Reports Ctrl', function () {
         }
       };
 
-      Authinfo = {
-        getPrimaryEmail: function () {
-          return "some@email.com";
-        },
-        getConferenceServicesWithoutSiteUrl: function () {
-          return [{
-            license: {
-              siteUrl: 'fakesite1'
-            }
-          }, {
-            license: {
-              siteUrl: 'fakesite2'
-            }
-          }, {
-            license: {
-              siteUrl: 'fakesite3'
-            }
-          }];
-        },
-        getOrgId: function () {
-          return '1';
-        },
-        isPartner: function () {
-          return false;
-        }
-      };
-
       Userservice = {
-        getUser: function (user, innerFunction) {
+        getUser: function (user) {
           expect(user).toBe('me');
         }
       };

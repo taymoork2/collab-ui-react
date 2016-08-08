@@ -2,7 +2,7 @@
 
 describe('Directive: aaTimeOutInvalid', function () {
   var $compile, $rootScope, $scope;
-  var AAUiModelService, AutoAttendantCeMenuModelService, HuntGroupService;
+  var AAUiModelService, AutoAttendantCeMenuModelService;
 
   var aaUiModel = {
     openHours: {},
@@ -13,7 +13,6 @@ describe('Directive: aaTimeOutInvalid', function () {
 
   var schedule = 'openHours';
   var index = '0';
-  var keyIndex = '0';
   var menuId = 'menu1';
 
   beforeEach(angular.mock.module('Huron'));

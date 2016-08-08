@@ -13,7 +13,6 @@
     vm.callVolumeChart = null;
     vm.availabilityChart = null;
     vm.utilizationChart = null;
-    //vm.getClusters = getClusters;
     vm.clusterUpdate = clusterUpdate;
     vm.timeUpdate = timeUpdate;
     vm.isRefresh = isRefresh;
@@ -23,10 +22,8 @@
     vm.setAvailabilityData = setAvailabilityData;
     vm.setUtilizationData = setUtilizationData;
     vm.setCPUUtilizationData = setCPUUtilizationData;
+    vm.setTotalCallsData = setTotalCallsData;
     vm.setClusterAvailability = setClusterAvailability;
-    //vm.averageUtilization = vm.REFRESH;
-    //vm.clusterAvailability = vm.REFRESH;
-    //vm.card = vm.REFRESH;
     vm.resizeCards = resizeCards;
     vm.delayedResize = delayedResize;
     vm.setDummyData = setDummyData;
@@ -36,7 +33,6 @@
     vm.clusterOptions = ['All Clusters'];
     vm.clusterSelected = vm.clusterOptions[0];
     vm.clusterId = vm.clusterOptions[0];
-    //getClusters();
     vm.Map = {};
     vm.timeOptions = [{
       value: 0,
@@ -89,14 +85,14 @@
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 1);
-        var prevdate = new Date(date1);
+        prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
 
       } else {
 
         vm.label = vm.timeSelected.label;
         date1.setMonth(date1.getMonth() - 3);
-        var prevdate = new Date(date1);
+        prevdate = new Date(date1);
         vm.date = month[prevdate.getMonth()] + ' ' + prevdate.getDate() + ',' + prevdate.getFullYear() + '-' + month[date2.getMonth()] + ' ' + date2.getDate() + ',' + date2.getFullYear();
 
       }
@@ -180,11 +176,10 @@
       setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
       setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected));
       resizeCards();
-      //delayedResize();
     }
 
     function setCallVolumeGraph(data) {
-      var tempCallVolumeChart = MetricsGraphService.setCallVolumeGraph(data, vm.callVolumeChart);
+      var tempCallVolumeChart = MetricsGraphService.setCallVolumeGraph(data, vm.callVolumeChart, vm.clusterSelected, vm.timeSelected.label);
       if (tempCallVolumeChart !== null && angular.isDefined(tempCallVolumeChart)) {
         vm.callVolumeChart = tempCallVolumeChart;
       }
@@ -201,7 +196,6 @@
           vm.callVolumeStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
@@ -234,12 +228,11 @@
           vm.availabilityStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
     function setUtilizationGraph(data) {
-      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart);
+      var tempUtilizationChart = MetricsGraphService.setUtilizationGraph(data, vm.utilizationChart, vm.clusterSelected, vm.timeSelected.label);
       if (tempUtilizationChart !== null && angular.isDefined(tempUtilizationChart)) {
         vm.UtilizationChart = tempUtilizationChart;
       }
@@ -257,42 +250,60 @@
           vm.utilizationStatus = vm.SET;
         }
         resizeCards();
-        //delayedResize();
       });
     }
 
     function setTotalCallsData() {
-      //changing the cluster ID to clister name and this should be changed back to cluster ID in future 
+      //changing the cluster ID to clister name and this should be changed back to cluster ID in future
       MetricsReportService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
         if (vm.clusterId === 'All Clusters') {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsOverflow)) {
-            vm.onprem = vm.EMPTY;
-            vm.cloud = vm.EMPTY;
-            vm.onprem = '';
-            vm.cloud = '';
-            vm.total = '';
+          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = 'N/A';
+            vm.cloud = response.data.callsOverflow;
+            vm.total = vm.cloud;
+          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = 'N/A';
+            vm.total = vm.onprem;
+          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsOverflow)) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsOverflow;
             vm.total = vm.onprem + vm.cloud;
-
           }
+
         } else {
           if (response === vm.ABORT) {
             return;
-          } else if (!angular.isDefined(response.data) || response.data.length === 0 || !angular.isDefined(response.data.callsOnPremise) || !angular.isDefined(response.data.callsRedirect)) {
-            vm.onprem = vm.EMPTY;
-            vm.cloud = vm.EMPTY;
-            vm.onprem = '';
-            vm.cloud = '';
-            vm.total = '';
+          } else if (!angular.isDefined(response.data) || response.data.length === 0) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
+          } else if (!angular.isDefined(response.data.callsOnPremise) && angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = 'N/A';
+            vm.cloud = response.data.callsRedirect;
+            vm.total = vm.cloud;
+          } else if (angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = response.data.callsOnPremise;
+            vm.cloud = 'N/A';
+            vm.total = vm.onprem;
+          } else if (!angular.isDefined(response.data.callsOnPremise) && !angular.isDefined(response.data.callsRedirect)) {
+            vm.onprem = 'N/A';
+            vm.cloud = 'N/A';
+            vm.total = 'N/A';
           } else {
             vm.onprem = response.data.callsOnPremise;
             vm.cloud = response.data.callsRedirect;
             vm.total = vm.onprem + vm.cloud;
-
           }
         }
         resizeCards();

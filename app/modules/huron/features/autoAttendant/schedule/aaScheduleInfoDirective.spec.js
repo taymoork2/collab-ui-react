@@ -2,7 +2,7 @@
 
 describe('Directive: aaScheduleInfo', function () {
   var $q, $compile, $rootScope, $scope;
-  var AAICalService, AAModelService, AutoAttendantCeMenuModelService, AACalendarService;
+  var AAICalService, AAModelService, AACalendarService;
 
   beforeEach(angular.mock.module('Huron'));
   var aaModel = {
@@ -14,11 +14,7 @@ describe('Directive: aaScheduleInfo', function () {
     ceInfos: []
   };
   var schedule = 'openHours';
-  var aaUiModel = {
-    openHours: {}
-  };
   var openHours = [];
-  var calendar = getJSONFixture('huron/json/autoAttendant/aCalendar.json');
 
   beforeEach(inject(function (_$q_, _$compile_, _$rootScope_, _AAModelService_, _AACalendarService_, _AAICalService_) {
     $compile = _$compile_;

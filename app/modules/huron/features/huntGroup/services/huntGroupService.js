@@ -224,7 +224,7 @@
      */
     function constructUserNumberMappingForUI(users) {
       var huntMembers = [];
-      users.map(function (user) {
+      users.forEach(function (user) {
         var flatArr = user.numbers.map(function (number) {
           return {
             displayUser: false,

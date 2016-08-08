@@ -12,7 +12,7 @@
       $scope.saveInProgress = false;
     };
 
-    var saveError = function (messages) {
+    var saveError = function () {
       $scope.saveInProgress = false;
     };
 

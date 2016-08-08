@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
-  var controller, $controller, $previousState, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, OtpService, $q;
+  var controller, $controller, $previousState, $scope, $state, $httpBackend, HuronConfig, Notification, OtpService, $q;
   beforeEach(angular.mock.module('Huron'));
 
   var stateParams = {
@@ -20,7 +20,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$previousState_, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _OtpService_, _$q_) {
+  function dependencies($rootScope, _$controller_, _$previousState_, _$state_, _$httpBackend_, _HuronConfig_, _Notification_, _OtpService_, _$q_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $previousState = _$previousState_;
@@ -28,7 +28,6 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
-    ActivationCodeEmailService = _ActivationCodeEmailService_;
     OtpService = _OtpService_;
     $q = _$q_;
   }

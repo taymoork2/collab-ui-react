@@ -15,7 +15,7 @@ if (isWindows) {
 } else {
   cp = spawn('npm', ['--version']);
 }
-cp.stdout.on('data', function(data) {
+cp.stdout.on('data', function (data) {
   var npmVersion = getParsedVersion(data.toString());
   var isNpmValid = (npmVersion >= 2) && (npmVersion < 3);
   if (!isNpmValid) {

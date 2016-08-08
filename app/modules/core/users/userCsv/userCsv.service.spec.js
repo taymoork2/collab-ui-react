@@ -7,7 +7,7 @@ describe('Controller: UserCsvService', function () {
   var trackingId = ' TrackingID: ';
   var dummyId = 'TrackingID';
   var email = 'dummyEmail@fakeAccount.com';
-  var headerFuncOne = function (id) {
+  var headerFuncOne = function () {
     return null;
   };
   var headerFuncTwo = function (id) {

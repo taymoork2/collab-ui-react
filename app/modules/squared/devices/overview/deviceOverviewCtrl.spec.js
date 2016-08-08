@@ -249,15 +249,15 @@ describe('Huron Device', function () {
 
   function CsdmHuronDeviceService(q) {
 
-    function setTimezoneForDevice(huronDevice, timezone) {
+    function setTimezoneForDevice() {
       return q.resolve(true);
     }
 
-    function getTimezoneForDevice(huronDevice) {
+    function getTimezoneForDevice() {
       return q.resolve('America/Los_Angeles');
     }
 
-    function getLinesForDevice(huronDevice) {
+    function getLinesForDevice() {
       return q.resolve([]);
     }
 

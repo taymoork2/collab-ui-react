@@ -434,17 +434,17 @@
 
     function addToCart(type) {
       switch (type) {
-      case NUMBER_ORDER:
-      case TOLLFREE_ORDER:
-        addToOrder(type);
-        break;
-      case PORT_ORDER:
-        addPortNumbersToOrder();
-        break;
-      case BLOCK_ORDER:
-      case TOLLFREE_BLOCK_ORDER:
-        addAdvancedOrder(type);
-        break;
+        case NUMBER_ORDER:
+        case TOLLFREE_ORDER:
+          addToOrder(type);
+          break;
+        case PORT_ORDER:
+          addPortNumbersToOrder();
+          break;
+        case BLOCK_ORDER:
+        case TOLLFREE_BLOCK_ORDER:
+          addAdvancedOrder(type);
+          break;
       }
     }
 
@@ -464,7 +464,7 @@
       _.forIn(model.searchResultsModel, function (value, _key) {
         if (value) {
           var key = _.parseInt(_key);
-          var searchResultsIndex = model.paginateOptions.currentPage * model.paginateOptions.pageSize + key;
+          var searchResultsIndex = (model.paginateOptions.currentPage * model.paginateOptions.pageSize) + key;
           if (searchResultsIndex < model.searchResults.length) {
             var numbers = model.searchResults[searchResultsIndex];
             if (type === NUMBER_ORDER) {
@@ -523,7 +523,7 @@
       var advancedOrder = {
         data: {
           areaCode: model.areaCode.code,
-          length: parseInt(model.quantity),
+          length: parseInt(model.quantity, 10),
           consecutive: model.consecutive
         },
         type: type
@@ -550,18 +550,18 @@
 
     function formatTelephoneNumber(telephoneNumber) {
       switch (_.get(telephoneNumber, 'type')) {
-      case NUMBER_ORDER:
-      case TOLLFREE_ORDER:
-        return getCommonPattern(telephoneNumber.data.numbers);
-      case PORT_ORDER:
-        return PORTING_NUMBERS;
-      case BLOCK_ORDER:
-      case TOLLFREE_BLOCK_ORDER:
-        return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
-      case undefined:
-        return getCommonPattern(telephoneNumber);
-      default:
-        return;
+        case NUMBER_ORDER:
+        case TOLLFREE_ORDER:
+          return getCommonPattern(telephoneNumber.data.numbers);
+        case PORT_ORDER:
+          return PORTING_NUMBERS;
+        case BLOCK_ORDER:
+        case TOLLFREE_BLOCK_ORDER:
+          return '(' + telephoneNumber.data.areaCode + ') XXX-XXXX';
+        case undefined:
+          return getCommonPattern(telephoneNumber);
+        default:
+          return;
       }
     }
 
@@ -722,16 +722,16 @@
 
     function getOrderQuantity(order) {
       switch (_.get(order, 'type')) {
-      case NUMBER_ORDER:
-      case TOLLFREE_ORDER:
-        return order.data.numbers.length;
-      case PORT_ORDER:
-        return order.data.numbers.length;
-      case BLOCK_ORDER:
-      case TOLLFREE_BLOCK_ORDER:
-        return order.data.length;
-      case undefined:
-        return;
+        case NUMBER_ORDER:
+        case TOLLFREE_ORDER:
+          return order.data.numbers.length;
+        case PORT_ORDER:
+          return order.data.numbers.length;
+        case BLOCK_ORDER:
+        case TOLLFREE_BLOCK_ORDER:
+          return order.data.length;
+        case undefined:
+          return;
       }
     }
 

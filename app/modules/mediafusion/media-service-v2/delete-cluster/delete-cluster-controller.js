@@ -104,7 +104,7 @@
     }
 
     function incrementSuccessCount(host, toCluster) {
-      return function (data, status, headers, config) {
+      return function () {
         vm.successCount++;
         vm.successMove = $translate.instant('mediaFusion.clusters.movedTo', {
           nodeName: host.hostname,
@@ -116,7 +116,7 @@
     }
 
     function incrementFailureCount(host) {
-      return function (error, status, headers, config) {
+      return function () {
         vm.errorCount++;
         vm.failedHostMove.push(host.hostname);
         deleteCluster();

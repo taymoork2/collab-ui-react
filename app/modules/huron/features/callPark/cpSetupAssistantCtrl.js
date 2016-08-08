@@ -165,24 +165,24 @@
 
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
-      case 27:
+        case 27:
         //escape key
-        cancelModal();
-        break;
-      case 39:
+          cancelModal();
+          break;
+        case 39:
         //right arrow
-        if (nextButton(getPageIndex()) === true) {
-          nextPage();
-        }
-        break;
-      case 37:
+          if (nextButton(getPageIndex()) === true) {
+            nextPage();
+          }
+          break;
+        case 37:
         //left arrow
-        if (previousButton(getPageIndex()) === true) {
-          previousPage();
-        }
-        break;
-      default:
-        break;
+          if (previousButton(getPageIndex()) === true) {
+            previousPage();
+          }
+          break;
+        default:
+          break;
       }
     }
 
@@ -253,7 +253,7 @@
 
       populateMembers(data);
 
-      CallParkService.saveCallPark(customerId, data).then(function (data) {
+      CallParkService.saveCallPark(customerId, data).then(function () {
         vm.saveProgress = false;
         Notification.success('callPark.successSave', {
           callParkName: vm.callParkName
@@ -291,14 +291,14 @@
       var domElement = _.get(element, '[0]');
       if (domElement) {
         switch (method) {
-        case 'add':
-          domElement.classList.add(appliedClass);
-          break;
-        case 'remove':
-          domElement.classList.remove(appliedClass);
-          break;
-        case 'default':
-          return true;
+          case 'add':
+            domElement.classList.add(appliedClass);
+            break;
+          case 'remove':
+            domElement.classList.remove(appliedClass);
+            break;
+          case 'default':
+            return true;
         }
       }
     }

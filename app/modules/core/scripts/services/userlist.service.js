@@ -101,11 +101,6 @@
           data.success = false;
           data.status = status;
           callback(data, status, searchStr);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     }
 
@@ -117,10 +112,10 @@
         attributes: ["name", "displayName", "userName", "entitlements", "active"]
       };
       $http({
-          method: 'POST',
-          url: generateUserReportsUrl,
-          data: requestData
-        })
+        method: 'POST',
+        url: generateUserReportsUrl,
+        data: requestData
+      })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -298,11 +293,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     }
 

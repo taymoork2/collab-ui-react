@@ -3,7 +3,7 @@
 describe('Controller: AASubmenuCtrl', function () {
   var controller;
   var AutoAttendantCeMenuModelService, AACommonService;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope;
   var aaUiModel = {
     openHours: {}
   };
@@ -71,10 +71,9 @@ describe('Controller: AASubmenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
-    $translate = _$translate_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AACommonService = _AACommonService_;

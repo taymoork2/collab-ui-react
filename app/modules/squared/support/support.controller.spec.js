@@ -8,10 +8,6 @@ describe('Controller: SupportCtrl', function () {
 
   var controller, Authinfo, Userservice, currentUser, Config, $scope;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
-  var user = {
-    'success': true,
-    'roles': roles
-  };
 
   beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
@@ -30,7 +26,6 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Config, 'isProd').and.returnValue(false);
 
     $scope = $rootScope.$new();
-    Userservice = Userservice;
     controller = $controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,

@@ -1,7 +1,7 @@
 "use strict";
 
 describe(' sunlightReportService', function () {
-  var sunlightReportService, $httpBackend, orgId;
+  var sunlightReportService, $httpBackend;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
 
   var fifteenMinutesOrgStats = dummyStats.fifteenMinutesOrgStats;
@@ -21,7 +21,6 @@ describe(' sunlightReportService', function () {
   beforeEach(inject(function (_SunlightReportService_, _$httpBackend_) {
     sunlightReportService = _SunlightReportService_;
     $httpBackend = _$httpBackend_;
-    orgId = '676a82cd-64e9-4ebd-933c-4dce087a02bd';
     $httpBackend.whenGET(/.*?org_stats?.*/g)
       .respond(function (method, url, data, headers, params) {
         if (params.viewType === 'fifteen_minutes') {

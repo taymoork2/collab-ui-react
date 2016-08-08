@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: DeviceService', function () {
-  var $httpBackend, $rootScope, DeviceService, HuronConfig;
+  var $httpBackend, DeviceService, HuronConfig;
 
   beforeEach(angular.mock.module('uc.device'));
   beforeEach(angular.mock.module('ui.router'));
@@ -18,9 +18,8 @@ describe('Service: DeviceService', function () {
 
   beforeEach(
     inject(
-      function (_$httpBackend_, _$rootScope_, _DeviceService_, _HuronConfig_) {
+      function (_$httpBackend_, _DeviceService_, _HuronConfig_) {
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         DeviceService = _DeviceService_;
         HuronConfig = _HuronConfig_;
       }));

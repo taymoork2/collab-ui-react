@@ -191,7 +191,7 @@
         this.type = obj.type || 'cloudberry';
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
-        this.displayName = obj.displayName || obj.name;
+        this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
         this.numbers = obj.numbers;
@@ -371,47 +371,47 @@
 
       function getState(obj) {
         switch (obj.state) {
-        case 'UNCLAIMED':
-          return {
-            readableState: t('CsdmStatus.RequiresActivation'),
-            priority: "3"
-          };
-        default:
-          switch ((obj.status || {}).connectionStatus) {
-          case 'CONNECTED':
-            if (hasIssues(obj)) {
-              return {
-                readableState: t('CsdmStatus.OnlineWithIssues'),
-                priority: "1"
-              };
-            }
+          case 'UNCLAIMED':
             return {
-              readableState: t('CsdmStatus.Online'),
-              priority: "5"
+              readableState: t('CsdmStatus.RequiresActivation'),
+              priority: "3"
             };
           default:
-            return {
-              readableState: t('CsdmStatus.Offline'),
-              priority: "2"
-            };
-          }
+            switch ((obj.status || {}).connectionStatus) {
+              case 'CONNECTED':
+                if (hasIssues(obj)) {
+                  return {
+                    readableState: t('CsdmStatus.OnlineWithIssues'),
+                    priority: "1"
+                  };
+                }
+                return {
+                  readableState: t('CsdmStatus.Online'),
+                  priority: "5"
+                };
+              default:
+                return {
+                  readableState: t('CsdmStatus.Offline'),
+                  priority: "2"
+                };
+            }
         }
       }
 
       function getCssColorClass(obj) {
         switch (obj.state) {
-        case 'UNCLAIMED':
-          return 'device-status-gray';
-        default:
-          switch ((obj.status || {}).connectionStatus) {
-          case 'CONNECTED':
-            if (hasIssues(obj)) {
-              return 'device-status-yellow';
-            }
-            return 'device-status-green';
+          case 'UNCLAIMED':
+            return 'device-status-gray';
           default:
-            return 'device-status-red';
-          }
+            switch ((obj.status || {}).connectionStatus) {
+              case 'CONNECTED':
+                if (hasIssues(obj)) {
+                  return 'device-status-yellow';
+                }
+                return 'device-status-green';
+              default:
+                return 'device-status-red';
+            }
         }
       }
 

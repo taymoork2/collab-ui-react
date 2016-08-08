@@ -249,7 +249,7 @@
         label: $translate.instant('trials.roomSystem')
       },
       watcher: {
-        listener: function (field, newValue, oldValue, scope, stopWatching) {
+        listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
             field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
           }
@@ -357,7 +357,7 @@
           return !hasUserServices();
         },
 
-        'model.licenseCount': function ($viewValue, $modelValue) {
+        'model.licenseCount': function ($viewValue) {
           if (hasUserServices()) {
             return ($viewValue === 0) ? _licenseCountDefaultQuantity : $viewValue;
           } else {
@@ -529,10 +529,10 @@
       });
       if (index) {
         switch (templateOptionsId) {
-        case messageTemplateOptionId:
-          vm.messageFields[index].model.type = Config.offerTypes.message;
-          vm.messageFields[index].templateOptions.label = $translate.instant('trials.message');
-          break;
+          case messageTemplateOptionId:
+            vm.messageFields[index].model.type = Config.offerTypes.message;
+            vm.messageFields[index].templateOptions.label = $translate.instant('trials.message');
+            break;
         }
       }
     }
@@ -551,8 +551,8 @@
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
         if (!state.enabled || _.every(state.trials, {
-            enabled: false
-          })) {
+          enabled: false
+        })) {
           removeNavState(state.name);
         } else {
           addNavState(state.name);
@@ -657,7 +657,7 @@
           if (!vm.webexTrial.enabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
                 vm.details.licenseDuration, Authinfo.getOrgId())
-              .catch(function (response) {
+              .catch(function () {
                 Notification.error('didManageModal.emailFailText');
               })
               .then(function () {
@@ -680,7 +680,7 @@
               });
           }
         })
-        .then(function (response) {
+        .then(function () {
           if (vm.contextTrial.enabled) {
             return TrialContextService.addService(vm.customerOrgId)
               .catch(function (response) {
@@ -706,7 +706,8 @@
           return {
             customerOrgId: vm.customerOrgId
           };
-        }).finally(function () {
+        })
+        .finally(function () {
           vm.loading = false;
         });
     }

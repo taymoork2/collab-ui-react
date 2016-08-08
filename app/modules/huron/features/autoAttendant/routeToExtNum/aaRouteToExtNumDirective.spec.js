@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: aaRouteToExtNum', function () {
-  var $compile, $rootScope, $scope, $q;
+  var $compile, $rootScope, $scope;
   var AAUiModelService, AutoAttendantCeMenuModelService;
 
   var aaUiModel = {
@@ -18,11 +18,10 @@ describe('Directive: aaRouteToExtNum', function () {
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $scope = _$rootScope_;
-    $q = _$q_;
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;

@@ -3,7 +3,7 @@
 describe('directive: SetupDropdown, testing navigation changes', function () {
   var $compile, $rootScope, $q, Authinfo, FeatureToggleService, Orgservice;
   var $state, $translate, $timeout;
-  var $controller, $scope, controller;
+  var $controller, $scope;
   var compiled;
 
   var usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -38,7 +38,7 @@ describe('directive: SetupDropdown, testing navigation changes', function () {
     spyOn($state, 'go');
 
     compiled = $compile('<cr-setup-dropdown></cr-setup-dropdown>')($rootScope);
-    controller = $controller('SetupWizardCtrl', {
+    $controller('SetupWizardCtrl', {
       $scope: $scope
     });
   }));

@@ -2,8 +2,8 @@
   'use strict';
 
   module.exports = angular.module('core.pageparam', [
-      require('modules/core/scripts/services/storage')
-    ])
+    require('modules/core/scripts/services/storage')
+  ])
     .service('PageParam', PageParam)
     .name;
 

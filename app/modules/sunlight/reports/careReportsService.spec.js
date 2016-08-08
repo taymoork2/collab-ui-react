@@ -19,12 +19,36 @@ describe('Service: Care Reports Service', function () {
         'dataProvider': {}
       });
 
-      CareReportsService.setTaskIncomingGraphs('dummyData', 'dummyData');
     });
 
-    it('should have created a graph when setTaskIncomingGraphs is called', function () {
+    it('should have created a graph when showTaskIncomingDummy is called', function () {
+      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', 'dummyData', 'dummyData', true);
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
+    it('should have created a graph when showTaskTimeDummy is called', function () {
+      CareReportsService.showTaskTimeDummy('taskTimeDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showAverageCsatDummy is called', function () {
+      CareReportsService.showAverageCsatDummy('averageCsatDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showTaskIncomingGraph is called', function () {
+      CareReportsService.showTaskIncomingGraph('taskIncomingdiv', 'dummyData', 'dummyData', true);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showTaskTimeGraph is called', function () {
+      CareReportsService.showTaskTimeGraph('taskTimeDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showAverageCsatGraph is called', function () {
+      CareReportsService.showAverageCsatGraph('averageCsatDiv', 'dummyData', 'dummyData');
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
   });
 });
