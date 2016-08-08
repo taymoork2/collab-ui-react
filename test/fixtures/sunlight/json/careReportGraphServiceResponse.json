@@ -9,7 +9,8 @@
       "titleBold": false,
       "titleColor": "#6A6B6C",
       "gridAlpha": 0,
-      "axisAlpha": 1
+      "axisAlpha": 1,
+      "stackType": "regular"
     },
     "legend": {
       "color": "#444",
@@ -18,14 +19,14 @@
       "switchable": false,
       "fontSize": 13,
       "markerLabelGap": 10,
-      "markerType": "square",
       "markerSize": 10,
       "position": "bottom",
-      "equalWidths": false,
+      "equalWidths": true,
       "horizontalGap": 5,
       "valueAlign": "left",
       "valueWidth": 0,
-      "verticalGap": 20
+      "verticalGap": 20,
+      "useGraphSettings": true
     },
     "balloon": {
       "adjustBorderColor": true,
@@ -42,7 +43,8 @@
       "cursorColor": "#AEAEAF",
       "categoryBalloonEnabled": false,
       "valueLineBalloonEnabled": false,
-      "cursorAlpha": 1
+      "cursorAlpha": 1,
+      "graphBulletAlpha": 1
     },
     "export": {
       "libs": {

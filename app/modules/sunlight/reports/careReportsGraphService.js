@@ -9,9 +9,15 @@
     // Base variables for building grids and charts
     var baseVariables = [];
     baseVariables['graph'] = {
-      'lineAlpha': 1,
-      'balloonColor': '#AEAEAF',
-      'lineThickness': 1
+      lineAlpha: 1,
+      balloonColor: '#AEAEAF',
+      lineThickness: 1,
+      marginTop: 10,
+      marginLeft: 0,
+      plotAreaBorderAlpha: 0,
+      legendValueText: ' ',
+      showBalloon: false,
+      fillAlphas: 0.1
     };
 
     baseVariables['axis'] = {
@@ -23,9 +29,10 @@
       'titleBold': false,
       'titleColor': '#6A6B6C',
       'gridAlpha': 0,
-      'axisAlpha': 1
-
+      'axisAlpha': 1,
+      'stackType': 'regular'
     };
+
     baseVariables['legend'] = {
       'color': chartColors.grayDarkest,
       'align': 'center',
@@ -33,14 +40,14 @@
       'switchable': false,
       'fontSize': 13,
       'markerLabelGap': 10,
-      'markerType': 'square',
       'markerSize': 10,
       'position': 'bottom',
-      'equalWidths': false,
+      'equalWidths': true,
       'horizontalGap': 5,
       'valueAlign': 'left',
       'valueWidth': 0,
-      'verticalGap': 20
+      'verticalGap': 20,
+      'useGraphSettings': true
     };
 
     baseVariables['balloon'] = {
@@ -59,7 +66,8 @@
       'cursorColor': '#AEAEAF',
       'categoryBalloonEnabled': false,
       'valueLineBalloonEnabled': false,
-      'cursorAlpha': 1
+      'cursorAlpha': 1,
+      'graphBulletAlpha': 1
     };
 
     baseVariables['export'] = {
@@ -86,52 +94,35 @@
       }
     }
 
-    //This function creates a deep copy of baseSerialGraph object with the arguments
-    function getBaseSerialGraph(data, valueAxes, graphs, categoryField, catAxis, exportReport, chartCursor, selectedIndex) {
-      var legend = {};
-      if (selectedIndex == 0) {
-        legend = {
-          'useGraphSettings': true,
-          'equalWidths': true,
-          'position': 'bottom'
-        };
-      } else {
-        legend = {
-          'data': [{
-            title: data.legendTitles[1],
-            color: data.colors[1]
-          }, {
-            title: data.legendTitles[0],
-            color: data.colors[0]
-          }],
-          'equalWidths': false,
-          'position': 'bottom'
-        };
-      }
-      return angular.copy({
-        'type': 'serial',
-        'theme': 'light',
-        'colors': data.colors,
-        "path": "./images/",
-        'marginRight': 30,
-        'legend': legend,
-        'dataProvider': data.data,
-        'valueAxes': valueAxes,
-        'graphs': graphs,
-        'balloon': baseVariables['balloon'],
-        'plotAreaBorderAlpha': 0,
-        'marginTop': 40,
-        'marginLeft': 50,
-        'chartCursor': chartCursor,
-        'categoryField': categoryField,
-        'categoryAxis': catAxis,
-        'export': exportReport
-      });
+    var baseChartConfig = {
+      type: 'serial',
+      theme: 'light',
+      path: './images/',
+      marginRight: 30,
+      marginTop: 40,
+      marginLeft: 50,
+      plotAreaBorderAlpha: 0,
+      balloon: getBaseVariable('balloon'),
+      export: false
+    };
+
+    function buildChartConfig(data, legend, graphs, chartCursor, categoryField, categoryAxis, valueAxes, exportReport) {
+      var chartConfig = {
+        dataProvider: data,
+        legend: legend,
+        graphs: graphs,
+        chartCursor: chartCursor,
+        categoryField: categoryField,
+        categoryAxis: categoryAxis,
+        valueAxes: valueAxes,
+        export: exportReport
+      };
+      return angular.copy(_.defaults(chartConfig, baseChartConfig));
     }
 
     var service = {
       getBaseVariable: getBaseVariable,
-      getBaseSerialGraph: getBaseSerialGraph
+      buildChartConfig: buildChartConfig
     };
 
     return service;
