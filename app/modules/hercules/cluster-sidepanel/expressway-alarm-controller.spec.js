@@ -22,7 +22,7 @@ describe('Controller: ExpresswayAlarmController', function () {
 
   it('should deal with no alarm solution', function () {
     initController({});
-    expect(controller.alarm.alarmSolutionElements).toBeUndefined(0);
+    expect(controller.alarm.alarmSolutionElements).toBeUndefined();
   });
 
   it('should deal with a solution with no replacement values', function () {
