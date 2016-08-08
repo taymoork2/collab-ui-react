@@ -767,32 +767,29 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
   });
 
-  describe('sendMetricsOnLoad', function () {
+  describe('setLoadingDone', function () {
+
     beforeEach(function () {
       spyOn(Analytics, 'trackEvent').and.returnValue($q.when({}));
     });
 
+    it('should set the vm.loading to false', function () {
+      controller.setLoadingDone();
+      expect($scope.vm.loading).toBeFalsy();
+    });
+
     it('should send metrics when called with a defined aa name', function () {
       $scope.vm.isAANameDefined = true;
-      controller.sendMetricsOnLoad('load');
+      controller.setLoadingDone();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.BUILDER_PAGE, {
         type: 'load'
       });
     });
 
-    it('should not send metrics when called with a defined aa name', function () {
+    it('should not send metrics when called with a undefined aa name', function () {
       $scope.vm.isAANameDefined = false;
-      controller.sendMetricsOnLoad('load');
-      expect(Analytics.trackEvent).not.toHaveBeenCalled();
-    });
-
-  });
-
-  describe('setLoadingDone', function () {
-
-    it('should set the vm.loading to false', function () {
       controller.setLoadingDone();
-      expect($scope.vm.loading).toBeFalsy();
+      expect(Analytics.trackEvent).not.toHaveBeenCalled();
     });
 
   });

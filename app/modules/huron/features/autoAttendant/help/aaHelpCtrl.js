@@ -14,7 +14,7 @@
     vm.showLink = false;
     vm.trigger = "focus";
     vm.placement = "auto right";
-    vm.metric = "";
+    var metric = "";
 
     vm.optionHelp = $translate.instant("autoAttendant.aaHelpFAQ");
     vm.helpUrlAATag = Config.helpUrl + "/tags#/?tags=auto%20attendant";
@@ -40,9 +40,9 @@
     }
 
     function sendMetrics() {
-      if (vm.metric) {
+      if (metric) {
         Analytics.trackEvent(AAMetricNameService.UI_HELP, {
-          type: vm.metric
+          type: metric
         });
       }
     }
@@ -50,7 +50,7 @@
     function activate() {
       vm.content = $scope.content;
       vm.showLink = $scope.showLink;
-      vm.metric = $scope.metric;
+      metric = $scope.metric;
     }
 
     activate();
