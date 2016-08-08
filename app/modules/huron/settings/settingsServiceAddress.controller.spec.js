@@ -1,20 +1,19 @@
 'use strict';
 
 describe('Controller: SettingsServiceAddressCtrl', function () {
-  var controller, $controller, $scope, $q, $timeout, PstnServiceAddressService, Authinfo, Notification;
+  var controller, $controller, $scope, $q, $timeout, PstnServiceAddressService, Notification;
   var address = getJSONFixture('huron/json/pstnSetup/huronServiceAddress.json');
   var updatedAddress = angular.copy(address);
   updatedAddress.streetAddress += 'updated';
 
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$timeout_, _PstnServiceAddressService_, _Authinfo_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$timeout_, _PstnServiceAddressService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
     $timeout = _$timeout_;
     PstnServiceAddressService = _PstnServiceAddressService_;
-    Authinfo = _Authinfo_;
     Notification = _Notification_;
 
     spyOn(PstnServiceAddressService, 'getAddress').and.returnValue($q.when(address));

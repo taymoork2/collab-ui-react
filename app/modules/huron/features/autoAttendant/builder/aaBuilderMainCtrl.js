@@ -235,7 +235,7 @@
         aaRecord);
 
       updateResponsePromise.then(
-        function (response) {
+        function () {
           // update successfully
           aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
           aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
@@ -379,9 +379,9 @@
 
           var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
 
-          return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function (assignmentResults) {
+          return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function () {
 
-            return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function (resources) {
+            return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function () {
 
               updateCE(recNum);
 
@@ -568,7 +568,7 @@
           // Sucessfully created new CE Definition, leave Name-assignment page
           vm.isAANameDefined = true;
         },
-        function (error) {
+        function () {
           return $q.reject('CE_SAVE_FAILURE');
         }
       );
@@ -626,11 +626,11 @@
     function evalKeyPress($keyCode) {
       switch ($keyCode) {
         // esc key
-      case 27:
-        closePanel();
-        break;
-      default:
-        break;
+        case 27:
+          closePanel();
+          break;
+        default:
+          break;
       }
     }
 

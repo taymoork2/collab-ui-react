@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DidAddCtrl', function () {
-  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, Config, EmailService, DialPlanService;
+  var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, EmailService;
 
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
 
@@ -36,7 +36,7 @@ describe('Controller: DidAddCtrl', function () {
     }
   };
 
-  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_) {
+  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _EmailService_, $timeout, _$window_, _$state_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $scope.trial = trial;
@@ -51,7 +51,6 @@ describe('Controller: DidAddCtrl', function () {
       }
     };
     HuronConfig = _HuronConfig_;
-    Config = _Config_;
     Notification = _Notification_;
     EmailService = _EmailService_;
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{

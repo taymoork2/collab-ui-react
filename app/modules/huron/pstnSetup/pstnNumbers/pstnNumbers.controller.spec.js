@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $controller, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
+  var controller, $compile, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService, FeatureToggleService;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -83,10 +83,9 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
-    $controller = _$controller_;
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
@@ -121,16 +120,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     $scope.$apply();
     $translate.instant.calls.reset();
     return _.get(el.scope(), '$$childTail.pstnNumbers');
-  }
-
-  function getFieldTemplateOptions(key) {
-    return _.chain(controller.fields)
-      .get('[0].templateOptions.fields')
-      .find({
-        key: key
-      })
-      .get('templateOptions')
-      .value();
   }
 
   describe('initial/default data', function () {

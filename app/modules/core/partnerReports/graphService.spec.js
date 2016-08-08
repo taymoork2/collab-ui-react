@@ -5,7 +5,7 @@ describe('Service: Graph Service', function () {
   var activeUsersChart, mediaQualityChart, activeUserPopulationChart, donutChart;
   var validateService = {
     validate: function () {},
-    validateNow: function (varOne, varTwo) {}
+    validateNow: function () {}
   };
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');

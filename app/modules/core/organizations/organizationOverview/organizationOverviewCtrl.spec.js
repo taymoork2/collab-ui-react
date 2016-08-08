@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: organizationOverviewCtrl', function () {
-  var controller, rootScope, $scope, Config, Orgservice, $q, $controller, Notification;
+  var controller, $scope, Orgservice, $q, $controller, Notification;
   var adminServicesJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
 
   var authInfo = {
@@ -14,11 +14,9 @@ describe('Controller: organizationOverviewCtrl', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _$q_, _Orgservice_) {
     $scope = $rootScope.$new();
-    rootScope = $rootScope;
     Orgservice = _Orgservice_;
-    Config = _Config_;
     $controller = _$controller_;
     Notification = _Notification_;
     $q = _$q_;
@@ -31,7 +29,7 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     Orgservice.setEftSetting = jasmine.createSpy().and.returnValue($q.when({}));
 
-    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
       callback(adminServicesJSONFixture, 200);
     });
 
@@ -66,8 +64,8 @@ describe('Controller: organizationOverviewCtrl', function () {
     it('should check if updateEftToggle in success state sets isEFT to true', function () {
       _.set($scope, 'currentOrganization.isEFT', false);
       $scope.updateEftToggle().then(function () {
-          expect($scope.currentOrganization.isEFT).toEqual(true);
-        })
+        expect($scope.currentOrganization.isEFT).toEqual(true);
+      })
         .finally(function () {
           expect($scope.eftToggleLoading).toEqual(false);
         });
@@ -82,8 +80,8 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     it('should gracefully error', function () {
       $scope.updateEftToggle().then(function () {
-          expect(Notification.error).toHaveBeenCalled();
-        })
+        expect(Notification.error).toHaveBeenCalled();
+      })
         .finally(function () {
           expect($scope.eftToggleLoading).toEqual(false);
         });

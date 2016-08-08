@@ -1,14 +1,14 @@
-module.exports = function(context) {
+module.exports = function (context) {
   var allowedIdentifiers = [
   // Jasmine
-  'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done', 'beforeAll', 'afterAll',
+    'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done', 'beforeAll', 'afterAll',
   // utils
-  'utils', 'deleteUtils', 'deleteTrialUtils', 'helper',
+    'utils', 'deleteUtils', 'deleteTrialUtils', 'helper',
   // page objects
-  'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
+    'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
+    'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
   // Others
-  'Math', '_'
+    'Math', '_'
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -16,7 +16,7 @@ module.exports = function(context) {
   var allowedBrowserMethods = ['get', 'getWindowHandle', 'getAllWindowHandles', 'switchTo', 'executeScript', 'close'];
 
   return {
-    CallExpression: function(node) {
+    CallExpression: function (node) {
 
       // Allow specific identifying objects or functions
       if ((node.callee.type == 'Identifier' &&

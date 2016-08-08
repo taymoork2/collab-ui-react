@@ -52,7 +52,7 @@ describe('Controller: LineExportCtrl', function () {
     it('should notify if promise rejected', function () {
       LineListService.exportCSV.calls.reset();
       LineListService.exportCSV.and.returnValue($q.reject());
-      var promise = controller.exportCSV();
+      controller.exportCSV();
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });

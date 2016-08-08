@@ -16,7 +16,7 @@ function post(url, body) {
     body: body
   };
 
-  function callback(error, response, body) {
+  function callback(error, response) {
     var ticket;
     if (!error && response.statusCode == 200) {
       var start = response.body.indexOf('<use:sessionTicket>') + '<use:sessionTicket>'.length;
@@ -37,7 +37,6 @@ function post(url, body) {
 } // post()
 
 var WebExPage = function () {
-  var ticket;
   var xmlApiUrl;
   var sessionTicketRequest;
 
@@ -85,13 +84,13 @@ var WebExPage = function () {
   ) {
 
     switch (loginType) {
-    case 1:
-      login.loginUsingIntegrationBackend(adminId);
-      break;
+      case 1:
+        login.loginUsingIntegrationBackend(adminId);
+        break;
 
-    default:
-      login.loginThroughGuiUsingIntegrationBackend(adminUserName, adminPassword);
-      break;
+      default:
+        login.loginThroughGuiUsingIntegrationBackend(adminUserName, adminPassword);
+        break;
     }
 
     var defer = protractor.promise.defer();

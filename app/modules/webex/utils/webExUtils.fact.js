@@ -85,8 +85,8 @@
     }; // isCIEnabledSite()
 
     obj.getSiteName = function (siteUrl) {
-      var funcName = "getSiteName()";
-      var logMsg = "";
+      // var funcName = "getSiteName()";
+      // var logMsg = "";
 
       var freeSiteSuffixList = [
         ".my",
@@ -109,11 +109,11 @@
         } // checkFreeSiteSuffix()
       );
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "dotIndex=" + dotIndex + "\n" +
-        "restOfSiteUrl=" + restOfSiteUrl + "\n" +
-        "siteName=" + siteName;
+      // logMsg = funcName + "\n" +
+      //   "siteUrl=" + siteUrl + "\n" +
+      //   "dotIndex=" + dotIndex + "\n" +
+      //   "restOfSiteUrl=" + restOfSiteUrl + "\n" +
+      //   "siteName=" + siteName;
       // $log.log(logMsg);
 
       return siteName;
@@ -226,9 +226,7 @@
       return siteVersion;
     }; // validateSiteVersionXmlData()
 
-    obj.validate = function (enableT30UnifiedAdminInfoXml) {
-
-    }; //
+    obj.validate = function () {}; //
 
     obj.validateUserInfoXmlData = function (userInfoXml) {
       var userInfo = this.validateXmlData(
@@ -275,16 +273,16 @@
     }; // validateAdminPagesInfoXmlData()
 
     obj.getSiteVersion = function (siteVersionJsonObj) {
-      var funcName = "getSiteVersion()";
-      var logMsg = "";
+      // var funcName = "getSiteVersion()";
+      // var logMsg = "";
 
       var trainReleaseJson = {
         trainReleaseVersion: null,
         trainReleaseOrder: null
       };
 
-      var trainReleaseVersion = null;
-      var trainReleaseOrder = null;
+      // var trainReleaseVersion = null;
+      // var trainReleaseOrder = null;
 
       if ("" === siteVersionJsonObj.errId) { // got a good response
         var siteVersionJson = siteVersionJsonObj.bodyJson;
@@ -297,8 +295,8 @@
     }; // getSiteVersion()
 
     obj.getEnableT30UnifiedAdmin = function (enableT30UnifiedAdminJsonObj) {
-      var funcName = "getEnableT30UnifiedAdmin()";
-      var logMsg = "";
+      // var funcName = "getEnableT30UnifiedAdmin()";
+      // var logMsg = "";
 
       var enableT30UnifiedAdmin = null;
 
@@ -314,11 +312,11 @@
 
       Orgservice.getValidLicenses().then(
         function getValidLicensesSuccess(licenses) {
-          var funcName = "getValidLicensesSuccess()";
-          var logMsg = "";
+          // var funcName = "getValidLicensesSuccess()";
+          // var logMsg = "";
 
-          logMsg = funcName + ": " + "\n" +
-            "licenses=" + JSON.stringify(licenses);
+          // logMsg = funcName + ": " + "\n" +
+          //   "licenses=" + JSON.stringify(licenses);
           // $log.log(logMsg);
 
           var allSitesLicenseInfo = [];
@@ -421,11 +419,11 @@
     }; // logoutSite()
 
     obj.utf8ToUtf16le = function (data) {
-      var funcName = "utf8ToUtf16le()";
-      var logMsg = "";
+      // var funcName = "utf8ToUtf16le()";
+      // var logMsg = "";
 
-      logMsg = funcName + "\n" +
-        "data=" + data;
+      // logMsg = funcName + "\n" +
+      //   "data=" + data;
       // $log.log(logMsg);
 
       var intBytes = [];
@@ -449,8 +447,8 @@
         intBytes.push(intByte2);
       }
 
-      logMsg = funcName + "\n" +
-        "intBytes=" + intBytes;
+      // logMsg = funcName + "\n" +
+      //   "intBytes=" + intBytes;
       // $log.log(logMsg);
 
       return intBytes;

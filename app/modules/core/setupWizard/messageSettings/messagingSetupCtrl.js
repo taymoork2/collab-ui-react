@@ -80,39 +80,39 @@
     $scope.setupNext = function () {
       if (!_.isEmpty(vm.selected.value) && !currentDataRetentionPeriod) {
         AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-          .then(function (response) {
+          .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionSuccess');
           })
-          .catch(function (response) {
+          .catch(function () {
             Notification.error('firstTimeWizard.messengerRetentionError');
           });
       }
 
       if (!_.isEmpty(vm.selected.value) && currentDataRetentionPeriod && currentDataRetentionPeriod !== vm.selected.value) {
         AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
-          .then(function (response) {
+          .then(function () {
             Notification.success('firstTimeWizard.messengerRetentionEditSuccess');
           })
-          .catch(function (response) {
+          .catch(function () {
             Notification.error('firstTimeWizard.messengerRetentionEditError');
           });
       }
 
       if (vm.msgIntegration && !msgIntFlag) {
         AccountOrgService.addMessengerInterop(orgId)
-          .then(function (response) {
+          .then(function () {
             Notification.success('firstTimeWizard.messengerEnableWebexSuccess');
           })
-          .catch(function (response) {
+          .catch(function () {
             Notification.error('firstTimeWizard.messengerEnableWebexError');
           });
 
       } else if (!vm.msgIntegration && msgIntFlag) {
         AccountOrgService.deleteMessengerInterop(orgId)
-          .then(function (response) {
+          .then(function () {
             Notification.success('firstTimeWizard.messengerDisableWebexError');
           })
-          .catch(function (response) {
+          .catch(function () {
             Notification.error('firstTimeWizard.messengerDisableWebexError');
           });
       }

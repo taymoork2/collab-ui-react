@@ -61,7 +61,7 @@
       return entitylist;
     }
 
-    function setEntitylist(entitylist) {
+    function setEntitylist() {
       entitylist = _.cloneDeep(entitylist);
     }
 
@@ -73,11 +73,11 @@
       }
     }
 
-    function getInternalNumberPool(pattern) {
+    function getInternalNumberPool() {
       return internalNumberPool;
     }
 
-    function getExternalNumberPool(pattern) {
+    function getExternalNumberPool() {
       return externalNumberPool;
     }
 
@@ -108,7 +108,7 @@
       });
 
       // don't select any DID on loading the page
-      _.forEach(entitylist, function (entity, index) {
+      _.forEach(entitylist, function (entity) {
         entity.externalNumber = externalNumberPool[0];
         entity.didDnMapMsg = undefined;
       });

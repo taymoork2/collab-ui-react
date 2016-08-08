@@ -3,7 +3,7 @@
 describe('ResponseInterceptor', function () {
   beforeEach(angular.mock.module('core.responseinterceptor'));
 
-  var $httpBackend, Interceptor, Auth;
+  var Interceptor, Auth;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {

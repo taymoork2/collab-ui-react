@@ -96,9 +96,9 @@
     $scope.setupTokenfield = function () {
       //tokenfield setup - Should make it into a directive later.
       angular.element('#usersfield-wiz').tokenfield({
-          delimiter: [',', ';'],
-          createTokensOnBlur: true
-        })
+        delimiter: [',', ';'],
+        createTokensOnBlur: true
+      })
         .on('tokenfield:createtoken', function (e) {
           //Removing anything in brackets from user data
           var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
@@ -492,9 +492,9 @@
 
         startLog = moment();
 
-        var i, temparray, chunk = Config.batchSize;
+        var i, chunk = Config.batchSize;
         for (i = 0; i < usersList.length; i += chunk) {
-          temparray = usersList.slice(i, i + chunk);
+          usersList.slice(i, i + chunk);
           //update entitlements
           Userservice.inviteUsers(usersList, null, callback);
         }

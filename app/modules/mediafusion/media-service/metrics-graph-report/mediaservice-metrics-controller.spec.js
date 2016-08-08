@@ -2,18 +2,12 @@
 
 describe('Controller:MediaServiceMetricsContoller', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService, redirectTargetPromise;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Config, MediaClusterServiceV2, XhrNotificationService, DummyMetricsReportService, MetricsReportService, MetricsGraphService, redirectTargetPromise;
 
-  var ABORT = 'ABORT';
-  var REFRESH = 'refresh';
-  var SET = 'set';
-  var EMPTY = 'empty';
   var dummydata = '';
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
-  var callVolumeData = callVolumeData.callvolume;
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/clusterAvailabilityData.json');
-  var clusteravailabilityData = clusteravailabilityData.clusteravailability;
 
   var timeOptions = [{
     value: 0,

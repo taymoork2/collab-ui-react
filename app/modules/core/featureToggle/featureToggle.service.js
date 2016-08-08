@@ -2,11 +2,11 @@
   'use strict';
 
   module.exports = angular.module('core.featuretoggle', [
-      require('modules/core/config/config'),
-      require('modules/core/scripts/services/authinfo'),
-      require('modules/core/scripts/services/org.service'),
-      require('modules/huron/telephony/telephonyConfig'),
-    ])
+    require('modules/core/config/config'),
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/core/scripts/services/org.service'),
+    require('modules/huron/telephony/telephonyConfig'),
+  ])
     .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
     .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService)
@@ -258,7 +258,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         } else {
@@ -268,7 +268,7 @@
           }).$promise.then(function (data) {
             toggles[feature] = data.val;
             return data.val;
-          }).catch(function (err) {
+          }).catch(function () {
             return false;
           });
         }
@@ -287,7 +287,7 @@
         return _.get(_.find(features.developer, {
           key: feature
         }), 'val', false);
-      }).catch(function (err) {
+      }).catch(function () {
         return false;
       });
 
@@ -320,7 +320,7 @@
     }
 
     function supports(feature) {
-      return $q(function (resolve, reject) {
+      return $q(function (resolve) {
         if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
@@ -355,7 +355,7 @@
       }).$promise.then(function (response) {
         return response.serviceMode === 'ENABLED';
       }).catch(function (response) {
-        Orgservice.getOrgCacheOption(function (data, status) {
+        Orgservice.getOrgCacheOption(function (data) {
           if (data.success) {
             return data.dirsyncEnabled;
           } else {

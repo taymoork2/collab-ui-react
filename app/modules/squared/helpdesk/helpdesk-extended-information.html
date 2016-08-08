@@ -7,7 +7,7 @@
 
 <div class="modal-body">
   <div ng-if="!modal.loading">
-    <p><pre>{{modal.data}}</pre></p>
+    <p><pre id="helpdesk-extended-data-modal-content">{{modal.data}}</pre></p>
   </div>
   <div ng-if="modal.loading" class="helpdesk-dialog-progress">
     <i class="icon icon-spinner"></i>
@@ -18,8 +18,9 @@
   <span ng-if="modal.copied" translate="helpdesk.extended-data-dialog.copiedToClipboard"></span>&nbsp;&nbsp;
   <button ng-disabled="modal.loading"
           class="btn btn--primary"
-          ngclipboard data-clipboard-text="{{modal.data}}"
-          ng-click="modal.copyingFinished()"
+          ngclipboard data-clipboard-target="#helpdesk-extended-data-modal-content"
+          ngclipboard-success="modal.clipboardSuccess(e)"
+          ngclipboard-error="modal.clipboardError(e)"
           focus-on>
     <span translate="helpdesk.extended-data-dialog.copy">
     </span>
