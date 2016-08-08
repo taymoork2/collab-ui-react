@@ -3345,7 +3345,8 @@
       "deregisterAllconfirmation": "I understand that all the nodes in this cluster will be deregistered automatically, and that the cluster will be deleted permanently. I also understand that I cannot undo this action.",
       "unabletomovenodes": "Failed to move/defuse {{nodes}} press cancel and try again",
       "clusterdeleteSuccess": "Successfully deleted {{clustername}}",
-      "movedTo": "{{nodeName}} moved to: {{clusterName}}"
+      "movedTo": "{{nodeName}} moved to: {{clusterName}}",
+      "upgradeSchedule": "Upgrade Schedule"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
