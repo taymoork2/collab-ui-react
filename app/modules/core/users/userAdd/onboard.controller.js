@@ -2265,6 +2265,7 @@
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
         $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
+        $scope.model.importCompletedAt = Date.now();
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {

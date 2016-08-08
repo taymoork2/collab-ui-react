@@ -1,39 +1,47 @@
 <div class="flex-container">
-  <div class="flex-item-no-resize upload-progress">
+  <!-- progress bar -->
+  <div class="flex-item-no-resize upload-progress" ng-show="csv.model.processProgress < 100">
     <div class="csv-process-content">
       <div class="progressbar">
         <div class="progressbar-info">
           <span class="progressbar-label"
                 ng-if="!csv.model.isRetrying && csv.model.processProgress < 100 && !csv.isCancelledByUser"
                 translate="firstTimeWizard.processing"></span>
-          <span class="progressbar-label" ng-if="csv.isCancelledByUser"
+            <span class="progressbar-label" ng-if="csv.isCancelledByUser"
                 translate="firstTimeWizard.canceling"></span>
-          <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
-            <span translate="userManage.bulk.retryingUsers" translate-value-users="{{csv.model.usersToRetry.length}}"
-                  translate-interpolation="messageformat"></span>
-            <span translate="userManage.bulk.retryingIn"></span>
-            <span ng-show="csv.model.retryTimerParts.hours > 0" translate="time.hours"
-                  translate-value-time="{{csv.model.retryTimerParts.hours}}"
-                  translate-interpolation="messageformat"></span>
-            <span ng-show="csv.model.retryTimerParts.minutes > 0" translate="time.minutes"
-                  translate-value-time="{{csv.model.retryTimerParts.minutes}}"
-                  translate-interpolation="messageformat"></span>
-            <span translate="time.seconds" translate-value-time="{{csv.model.retryTimerParts.seconds}}"
-                  translate-interpolation="messageformat"></span>
+            <span class="progressbar-label retry-label" ng-show="csv.model.isRetrying">
+              <span translate="userManage.bulk.retryingUsers" translate-value-users="{{csv.model.usersToRetry.length}}"
+                    translate-interpolation="messageformat"></span>
+              <span translate="userManage.bulk.retryingIn"></span>
+              <span ng-show="csv.model.retryTimerParts.hours > 0" translate="time.hours"
+                    translate-value-time="{{csv.model.retryTimerParts.hours}}"
+                    translate-interpolation="messageformat"></span>
+              <span ng-show="csv.model.retryTimerParts.minutes > 0" translate="time.minutes"
+                    translate-value-time="{{csv.model.retryTimerParts.minutes}}"
+                    translate-interpolation="messageformat"></span>
+              <span translate="time.seconds" translate-value-time="{{csv.model.retryTimerParts.seconds}}"
+                    translate-interpolation="messageformat"></span>
           </span>
-          <span class="progressbar-label" ng-if="csv.model.processProgress == 100" translate="common.done"></span>
-          <span class="progressbar-progress">{{csv.model.numTotalUsers}}/{{csv.model.numMaxUsers}}</span>
+          <span class="progressbar-progress">{{csv.model.processProgress}}%</span>
         </div>
         <progressbar animate="false" class="progress-striped active" value="csv.model.processProgress"
                      type="primary"></progressbar>
         <div class="csv-filename">{{csv.model.fileName}}</div>
       </div>
       <div ng-if="csv.model.isProcessing" class="close-button">
-        <button type="button" class="close" ng-click="vm.onCancelImport()">
+        <a class="icon icon-close" ng-click="vm.onCancelImport()">
           <span class="sr-only" translate="common.close"></span>
-        </button>
+        </a>
       </div>
     </div>
+  </div>
+
+  <!-- done import status -->
+  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="csv.model.processProgress == 100">
+      <span class="progressbar-label">
+        <span class="progressbar-label" translate="userManage.bulk.import.completedAt" translate-values="{ filename: csv.model.fileName }"></span>
+        <span class="progressbar-label">{{csv.model.importCompletedAt | date:'short'}}</span>
+      </span>
   </div>
 
   <!-- display the results stats -->
@@ -46,28 +54,9 @@
       <div class="total">{{csv.model.numExistingUsers}}</div>
       <h4 class="total-title" translate="userManage.bulk.existingUsers"></h4>
     </div>
-    <div class="stat retry-users" ng-if="csv.model.usersToRetry.length > 0">
-      <div class="total">{{csv.model.usersToRetry.length}}</div>
-      <h4 class="total-title" translate="userManage.bulk.retryUsers"></h4>
-    </div>
     <div class="stat error-users" ng-class="{disabled: csv.model.userErrorArray.length === 0}">
       <div class="total">{{csv.model.userErrorArray.length}}</div>
       <h4 class="total-title" translate="userManage.bulk.errorUsers"></h4>
-    </div>
-  </div>
-
-  <!-- display the timer for how long the upload is taking -->
-  <div class="flex-item-no-resize upload-timer">
-    <div>
-      <span translate="firstTimeWizard.timeElapsed"></span>
-      <timer interval="1000">
-      <span ng-show="hours" translate="time.hours" translate-value-time="{{hours}}"
-            translate-interpolation="messageformat"></span>
-        <span ng-show="minutes" translate="time.minutes" translate-value-time="{{minutes}}"
-              translate-interpolation="messageformat"></span>
-        <span translate="time.seconds" translate-value-time="{{seconds}}"
-              translate-interpolation="messageformat"></span>
-      </timer>
     </div>
   </div>
 
@@ -76,26 +65,29 @@
     <div class="flex-container upload-errors" ng-if="csv.model.userErrorArray.length > 0">
 
       <div class="flex-item-no-resize">
-        <h4 translate="userManage.bulk.errorUsers"></h4>
-        <div ng-disabled="csv.model.isProcessing">
+        <h5 translate="userManage.bulk.errorUsers"></h5>
+        <p>
+          <span translate="userManage.bulk.import.errorResolveInstructions"></span>
+          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}" tooltip-placement="top"></span>
+        </p>
+        <div class="error-download" ng-disabled="csv.model.isProcessing">
           <csv-download type="error" filename="errors.csv" no-icon
                         anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}"></csv-download>
         </div>
-        <p translate="userManage.bulk.import.errorResolveInstructions"></p>
       </div>
 
       <div class="flex-item-no-resize table-header">
         <div class="row">
-          <span class="columns small-1 center error-row" translate="userManage.bulk.import.headerRow"></span>
-          <span class="columns small-11 error-desc" translate="userManage.bulk.import.headerErrorMessage"></span>
+          <span class="columns small-2 center error-row" translate="userManage.bulk.import.headerRow"></span>
+          <span class="columns small-10 error-desc" translate="userManage.bulk.import.headerErrorMessage"></span>
         </div>
       </div>
 
       <div class="flex-item-resize table-body">
         <div class="scroller">
           <div ng-repeat="data in csv.model.userErrorArray" class="row">
-            <span class="columns small-1 center error-row">{{::data.row}}</span>
-            <span class="columns small-11 error-desc">{{::data.error}}</span>
+            <span class="columns small-2 center error-row">{{::data.row}}</span>
+            <span class="columns small-10 error-desc">{{::data.error}}</span>
           </div>
         </div>
       </div>
