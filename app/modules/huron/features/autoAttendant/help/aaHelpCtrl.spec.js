@@ -77,7 +77,7 @@ describe('Controller: AAHelpCtrl', function () {
       controller.metric = metric;
       controller.sendMetrics();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.UI_HELP, {
-        type: controller.metric
+        icon: controller.metric
       });
     });
 
