@@ -10,7 +10,7 @@
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
 
-    vm.disableMediaService = function (serviceId) {
+    vm.disableMediaService = function () {
       MediaServiceActivation.setServiceEnabled(vm.serviceId, false).then(
         function success() {
           vm.disableOrpheusForMediaFusion();
@@ -20,7 +20,7 @@
             reload: true
           });
         },
-        function error(data, status) {
+        function error() {
           XhrNotificationService.notify(error);
         });
     };
@@ -51,16 +51,16 @@
 
           if (mediaAgentOrgIdsArray.length > 0) {
             MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });
               });
           } else {
             MediaServiceActivation.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success(response) {},
-              function error(errorResponse, status) {
+              function success() {},
+              function error(errorResponse) {
                 Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
                   failureMessage: errorResponse.message
                 });

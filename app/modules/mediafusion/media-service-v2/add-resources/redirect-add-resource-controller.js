@@ -50,9 +50,9 @@
         return;
       }
       $modal.open({
-          templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
-          type: 'dialog'
-        })
+        templateUrl: 'modules/hercules/add-resource/confirm-setup-cancel-dialog.html',
+        type: 'dialog'
+      })
         .result.then(function (isAborting) {
           if (isAborting) {
             $modalInstance.close();

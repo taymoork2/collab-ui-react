@@ -135,10 +135,10 @@
     function patch(data) {
       vm.state = 'syncing';
       return ScheduleUpgradeService.patch(Authinfo.getOrgId(), vm.connectorType, {
-          scheduleTime: data.scheduleTime.value,
-          scheduleTimeZone: data.scheduleTimeZone.value,
-          scheduleDay: data.scheduleDay.value
-        })
+        scheduleTime: data.scheduleTime.value,
+        scheduleTimeZone: data.scheduleTimeZone.value,
+        scheduleDay: data.scheduleDay.value
+      })
         .then(function (data) {
           $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
           vm.isAdminAcknowledged = true;

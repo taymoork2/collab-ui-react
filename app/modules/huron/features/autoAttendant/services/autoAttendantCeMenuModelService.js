@@ -1027,7 +1027,7 @@
           newOption.actions = createActionArray(menuEntry.actions);
           newOptionArray.push(newOption);
         } else if (menuEntry.key && _.has(menuEntry, 'entries') && _.has(menuEntry, 'headers')) {
-          var newOption = {};
+          newOption = {};
           if (angular.isDefined(menuEntry.description)) {
             newOption.description = menuEntry.description;
           }

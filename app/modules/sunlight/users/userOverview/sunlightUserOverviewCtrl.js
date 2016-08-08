@@ -62,7 +62,7 @@
       }
 
       SunlightConfigService.updateUserInfo(updatedUserInfo, userId)
-        .then(function (response) {
+        .then(function () {
           vm.hideSaveCancel();
           Notification.success('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
             userId: vm.currentUser.userName

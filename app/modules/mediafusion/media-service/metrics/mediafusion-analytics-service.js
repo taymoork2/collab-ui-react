@@ -24,11 +24,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -48,11 +43,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -72,11 +62,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -96,11 +81,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -120,11 +100,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -144,11 +119,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -168,11 +138,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -192,11 +157,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -216,11 +176,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -240,11 +195,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -264,11 +214,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -288,11 +233,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -312,11 +252,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -336,11 +271,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 
@@ -360,11 +290,6 @@
           data.success = false;
           data.status = status;
           callback(data, status);
-          var description = null;
-          var errors = data.Errors;
-          if (errors) {
-            description = errors[0].description;
-          }
         });
     };
 

@@ -14,7 +14,7 @@ describe('Controller: Trial Webex', function () {
     bard.mockService(TrialWebexService, {
       getData: trialData.enabled.trials.webexTrial,
       validateSiteUrl: function (siteUrl) {
-        return $q(function (resolve, reject) {
+        return $q(function (resolve) {
           if (siteUrl === 'acmecorp.webex.com') {
             resolve({
               isValid: true

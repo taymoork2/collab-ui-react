@@ -72,10 +72,10 @@
         };
 
         $http({
-            method: 'PATCH',
-            url: dirsyncUrl,
-            data: payload
-          })
+          method: 'PATCH',
+          url: dirsyncUrl,
+          data: payload
+        })
           .success(function (data, status) {
             data = data || {};
             data.success = true;

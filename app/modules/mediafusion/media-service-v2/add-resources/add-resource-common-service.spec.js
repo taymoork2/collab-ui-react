@@ -1,8 +1,8 @@
   'use strict';
   describe('AddResourceCommonServiceV2', function () {
     beforeEach(angular.mock.module('Mediafusion'));
-    var redirectTargetPromise, $q, httpBackend, $state, $stateParams, AddResourceCommonServiceV2, XhrNotificationService, $translate, $modal, MediaClusterServiceV2, MediaServiceActivationV2, authinfo;
-    beforeEach(inject(function (_XhrNotificationService_, _$translate_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, _$q_, _$modal_, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_) {
+    var redirectTargetPromise, $q, httpBackend, AddResourceCommonServiceV2, MediaClusterServiceV2, MediaServiceActivationV2, authinfo;
+    beforeEach(inject(function (_AddResourceCommonServiceV2_, $httpBackend, _$q_, _MediaClusterServiceV2_, _MediaServiceActivationV2_, _Authinfo_) {
       authinfo = _Authinfo_;
       authinfo.getOrgId = sinon.stub().returns('orgId');
       $q = _$q_;
@@ -11,11 +11,7 @@
       redirectTargetPromise = {
         then: sinon.stub()
       };
-      $stateParams = _$stateParams_;
       AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
-      $translate = _$translate_;
-      XhrNotificationService = _XhrNotificationService_;
-      $modal = _$modal_;
       MediaClusterServiceV2 = _MediaClusterServiceV2_;
       MediaServiceActivationV2 = _MediaServiceActivationV2_;
     }));

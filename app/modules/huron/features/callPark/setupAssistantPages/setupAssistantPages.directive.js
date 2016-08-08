@@ -16,12 +16,8 @@
   });
 
   function createSetupAssistantPageDirective(pageFile) {
-    var callParkSA;
-
     var directive = {
-      link: function (scope, element, attrs) {
-        callParkSA = scope.callParkSA;
-      },
+      link: function () {},
       templateUrl: 'modules/huron/features/callPark/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false

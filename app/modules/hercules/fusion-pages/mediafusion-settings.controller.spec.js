@@ -4,11 +4,8 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $stateParams, httpMock, MediaClusterServiceV2, XhrNotificationService, FusionClusterService, redirectTargetPromise, controller, authInfo, redirectTargetPromise;
-  redirectTargetPromise = {
-    then: sinon.stub()
-  };
-  var authInfo = {
+  var httpMock, MediaClusterServiceV2, XhrNotificationService, FusionClusterService, controller, authInfo;
+  authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
   };
 
@@ -24,9 +21,6 @@ describe('Controller: MediafusionClusterSettingsController', function () {
     XhrNotificationService = _XhrNotificationService_;
     FusionClusterService = _FusionClusterService_;
     httpMock.when('GET', /^\w+.*/).respond({});
-    redirectTargetPromise = {
-      then: sinon.stub()
-    };
 
     controller = $controller('MediafusionClusterSettingsController', {
       $stateParams: $stateParams,

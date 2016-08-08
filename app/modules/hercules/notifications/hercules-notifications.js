@@ -19,12 +19,12 @@
     vm.showNotifications = false;
     vm.typeDisplayName = function (type) {
       switch (type) {
-      case NotificationService.types.ALERT:
-        return 'ALERT';
-      case NotificationService.types.NEW:
-        return 'NEW';
-      default:
-        return 'TO-DO';
+        case NotificationService.types.ALERT:
+          return 'ALERT';
+        case NotificationService.types.NEW:
+          return 'NEW';
+        default:
+          return 'TO-DO';
       }
     };
 

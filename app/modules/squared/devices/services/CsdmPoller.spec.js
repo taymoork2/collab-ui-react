@@ -26,10 +26,10 @@ describe('CsdmPoller', function () {
       return defer.promise;
     };
     var hub = Hub.create();
-    var poller = Poller.create(service, hub);
+    Poller.create(service, hub);
 
     var callback = sinon.stub();
-    var subscription = hub.on('data', callback, {
+    hub.on('data', callback, {
       scope: scope
     });
 

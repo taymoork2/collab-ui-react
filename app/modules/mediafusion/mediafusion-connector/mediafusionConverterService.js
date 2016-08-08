@@ -96,7 +96,7 @@
       }
     };
 
-    function serviceAndClusterNeedsAttention(service, cluster) {
+    function serviceAndClusterNeedsAttention(service) {
       // cluster.needs_attention = true;
       service.needs_attention = true;
     }

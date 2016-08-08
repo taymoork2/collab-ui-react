@@ -33,7 +33,7 @@
     };
 
     var addCsAdminToCustomer = function (encryptedParam) {
-      csadminservice.setCsAdmin(encryptedParam, function (data, status) {
+      csadminservice.setCsAdmin(encryptedParam, function (data) {
         if (data.success) {
           $scope.result.orgId = data.orgId;
           $scope.result.customerName = data.customerName;

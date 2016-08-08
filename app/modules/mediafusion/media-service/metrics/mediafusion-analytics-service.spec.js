@@ -3,12 +3,10 @@
 describe('Service: MediaFusionAnalyticsService', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $httpBackend, $location, Service, overload, utilization;
-  var rootPath = 'https://athena-integration.wbx2.com/athena/api/v1';
-  var ping = rootPath + '/ping';
+  var $httpBackend, Service, utilization;
 
   beforeEach(function () {
-    angular.mock.module(function ($provide) {
+    angular.mock.module(function () {
 
       utilization = {
         cluster: sinon.stub(),

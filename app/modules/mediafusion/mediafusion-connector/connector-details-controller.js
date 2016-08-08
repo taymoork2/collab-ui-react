@@ -63,10 +63,10 @@
 
         $scope.changeRole = function ($selectedRole) {
           MediafusionClusterService.changeRole($selectedRole, $scope.selectedCluster)
-            .success(function (data) {
+            .success(function () {
               Notification.success('mediaFusion.roleAssignmentSuccess');
             })
-            .error(function (data, status) {
+            .error(function (data) {
               Notification.error('mediaFusion.roleAssignmentFailure', {
                 failureMessage: data.message
               });
@@ -95,11 +95,11 @@
               resp.finally(function () {
                 $scope.displayName = $scope.clusterVal;
                 MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, resp.$$state.value.data.id)
-                  .success(function (data) {
+                  .success(function () {
                     $scope.oldClusterVal = $name;
                     Notification.success('mediaFusion.groupAssignmentSuccess');
                   })
-                  .error(function (data, status) {
+                  .error(function (data) {
                     Notification.error('mediaFusion.groupAssignmentFailure', {
                       failureMessage: data.message
                     });
@@ -124,13 +124,13 @@
                 createPromise.finally(function () {
                   getGroups();
                   MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySet.id)
-                    .success(function (data) {
+                    .success(function () {
                       MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, createPromise.$$state.value.data.id)
-                        .success(function (data) {
+                        .success(function () {
                           $scope.oldClusterVal = $name;
                           Notification.success('mediaFusion.groupAssignmentSuccess');
                         })
-                        .error(function (data, status) {
+                        .error(function (data) {
                           Notification.error('mediaFusion.groupAssignmentFailure', {
                             failureMessage: data.message
                           });
@@ -148,11 +148,11 @@
                 promise.finally(function () {
                   //Check if new cluster has a valid cluster id
                   MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $scope.newGrpId)
-                    .success(function (data) {
+                    .success(function () {
                       $scope.oldClusterVal = $name;
                       Notification.success('mediaFusion.groupAssignmentSuccess');
                     })
-                    .error(function (data, status) {
+                    .error(function (data) {
                       Notification.success('mediaFusion.groupAssignmentFailure', {
                         failureMessage: data.message
                       });
@@ -165,7 +165,7 @@
 
         };
 
-        $scope.onSelect = function ($item, $model, $label) {
+        $scope.onSelect = function ($item) {
           $scope.showbutton = true;
           $scope.clusterVal = $item.name;
           $scope.newGrpId = $item.id;

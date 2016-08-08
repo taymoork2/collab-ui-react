@@ -66,6 +66,45 @@ describe('Service: Webex Trial Service', function () {
       $httpBackend.flush();
     });
 
+    it('should fail to validate a duplicate site url', function () {
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '439012'
+        }]
+      });
+      TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should fail to validate a duplicate or reserved site url', function () {
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '431397'
+        }]
+      });
+      TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should fail to validate a reserved site url', function () {
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '439015'
+        }]
+      });
+      TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      $httpBackend.flush();
+    });
+
     it('should fail to validate a valid site url when errorCode is unknown', function () {
       $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{

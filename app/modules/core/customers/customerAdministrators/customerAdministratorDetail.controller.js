@@ -15,18 +15,18 @@
 
     vm.selected = '';
     vm.selectedAdmin = undefined;
-    vm.searchUsers = [];
     vm.users = [];
     vm.administrators = [];
     vm.addAdmin = addAdmin;
+    vm.getPartnerUsers = getPartnerUsers;
     vm.removeSalesAdmin = removeSalesAdmin;
-    vm.timeoutVal = 500;
-    vm.filterList = _.debounce(filterList, vm.timeoutVal);
+    vm.adminSuggestLimit = 8;
+    vm.resultsError = false;
+    vm.resultsErrorMessage = '';
 
     init();
 
     function init() {
-      getPartnerUsers();
       getAssignedSalesAdministrators();
     }
 
@@ -81,13 +81,6 @@
       Analytics.trackPartnerActions(Analytics.eventNames.ASSIGN, uuid, Authinfo.getOrgId());
     }
 
-    function filterList(newValue, oldValue) {
-      if (newValue.length > 0 && (newValue !== oldValue)) {
-        vm.selected = newValue;
-        getPartnerUsers(newValue);
-      }
-    }
-
     function patchSalesAdminRole(email) {
       CustomerAdministratorService.patchSalesAdminRole(email)
         .catch(function () {
@@ -129,34 +122,48 @@
     }
 
     function getPartnerUsers(str) {
-      CustomerAdministratorService.getPartnerUsers(str)
+      vm.resultsError = false;
+      return CustomerAdministratorService.getPartnerUsers(str.split(' ')[0])
         .then(function (response) {
           var resources = _.get(response, 'data.Resources', []);
+          var searchUsers = [];
           var fullName = '';
           var uuid = '';
-          _.each(resources, function (user) {
+          _.every(resources, function (user) {
             if (user.name) {
-              var givenName = _.get(user, 'name.givenName');
-              var familyName = _.get(user, 'name.familyName');
+              var givenName = user.name.givenName;
+              var familyName = user.name.familyName;
               if (givenName && familyName) {
                 fullName = givenName + ' ' + familyName;
               }
             } else if (user.displayName) {
-              fullName = _.get(user, 'displayName');
+              fullName = user.displayName;
             } else {
-              fullName = _.get(user, 'username');
+              fullName = user.userName;
             }
-            uuid = _.get(user, 'id');
-            if (vm.searchUsers.indexOf(fullName) < 0) {
-              vm.searchUsers.push(fullName);
+            uuid = user.id;
+            if (fullName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+              user.displayName.toLowerCase().indexOf(str.toLowerCase()) !== -1 ||
+              user.userName.toLowerCase().indexOf(str.toLowerCase()) !== -1) {
+              searchUsers.push(fullName);
+              vm.users.push({
+                fullName: fullName,
+                uuid: uuid
+              });
             }
-            vm.users.push({
-              fullName: fullName,
-              uuid: uuid
-            });
+            return searchUsers.length < vm.adminSuggestLimit;
           });
+          if (searchUsers.length === 0) {
+            vm.resultsError = true;
+            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.noResultsError');
+          }
+          return searchUsers;
         })
-        .catch(function () {
+        .catch(function (err) {
+          if (_.get(err, 'status') === 403 && _.get(err, 'data.Errors[0].errorCode') === '200046') {
+            vm.resultsError = true;
+            vm.resultsErrorMessage = $translate.instant('customerAdminPanel.tooManyResultsError');
+          }
           Notification.error('customerAdminPanel.customerAdministratorServiceError');
         });
     }
@@ -171,15 +178,15 @@
             var avatarSyncEnabled = false;
             var adminProfile = {};
             if (user.name) {
-              var givenName = _.get(user, 'name.givenName');
-              var familyName = _.get(user, 'name.familyName');
+              var givenName = user.name.givenName;
+              var familyName = user.name.familyName;
               if (givenName && familyName) {
                 fullName = givenName + ' ' + familyName;
               }
             } else if (user.displayName) {
-              fullName = _.get(user, 'displayName');
+              fullName = user.displayName;
             } else {
-              fullName = _.get(user, 'username');
+              fullName = user.userName;
             }
             var userEmails = _.get(response.data, 'emails', []);
             var email = '';
@@ -188,8 +195,8 @@
                 email = emailDetail.value;
               }
             });
-            uuid = _.get(user, 'id');
-            avatarSyncEnabled = _.get(user, 'avatarSyncEnabled');
+            uuid = user.id;
+            avatarSyncEnabled = user.avatarSyncEnabled;
             adminProfile = {
               uuid: uuid,
               fullName: fullName,
