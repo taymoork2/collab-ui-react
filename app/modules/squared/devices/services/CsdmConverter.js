@@ -191,7 +191,7 @@
         this.type = obj.type || 'cloudberry';
         this.entitlements = obj.entitlements;
         this.cisUuid = obj.cisUuid || obj.uuid;
-        this.displayName = obj.displayName || obj.name;
+        this.displayName = obj.displayName;
         this.sipUrl = obj.sipUrl;
         this.devices = obj.type === 'huron' ? obj.phones : convertCloudberryDevices(obj.devices);
         this.numbers = obj.numbers;
