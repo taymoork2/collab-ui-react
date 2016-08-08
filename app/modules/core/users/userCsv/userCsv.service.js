@@ -128,11 +128,15 @@
                   break;
                 }
               case ('400109'):
-              case ('400096'):
-                {
+              	{
                   responseMessage = $translate.instant('usersPage.unableToMigrateError', {
                     email: email
                   });
+                  break;
+                }
+              case ('400096'):
+                {
+                  responseMessage = $translate.instant('usersPage.unknownCreateUserError');
                   break;
                 }
               case ('400111'):
