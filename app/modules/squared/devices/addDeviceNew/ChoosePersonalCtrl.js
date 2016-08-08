@@ -15,14 +15,6 @@
 
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
     var userDeviceCount = {};
-    $http.get(devicesUrl).then(function (res) {
-      _.forEach(res.data, function (device) {
-        if (!userDeviceCount[device.cisUuid]) {
-          userDeviceCount[device.cisUuid] = 0;
-        }
-        userDeviceCount[device.cisUuid] += 1;
-      });
-    });
 
     vm.model = {
       userInputOption: 0,
@@ -34,6 +26,23 @@
 
     vm.isExistingCollapsed = vm.wizardData.allowUserCreation;
     vm.isLoading = false;
+
+    function init() {
+      loadUserDeviceCount();
+    }
+
+    init();
+
+    function loadUserDeviceCount() {
+      $http.get(devicesUrl).then(function (res) {
+        _.forEach(res.data, function (device) {
+          if (!userDeviceCount[device.cisUuid]) {
+            userDeviceCount[device.cisUuid] = 0;
+          }
+          userDeviceCount[device.cisUuid] += 1;
+        });
+      });
+    }
 
     vm.validateTokens = function () {
       vm.deviceName = "NOT IMPLEMENTED";
@@ -51,7 +60,7 @@
             vm.noResults = true;
             return;
           }
-          var userList = data.Resources.map(function (r) {
+          var userList = _(data.Resources).map(function (r) {
             var name = null;
             if (r.name) {
               name = r.name.givenName;
@@ -67,10 +76,9 @@
             }
             r.extractedName = name;
             return r;
-          });
-          _.filter(userList, function (u) {
-            return userDeviceCount[u.id] && userDeviceCount[u.id] < 10;
-          });
+          }).filter(function (u) {
+            return !(u.id in userDeviceCount) || userDeviceCount[u.id] < 10;
+          }).value();
           vm.noResults = _.isEmpty(userList);
           deferred.resolve(userList);
         };
