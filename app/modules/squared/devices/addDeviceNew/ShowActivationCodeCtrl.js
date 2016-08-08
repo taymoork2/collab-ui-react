@@ -19,11 +19,19 @@
     vm.activationCode = vm.wizardData.activationCode || (vm.wizardData.code && vm.wizardData.code.activationCode) || '';
 
     vm.onCopySuccess = function () {
-      Notification.success('clipboard.success');
+      Notification.success(
+        'generateActivationCodeModal.clipboardSuccess',
+        undefined,
+        'generateActivationCodeModal.clipboardSuccessTitle'
+      );
     };
 
-    vm.onCopyError = function () {
-      Notification.success('clipboard.error');
+    vm.onCopyError = function (error) {
+      Notification.notify(
+        [$translate.instant('generateActivationCodeModal.clipboardError') + " " + error.data.error],
+        'error',
+        $translate.instant('generateActivationCodeModal.clipboardErrorTitle')
+      );
     };
 
     if (vm.wizardData.deviceType === 'huron') {
@@ -139,7 +147,6 @@
     };
 
     vm.sendActivationCodeEmail = function sendActivationCodeEmail() {
-      var entitleResult;
       var emailInfo = {
         email: vm.email.to,
         firstName: vm.email.to,
@@ -150,20 +157,22 @@
       };
 
       ActivationCodeEmailService.save({}, emailInfo, function () {
-        entitleResult = {
-          msg: $translate.instant('generateActivationCodeModal.emailSuccess'),
-          type: 'success'
-        };
-
-        Notification.notify([entitleResult.msg], entitleResult.type);
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailSuccess', {
+            'address': vm.email.to
+          })],
+          'success',
+          $translate.instant('generateActivationCodeModal.emailSuccessTitle')
+        );
 
       }, function (error) {
-        entitleResult = {
-          msg: $translate.instant('generateActivationCodeModal.emailError') + "  " + error.data.error,
-          type: 'error'
-        };
-
-        Notification.notify([entitleResult.msg], entitleResult.type);
+        Notification.notify(
+          [$translate.instant('generateActivationCodeModal.emailError', {
+            'address': vm.email.to
+          }) + " " + error.data.error],
+          'error',
+          $translate.instant('generateActivationCodeModal.emailErrorTitle')
+        );
       });
     };
 

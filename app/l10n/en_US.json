@@ -3054,8 +3054,14 @@
     "expires": "Expires: {{date}}",
     "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
-    "emailSuccess": "Email sent successfully.",
-    "emailError": "Email unsuccessful.",
+    "emailSuccessTitle": "Email sent",
+    "emailSuccess": "Activation code has been sent to {{address}}",
+    "emailErrorTitle": "Email not sent",
+    "emailError": "Failed to send activation code to {{address}}",
+    "clipboardSuccessTitle": "Copied to clipboard",
+    "clipboardSuccess": "Activation code has been copied to the clipboard.",
+    "clipboardErrorTitle": "Not copied to clipboard",
+    "clipboardError": "Failed to copy activation code to the clipboard.",
     "generateErrorNotFound": "Please unlicense and relicense this Spark Call user. Contact support if the problem persists.",
     "generateError": "Unable to generate activation code. Please try again."
   },
@@ -5528,9 +5534,5 @@
     "Pacific/Tongatapu": "Pacific/Tongatapu",
     "Etc/GMT-14": "Etc/GMT-14",
     "Pacific/Kiritimati": "Pacific/Kiritimati"
-  },
-  "clipboard": {
-    "success": "Copied to clipboard",
-    "error": "Copy to clipboard failed"
   }
 }
