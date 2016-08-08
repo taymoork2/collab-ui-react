@@ -14,7 +14,6 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   }));
 
   beforeEach(inject(function ($stateParams, $translate, _FusionClusterService_, _XhrNotificationService_, _MediaClusterServiceV2_, $httpBackend, $controller) {
-    $stateParams = $stateParams;
     httpMock = $httpBackend;
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;

@@ -8,8 +8,6 @@ describe('Controller: HostDetailsControllerV2', function () {
 
   beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _MediaClusterServiceV2_, _XhrNotificationService_, $translate) {
     $rootScope = _$rootScope_;
-    $clusterId = $clusterId;
-    $selectedRole = $selectedRole;
     $stateParams = {
       "groupName": "Bangalore - Site 1",
       "selectedClusters": [{
@@ -150,7 +148,6 @@ describe('Controller: HostDetailsControllerV2', function () {
 
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     XhrNotificationService = _XhrNotificationService_;
-    $translate = $translate;
 
     $modal = {
       open: sinon.stub().returns({

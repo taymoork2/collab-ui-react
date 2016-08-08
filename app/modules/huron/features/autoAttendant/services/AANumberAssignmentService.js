@@ -59,24 +59,25 @@
           // let's just do it the straight-forward way...
 
           // find resources not in CMI
+          var matchResourceNumber = function (obj) {
+            return obj.number.replace(/\D/g, '') === resources[i].getNumber();
+          };
           var i = 0;
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
-            var cmiObj = cmiAssignedNumbers.filter(function (obj) {
-
-              return obj.number.replace(/\D/g, '') === resources[i].getNumber();
-            });
+            var cmiObj = cmiAssignedNumbers.filter(matchResourceNumber);
             if (!angular.isDefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
             }
           }
           // find CMI assigned numbers not in resources
+          var matchCmiAssignedNumber = function (obj) {
+            return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
+          };
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
               // check to see if it's in the resource list
-              var rscObj = resources.filter(function (obj) {
-                return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
-              });
+              var rscObj = resources.filter(matchCmiAssignedNumber);
               if (!angular.isDefined(rscObj) || rscObj === null || rscObj.length === 0) {
                 onlyCMI.push(cmiAssignedNumbers[i].number);
               }
@@ -152,6 +153,12 @@
 
       return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
 
+        var inCMIAssignedList = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
+        };
+        var inExtension = function (obj) {
+          return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
+        };
         var i = 0;
         for (i = 0; i < resources.length; i++) {
           if (resources[i].getType() === service.DIRECTORY_NUMBER) {
@@ -159,9 +166,7 @@
             // if we don't have an id, get it from CMI
             if (!resources[i].id) {
               // find it in CMI assigned list
-              var cmiObjESN = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
-              });
+              var cmiObjESN = _.find(cmiAssignedNumbers, inCMIAssignedList);
               if (angular.isDefined(cmiObjESN) && cmiObjESN.number) {
                 resources[i].setId(cmiObjESN.number);
               } else {
@@ -175,9 +180,7 @@
             // if we don't have a number, get it from CMI
             if (!resources[i].number) {
               // find it in CMI assigned list
-              var cmiObjExtension = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
-              });
+              var cmiObjExtension = _.find(cmiAssignedNumbers, inExtension);
               if (angular.isDefined(cmiObjExtension) && cmiObjExtension.number) {
                 resources[i].setNumber(cmiObjExtension.number);
               } else {

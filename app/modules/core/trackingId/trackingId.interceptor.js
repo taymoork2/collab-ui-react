@@ -45,7 +45,7 @@
       } else {
         whitelistSubdomainArray = [];
       }
-      var regex = "^http?s:\/\/(?:";
+      var regex = "^http?s://(?:";
       if (whitelistSubdomainArray.length) {
         regex += "(?!" + whitelistSubdomainArray.join('|') + ")";
       }

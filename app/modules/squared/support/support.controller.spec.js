@@ -26,7 +26,6 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Config, 'isProd').and.returnValue(false);
 
     $scope = $rootScope.$new();
-    Userservice = Userservice;
     controller = $controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,

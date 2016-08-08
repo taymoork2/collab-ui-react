@@ -105,7 +105,7 @@
         };
 
         $scope.getTranslate = function getTranslate() {
-          return 'translate(' + $scope.getWidth() / 2 + ',' + $scope.getHeight() / 2 + ')';
+          return 'translate(' + ($scope.getWidth() / 2) + ',' + ($scope.getHeight() / 2) + ')';
         };
 
         $scope.getWidth = function getWidth() {

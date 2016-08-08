@@ -26,7 +26,7 @@ describe('Controller: Dummy Reports', function () {
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + (3 - x) * 7, 'day').format(dayFormat);
+        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {
@@ -45,7 +45,7 @@ describe('Controller: Dummy Reports', function () {
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
-        data[x].modifiedDate = moment().startOf('week').subtract(1 + (3 - x) * 7, 'day').format(dayFormat);
+        data[x].modifiedDate = moment().startOf('week').subtract(1 + ((3 - x) * 7), 'day').format(dayFormat);
       }
     } else {
       for (var y = 0; y <= 2; y++) {

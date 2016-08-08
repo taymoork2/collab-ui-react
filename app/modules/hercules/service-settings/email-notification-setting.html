@@ -1,5 +1,6 @@
 <h5 translate="hercules.settings.emailNotificationsHeading"></h5>
-<h6><strong translate="hercules.settings.emailAdministratorHeading"></strong></h6>
+<h6 class="email-subsection"><strong translate="hercules.settings.emailAdministratorHeading"
+                                     ng-if="expresswayServiceSettings.servicesId[0] === 'squared-fusion-cal'"></strong></h6>
 <p><span translate="hercules.settings.emailAdministratorNotification"></span><br>
 </p>
 
@@ -15,7 +16,7 @@
 <span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>
 
 <div ng-if="expresswayServiceSettings.servicesId[0] === 'squared-fusion-cal'">
-  <h6><strong translate="hercules.settings.emailUserHeading"></strong></h6>
+  <h6 class="email-subsection"><strong translate="hercules.settings.emailUserHeading"></strong></h6>
   <p><span translate="hercules.settings.emailUserNotification"></span>
   </p>
 
