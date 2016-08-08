@@ -583,6 +583,24 @@
       $scope.confChk = [];
       $scope.allLicenses = [];
 
+      var formatLicense = function (site) {
+        var confMatches = _.filter(confFeatures, {
+          siteUrl: site
+        });
+        var cmrMatches = _.filter(cmrFeatures, {
+          siteUrl: site
+        });
+        var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
+        return {
+          site: site,
+          billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+          confLic: confMatches,
+          cmrLic: cmrMatches,
+          isCISite: isCISiteFlag,
+          siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
+        };
+      };
+
       for (var i in confs) {
         var temp = {
           confFeature: confs[i],
@@ -617,23 +635,7 @@
         });
         siteUrls = _.uniq(siteUrls);
 
-        $scope.allLicenses = _.map(siteUrls, function (site) {
-          var confMatches = _.filter(confFeatures, {
-            siteUrl: site
-          });
-          var cmrMatches = _.filter(cmrFeatures, {
-            siteUrl: site
-          });
-          var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
-          return {
-            site: site,
-            billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
-            confLic: confMatches,
-            cmrLic: cmrMatches,
-            isCISite: isCISiteFlag,
-            siteAdminUrl: (isCISiteFlag ? '' : WebExUtilsFact.getSiteAdminUrl(site))
-          };
-        });
+        $scope.allLicenses = _.map(siteUrls, formatLicense);
         $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
         for (var j in cmrs) {
@@ -1939,7 +1941,9 @@
       $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
       Userservice.migrateUsers(batch, function (data) {
         var successMovedUsers = [];
-
+        var match = function (batchObj) {
+          return user.address === batchObj.userName;
+        };
         for (var i = 0; i < data.userResponse.length; i++) {
           if (data.userResponse[i].status !== 200) {
             $scope.results.errors.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
@@ -1947,9 +1951,7 @@
             var user = {
               'address': data.userResponse[i].email
             };
-            var userArray = batch.filter(function (batchObj) {
-              return user.address === batchObj.userName;
-            });
+            var userArray = batch.filter(match);
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
@@ -2232,9 +2234,9 @@
           return $q(function (resolve) {
             if (userArray.length > 0) {
               Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
-                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                successCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).catch(function (response) {
-                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                errorCallback(response, (startIndex - userArray.length) + 1, userArray.length);
               }).finally(function () {
                 calculateProcessProgress();
                 resolve();
@@ -2248,7 +2250,7 @@
 
       function calculateProcessProgress() {
         $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+        $scope.model.processProgress = Math.round(($scope.model.numTotalUsers / userArray.length) * 100);
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {
@@ -2305,5 +2307,4 @@
     }
 
   }
-})
-();
+})();

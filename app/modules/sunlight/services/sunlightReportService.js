@@ -211,8 +211,8 @@
     }
 
     function calculateAvgWaitTime(stats1, stats2) {
-      var totalTask1 = stats1.numTasksAssignedState + stats1.numTasksAbandonedState - stats1.numTasksAssignedToAbandonedState;
-      var totalTask2 = stats2.numTasksAssignedState + stats2.numTasksAbandonedState - stats2.numTasksAssignedToAbandonedState;
+      var totalTask1 = stats1.numTasksAssignedState + (stats1.numTasksAbandonedState - stats1.numTasksAssignedToAbandonedState);
+      var totalTask2 = stats2.numTasksAssignedState + (stats2.numTasksAbandonedState - stats2.numTasksAssignedToAbandonedState);
       var totalTasks = totalTask1 + totalTask2;
 
       var duration1 = (totalTask1 != 0) ? (totalTask1 * stats1.avgTaskWaitTime) : stats1.avgTaskWaitTime;

@@ -553,7 +553,7 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions[(index - 1 + 7) % 7] = {
+        vm.dayOptions[((index - 1) + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)

@@ -37,7 +37,7 @@
       if (d) {
         return findMessages(d);
       } else {
-        var s = data && data.status || status;
+        var s = (data && data.status) || status;
         return [s ? 'Backend responded with status ' + s + '.' : defaultErrorMessage];
       }
     };

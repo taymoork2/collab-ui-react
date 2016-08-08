@@ -33,7 +33,7 @@
         days: []
       };
       _.each(getTwoLetterDays(), function (value, index) {
-        hours.days[(index - 1 + 7) % 7] = {
+        hours.days[((index - 1) + 7) % 7] = {
           abbr: value,
           index: index,
           active: false

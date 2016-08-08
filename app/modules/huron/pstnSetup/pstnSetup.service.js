@@ -425,6 +425,7 @@
 
               return newOrder;
             }
+            return undefined;
           })
           .compact()
           .value();

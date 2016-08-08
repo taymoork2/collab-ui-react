@@ -30,7 +30,6 @@ describe('Care Feature Delete Ctrl', function () {
     $stateParams = _$stateParams_;
     $translate = _$translate_;
     $timeout = _$timeout_;
-    Authinfo = Authinfo;
     CareFeatureList = _CareFeatureList_;
     Notification = _Notification_;
     Log = _Log_;
