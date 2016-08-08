@@ -15,19 +15,23 @@
     vm.showGenerateOtpButton = false;
 
     function addLinkOrButtonForActivationCode() {
-      if (vm.csdmHuronUserDeviceService.dataLoaded()) {
-        if (_.size(vm.devices)) {
-          $scope.userOverview.enableAuthCodeLink();
-          vm.showGenerateOtpButton = false;
-        } else {
-          $scope.userOverview.disableAuthCodeLink();
-          vm.showGenerateOtpButton = true;
+      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
+        if (vm.csdmHuronUserDeviceService.dataLoaded()) {
+          if (_.size(vm.devices)) {
+            $scope.userOverview.enableAuthCodeLink();
+            vm.showGenerateOtpButton = false;
+          } else {
+            $scope.userOverview.disableAuthCodeLink();
+            vm.showGenerateOtpButton = true;
+          }
         }
       }
     }
 
     $scope.$watch(function () {
-      return vm.csdmHuronUserDeviceService.dataLoaded();
+      if (_.has(vm, 'csdmHuronUserDeviceService.dataLoaded')) {
+        return vm.csdmHuronUserDeviceService.dataLoaded();
+      }
     }, addLinkOrButtonForActivationCode);
 
     vm.showDeviceDetails = function (device) {
