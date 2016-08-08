@@ -1144,7 +1144,11 @@
     "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
-    "voicemailTimeZoneGetError": "Failed to get voicemail time zone."
+    "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
+    "externalVoiceMailAccessLabel": "External Voicemail Access",
+    "voiceMailPilotHelpText": "Usage of this E164 number incurrs usage cost",
+    "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network"
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
