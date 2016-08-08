@@ -15,7 +15,6 @@ describe('Controller: MediaServiceControllerV2', function () {
   }));
   beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, _$translate_, _MediaServiceActivationV2_, _MediaClusterServiceV2_, _XhrNotificationService_, _Notification_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
-    $state = $state;
     httpMock = _$httpBackend_;
     $q = _$q_;
     $modal = _$modal_;

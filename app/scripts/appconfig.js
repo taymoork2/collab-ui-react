@@ -2502,97 +2502,13 @@
             templateUrl: 'modules/mediafusion/media-service/metrics/analytics-utilization-graph.html',
             parent: 'main'
           })
-          .state('media-service', {
-            templateUrl: 'modules/mediafusion/media-service/overview.html',
-            controller: 'MediaServiceController',
+          //V2 API changes
+          .state('media-service-v2', {
+            templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
+            controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main'
           })
-          .state('media-service.list', {
-            url: '/mediaservice',
-            views: {
-              'fullPane': {
-                templateUrl: 'modules/mediafusion/media-service/resources/cluster-list.html'
-              }
-            }
-          })
-          .state('media-service.settings', {
-            url: '/mediaservice/settings',
-            views: {
-              'fullPane': {
-                controllerAs: 'mediaServiceSettings',
-                controller: 'MediaServiceSettingsController',
-                templateUrl: 'modules/mediafusion/media-service/settings/media-service-settings.html'
-              }
-            }
-          })
-
-        .state('connector-details', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
-              controllerAs: 'groupDetails',
-              controller: 'GroupDetailsController',
-              templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
-            },
-            'header@connector-details': {
-              templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
-            }
-          },
-          data: {
-            displayName: 'Overview'
-          },
-          params: {
-            groupName: {},
-            selectedClusters: {}
-          }
-        })
-          .state('connector-details.alarm-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-            controller: 'MediaAlarmController',
-            controllerAs: 'alarmCtrl',
-            data: {
-              displayName: 'Alarm Details'
-            },
-            params: {
-              alarm: null,
-              host: null
-            }
-          })
-          .state('connector-details.host-details', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/host-details.html',
-            controller: 'HostDetailsController',
-            controllerAs: 'hostDetails',
-            data: {
-              displayName: 'Host'
-            },
-            params: {
-              clusterId: null,
-              properties: null,
-              connector: null,
-              hostLength: null
-            }
-          })
-          .state('connector-details.group-settings', {
-            templateUrl: 'modules/mediafusion/media-service/side-panel/group-settings.html',
-            controller: 'GroupSettingsController',
-            controllerAs: 'groupClusterSettingsCtrl',
-            data: {
-              displayName: 'Settings'
-            },
-            params: {
-              clusterList: null,
-              dispName: null
-            }
-          })
-
-        //V2 API changes
-        .state('media-service-v2', {
-          templateUrl: 'modules/mediafusion/media-service-v2/overview.html',
-          controller: 'MediaServiceControllerV2',
-          controllerAs: 'med',
-          parent: 'main'
-        })
           .state('media-service-v2.list', {
             url: '/mediaserviceV2',
             views: {
@@ -2611,28 +2527,27 @@
               }
             }
           })
-
-        .state('connector-details-v2', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
-              controllerAs: 'groupDetails',
-              controller: 'GroupDetailsControllerV2',
-              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
+          .state('connector-details-v2', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controllerAs: 'groupDetails',
+                controller: 'GroupDetailsControllerV2',
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-details.html'
+              },
+              'header@connector-details-v2': {
+                templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
+              }
             },
-            'header@connector-details-v2': {
-              templateUrl: 'modules/mediafusion/media-service-v2/side-panel/group-header.html'
+            data: {
+              displayName: 'Overview'
+            },
+            params: {
+              clusterName: {},
+              nodes: {},
+              cluster: {}
             }
-          },
-          data: {
-            displayName: 'Overview'
-          },
-          params: {
-            clusterName: {},
-            nodes: {},
-            cluster: {}
-          }
-        })
+          })
           .state('connector-details-v2.alarm-details', {
             templateUrl: 'modules/mediafusion/media-service-v2/side-panel/alarm-details.html',
             controller: 'MediaAlarmControllerV2',

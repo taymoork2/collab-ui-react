@@ -103,7 +103,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     }]);
 
     // for an external number query, return the number formatted with a +
-    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
+    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=&order=pattern&pattern=(.+)/;
     $httpBackend.whenGET(externalNumberQueryUri)
       .respond(function (method, url) {
 

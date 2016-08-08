@@ -35,7 +35,7 @@
     svc.events = null;
 
     function generateMessagebody(events) {
-      var messageBody = '@startuml \n autonumber \"<b>[0]\"\n';
+      var messageBody = '@startuml \n autonumber "<b>[0]"\n';
       var source = '';
       var remote = '';
       var note = '';
@@ -62,21 +62,21 @@
             //incommig call
             if (events[i].dataParam.direction === 'in') {
               if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
-                messageBody += '\"' + remote + '\"' + TRANSITION_ARROW + '\"' + source + '\"' + ': ';
+                messageBody += '"' + remote + '"' + TRANSITION_ARROW + '"' + source + '"' + ': ';
               } else {
-                messageBody += '\"' + remote + '\"' + '->' + '\"' + source + '\"' + ': ';
+                messageBody += '"' + remote + '"' + '->' + '"' + source + '"' + ': ';
               }
             } else {
               if (!_.isUndefined(events[i].dataParam.callflowTransition) && (events[i].dataParam.callflowTransition)) {
-                messageBody += '\"' + source + '\"' + TRANSITION_ARROW + '\"' + remote + '\"' + ': ';
+                messageBody += '"' + source + '"' + TRANSITION_ARROW + '"' + remote + '"' + ': ';
               } else {
-                messageBody += '\"' + source + '\"' + '->' + '\"' + remote + '\"' + ': ';
+                messageBody += '"' + source + '"' + '->' + '"' + remote + '"' + ': ';
               }
             }
 
             eventNote = note;
             eventNote += events[i].dataParam.msgType;
-            messageBody += '\"' + eventNote.replace('"', ' ') + '\"\n';
+            messageBody += '"' + eventNote.replace('"', ' ') + '"\n';
           }
         }
       }

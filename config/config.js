@@ -13,6 +13,7 @@ var config = {
     huron: e2e + '/huron/**/*_spec.js',
     mediafusion: e2e + '/mediafusion/**/*_spec.js',
     squared: e2e + '/squared/**/*_spec.js',
+    sunlight: e2e + '/sunlight/**/*_spec.js',
     webex: e2e + '/webex/**/*_spec.js',
   },
 };
